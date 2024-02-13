@@ -1,0 +1,39 @@
+name: Formatting
+
+on:
+  push:
+    branches: ["main", "dev"]
+  pull_request:
+    branches: ["main", "dev"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python "3.11"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            config/requirements_dev.txt
+
+      - name: Upgrade pip
+        run: |
+          python -m pip install --upgrade pip
+
+      - name: Install black
+        run: |
+          pip install $(grep black config/requirements_dev.txt | xargs)
+          pip install black[jupyter]
+
+      - name: Format with black
+        run: |
+          black . --line-length 88 --diff --check

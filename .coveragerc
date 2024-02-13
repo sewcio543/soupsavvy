@@ -1,0 +1,23 @@
+[run]
+source = soupsavvy
+
+[report]
+omit =
+    *__init__.py
+    tests\*
+
+exclude_lines =
+    @overload
+    @abstract*
+    raise NotImplementedError
+    pragma: no cover
+    # Ignore imports
+    from
+    import
+    def __repr__
+    def __str__
+
+skip_covered = true
+sort = cover
+show_missing = true
+fail_under = 70

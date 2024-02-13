@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "soupsavvy"
+readme = "README.md"
+description = "Python package for advanced web scraping"
+authors = [{name = "sewcio543"}]
+license = {file = "LICENSE"}
+requires-python = ">=3.9"
+
+keywords = ["web-scraping", "html", "soup", "bs4", "markup"]
+
+classifiers = [
+  "Development Status :: 1 - Planning",
+
+  "Intended Audience :: Developers",
+
+  "License :: OSI Approved :: MIT License",
+
+  "Operating System :: OS Independent",
+
+  # supported python versions
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+]
+dynamic = ["version", "dependencies", "optional-dependencies"]
+
+[tool.setuptools.dynamic]
+version = {attr = "soupsavvy.__version__"}
+dependencies = {file = ["requirements.txt"]}
+optional-dependencies = {dev = { file = ["config/requirements_dev.txt"] }}
+
+[project.urls]
+source = "https://github.com/sewcio543/soupsavvy"
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+disable_error_code = "overload-overlap"
