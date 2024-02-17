@@ -6,6 +6,37 @@ on:
       - "main"
 
 jobs:
+  build:
+    name: Build distribution 📦
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python and Upgrade pip
+        uses: ./.github/actions/setup_python
+        with:
+          python-version: "3.11"
+
+        # 3.0.1-dev5 -> 3.0.1 with release
+      - name: Update development version
+        uses: ./.github/actions/bump_version
+        with:
+          type: "release"
+          commit: false
+          tag: false
+          push: false
+
+      - name: Build package
+        uses: ./.github/actions/build_package
+
+      - name: Store the distribution packages
+        uses: actions/upload-artifact@v3
+        with:
+          name: prod-package-dist
+          path: dist/
+
   publish:
     runs-on: ubuntu-latest
 
@@ -21,41 +52,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python "3.11"
-        uses: actions/setup-python@v5
+      - name: Set up Python and Upgrade pip
+        uses: ./.github/actions/setup_python
         with:
           python-version: "3.11"
-          cache: pip
-          cache-dependency-path: |
-            config/requirements_dev.txt
 
-      - name: Upgrade pip
-        run: |
-          python -m pip install --upgrade pip
-
-      - name: Install dependencies
-        run: |
-          pip install -r config/requirements_dev.txt
-          pip install .
-
-      - name: Configure git
-        run: |
-          git config --global user.name "Github Actions BumpVersion"
-          git config --global user.email "username@users.noreply.github.com"
-
-      - name: Update development version and commit
-        run: |
-          # creates git tag and commit
-          # 3.0.1-dev4 -> 3.0.1
-          bump2version release --verbose
-
-      - name: Build package
-        uses: ./.github/actions/build_package
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: prod-package-dist
+          path: dist/
 
       - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
 
-      - name: Push changes and new tag
-        run: |
-          # push only if publish was successful
-          git push --follow-tags
+      - name: Update development version with commit and tag
+        uses: ./.github/actions/bump_version
+        with:
+          type: "release"
+          commit: true
+          tag: true
+          push: true
