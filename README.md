@@ -2,6 +2,7 @@
 
 ## Package
 
+[![jhc github](https://img.shields.io/badge/GitHub-sewcio543-181717.svg?style=flat&logo=github)](https://github.com/jhrcook)
 [![!pypi](https://img.shields.io/pypi/v/soupsavvy?color=orange)](https://pypi.org/project/soupsavvy/)
 [![!python-versions](https://img.shields.io/pypi/pyversions/soupsavvy)](https://www.python.org/)
 
@@ -21,6 +22,9 @@
 
 ![example workflow](https://github.com/sewcio543/soupsavvy/actions/workflows/type_checking.yml/badge.svg)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
+
+![example workflow](https://github.com/sewcio543/soupsavvy/actions/workflows/pre-commit.yml/badge.svg)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 
 ## About
 
