@@ -45,9 +45,6 @@ jobs:
       name: pypi
       url: https://pypi.org/p/soupsavvy
 
-    env:
-      GIT_TOKEN: ${{ secrets.GH_TOKEN }}
-
     permissions:
       contents: write
       id-token: write
@@ -88,9 +85,6 @@ jobs:
     environment:
       name: testpypi
       url: https://test.pypi.org/p/soupsavvy
-
-    env:
-      GIT_TOKEN: ${{ secrets.GH_TOKEN }}
 
     permissions:
       contents: write
