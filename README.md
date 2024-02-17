@@ -14,18 +14,10 @@
 ## Code Quality
 
 ![Build](https://github.com/sewcio543/soupsavvy/actions/workflows/build_package.yml/badge.svg)
-
 ![Linting](https://github.com/sewcio543/soupsavvy/actions/workflows/linting.yml/badge.svg)
-[![Flake8](https://img.shields.io/badge/flake8-checked-blueviolet)](https://github.com/PyCQA/flake8)
-
 ![Formatting](https://github.com/sewcio543/soupsavvy/actions/workflows/formatting.yml/badge.svg)
-[![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-
 ![Type Checking](https://github.com/sewcio543/soupsavvy/actions/workflows/type_checking.yml/badge.svg)
-[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
-
-![Pre-Commit](https://github.com/sewcio543/soupsavvy/actions/workflows/pre-commit.yml/badge.svg)
-[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/sewcio543/soupsavvy/main.svg)](https://results.pre-commit.ci/latest/github/sewcio543/soupsavvy/main)
 
 ## About
 
