@@ -29,6 +29,7 @@ runs:
     - name: Install dependencies
       run: |
         pip install $(grep bump2version config/requirements_dev.txt | xargs)
+      shell: bash
 
     - name: Configure git
       run: |
@@ -65,3 +66,4 @@ runs:
         fi
 
         echo "Commit is set to false, skipping push"
+      shell: bash

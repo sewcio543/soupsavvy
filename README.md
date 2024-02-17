@@ -2,30 +2,30 @@
 
 ## Package
 
-[![jhc github](https://img.shields.io/badge/GitHub-sewcio543-181717.svg?style=flat&logo=github)](https://github.com/jhrcook)
-[![!pypi](https://img.shields.io/pypi/v/soupsavvy?color=orange)](https://pypi.org/project/soupsavvy/)
-[![!python-versions](https://img.shields.io/pypi/pyversions/soupsavvy)](https://www.python.org/)
+[![GitHub](https://img.shields.io/badge/GitHub-sewcio543-181717.svg?style=flat&logo=github)](https://github.com/sewcio543)
+[![PyPI](https://img.shields.io/pypi/v/soupsavvy?color=orange)](https://pypi.org/project/soupsavvy/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/soupsavvy)](https://www.python.org/)
 
 ## Testing
 
-![example workflow](https://github.com/sewcio543/soupsavvy/actions/workflows/tests.yml/badge.svg)
-[![codecov](https://codecov.io/gh/sewcio543/soupsavvy/graph/badge.svg?token=RZ51VS3QLB)](https://codecov.io/gh/sewcio543/soupsavvy)
+![Tests](https://github.com/sewcio543/soupsavvy/actions/workflows/tests.yml/badge.svg)
+[![Codecov](https://codecov.io/gh/sewcio543/soupsavvy/graph/badge.svg?token=RZ51VS3QLB)](https://codecov.io/gh/sewcio543/soupsavvy)
 
 ## Code Quality
 
 ![Build](https://github.com/sewcio543/soupsavvy/actions/workflows/build_package.yml/badge.svg)
 
-![example workflow](https://github.com/sewcio543/soupsavvy/actions/workflows/linting.yml/badge.svg)
-[![Linter: flake8](https://img.shields.io/badge/flake8-checked-blueviolet)](https://github.com/PyCQA/flake8)
+![Linting](https://github.com/sewcio543/soupsavvy/actions/workflows/linting.yml/badge.svg)
+[![Flake8](https://img.shields.io/badge/flake8-checked-blueviolet)](https://github.com/PyCQA/flake8)
 
-![example workflow](https://github.com/sewcio543/soupsavvy/actions/workflows/formatting.yml/badge.svg)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+![Formatting](https://github.com/sewcio543/soupsavvy/actions/workflows/formatting.yml/badge.svg)
+[![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-![example workflow](https://github.com/sewcio543/soupsavvy/actions/workflows/type_checking.yml/badge.svg)
-[![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
+![Type Checking](https://github.com/sewcio543/soupsavvy/actions/workflows/type_checking.yml/badge.svg)
+[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
 
-![example workflow](https://github.com/sewcio543/soupsavvy/actions/workflows/pre-commit.yml/badge.svg)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+![Pre-Commit](https://github.com/sewcio543/soupsavvy/actions/workflows/pre-commit.yml/badge.svg)
+[![Pre-Commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 
 ## About
 
