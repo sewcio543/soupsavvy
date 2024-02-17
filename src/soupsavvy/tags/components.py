@@ -10,8 +10,8 @@ from typing import Any, Iterable, Optional, Pattern
 from bs4 import Tag
 
 from .base import SelectableCSS, SelectableSoup, SingleSelectableSoup
-from .exceptions import NotSelectableSoupException, WildcardElementTagException
-from .namespace import DEFAULT_PATTERN, FIND_RESULT, NAME, STRING
+from .exceptions import NotSelectableSoupException, WildcardTagException
+from .namespace import CSS_SELECTOR_WILDCARD, DEFAULT_PATTERN, FIND_RESULT, NAME, STRING
 
 
 @dataclass
@@ -76,11 +76,6 @@ class AttributeTag(SingleSelectableSoup, SelectableCSS):
         return self.value
 
     @property
-    def wildcard(self) -> bool:
-        # AttributeTag is never a wildcard
-        return False
-
-    @property
     def selector(self) -> str:
         # undefined value - bs Tag matches all elements with attribute if css is
         # provided without a value in ex. format '[href]'
@@ -142,14 +137,21 @@ class ElementTag(SingleSelectableSoup, SelectableCSS):
     tag: Optional[str] = None
     attributes: Iterable[AttributeTag] = field(default_factory=list)
 
+    def __post_init__(self) -> None:
+        """Raises exception if empty ElementTag was provided."""
+        if self.tag is None and not self.attributes:
+            raise WildcardTagException(
+                "Empty ElementTag is not a valid input, provide tag or attributes. "
+                + "If you want to match all elements, use AnyTag component instead."
+            )
+
     @property
     def selector(self) -> str:
         # drop duplicated css attribute selectors and preserve order
         selectors = list(map(lambda attr: attr.selector, self.attributes))
         attrs = sorted(set(selectors), key=selectors.index)
-        # if tag and attributes were not provided (which is considered a legal move)
-        # returns selector matching all elements "*"
-        return ((self.tag or "") + "".join(attrs)) or "*"
+        # at least one of tag or attributes must be provided
+        return (self.tag or "") + "".join(attrs)
 
     @property
     def _find_params(self) -> dict[str, Any]:
@@ -157,11 +159,6 @@ class ElementTag(SingleSelectableSoup, SelectableCSS):
         # reduce raises error when given an empty iterable
         attrs = dict(reduce(lambda x, y: {**x, **y}, params)) if params else {}
         return {NAME: self.tag} | attrs
-
-    @property
-    def wildcard(self) -> bool:
-        # ElementTag is a wildcard when tag and no attributes are defined
-        return self.tag is None and not self.attributes
 
 
 @dataclass
@@ -214,20 +211,16 @@ class PatternElementTag(SingleSelectableSoup):
     def __post_init__(self) -> None:
         #! if only string is specified in case of wildcard tag - returns NavigableString
         #! which causes problems downstream
-        if self.tag.wildcard:
-            raise WildcardElementTagException(
-                "Empty ElementTag is not a valid input for PatternElementTag."
+        if isinstance(self.tag, AnyTag):
+            raise WildcardTagException(
+                "AnyTag which is a wildcard tag matching all elements, "
+                + "is not acceptable as a tag parameter for PatternElementTag."
             )
 
     @property
     def _find_params(self) -> dict[str, Any]:
         pattern = re.compile(self.pattern) if self.re else self.pattern
         return {STRING: pattern} | self.tag._find_params
-
-    @property
-    def wildcard(self) -> bool:
-        # PatternElementTag is never a wildcard as it does not accept wildcard Tags
-        return False
 
 
 @dataclass(init=False)
@@ -309,3 +302,27 @@ class StepsElementTag(SelectableSoup):
             )
 
         return elements
+
+
+class AnyTag(SingleSelectableSoup, SelectableCSS):
+    """
+    Class representing a wildcard tag that matches any tag in the markup.
+    Matches always the first tag in the markup.
+
+    AnyTag implements SelectableCSS interface with wildcard css selector "*".
+
+    Example
+    -------
+    >>> any_element = AnyTag()
+    >>> any_element.selector
+    "*"
+    """
+
+    @property
+    def _find_params(self) -> dict[str, Any]:
+        return {}
+
+    @property
+    def selector(self) -> str:
+        """Returns wildcard css selector matching all elements in the markup."""
+        return CSS_SELECTOR_WILDCARD

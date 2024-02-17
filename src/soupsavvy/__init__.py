@@ -1,4 +1,5 @@
 from .tags import (
+    AnyTag,
     AttributeTag,
     ElementTag,
     PatternElementTag,
@@ -10,6 +11,7 @@ __version__ = "0.2.0-dev0"
 __author__ = "sewcio543"
 
 __all__ = [
+    "AnyTag",
     "AttributeTag",
     "ElementTag",
     "PatternElementTag",

@@ -5,13 +5,12 @@ from bs4 import Tag
 
 from soupsavvy.tags.base import SoupUnionTag
 from soupsavvy.tags.components import AttributeTag, ElementTag
-from soupsavvy.tags.exceptions import TagNotFoundException
+from soupsavvy.tags.exceptions import TagNotFoundException, WildcardTagException
 
 from .conftest import strip, to_bs
 
 
 @pytest.mark.soup
-@pytest.mark.css_selector
 class TestElementTag:
     """Class for ElementTag unit test suite."""
 
@@ -54,18 +53,6 @@ class TestElementTag:
         result = tag.find(bs)
         assert str(result) == strip(markup)
 
-    def test_tag_wildcard_attribute_works_as_expected(self):
-        """
-        Tests if ElementTag wildcard attribute returns proper boolean value.
-        Empty ElementTag is one without parameters, which is a wild card and matches
-        all html elements.
-        """
-        empty_tag = ElementTag()
-        assert empty_tag.wildcard
-
-        not_empty_tag = ElementTag("div")
-        assert not not_empty_tag.wildcard
-
     @pytest.mark.parametrize(
         argnames="tag",
         argvalues=[
@@ -107,17 +94,14 @@ class TestElementTag:
         result = tag.find(bs)
         assert str(result) == strip(markup)
 
-    def test_element_without_parameters_matches_always_html_element(self):
+    def test_raises_exception_when_initialized_without_parameters(self):
         """
-        Tests if ElementTag without parameters matches first exisiting element in
-        html tree which is always <html> element.
+        Tests if ElementTag initialized without any parameters raises WildcardTagException.
+        This is illegal move sincve it matches all elements
+        and AnyTag should be used instead.
         """
-        # BeautifulSoup wraps element with html and body elements
-        bs = to_bs("""<a class="profile"></a>""")
-        tag = ElementTag()
-        result = tag.find(bs)
-        # first found element is <html>
-        assert str(result).startswith("<html>")
+        with pytest.raises(WildcardTagException):
+            ElementTag()
 
     @pytest.mark.parametrize(
         argnames="tag",
@@ -284,6 +268,7 @@ class TestElementTag:
         expected_2 = """<a href="github "></a>"""
         assert list(map(str, result)) == [strip(expected_1), strip(expected_2)]
 
+    @pytest.mark.css_selector
     @pytest.mark.parametrize(
         argnames="tag, selector",
         argvalues=[
@@ -337,7 +322,6 @@ class TestElementTag:
                 ),
                 "a[class='widget menu']",
             ),
-            (ElementTag(), "*"),
         ],
         ids=[
             "only_attribute",
@@ -347,7 +331,6 @@ class TestElementTag:
             "duplicated_attributes",
             "tag_and_any_value_attribute",
             "attribute_value_with_whitespace",
-            "wild_card_selector",
         ],
     )
     def test_selector_is_correct(self, tag: ElementTag, selector: str):

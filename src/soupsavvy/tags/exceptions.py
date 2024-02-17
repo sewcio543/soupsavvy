@@ -13,22 +13,18 @@ class TagNotFoundException(SelectableSoupException):
     """
 
 
-class WildcardElementTagException(SelectableSoupException):
+class WildcardTagException(SelectableSoupException):
     """
     Exception to be raised when wildcard SelectableSoup is provided in place where
-    it's not expected. ElementTag initialized without passing any parameters is a wild
-    tag that matches any html elements. This could be useful in some cases, but can
-    render code unpredictable.
+    it's not expected. AnyTag is a wildcard tag that matches any html elements.
+    This could be useful in some cases, but can render code unpredictable.
 
     Example
     -------
-    >>> empty_tag = ElementTag()
-    >>> empty_tag.wildcard
-    True
-    >>> PatternElementTag(empty_tag, pattern="Hello World")
+    >>> PatternElementTag(AnyTag(), pattern="Hello World")
     WildcardElementTagException
 
-    In this example wildcard ElementTag is not accepted as input tag and this exception
+    In this example wildcard AnyTag is not accepted as input tag and this exception
     is raised. PatternElementTag without any tag search parameters except for 'string'
     returns NavigableString in find method,
     which causes unexpected behaviour downstream that would rather be avoided in line
