@@ -22,15 +22,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Check branch [Allowed only from main]
+        run: |
+          current_branch=$(git branch --show-current)
+          if [[ "$current_branch" != "main" ]]; then
+            echo "Workflow can only be run from the main branch"
+            exit 1
+          fi
 
       - name: Set up Python and Upgrade pip
         uses: ./.github/actions/setup_python
         with:
           python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          pip install $(grep bump2version config/requirements_dev.txt | xargs)
 
       - name: Update development version
         uses: ./.github/actions/bump_version

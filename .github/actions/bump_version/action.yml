@@ -33,7 +33,7 @@ runs:
 
     - name: Configure git
       run: |
-        git config --global user.name "Github Actions BumpVersion"
+        git config --global user.name "bump2version-gha[bot]"
         git config --global user.email "username@users.noreply.github.com"
       shell: bash
 
@@ -61,7 +61,8 @@ runs:
       if: ${{ inputs.push == 'true' }}
       run: |
         if [ "${{ inputs.commit }}" = "true" ]; then
-            git push --follow-tags
+            current_branch=$(git branch --show-current)
+            git push origin $current_branch --follow-tags
             exit 0
         fi
 
