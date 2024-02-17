@@ -4,11 +4,16 @@ import re
 
 import pytest
 
-from soupsavvy.tags.components import AttributeTag, ElementTag, PatternElementTag
+from soupsavvy.tags.components import (
+    AnyTag,
+    AttributeTag,
+    ElementTag,
+    PatternElementTag,
+)
 from soupsavvy.tags.exceptions import (
     NavigableStringException,
     TagNotFoundException,
-    WildcardElementTagException,
+    WildcardTagException,
 )
 
 from .conftest import strip, to_bs
@@ -90,21 +95,13 @@ class TestPatternElementTag:
         with pytest.raises(TagNotFoundException):
             tag.find(bs, strict=True)
 
-    def test_pattern_tag_raises_exception_in_init_we_tag_is_wildcard(self):
+    def test_init_raises_exception_if_input_tag_is_anytag(self):
         """
         Tests if init raises WildcardElementTagException if tag passed
-        to pattern tag is a wildcard.
+        to pattern tag is AnyTag. This is not allowed since AnyTag is a wildcard tag.
         """
-        with pytest.raises(WildcardElementTagException):
-            PatternElementTag(tag=ElementTag(), pattern="Hello")
-
-    def test_pattern_tag_is_not_wildcard(self):
-        """
-        Tests if PatternElementTag is not a wildcard, since it does not accept
-        Tag that is a wildcard.
-        """
-        tag = PatternElementTag(tag=ElementTag("div"), pattern="Hello")
-        assert not tag.wildcard
+        with pytest.raises(WildcardTagException):
+            PatternElementTag(tag=AnyTag(), pattern="Hello")
 
     def test_find_all_returns_list_of_matched_elements(self):
         """
@@ -157,20 +154,18 @@ class TestPatternElementTag:
         assert len(result) == 0
 
 
-class NotWildcardElementTag(ElementTag):
+class LegalWildcardTag(ElementTag):
     """
-    Mock class that is ElementTag with overridden wildcard property
-    that always returns False. This way empty ElementTag can be created that is
-    a valid input into PatternElementTag. This enables to create hipothetical
-    case when find method returns NavigableString instead of Tag
-    (only string parameter was passed into bs4.find method).
+    Mock class that is ElementTag that allows no parameters passed to init.
+    This way wildcard tag can be created that is a valid input into PatternElementTag.
+    This enables to create hypothetical case when find method returns NavigableString
+    instead of Tag (only string parameter was passed into bs4.find method).
     This should raise NavigableStringException that is an invalid output of
     SelectableSoup.find method.
     """
 
-    @property
-    def wildcard(self) -> bool:
-        return False
+    def __post_init__(self):
+        """Overriden post init to not raise exception on empty tag and attributes."""
 
 
 @pytest.mark.soup
@@ -179,12 +174,12 @@ def test_exception_is_raised_when_navigable_string_is_a_result():
     """
     Tests if NavigableStringException is raised when bs4.find returns NavigableString.
     Child classes of SelectableSoup should always always prevent that,
-    thus this is a hipotetical case that is covered anyway to ensure that it does
+    thus this is a hypothetical case that is covered anyway to ensure that it does
     not break code downstream.
     """
     markup = """<div class="widget">Hello World</div>"""
     bs = to_bs(markup)
-    tag = PatternElementTag(tag=NotWildcardElementTag(), pattern="Hello World")
+    tag = PatternElementTag(tag=LegalWildcardTag(), pattern="Hello World")
 
     with pytest.raises(NavigableStringException):
         tag.find(bs, strict=True)

@@ -12,7 +12,6 @@ from .conftest import strip, to_bs
 
 
 @pytest.mark.soup
-@pytest.mark.css_selector
 class TestAttributeTag:
     """Class for AttributeTag unit test suite."""
 
@@ -43,14 +42,6 @@ class TestAttributeTag:
         result = tag.find(bs)
         assert str(result) == strip(markup)
 
-    def test_attribute_tag_is_not_a_wildcard(self):
-        """
-        Tests if AttributeTag is not a wildcard. It should never be as always must
-        have defined search parameters.
-        """
-        tag = AttributeTag(name="class", value="widget", re=True)
-        assert not tag.wildcard
-
     @pytest.mark.parametrize(
         argnames="markup",
         argvalues=[
@@ -66,6 +57,7 @@ class TestAttributeTag:
         result = tag.find(bs)
         assert str(result) == strip(markup)
 
+    @pytest.mark.css_selector
     def test_when_pattern_and_value_pattern_used_in_find_value_in_selector(self):
         """
         Tests if both value and pattern are passed, value is used in selector attribute
@@ -315,6 +307,7 @@ class TestAttributeTag:
         expected_2 = """<a href="github "></a>"""
         assert list(map(str, result)) == [strip(expected_1), strip(expected_2)]
 
+    @pytest.mark.css_selector
     @pytest.mark.parametrize(
         argnames="tag, selector",
         argvalues=[
