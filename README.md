@@ -9,6 +9,7 @@
 ## Testing
 
 ![example workflow](https://github.com/sewcio543/soupsavvy/actions/workflows/tests.yml/badge.svg)
+[![codecov](https://codecov.io/gh/sewcio543/soupsavvy/graph/badge.svg?token=RZ51VS3QLB)](https://codecov.io/gh/sewcio543/soupsavvy)
 
 ## Code Quality
 
