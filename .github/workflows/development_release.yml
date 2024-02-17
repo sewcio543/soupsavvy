@@ -9,6 +9,7 @@ jobs:
   build:
     name: Build distribution 📦
     runs-on: ubuntu-latest
+    if: github.actor != 'bump2version-gha[bot]'
 
     steps:
       - name: Checkout code
@@ -18,6 +19,11 @@ jobs:
         uses: ./.github/actions/setup_python
         with:
           python-version: "3.11"
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
 
         # 3.0.1-dev2 -> 3.0.1-dev3 with build
       - name: Update development version
@@ -40,6 +46,7 @@ jobs:
   publish:
     needs: build
     runs-on: ubuntu-latest
+    if: github.actor != 'bump2version-gha[bot]'
 
     environment:
       name: testpypi

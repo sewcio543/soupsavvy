@@ -9,6 +9,7 @@ jobs:
   build:
     name: Build distribution 📦
     runs-on: ubuntu-latest
+    if: github.actor != 'bump2version-gha[bot]'
 
     steps:
       - name: Checkout code
@@ -40,6 +41,7 @@ jobs:
   publish_prod:
     runs-on: ubuntu-latest
     needs: build
+    if: github.actor != 'bump2version-gha[bot]'
 
     environment:
       name: pypi
@@ -84,6 +86,7 @@ jobs:
   publish_dev:
     needs: build
     runs-on: ubuntu-latest
+    if: github.actor != 'bump2version-gha[bot]'
 
     environment:
       name: testpypi
