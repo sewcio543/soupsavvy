@@ -1,0 +1,70 @@
+name: Bump Package Version
+description: Bumps the version using bump2version
+
+inputs:
+  type:
+    description: "Type of version bump"
+    required: true
+    type: string
+    enum: ["release", "build"]
+  tag:
+    description: "Create a new tag?"
+    required: false
+    default: false
+    type: boolean
+  commit:
+    description: "Create a new commit?"
+    required: false
+    default: false
+    type: boolean
+  push:
+    description: "Push changes to the repository?"
+    required: false
+    default: false
+    type: boolean
+
+runs:
+  using: composite
+  steps:
+    - name: Install dependencies
+      run: |
+        pip install $(grep bump2version config/requirements_dev.txt | xargs)
+      shell: bash
+
+    - name: Configure git
+      run: |
+        git config --global user.name "bump2version-gha[bot]"
+        git config --global user.email "username@users.noreply.github.com"
+      shell: bash
+
+    - name: Update version with bump2version
+      run: |
+        # Define tag and commit arguments based on input values
+        TAG_ARG="--no-tag"
+        COMMIT_ARG="--no-commit"
+
+        if [ "${{ inputs.tag }}" = "true" ]; then
+            TAG_ARG="--tag"
+        fi
+
+        if [ "${{ inputs.commit }}" = "true" ]; then
+            COMMIT_ARG="--commit"
+        fi
+
+        echo "Tag argument: ${TAG_ARG}"
+        echo "Commit argument: ${COMMIT_ARG}"
+
+        bump2version ${{ inputs.type }} --verbose $TAG_ARG $COMMIT_ARG
+      shell: bash
+
+    - name: Push changes and new tag
+      if: ${{ inputs.push == 'true' }}
+      run: |
+        if [ "${{ inputs.commit }}" = "true" ]; then
+            current_branch=$(git branch --show-current)
+            git push origin $current_branch --follow-tags
+            exit 0
+        fi
+
+        echo "Commit is set to false, skipping push"
+      shell: bash

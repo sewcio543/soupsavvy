@@ -4,6 +4,7 @@ import pytest
 
 from soupsavvy.tags.base import SoupUnionTag
 from soupsavvy.tags.components import (
+    AnyTag,
     AttributeTag,
     ElementTag,
     PatternElementTag,
@@ -39,7 +40,7 @@ class TestStepsElementTag:
                     tag="a", attributes=[AttributeTag(name="href", value="search")]
                 ),
             ),
-            StepsElementTag(ElementTag(tag="div"), ElementTag()),
+            StepsElementTag(ElementTag(tag="div"), AnyTag()),
             StepsElementTag(AttributeTag(name="href", value="google"), ElementTag("a")),
             StepsElementTag(
                 ElementTag(tag="div"),
@@ -49,7 +50,7 @@ class TestStepsElementTag:
         ids=[
             "with_only_tag_names",
             "with_tags_attributes",
-            "with_empty_element_tag",
+            "with_any_tag",
             "with_only_attribute",
             "with_pattern_tag",
         ],

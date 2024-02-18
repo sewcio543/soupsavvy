@@ -1,8 +1,15 @@
 name: Build package
+description: Builds the package and check distribution files
 
 runs:
   using: composite
   steps:
+    - name: Install dependencies
+      run: |
+        pip install $(grep build config/requirements_dev.txt | xargs)
+        pip install $(grep twine config/requirements_dev.txt | xargs)
+      shell: bash
+
     - name: Build project and create distribution files
       run: python -m build
       shell: bash

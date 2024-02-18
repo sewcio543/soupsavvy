@@ -13,3 +13,5 @@ FIND_RESULT = Union[NavigableString, Tag, None]
 # default pattern if no value was provided
 # wild card - matches any sequence of characters in a non-greedy
 DEFAULT_PATTERN = "(.*?)"
+# css selector wildcard
+CSS_SELECTOR_WILDCARD = "*"

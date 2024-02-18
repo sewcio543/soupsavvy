@@ -206,14 +206,6 @@ class SingleSelectableSoup(SelectableSoup):
             "and does not implement this property."
         )
 
-    @abstractproperty
-    def wildcard(self) -> bool:
-        """True if object is a wildcard matching all html elements."""
-        raise NotImplementedError(
-            f"{self.__class__.__name__} is an interface, "
-            "and does not implement this property."
-        )
-
 
 class SelectableCSS:
     """

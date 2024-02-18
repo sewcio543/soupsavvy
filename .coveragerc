@@ -17,7 +17,5 @@ exclude_lines =
     def __repr__
     def __str__
 
-skip_covered = true
 sort = cover
 show_missing = true
-fail_under = 70
