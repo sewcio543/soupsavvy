@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - "main"
-      - "dev/[0-9]*.[0-9]*.[0-9]*"
+      - "dev/[0-9]+.[0-9]+.[0-9]+"
   pull_request:
     branches:
       - "main"
-      - "dev/[0-9]*.[0-9]*.[0-9]*"
+      - "dev/[0-9]+.[0-9]+.[0-9]+"
   workflow_dispatch: {}
 
 jobs:
@@ -26,18 +26,18 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
-          pip install -r config/requirements_dev.txt
+          python -m pip install -r requirements.txt
+          python -m pip install -r config/requirements_dev.txt
 
       - name: Test with coverage
         run: |
-          coverage run -m pytest
+          python -m coverage run -m pytest
 
       - name: Report coverage
         run: |
-          coverage report
+          python -m coverage report
 
       - name: Upload coverage reports to Codecov
         run: |
           echo "Using codecov version: $(codecov --version)"
-          codecov --verbose
+          python -m codecov --verbose
