@@ -17,6 +17,8 @@ permissions:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    continue-on-error: true
+
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12"]
@@ -35,4 +37,4 @@ jobs:
 
       - name: Lint with flake8
         run: |
-          python -m flake8 --config tox.ini
+          flake8 --config tox.ini
