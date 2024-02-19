@@ -38,5 +38,5 @@ jobs:
         with:
           type: "build"
           commit: true
-          tag: false
+          tag: true
           push: true
