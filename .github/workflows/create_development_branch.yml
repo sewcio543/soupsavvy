@@ -49,7 +49,9 @@ jobs:
 
       - name: Create new development branch
         run: |
-          NEW_VERSION=$(cat src/soupsavvy/VERSION)
+          NEW_VERSION=$(cat soupsavvy/VERSION)
+          # remove pre-release suffix if exists
+          NEW_VERSION=$(echo $NEW_VERSION | cut -d'-' -f1)
           DEV_BRANCH_NAME="dev/${NEW_VERSION}"
 
           # remove uncommitted changes
