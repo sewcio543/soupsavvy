@@ -28,16 +28,16 @@ jobs:
 
       - name: Install mypy
         run: |
-          pip install $(grep mypy config/requirements_dev.txt | xargs)
+          python -m pip install $(grep mypy config/requirements_dev.txt | xargs)
 
       - name: Run mypy with missing imports
         run: |
-          mypy . || true
+          python -m mypy . || true
 
       - name: Install mypy types
         run: |
-          mypy --install-types --non-interactive
+          python -m mypy --install-types --non-interactive
 
       - name: Check types with mypy
         run: |
-          mypy . --ignore-missing-imports
+          python -m mypy . --ignore-missing-imports

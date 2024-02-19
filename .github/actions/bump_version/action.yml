@@ -28,7 +28,7 @@ runs:
   steps:
     - name: Install dependencies
       run: |
-        pip install $(grep bump2version config/requirements_dev.txt | xargs)
+        python -m pip install $(grep bump2version config/requirements_dev.txt | xargs)
       shell: bash
 
     - name: Configure git
@@ -54,7 +54,7 @@ runs:
         echo "Tag argument: ${TAG_ARG}"
         echo "Commit argument: ${COMMIT_ARG}"
 
-        bump2version ${{ inputs.type }} --verbose $TAG_ARG $COMMIT_ARG
+        python -m bump2version ${{ inputs.type }} --verbose $TAG_ARG $COMMIT_ARG
       shell: bash
 
     - name: Push changes and new tag

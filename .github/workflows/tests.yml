@@ -30,8 +30,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
-          pip install -r config/requirements_dev.txt
+          python -m pip install -r requirements.txt
+          python -m pip install -r config/requirements_dev.txt
 
       - name: Test with pytest
-        run: pytest -v -ra
+        run: |
+          python -m pytest -v -ra
