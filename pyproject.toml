@@ -35,6 +35,9 @@ version = {attr = "soupsavvy.__version__"}
 dependencies = {file = ["requirements.txt"]}
 optional-dependencies = {dev = { file = ["config/requirements_dev.txt"] }}
 
+[tool.setuptools]
+packages = ["soupsavvy"]
+
 [project.urls]
 source = "https://github.com/sewcio543/soupsavvy"
 

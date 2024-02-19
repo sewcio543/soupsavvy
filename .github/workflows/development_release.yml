@@ -1,9 +1,9 @@
-name: Development Release
+name: Deployment [test PyPI]
 
 on:
   push:
     branches:
-      - "dev/[0-9]*.[0-9]*.[0-9]*"
+      - "dev/[0-9]+.[0-9]+.[0-9]+"
   workflow_dispatch: {}
 
 jobs:

@@ -1,4 +1,4 @@
-name: Production Release
+name: Deployment [PyPI]
 
 on:
   push:
@@ -81,6 +81,7 @@ jobs:
   publish_dev:
     needs: build
     runs-on: ubuntu-latest
+    continue-on-error: true
 
     environment:
       name: testpypi
