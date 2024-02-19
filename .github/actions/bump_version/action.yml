@@ -28,7 +28,7 @@ runs:
   steps:
     - name: Install dependencies
       run: |
-        python -m pip install $(grep bump2version config/requirements_dev.txt | xargs)
+        pip install $(grep bump2version config/requirements_dev.txt | xargs)
       shell: bash
 
     - name: Configure git
