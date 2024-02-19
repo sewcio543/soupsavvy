@@ -2,8 +2,8 @@ name: Development Release
 
 on:
   push:
-    branches:
-      - "dev/[0-9]*.[0-9]*.[0-9]*"
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+-dev[0-9]+"
   workflow_dispatch: {}
 
 jobs:
@@ -19,15 +19,6 @@ jobs:
         uses: ./.github/actions/setup_python
         with:
           python-version: "3.11"
-
-        # 3.0.1-dev2 -> 3.0.1-dev3 with build
-      - name: Update development version
-        uses: ./.github/actions/bump_version
-        with:
-          type: "build"
-          commit: false
-          tag: false
-          push: false
 
       - name: Build package
         uses: ./.github/actions/build_package
@@ -53,9 +44,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GH_TOKEN }}
 
       - name: Set up Python and Upgrade pip
         uses: ./.github/actions/setup_python
@@ -72,11 +60,3 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
-
-      - name: Update development version with commit and tag
-        uses: ./.github/actions/bump_version
-        with:
-          type: "build"
-          commit: true
-          tag: true
-          push: true
