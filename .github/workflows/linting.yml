@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - "main"
-      - "dev/[0-9]*.[0-9]*.[0-9]*"
+      - "dev/[0-9]+.[0-9]+.[0-9]+"
   pull_request:
     branches:
       - "main"
-      - "dev/[0-9]*.[0-9]*.[0-9]*"
+      - "dev/[0-9]+.[0-9]+.[0-9]+"
   workflow_dispatch: {}
 
 permissions:
@@ -31,8 +31,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install $(grep flake8 config/requirements_dev.txt | xargs)
+          python -m pip install $(grep flake8 config/requirements_dev.txt | xargs)
 
       - name: Lint with flake8
         run: |
-          flake8 --config tox.ini
+          python -m flake8 --config tox.ini

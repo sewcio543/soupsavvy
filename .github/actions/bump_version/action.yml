@@ -28,7 +28,7 @@ runs:
   steps:
     - name: Install dependencies
       run: |
-        pip install $(grep bump2version config/requirements_dev.txt | xargs)
+        python -m pip install $(grep bump2version config/requirements_dev.txt | xargs)
       shell: bash
 
     - name: Configure git
@@ -62,7 +62,10 @@ runs:
       run: |
         if [ "${{ inputs.commit }}" = "true" ]; then
             current_branch=$(git branch --show-current)
-            git push origin $current_branch --follow-tags
+            # push commit with skip ci mark
+            git push origin $current_branch
+            # push tag to trigger seperate event
+            git push origin --tags
             exit 0
         fi
 
