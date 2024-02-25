@@ -7,6 +7,7 @@ permissions:
 
 env:
   BRANCH_NAME: gh-pages
+  BUILD_FOLDER: build_/
 
 jobs:
   docs:
@@ -28,25 +29,25 @@ jobs:
       - name: Sphinx build
         run: |
           sphinx-apidoc -o docs/source soupsavvy --separate --force
-          rm -rf _build
-          sphinx-build docs/source build_
+          rm -rf ${BUILD_FOLDER}
+          sphinx-build docs/source ${BUILD_FOLDER}
 
       - name: Push to gh-pages
         run: |
           # Check if the gh-pages branch exists
-          if [ `git branch --list $BRANCH_NAME` ]; then
-              echo "Switching to $(BRANCH_NAME) branch"
-              git checkout $(BRANCH_NAME)
+          if [ `git branch --list ${BRANCH_NAME}` ]; then
+              echo "Switching to $BRANCH_NAME branch"
+              git checkout ${BRANCH_NAME}
               # Remove all files and directories in the branch
               git rm -rf .
           else
-              echo "Creating $(BRANCH_NAME) branch"
-              git checkout --orphan $(BRANCH_NAME)
+              echo "Creating $BRANCH_NAME branch"
+              git checkout --orphan ${BRANCH_NAME}
               git reset --hard
           fi
 
           # Add build_ directory and commit changes
-          cp -r build_/* .
+          cp -r ${BUILD_FOLDER}/* .
           git add .
           git commit -m "Update documentation [gh-pages]"
-          git push origin $(BRANCH_NAME)
+          git push origin ${BRANCH_NAME}
