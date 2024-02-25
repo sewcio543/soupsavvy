@@ -5,6 +5,9 @@ on: [push]
 permissions:
   contents: write
 
+env:
+  BRANCH_NAME: gh-pages
+
 jobs:
   docs:
     runs-on: ubuntu-latest
@@ -31,19 +34,19 @@ jobs:
       - name: Push to gh-pages
         run: |
           # Check if the gh-pages branch exists
-          if [ `git branch --list $branch_name` ]; then
-              echo "Switching to $(branch_name) branch"
-              git checkout $(branch_name)
+          if [ `git branch --list $BRANCH_NAME` ]; then
+              echo "Switching to $(BRANCH_NAME) branch"
+              git checkout $(BRANCH_NAME)
               # Remove all files and directories in the branch
               git rm -rf .
           else
-              echo "Creating $(branch_name) branch"
-              git checkout --orphan $(branch_name)
+              echo "Creating $(BRANCH_NAME) branch"
+              git checkout --orphan $(BRANCH_NAME)
               git reset --hard
           fi
 
           # Add build_ directory and commit changes
           cp -r build_/* .
           git add .
-          git commit -m "Update documentation"
-          git push origin $(branch_name)
+          git commit -m "Update documentation [gh-pages]"
+          git push origin $(BRANCH_NAME)
