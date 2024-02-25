@@ -7,7 +7,7 @@ from .tags import (
     StepsElementTag,
 )
 
-__version__ = "0.1.3-dev1"
+__version__ = "0.1.3-dev2"
 __author__ = "sewcio543"
 
 __all__ = [
