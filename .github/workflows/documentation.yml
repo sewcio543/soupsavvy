@@ -36,6 +36,10 @@ jobs:
           rm -rf ${BUILD_FOLDER}
           sphinx-build docs/source ${BUILD_FOLDER}
 
+      - name: Transform rst files
+        working-directory: docs/source
+        run: python renaming.py
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:

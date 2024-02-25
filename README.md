@@ -1,25 +1,22 @@
 # SoupSavvy
 
-## Package
+| | |
+| --- | --- |
+| Package | ![Deployment PyPI](https://github.com/sewcio543/soupsavvy/actions/workflows/production_release.yml/badge.svg) ![Deployment test PyPI](https://github.com/sewcio543/soupsavvy/actions/workflows/development_release.yml/badge.svg) [![GitHub](https://img.shields.io/badge/GitHub-sewcio543-181717.svg?style=flat&logo=github)](https://github.com/sewcio543) [![PyPI](https://img.shields.io/pypi/v/soupsavvy?color=orange)](https://pypi.org/project/soupsavvy/) [![Python Versions](https://img.shields.io/pypi/pyversions/soupsavvy)](https://www.python.org/)|
+| Testing | ![Tests](https://github.com/sewcio543/soupsavvy/actions/workflows/tests.yml/badge.svg) [![Codecov](https://codecov.io/gh/sewcio543/soupsavvy/graph/badge.svg?token=RZ51VS3QLB)](https://codecov.io/gh/sewcio543/soupsavvy)|
+| Code Quality | ![Build](https://github.com/sewcio543/soupsavvy/actions/workflows/build_package.yml/badge.svg) ![Linting](https://github.com/sewcio543/soupsavvy/actions/workflows/linting.yml/badge.svg) ![Formatting](https://github.com/sewcio543/soupsavvy/actions/workflows/formatting.yml/badge.svg) ![Type Checking](https://github.com/sewcio543/soupsavvy/actions/workflows/type_checking.yml/badge.svg) [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/sewcio543/soupsavvy/main.svg)](https://results.pre-commit.ci/latest/github/sewcio543/soupsavvy/main)|
+| Documentation | [![readthedocs](https://img.shields.io/readthedocs/pip?logo=readthedocs)](https://github.com/sewcio543/soupsavvy/actions/workflows/documentation.yml/badge.svg) [![Docs link](https://img.shields.io/badge/docs-check_out-blue)](https://sewcio543.github.io/soupsavvy/)|
 
-![Deployment PyPI](https://github.com/sewcio543/soupsavvy/actions/workflows/production_release.yml/badge.svg)
-![Deployment test PyPI](https://github.com/sewcio543/soupsavvy/actions/workflows/development_release.yml/badge.svg)
-[![GitHub](https://img.shields.io/badge/GitHub-sewcio543-181717.svg?style=flat&logo=github)](https://github.com/sewcio543)
-[![PyPI](https://img.shields.io/pypi/v/soupsavvy?color=orange)](https://pypi.org/project/soupsavvy/)
-[![Python Versions](https://img.shields.io/pypi/pyversions/soupsavvy)](https://www.python.org/)  
+## Table of Contents
 
-## Testing
-
-![Tests](https://github.com/sewcio543/soupsavvy/actions/workflows/tests.yml/badge.svg)
-[![Codecov](https://codecov.io/gh/sewcio543/soupsavvy/graph/badge.svg?token=RZ51VS3QLB)](https://codecov.io/gh/sewcio543/soupsavvy)
-
-## Code Quality
-
-![Build](https://github.com/sewcio543/soupsavvy/actions/workflows/build_package.yml/badge.svg)
-![Linting](https://github.com/sewcio543/soupsavvy/actions/workflows/linting.yml/badge.svg)
-![Formatting](https://github.com/sewcio543/soupsavvy/actions/workflows/formatting.yml/badge.svg)
-![Type Checking](https://github.com/sewcio543/soupsavvy/actions/workflows/type_checking.yml/badge.svg)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/sewcio543/soupsavvy/main.svg)](https://results.pre-commit.ci/latest/github/sewcio543/soupsavvy/main)
+- [About](#about)
+- [Key features](#key-features)
+- [Instalation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgements](#acknowledgements)
+- [In the future](#in-the-future)
 
 ## About
 
@@ -118,11 +115,13 @@ This streamlined SoupSavvy approach and encapsulating complex tag(s) into single
 
 With SoupSavvy's robust features, developers can avoid common problems encountered in web scraping, such as exception handling or integration with type checkers.
 
+Full documentation can be found at **[Soupsavvy Docs](https://sewcio543.github.io/soupsavvy/)**
+
 ## Contributing
 
 If you'd like to contribute to SoupSavvy, feel free to check out the [GitHub repository](https://github.com/sewcio543/soupsavvy) and submit pull requests into one of development branches. Any feedback, bug reports, or feature requests are welcome!
 
-## 📄 License
+## License
 
 [![MIT License](https://img.shields.io/badge/license-MIT-green?style=plastic)](https://choosealicense.com/licenses/mit/)  
 SoupSavvy is licensed under the [MIT License](https://opensource.org/licenses/MIT), allowing for both personal and commercial use. See the `LICENSE` file for more information.
@@ -136,7 +135,7 @@ SoupSavvy is built upon the foundation of excellent BeautifulSoup. We extend our
 Make your soup more beautiful and savvier!  
 Happy scraping! 🍲✨
 
-## TODO
+## In the future
 
 - Scraping workflows from soup to nuts
 - New Tag components
