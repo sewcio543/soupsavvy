@@ -22,22 +22,24 @@ class AttributeTag(SingleSelectableSoup, SelectableCSS):
     For example 'AttributeTag(name="class", value="widget")' matches all html elements
     that have class attribute with value "widget".
 
-    <div class="widget">Hello World</div> ✔️
-    <div class="menu">Hello World</div> ❌
+    Example
+    -------
+    >>> <div class="widget">Hello World</div> ✔️
+    >>> <div class="menu">Hello World</div> ❌
 
     Parameters
     ----------
     name : str
         HTML element attribute name ex. "class", "href"
-    value: str, optional
+    value : str, optional
         Value of the attribute, like a class name.
         By default None, if not provided pattern will be used.
         If both pattern and value are None, pattern falls back to default,
         that matches any sequence of characters.
-    re: bool, optional
+    re : bool, optional
         Whether to use a pattern to match the attribute value, by default False.
         If True, attribute value needs to be contained in the name to be matched.
-    pattern: Pattern | str, optional
+    pattern : Pattern | str, optional
         Regular Expression pattern to match the attribute value.
         Applicable only for SelectableSoup find operations, skipped in selector.
 
@@ -96,19 +98,23 @@ class ElementTag(SingleSelectableSoup, SelectableCSS):
     Class representing HTML element.
     Provides elements based on element tag and all defined attributes.
 
-    For example:
-        ElementTag(
-            tag="div",
-            attributes=[
-                AttributeTag(name="class", value="widget"),
-                AttributeTag(name="role", value="button")
-            ]
-        )
+    Example
+    -------
+    >>> ElementTag(
+    >>>     tag="div",
+    >>>     attributes=[
+    >>>         AttributeTag(name="class", value="widget"),
+    >>>         AttributeTag(name="role", value="button")
+    >>>     ]
+    >>> )
+
     matches all elements that have "div" tag name, 'class' attribute "widget"
     and 'role' attribute "button".
 
-    <div class="widget" role="button">Hello World</div> ✔️
-    <div class="menu" role="button">Hello World</div> ❌
+    Example
+    -------
+    >>> <div class="widget" role="button">Hello World</div> ✔️
+    >>> <div class="menu" role="button">Hello World</div> ❌
 
     Parameters
     ----------
@@ -167,16 +173,20 @@ class PatternElementTag(SingleSelectableSoup):
     Class representing HTML element with specific string pattern for text.
     Provides elements matching ElementTag with their text matching a pattern.
 
-    For example:
-        PatternElementTag(
-            pattern="Hello World",
-            tag=ElementTag("div")
-        )
+    Example
+    -------
+    >>> PatternElementTag(
+    >>>     pattern="Hello World",
+    >>>     tag=ElementTag("div")
+    >>> )
+
     matches all elements that have "div" tag name
     AND their text is equal to "Hello World".
 
-    <div>Hello World</div> ✔️
-    <div>Hello Python</div> ❌
+    Example
+    -------
+    >>> <div>Hello World</div> ✔️
+    >>> <div>Hello Python</div> ❌
 
     Parameters
     ----------
@@ -195,8 +205,10 @@ class PatternElementTag(SingleSelectableSoup):
     Pattern can be a regex pattern.
     Providing 're.compile(r"[0-9]")' as pattern will much any digit in text:
 
-    <div>>Hello World 123</div> ✔️
-    <div>Hello World</div> ❌
+    Example
+    -------
+    >>> <div>Hello World 123</div> ✔️
+    >>> <div>Hello World</div> ❌
 
     Raises
     ------
@@ -229,19 +241,23 @@ class StepsElementTag(SelectableSoup):
     Class representing an list of steps of multiple soup selectors.
     Finds nested elements that match all steps in order.
 
-    For example:
-        StepsElementTag(
-            ElementTag("div", [AttributeTag(name="class", value="menu")]),
-            ElementTag("a", [AttributeTag(name="href", value="google", re=True)])
-        )
+    Example
+    -------
+    >>> StepsElementTag(
+    >>>     ElementTag("div", [AttributeTag(name="class", value="menu")]),
+    >>>     ElementTag("a", [AttributeTag(name="href", value="google", re=True)])
+    >>> )
+
     matches all elements inside 'div' element with 'menu' class attribute
     that are 'a' elements with href attribute containing 'google'.
 
-    <div class="menu"><a href="google.com"></a></div> ✔️
-    <div class="menu"><a href="duckduckgo.com"></a></div> ❌
-    <div class="widget"><a href="google.com"></a></div> ❌
-    <a href="google.com"></a> ❌
-    <div class="widget"></div> ❌
+    Example
+    -------
+    >>> <div class="menu"><a href="google.com"></a></div> ✔️
+    >>> <div class="menu"><a href="duckduckgo.com"></a></div> ❌
+    >>> <div class="widget"><a href="google.com"></a></div> ❌
+    >>> <a href="google.com"></a> ❌
+    >>> <div class="widget"></div> ❌
 
     Parameters
     ----------

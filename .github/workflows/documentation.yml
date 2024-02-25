@@ -1,0 +1,36 @@
+name: Documentation [Github Pages]
+
+on: [push]
+
+permissions:
+  contents: write
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python and Upgrade pip
+        uses: ./.github/actions/setup_python
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install -r docs/requirements.txt
+
+      - name: Sphinx build
+        run: |
+          python -m sphinx-apidoc -o docs/source soupsavvy --separate --force
+          rm -rf _build
+          python -m sphinx-build docs/source build_
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: _build/
+          force_orphan: true

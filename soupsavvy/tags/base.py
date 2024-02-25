@@ -186,7 +186,7 @@ class SingleSelectableSoup(SelectableSoup):
     To implement SingleSelectableSoup interface, child class must implement:
     * 'wildcard' property that defines whether tag matches all html elements.
     * '_find_params' property that returns dict representing Tag.find
-      and find_all parameters that are passed as keyword arguments into these methods.
+    and find_all parameters that are passed as keyword arguments into these methods.
     """
 
     def find_all(self, tag: Tag) -> list[Tag]:
@@ -232,16 +232,20 @@ class SoupUnionTag(SelectableSoup):
     Class representing an Union of multiple soup selectors.
     Provides elements matching any of the selectors in an Union.
 
-    For example:
-        SoupUnionTag(
-            ElementTag("a"),
-            ElementTag("div", [AttributeTag(name="class", value="widget")])
-        )
+    Example
+    -------
+    >>> SoupUnionTag(
+    >>>     ElementTag("a"),
+    >>>     ElementTag("div", [AttributeTag(name="class", value="widget")])
+    >>> )
+
     matches all elements that have "a" tag name OR 'class' attribute "widget".
 
-    <a>Hello World</a> ✔️
-    <div class="widget">Hello World</div> ✔️
-    <div>Hello Python</div> ❌
+    Example
+    -------
+    >>> <a>Hello World</a> ✔️
+    >>> <div class="widget">Hello World</div> ✔️
+    >>> <div>Hello Python</div> ❌
 
     Parameters
     ----------
