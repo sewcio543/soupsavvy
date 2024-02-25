@@ -17,6 +17,7 @@ runs:
         cache: pip
         cache-dependency-path: |
           requirements.txt
+          docs/requirements.txt
           config/requirements_dev.txt
 
     - name: Upgrade pip

@@ -23,9 +23,9 @@ jobs:
 
       - name: Sphinx build
         run: |
-          python -m sphinx-apidoc -o docs/source soupsavvy --separate --force
+          sphinx-apidoc -o docs/source soupsavvy --separate --force
           rm -rf _build
-          python -m sphinx-build docs/source build_
+          sphinx-build docs/source build_
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
