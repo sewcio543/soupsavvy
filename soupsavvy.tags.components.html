@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tags.components &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tags.exceptions" href="soupsavvy.tags.exceptions.html" />
+    <link rel="prev" title="tags.base" href="soupsavvy.tags.base.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="soupsavvy.tags.html">tags</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="soupsavvy.tags.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.base.html">tags.base</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tags.components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.components.AnyTag"><code class="docutils literal notranslate"><span class="pre">AnyTag</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.components.AttributeTag"><code class="docutils literal notranslate"><span class="pre">AttributeTag</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.components.ElementTag"><code class="docutils literal notranslate"><span class="pre">ElementTag</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.components.PatternElementTag"><code class="docutils literal notranslate"><span class="pre">PatternElementTag</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.components.StepsElementTag"><code class="docutils literal notranslate"><span class="pre">StepsElementTag</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.exceptions.html">tags.exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.tags.html#module-soupsavvy.tags">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.utils.html">utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="soupsavvy.tags.html">tags</a></li>
+      <li class="breadcrumb-item active">tags.components</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/soupsavvy.tags.components.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-soupsavvy.tags.components">
+<span id="tags-components"></span><h1>tags.components<a class="headerlink" href="#module-soupsavvy.tags.components" title="Link to this heading"></a></h1>
+<p>Module for components utilized to navigate html markup or BeautifulSoup Tags.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.AnyTag">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnyTag</span></span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#AnyTag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.AnyTag" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SingleSelectableSoup" title="soupsavvy.tags.base.SingleSelectableSoup"><code class="xref py py-class docutils literal notranslate"><span class="pre">SingleSelectableSoup</span></code></a>, <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SelectableCSS" title="soupsavvy.tags.base.SelectableCSS"><code class="xref py py-class docutils literal notranslate"><span class="pre">SelectableCSS</span></code></a></p>
+<p>Class representing a wildcard tag that matches any tag in the markup.
+Matches always the first tag in the markup.</p>
+<p>AnyTag implements SelectableCSS interface with wildcard css selector “*”.</p>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">any_element</span> <span class="o">=</span> <span class="n">AnyTag</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">any_element</span><span class="o">.</span><span class="n">selector</span>
+<span class="go">&quot;*&quot;</span>
+</pre></div>
+</div>
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.AnyTag.selector">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selector</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#soupsavvy.tags.components.AnyTag.selector" title="Link to this definition"></a></dt>
+<dd><p>Returns wildcard css selector matching all elements in the markup.</p>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.AttributeTag">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AttributeTag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Pattern</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#AttributeTag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.AttributeTag" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SingleSelectableSoup" title="soupsavvy.tags.base.SingleSelectableSoup"><code class="xref py py-class docutils literal notranslate"><span class="pre">SingleSelectableSoup</span></code></a>, <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SelectableCSS" title="soupsavvy.tags.base.SelectableCSS"><code class="xref py py-class docutils literal notranslate"><span class="pre">SelectableCSS</span></code></a></p>
+<p>Class representing attribute of the HTML element.
+If used directly, provides elements based only on a single attribute value.
+For example ‘AttributeTag(name=”class”, value=”widget”)’ matches all html elements
+that have class attribute with value “widget”.</p>
+<section id="id1">
+<h2>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;Hello World&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;div class=&quot;menu&quot;&gt;Hello World&lt;/div&gt; ❌
+</pre></div>
+</div>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>name<span class="classifier">str</span></dt><dd><p>HTML element attribute name ex. “class”, “href”</p>
+</dd>
+<dt>value<span class="classifier">str, optional</span></dt><dd><p>Value of the attribute, like a class name.
+By default None, if not provided pattern will be used.
+If both pattern and value are None, pattern falls back to default,
+that matches any sequence of characters.</p>
+</dd>
+<dt>re<span class="classifier">bool, optional</span></dt><dd><p>Whether to use a pattern to match the attribute value, by default False.
+If True, attribute value needs to be contained in the name to be matched.</p>
+</dd>
+<dt>pattern<span class="classifier">Pattern | str, optional</span></dt><dd><p>Regular Expression pattern to match the attribute value.
+Applicable only for SelectableSoup find operations, skipped in selector.</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h2>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">attribute</span> <span class="o">=</span> <span class="n">AttributeTag</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;widget&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attribute</span><span class="o">.</span><span class="n">selector</span>
+<span class="go">[class=widget]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">attribute</span> <span class="o">=</span> <span class="n">AttributeTag</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;widget&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attribute</span><span class="o">.</span><span class="n">selector</span>
+<span class="go">[class*=widget]</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.AttributeTag.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Pattern</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#soupsavvy.tags.components.AttributeTag.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.AttributeTag.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#soupsavvy.tags.components.AttributeTag.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.AttributeTag.pattern">
+<span class="sig-name descname"><span class="pre">pattern</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Pattern</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#soupsavvy.tags.components.AttributeTag.pattern" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.AttributeTag.re">
+<span class="sig-name descname"><span class="pre">re</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#soupsavvy.tags.components.AttributeTag.re" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.AttributeTag.selector">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selector</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#soupsavvy.tags.components.AttributeTag.selector" title="Link to this definition"></a></dt>
+<dd><p>Returns string representing element css selector.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.AttributeTag.value">
+<span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#soupsavvy.tags.components.AttributeTag.value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.ElementTag">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ElementTag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes:</span> <span class="pre">~typing.Iterable[~soupsavvy.tags.components.AttributeTag]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#ElementTag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.ElementTag" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SingleSelectableSoup" title="soupsavvy.tags.base.SingleSelectableSoup"><code class="xref py py-class docutils literal notranslate"><span class="pre">SingleSelectableSoup</span></code></a>, <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SelectableCSS" title="soupsavvy.tags.base.SelectableCSS"><code class="xref py py-class docutils literal notranslate"><span class="pre">SelectableCSS</span></code></a></p>
+<p>Class representing HTML element.
+Provides elements based on element tag and all defined attributes.</p>
+<section id="id3">
+<h2>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ElementTag</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">attributes</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">AttributeTag</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;widget&quot;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">AttributeTag</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;role&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;button&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+</pre></div>
+</div>
+<p>matches all elements that have “div” tag name, ‘class’ attribute “widget”
+and ‘role’ attribute “button”.</p>
+</section>
+<section id="id4">
+<h2>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div class=&quot;widget&quot; role=&quot;button&quot;&gt;Hello World&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;div class=&quot;menu&quot; role=&quot;button&quot;&gt;Hello World&lt;/div&gt; ❌
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h2>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>name<span class="classifier">str, optional</span></dt><dd><p>HTML tag name ex. “a”, “div”. By default None.</p>
+</dd>
+<dt>attributes<span class="classifier">Iterable[AttributeTag], optional</span></dt><dd><p>Iterable of AttributeTag objects that specify element attributes.
+By default empty list.</p>
+</dd>
+</dl>
+</section>
+<section id="id6">
+<h2>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">element</span> <span class="o">=</span> <span class="n">ElementTag</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="n">AttributeTag</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;widget&quot;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">element</span><span class="o">.</span><span class="n">selector</span>
+<span class="go">div[class=widget]</span>
+</pre></div>
+</div>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>Initializing object without passing any parameters is a legal move.
+It results in matching all elements in markup and wildcard selector “*”.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.ElementTag.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes:</span> <span class="pre">~typing.Iterable[~soupsavvy.tags.components.AttributeTag]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#soupsavvy.tags.components.ElementTag.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.ElementTag.attributes">
+<span class="sig-name descname"><span class="pre">attributes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soupsavvy.tags.components.AttributeTag" title="soupsavvy.tags.components.AttributeTag"><span class="pre">AttributeTag</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.tags.components.ElementTag.attributes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.ElementTag.selector">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selector</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#soupsavvy.tags.components.ElementTag.selector" title="Link to this definition"></a></dt>
+<dd><p>Returns string representing element css selector.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.ElementTag.tag">
+<span class="sig-name descname"><span class="pre">tag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#soupsavvy.tags.components.ElementTag.tag" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.PatternElementTag">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PatternElementTag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SingleSelectableSoup" title="soupsavvy.tags.base.SingleSelectableSoup"><span class="pre">SingleSelectableSoup</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Pattern</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#PatternElementTag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.PatternElementTag" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SingleSelectableSoup" title="soupsavvy.tags.base.SingleSelectableSoup"><code class="xref py py-class docutils literal notranslate"><span class="pre">SingleSelectableSoup</span></code></a></p>
+<p>Class representing HTML element with specific string pattern for text.
+Provides elements matching ElementTag with their text matching a pattern.</p>
+<section id="id7">
+<h2>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">PatternElementTag</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;Hello World&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">tag</span><span class="o">=</span><span class="n">ElementTag</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+</pre></div>
+</div>
+<p>matches all elements that have “div” tag name
+AND their text is equal to “Hello World”.</p>
+</section>
+<section id="id8">
+<h2>Example<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;Hello World&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;div&gt;Hello Python&lt;/div&gt; ❌
+</pre></div>
+</div>
+</section>
+<section id="id9">
+<h2>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>tag: SingleSelectableSoup</dt><dd><p>An SingleSelectableSoup instance representing desired HTML element.
+Empty Tag is not a valid paramater and raises an exception.</p>
+</dd>
+<dt>pattern: str | Pattern</dt><dd><p>A pattern to match text of the element. Can be a string for exact match
+or Pattern for any more complex regular expressions.</p>
+</dd>
+<dt>re: bool, optional</dt><dd><p>Whether to use a pattern to match the text, by default False.
+If True, text of element needs to be contained in the pattern to be matched.</p>
+</dd>
+</dl>
+</section>
+<section id="id10">
+<h2>Notes<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<p>Pattern can be a regex pattern.
+Providing ‘re.compile(r”[0-9]”)’ as pattern will much any digit in text:</p>
+</section>
+<section id="id11">
+<h2>Example<a class="headerlink" href="#id11" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;Hello World 123&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;div&gt;Hello World&lt;/div&gt; ❌
+</pre></div>
+</div>
+</section>
+<section id="raises">
+<h2>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>EmptyElementTagException</dt><dd><p>When empty ElementTag was passed as a tag parameter.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.PatternElementTag.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SingleSelectableSoup" title="soupsavvy.tags.base.SingleSelectableSoup"><span class="pre">SingleSelectableSoup</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Pattern</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#soupsavvy.tags.components.PatternElementTag.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.PatternElementTag.pattern">
+<span class="sig-name descname"><span class="pre">pattern</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Pattern</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.tags.components.PatternElementTag.pattern" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.PatternElementTag.re">
+<span class="sig-name descname"><span class="pre">re</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#soupsavvy.tags.components.PatternElementTag.re" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.PatternElementTag.tag">
+<span class="sig-name descname"><span class="pre">tag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SingleSelectableSoup" title="soupsavvy.tags.base.SingleSelectableSoup"><span class="pre">SingleSelectableSoup</span></a></em><a class="headerlink" href="#soupsavvy.tags.components.PatternElementTag.tag" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.StepsElementTag">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StepsElementTag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SelectableSoup" title="soupsavvy.tags.base.SelectableSoup"><span class="pre">SelectableSoup</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SelectableSoup" title="soupsavvy.tags.base.SelectableSoup"><span class="pre">SelectableSoup</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SelectableSoup" title="soupsavvy.tags.base.SelectableSoup"><span class="pre">SelectableSoup</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#StepsElementTag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.StepsElementTag" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SelectableSoup" title="soupsavvy.tags.base.SelectableSoup"><code class="xref py py-class docutils literal notranslate"><span class="pre">SelectableSoup</span></code></a></p>
+<p>Class representing an list of steps of multiple soup selectors.
+Finds nested elements that match all steps in order.</p>
+<section id="id12">
+<h2>Example<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">StepsElementTag</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ElementTag</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">AttributeTag</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;menu&quot;</span><span class="p">)]),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ElementTag</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">AttributeTag</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;href&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;google&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">=</span><span class="kc">True</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+</pre></div>
+</div>
+<p>matches all elements inside ‘div’ element with ‘menu’ class attribute
+that are ‘a’ elements with href attribute containing ‘google’.</p>
+</section>
+<section id="id13">
+<h2>Example<a class="headerlink" href="#id13" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div class=&quot;menu&quot;&gt;&lt;a href=&quot;google.com&quot;&gt;&lt;/a&gt;&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;div class=&quot;menu&quot;&gt;&lt;a href=&quot;duckduckgo.com&quot;&gt;&lt;/a&gt;&lt;/div&gt; ❌
+&gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;a href=&quot;google.com&quot;&gt;&lt;/a&gt;&lt;/div&gt; ❌
+&gt;&gt;&gt; &lt;a href=&quot;google.com&quot;&gt;&lt;/a&gt; ❌
+&gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;/div&gt; ❌
+</pre></div>
+</div>
+</section>
+<section id="id14">
+<h2>Parameters<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>tags<span class="classifier">SelectableSoup</span></dt><dd><p>SelectableSoup objects to match accepted as positional arguments.</p>
+</dd>
+</dl>
+</section>
+<section id="id15">
+<h2>Notes<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
+<p>StepsElementTag does not implement SelectableSoup interface
+as it allows SelectableSoup as positional init arguments.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.StepsElementTag.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SelectableSoup" title="soupsavvy.tags.base.SelectableSoup"><span class="pre">SelectableSoup</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SelectableSoup" title="soupsavvy.tags.base.SelectableSoup"><span class="pre">SelectableSoup</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SelectableSoup" title="soupsavvy.tags.base.SelectableSoup"><span class="pre">SelectableSoup</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#StepsElementTag.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.StepsElementTag.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes StepsElementTag object with provided positional arguments as tags.
+At least two SelectableSoup object required to create StepsElementTag.</p>
+<section id="id16">
+<h3>Parameters<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>tags: SelectableSoup</dt><dd><p>SelectableSoup objects to match accepted as positional arguments.</p>
+</dd>
+</dl>
+</section>
+<section id="id17">
+<h3>Raises<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>NotSelectableSoupException</dt><dd><p>If any of provided parameters is not an instance of SelectableSoup.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.StepsElementTag.find_all">
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#StepsElementTag.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.StepsElementTag.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all matching elements in provided BeautifulSoup Tag.</p>
+<section id="id18">
+<h3>Parameters<a class="headerlink" href="#id18" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>list[Tag]</dt><dd><p>A list of Tag objects matching tag specifications.
+If none found, the list is empty.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="soupsavvy.tags.base.html" class="btn btn-neutral float-left" title="tags.base" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soupsavvy.tags.exceptions.html" class="btn btn-neutral float-right" title="tags.exceptions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, sewcio543.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

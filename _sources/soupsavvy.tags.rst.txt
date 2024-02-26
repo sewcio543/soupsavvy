@@ -1,0 +1,21 @@
+tags
+======================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.tags.base
+   soupsavvy.tags.components
+   soupsavvy.tags.exceptions
+   soupsavvy.tags.namespace
+
+Module contents
+---------------
+
+.. automodule:: soupsavvy.tags
+   :members:
+   :undoc-members:
+   :show-inheritance:

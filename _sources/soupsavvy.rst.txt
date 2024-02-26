@@ -1,0 +1,19 @@
+soupsavvy package
+=================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.tags
+   soupsavvy.utils
+
+Module contents
+---------------
+
+.. automodule:: soupsavvy
+   :members:
+   :undoc-members:
+   :show-inheritance:
