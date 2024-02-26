@@ -39,7 +39,6 @@ jobs:
         run: python renaming.py
 
       - name: Build HTML documentation
-        working-directory: docs/source
         run: |
           rm -rf ${BUILD_FOLDER}
           sphinx-build docs/source ${BUILD_FOLDER}
