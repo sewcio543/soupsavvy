@@ -1,15 +1,15 @@
-name: Generate changelog
-
 on:
   push:
     branches:
       # for testing
       - cd/auto_release
 
-jobs:
-  generate-changelog:
-    runs-on: ubuntu-latest
+name: Create Release
 
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -18,24 +18,18 @@ jobs:
 
       - name: Get interested tags
         run: |
-          tags=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n 2)
-          echo "tags: $tags"
-          latest_tag=$(echo "$tags" | head -n 1)
-          previous_tag=$(echo "$tags" | tail -n 1)
-          echo "previousTag: $previous_tag"
-          echo "latestTag: $latest_tag"
-          echo "previousTag=$previous_tag" >> $GITHUB_ENV
-          echo "latestTag=$latest_tag" >> $GITHUB_ENV
+          git checkout main
+          tag=$(git describe)
+          echo "Release tag: $tag"
+          echo "tag=$tag" >> $GITHUB_ENV
 
-      - name: Update CHANGELOG
-        id: changelog
-        uses: requarks/changelog-action@v1
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          token: ${{ github.token }}
-          fromTag: ${{ env.latestTag }}
-          toTag: ${{ env.previousTag }}
-          includeInvalidCommits: true
-
-      - name: Show changelog
-        run: |
-          cat CHANGELOG.md
+          tag_name: ${{ env.tag }}
+          release_name: ${{ env.tag }}
+          draft: false
+          prerelease: false
