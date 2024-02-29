@@ -24,7 +24,7 @@ jobs:
           previous_tag=$(echo "$tags" | tail -n 1)
           echo "previousTag: $previous_tag"
           echo "latestTag: $latest_tag"
-          echo "previousTag=$name" >> $GITHUB_ENV
+          echo "previousTag=$previous_tag" >> $GITHUB_ENV
           echo "latestTag=$latest_tag" >> $GITHUB_ENV
 
       - name: Update CHANGELOG
