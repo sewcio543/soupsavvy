@@ -56,7 +56,7 @@ def deprecated_class(
     Returns
     -------
     Callable
-        Decorated function.
+        Decorated class.
     """
 
     def decorator(cls: Type) -> Type:
