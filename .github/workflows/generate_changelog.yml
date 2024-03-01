@@ -1,10 +1,13 @@
+name: Create Release
+
 on:
   push:
     branches:
       # for testing
       - cd/auto_release
 
-name: Create Release
+permissions:
+  contents: write
 
 jobs:
   build:
