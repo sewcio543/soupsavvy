@@ -26,13 +26,8 @@ jobs:
           echo "Release tag: $tag"
           echo "tag=$tag" >> $GITHUB_ENV
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: ncipollo/release-action@v1
         with:
-          tag_name: ${{ env.tag }}
-          release_name: ${{ env.tag }}
-          draft: false
-          prerelease: false
+          generateReleaseNotes: true
+          tag: ${{ env.tag }}
+          name: ${{ env.tag }}
