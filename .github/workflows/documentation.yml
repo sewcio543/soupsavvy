@@ -19,6 +19,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          # gh-pages is protected branch
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: Set up Python and Upgrade pip
         uses: ./.github/actions/setup_python
