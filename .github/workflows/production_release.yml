@@ -126,8 +126,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # this fetches all history and
-          token: ${{ secrets.GH_TOKEN }}
+          fetch-depth: 0 # this fetches all history and tags
 
       - name: Get interested tags
         run: |
