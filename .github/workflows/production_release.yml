@@ -113,3 +113,31 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
+
+  github_release:
+    needs: build
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # this fetches all history and
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Get interested tags
+        run: |
+          git checkout main
+          tag=$(git describe)
+          echo "Release tag: $tag"
+          echo "tag=$tag" >> $GITHUB_ENV
+
+      - uses: ncipollo/release-action@v1
+        with:
+          generateReleaseNotes: true
+          tag: ${{ env.tag }}
+          name: ${{ env.tag }}
