@@ -1,4 +1,6 @@
-# SoupSavvy
+![SoupSavvy](resources/logo.png)
+
+<p style="font-weight: bold; font-size: 30px">Soap this soup!</p>
 
 | | |
 | --- | --- |
