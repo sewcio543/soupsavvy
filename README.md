@@ -1,7 +1,5 @@
 ![SoupSavvy](resources/logo.png)
 
-<p style="font-weight: bold; font-size: 30px">Soap this soup!</p>
-
 | | |
 | --- | --- |
 | Package | ![Deployment PyPI](https://github.com/sewcio543/soupsavvy/actions/workflows/production_release.yml/badge.svg) ![Deployment test PyPI](https://github.com/sewcio543/soupsavvy/actions/workflows/development_release.yml/badge.svg) [![GitHub](https://img.shields.io/badge/GitHub-sewcio543-181717.svg?style=flat&logo=github)](https://github.com/sewcio543) [![PyPI](https://img.shields.io/pypi/v/soupsavvy?color=orange)](https://pypi.org/project/soupsavvy/) [![Python Versions](https://img.shields.io/pypi/pyversions/soupsavvy)](https://www.python.org/)|
@@ -134,8 +132,8 @@ SoupSavvy is built upon the foundation of excellent BeautifulSoup. We extend our
 
 ---
 
-Make your soup more beautiful and savvier!  
-Happy scraping! 🍲✨
+**Let's soap this soup!**  
+**Happy scraping!** 🍲✨
 
 ## In the future
 
