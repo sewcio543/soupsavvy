@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import random
+import warnings
 from typing import Iterable, Optional, Union
 
 from . import namespace, settings
@@ -13,25 +14,20 @@ CHILD_TYPE = Union["TagGenerator", str]
 
 
 class AttributeGenerator(BaseGenerator):
-    def __init__(self, name: str, value: Optional[Union[str, Iterable[str]]] = None):
+    def __init__(
+        self,
+        name: str,
+        value: Optional[Union[str, Iterable[str]]] = None,
+    ):
         self.name = name
         self.value = value
-        super().__init__()
 
     def generate(self):
         value = self.value
 
-        if self.value is None:
-            options = self.data.get(self.name, [])
-
-            conditions = [settings.USE_TEMPLATES_VALUE, options]
-            value = (
-                random.choice(options)
-                if all(conditions)
-                else self._generate_unique_id()
-            )
-
-        elif not isinstance(self.value, str):
+        if value is None:
+            value = self.template.generate(self.name)
+        elif not isinstance(self.value, str) and isinstance(self.value, Iterable):
             value = random.choice(list(self.value))
 
         return f'{self.name}="{value}"'
@@ -63,7 +59,6 @@ class TagGenerator(BaseTagGenerator):
             child if isinstance(child, TagGenerator) else TagGenerator(child)
             for child in children
         ]
-        super().__init__()
 
     def _parse_attribute(self, attr: ATTRIBUTE_TYPE) -> AttributeGenerator:
         if isinstance(attr, AttributeGenerator):
@@ -74,33 +69,18 @@ class TagGenerator(BaseTagGenerator):
 
     def generate(self):
         attrs = " ".join(attr.generate() for attr in self.attrs)
-
-        if settings.GENERATE_ATTRS and not attrs:
-            number = sum(
-                random.random() < settings.CHANCE for _ in range(settings.MAX_ATTRS)
-            )
-            names = random.sample(namespace.ALL_ATTRS, k=number)
-            attrs = " ".join(AttributeGenerator(name).generate() for name in names)
-
         sep = " " if attrs else ""
         children = "".join(child.generate() for child in self.children)
         tag = f"<{self.name}{sep}{attrs}>"
 
         if self.name in namespace.VOID_TAGS:
+            if children:
+                warnings.warn("dsd")
             return tag
 
-        text = self.text
-
-        if self.text is None:
-            options = self.data.get(namespace.TEXT, [])
-
-            conditions = [
-                settings.USE_TEMPLATES_TEXT,
-                options,
-                random.random() < settings.CHANCE,
-            ]
-            text = random.choice(options) if all(conditions) else ""
-
+        text = (
+            self.template.generate(namespace.TEXT) if self.text is None else self.text
+        )
         return f"{tag}{text}{children}</{self.name}>"
 
     def __str__(self):

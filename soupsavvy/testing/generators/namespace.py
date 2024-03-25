@@ -1,7 +1,3 @@
-import os
-
-SETUP_FILE = os.path.join("soupsavvy", "_resources", "generator_setup.json")
-
 VOID_TAGS = [
     "area",
     "base",
