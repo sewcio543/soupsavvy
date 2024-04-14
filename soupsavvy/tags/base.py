@@ -67,7 +67,7 @@ class SelectableSoup(ABC):
         strict : bool, optional
             If True, raises an exception if tag was not found in markup,
             if False and tag was not found, returns None by defaulting to BeautifulSoup
-            implementation. Value of this parameter does not affect behaviour if tag
+            implementation. Value of this parameter does not affect behavior if tag
             was successfully found in the markup. By default False.
         exception: Exception, optional
             Exception instance to be raised when strict parameter is set to True
