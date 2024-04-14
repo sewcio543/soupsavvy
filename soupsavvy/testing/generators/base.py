@@ -1,30 +1,24 @@
-from __future__ import annotations
+"""
+Module for the BaseGenerator abstract class that is a parent for all generators.
+
+soupsavvy generator is anything that generates content,
+they should all inherit from this class and implement the 'generate' method.
+"""
 
 from abc import ABC, abstractmethod
 
-from bs4 import BeautifulSoup, Tag
-
-from . import namespace, settings
-from .templates.templates import BaseTemplate
-
 
 class BaseGenerator(ABC):
-    _template: BaseTemplate = BaseTemplate()
+    """
+    Abstract base class for all kind of soupsavvy generators.
 
-    @property
-    def template(self) -> BaseTemplate:
-        return self._template
+    All components generating content should inherit from this class
+    and implement the 'generate' method to return the generated content.
+    """
 
     @abstractmethod
     def generate(self) -> str:
-        raise NotImplementedError()
-
-    def generate_tag(self) -> Tag:
-        markup = self.generate()
-        return BeautifulSoup(markup, namespace.PARSER)
-
-    def __repr__(self):
-        return str(self)
-
-
-class BaseTagGenerator(BaseGenerator): ...
+        raise NotImplementedError(
+            f"{self.__class__.__name__} is a base class and does not implement "
+            "'generate' method."
+        )
