@@ -1,3 +1,5 @@
+"""Module for deprecation decorators and functions."""
+
 import functools
 import warnings
 from typing import Callable, Type
@@ -56,7 +58,7 @@ def deprecated_class(
     Returns
     -------
     Callable
-        Decorated function.
+        Decorated class.
     """
 
     def decorator(cls: Type) -> Type:

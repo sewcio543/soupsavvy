@@ -9,9 +9,15 @@ from typing import Any, Iterable, Optional, Pattern
 
 from bs4 import Tag
 
-from .base import SelectableCSS, SelectableSoup, SingleSelectableSoup
-from .exceptions import NotSelectableSoupException, WildcardTagException
-from .namespace import CSS_SELECTOR_WILDCARD, DEFAULT_PATTERN, FIND_RESULT, NAME, STRING
+from soupsavvy.tags.base import SelectableCSS, SelectableSoup, SingleSelectableSoup
+from soupsavvy.tags.exceptions import NotSelectableSoupException, WildcardTagException
+from soupsavvy.tags.namespace import (
+    CSS_SELECTOR_WILDCARD,
+    DEFAULT_PATTERN,
+    FIND_RESULT,
+    NAME,
+    STRING,
+)
 
 
 @dataclass
@@ -192,7 +198,7 @@ class PatternElementTag(SingleSelectableSoup):
     ----------
     tag: SingleSelectableSoup
         An SingleSelectableSoup instance representing desired HTML element.
-        Empty Tag is not a valid paramater and raises an exception.
+        Empty Tag is not a valid parameter and raises an exception.
     pattern: str | Pattern
         A pattern to match text of the element. Can be a string for exact match
         or Pattern for any more complex regular expressions.
