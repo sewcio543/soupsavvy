@@ -12,6 +12,7 @@ Soupsavvy's documentation!
 
    soupsavvy.tags
    soupsavvy.utils
+   soupsavvy.testing
 
 
 .. mdinclude:: ../../README.md
