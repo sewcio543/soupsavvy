@@ -2,19 +2,19 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod, abstractproperty
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from functools import reduce
 from typing import Any, Literal, Optional, overload
 
 from bs4 import NavigableString, Tag
 
-from .exceptions import (
+from soupsavvy.tags.exceptions import (
     NavigableStringException,
     NotSelectableSoupException,
     TagNotFoundException,
 )
-from .namespace import FIND_RESULT
+from soupsavvy.tags.namespace import FIND_RESULT
 
 
 class SelectableSoup(ABC):
@@ -30,7 +30,7 @@ class SelectableSoup(ABC):
         If strict parameter is set to True and element is not found exception is raised.
         If strict is set to False, which is a default and element is not found
         result of Tag.find is return, which is None.
-        Otherwise mathcing Tag is returned.
+        Otherwise matching Tag is returned.
     find_all(tag: Tag)
         Finds all tag elements in BeautifulSoup Tag by wrapping Tag find_all method
         and passing parameters specific to given tag.
@@ -195,7 +195,8 @@ class SingleSelectableSoup(SelectableSoup):
     def _find(self, tag: Tag) -> FIND_RESULT:
         return tag.find(**self._find_params)
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def _find_params(self) -> dict[str, Any]:
         """
         Returns keyword arguments for Tag.find and Tag.find_all in form of dictionary,
@@ -217,7 +218,8 @@ class SelectableCSS:
     * 'selector' property, which return a string representing element css selector.
     """
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def selector(self) -> str:
         """Returns string representing element css selector."""
         raise NotImplementedError(

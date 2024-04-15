@@ -1,3 +1,5 @@
+"""Module for deprecation decorators and functions."""
+
 import functools
 import warnings
 from typing import Callable, Type

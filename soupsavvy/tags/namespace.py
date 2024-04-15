@@ -1,4 +1,4 @@
-"""Namespace for tag components."""
+"""Namespace with constants and types for tag components."""
 
 from typing import Union
 
