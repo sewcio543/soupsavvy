@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from functools import reduce
 from typing import Any, Iterable, Optional, Pattern
 
-from bs4 import Tag
+from bs4 import SoupStrainer, Tag
 
 from soupsavvy.tags.base import SelectableCSS, SelectableSoup, SingleSelectableSoup
 from soupsavvy.tags.exceptions import NotSelectableSoupException, WildcardTagException
@@ -18,6 +18,7 @@ from soupsavvy.tags.namespace import (
     NAME,
     STRING,
 )
+from soupsavvy.tags.utils import TagIterator, UniqueTag
 
 
 @dataclass
@@ -299,10 +300,12 @@ class StepsElementTag(SelectableSoup):
         """
         args = [tag1, tag2] + list(tags)
         invalid = [arg for arg in args if not isinstance(arg, SelectableSoup)]
+
         if invalid:
             raise NotSelectableSoupException(
                 f"Parameters {invalid} are not instances of SelectableSoup."
             )
+
         self.steps = args
 
     def _find(self, tag: Tag) -> FIND_RESULT:
@@ -310,6 +313,7 @@ class StepsElementTag(SelectableSoup):
 
         for step in self.steps:
             element = step.find(element, strict=False)  # type: ignore
+
             if element is None:
                 break
 
@@ -348,3 +352,102 @@ class AnyTag(SingleSelectableSoup, SelectableCSS):
     def selector(self) -> str:
         """Returns wildcard css selector matching all elements in the markup."""
         return CSS_SELECTOR_WILDCARD
+
+
+@dataclass(init=False)
+class NotElementTag(SelectableSoup):
+    def __init__(
+        self,
+        tag: SelectableSoup,
+        /,
+        *tags: SelectableSoup,
+    ) -> None:
+        """
+        Initializes NotElementTags object with provided positional arguments as tags.
+        At least two SelectableSoup object required to create NotElementTags.
+
+        Parameters
+        ----------
+        tags: SelectableSoup
+            SelectableSoup objects to negate match accepted as positional arguments.
+
+        Raises
+        ------
+        NotSelectableSoupException
+            If any of provided parameters is not an instance of SelectableSoup.
+        """
+        args = [tag] + list(tags)
+        invalid = [arg for arg in args if not isinstance(arg, SelectableSoup)]
+
+        if invalid:
+            raise NotSelectableSoupException(
+                f"Parameters {invalid} are not instances of SelectableSoup."
+            )
+
+        self.steps = args
+
+    def _find(self, tag: Tag) -> FIND_RESULT:
+        elements = self.find_all(tag)
+        return elements[0] if elements else None
+
+    def find_all(self, tag: Tag) -> list[Tag]:
+        steps = iter(self.steps)
+        elements = self._find_all(step=next(steps), tag=tag)
+
+        for step in steps:
+            elements |= self._find_all(step=step, tag=tag)
+
+        return [element.tag for element in elements]
+
+    def _find_all(self, step: SelectableSoup, tag: Tag) -> set[UniqueTag]:
+        elements = step.find_all(tag)
+        return {UniqueTag(element) for element in elements}
+
+
+class AndElementTag(SelectableSoup):
+    def __init__(
+        self,
+        tag: SelectableSoup,
+        /,
+        *tags: SelectableSoup,
+    ) -> None:
+        """
+        Initializes AndElementTag object with provided positional arguments as tags.
+        At least two SelectableSoup object required to create AndElementTag.
+
+        Parameters
+        ----------
+        tags: SelectableSoup
+            SelectableSoup objects to match accepted as positional arguments.
+
+        Raises
+        ------
+        NotSelectableSoupException
+            If any of provided parameters is not an instance of SelectableSoup.
+        """
+        args = [tag] + list(tags)
+        invalid = [arg for arg in args if not isinstance(arg, SelectableSoup)]
+
+        if invalid:
+            raise NotSelectableSoupException(
+                f"Parameters {invalid} are not instances of SelectableSoup."
+            )
+
+        self.steps = args
+
+    def _find(self, tag: Tag) -> FIND_RESULT:
+        elements = self.find_all(tag)
+        return elements[0] if elements else None
+
+    def find_all(self, tag: Tag) -> list[Tag]:
+        steps = iter(self.steps)
+        elements = self._find_all(step=next(steps), tag=tag)
+
+        for step in steps:
+            elements &= self._find_all(step=step, tag=tag)
+
+        return [element.tag for element in elements]
+
+    def _find_all(self, step: SelectableSoup, tag: Tag) -> set[UniqueTag]:
+        elements = step.find_all(tag)
+        return {UniqueTag(element) for element in elements}

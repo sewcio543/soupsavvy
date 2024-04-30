@@ -184,7 +184,6 @@ class SingleSelectableSoup(SelectableSoup):
     Notes
     -----
     To implement SingleSelectableSoup interface, child class must implement:
-    * 'wildcard' property that defines whether tag matches all html elements.
     * '_find_params' property that returns dict representing Tag.find
     and find_all parameters that are passed as keyword arguments into these methods.
     """
@@ -283,16 +282,19 @@ class SoupUnionTag(SelectableSoup):
         """
         args = [tag1, tag2] + list(tags)
         invalid = [arg for arg in args if not isinstance(arg, SelectableSoup)]
+
         if invalid:
             raise NotSelectableSoupException(
                 f"Parameters {invalid} are not instances of SelectableSoup."
             )
+
         self.tags = args
 
     def _find(self, tag: Tag) -> FIND_RESULT:
         # iterates all tags and returns first element that matches
         for _tag_ in self.tags:
             result = _tag_.find(tag)
+
             if result is not None:
                 return result
 
