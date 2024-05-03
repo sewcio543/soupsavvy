@@ -179,7 +179,7 @@ class SelectableSoup(ABC):
 
         return SoupUnionTag(self, x)
 
-    def __invert__(self) -> NotElementTag:
+    def __invert__(self) -> SelectableSoup:
         """
         Overrides __invert__ method called also by tilde operator '~'.
         Syntactical Sugar for bitwise NOT operator, that creates a NotElementTag
@@ -195,6 +195,9 @@ class SelectableSoup(ABC):
         NotElementTag
             Negation of SelectableSoup that can be used to get all elements
             that do not match the SelectableSoup.
+        SelectableSoup
+            Any SelectableSoup object in case of directly inverting
+            NotElementTag to get original SelectableSoup.
 
         Raises
         ------
