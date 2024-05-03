@@ -7,18 +7,16 @@ from dataclasses import dataclass, field
 from functools import reduce
 from typing import Any, Iterable, Optional, Pattern
 
-from bs4 import SoupStrainer, Tag
+from bs4 import Tag
 
-from soupsavvy.tags.base import SelectableCSS, SelectableSoup, SingleSelectableSoup
-from soupsavvy.tags.exceptions import NotSelectableSoupException, WildcardTagException
-from soupsavvy.tags.namespace import (
-    CSS_SELECTOR_WILDCARD,
-    DEFAULT_PATTERN,
-    FIND_RESULT,
-    NAME,
-    STRING,
+import soupsavvy.tags.namespace as ns
+from soupsavvy.tags.base import (
+    IterableSoup,
+    SelectableCSS,
+    SelectableSoup,
+    SingleSelectableSoup,
 )
-from soupsavvy.tags.utils import TagIterator, UniqueTag
+from soupsavvy.tags.exceptions import WildcardTagException
 
 
 @dataclass
@@ -77,7 +75,7 @@ class AttributeTag(SingleSelectableSoup, SelectableCSS):
             return re.compile(self.pattern)
         # if pattern and value was not provided, fall back to default pattern
         if self.value is None:
-            return re.compile(DEFAULT_PATTERN)
+            return re.compile(ns.DEFAULT_PATTERN)
         # if only value was provided and re = True, create pattern from value
         if self.re:
             return re.compile(self.value)
@@ -96,7 +94,9 @@ class AttributeTag(SingleSelectableSoup, SelectableCSS):
 
     @property
     def _find_params(self) -> dict[str, Any]:
-        return {self.name: self._pattern}
+        # passing filters in attrs parameter as dict instead of kwargs
+        # to avoid overriding other find method parameters like ex. 'name'
+        return {ns.ATTRS: {self.name: self._pattern}}
 
 
 @dataclass
@@ -168,10 +168,10 @@ class ElementTag(SingleSelectableSoup, SelectableCSS):
 
     @property
     def _find_params(self) -> dict[str, Any]:
-        params = [attr._find_params for attr in self.attributes]
+        params = [attr._find_params[ns.ATTRS] for attr in self.attributes]
         # reduce raises error when given an empty iterable
         attrs = dict(reduce(lambda x, y: {**x, **y}, params)) if params else {}
-        return {NAME: self.tag} | attrs
+        return {ns.NAME: self.tag} | {ns.ATTRS: attrs}
 
 
 @dataclass
@@ -239,11 +239,11 @@ class PatternElementTag(SingleSelectableSoup):
     @property
     def _find_params(self) -> dict[str, Any]:
         pattern = re.compile(self.pattern) if self.re else self.pattern
-        return {STRING: pattern} | self.tag._find_params
+        return {ns.STRING: pattern} | self.tag._find_params
 
 
 @dataclass(init=False)
-class StepsElementTag(SelectableSoup):
+class StepsElementTag(SelectableSoup, IterableSoup):
     """
     Class representing an list of steps of multiple soup selectors.
     Finds nested elements that match all steps in order.
@@ -298,26 +298,7 @@ class StepsElementTag(SelectableSoup):
         NotSelectableSoupException
             If any of provided parameters is not an instance of SelectableSoup.
         """
-        args = [tag1, tag2] + list(tags)
-        invalid = [arg for arg in args if not isinstance(arg, SelectableSoup)]
-
-        if invalid:
-            raise NotSelectableSoupException(
-                f"Parameters {invalid} are not instances of SelectableSoup."
-            )
-
-        self.steps = args
-
-    def _find(self, tag: Tag) -> FIND_RESULT:
-        element = tag
-
-        for step in self.steps:
-            element = step.find(element, strict=False)  # type: ignore
-
-            if element is None:
-                break
-
-        return element
+        super().__init__([tag1, tag2, *tags])
 
     def find_all(self, tag: Tag) -> list[Tag]:
         elements = [tag]
@@ -326,6 +307,10 @@ class StepsElementTag(SelectableSoup):
             elements = reduce(
                 list.__add__, (step.find_all(element) for element in elements)
             )
+
+            # break if no elements were found in the step
+            if not elements:
+                break
 
         return elements
 
@@ -351,103 +336,4 @@ class AnyTag(SingleSelectableSoup, SelectableCSS):
     @property
     def selector(self) -> str:
         """Returns wildcard css selector matching all elements in the markup."""
-        return CSS_SELECTOR_WILDCARD
-
-
-@dataclass(init=False)
-class NotElementTag(SelectableSoup):
-    def __init__(
-        self,
-        tag: SelectableSoup,
-        /,
-        *tags: SelectableSoup,
-    ) -> None:
-        """
-        Initializes NotElementTags object with provided positional arguments as tags.
-        At least two SelectableSoup object required to create NotElementTags.
-
-        Parameters
-        ----------
-        tags: SelectableSoup
-            SelectableSoup objects to negate match accepted as positional arguments.
-
-        Raises
-        ------
-        NotSelectableSoupException
-            If any of provided parameters is not an instance of SelectableSoup.
-        """
-        args = [tag] + list(tags)
-        invalid = [arg for arg in args if not isinstance(arg, SelectableSoup)]
-
-        if invalid:
-            raise NotSelectableSoupException(
-                f"Parameters {invalid} are not instances of SelectableSoup."
-            )
-
-        self.steps = args
-
-    def _find(self, tag: Tag) -> FIND_RESULT:
-        elements = self.find_all(tag)
-        return elements[0] if elements else None
-
-    def find_all(self, tag: Tag) -> list[Tag]:
-        steps = iter(self.steps)
-        elements = self._find_all(step=next(steps), tag=tag)
-
-        for step in steps:
-            elements |= self._find_all(step=step, tag=tag)
-
-        return [element.tag for element in elements]
-
-    def _find_all(self, step: SelectableSoup, tag: Tag) -> set[UniqueTag]:
-        elements = step.find_all(tag)
-        return {UniqueTag(element) for element in elements}
-
-
-class AndElementTag(SelectableSoup):
-    def __init__(
-        self,
-        tag: SelectableSoup,
-        /,
-        *tags: SelectableSoup,
-    ) -> None:
-        """
-        Initializes AndElementTag object with provided positional arguments as tags.
-        At least two SelectableSoup object required to create AndElementTag.
-
-        Parameters
-        ----------
-        tags: SelectableSoup
-            SelectableSoup objects to match accepted as positional arguments.
-
-        Raises
-        ------
-        NotSelectableSoupException
-            If any of provided parameters is not an instance of SelectableSoup.
-        """
-        args = [tag] + list(tags)
-        invalid = [arg for arg in args if not isinstance(arg, SelectableSoup)]
-
-        if invalid:
-            raise NotSelectableSoupException(
-                f"Parameters {invalid} are not instances of SelectableSoup."
-            )
-
-        self.steps = args
-
-    def _find(self, tag: Tag) -> FIND_RESULT:
-        elements = self.find_all(tag)
-        return elements[0] if elements else None
-
-    def find_all(self, tag: Tag) -> list[Tag]:
-        steps = iter(self.steps)
-        elements = self._find_all(step=next(steps), tag=tag)
-
-        for step in steps:
-            elements &= self._find_all(step=step, tag=tag)
-
-        return [element.tag for element in elements]
-
-    def _find_all(self, step: SelectableSoup, tag: Tag) -> set[UniqueTag]:
-        elements = step.find_all(tag)
-        return {UniqueTag(element) for element in elements}
+        return ns.CSS_SELECTOR_WILDCARD

@@ -76,7 +76,7 @@ class TestPatternElementTag:
         self, tag: PatternElementTag
     ):
         """
-        Tests if element was not found and method returs None
+        Tests if element was not found and method returns None
         for various PatternElementTags that does not match element.
         """
         markup = """<div class="widget">Hello World</div>"""
@@ -165,7 +165,7 @@ class LegalWildcardTag(ElementTag):
     """
 
     def __post_init__(self):
-        """Overriden post init to not raise exception on empty tag and attributes."""
+        """Overridden post init to not raise exception on empty tag and attributes."""
 
 
 @pytest.mark.soup
