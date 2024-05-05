@@ -58,7 +58,7 @@ class TestStepsElementTag:
     def test_element_is_found_for_valid_steps_elements(self, tag: StepsElementTag):
         """
         Tests if element was found for various valid StepsElementTag.
-        Element is returned if it matches multistep tags.
+        Element is returned if it matches multi-step tags.
         """
         text = """
             <div class="container" href="google">
@@ -332,8 +332,7 @@ class TestStepsElementTag:
             ElementTag("a", attributes=[AttributeTag(name="class", value="link")]),
         )
         results = tag.find_all(bs)
-        assert isinstance(results, list)
-        assert len(results) == 0
+        assert results == []
 
     def test_find_element_with_nested_steps_elements(self):
         """
@@ -365,3 +364,40 @@ class TestStepsElementTag:
         )
         result = tag.find(bs)
         assert str(result) == strip("""<span>Welcome there</span>""")
+
+    def test_find_skips_elements_partially_matching_steps(self):
+        """
+        Tests if StepsElementTag find method skips elements that partially match
+        the steps and returns the first element that matches all steps.
+        In this case first tag matches only first step,
+        but second tag matches both steps.
+        """
+        text = """
+            <div class="container" href="google">
+                <a class="link" href="search">Welcome</a>
+            </div>
+            <div class="container" href="google">
+                <span class="link" href="search">Welcome</span>
+            </div>
+        """
+        bs = to_bs(text)
+        tag = StepsElementTag(ElementTag(tag="div"), ElementTag(tag="span"))
+        result = tag.find(bs)
+
+        expected = """<span class="link" href="search">Welcome</span>"""
+        assert str(result) == strip(expected)
+
+    def test_returns_empty_list_if_first_step_was_not_matched(self):
+        """
+        Tests if StepsElementTag find_all method returns an empty list
+        if the first step was not matched.
+        """
+        text = """
+            <div class="container" href="google">
+                <a class="link" href="search">Welcome</a>
+            </div>
+        """
+        bs = to_bs(text)
+        tag = StepsElementTag(ElementTag(tag="span"), ElementTag(tag="a"))
+        result = tag.find_all(bs)
+        assert result == []

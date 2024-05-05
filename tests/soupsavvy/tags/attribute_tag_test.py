@@ -279,8 +279,7 @@ class TestAttributeTag:
         bs = to_bs(markup)
         tag = AttributeTag(name="href", value="photos")
         result = tag.find_all(bs)
-        assert isinstance(result, list)
-        assert len(result) == 0
+        assert result == []
 
     def test_find_all_matches_all_nested_elements(self):
         """
@@ -306,6 +305,20 @@ class TestAttributeTag:
         """
         expected_2 = """<a href="github "></a>"""
         assert list(map(str, result)) == [strip(expected_1), strip(expected_2)]
+
+    def test_do_not_shadow_bs4_find_method_parameters(self):
+        """
+        Tests that find method does not shadow bs4.Tag find method parameters.
+        If attribute name is the same as bs4.Tag find method parameter
+        like ex. 'string' or 'name' it should not cause any conflicts.
+        The way to avoid it is to pass attribute filters as a dictionary to 'attrs'
+        parameter in bs4.Tag find method instead of as keyword arguments.
+        """
+        markup = """<a name="github"></a>"""
+        bs = to_bs(markup)
+        tag = AttributeTag(name="name", value="github")
+        result = tag.find(bs)
+        assert str(result) == strip(markup)
 
     @pytest.mark.css_selector
     @pytest.mark.parametrize(

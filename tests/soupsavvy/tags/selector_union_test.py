@@ -45,9 +45,9 @@ class TestSoupUnionTag:
         with pytest.raises(NotSelectableSoupException):
             SoupUnionTag(tag_1, "string")  # type: ignore
 
-    def test_soup_union_is_instanciated_with_correct_tags_attribute(self):
+    def test_soup_union_is_instantiated_with_correct_tags_attribute(self):
         """
-        Tests if tags attribute of SoupUnionTag is asigned properly is a list
+        Tests if tags attribute of SoupUnionTag is assigned properly is a list
         containing all Tags provided in init.
         """
         tag_1 = ElementTag("a", attributes=[AttributeTag("class", value="widget")])
@@ -55,12 +55,12 @@ class TestSoupUnionTag:
 
         union = SoupUnionTag(tag_1, tag_2)
 
-        assert isinstance(union.tags, list)
-        assert union.tags == [tag_1, tag_2]
+        assert isinstance(union.steps, list)
+        assert union.steps == [tag_1, tag_2]
 
-    def test_soup_union_is_instanciated_with_more_than_two_arguments(self):
+    def test_soup_union_is_instantiated_with_more_than_two_arguments(self):
         """
-        Tests if tags attribute of SoupUnionTag is asigned properly is a list
+        Tests if tags attribute of SoupUnionTag is assigned properly is a list
         containing all Tags provided in init. Init can take any number of positional
         arguments above 2 that are SelectableSoup.
         In this case testing arguments of mixed types: ElementTag and AttributeTag.
@@ -71,8 +71,8 @@ class TestSoupUnionTag:
 
         union = SoupUnionTag(tag_1, tag_2, tag_3)
 
-        assert isinstance(union.tags, list)
-        assert union.tags == [tag_1, tag_2, tag_3]
+        assert isinstance(union.steps, list)
+        assert union.steps == [tag_1, tag_2, tag_3]
 
     @pytest.mark.parametrize(
         argnames="markup",
