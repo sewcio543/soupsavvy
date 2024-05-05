@@ -1,9 +1,10 @@
 from abc import abstractmethod
-from typing import Iterable
+from typing import Iterable, Optional
 
 from bs4 import Tag
 
 from soupsavvy.tags.base import SelectableCSS, SelectableSoup
+from soupsavvy.tags.namespace import FindResult
 from soupsavvy.tags.tag_utils import TagIterator
 
 
@@ -11,13 +12,16 @@ class ConditionalSoup(SelectableSoup, SelectableCSS):
 
     @abstractmethod
     def _condition(self, tag: Tag) -> bool:
-        raise NotImplementedError()
+        raise NotImplementedError(
+            f"{self.__class__.__name__} is an interface, "
+            "and does not implement this method."
+        )
 
-    def _get_iterator(self, tag: Tag) -> Iterable[Tag]:
-        return TagIterator(tag)
+    def _get_iterator(self, tag: Tag, recursive: bool) -> Iterable[Tag]:
+        return TagIterator(tag, recursive=recursive)
 
-    def _find(self, tag: Tag):
-        iterator = self._get_iterator(tag)
+    def _find(self, tag: Tag, recursive: bool = True) -> FindResult:
+        iterator = self._get_iterator(tag, recursive=recursive)
 
         for _tag_ in iterator:
             if self._condition(_tag_):
@@ -25,9 +29,14 @@ class ConditionalSoup(SelectableSoup, SelectableCSS):
 
         return None
 
-    def find_all(self, tag: Tag):
-        iterator = TagIterator(tag)
-        return [_tag_ for _tag_ in iterator if self._condition(_tag_)]
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        iterator = self._get_iterator(tag, recursive=recursive)
+        return [_tag_ for _tag_ in iterator if self._condition(_tag_)][:limit]
 
 
 class OnlyChild(ConditionalSoup):
@@ -101,8 +110,8 @@ class FirstOfType(ConditionalSoup):
     def __init__(self, tag: str):
         self.tag = tag
 
-    def _get_iterator(self, tag: Tag) -> Iterable[Tag]:
-        return tag.find_all(self.tag)
+    def _get_iterator(self, tag: Tag, recursive: bool) -> Iterable[Tag]:
+        return tag.find_all(self.tag, recursive=recursive)
 
     def _condition(self, tag: Tag) -> bool:
         return len(tag.find_previous_siblings(self.tag)) == 0
@@ -117,8 +126,8 @@ class LastOfType(ConditionalSoup):
     def __init__(self, tag: str):
         self.tag = tag
 
-    def _get_iterator(self, tag: Tag) -> Iterable[Tag]:
-        return tag.find_all(self.tag)
+    def _get_iterator(self, tag: Tag, recursive: bool) -> Iterable[Tag]:
+        return tag.find_all(self.tag, recursive=recursive)
 
     def _condition(self, tag: Tag) -> bool:
         return len(tag.find_next_siblings(self.tag)) == 0
@@ -134,8 +143,8 @@ class NthOfType(ConditionalSoup):
         self.tag = tag
         self.n = n
 
-    def _get_iterator(self, tag: Tag) -> Iterable[Tag]:
-        return tag.find_all(self.tag)
+    def _get_iterator(self, tag: Tag, recursive: bool) -> Iterable[Tag]:
+        return tag.find_all(self.tag, recursive=recursive)
 
     def _condition(self, tag: Tag) -> bool:
         return len(tag.find_previous_siblings(self.tag)) == self.n - 1
@@ -151,8 +160,8 @@ class NthLastOfType(ConditionalSoup):
         self.tag = tag
         self.n = n
 
-    def _get_iterator(self, tag: Tag) -> Iterable[Tag]:
-        return tag.find_all(self.tag)
+    def _get_iterator(self, tag: Tag, recursive: bool) -> Iterable[Tag]:
+        return tag.find_all(self.tag, recursive=recursive)
 
     def _condition(self, tag: Tag) -> bool:
         return len(tag.find_next_siblings(self.tag)) == self.n - 1
@@ -167,8 +176,8 @@ class OnlyOfType(ConditionalSoup):
     def __init__(self, tag: str):
         self.tag = tag
 
-    def _get_iterator(self, tag: Tag) -> Iterable[Tag]:
-        return tag.find_all(self.tag)
+    def _get_iterator(self, tag: Tag, recursive: bool) -> Iterable[Tag]:
+        return tag.find_all(self.tag, recursive=recursive)
 
     def _condition(self, tag: Tag) -> bool:
         return (
