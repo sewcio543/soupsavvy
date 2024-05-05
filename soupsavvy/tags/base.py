@@ -5,6 +5,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from functools import reduce
+from itertools import chain
 from typing import Any, Iterable, Literal, Optional, overload
 
 from bs4 import NavigableString, Tag
@@ -53,6 +54,7 @@ class SelectableSoup(ABC):
         self,
         tag: Tag,
         strict: Literal[False] = ...,
+        recursive: bool = ...,
     ) -> Optional[Tag]: ...
 
     @overload
@@ -60,9 +62,15 @@ class SelectableSoup(ABC):
         self,
         tag: Tag,
         strict: Literal[True] = ...,
+        recursive: bool = ...,
     ) -> Tag: ...
 
-    def find(self, tag: Tag, strict: bool = False) -> Optional[Tag]:
+    def find(
+        self,
+        tag: Tag,
+        strict: bool = False,
+        recursive: bool = True,
+    ) -> Optional[Tag]:
         """
         Finds a first matching element in provided BeautifulSoup Tag.
 
@@ -75,9 +83,10 @@ class SelectableSoup(ABC):
             if False and tag was not found, returns None by defaulting to BeautifulSoup
             implementation. Value of this parameter does not affect behavior if tag
             was successfully found in the markup. By default False.
-        exception: Exception, optional
-            Exception instance to be raised when strict parameter is set to True
-            and tag was not found in markup. By default TagNotFoundException is raised.
+        recursive : bool, optional
+            bs4.Tag.find method parameter that specifies if search should be recursive.
+            If set to False, only direct children of the tag will be searched.
+            By default True.
 
         Returns
         -------
@@ -96,7 +105,7 @@ class SelectableSoup(ABC):
         NavigableStringException
             If NavigableString was returned by bs4.
         """
-        result = self._find(tag)
+        result = self._find(tag, recursive=recursive)
 
         if result is None:
             if strict:
@@ -112,7 +121,12 @@ class SelectableSoup(ABC):
         return result
 
     @abstractmethod
-    def find_all(self, tag: Tag) -> list[Tag]:
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
         """
         Finds all matching elements in provided BeautifulSoup Tag.
 
@@ -120,6 +134,13 @@ class SelectableSoup(ABC):
         ----------
         tag : Tag
             Any BeautifulSoup Tag object.
+        recursive : bool, optional
+            bs4.Tag.find method parameter that specifies if search should be recursive.
+            If set to False, only direct children of the tag will be searched.
+            By default True.
+        limit : int, optional
+            bs4.Tag.find_all method parameter that specifies maximum number of elements
+            to return. If set to None, all elements are returned. By default None.
 
         Returns
         -------
@@ -132,7 +153,7 @@ class SelectableSoup(ABC):
             "and does not implement this method."
         )
 
-    def _find(self, tag: Tag) -> FindResult:
+    def _find(self, tag: Tag, recursive: bool = True) -> FindResult:
         """
         Returns an object that is a result of markup search.
 
@@ -140,13 +161,17 @@ class SelectableSoup(ABC):
         ----------
         tag : Tag
             Any BeautifulSoup Tag object.
+        recursive : bool, optional
+            bs4.Tag.find method parameter that specifies if search should be recursive.
+            If set to False, only direct children of the tag will be searched.
+            By default True.
 
         Returns
         -------
         NavigableString | Tag | None:
             Result of bs4.Tag find method with tag parameters.
         """
-        elements = self.find_all(tag)
+        elements = self.find_all(tag, recursive=recursive, limit=1)
         return elements[0] if elements else None
 
     def __or__(self, x: SelectableSoup) -> SoupUnionTag:
@@ -231,11 +256,55 @@ class SelectableSoup(ABC):
         """
         if not isinstance(x, SelectableSoup):
             raise TypeError(
-                f"Bitwise and not supported for types {type(self)} and {type(x)}, "
+                f"Bitwise AND not supported for types {type(self)} and {type(x)}, "
                 f"expected an instance of {SelectableSoup.__name__}."
             )
 
         return AndElementTag(self, x)
+
+    def __gt__(self, x: SelectableSoup) -> ParentTag:
+        """
+        Overrides __gt__ method called also by greater than operator '>'.
+        Syntactical Sugar for greater than operator, that creates a ParentTag
+        which is equivalent to child element css selector.
+
+        Example
+        -------
+        >>> div > a
+
+        matches all 'a' elements that are direct children of 'div' elements.
+        The same can be achieved by using '>' operator on two SelectableSoup objects.
+
+        Example
+        -------
+        >>> ElementTag("div") > ElementTag("a")
+
+        Which results in ParentTag(ElementTag("div"), ElementTag("a")) object.
+
+        Parameters
+        ----------
+        x : SelectableSoup
+            SelectableSoup object to be combined into new ParentTag as child
+            of current SelectableSoup.
+
+        Returns
+        -------
+        ParentTag
+            ParentTag object that can be used to get all elements
+            that are direct children of the current SelectableSoup.
+
+        Raises
+        ------
+        TypeError
+            If provided object is not of SelectableSoup type.
+        """
+        if not isinstance(x, SelectableSoup):
+            raise TypeError(
+                f"GT operator not supported for types {type(self)} and {type(x)}, "
+                f"expected an instance of {SelectableSoup.__name__}."
+            )
+
+        return ParentTag(self, x)
 
 
 class SingleSelectableSoup(SelectableSoup):
@@ -249,11 +318,13 @@ class SingleSelectableSoup(SelectableSoup):
     and find_all parameters that are passed as keyword arguments into these methods.
     """
 
-    def find_all(self, tag: Tag) -> list[Tag]:
-        return tag.find_all(**self._find_params)
-
-    def _find(self, tag: Tag) -> FindResult:
-        return tag.find(**self._find_params)
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        return tag.find_all(**self._find_params, recursive=recursive, limit=limit)
 
     @property
     @abstractmethod
@@ -379,18 +450,29 @@ class SoupUnionTag(SelectableSoup, IterableSoup):
         """
         super().__init__([tag1, tag2, *tags])
 
-    def _find(self, tag: Tag) -> FindResult:
+    def _find(self, tag: Tag, recursive: bool = True) -> FindResult:
         # iterates all tags and returns first element that matches
         for _tag_ in self.steps:
-            result = _tag_.find(tag)
+            result = _tag_.find(tag, recursive=recursive)
 
             if result is not None:
                 return result
 
         return None
 
-    def find_all(self, tag: Tag) -> list[Tag]:
-        return reduce(list.__add__, (_tag_.find_all(tag) for _tag_ in self.steps))
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        return reduce(
+            list.__add__,
+            (
+                _tag_.find_all(tag, recursive=recursive, limit=limit)
+                for _tag_ in self.steps
+            ),
+        )
 
 
 @dataclass(init=False)
@@ -441,17 +523,25 @@ class NotElementTag(SelectableSoup, IterableSoup):
         self._multiple = bool(tags)
         super().__init__([tag, *tags])
 
-    def find_all(self, tag: Tag) -> list[Tag]:
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
         matching = set()
 
         for step in self.steps:
-            matching |= {UniqueTag(element) for element in step.find_all(tag)}
+            matching |= {
+                UniqueTag(element)
+                for element in step.find_all(tag, recursive=recursive)
+            }
 
         return [
             element
-            for element in TagIterator(tag, recursive=True)
+            for element in TagIterator(tag, recursive=recursive)
             if UniqueTag(element) not in matching
-        ]
+        ][:limit]
 
     def __invert__(self) -> SelectableSoup:
         """
@@ -516,13 +606,74 @@ class AndElementTag(SelectableSoup, IterableSoup):
         """
         super().__init__([tag1, tag2, *tags])
 
-    def find_all(self, tag: Tag) -> list[Tag]:
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
         steps = iter(self.steps)
-        matching = [UniqueTag(element) for element in next(steps).find_all(tag)]
+        matching = [
+            UniqueTag(element)
+            for element in next(steps).find_all(tag, recursive=recursive)
+        ]
 
         for step in steps:
             # not using set on purpose to keep order of elements
-            step_elements = [UniqueTag(element) for element in step.find_all(tag)]
+            step_elements = [
+                UniqueTag(element)
+                for element in step.find_all(tag, recursive=recursive)
+            ]
             matching = [element for element in matching if element in step_elements]
 
-        return [element.tag for element in matching]
+        return [element.tag for element in matching][:limit]
+
+
+class ParentTag(SelectableSoup):
+    def __init__(self, parent: SelectableSoup, child: SelectableSoup):
+        self.parent = parent
+        self.child = child
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        # first find all parent tags
+        parents = self.parent.find_all(tag, recursive=recursive)
+        # find all direct matching children of parents
+        children = chain.from_iterable(
+            self.child.find_all(parent, recursive=False) for parent in parents
+        )
+        return list(children)[:limit]
+
+
+class PrecedingTag(SelectableSoup):
+    def __init__(self, previous: SelectableSoup, next: SelectableSoup):
+        self.previous = previous
+        self.next = next
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        parents = self.previous.find_all(tag, recursive=recursive)
+        # find all direct matching children of parents
+        matches = []
+
+        for parent in parents:
+            if parent.parent is None:
+                continue
+
+            if parent.find_next_sibling() in self.next.find_all(
+                parent.parent, recursive=False
+            ):
+                matches.append(parent)
+
+            if len(matches) == limit:
+                break
+
+        return matches[:limit]

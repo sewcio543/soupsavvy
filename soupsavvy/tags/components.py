@@ -300,19 +300,25 @@ class StepsElementTag(SelectableSoup, IterableSoup):
         """
         super().__init__([tag1, tag2, *tags])
 
-    def find_all(self, tag: Tag) -> list[Tag]:
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
         elements = [tag]
 
         for step in self.steps:
             elements = reduce(
-                list.__add__, (step.find_all(element) for element in elements)
+                list.__add__,
+                (step.find_all(element, recursive=recursive) for element in elements),
             )
 
             # break if no elements were found in the step
             if not elements:
                 break
 
-        return elements
+        return elements[:limit]
 
 
 class AnyTag(SingleSelectableSoup, SelectableCSS):
