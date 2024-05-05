@@ -405,6 +405,29 @@ class NotElementTag(SelectableSoup, IterableSoup):
         Initializes NotElementTags object with provided positional arguments as tags.
         At least one SelectableSoup object is required to create NotElementTags.
 
+        Example
+        -------
+        >>> NotElementTag(ElementTag(tag="div")
+
+        matches all elements that do not have "div" tag name.
+
+        Example
+        -------
+        >>> <span> class="widget">Hello World</span> ✔️
+        >>> <div class="menu">Hello World</div> ❌
+
+        Object can be initialized with multiple selectors as well, in which case
+        all selectors must match for element to be excluded from the result.
+
+        Object can be created as well by using bitwise NOT operator '~'
+        on a SelectableSoup object.
+
+        Example
+        -------
+        >>> ~ElementTag(tag="div")
+
+        Which is equivalent to the first example.
+
         Parameters
         ----------
         tags: SelectableSoup
@@ -453,6 +476,33 @@ class AndElementTag(SelectableSoup, IterableSoup):
         """
         Initializes AndElementTag object with provided positional arguments as tags.
         At least two SelectableSoup objects are required to create AndElementTag.
+
+        Example
+        -------
+        >>> AndElementTag(
+        ...    ElementTag(tag="div"),
+        ...    AttributeTag(name="class", value="widget")
+        ... )
+
+        matches all elements that have "div" tag name AND 'class' attribute "widget".
+
+        Example
+        -------
+        >>> <div class="widget">Hello World</div> ✔️
+        >>> <span class="widget">Hello World</span> ❌
+        >>> <div class="menu">Hello World</div> ❌
+
+        Object can be initialized with multiple selectors as well, in which case
+        all selectors must match for element to be included in the result.
+
+        Object can be created as well by using bitwise AND operator '&'
+        on two SelectableSoup objects.
+
+        Example
+        -------
+        >>> ElementTag(tag="div") & AttributeTag(name="class", value="widget")
+
+        Which is equivalent to the first example.
 
         Parameters
         ----------
