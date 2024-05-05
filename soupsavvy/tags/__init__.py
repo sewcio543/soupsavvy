@@ -1,4 +1,4 @@
-from .base import SoupUnionTag
+from .base import AndElementTag, NotElementTag, SoupUnionTag
 from .components import (
     AnyTag,
     AttributeTag,
@@ -14,4 +14,6 @@ __all__ = [
     "PatternElementTag",
     "SoupUnionTag",
     "StepsElementTag",
+    "AndElementTag",
+    "NotElementTag",
 ]
