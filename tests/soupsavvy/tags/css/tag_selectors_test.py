@@ -380,3 +380,17 @@ class TestEmptyChild:
             strip("<div></div>"),
             strip("<div></div>"),
         ]
+
+    def test_closing_tag_is_always_empty(self):
+        """
+        Tests if closing tag like ex. image always matches the Empty tag.
+        Closing tags do not allow children or text.
+        """
+        html = """
+            <img src="picture.jpg"/>
+            <div>Hello</div>
+        """
+        bs = find_body_element(to_bs(html))
+        tag = Empty()
+        result = tag.find(bs)
+        assert str(result) == strip("""<img src="picture.jpg"/>""")
