@@ -149,7 +149,7 @@ class OnlyChild(CSSSelectorSoup):
 
 
 @dataclass
-class EmptyTag(CSSSelectorSoup):
+class Empty(CSSSelectorSoup):
     """
     Class to select tags that are empty, i.e., have no children.
     It uses the CSS selector `:empty`.
@@ -173,9 +173,9 @@ class EmptyTag(CSSSelectorSoup):
 
     Example
     --------
-    >>> EmptyTag().selector
+    >>> Empty().selector
     :empty
-    >>> EmptyTag("ol").selector
+    >>> Empty("ol").selector
     ol:empty
 
     If tag is specified, two conditions must be met:
