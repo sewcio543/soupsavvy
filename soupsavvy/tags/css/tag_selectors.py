@@ -2,7 +2,7 @@
 Module with classes for tag selection based on CSS selectors.
 
 Contains implementation of basic CSS pseudo-classes like
-:only-child, :empty, :nth-child.
+:only-child, :empty, :nth-child().
 
 They can be used in combination with other SelectableSoup objects
 to create more complex tag selection conditions.
