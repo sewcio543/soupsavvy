@@ -165,7 +165,7 @@ class TestNthChild:
 
     def test_find_and_find_all_raise_exception_with_invalid_selector(self):
         """
-        Tests if find method raises InvalidCSSSelector exception
+        Tests if find and find_all methods raise InvalidCSSSelector exception
         if invalid n parameter is passed into the selector.
         """
         html = """<div></div>"""
