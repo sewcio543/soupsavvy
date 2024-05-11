@@ -41,3 +41,5 @@ jobs:
         run: |
           echo "Using codecov version: $(codecov --version)"
           python -m codecov --verbose
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
