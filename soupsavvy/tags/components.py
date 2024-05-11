@@ -308,12 +308,14 @@ class StepsElementTag(SelectableSoup, IterableSoup):
     ) -> list[Tag]:
         elements = [tag]
 
-        for step in self.steps:
+        for i, step in enumerate(self.steps):
+            # only first step follows recursive rule
+            recursive_ = recursive if i == 0 else True
+
             elements = reduce(
                 list.__add__,
-                (step.find_all(element, recursive=recursive) for element in elements),
+                (step.find_all(element, recursive=recursive_) for element in elements),
             )
-
             # break if no elements were found in the step
             if not elements:
                 break

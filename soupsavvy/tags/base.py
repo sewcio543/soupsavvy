@@ -676,4 +676,4 @@ class PrecedingTag(SelectableSoup):
             if len(matches) == limit:
                 break
 
-        return matches[:limit]
+        return matches

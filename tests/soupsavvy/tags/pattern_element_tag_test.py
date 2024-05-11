@@ -16,7 +16,7 @@ from soupsavvy.tags.exceptions import (
     WildcardTagException,
 )
 
-from .conftest import strip, to_bs
+from .conftest import find_body_element, strip, to_bs
 
 
 @pytest.mark.soup
@@ -150,8 +150,122 @@ class TestPatternElementTag:
             pattern="Hello World",
         )
         result = tag.find_all(bs)
-        assert isinstance(result, list)
-        assert len(result) == 0
+        assert result == []
+
+    def test_find_returns_first_matching_child_if_recursive_false(self):
+        """
+        Tests if find returns first matching child element if recursive is False.
+        In this case first span and <div>Hello 1</div> do not match
+        because they are not div and not direct child in this order.
+        """
+        text = """
+            <span>Hello</span>
+            <div class="Hello"></div>
+            <div>
+                <div>Hello 1</div>
+            </div>
+            <div>Hello 2</div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = PatternElementTag(
+            ElementTag(tag="div"),
+            pattern="Hello",
+            re=True,
+        )
+        result = tag.find(bs, recursive=False)
+
+        assert str(result) == strip("""<div>Hello 2</div>""")
+
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+        """
+        Tests if find returns None if no child element matches the selector
+        and recursive is False.
+        """
+        text = """
+            <span>Hello</span>
+            <div class="Hello"></div>
+            <div>
+                <div>Hello 1</div>
+            </div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = PatternElementTag(
+            ElementTag(tag="div"),
+            pattern="Hello",
+            re=True,
+        )
+        result = tag.find(bs, recursive=False)
+        assert result is None
+
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+        """
+        Tests if find raises TagNotFoundException if no child element
+        matches the selector, when recursive is False and strict is True.
+        """
+        text = """
+            <span>Hello</span>
+            <div class="Hello"></div>
+            <div>
+                <div>Hello 1</div>
+            </div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = PatternElementTag(
+            ElementTag(tag="div"),
+            pattern="Hello",
+            re=True,
+        )
+
+        with pytest.raises(TagNotFoundException):
+            tag.find(bs, strict=True, recursive=False)
+
+    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+        """
+        Tests if find_all returns all matching children if recursive is False.
+        It returns only matching children of the body element.
+        """
+        text = """
+            <span>Hello</span>
+            <div class="Hello"></div>
+            <div>
+                <div>Hello 1</div>
+            </div>
+            <div>Hello 2</div>
+            <div>Morning, Hello</div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = PatternElementTag(
+            ElementTag(tag="div"),
+            pattern="Hello",
+            re=True,
+        )
+        results = tag.find_all(bs, recursive=False)
+
+        assert list(map(str, results)) == [
+            strip("""<div>Hello 2</div>"""),
+            strip("""<div>Morning, Hello</div>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+        """
+        Tests if find_all returns only x elements when limit is set.
+        In this case only 2 first in order elements are returned.
+        """
+        text = """
+            <span></span>
+            <div>Hello 1</div>
+            <div>Hello 2</div>
+            <div>Hello 3</div>
+            <div>Hello 4</div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = ElementTag(tag="div")
+        results = tag.find_all(bs, limit=2)
+
+        assert list(map(str, results)) == [
+            strip("""<div>Hello 1</div>"""),
+            strip("""<div>Hello 2</div>"""),
+        ]
 
 
 class LegalWildcardTag(ElementTag):
