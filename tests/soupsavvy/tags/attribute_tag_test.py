@@ -453,6 +453,24 @@ class TestAttributeTag:
         with pytest.raises(TagNotFoundException):
             tag.find(bs, strict=True, recursive=False)
 
+    def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns an empty list if no child element matches the selector
+        and recursive is False.
+        """
+        text = """
+            <div class="google">
+                <a href="github">Hello 1</a>
+            </div>
+            <a class="github">Hello 2</a>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = AttributeTag(name="href", value="github")
+        results = tag.find_all(bs, recursive=False)
+        assert results == []
+
     def test_find_all_returns_all_matching_children_when_recursive_false(self):
         """
         Tests if find_all returns all matching children if recursive is False.
@@ -480,8 +498,9 @@ class TestAttributeTag:
         In this case only 2 first in order elements are returned.
         """
         text = """
-            <span></span>
-            <a class="github">Hello 2</a>
+            <span>
+                <a class="github">Hello 2</a>
+            </span>
             <div class="menu"></div>
             <div class="google"></div>
             <span class="menu"></span>
@@ -493,4 +512,31 @@ class TestAttributeTag:
         assert list(map(str, results)) == [
             strip("""<a class="github">Hello 2</a>"""),
             strip("""<div class="menu"></div>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns only x elements when limit is set and recursive
+        is False. In this case only 2 first in order children matching
+        the selector are returned.
+        """
+        text = """
+            <span>
+                <a class="github">Hello 2</a>
+            </span>
+            <div class="menu"></div>
+            <div>
+                <div class="google"></div>
+            </div>
+            <span class="menu"></span>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = AttributeTag(name="class")
+        results = tag.find_all(bs, recursive=False, limit=2)
+
+        assert list(map(str, results)) == [
+            strip("""<div class="menu"></div>"""),
+            strip("""<span class="menu"></span>"""),
         ]

@@ -217,6 +217,25 @@ class TestAndElementTag:
             strip("""<a class="">Hello 4</a>"""),
         ]
 
+    def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns an empty list if no child element matches the selector
+        and recursive is False.
+        """
+        text = """
+            <div class="google">
+                <a class="github">Hello 1</a>
+            </div>
+            <a href="github">Hello 2</a>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = AndElementTag(ElementTag("a"), AttributeTag("class"))
+
+        results = tag.find_all(bs, recursive=False)
+        assert results == []
+
     def test_find_all_returns_only_x_elements_when_limit_is_set(self):
         """
         Tests if find_all returns only x elements when limit is set.
@@ -224,7 +243,9 @@ class TestAndElementTag:
         """
         text = """
             <span class="link"></span>
-            <div class="">Hello 1</div>
+            <div>
+                <div class="">Hello 1</div>
+            </div>
             <div>Hello 2</div>
             <div class="link">Hello 3</div>
             <div class="menu">Hello 4</div>
@@ -237,4 +258,31 @@ class TestAndElementTag:
         assert list(map(str, results)) == [
             strip("""<div class="">Hello 1</div>"""),
             strip("""<div class="link">Hello 3</div>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns only x elements when limit is set and recursive
+        is False. In this case only 2 first in order children matching
+        the selector are returned.
+        """
+        text = """
+            <span class="link"></span>
+            <div>
+                <div class="">Hello 1</div>
+            </div>
+            <div>Hello 2</div>
+            <div class="link">Hello 3</div>
+            <div class="menu">Hello 4</div>
+            <div class="">Hello 5</div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = AndElementTag(ElementTag("div"), AttributeTag("class"))
+        results = tag.find_all(bs, recursive=False, limit=2)
+
+        assert list(map(str, results)) == [
+            strip("""<div class="link">Hello 3</div>"""),
+            strip("""<div class="menu">Hello 4</div>"""),
         ]

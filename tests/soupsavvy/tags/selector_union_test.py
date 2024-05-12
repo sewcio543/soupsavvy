@@ -280,6 +280,28 @@ class TestSoupUnionTag:
             strip("""<p>Hello 4</p>"""),
         ]
 
+    def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns an empty list if no child element matches the selector
+        and recursive is False.
+        """
+        text = """
+            <div>
+                <a href="github">Hello 1</a>
+                <p>Hello 2</p>
+            </div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = SoupUnionTag(
+            ElementTag(tag="a"),
+            ElementTag(tag="p"),
+        )
+
+        results = tag.find_all(bs, recursive=False)
+        assert results == []
+
     def test_find_all_returns_only_x_elements_when_limit_is_set(self):
         """
         Tests if find_all returns only x elements when limit is set.
@@ -290,8 +312,9 @@ class TestSoupUnionTag:
         """
         text = """
             <p>Empty</p>
-            <span></span>
-            <a href="github">Hello 1</a>
+            <span>
+                <a href="github">Hello 1</a>
+            </span>
             <p>Hello 2</p>
             <a>Hello 3</a>
         """
@@ -304,6 +327,34 @@ class TestSoupUnionTag:
 
         assert list(map(str, results)) == [
             strip("""<a href="github">Hello 1</a>"""),
+            strip("""<a>Hello 3</a>"""),
+            strip("""<p>Empty</p>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns only x elements when limit is set and recursive
+        is False. In this case only 2 first in order children matching
+        the selector are returned.
+        """
+        text = """
+            <p>Empty</p>
+            <span>
+                <a href="github">Hello 1</a>
+            </span>
+            <p>Hello 2</p>
+            <a>Hello 3</a>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = SoupUnionTag(
+            ElementTag(tag="a"),
+            ElementTag(tag="p"),
+        )
+        results = tag.find_all(bs, recursive=False, limit=2)
+
+        assert list(map(str, results)) == [
             strip("""<a>Hello 3</a>"""),
             strip("""<p>Empty</p>"""),
         ]

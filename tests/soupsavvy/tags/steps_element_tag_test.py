@@ -493,6 +493,29 @@ class TestStepsElementTag:
             strip("""<a>Hello 2</a>"""),
         ]
 
+    def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns an empty list if no child element matches the selector
+        and recursive is False.
+        """
+        text = """
+            <span>
+                <div><a>Hello 1</a></div>
+            </span>
+            <div class="google"></div>
+            <a href="github">Hello 2</a>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = StepsElementTag(
+            ElementTag("div"),
+            ElementTag("a"),
+        )
+
+        results = tag.find_all(bs, recursive=False)
+        assert results == []
+
     def test_find_all_returns_only_x_elements_when_limit_is_set(self):
         """
         Tests if find_all returns only x elements when limit is set.
@@ -500,8 +523,10 @@ class TestStepsElementTag:
         """
         text = """
             <a></a>
+            <span>
+                <div><a>Hello 1</a></div>
+            </span>
             <div>Hello</div>
-            <div><a>Hello 1</a></div>
             <div><a>Hello 2</a></div>
             <div><a>Hello 3</a></div>
             <div><a>Hello 4</a></div>
@@ -516,6 +541,36 @@ class TestStepsElementTag:
         assert list(map(str, results)) == [
             strip("""<a>Hello 1</a>"""),
             strip("""<a>Hello 2</a>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns only x elements when limit is set and recursive
+        is False. In this case only 2 first in order children matching
+        the selector are returned.
+        """
+        text = """
+            <a></a>
+            <span>
+                <div><a>Hello 1</a></div>
+            </span>
+            <div>Hello</div>
+            <div><a>Hello 2</a></div>
+            <div><a>Hello 3</a></div>
+            <div><a>Hello 4</a></div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = StepsElementTag(
+            ElementTag("div"),
+            ElementTag("a"),
+        )
+        results = tag.find_all(bs, recursive=False, limit=2)
+
+        assert list(map(str, results)) == [
+            strip("""<a>Hello 2</a>"""),
+            strip("""<a>Hello 3</a>"""),
         ]
 
     def test_find_steps_after_first_are_always_recursive(self):

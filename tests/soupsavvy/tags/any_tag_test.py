@@ -143,15 +143,38 @@ class TestAnyTag:
         Always first in order elements are returned.
         """
         text = """
-            <div>Hello 1</div>
+            <div><a>Hello 1</a></div>
             <div>Hello 2</div>
             <div>Hello 3</div>
             <div>Hello 4</div>
         """
         bs = find_body_element(to_bs(text))
-        results = tag.find_all(bs, limit=2)
+        results = tag.find_all(bs, limit=3)
 
         assert list(map(str, results)) == [
-            strip("""<div>Hello 1</div>"""),
+            strip("""<div><a>Hello 1</a></div>"""),
+            strip("""<a>Hello 1</a>"""),
+            strip("""<div>Hello 2</div>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
+        self, tag: AnyTag
+    ):
+        """
+        Tests if find_all returns only x elements when limit is set and recursive
+        is False. In this case only 2 first in order children matching
+        the selector are returned.
+        """
+        text = """
+            <div><a>Hello 1</a></div>
+            <div>Hello 2</div>
+            <div>Hello 3</div>
+            <div>Hello 4</div>
+        """
+        bs = find_body_element(to_bs(text))
+        results = tag.find_all(bs, recursive=False, limit=2)
+
+        assert list(map(str, results)) == [
+            strip("""<div><a>Hello 1</a></div>"""),
             strip("""<div>Hello 2</div>"""),
         ]
