@@ -7,7 +7,7 @@ from soupsavvy.tags.components import AnyTag
 from soupsavvy.tags.exceptions import TagNotFoundException
 from soupsavvy.tags.namespace import CSS_SELECTOR_WILDCARD
 
-from .conftest import strip, to_bs
+from .conftest import find_body_element, strip, to_bs
 
 
 def find_tag(bs: Tag, name: str = "body") -> Tag:
@@ -104,3 +104,54 @@ class TestAnyTag:
     def test_selector_is_a_css_selector_wildcard(self, tag: AnyTag):
         """Test if selector attribute is a css selector wildcard."""
         assert tag.selector == CSS_SELECTOR_WILDCARD
+
+    def test_find_returns_first_child_if_recursive_false(self, tag: AnyTag):
+        """
+        Tests if find returns first matching child element if recursive is False.
+        For AnyTag it doesn't matter if recursive is True or False, it always
+        returns first element.
+        """
+        markup = """<a class="widget"></a><a class="widget_2"></a>"""
+        bs = find_tag(to_bs(markup))
+        result = tag.find(bs, recursive=False)
+        assert str(result) == strip("""<a class="widget"></a>""")
+
+    def test_find_all_returns_all_children_when_recursive_false(self, tag: AnyTag):
+        """
+        Tests if find_all returns all matching children if recursive is False.
+        It returns all children of the body element, but not nested children.
+        """
+        text = """
+            <div><a>Hello 1</a></div>
+            <a class="link">Hello 2</a>
+            <div class="google"><span>Hello</span></div>
+            <a>Hello 3</a>
+        """
+        bs = find_body_element(to_bs(text))
+        results = tag.find_all(bs, recursive=False)
+
+        assert list(map(str, results)) == [
+            strip("""<div><a>Hello 1</a></div>"""),
+            strip("""<a class="link">Hello 2</a>"""),
+            strip("""<div class="google"><span>Hello</span></div>"""),
+            strip("""<a>Hello 3</a>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set(self, tag: AnyTag):
+        """
+        Tests if find_all returns only x elements when limit is set.
+        Always first in order elements are returned.
+        """
+        text = """
+            <div>Hello 1</div>
+            <div>Hello 2</div>
+            <div>Hello 3</div>
+            <div>Hello 4</div>
+        """
+        bs = find_body_element(to_bs(text))
+        results = tag.find_all(bs, limit=2)
+
+        assert list(map(str, results)) == [
+            strip("""<div>Hello 1</div>"""),
+            strip("""<div>Hello 2</div>"""),
+        ]

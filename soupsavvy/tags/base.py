@@ -468,11 +468,8 @@ class SoupUnionTag(SelectableSoup, IterableSoup):
     ) -> list[Tag]:
         return reduce(
             list.__add__,
-            (
-                _tag_.find_all(tag, recursive=recursive, limit=limit)
-                for _tag_ in self.steps
-            ),
-        )
+            (_tag_.find_all(tag, recursive=recursive) for _tag_ in self.steps),
+        )[:limit]
 
 
 @dataclass(init=False)

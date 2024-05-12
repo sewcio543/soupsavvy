@@ -1,7 +1,6 @@
 """Testing module for NotElementTag class."""
 
 import pytest
-from bs4 import Tag
 
 from soupsavvy.tags.base import NotElementTag, SoupUnionTag
 from soupsavvy.tags.components import AttributeTag, ElementTag
@@ -178,3 +177,99 @@ class TestNotElementTag:
         not_element = NotElementTag(tag1, tag2)
         negation = ~not_element
         assert negation == SoupUnionTag(tag1, tag2)
+
+    def test_find_returns_first_matching_child_if_recursive_false(self):
+        """
+        Tests if find returns first matching child element if recursive is False.
+        In this case first 'span' element matches the selector, but it's not a child
+        of body element, so it's not returned.
+        """
+        text = """
+            <a class="google">
+                <span>Hello 1</span>
+            </a>
+            <a href="github">Hello 2</a>
+            <div>Hello 3</div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = NotElementTag(ElementTag(tag="a"))
+        result = tag.find(bs, recursive=False)
+        assert str(result) == strip("""<div>Hello 3</div>""")
+
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+        """
+        Tests if find returns None if no child element matches the selector
+        and recursive is False. In this case first 'a' element matches the selector,
+        but it's not a child of body element, so it's not returned.
+        """
+        text = """
+            <a class="google">
+                <span>Hello 1</span>
+            </a>
+            <a>Hello 2</a>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = NotElementTag(ElementTag(tag="a"))
+        result = tag.find(bs, recursive=False)
+        assert result is None
+
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+        """
+        Tests if find raises TagNotFoundException if no child element
+        matches the selector, when recursive is False and strict is True.
+        """
+        text = """
+            <a class="google">
+                <span>Hello 1</span>
+            </a>
+            <a>Hello 2</a>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = NotElementTag(ElementTag(tag="a"))
+
+        with pytest.raises(TagNotFoundException):
+            tag.find(bs, strict=True, recursive=False)
+
+    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+        """
+        Tests if find_all returns all matching children if recursive is False.
+        It returns only matching children of the body element.
+        """
+        text = """
+            <a class="google">
+                <span>Hello 1</span>
+                <p>Hello 2</p>
+            </a>
+            <div>Hello 3</div>
+            <a class="link">Hello 4</a>
+            <span>Hello 5</span>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = NotElementTag(ElementTag(tag="a"))
+        results = tag.find_all(bs, recursive=False)
+
+        assert list(map(str, results)) == [
+            strip("""<div>Hello 3</div>"""),
+            strip("""<span>Hello 5</span>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+        """
+        Tests if find_all returns only x elements when limit is set.
+        In this case only 2 first in order elements are returned.
+        """
+        text = """
+            <a></a>
+            <div>Hello 1</div>
+            <span>Hello 2</span>
+            <div>Hello 3</div>
+            <div>Hello 4</div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = NotElementTag(ElementTag(tag="a"))
+        results = tag.find_all(bs, limit=2)
+
+        assert list(map(str, results)) == [
+            strip("""<div>Hello 1</div>"""),
+            strip("""<span>Hello 2</span>"""),
+        ]

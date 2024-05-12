@@ -97,7 +97,7 @@ class TestElementTag:
     def test_raises_exception_when_initialized_without_parameters(self):
         """
         Tests if ElementTag initialized without any parameters raises WildcardTagException.
-        This is illegal move sincve it matches all elements
+        This is illegal move since it matches all elements
         and AnyTag should be used instead.
         """
         with pytest.raises(WildcardTagException):

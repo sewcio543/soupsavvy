@@ -6,7 +6,7 @@ from soupsavvy.tags.base import AndElementTag
 from soupsavvy.tags.components import AttributeTag, ElementTag, StepsElementTag
 from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
 
-from .conftest import strip, to_bs
+from .conftest import find_body_element, strip, to_bs
 
 
 @pytest.mark.soup
@@ -142,3 +142,99 @@ class TestAndElementTag:
 
         with pytest.raises(TypeError):
             tag & "class"  # type: ignore
+
+    def test_find_returns_first_matching_child_if_recursive_false(self):
+        """
+        Tests if find returns first matching child element if recursive is False.
+        In this case first 'a' element matches the selector,
+        but it's not a child of body element, so it's not returned.
+        """
+        text = """
+            <div class="google">
+                <a class="github">Hello 1</a>
+            </div>
+            <a href="github">Hello 2</a>
+            <a class="github">Hello 3</a>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = AndElementTag(ElementTag("a"), AttributeTag("class"))
+        result = tag.find(bs, recursive=False)
+        assert str(result) == strip("""<a class="github">Hello 3</a>""")
+
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+        """
+        Tests if find returns None if no child element matches the selector
+        and recursive is False. In this case first 'a' element matches the selector,
+        but it's not a child of body element, so it's not returned.
+        """
+        text = """
+            <div class="google">
+                <a class="github">Hello 1</a>
+            </div>
+            <a href="github">Hello 2</a>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = AndElementTag(ElementTag("a"), AttributeTag("class"))
+        result = tag.find(bs, recursive=False)
+        assert result is None
+
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+        """
+        Tests if find raises TagNotFoundException if no child element
+        matches the selector, when recursive is False and strict is True.
+        """
+        text = """
+            <div class="google">
+                <a class="github">Hello 1</a>
+            </div>
+            <a href="github">Hello 2</a>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = AndElementTag(ElementTag("a"), AttributeTag("class"))
+
+        with pytest.raises(TagNotFoundException):
+            tag.find(bs, strict=True, recursive=False)
+
+    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+        """
+        Tests if find_all returns all matching children if recursive is False.
+        It returns only matching children of the body element.
+        """
+        text = """
+            <div class="google">
+                <a class="github">Hello 1</a>
+            </div>
+            <a class="github">Hello 2</a>
+            <a href="github">Hello 3</a>
+            <a class="">Hello 4</a>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = AndElementTag(ElementTag("a"), AttributeTag("class"))
+        results = tag.find_all(bs, recursive=False)
+
+        assert list(map(str, results)) == [
+            strip("""<a class="github">Hello 2</a>"""),
+            strip("""<a class="">Hello 4</a>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+        """
+        Tests if find_all returns only x elements when limit is set.
+        In this case only 2 first in order elements are returned.
+        """
+        text = """
+            <span class="link"></span>
+            <div class="">Hello 1</div>
+            <div>Hello 2</div>
+            <div class="link">Hello 3</div>
+            <div class="menu">Hello 4</div>
+            <div class="">Hello 5</div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = AndElementTag(ElementTag("div"), AttributeTag("class"))
+        results = tag.find_all(bs, limit=2)
+
+        assert list(map(str, results)) == [
+            strip("""<div class="">Hello 1</div>"""),
+            strip("""<div class="link">Hello 3</div>"""),
+        ]

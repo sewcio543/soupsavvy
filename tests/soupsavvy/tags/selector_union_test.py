@@ -6,7 +6,7 @@ from soupsavvy.tags.base import SoupUnionTag
 from soupsavvy.tags.components import AttributeTag, ElementTag
 from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
 
-from .conftest import strip, to_bs
+from .conftest import find_body_element, strip, to_bs
 
 
 @pytest.fixture(scope="session")
@@ -189,3 +189,121 @@ class TestSoupUnionTag:
             strip("<i></i>"),
         ]
         assert list(map(str, result)) == expected
+
+    def test_find_returns_first_matching_child_if_recursive_false(self):
+        """
+        Tests if find returns first matching child element if recursive is False.
+        In this case first 'a' and 'p' elements mach, but they are not direct children
+        of body element, so they are not returned.
+        """
+        text = """
+            <div>
+                <a href="github">Hello 1</a>
+                <p>Hello 2</p>
+            </div>
+            <a href="github">Hello 3</a>
+            <p>Hello 4</p>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = SoupUnionTag(
+            ElementTag(tag="a"),
+            ElementTag(tag="p"),
+        )
+        result = tag.find(bs, recursive=False)
+
+        assert str(result) == strip("""<a href="github">Hello 3</a>""")
+
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+        """
+        Tests if find returns None if no child element matches the selector
+        and recursive is False.
+        """
+        text = """
+            <div>
+                <a href="github">Hello 1</a>
+                <p>Hello 2</p>
+            </div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = SoupUnionTag(
+            ElementTag(tag="a"),
+            ElementTag(tag="p"),
+        )
+        result = tag.find(bs, recursive=False)
+        assert result is None
+
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+        """
+        Tests if find raises TagNotFoundException if no child element
+        matches the selector, when recursive is False and strict is True.
+        """
+        text = """
+            <div>
+                <a href="github">Hello 1</a>
+                <p>Hello 2</p>
+            </div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = SoupUnionTag(
+            ElementTag(tag="a"),
+            ElementTag(tag="p"),
+        )
+
+        with pytest.raises(TagNotFoundException):
+            tag.find(bs, strict=True, recursive=False)
+
+    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+        """
+        Tests if find_all returns all matching children if recursive is False.
+        It returns only matching children of the body element.
+        """
+        text = """
+            <p>Empty</p>
+            <div>
+                <a href="github">Hello 1</a>
+                <p>Hello 2</p>
+            </div>
+            <a href="github">Hello 3</a>
+            <p>Hello 4</p>
+            <span></span>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = SoupUnionTag(
+            ElementTag(tag="a"),
+            ElementTag(tag="p"),
+        )
+        results = tag.find_all(bs, recursive=False)
+
+        assert list(map(str, results)) == [
+            strip("""<a href="github">Hello 3</a>"""),
+            strip("""<p>Empty</p>"""),
+            strip("""<p>Hello 4</p>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+        """
+        Tests if find_all returns only x elements when limit is set.
+        In this case only 3 first in order elements are returned.
+        Union does not return found elements in the order they appear in
+        the document, but in the order they are found, so first all 'a' elements
+        are returned, then 'p' elements.
+        """
+        text = """
+            <p>Empty</p>
+            <span></span>
+            <a href="github">Hello 1</a>
+            <p>Hello 2</p>
+            <a>Hello 3</a>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = SoupUnionTag(
+            ElementTag(tag="a"),
+            ElementTag(tag="p"),
+        )
+        results = tag.find_all(bs, limit=3)
+
+        assert list(map(str, results)) == [
+            strip("""<a href="github">Hello 1</a>"""),
+            strip("""<a>Hello 3</a>"""),
+            strip("""<p>Empty</p>"""),
+        ]
