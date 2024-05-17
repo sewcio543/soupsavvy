@@ -1,0 +1,354 @@
+"""Testing module for NextSiblingCombinator class."""
+
+import pytest
+
+from soupsavvy.tags.base import NextSiblingCombinator
+from soupsavvy.tags.components import AttributeTag, ElementTag
+from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
+
+from .conftest import find_body_element, strip, to_bs
+
+
+@pytest.mark.soup
+class TestNextSiblingCombinator:
+    """Class for NextSiblingCombinator unit test suite."""
+
+    def test_raises_exception_when_invalid_input(self):
+        """
+        Tests if NextSiblingCombinator raises NotSelectableSoupException when
+        invalid input is provided.
+        """
+        with pytest.raises(NotSelectableSoupException):
+            NextSiblingCombinator(ElementTag("a"), "p")  # type: ignore
+
+        with pytest.raises(NotSelectableSoupException):
+            NextSiblingCombinator("a", ElementTag("p"))  # type: ignore
+
+    def test_find_returns_first_tag_matching_all_selectors(self):
+        """
+        Tests if find method returns the first tag that matches
+        next sibling combinator.
+        """
+        text = """
+            <p>Hello 1</p>
+            <a class="link"></a>
+            <div>Hello 2</div>
+            <p>Hello 3</p>
+            <a class="widget"></a>
+            <p>Hello 4</p>
+        """
+        bs = find_body_element(to_bs(text))
+
+        tag = NextSiblingCombinator(
+            ElementTag("a"),
+            ElementTag("p"),
+        )
+        result = tag.find(bs)
+        assert str(result) == strip("""<p>Hello 4</p>""")
+
+    def test_find_raises_exception_when_no_tags_match_in_strict_mode(self):
+        """
+        Tests if find method raises TagNotFoundException when no tag is found
+        that matches next sibling combinator in strict mode.
+        """
+        text = """
+            <p>Hello 1</p>
+            <a class="link"></a>
+            <div>Hello 2</div>
+            <p>Hello 3</p>
+            <a class="widget"></a>
+        """
+        bs = to_bs(text)
+        tag = NextSiblingCombinator(
+            ElementTag("a"),
+            ElementTag("p"),
+        )
+
+        with pytest.raises(TagNotFoundException):
+            tag.find(bs, strict=True)
+
+    def test_find_returns_none_if_no_tags_match_in_not_strict_mode(self):
+        """
+        Tests if find method returns None when no tag is found that
+        matches next sibling combinator in not strict mode.
+        """
+        text = """
+            <p>Hello 1</p>
+            <a class="link"></a>
+            <div>Hello 2</div>
+            <p>Hello 3</p>
+            <a class="widget"></a>
+        """
+        bs = to_bs(text)
+        tag = NextSiblingCombinator(
+            ElementTag("a"),
+            ElementTag("p"),
+        )
+        assert tag.find(bs) is None
+
+    def test_finds_all_tags_matching_selectors(self):
+        """
+        Tests if find_all method returns all tags that match next sibling combinator.
+        """
+        text = """
+            <div>
+                <a class="widget"></a>
+                <p>Hello 1</p>
+                <div>Text</div>
+            </div>
+            <a class="link">
+                <p>Child</p>
+            </a>
+            <div>Hello 2</div>
+            <p>Hello 3</p>
+            <a class="widget"></a>
+            <p>Hello 4</p>
+        """
+        bs = find_body_element(to_bs(text))
+
+        tag = NextSiblingCombinator(
+            ElementTag("a"),
+            ElementTag("p"),
+        )
+        result = tag.find_all(bs)
+
+        assert list(map(str, result)) == [
+            strip("""<p>Hello 1</p>"""),
+            strip("""<p>Hello 4</p>"""),
+        ]
+
+    def test_find_all_returns_empty_list_if_no_tag_matches(self):
+        """
+        Tests if find_all method returns an empty list when no tag is found
+        that matches  next sibling combinator.
+        """
+        text = """
+            <p>Hello 1</p>
+            <a class="link"></a>
+            <div>Hello 2</div>
+            <p>Hello 3</p>
+            <a class="widget"></a>
+        """
+        bs = to_bs(text)
+        tag = NextSiblingCombinator(
+            ElementTag("a"),
+            ElementTag("p"),
+        )
+
+        result = tag.find_all(bs)
+        assert result == []
+
+    def test_add_operator_returns_and_child_combinator(self):
+        """
+        Tests if addition operator (__add__) returns NextSiblingCombinator instance.
+        """
+        tag1 = ElementTag("a")
+        tag2 = AttributeTag("class", "link")
+        intersection = tag1 + tag2
+        assert isinstance(intersection, NextSiblingCombinator)
+        assert intersection.previous == tag1
+        assert intersection.next == tag2
+
+    def test_add_operator_raises_exception_if_not_selectable_soup(self):
+        """
+        Tests if  addition operator (__add__) raises NotSelectableSoupException
+        when second operand is not a SelectableSoup instance.
+        """
+        tag = ElementTag("a")
+
+        with pytest.raises(NotSelectableSoupException):
+            tag > "class"  # type: ignore
+
+    def test_find_returns_first_matching_child_if_recursive_false(self):
+        """
+        Tests if find returns first matching child element if recursive is False.
+        In this case first 'p' element matches the selector, as it occurs after
+        "a" element, but it's not a child of body element.
+        """
+        text = """
+            <div>
+                <a class="widget"></a>
+                <p>Hello 1</p>
+            </div>
+            <a class="widget"></a>
+            <p>Hello 2</p>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = NextSiblingCombinator(
+            ElementTag("a"),
+            ElementTag("p"),
+        )
+        result = tag.find(bs, recursive=False)
+        assert str(result) == strip("""<p>Hello 2</p>""")
+
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+        """
+        Tests if find returns None if no child element matches the selector
+        and recursive is False.
+        """
+        text = """
+            <div>
+                <a class="widget"></a>
+                <p>Hello 1</p>
+            </div>
+            <p>Hello 2</p>
+            <a class="widget"></a>
+            <div>Hello 3</div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = NextSiblingCombinator(
+            ElementTag("a"),
+            ElementTag("p"),
+        )
+        result = tag.find(bs, recursive=False)
+        assert result is None
+
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+        """
+        Tests if find raises TagNotFoundException if no child element
+        matches the selector, when recursive is False and strict is True.
+        """
+        text = """
+            <div>
+                <a class="widget"></a>
+                <p>Hello 1</p>
+            </div>
+            <p>Hello 2</p>
+            <a class="widget"></a>
+            <div>Hello 3</div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = NextSiblingCombinator(
+            ElementTag("a"),
+            ElementTag("p"),
+        )
+
+        with pytest.raises(TagNotFoundException):
+            tag.find(bs, strict=True, recursive=False)
+
+    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+        """
+        Tests if find_all returns all matching children if recursive is False.
+        It returns only matching children of the body element.
+        """
+        text = """
+            <a class="widget"></a>
+            <p>Hello 1</p>
+            <div>
+                <a class="widget"></a>
+                <p>Hello 2</p>
+                <div>Text</div>
+            </div>
+            <a class="link">
+                <p>Child</p>
+            </a>
+            <div>Hello 3</div>
+            <p>Hello 4</p>
+            <a class="widget"></a>
+            <p>Hello 5</p>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = NextSiblingCombinator(
+            ElementTag("a"),
+            ElementTag("p"),
+        )
+        results = tag.find_all(bs, recursive=False)
+
+        assert list(map(str, results)) == [
+            strip("""<p>Hello 1</p>"""),
+            strip("""<p>Hello 5</p>"""),
+        ]
+
+    def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns an empty list if no child element
+        matches the selector and recursive is False.
+        """
+        text = """
+            <div>
+                <a class="widget"></a>
+                <p>Hello 1</p>
+            </div>
+            <p>Hello 2</p>
+            <a class="widget"></a>
+            <div>Hello 3</div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = NextSiblingCombinator(
+            ElementTag("a"),
+            ElementTag("p"),
+        )
+
+        results = tag.find_all(bs, recursive=False)
+        assert results == []
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+        """
+        Tests if find_all returns only x elements when limit is set.
+        In this case only 2 first in order elements are returned.
+        """
+        text = """
+            <a class="widget"></a>
+            <p>Hello 1</p>
+            <div>
+                <a class="widget"></a>
+                <p>Hello 2</p>
+                <div>Text</div>
+            </div>
+            <a class="link">
+                <p>Child</p>
+            </a>
+            <div>Hello 3</div>
+            <p>Hello 4</p>
+            <a class="widget"></a>
+            <p>Hello 5</p>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = NextSiblingCombinator(
+            ElementTag("a"),
+            ElementTag("p"),
+        )
+        results = tag.find_all(bs, limit=2)
+
+        assert list(map(str, results)) == [
+            strip("""<p>Hello 1</p>"""),
+            strip("""<p>Hello 2</p>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns only x elements when limit is set and recursive
+        is False. In this case only 2 first in order children matching
+        the selector are returned.
+        """
+        text = """
+            <a class="widget"></a>
+            <p>Hello 1</p>
+            <div>
+                <a class="widget"></a>
+                <p>Hello 2</p>
+                <div>Text</div>
+            </div>
+            <a class="link">
+                <p>Child</p>
+            </a>
+            <p>Hello 3</p>
+            <a class="widget"></a>
+            <p>Hello 4</p>
+            <div>Hello 5</div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = NextSiblingCombinator(
+            ElementTag("a"),
+            ElementTag("p"),
+        )
+        results = tag.find_all(bs, recursive=False, limit=2)
+
+        assert list(map(str, results)) == [
+            strip("""<p>Hello 1</p>"""),
+            strip("""<p>Hello 3</p>"""),
+        ]

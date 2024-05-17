@@ -5,7 +5,11 @@ from bs4 import Tag
 
 from soupsavvy.tags.base import SoupUnionTag
 from soupsavvy.tags.components import AttributeTag, ElementTag
-from soupsavvy.tags.exceptions import TagNotFoundException, WildcardTagException
+from soupsavvy.tags.exceptions import (
+    NotSelectableSoupException,
+    TagNotFoundException,
+    WildcardTagException,
+)
 
 from .conftest import find_body_element, strip, to_bs
 
@@ -413,12 +417,12 @@ class TestElementTag:
 
     def test_dunder_or_method_raises_exception_when_not_selectable_soup(self):
         """
-        Tests if __or__ method of SelectableSoup raises TypeError when input parameter
-        is not of SelectableSoup type.
+        Tests if __or__ method of SelectableSoup raises NotSelectableSoupException
+        when input parameter is not of SelectableSoup type.
         """
         tag_1 = ElementTag("a")
 
-        with pytest.raises(TypeError):
+        with pytest.raises(NotSelectableSoupException):
             tag_1.__or__("element")  # type: ignore
 
     def test_find_returns_first_matching_child_if_recursive_false(self):

@@ -2,8 +2,8 @@
 
 import pytest
 
-from soupsavvy.tags.base import AndElementTag
-from soupsavvy.tags.components import AttributeTag, ElementTag, StepsElementTag
+from soupsavvy.tags.base import AndElementTag, StepsElementTag
+from soupsavvy.tags.components import AttributeTag, ElementTag
 from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
 
 from .conftest import find_body_element, strip, to_bs
@@ -135,12 +135,12 @@ class TestAndElementTag:
 
     def test_bitwise_and_operator_raises_exception_if_not_selectable_soup(self):
         """
-        Tests if bitwise AND operator (__and__) raises TypeError
+        Tests if bitwise AND operator (__and__) raises NotSelectableSoupException
         when one of the operands is not SelectableSoup instance.
         """
         tag = ElementTag("a")
 
-        with pytest.raises(TypeError):
+        with pytest.raises(NotSelectableSoupException):
             tag & "class"  # type: ignore
 
     def test_find_returns_first_matching_child_if_recursive_false(self):

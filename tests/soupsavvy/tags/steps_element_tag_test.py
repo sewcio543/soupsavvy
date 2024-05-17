@@ -2,13 +2,12 @@
 
 import pytest
 
-from soupsavvy.tags.base import SoupUnionTag
+from soupsavvy.tags.base import SoupUnionTag, StepsElementTag
 from soupsavvy.tags.components import (
     AnyTag,
     AttributeTag,
     ElementTag,
     PatternElementTag,
-    StepsElementTag,
 )
 from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
 

@@ -160,8 +160,7 @@ class TestSoupUnionTag:
         """
         bs = to_bs(markup)
         result = mock_soup_union.find_all(bs)
-        assert isinstance(result, list)
-        assert len(result) == 0
+        assert result == []
 
     def test_union_consisting_of_unions_covers_all_tags(self):
         """
