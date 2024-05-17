@@ -403,3 +403,21 @@ class TestSubsequentSiblingCombinator:
             strip("""<p>Hello 2</p>"""),
             strip("""<p>Hello 3</p>"""),
         ]
+
+    @pytest.mark.edge_case
+    def test_continue_if_first_element_has_no_parent(self):
+        """
+        Tests if find_all continues searching if first element has no parents.
+        It is only possible when html element is the first element in the markup.
+        This edge case test is only important for testing coverage and should not
+        an issue in normal use cases.
+        """
+        text = """<p>First element</p>"""
+        bs = to_bs(text)
+        tag = SubsequentSiblingCombinator(
+            TagSelector("html"),
+            TagSelector("p"),
+        )
+        # manipulate html Tag to have no parent (surprising it does have itself as parent)
+        bs.find("html").parent = None  # type: ignore
+        tag.find(bs)
