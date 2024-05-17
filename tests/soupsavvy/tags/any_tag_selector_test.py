@@ -1,9 +1,9 @@
-"""Testing module for AnyTag class."""
+"""Testing module for AnyTagSelector class."""
 
 import pytest
 from bs4 import Tag
 
-from soupsavvy.tags.components import AnyTag
+from soupsavvy.tags.components import AnyTagSelector
 from soupsavvy.tags.exceptions import TagNotFoundException
 from soupsavvy.tags.namespace import CSS_SELECTOR_WILDCARD
 
@@ -25,29 +25,29 @@ def find_tag(bs: Tag, name: str = "body") -> Tag:
 
 
 @pytest.mark.soup
-class TestAnyTag:
-    """Class for AnyTag unit test suite."""
+class TestAnyTagSelector:
+    """Class for AnyTagSelector unit test suite."""
 
     @pytest.fixture(scope="class")
-    def tag(self) -> AnyTag:
-        """Fixture for AnyTag instance."""
-        return AnyTag()
+    def tag(self) -> AnyTagSelector:
+        """Fixture for AnyTagSelector instance."""
+        return AnyTagSelector()
 
-    def test_find_extracts_first_tag_when_there_is_only_one(self, tag: AnyTag):
+    def test_find_extracts_first_tag_when_there_is_only_one(self, tag: AnyTagSelector):
         """Test if first tag is extracted when there is only one tag."""
         markup = """<a class="widget"></a>"""
         bs = find_tag(to_bs(markup))
         result = tag.find(bs)
         assert str(result) == strip(markup)
 
-    def test_find_extracts_first_tag_when_there_are_many(self, tag: AnyTag):
+    def test_find_extracts_first_tag_when_there_are_many(self, tag: AnyTagSelector):
         """Test if first tag is extracted when there are many tags."""
         markup = """<a class="widget"></a><a class="widget_2"></a>"""
         bs = find_tag(to_bs(markup))
         result = tag.find(bs)
         assert str(result) == strip("""<a class="widget"></a>""")
 
-    def test_find_extracts_first_tag_parent_tag(self, tag: AnyTag):
+    def test_find_extracts_first_tag_parent_tag(self, tag: AnyTagSelector):
         """Test if first tag is extracted if it is parent tag with children tags."""
         markup = """
             <div><a class="widget"></a></div>
@@ -57,7 +57,7 @@ class TestAnyTag:
         result = tag.find(bs)
         assert str(result) == strip("""<div><a class="widget"></a></div>""")
 
-    def test_find_all_extracts_all_tags(self, tag: AnyTag):
+    def test_find_all_extracts_all_tags(self, tag: AnyTagSelector):
         """
         Test if all tags are extracted by find_all method,
         no matter if they are nested or in the root.
@@ -76,14 +76,16 @@ class TestAnyTag:
         ]
         assert list(map(str, result)) == expected
 
-    def test_find_returns_none_if_there_are_no_child_tags(self, tag: AnyTag):
+    def test_find_returns_none_if_there_are_no_child_tags(self, tag: AnyTagSelector):
         """Test if None is returned when there are no child tags in bs4 object."""
         markup = """<a class="widget"></a>"""
         bs = find_tag(to_bs(markup), name="a")
         result = tag.find(bs)
         assert result is None
 
-    def test_find_raises_exception_if_strict_mode_and_no_child_tags(self, tag: AnyTag):
+    def test_find_raises_exception_if_strict_mode_and_no_child_tags(
+        self, tag: AnyTagSelector
+    ):
         """
         Test if exception is raised when there are no child tags in bs4 object
         and strict mode is on.
@@ -94,21 +96,21 @@ class TestAnyTag:
         with pytest.raises(TagNotFoundException):
             tag.find(bs, strict=True)
 
-    def test_find_all_returns_empty_list_if_no_child_tags(self, tag: AnyTag):
+    def test_find_all_returns_empty_list_if_no_child_tags(self, tag: AnyTagSelector):
         """Test if empty list is returned when there are no child tags in bs4 object."""
         markup = """<a class="widget"></a>"""
         bs = find_tag(to_bs(markup), name="a")
         assert tag.find_all(bs) == []
 
     @pytest.mark.css_selector
-    def test_selector_is_a_css_selector_wildcard(self, tag: AnyTag):
+    def test_selector_is_a_css_selector_wildcard(self, tag: AnyTagSelector):
         """Test if selector attribute is a css selector wildcard."""
         assert tag.selector == CSS_SELECTOR_WILDCARD
 
-    def test_find_returns_first_child_if_recursive_false(self, tag: AnyTag):
+    def test_find_returns_first_child_if_recursive_false(self, tag: AnyTagSelector):
         """
         Tests if find returns first matching child element if recursive is False.
-        For AnyTag it doesn't matter if recursive is True or False, it always
+        For AnyTagSelector it doesn't matter if recursive is True or False, it always
         returns first element.
         """
         markup = """<a class="widget"></a><a class="widget_2"></a>"""
@@ -116,7 +118,9 @@ class TestAnyTag:
         result = tag.find(bs, recursive=False)
         assert str(result) == strip("""<a class="widget"></a>""")
 
-    def test_find_all_returns_all_children_when_recursive_false(self, tag: AnyTag):
+    def test_find_all_returns_all_children_when_recursive_false(
+        self, tag: AnyTagSelector
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns all children of the body element, but not nested children.
@@ -137,7 +141,9 @@ class TestAnyTag:
             strip("""<a>Hello 3</a>"""),
         ]
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self, tag: AnyTag):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self, tag: AnyTagSelector
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         Always first in order elements are returned.
@@ -158,7 +164,7 @@ class TestAnyTag:
         ]
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
-        self, tag: AnyTag
+        self, tag: AnyTagSelector
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive

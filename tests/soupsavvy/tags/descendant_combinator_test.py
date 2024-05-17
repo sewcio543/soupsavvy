@@ -4,10 +4,10 @@ import pytest
 
 from soupsavvy.tags.combinators import DescendantCombinator, SelectorList
 from soupsavvy.tags.components import (
-    AnyTag,
-    AttributeTag,
-    ElementTag,
-    PatternElementTag,
+    AnyTagSelector,
+    AttributeSelector,
+    PatternSelector,
+    TagSelector,
 )
 from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
 
@@ -24,28 +24,28 @@ class TestDescendantCombinator:
         is not a SelectableSoup object.
         """
         with pytest.raises(NotSelectableSoupException):
-            DescendantCombinator(ElementTag(tag="div"), "string")  # type: ignore
+            DescendantCombinator(TagSelector(tag="div"), "string")  # type: ignore
 
     @pytest.mark.parametrize(
         argnames="tag",
         argvalues=[
-            DescendantCombinator(ElementTag(tag="div"), ElementTag(tag="a")),
+            DescendantCombinator(TagSelector(tag="div"), TagSelector(tag="a")),
             DescendantCombinator(
-                ElementTag(
+                TagSelector(
                     tag="div",
-                    attributes=[AttributeTag(name="class", value="container")],
+                    attributes=[AttributeSelector(name="class", value="container")],
                 ),
-                ElementTag(
-                    tag="a", attributes=[AttributeTag(name="href", value="search")]
+                TagSelector(
+                    tag="a", attributes=[AttributeSelector(name="href", value="search")]
                 ),
             ),
-            DescendantCombinator(ElementTag(tag="div"), AnyTag()),
+            DescendantCombinator(TagSelector(tag="div"), AnyTagSelector()),
             DescendantCombinator(
-                AttributeTag(name="href", value="google"), ElementTag("a")
+                AttributeSelector(name="href", value="google"), TagSelector("a")
             ),
             DescendantCombinator(
-                ElementTag(tag="div"),
-                PatternElementTag(tag=ElementTag("a"), pattern="Welcome"),
+                TagSelector(tag="div"),
+                PatternSelector(tag=TagSelector("a"), pattern="Welcome"),
             ),
         ],
         ids=[
@@ -73,23 +73,24 @@ class TestDescendantCombinator:
     @pytest.mark.parametrize(
         argnames="tag",
         argvalues=[
-            DescendantCombinator(ElementTag(tag="div"), ElementTag(tag="span")),
-            DescendantCombinator(ElementTag(tag="footer"), ElementTag(tag="a")),
+            DescendantCombinator(TagSelector(tag="div"), TagSelector(tag="span")),
+            DescendantCombinator(TagSelector(tag="footer"), TagSelector(tag="a")),
             DescendantCombinator(
-                ElementTag(
+                TagSelector(
                     tag="div",
-                    attributes=[AttributeTag(name="class", value="container")],
+                    attributes=[AttributeSelector(name="class", value="container")],
                 ),
-                ElementTag(
-                    tag="a", attributes=[AttributeTag(name="href", value="funhub.com")]
+                TagSelector(
+                    tag="a",
+                    attributes=[AttributeSelector(name="href", value="funhub.com")],
                 ),
             ),
             DescendantCombinator(
-                AttributeTag(name="href", value="funhub.com"), ElementTag("a")
+                AttributeSelector(name="href", value="funhub.com"), TagSelector("a")
             ),
             DescendantCombinator(
-                ElementTag(tag="div"),
-                PatternElementTag(tag=ElementTag("a"), pattern="Goodbye"),
+                TagSelector(tag="div"),
+                PatternSelector(tag=TagSelector("a"), pattern="Goodbye"),
             ),
         ],
         ids=[
@@ -126,7 +127,7 @@ class TestDescendantCombinator:
             </div>
         """
         bs = to_bs(text)
-        tag = DescendantCombinator(ElementTag(tag="div"), ElementTag(tag="span"))
+        tag = DescendantCombinator(TagSelector(tag="div"), TagSelector(tag="span"))
 
         with pytest.raises(TagNotFoundException):
             tag.find(bs, strict=True)
@@ -147,10 +148,11 @@ class TestDescendantCombinator:
         """
         bs = to_bs(text)
         tag = DescendantCombinator(
-            ElementTag(
-                tag="div", attributes=[AttributeTag(name="class", value="container")]
+            TagSelector(
+                tag="div",
+                attributes=[AttributeSelector(name="class", value="container")],
             ),
-            ElementTag(tag="a"),
+            TagSelector(tag="a"),
         )
         result = tag.find(bs)
         assert str(result) == strip("""<a class="link" href="search">Welcome</a>""")
@@ -180,23 +182,23 @@ class TestDescendantCombinator:
         bs = to_bs(text)
         tag = DescendantCombinator(
             SelectorList(
-                ElementTag(
+                TagSelector(
                     tag="div",
-                    attributes=[AttributeTag(name="class", value="container")],
+                    attributes=[AttributeSelector(name="class", value="container")],
                 ),
-                ElementTag(
+                TagSelector(
                     tag="div",
-                    attributes=[AttributeTag(name="class", value="wrapper")],
+                    attributes=[AttributeSelector(name="class", value="wrapper")],
                 ),
             ),
             SelectorList(
-                ElementTag(
+                TagSelector(
                     tag="a",
-                    attributes=[AttributeTag(name="class", value="link")],
+                    attributes=[AttributeSelector(name="class", value="link")],
                 ),
-                ElementTag(
+                TagSelector(
                     tag="a",
-                    attributes=[AttributeTag(name="class", value="funhub")],
+                    attributes=[AttributeSelector(name="class", value="funhub")],
                 ),
             ),
         )
@@ -225,13 +227,15 @@ class TestDescendantCombinator:
         """
         bs = to_bs(text)
         tag = DescendantCombinator(
-            ElementTag(
-                tag="div", attributes=[AttributeTag(name="class", value="container")]
+            TagSelector(
+                tag="div",
+                attributes=[AttributeSelector(name="class", value="container")],
             ),
-            ElementTag(
-                tag="span", attributes=[AttributeTag(name="id", value="funhub_link")]
+            TagSelector(
+                tag="span",
+                attributes=[AttributeSelector(name="id", value="funhub_link")],
             ),
-            ElementTag(tag="a"),
+            TagSelector(tag="a"),
         )
         result = tag.find(bs)
         assert str(result) == strip("""<a class="link" href="funhub.com">Welcome</a>""")
@@ -260,10 +264,13 @@ class TestDescendantCombinator:
         """
         bs = to_bs(text)
         tag = DescendantCombinator(
-            ElementTag(
-                tag="span", attributes=[AttributeTag(name="class", value="funhub_link")]
+            TagSelector(
+                tag="span",
+                attributes=[AttributeSelector(name="class", value="funhub_link")],
             ),
-            ElementTag(tag="a", attributes=[AttributeTag(name="class", value="link")]),
+            TagSelector(
+                tag="a", attributes=[AttributeSelector(name="class", value="link")]
+            ),
         )
         results = tag.find_all(bs)
         expected = [
@@ -300,8 +307,10 @@ class TestDescendantCombinator:
         """
         bs = to_bs(text)
         tag = DescendantCombinator(
-            ElementTag("div"),
-            ElementTag("a", attributes=[AttributeTag(name="class", value="link")]),
+            TagSelector("div"),
+            TagSelector(
+                "a", attributes=[AttributeSelector(name="class", value="link")]
+            ),
         )
         results = tag.find_all(bs)
         expected = [
@@ -329,8 +338,10 @@ class TestDescendantCombinator:
         """
         bs = to_bs(text)
         tag = DescendantCombinator(
-            ElementTag("div"),
-            ElementTag("a", attributes=[AttributeTag(name="class", value="link")]),
+            TagSelector("div"),
+            TagSelector(
+                "a", attributes=[AttributeSelector(name="class", value="link")]
+            ),
         )
         results = tag.find_all(bs)
         assert results == []
@@ -356,12 +367,12 @@ class TestDescendantCombinator:
         bs = to_bs(text)
         tag = DescendantCombinator(
             DescendantCombinator(
-                ElementTag("div"),
-                ElementTag(
-                    "a", attributes=[AttributeTag(name="class", value="funhub")]
+                TagSelector("div"),
+                TagSelector(
+                    "a", attributes=[AttributeSelector(name="class", value="funhub")]
                 ),
             ),
-            ElementTag("span"),
+            TagSelector("span"),
         )
         result = tag.find(bs)
         assert str(result) == strip("""<span>Welcome there</span>""")
@@ -382,7 +393,7 @@ class TestDescendantCombinator:
             </div>
         """
         bs = to_bs(text)
-        tag = DescendantCombinator(ElementTag(tag="div"), ElementTag(tag="span"))
+        tag = DescendantCombinator(TagSelector(tag="div"), TagSelector(tag="span"))
         result = tag.find(bs)
 
         expected = """<span class="link" href="search">Welcome</span>"""
@@ -399,7 +410,7 @@ class TestDescendantCombinator:
             </div>
         """
         bs = to_bs(text)
-        tag = DescendantCombinator(ElementTag(tag="span"), ElementTag(tag="a"))
+        tag = DescendantCombinator(TagSelector(tag="span"), TagSelector(tag="a"))
         result = tag.find_all(bs)
         assert result == []
 
@@ -421,8 +432,8 @@ class TestDescendantCombinator:
         """
         bs = find_body_element(to_bs(text))
         tag = DescendantCombinator(
-            ElementTag("div"),
-            ElementTag("a"),
+            TagSelector("div"),
+            TagSelector("a"),
         )
         result = tag.find(bs, recursive=False)
         assert str(result) == strip("""<a>Hello 1</a>""")
@@ -441,8 +452,8 @@ class TestDescendantCombinator:
         """
         bs = find_body_element(to_bs(text))
         tag = DescendantCombinator(
-            ElementTag("div"),
-            ElementTag("a"),
+            TagSelector("div"),
+            TagSelector("a"),
         )
         result = tag.find(bs, recursive=False)
         assert result is None
@@ -461,8 +472,8 @@ class TestDescendantCombinator:
         """
         bs = find_body_element(to_bs(text))
         tag = DescendantCombinator(
-            ElementTag("div"),
-            ElementTag("a"),
+            TagSelector("div"),
+            TagSelector("a"),
         )
 
         with pytest.raises(TagNotFoundException):
@@ -484,8 +495,8 @@ class TestDescendantCombinator:
         """
         bs = find_body_element(to_bs(text))
         tag = DescendantCombinator(
-            ElementTag("div"),
-            ElementTag("a"),
+            TagSelector("div"),
+            TagSelector("a"),
         )
         results = tag.find_all(bs, recursive=False)
 
@@ -510,8 +521,8 @@ class TestDescendantCombinator:
         """
         bs = find_body_element(to_bs(text))
         tag = DescendantCombinator(
-            ElementTag("div"),
-            ElementTag("a"),
+            TagSelector("div"),
+            TagSelector("a"),
         )
 
         results = tag.find_all(bs, recursive=False)
@@ -534,8 +545,8 @@ class TestDescendantCombinator:
         """
         bs = find_body_element(to_bs(text))
         tag = DescendantCombinator(
-            ElementTag("div"),
-            ElementTag("a"),
+            TagSelector("div"),
+            TagSelector("a"),
         )
         results = tag.find_all(bs, limit=2)
 
@@ -564,8 +575,8 @@ class TestDescendantCombinator:
         """
         bs = find_body_element(to_bs(text))
         tag = DescendantCombinator(
-            ElementTag("div"),
-            ElementTag("a"),
+            TagSelector("div"),
+            TagSelector("a"),
         )
         results = tag.find_all(bs, recursive=False, limit=2)
 
@@ -592,9 +603,9 @@ class TestDescendantCombinator:
         """
         bs = find_body_element(to_bs(text))
         tag = DescendantCombinator(
-            ElementTag("div"),
-            ElementTag("div"),
-            ElementTag("a"),
+            TagSelector("div"),
+            TagSelector("div"),
+            TagSelector("a"),
         )
         result = tag.find(bs, recursive=False)
         assert str(result) == strip("""<a>Hello 1</a>""")

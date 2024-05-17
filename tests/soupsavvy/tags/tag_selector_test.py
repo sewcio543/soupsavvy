@@ -1,10 +1,10 @@
-"""Testing module for ElementTag class."""
+"""Testing module for TagSelector class."""
 
 import pytest
 from bs4 import Tag
 
 from soupsavvy.tags.combinators import SelectorList
-from soupsavvy.tags.components import AttributeTag, ElementTag
+from soupsavvy.tags.components import AttributeSelector, TagSelector
 from soupsavvy.tags.exceptions import (
     NotSelectableSoupException,
     TagNotFoundException,
@@ -15,27 +15,27 @@ from .conftest import find_body_element, strip, to_bs
 
 
 @pytest.mark.soup
-class TestElementTag:
-    """Class for ElementTag unit test suite."""
+class TestTagSelector:
+    """Class for TagSelector unit test suite."""
 
     @pytest.mark.parametrize(
         argnames="tag",
         argvalues=[
-            ElementTag(
-                tag="a", attributes=[AttributeTag(name="class", value="widget")]
+            TagSelector(
+                tag="a", attributes=[AttributeSelector(name="class", value="widget")]
             ),
-            ElementTag(tag="a"),
-            ElementTag(
-                tag=None, attributes=[AttributeTag(name="class", value="widget")]
+            TagSelector(tag="a"),
+            TagSelector(
+                tag=None, attributes=[AttributeSelector(name="class", value="widget")]
             ),
-            ElementTag(
+            TagSelector(
                 tag="a",
-                attributes=[AttributeTag(name="class", value="widget", re=True)],
+                attributes=[AttributeSelector(name="class", value="widget", re=True)],
             ),
-            ElementTag(
-                tag="a", attributes=[AttributeTag(name="class", pattern="widget")]
+            TagSelector(
+                tag="a", attributes=[AttributeSelector(name="class", pattern="widget")]
             ),
-            ElementTag(tag="a", attributes=[AttributeTag(name="class")]),
+            TagSelector(tag="a", attributes=[AttributeSelector(name="class")]),
         ],
         ids=[
             "exact_tag_name_match",
@@ -46,7 +46,7 @@ class TestElementTag:
             "existing_attribute_match",
         ],
     )
-    def test_tag_was_found_based_on_valid_tag_and_attributes(self, tag: ElementTag):
+    def test_tag_was_found_based_on_valid_tag_and_attributes(self, tag: TagSelector):
         """
         Tests if bs4.Tag was found for various combinations of tag and attributes.
         Element should be matched if tag is specified as 'a' or None
@@ -60,24 +60,26 @@ class TestElementTag:
     @pytest.mark.parametrize(
         argnames="tag",
         argvalues=[
-            ElementTag(
+            TagSelector(
                 tag="a",
                 attributes=[
-                    AttributeTag(name="class", value="widget menu"),
-                    AttributeTag(name="id", value="menu 1"),
+                    AttributeSelector(name="class", value="widget menu"),
+                    AttributeSelector(name="id", value="menu 1"),
                 ],
             ),
-            ElementTag(
+            TagSelector(
                 tag="a",
-                attributes=[AttributeTag(name="class", value="widget", re=True)],
+                attributes=[AttributeSelector(name="class", value="widget", re=True)],
             ),
-            ElementTag(
+            TagSelector(
                 tag="a",
-                attributes=[AttributeTag(name="class", value="widget menu", re=False)],
+                attributes=[
+                    AttributeSelector(name="class", value="widget menu", re=False)
+                ],
             ),
-            ElementTag(
+            TagSelector(
                 tag=None,
-                attributes=[AttributeTag(name="id", pattern=r"^menu.?\d$")],
+                attributes=[AttributeSelector(name="id", pattern=r"^menu.?\d$")],
             ),
         ],
         ids=[
@@ -87,7 +89,7 @@ class TestElementTag:
             "any_match_with_one_attributes_pattern",
         ],
     )
-    def test_tag_with_attributes_was_found_for_valid_tags(self, tag: ElementTag):
+    def test_tag_with_attributes_was_found_for_valid_tags(self, tag: TagSelector):
         """
         Tests if bs4.Tag with multiple attributes was found for various tags
         that should match them. Tag is found only if all defined attributes tags match
@@ -100,39 +102,43 @@ class TestElementTag:
 
     def test_raises_exception_when_initialized_without_parameters(self):
         """
-        Tests if ElementTag initialized without any parameters raises WildcardTagException.
+        Tests if TagSelector initialized without any parameters raises WildcardTagException.
         This is illegal move since it matches all elements
         and AnyTag should be used instead.
         """
         with pytest.raises(WildcardTagException):
-            ElementTag()
+            TagSelector()
 
     @pytest.mark.parametrize(
         argnames="tag",
         argvalues=[
-            ElementTag(
+            TagSelector(
                 tag="div",
                 attributes=[
-                    AttributeTag(name="class", value="widget menu"),
-                    AttributeTag(name="id", value="menu 1"),
+                    AttributeSelector(name="class", value="widget menu"),
+                    AttributeSelector(name="id", value="menu 1"),
                 ],
             ),
-            ElementTag(
+            TagSelector(
                 tag="a",
                 attributes=[
-                    AttributeTag(name="class", value="wrong name"),
-                    AttributeTag(name="id", value="wrong name"),
+                    AttributeSelector(name="class", value="wrong name"),
+                    AttributeSelector(name="id", value="wrong name"),
                 ],
             ),
-            ElementTag(
+            TagSelector(
                 tag="a",
                 attributes=[
-                    AttributeTag(name="class", value="widget menu"),
-                    AttributeTag(name="id", value="wrong name"),
+                    AttributeSelector(name="class", value="widget menu"),
+                    AttributeSelector(name="id", value="wrong name"),
                 ],
             ),
-            ElementTag(tag=None, attributes=[AttributeTag(name="id", value="menu")]),
-            ElementTag(tag=None, attributes=[AttributeTag(name="name", value="123")]),
+            TagSelector(
+                tag=None, attributes=[AttributeSelector(name="id", value="menu")]
+            ),
+            TagSelector(
+                tag=None, attributes=[AttributeSelector(name="name", value="123")]
+            ),
         ],
         ids=[
             "tag_name_not_match",
@@ -142,7 +148,9 @@ class TestElementTag:
             "not_existing_attribute_match",
         ],
     )
-    def test_tag_with_attributes_was_found_for_not_matching_tags(self, tag: ElementTag):
+    def test_tag_with_attributes_was_found_for_not_matching_tags(
+        self, tag: TagSelector
+    ):
         """
         Tests find return None for various tags that does not match given element.
         Element should not be match if tag and all attributes are not matching.
@@ -154,14 +162,14 @@ class TestElementTag:
     def test_additional_attribute_is_not_matched(self):
         """
         Tests find return element if it has attributes that are not specified
-        in ElementTag, they can take any value and are skipped in find.
+        in TagSelector, they can take any value and are skipped in find.
         In this case, the fact that element has 'id' attribute
         does not affect the find method.
         """
         markup = """<a class="widget" id="menu 1"></a>"""
         bs = to_bs(markup)
-        tag = ElementTag(
-            tag="a", attributes=[AttributeTag(name="class", value="widget")]
+        tag = TagSelector(
+            tag="a", attributes=[AttributeSelector(name="class", value="widget")]
         )
         result = tag.find(bs)
         assert str(result) == strip(markup)
@@ -172,7 +180,7 @@ class TestElementTag:
         """
         markup = """<a class="widget menu" id="menu 1"></a>"""
         bs = to_bs(markup)
-        tag = ElementTag(tag="div")
+        tag = TagSelector(tag="div")
 
         with pytest.raises(TagNotFoundException):
             tag.find(bs, strict=True)
@@ -188,9 +196,9 @@ class TestElementTag:
             <a href="github "></a>
         """
         bs = to_bs(text)
-        tag = ElementTag(
+        tag = TagSelector(
             tag="a",
-            attributes=[AttributeTag(name="href", value="github", re=True)],
+            attributes=[AttributeSelector(name="href", value="github", re=True)],
         )
         result = tag.find_all(bs)
         assert len(result) == 3
@@ -212,11 +220,11 @@ class TestElementTag:
             <a href="github pages", id="5"></a>
         """
         bs = to_bs(text)
-        tag = ElementTag(
+        tag = TagSelector(
             tag="a",
             attributes=[
-                AttributeTag(name="href", value="github"),
-                AttributeTag(name="id", pattern=r"\d"),
+                AttributeSelector(name="href", value="github"),
+                AttributeSelector(name="id", pattern=r"\d"),
             ],
         )
         result = tag.find_all(bs)
@@ -233,11 +241,11 @@ class TestElementTag:
             <a href="github pages", id="5"></a>
         """
         bs = to_bs(text)
-        tag = ElementTag(
+        tag = TagSelector(
             tag="a",
             attributes=[
-                AttributeTag(name="href", value="github"),
-                AttributeTag(name="id", pattern=r"\d"),
+                AttributeSelector(name="href", value="github"),
+                AttributeSelector(name="id", pattern=r"\d"),
             ],
         )
         result = tag.find_all(bs)
@@ -256,9 +264,9 @@ class TestElementTag:
             </div>
         """
         bs = to_bs(text)
-        tag = ElementTag(
+        tag = TagSelector(
             tag=None,
-            attributes=[AttributeTag(name="href", value="github", re=True)],
+            attributes=[AttributeSelector(name="href", value="github", re=True)],
         )
         result = tag.find_all(bs)
         expected_1 = """
@@ -281,11 +289,11 @@ class TestElementTag:
         """
         markup = """<div name="github" string="any"></div>"""
         bs = to_bs(markup)
-        tag = ElementTag(
+        tag = TagSelector(
             "div",
             attributes=[
-                AttributeTag("name", "github"),
-                AttributeTag("string"),
+                AttributeSelector("name", "github"),
+                AttributeSelector("string"),
             ],
         )
         result = tag.find(bs)
@@ -296,52 +304,53 @@ class TestElementTag:
         argnames="tag, selector",
         argvalues=[
             (
-                ElementTag(attributes=[AttributeTag("class", value="menu")]),
+                TagSelector(attributes=[AttributeSelector("class", value="menu")]),
                 "[class='menu']",
             ),
             (
-                ElementTag(
+                TagSelector(
                     attributes=[
-                        AttributeTag("class", value="menu"),
-                        AttributeTag("id", value="menu_2"),
+                        AttributeSelector("class", value="menu"),
+                        AttributeSelector("id", value="menu_2"),
                     ]
                 ),
                 "[class='menu'][id='menu_2']",
             ),
             (
-                ElementTag(
+                TagSelector(
                     tag="div",
                     attributes=[
-                        AttributeTag("class", value="menu"),
-                        AttributeTag("id", value="menu_2"),
+                        AttributeSelector("class", value="menu"),
+                        AttributeSelector("id", value="menu_2"),
                     ],
                 ),
                 "div[class='menu'][id='menu_2']",
             ),
             (
-                ElementTag(
+                TagSelector(
                     tag="a",
                     attributes=[
-                        AttributeTag("class", value="menu", re=True),
-                        AttributeTag("awesomeness", value="3", re=False),
+                        AttributeSelector("class", value="menu", re=True),
+                        AttributeSelector("awesomeness", value="3", re=False),
                     ],
                 ),
                 "a[class*='menu'][awesomeness='3']",
             ),
             (
-                ElementTag(
+                TagSelector(
                     tag="a",
                     attributes=[
-                        AttributeTag("class", value="menu"),
-                        AttributeTag("class", value="menu"),
+                        AttributeSelector("class", value="menu"),
+                        AttributeSelector("class", value="menu"),
                     ],
                 ),
                 "a[class='menu']",
             ),
-            (ElementTag(tag="a", attributes=[AttributeTag("class")]), "a[class]"),
+            (TagSelector(tag="a", attributes=[AttributeSelector("class")]), "a[class]"),
             (
-                ElementTag(
-                    tag="a", attributes=[AttributeTag("class", value="widget menu")]
+                TagSelector(
+                    tag="a",
+                    attributes=[AttributeSelector("class", value="widget menu")],
                 ),
                 "a[class='widget menu']",
             ),
@@ -356,27 +365,31 @@ class TestElementTag:
             "attribute_value_with_whitespace",
         ],
     )
-    def test_selector_is_correct(self, tag: ElementTag, selector: str):
-        """Tests if css selector for ElementTag is constructed as expected."""
+    def test_selector_is_correct(self, tag: TagSelector, selector: str):
+        """Tests if css selector for TagSelector is constructed as expected."""
         assert tag.selector == selector
 
     @pytest.mark.parametrize(
         argnames="tags",
         argvalues=[
-            (ElementTag("a"), ElementTag("a")),
+            (TagSelector("a"), TagSelector("a")),
             (
-                ElementTag("a", attributes=[AttributeTag("class", value="widget")]),
-                ElementTag("a", attributes=[AttributeTag("class", value="widget")]),
+                TagSelector(
+                    "a", attributes=[AttributeSelector("class", value="widget")]
+                ),
+                TagSelector(
+                    "a", attributes=[AttributeSelector("class", value="widget")]
+                ),
             ),
             (
-                ElementTag(attributes=[AttributeTag("class", value="widget")]),
-                ElementTag(attributes=[AttributeTag("class", value="widget")]),
+                TagSelector(attributes=[AttributeSelector("class", value="widget")]),
+                TagSelector(attributes=[AttributeSelector("class", value="widget")]),
             ),
         ],
         ids=["without_attributes", "with_attributes", "without_tag"],
     )
     def test_equal_method_returns_true_for_the_same_parameters(
-        self, tags: list[ElementTag]
+        self, tags: list[TagSelector]
     ):
         """Tests if __eq__ returns True if tags have the same init parameters."""
         assert tags[0] == tags[1]
@@ -384,20 +397,22 @@ class TestElementTag:
     @pytest.mark.parametrize(
         argnames="tags",
         argvalues=[
-            (ElementTag("a"), ElementTag("div")),
+            (TagSelector("a"), TagSelector("div")),
             (
-                ElementTag("a", attributes=[AttributeTag("class", value="widget")]),
-                ElementTag("a", attributes=[AttributeTag("class", value="menu")]),
+                TagSelector(
+                    "a", attributes=[AttributeSelector("class", value="widget")]
+                ),
+                TagSelector("a", attributes=[AttributeSelector("class", value="menu")]),
             ),
             (
-                ElementTag(attributes=[AttributeTag("class", value="widget")]),
-                ElementTag(attributes=[AttributeTag("class", value="menu")]),
+                TagSelector(attributes=[AttributeSelector("class", value="widget")]),
+                TagSelector(attributes=[AttributeSelector("class", value="menu")]),
             ),
         ],
         ids=["without_attributes", "with_attributes", "without_tag"],
     )
     def test_equal_method_returns_false_for_the_different_parameters(
-        self, tags: list[ElementTag]
+        self, tags: list[TagSelector]
     ):
         """Tests if __eq__ returns False if tags have different init parameters."""
         assert tags[0] != tags[1]
@@ -407,8 +422,12 @@ class TestElementTag:
         Tests if __or__ method of SelectableSoup returns SoupUnionTag with
         expected tags that took part in logical disjunction.
         """
-        tag_1 = ElementTag("a", attributes=[AttributeTag("class", value="widget")])
-        tag_2 = ElementTag("div", attributes=[AttributeTag("class", value="menu")])
+        tag_1 = TagSelector(
+            "a", attributes=[AttributeSelector("class", value="widget")]
+        )
+        tag_2 = TagSelector(
+            "div", attributes=[AttributeSelector("class", value="menu")]
+        )
         union = tag_1.__or__(tag_2)
         assert union == SelectorList(tag_1, tag_2)
         assert isinstance(union, SelectorList)
@@ -420,7 +439,7 @@ class TestElementTag:
         Tests if __or__ method of SelectableSoup raises NotSelectableSoupException
         when input parameter is not of SelectableSoup type.
         """
-        tag_1 = ElementTag("a")
+        tag_1 = TagSelector("a")
 
         with pytest.raises(NotSelectableSoupException):
             tag_1.__or__("element")  # type: ignore
@@ -438,7 +457,7 @@ class TestElementTag:
             <a href="github">Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = ElementTag(tag="a")
+        tag = TagSelector(tag="a")
         result = tag.find(bs, recursive=False)
 
         assert str(result) == strip("""<a href="github">Hello 2</a>""")
@@ -456,7 +475,7 @@ class TestElementTag:
             <span class="github">Hello 2</span>
         """
         bs = find_body_element(to_bs(text))
-        tag = ElementTag(tag="a")
+        tag = TagSelector(tag="a")
         result = tag.find(bs, recursive=False)
         assert result is None
 
@@ -472,9 +491,9 @@ class TestElementTag:
             <a class="github">Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = ElementTag(
+        tag = TagSelector(
             tag="a",
-            attributes=[AttributeTag("class", value="google")],
+            attributes=[AttributeSelector("class", value="google")],
         )
 
         with pytest.raises(TagNotFoundException):
@@ -494,7 +513,7 @@ class TestElementTag:
             <a>Hello 3</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = ElementTag(tag="a")
+        tag = TagSelector(tag="a")
         results = tag.find_all(bs, recursive=False)
 
         assert list(map(str, results)) == [
@@ -516,9 +535,9 @@ class TestElementTag:
             <a class="github">Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = ElementTag(
+        tag = TagSelector(
             tag="a",
-            attributes=[AttributeTag("class", value="google")],
+            attributes=[AttributeSelector("class", value="google")],
         )
 
         results = tag.find_all(bs, recursive=False)
@@ -538,7 +557,7 @@ class TestElementTag:
             <div>Hello 4</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = ElementTag(tag="div")
+        tag = TagSelector(tag="div")
         results = tag.find_all(bs, limit=2)
 
         assert list(map(str, results)) == [
@@ -567,7 +586,7 @@ class TestElementTag:
             <div>Hello 4</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = ElementTag(tag="div")
+        tag = TagSelector(tag="div")
         results = tag.find_all(bs, recursive=False, limit=2)
 
         assert list(map(str, results)) == [

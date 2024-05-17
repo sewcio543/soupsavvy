@@ -24,7 +24,7 @@ if TYPE_CHECKING:
         SelectorList,
         SubsequentSiblingCombinator,
     )
-    from soupsavvy.tags.components import AndElementTag, NotElementTag
+    from soupsavvy.tags.components import AndSelector, NotSelector
 
 
 class SelectableSoup(ABC):
@@ -262,11 +262,11 @@ class SelectableSoup(ABC):
         NotSelectableSoupException
             If provided object is not of SelectableSoup type.
         """
-        from soupsavvy.tags.components import NotElementTag
+        from soupsavvy.tags.components import NotSelector
 
-        return NotElementTag(self)
+        return NotSelector(self)
 
-    def __and__(self, x: SelectableSoup) -> AndElementTag:
+    def __and__(self, x: SelectableSoup) -> AndSelector:
         """
         Overrides __and__ method called also by ampersand operator '&'.
         Syntactical Sugar for bitwise AND operator, that creates an AndElementTag
@@ -289,14 +289,14 @@ class SelectableSoup(ABC):
         NotSelectableSoupException
             If provided object is not of SelectableSoup type.
         """
-        from soupsavvy.tags.components import AndElementTag
+        from soupsavvy.tags.components import AndSelector
 
         message = (
             f"Bitwise AND not supported for types {type(self)} and {type(x)}, "
             f"expected an instance of {SelectableSoup.__name__}."
         )
         self._check_selector_type(x, message=message)
-        return AndElementTag(self, x)
+        return AndSelector(self, x)
 
     def __gt__(self, x: SelectableSoup) -> ChildCombinator:
         """

@@ -1,14 +1,14 @@
-"""Testing module for PatternElementTag class."""
+"""Testing module for PatternSelector class."""
 
 import re
 
 import pytest
 
 from soupsavvy.tags.components import (
-    AnyTag,
-    AttributeTag,
-    ElementTag,
-    PatternElementTag,
+    AnyTagSelector,
+    AttributeSelector,
+    PatternSelector,
+    TagSelector,
 )
 from soupsavvy.tags.exceptions import (
     NavigableStringException,
@@ -20,22 +20,24 @@ from .conftest import find_body_element, strip, to_bs
 
 
 @pytest.mark.soup
-class TestPatternElementTag:
-    """Class for PatternElementTag unit test suite."""
+class TestPatternSelector:
+    """Class for PatternSelector unit test suite."""
 
     @pytest.mark.parametrize(
         argnames="tag",
         argvalues=[
-            PatternElementTag(
+            PatternSelector(
                 pattern="Hello World",
-                tag=ElementTag(
-                    "div", attributes=[AttributeTag("class", value="widget")]
+                tag=TagSelector(
+                    "div", attributes=[AttributeSelector("class", value="widget")]
                 ),
             ),
-            PatternElementTag(tag=ElementTag("div"), pattern="Hello World"),
-            PatternElementTag(tag=ElementTag("div"), pattern="Hello", re=True),
-            PatternElementTag(
-                tag=ElementTag(attributes=[AttributeTag("class", value="widget")]),
+            PatternSelector(tag=TagSelector("div"), pattern="Hello World"),
+            PatternSelector(tag=TagSelector("div"), pattern="Hello", re=True),
+            PatternSelector(
+                tag=TagSelector(
+                    attributes=[AttributeSelector("class", value="widget")]
+                ),
                 pattern=re.compile("World"),
             ),
         ],
@@ -46,9 +48,9 @@ class TestPatternElementTag:
             "match_with_re_pattern",
         ],
     )
-    def test_element_is_found_for_valid_pattern_tags(self, tag: PatternElementTag):
+    def test_element_is_found_for_valid_pattern_tags(self, tag: PatternSelector):
         """
-        Tests if element was found for various valid PatternElementTags.
+        Tests if element was found for various valid PatternSelectors.
         Element is returned if it matches the ElementTag and has text matching
         provided pattern.
         """
@@ -60,24 +62,28 @@ class TestPatternElementTag:
     @pytest.mark.parametrize(
         argnames="tag",
         argvalues=[
-            PatternElementTag(
+            PatternSelector(
                 pattern="Hello World",
-                tag=ElementTag("div", attributes=[AttributeTag("class", value="menu")]),
+                tag=TagSelector(
+                    "div", attributes=[AttributeSelector("class", value="menu")]
+                ),
             ),
-            PatternElementTag(tag=ElementTag("div"), pattern="Hello Python"),
-            PatternElementTag(
-                tag=ElementTag(attributes=[AttributeTag("class", value="widget")]),
+            PatternSelector(tag=TagSelector("div"), pattern="Hello Python"),
+            PatternSelector(
+                tag=TagSelector(
+                    attributes=[AttributeSelector("class", value="widget")]
+                ),
                 pattern=re.compile(r"World \d"),
             ),
         ],
         ids=["not_match_attr", "not_match_text", "not_match_pattern"],
     )
     def test_element_is_not_found_for_not_matching_pattern_tags(
-        self, tag: PatternElementTag
+        self, tag: PatternSelector
     ):
         """
         Tests if element was not found and method returns None
-        for various PatternElementTags that does not match element.
+        for various PatternSelectors that does not match element.
         """
         markup = """<div class="widget">Hello World</div>"""
         bs = to_bs(markup)
@@ -90,7 +96,7 @@ class TestPatternElementTag:
         """
         markup = """<div class="widget">Hello World</div>"""
         bs = to_bs(markup)
-        tag = PatternElementTag(tag=ElementTag("div"), pattern="Hello Python")
+        tag = PatternSelector(tag=TagSelector("div"), pattern="Hello Python")
 
         with pytest.raises(TagNotFoundException):
             tag.find(bs, strict=True)
@@ -101,11 +107,11 @@ class TestPatternElementTag:
         to pattern tag is AnyTag. This is not allowed since AnyTag is a wildcard tag.
         """
         with pytest.raises(WildcardTagException):
-            PatternElementTag(tag=AnyTag(), pattern="Hello")
+            PatternSelector(tag=AnyTagSelector(), pattern="Hello")
 
     def test_find_all_returns_list_of_matched_elements(self):
         """
-        Tests if PatternElementTag find_all method returns
+        Tests if PatternSelector find_all method returns
         a list of all matched elements.
         """
         text = """
@@ -118,8 +124,10 @@ class TestPatternElementTag:
             <a href="github">Hello Python</a>
         """
         bs = to_bs(text)
-        tag = PatternElementTag(
-            tag=ElementTag("a", attributes=[AttributeTag(name="href", value="github")]),
+        tag = PatternSelector(
+            tag=TagSelector(
+                "a", attributes=[AttributeSelector(name="href", value="github")]
+            ),
             pattern="Hello",
             re=True,
         )
@@ -133,7 +141,7 @@ class TestPatternElementTag:
 
     def test_find_all_returns_empty_list_if_no_matched_elements(self):
         """
-        Tests if PatternElementTag find_all method returns empty list if
+        Tests if PatternSelector find_all method returns empty list if
         no element matches the tag.
         """
         text = """
@@ -145,8 +153,10 @@ class TestPatternElementTag:
             <a href="github">Hello Python</a>
         """
         bs = to_bs(text)
-        tag = PatternElementTag(
-            tag=ElementTag("a", attributes=[AttributeTag(name="href", value="github")]),
+        tag = PatternSelector(
+            tag=TagSelector(
+                "a", attributes=[AttributeSelector(name="href", value="github")]
+            ),
             pattern="Hello World",
         )
         result = tag.find_all(bs)
@@ -167,8 +177,8 @@ class TestPatternElementTag:
             <div>Hello 2</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternElementTag(
-            ElementTag(tag="div"),
+        tag = PatternSelector(
+            TagSelector(tag="div"),
             pattern="Hello",
             re=True,
         )
@@ -189,8 +199,8 @@ class TestPatternElementTag:
             </div>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternElementTag(
-            ElementTag(tag="div"),
+        tag = PatternSelector(
+            TagSelector(tag="div"),
             pattern="Hello",
             re=True,
         )
@@ -210,8 +220,8 @@ class TestPatternElementTag:
             </div>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternElementTag(
-            ElementTag(tag="div"),
+        tag = PatternSelector(
+            TagSelector(tag="div"),
             pattern="Hello",
             re=True,
         )
@@ -234,8 +244,8 @@ class TestPatternElementTag:
             <div>Morning, Hello</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternElementTag(
-            ElementTag(tag="div"),
+        tag = PatternSelector(
+            TagSelector(tag="div"),
             pattern="Hello",
             re=True,
         )
@@ -261,8 +271,8 @@ class TestPatternElementTag:
             </div>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternElementTag(
-            ElementTag(tag="div"),
+        tag = PatternSelector(
+            TagSelector(tag="div"),
             pattern="Hello",
             re=True,
         )
@@ -284,8 +294,8 @@ class TestPatternElementTag:
             <div>Hello 3</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternElementTag(
-            ElementTag(tag="div"),
+        tag = PatternSelector(
+            TagSelector(tag="div"),
             pattern="Hello",
             re=True,
         )
@@ -313,8 +323,8 @@ class TestPatternElementTag:
             <div>Hello 3</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternElementTag(
-            ElementTag(tag="div"),
+        tag = PatternSelector(
+            TagSelector(tag="div"),
             pattern="Hello",
             re=True,
         )
@@ -326,10 +336,10 @@ class TestPatternElementTag:
         ]
 
 
-class LegalWildcardTag(ElementTag):
+class LegalWildcardTag(TagSelector):
     """
     Mock class that is ElementTag that allows no parameters passed to init.
-    This way wildcard tag can be created that is a valid input into PatternElementTag.
+    This way wildcard tag can be created that is a valid input into PatternSelector.
     This enables to create hypothetical case when find method returns NavigableString
     instead of Tag (only string parameter was passed into bs4.find method).
     This should raise NavigableStringException that is an invalid output of
@@ -351,7 +361,7 @@ def test_exception_is_raised_when_navigable_string_is_a_result():
     """
     markup = """<div class="widget">Hello World</div>"""
     bs = to_bs(markup)
-    tag = PatternElementTag(tag=LegalWildcardTag(), pattern="Hello World")
+    tag = PatternSelector(tag=LegalWildcardTag(), pattern="Hello World")
 
     with pytest.raises(NavigableStringException):
         tag.find(bs, strict=True)

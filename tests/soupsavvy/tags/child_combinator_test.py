@@ -3,7 +3,7 @@
 import pytest
 
 from soupsavvy.tags.combinators import ChildCombinator
-from soupsavvy.tags.components import AttributeTag, ElementTag
+from soupsavvy.tags.components import AttributeSelector, TagSelector
 from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
 
 from .conftest import find_body_element, strip, to_bs
@@ -19,10 +19,10 @@ class TestChildCombinator:
         invalid input is provided.
         """
         with pytest.raises(NotSelectableSoupException):
-            ChildCombinator(ElementTag("a"), "p")  # type: ignore
+            ChildCombinator(TagSelector("a"), "p")  # type: ignore
 
         with pytest.raises(NotSelectableSoupException):
-            ChildCombinator("a", ElementTag("p"))  # type: ignore
+            ChildCombinator("a", TagSelector("p"))  # type: ignore
 
     def test_find_returns_first_tag_matching_all_selectors(self):
         """
@@ -43,8 +43,8 @@ class TestChildCombinator:
         bs = find_body_element(to_bs(text))
 
         tag = ChildCombinator(
-            ElementTag("a"),
-            AttributeTag("class", "widget"),
+            TagSelector("a"),
+            AttributeSelector("class", "widget"),
         )
         result = tag.find(bs)
         assert str(result) == strip("""<span class="widget"></span>""")
@@ -64,8 +64,8 @@ class TestChildCombinator:
         """
         bs = to_bs(text)
         tag = ChildCombinator(
-            ElementTag("a"),
-            AttributeTag("class", "widget"),
+            TagSelector("a"),
+            AttributeSelector("class", "widget"),
         )
 
         with pytest.raises(TagNotFoundException):
@@ -86,8 +86,8 @@ class TestChildCombinator:
         """
         bs = to_bs(text)
         tag = ChildCombinator(
-            ElementTag("a"),
-            AttributeTag("class", "widget"),
+            TagSelector("a"),
+            AttributeSelector("class", "widget"),
         )
         assert tag.find(bs) is None
 
@@ -118,8 +118,8 @@ class TestChildCombinator:
         bs = find_body_element(to_bs(text))
 
         tag = ChildCombinator(
-            ElementTag("a"),
-            AttributeTag("class", "widget"),
+            TagSelector("a"),
+            AttributeSelector("class", "widget"),
         )
         result = tag.find_all(bs)
 
@@ -143,8 +143,8 @@ class TestChildCombinator:
         """
         bs = to_bs(text)
         tag = ChildCombinator(
-            ElementTag("a"),
-            AttributeTag("class", "widget"),
+            TagSelector("a"),
+            AttributeSelector("class", "widget"),
         )
         result = tag.find_all(bs)
         assert result == []
@@ -153,8 +153,8 @@ class TestChildCombinator:
         """
         Tests if greater than operator (__gt__) returns ChildCombinator instance.
         """
-        tag1 = ElementTag("a")
-        tag2 = AttributeTag("class", "link")
+        tag1 = TagSelector("a")
+        tag2 = AttributeSelector("class", "link")
         intersection = tag1 > tag2
         assert isinstance(intersection, ChildCombinator)
         assert intersection.parent == tag1
@@ -165,7 +165,7 @@ class TestChildCombinator:
         Tests if greater then operator (__gt__) raises NotSelectableSoupException
         when second operand is not a SelectableSoup instance.
         """
-        tag = ElementTag("a")
+        tag = TagSelector("a")
 
         with pytest.raises(NotSelectableSoupException):
             tag > "class"  # type: ignore
@@ -188,8 +188,8 @@ class TestChildCombinator:
         """
         bs = find_body_element(to_bs(text))
         tag = ChildCombinator(
-            ElementTag("a"),
-            ElementTag("p"),
+            TagSelector("a"),
+            TagSelector("p"),
         )
         result = tag.find(bs, recursive=False)
         assert str(result) == strip("""<p>Text</p>""")
@@ -210,8 +210,8 @@ class TestChildCombinator:
         """
         bs = find_body_element(to_bs(text))
         tag = ChildCombinator(
-            ElementTag("a"),
-            ElementTag("p"),
+            TagSelector("a"),
+            TagSelector("p"),
         )
         result = tag.find(bs, recursive=False)
         assert result is None
@@ -232,8 +232,8 @@ class TestChildCombinator:
         """
         bs = find_body_element(to_bs(text))
         tag = ChildCombinator(
-            ElementTag("a"),
-            ElementTag("p"),
+            TagSelector("a"),
+            TagSelector("p"),
         )
 
         with pytest.raises(TagNotFoundException):
@@ -264,8 +264,8 @@ class TestChildCombinator:
         """
         bs = find_body_element(to_bs(text))
         tag = ChildCombinator(
-            ElementTag("a"),
-            ElementTag("p"),
+            TagSelector("a"),
+            TagSelector("p"),
         )
         results = tag.find_all(bs, recursive=False)
 
@@ -292,8 +292,8 @@ class TestChildCombinator:
         """
         bs = find_body_element(to_bs(text))
         tag = ChildCombinator(
-            ElementTag("a"),
-            ElementTag("p"),
+            TagSelector("a"),
+            TagSelector("p"),
         )
 
         results = tag.find_all(bs, recursive=False)
@@ -324,8 +324,8 @@ class TestChildCombinator:
         """
         bs = find_body_element(to_bs(text))
         tag = ChildCombinator(
-            ElementTag("a"),
-            ElementTag("p"),
+            TagSelector("a"),
+            TagSelector("p"),
         )
         results = tag.find_all(bs, limit=2)
 
@@ -363,8 +363,8 @@ class TestChildCombinator:
         """
         bs = find_body_element(to_bs(text))
         tag = ChildCombinator(
-            ElementTag("a"),
-            ElementTag("p"),
+            TagSelector("a"),
+            TagSelector("p"),
         )
         results = tag.find_all(bs, recursive=False, limit=2)
 

@@ -1,17 +1,17 @@
-"""Testing module for NotElementTag class."""
+"""Testing module for NotSelector class."""
 
 import pytest
 
 from soupsavvy.tags.combinators import SelectorList
-from soupsavvy.tags.components import AttributeTag, ElementTag, NotElementTag
+from soupsavvy.tags.components import AttributeSelector, NotSelector, TagSelector
 from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
 
 from .conftest import find_body_element, strip, to_bs
 
 
 @pytest.mark.soup
-class TestNotElementTag:
-    """Class for NotElementTag unit test suite."""
+class TestNotSelector:
+    """Class for NotSelector unit test suite."""
 
     def test_find_returns_first_tag_not_matching_selector(self):
         """
@@ -21,7 +21,7 @@ class TestNotElementTag:
         markup = """<a class="widget"></a><div class="widget"></div>"""
         bs = find_body_element(to_bs(markup))
 
-        tag = NotElementTag(ElementTag("a"))
+        tag = NotSelector(TagSelector("a"))
         result = tag.find(bs)
         assert str(result) == strip("""<div class="widget"></div>""")
 
@@ -31,7 +31,7 @@ class TestNotElementTag:
         All of the parameters must be SelectableSoup instances.
         """
         with pytest.raises(NotSelectableSoupException):
-            NotElementTag("div", AttributeTag("class"))  # type: ignore
+            NotSelector("div", AttributeSelector("class"))  # type: ignore
 
     def test_find_raises_exception_when_all_tags_match_in_strict_mode(self):
         """
@@ -40,7 +40,7 @@ class TestNotElementTag:
         """
         markup = """<a class="widget"></a><a class="link"></a>"""
         bs = find_body_element(to_bs(markup))
-        tag = NotElementTag(ElementTag("a"))
+        tag = NotSelector(TagSelector("a"))
 
         with pytest.raises(TagNotFoundException):
             tag.find(bs, strict=True)
@@ -52,7 +52,7 @@ class TestNotElementTag:
         """
         markup = """<a class="widget"></a><a class="link"></a>"""
         bs = find_body_element(to_bs(markup))
-        tag = NotElementTag(ElementTag("a"))
+        tag = NotSelector(TagSelector("a"))
         assert tag.find(bs) is None
 
     def test_find_returns_first_tag_not_matching_selector_for_multiple_selectors(self):
@@ -69,7 +69,7 @@ class TestNotElementTag:
         """
         bs = find_body_element(to_bs(markup))
 
-        tag = NotElementTag(ElementTag("a"), AttributeTag("class", "1", re=True))
+        tag = NotSelector(TagSelector("a"), AttributeSelector("class", "1", re=True))
         result = tag.find(bs)
         assert str(result) == strip("""<div class="link"></div>""")
 
@@ -86,7 +86,7 @@ class TestNotElementTag:
         """
         bs = find_body_element(to_bs(markup))
 
-        tag = NotElementTag(ElementTag("a"), AttributeTag("class", "1", re=True))
+        tag = NotSelector(TagSelector("a"), AttributeSelector("class", "1", re=True))
         result = tag.find_all(bs)
 
         assert list(map(str, result)) == [
@@ -105,7 +105,7 @@ class TestNotElementTag:
         """
         bs = find_body_element(to_bs(markup))
 
-        tag = NotElementTag(ElementTag("a"), AttributeTag("class", "2", re=True))
+        tag = NotSelector(TagSelector("a"), AttributeSelector("class", "2", re=True))
         result = tag.find_all(bs)
         assert result == []
 
@@ -121,7 +121,7 @@ class TestNotElementTag:
         """
         bs = find_body_element(to_bs(markup))
 
-        tag = NotElementTag(ElementTag("span"))
+        tag = NotSelector(TagSelector("span"))
         result = tag.find(bs)
 
         assert str(result) == strip("""<div><a class="widget 12"></a></div>""")
@@ -137,7 +137,7 @@ class TestNotElementTag:
         """
         bs = find_body_element(to_bs(markup))
 
-        tag = NotElementTag(ElementTag("span"))
+        tag = NotSelector(TagSelector("span"))
         result = tag.find_all(bs)
 
         assert list(map(str, result)) == [
@@ -147,21 +147,21 @@ class TestNotElementTag:
 
     def test_bitwise_not_operator_returns_not_element_tag(self):
         """
-        Tests if bitwise NOT operator (__invert__) returns NotElementTag instance
+        Tests if bitwise NOT operator (__invert__) returns NotSelector instance
         with the same selector.
         """
-        tag = ElementTag("a")
+        tag = TagSelector("a")
         negation = ~tag
-        assert isinstance(negation, NotElementTag)
+        assert isinstance(negation, NotSelector)
         assert negation.steps == [tag]
 
     def test_bitwise_not_operator_on_not_element_tag_returns_tag(self):
         """
         Tests if bitwise NOT operator (__invert__) returns the original tag
-        when applied to NotElementTag instance with single selector.
+        when applied to NotSelector instance with single selector.
         """
-        tag = ElementTag("a")
-        not_element = NotElementTag(tag)
+        tag = TagSelector("a")
+        not_element = NotSelector(tag)
         negation = ~not_element
         assert negation == tag
 
@@ -170,11 +170,11 @@ class TestNotElementTag:
     ):
         """
         Tests if bitwise NOT operator (__invert__) returns SoupUnionTag instance
-        when applied to NotElementTag instance with multiple selectors.
+        when applied to NotSelector instance with multiple selectors.
         """
-        tag1 = ElementTag("a")
-        tag2 = ElementTag("div")
-        not_element = NotElementTag(tag1, tag2)
+        tag1 = TagSelector("a")
+        tag2 = TagSelector("div")
+        not_element = NotSelector(tag1, tag2)
         negation = ~not_element
         assert negation == SelectorList(tag1, tag2)
 
@@ -192,7 +192,7 @@ class TestNotElementTag:
             <div>Hello 3</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = NotElementTag(ElementTag(tag="a"))
+        tag = NotSelector(TagSelector(tag="a"))
         result = tag.find(bs, recursive=False)
         assert str(result) == strip("""<div>Hello 3</div>""")
 
@@ -209,7 +209,7 @@ class TestNotElementTag:
             <a>Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = NotElementTag(ElementTag(tag="a"))
+        tag = NotSelector(TagSelector(tag="a"))
         result = tag.find(bs, recursive=False)
         assert result is None
 
@@ -225,7 +225,7 @@ class TestNotElementTag:
             <a>Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = NotElementTag(ElementTag(tag="a"))
+        tag = NotSelector(TagSelector(tag="a"))
 
         with pytest.raises(TagNotFoundException):
             tag.find(bs, strict=True, recursive=False)
@@ -245,7 +245,7 @@ class TestNotElementTag:
             <span>Hello 5</span>
         """
         bs = find_body_element(to_bs(text))
-        tag = NotElementTag(ElementTag(tag="a"))
+        tag = NotSelector(TagSelector(tag="a"))
         results = tag.find_all(bs, recursive=False)
 
         assert list(map(str, results)) == [
@@ -267,7 +267,7 @@ class TestNotElementTag:
             <a>Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = NotElementTag(ElementTag(tag="a"))
+        tag = NotSelector(TagSelector(tag="a"))
 
         results = tag.find_all(bs, recursive=False)
         assert results == []
@@ -286,7 +286,7 @@ class TestNotElementTag:
             <div>Hello 4</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = NotElementTag(ElementTag(tag="a"))
+        tag = NotSelector(TagSelector(tag="a"))
         results = tag.find_all(bs, limit=2)
 
         assert list(map(str, results)) == [
@@ -311,7 +311,7 @@ class TestNotElementTag:
             <div>Hello 4</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = NotElementTag(ElementTag(tag="a"))
+        tag = NotSelector(TagSelector(tag="a"))
         results = tag.find_all(bs, recursive=False, limit=2)
 
         assert list(map(str, results)) == [

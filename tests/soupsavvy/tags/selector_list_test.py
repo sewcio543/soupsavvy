@@ -3,7 +3,7 @@
 import pytest
 
 from soupsavvy.tags.combinators import SelectorList
-from soupsavvy.tags.components import AttributeTag, ElementTag
+from soupsavvy.tags.components import AttributeSelector, TagSelector
 from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
 
 from .conftest import find_body_element, strip, to_bs
@@ -22,9 +22,9 @@ def mock_soup_union() -> SelectorList:
     SelectorList
         Mocked SelectorList used for testing purposes.
     """
-    tag_1 = ElementTag("a", attributes=[AttributeTag("class", value="widget")])
-    tag_2 = ElementTag("div", attributes=[AttributeTag("class", value="menu")])
-    tag_3 = AttributeTag(name="awesomeness", pattern=r"\d")
+    tag_1 = TagSelector("a", attributes=[AttributeSelector("class", value="widget")])
+    tag_2 = TagSelector("div", attributes=[AttributeSelector("class", value="menu")])
+    tag_3 = AttributeSelector(name="awesomeness", pattern=r"\d")
     union = SelectorList(tag_1, tag_2, tag_3)
     return union
 
@@ -40,7 +40,9 @@ class TestSelectorList:
         Tests if init raises a NotSelectableSoupException exception if at least one
         of the positional parameters is not an instance of SelectableSoup.
         """
-        tag_1 = ElementTag("a", attributes=[AttributeTag("class", value="widget")])
+        tag_1 = TagSelector(
+            "a", attributes=[AttributeSelector("class", value="widget")]
+        )
 
         with pytest.raises(NotSelectableSoupException):
             SelectorList(tag_1, "string")  # type: ignore
@@ -50,8 +52,12 @@ class TestSelectorList:
         Tests if tags attribute of SelectorList is assigned properly is a list
         containing all Tags provided in init.
         """
-        tag_1 = ElementTag("a", attributes=[AttributeTag("class", value="widget")])
-        tag_2 = ElementTag("div", attributes=[AttributeTag("class", value="menu")])
+        tag_1 = TagSelector(
+            "a", attributes=[AttributeSelector("class", value="widget")]
+        )
+        tag_2 = TagSelector(
+            "div", attributes=[AttributeSelector("class", value="menu")]
+        )
 
         union = SelectorList(tag_1, tag_2)
 
@@ -65,9 +71,13 @@ class TestSelectorList:
         arguments above 2 that are SelectableSoup.
         In this case testing arguments of mixed types: ElementTag and AttributeTag.
         """
-        tag_1 = ElementTag("a", attributes=[AttributeTag("class", value="widget")])
-        tag_2 = ElementTag("div", attributes=[AttributeTag("class", value="menu")])
-        tag_3 = AttributeTag(name="class", value="dropdown")
+        tag_1 = TagSelector(
+            "a", attributes=[AttributeSelector("class", value="widget")]
+        )
+        tag_2 = TagSelector(
+            "div", attributes=[AttributeSelector("class", value="menu")]
+        )
+        tag_3 = AttributeSelector(name="class", value="dropdown")
 
         union = SelectorList(tag_1, tag_2, tag_3)
 
@@ -177,8 +187,8 @@ class TestSelectorList:
         """
         bs = to_bs(markup)
         union = SelectorList(
-            SelectorList(ElementTag("a"), ElementTag("div")),
-            SelectorList(ElementTag("b"), ElementTag("i")),
+            SelectorList(TagSelector("a"), TagSelector("div")),
+            SelectorList(TagSelector("b"), TagSelector("i")),
         )
         result = union.find_all(bs)
         expected = [
@@ -205,8 +215,8 @@ class TestSelectorList:
         """
         bs = find_body_element(to_bs(text))
         tag = SelectorList(
-            ElementTag(tag="a"),
-            ElementTag(tag="p"),
+            TagSelector(tag="a"),
+            TagSelector(tag="p"),
         )
         result = tag.find(bs, recursive=False)
 
@@ -225,8 +235,8 @@ class TestSelectorList:
         """
         bs = find_body_element(to_bs(text))
         tag = SelectorList(
-            ElementTag(tag="a"),
-            ElementTag(tag="p"),
+            TagSelector(tag="a"),
+            TagSelector(tag="p"),
         )
         result = tag.find(bs, recursive=False)
         assert result is None
@@ -244,8 +254,8 @@ class TestSelectorList:
         """
         bs = find_body_element(to_bs(text))
         tag = SelectorList(
-            ElementTag(tag="a"),
-            ElementTag(tag="p"),
+            TagSelector(tag="a"),
+            TagSelector(tag="p"),
         )
 
         with pytest.raises(TagNotFoundException):
@@ -268,8 +278,8 @@ class TestSelectorList:
         """
         bs = find_body_element(to_bs(text))
         tag = SelectorList(
-            ElementTag(tag="a"),
-            ElementTag(tag="p"),
+            TagSelector(tag="a"),
+            TagSelector(tag="p"),
         )
         results = tag.find_all(bs, recursive=False)
 
@@ -294,8 +304,8 @@ class TestSelectorList:
         """
         bs = find_body_element(to_bs(text))
         tag = SelectorList(
-            ElementTag(tag="a"),
-            ElementTag(tag="p"),
+            TagSelector(tag="a"),
+            TagSelector(tag="p"),
         )
 
         results = tag.find_all(bs, recursive=False)
@@ -319,8 +329,8 @@ class TestSelectorList:
         """
         bs = find_body_element(to_bs(text))
         tag = SelectorList(
-            ElementTag(tag="a"),
-            ElementTag(tag="p"),
+            TagSelector(tag="a"),
+            TagSelector(tag="p"),
         )
         results = tag.find_all(bs, limit=3)
 
@@ -348,8 +358,8 @@ class TestSelectorList:
         """
         bs = find_body_element(to_bs(text))
         tag = SelectorList(
-            ElementTag(tag="a"),
-            ElementTag(tag="p"),
+            TagSelector(tag="a"),
+            TagSelector(tag="p"),
         )
         results = tag.find_all(bs, recursive=False, limit=2)
 
