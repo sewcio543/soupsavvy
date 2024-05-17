@@ -2,8 +2,8 @@
 
 import pytest
 
-from soupsavvy.tags.base import AndElementTag, StepsElementTag
-from soupsavvy.tags.components import AttributeTag, ElementTag
+from soupsavvy.tags.combinators import DescendantCombinator
+from soupsavvy.tags.components import AndElementTag, AttributeTag, ElementTag
 from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
 
 from .conftest import find_body_element, strip, to_bs
@@ -76,7 +76,7 @@ class TestAndElementTag:
         tag = AndElementTag(
             ElementTag("a"),
             AttributeTag("class", "1", re=True),
-            StepsElementTag(ElementTag("div"), ElementTag("a")),
+            DescendantCombinator(ElementTag("div"), ElementTag("a")),
         )
         result = tag.find(bs)
         assert str(result) == strip("""<a class="widget 12"></a>""")

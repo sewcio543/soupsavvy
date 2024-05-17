@@ -1,10 +1,10 @@
 from .tags import (
     AnyTag,
     AttributeTag,
+    DescendantCombinator,
     ElementTag,
     PatternElementTag,
-    SoupUnionTag,
-    StepsElementTag,
+    SelectorList,
 )
 
 __version__ = "0.1.5-dev4"
@@ -15,6 +15,6 @@ __all__ = [
     "AttributeTag",
     "ElementTag",
     "PatternElementTag",
-    "SoupUnionTag",
-    "StepsElementTag",
+    "SelectorList",
+    "DescendantCombinator",
 ]

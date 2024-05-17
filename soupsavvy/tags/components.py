@@ -17,6 +17,7 @@ from soupsavvy.tags.base import (
     SingleSelectableSoup,
 )
 from soupsavvy.tags.exceptions import WildcardTagException
+from soupsavvy.tags.tag_utils import TagIterator, UniqueTag
 
 
 @dataclass
@@ -264,3 +265,201 @@ class AnyTag(SingleSelectableSoup, SelectableCSS):
     def selector(self) -> str:
         """Returns wildcard css selector matching all elements in the markup."""
         return ns.CSS_SELECTOR_WILDCARD
+
+
+@dataclass(init=False)
+class NotElementTag(SelectableSoup, IterableSoup):
+    """
+    Class representing selector of elements that do not match provided selectors.
+
+    Example
+    -------
+    >>> NotElementTag(ElementTag(tag="div")
+
+    matches all elements that do not have "div" tag name.
+
+    Example
+    -------
+    >>> <span> class="widget">Hello World</span> ✔️
+    >>> <div class="menu">Hello World</div> ❌
+
+    Object can be initialized with multiple selectors as well, in which case
+    all selectors must match for element to be excluded from the result.
+
+    Object can be created as well by using bitwise NOT operator '~'
+    on a SelectableSoup object.
+
+    Example
+    -------
+    >>> ~ElementTag(tag="div")
+
+    Which is equivalent to the first example.
+
+    This is an equivalent of CSS :not() negation pseudo-class,
+    that represents elements that do not match a list of selectors
+
+    Example
+    -------
+    >>> div:not(.widget) { color: red; }
+    >>> :not(strong, .important) { color: red; }
+
+    The second example translated to soupsavvy would be:
+
+    Example
+    -------
+    >>> NotElementTag(ElementTag("strong"), AttributeTag("class", "important"))
+    >>> ~(ElementTag("strong") | AttributeTag("class", "important"))
+
+    Notes
+    -----
+    For more information on :not() pseudo-class see:
+    https://developer.mozilla.org/en-US/docs/Web/CSS/:not
+    """
+
+    def __init__(
+        self,
+        tag: SelectableSoup,
+        /,
+        *tags: SelectableSoup,
+    ) -> None:
+        """
+        Initializes NotElementTags object with provided positional arguments as tags.
+        At least one SelectableSoup object is required to create NotElementTags.
+
+        Parameters
+        ----------
+        tags: SelectableSoup
+            SelectableSoup objects to negate match accepted as positional arguments.
+
+        Raises
+        ------
+        NotSelectableSoupException
+            If any of provided parameters is not an instance of SelectableSoup.
+        """
+        self._multiple = bool(tags)
+        super().__init__([tag, *tags])
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        matching = set()
+
+        for step in self.steps:
+            matching |= {
+                UniqueTag(element)
+                for element in step.find_all(tag, recursive=recursive)
+            }
+
+        return [
+            element
+            for element in TagIterator(tag, recursive=recursive)
+            if UniqueTag(element) not in matching
+        ][:limit]
+
+    def __invert__(self) -> SelectableSoup:
+        """
+        Overrides __invert__ method to cancel out negation by returning
+        the tag in case of single selector, or SoupUnionTag in case of multiple.
+        """
+        from soupsavvy.tags.combinators import SelectorList
+
+        if not self._multiple:
+            return next(iter(self.steps))
+
+        return SelectorList(*self.steps)
+
+
+@dataclass(init=False)
+class AndElementTag(SelectableSoup, IterableSoup):
+    """
+    Class representing an intersection of multiple soup selectors.
+    Provides elements matching all of the listed selectors.
+
+    Example
+    -------
+    >>> AndElementTag(
+    ...    ElementTag(tag="div"),
+    ...    AttributeTag(name="class", value="widget")
+    ... )
+
+    matches all elements that have "div" tag name AND 'class' attribute "widget".
+
+    Example
+    -------
+    >>> <div class="widget">Hello World</div> ✔️
+    >>> <span class="widget">Hello World</span> ❌
+    >>> <div class="menu">Hello World</div> ❌
+
+    Object can be initialized with multiple selectors as well, in which case
+    all selectors must match for element to be included in the result.
+
+    Object can be created as well by using bitwise AND operator '&'
+    on two SelectableSoup objects.
+
+    Example
+    -------
+    >>> ElementTag(tag="div") & AttributeTag(name="class", value="widget")
+
+    Which is equivalent to the first example.
+
+    This is an equivalent of CSS selectors concatenation.
+
+    Example
+    -------
+    >>> div.class1#id1 { color: red; }
+
+    which translated to soupsavvy would be:
+
+    Example
+    -------
+    >>> ElementTag("div") & AttributeTag("class", "class1") & AttributeTag("id", "id1")
+    >>> ElementTag("div", attributes=[AttributeTag("class", "class1"), AttributeTag("id", "id1")])
+    """
+
+    def __init__(
+        self,
+        tag1: SelectableSoup,
+        tag2: SelectableSoup,
+        /,
+        *tags: SelectableSoup,
+    ) -> None:
+        """
+        Initializes AndElementTag object with provided positional arguments as tags.
+        At least two SelectableSoup objects are required to create AndElementTag.
+
+        Parameters
+        ----------
+        tags: SelectableSoup
+            SelectableSoup objects to match accepted as positional arguments.
+
+        Raises
+        ------
+        NotSelectableSoupException
+            If any of provided parameters is not an instance of SelectableSoup.
+        """
+        super().__init__([tag1, tag2, *tags])
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        steps = iter(self.steps)
+        matching = [
+            UniqueTag(element)
+            for element in next(steps).find_all(tag, recursive=recursive)
+        ]
+
+        for step in steps:
+            # not using set on purpose to keep order of elements
+            step_elements = [
+                UniqueTag(element)
+                for element in step.find_all(tag, recursive=recursive)
+            ]
+            matching = [element for element in matching if element in step_elements]
+
+        return [element.tag for element in matching][:limit]

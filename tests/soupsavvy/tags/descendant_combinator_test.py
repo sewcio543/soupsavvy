@@ -1,8 +1,8 @@
-"""Testing module for StepsElementTag class."""
+"""Testing module for DescendantCombinator class."""
 
 import pytest
 
-from soupsavvy.tags.base import SoupUnionTag, StepsElementTag
+from soupsavvy.tags.combinators import DescendantCombinator, SelectorList
 from soupsavvy.tags.components import (
     AnyTag,
     AttributeTag,
@@ -15,8 +15,8 @@ from .conftest import find_body_element, strip, to_bs
 
 
 @pytest.mark.soup
-class TestStepsElementTag:
-    """Class for StepsElementTag unit test suite."""
+class TestDescendantCombinator:
+    """Class for DescendantCombinator unit test suite."""
 
     def test_not_selectablesoup_in_init_raises_exception(self):
         """
@@ -24,13 +24,13 @@ class TestStepsElementTag:
         is not a SelectableSoup object.
         """
         with pytest.raises(NotSelectableSoupException):
-            StepsElementTag(ElementTag(tag="div"), "string")  # type: ignore
+            DescendantCombinator(ElementTag(tag="div"), "string")  # type: ignore
 
     @pytest.mark.parametrize(
         argnames="tag",
         argvalues=[
-            StepsElementTag(ElementTag(tag="div"), ElementTag(tag="a")),
-            StepsElementTag(
+            DescendantCombinator(ElementTag(tag="div"), ElementTag(tag="a")),
+            DescendantCombinator(
                 ElementTag(
                     tag="div",
                     attributes=[AttributeTag(name="class", value="container")],
@@ -39,9 +39,11 @@ class TestStepsElementTag:
                     tag="a", attributes=[AttributeTag(name="href", value="search")]
                 ),
             ),
-            StepsElementTag(ElementTag(tag="div"), AnyTag()),
-            StepsElementTag(AttributeTag(name="href", value="google"), ElementTag("a")),
-            StepsElementTag(
+            DescendantCombinator(ElementTag(tag="div"), AnyTag()),
+            DescendantCombinator(
+                AttributeTag(name="href", value="google"), ElementTag("a")
+            ),
+            DescendantCombinator(
                 ElementTag(tag="div"),
                 PatternElementTag(tag=ElementTag("a"), pattern="Welcome"),
             ),
@@ -54,9 +56,9 @@ class TestStepsElementTag:
             "with_pattern_tag",
         ],
     )
-    def test_element_is_found_for_valid_steps_elements(self, tag: StepsElementTag):
+    def test_element_is_found_for_valid_steps_elements(self, tag: DescendantCombinator):
         """
-        Tests if element was found for various valid StepsElementTag.
+        Tests if element was found for various valid DescendantCombinator.
         Element is returned if it matches multi-step tags.
         """
         text = """
@@ -71,9 +73,9 @@ class TestStepsElementTag:
     @pytest.mark.parametrize(
         argnames="tag",
         argvalues=[
-            StepsElementTag(ElementTag(tag="div"), ElementTag(tag="span")),
-            StepsElementTag(ElementTag(tag="footer"), ElementTag(tag="a")),
-            StepsElementTag(
+            DescendantCombinator(ElementTag(tag="div"), ElementTag(tag="span")),
+            DescendantCombinator(ElementTag(tag="footer"), ElementTag(tag="a")),
+            DescendantCombinator(
                 ElementTag(
                     tag="div",
                     attributes=[AttributeTag(name="class", value="container")],
@@ -82,10 +84,10 @@ class TestStepsElementTag:
                     tag="a", attributes=[AttributeTag(name="href", value="funhub.com")]
                 ),
             ),
-            StepsElementTag(
+            DescendantCombinator(
                 AttributeTag(name="href", value="funhub.com"), ElementTag("a")
             ),
-            StepsElementTag(
+            DescendantCombinator(
                 ElementTag(tag="div"),
                 PatternElementTag(tag=ElementTag("a"), pattern="Goodbye"),
             ),
@@ -99,10 +101,10 @@ class TestStepsElementTag:
         ],
     )
     def test_element_is_not_found_for_not_matching_steps_tags(
-        self, tag: StepsElementTag
+        self, tag: DescendantCombinator
     ):
         """
-        Tests if element was not found for various invalid StepsElementTag
+        Tests if element was not found for various invalid DescendantCombinator
         and None was returned.
         """
         text = """
@@ -124,14 +126,14 @@ class TestStepsElementTag:
             </div>
         """
         bs = to_bs(text)
-        tag = StepsElementTag(ElementTag(tag="div"), ElementTag(tag="span"))
+        tag = DescendantCombinator(ElementTag(tag="div"), ElementTag(tag="span"))
 
         with pytest.raises(TagNotFoundException):
             tag.find(bs, strict=True)
 
     def test_finds_nested_elements_that_are_not_direct_children(self):
         """
-        Tests if StepsElementTag find method returns matching elements if they
+        Tests if DescendantCombinator find method returns matching elements if they
         are in markup as not direct children of previous element in steps.
         """
         text = """
@@ -144,7 +146,7 @@ class TestStepsElementTag:
             </div>
         """
         bs = to_bs(text)
-        tag = StepsElementTag(
+        tag = DescendantCombinator(
             ElementTag(
                 tag="div", attributes=[AttributeTag(name="class", value="container")]
             ),
@@ -155,7 +157,7 @@ class TestStepsElementTag:
 
     def test_finds_for_multiple_options_with_soup_union_tag(self):
         """
-        Tests if StepsElementTag find_all method returns matching elements if they
+        Tests if DescendantCombinator find_all method returns matching elements if they
         match any of tags that are part of SoupUnionTag at any step.
         """
         text = """
@@ -176,8 +178,8 @@ class TestStepsElementTag:
             </div>
         """
         bs = to_bs(text)
-        tag = StepsElementTag(
-            SoupUnionTag(
+        tag = DescendantCombinator(
+            SelectorList(
                 ElementTag(
                     tag="div",
                     attributes=[AttributeTag(name="class", value="container")],
@@ -187,7 +189,7 @@ class TestStepsElementTag:
                     attributes=[AttributeTag(name="class", value="wrapper")],
                 ),
             ),
-            SoupUnionTag(
+            SelectorList(
                 ElementTag(
                     tag="a",
                     attributes=[AttributeTag(name="class", value="link")],
@@ -209,7 +211,7 @@ class TestStepsElementTag:
 
     def test_finds_element_for_more_than_two_steps(self):
         """
-        Tests if StepsElementTag find method returns matching elements if there are
+        Tests if DescendantCombinator find method returns matching elements if there are
         more than two tags are in steps.
         """
         text = """
@@ -222,7 +224,7 @@ class TestStepsElementTag:
             </div>
         """
         bs = to_bs(text)
-        tag = StepsElementTag(
+        tag = DescendantCombinator(
             ElementTag(
                 tag="div", attributes=[AttributeTag(name="class", value="container")]
             ),
@@ -236,7 +238,7 @@ class TestStepsElementTag:
 
     def test_find_all_handles_multiple_different_levels_of_elements(self):
         """
-        Tests if StepsElementTag find_all method returns matching elements
+        Tests if DescendantCombinator find_all method returns matching elements
         if there are at different depth levels.
         """
         text = """
@@ -257,7 +259,7 @@ class TestStepsElementTag:
             </span>
         """
         bs = to_bs(text)
-        tag = StepsElementTag(
+        tag = DescendantCombinator(
             ElementTag(
                 tag="span", attributes=[AttributeTag(name="class", value="funhub_link")]
             ),
@@ -273,7 +275,7 @@ class TestStepsElementTag:
 
     def test_find_all_returns_list_of_matched_elements(self):
         """
-        Tests if StepsElementTag find_all method returns
+        Tests if DescendantCombinator find_all method returns
         a list of all matched elements.
         """
         text = """
@@ -297,7 +299,7 @@ class TestStepsElementTag:
             </div>
         """
         bs = to_bs(text)
-        tag = StepsElementTag(
+        tag = DescendantCombinator(
             ElementTag("div"),
             ElementTag("a", attributes=[AttributeTag(name="class", value="link")]),
         )
@@ -311,7 +313,7 @@ class TestStepsElementTag:
 
     def test_find_all_returns_empty_list_if_no_matched_elements(self):
         """
-        Tests if StepsElementTag find_all method returns empty list if
+        Tests if DescendantCombinator find_all method returns empty list if
         no element matches the tag.
         """
         text = """
@@ -326,7 +328,7 @@ class TestStepsElementTag:
             </div>
         """
         bs = to_bs(text)
-        tag = StepsElementTag(
+        tag = DescendantCombinator(
             ElementTag("div"),
             ElementTag("a", attributes=[AttributeTag(name="class", value="link")]),
         )
@@ -335,7 +337,7 @@ class TestStepsElementTag:
 
     def test_find_element_with_nested_steps_elements(self):
         """
-        Tests if StepsElementTag can take another StepsElementTag as a step
+        Tests if DescendantCombinator can take another DescendantCombinator as a step
         and find element that matches.
         """
         text = """
@@ -352,8 +354,8 @@ class TestStepsElementTag:
             </div>
         """
         bs = to_bs(text)
-        tag = StepsElementTag(
-            StepsElementTag(
+        tag = DescendantCombinator(
+            DescendantCombinator(
                 ElementTag("div"),
                 ElementTag(
                     "a", attributes=[AttributeTag(name="class", value="funhub")]
@@ -366,7 +368,7 @@ class TestStepsElementTag:
 
     def test_find_skips_elements_partially_matching_steps(self):
         """
-        Tests if StepsElementTag find method skips elements that partially match
+        Tests if DescendantCombinator find method skips elements that partially match
         the steps and returns the first element that matches all steps.
         In this case first tag matches only first step,
         but second tag matches both steps.
@@ -380,7 +382,7 @@ class TestStepsElementTag:
             </div>
         """
         bs = to_bs(text)
-        tag = StepsElementTag(ElementTag(tag="div"), ElementTag(tag="span"))
+        tag = DescendantCombinator(ElementTag(tag="div"), ElementTag(tag="span"))
         result = tag.find(bs)
 
         expected = """<span class="link" href="search">Welcome</span>"""
@@ -388,7 +390,7 @@ class TestStepsElementTag:
 
     def test_returns_empty_list_if_first_step_was_not_matched(self):
         """
-        Tests if StepsElementTag find_all method returns an empty list
+        Tests if DescendantCombinator find_all method returns an empty list
         if the first step was not matched.
         """
         text = """
@@ -397,7 +399,7 @@ class TestStepsElementTag:
             </div>
         """
         bs = to_bs(text)
-        tag = StepsElementTag(ElementTag(tag="span"), ElementTag(tag="a"))
+        tag = DescendantCombinator(ElementTag(tag="span"), ElementTag(tag="a"))
         result = tag.find_all(bs)
         assert result == []
 
@@ -418,7 +420,7 @@ class TestStepsElementTag:
             </div>
         """
         bs = find_body_element(to_bs(text))
-        tag = StepsElementTag(
+        tag = DescendantCombinator(
             ElementTag("div"),
             ElementTag("a"),
         )
@@ -438,7 +440,7 @@ class TestStepsElementTag:
             <a href="github">Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = StepsElementTag(
+        tag = DescendantCombinator(
             ElementTag("div"),
             ElementTag("a"),
         )
@@ -458,7 +460,7 @@ class TestStepsElementTag:
             <a href="github">Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = StepsElementTag(
+        tag = DescendantCombinator(
             ElementTag("div"),
             ElementTag("a"),
         )
@@ -481,7 +483,7 @@ class TestStepsElementTag:
             <div><a>Hello 2</a></div>
         """
         bs = find_body_element(to_bs(text))
-        tag = StepsElementTag(
+        tag = DescendantCombinator(
             ElementTag("div"),
             ElementTag("a"),
         )
@@ -507,7 +509,7 @@ class TestStepsElementTag:
             <a href="github">Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = StepsElementTag(
+        tag = DescendantCombinator(
             ElementTag("div"),
             ElementTag("a"),
         )
@@ -531,7 +533,7 @@ class TestStepsElementTag:
             <div><a>Hello 4</a></div>
         """
         bs = find_body_element(to_bs(text))
-        tag = StepsElementTag(
+        tag = DescendantCombinator(
             ElementTag("div"),
             ElementTag("a"),
         )
@@ -561,7 +563,7 @@ class TestStepsElementTag:
             <div><a>Hello 4</a></div>
         """
         bs = find_body_element(to_bs(text))
-        tag = StepsElementTag(
+        tag = DescendantCombinator(
             ElementTag("div"),
             ElementTag("a"),
         )
@@ -589,7 +591,7 @@ class TestStepsElementTag:
             </div>
         """
         bs = find_body_element(to_bs(text))
-        tag = StepsElementTag(
+        tag = DescendantCombinator(
             ElementTag("div"),
             ElementTag("div"),
             ElementTag("a"),

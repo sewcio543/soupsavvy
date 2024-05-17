@@ -3,7 +3,7 @@
 import pytest
 from bs4 import Tag
 
-from soupsavvy.tags.base import SoupUnionTag
+from soupsavvy.tags.combinators import SelectorList
 from soupsavvy.tags.components import AttributeTag, ElementTag
 from soupsavvy.tags.exceptions import (
     NotSelectableSoupException,
@@ -410,8 +410,8 @@ class TestElementTag:
         tag_1 = ElementTag("a", attributes=[AttributeTag("class", value="widget")])
         tag_2 = ElementTag("div", attributes=[AttributeTag("class", value="menu")])
         union = tag_1.__or__(tag_2)
-        assert union == SoupUnionTag(tag_1, tag_2)
-        assert isinstance(union, SoupUnionTag)
+        assert union == SelectorList(tag_1, tag_2)
+        assert isinstance(union, SelectorList)
         # checking python itself just to make sure syntactical sugar works
         assert union == (tag_1 | tag_2)
 

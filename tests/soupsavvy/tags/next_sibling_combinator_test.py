@@ -2,7 +2,7 @@
 
 import pytest
 
-from soupsavvy.tags.base import NextSiblingCombinator
+from soupsavvy.tags.combinators import NextSiblingCombinator
 from soupsavvy.tags.components import AttributeTag, ElementTag
 from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
 

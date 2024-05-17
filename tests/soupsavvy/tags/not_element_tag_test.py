@@ -2,8 +2,8 @@
 
 import pytest
 
-from soupsavvy.tags.base import NotElementTag, SoupUnionTag
-from soupsavvy.tags.components import AttributeTag, ElementTag
+from soupsavvy.tags.combinators import SelectorList
+from soupsavvy.tags.components import AttributeTag, ElementTag, NotElementTag
 from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
 
 from .conftest import find_body_element, strip, to_bs
@@ -176,7 +176,7 @@ class TestNotElementTag:
         tag2 = ElementTag("div")
         not_element = NotElementTag(tag1, tag2)
         negation = ~not_element
-        assert negation == SoupUnionTag(tag1, tag2)
+        assert negation == SelectorList(tag1, tag2)
 
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """

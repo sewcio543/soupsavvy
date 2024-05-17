@@ -1,8 +1,8 @@
-"""Testing module for SoupUnionTag class."""
+"""Testing module for SelectorList class."""
 
 import pytest
 
-from soupsavvy.tags.base import SoupUnionTag
+from soupsavvy.tags.combinators import SelectorList
 from soupsavvy.tags.components import AttributeTag, ElementTag
 from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
 
@@ -10,28 +10,28 @@ from .conftest import find_body_element, strip, to_bs
 
 
 @pytest.fixture(scope="session")
-def mock_soup_union() -> SoupUnionTag:
+def mock_soup_union() -> SelectorList:
     """
-    Fixture that mocks SoupUnionTag with three Tags:
+    Fixture that mocks SelectorList with three Tags:
     * first matching all 'a' elements with 'class' attribute equal to 'widget'
     * second matching all 'div' elements with 'class' attribute equal to 'menu'
     * third matching all elements with 'awesomeness' attribute which value contains a digit.
 
     Returns
     -------
-    SoupUnionTag
-        Mocked SoupUnionTag used for testing purposes.
+    SelectorList
+        Mocked SelectorList used for testing purposes.
     """
     tag_1 = ElementTag("a", attributes=[AttributeTag("class", value="widget")])
     tag_2 = ElementTag("div", attributes=[AttributeTag("class", value="menu")])
     tag_3 = AttributeTag(name="awesomeness", pattern=r"\d")
-    union = SoupUnionTag(tag_1, tag_2, tag_3)
+    union = SelectorList(tag_1, tag_2, tag_3)
     return union
 
 
 @pytest.mark.soup
-class TestSoupUnionTag:
-    """Class for SoupUnionTag unit test suite."""
+class TestSelectorList:
+    """Class for SelectorList unit test suite."""
 
     def test_init_raises_exception_if_at_least_one_argument_is_not_selectable_soup(
         self,
@@ -43,24 +43,24 @@ class TestSoupUnionTag:
         tag_1 = ElementTag("a", attributes=[AttributeTag("class", value="widget")])
 
         with pytest.raises(NotSelectableSoupException):
-            SoupUnionTag(tag_1, "string")  # type: ignore
+            SelectorList(tag_1, "string")  # type: ignore
 
     def test_soup_union_is_instantiated_with_correct_tags_attribute(self):
         """
-        Tests if tags attribute of SoupUnionTag is assigned properly is a list
+        Tests if tags attribute of SelectorList is assigned properly is a list
         containing all Tags provided in init.
         """
         tag_1 = ElementTag("a", attributes=[AttributeTag("class", value="widget")])
         tag_2 = ElementTag("div", attributes=[AttributeTag("class", value="menu")])
 
-        union = SoupUnionTag(tag_1, tag_2)
+        union = SelectorList(tag_1, tag_2)
 
         assert isinstance(union.steps, list)
         assert union.steps == [tag_1, tag_2]
 
     def test_soup_union_is_instantiated_with_more_than_two_arguments(self):
         """
-        Tests if tags attribute of SoupUnionTag is assigned properly is a list
+        Tests if tags attribute of SelectorList is assigned properly is a list
         containing all Tags provided in init. Init can take any number of positional
         arguments above 2 that are SelectableSoup.
         In this case testing arguments of mixed types: ElementTag and AttributeTag.
@@ -69,7 +69,7 @@ class TestSoupUnionTag:
         tag_2 = ElementTag("div", attributes=[AttributeTag("class", value="menu")])
         tag_3 = AttributeTag(name="class", value="dropdown")
 
-        union = SoupUnionTag(tag_1, tag_2, tag_3)
+        union = SelectorList(tag_1, tag_2, tag_3)
 
         assert isinstance(union.steps, list)
         assert union.steps == [tag_1, tag_2, tag_3]
@@ -84,17 +84,17 @@ class TestSoupUnionTag:
         ids=["a", "div", "attribute"],
     )
     def test_soup_finds_element_of_any_matching_tag(
-        self, markup: str, mock_soup_union: SoupUnionTag
+        self, markup: str, mock_soup_union: SelectorList
     ):
         """
-        Tests if find returns Tag for elements matching any of SoupUnionTag tags.
+        Tests if find returns Tag for elements matching any of SelectorList tags.
         """
         bs = to_bs(markup)
         result = mock_soup_union.find(bs)
         assert str(result) == strip(markup)
 
     def test_find_returns_none_if_no_element_matches_the_tags(
-        self, mock_soup_union: SoupUnionTag
+        self, mock_soup_union: SelectorList
     ):
         """Tests if find method returns None if no element matches provided tags."""
         markup = """
@@ -106,7 +106,7 @@ class TestSoupUnionTag:
         assert mock_soup_union.find(bs) is None
 
     def test_find_raises_exception_if_no_element_matches_the_tags_in_strict_mode(
-        self, mock_soup_union: SoupUnionTag
+        self, mock_soup_union: SelectorList
     ):
         """
         Tests if find method raises TagNotFoundException if no element
@@ -124,7 +124,7 @@ class TestSoupUnionTag:
             mock_soup_union.find(bs, strict=True)
 
     def test_finds_all_returns_a_list_of_all_matching_elements(
-        self, mock_soup_union: SoupUnionTag
+        self, mock_soup_union: SelectorList
     ):
         """
         Tests find_all returns a list of all elements that match any of provided tags.
@@ -148,7 +148,7 @@ class TestSoupUnionTag:
         assert list(map(str, result)) == expected
 
     def test_finds_all_returns_empty_list_if_no_element_matches(
-        self, mock_soup_union: SoupUnionTag
+        self, mock_soup_union: SelectorList
     ):
         """
         Tests find_all returns an empty list if no element matches any of provided tags.
@@ -164,7 +164,7 @@ class TestSoupUnionTag:
 
     def test_union_consisting_of_unions_covers_all_tags(self):
         """
-        Tests if SoupUnionTag constructed from SoupUnionTags matches all elements
+        Tests if SelectorList constructed from SelectorLists matches all elements
         that match any of Unions.
         """
         markup = """
@@ -176,9 +176,9 @@ class TestSoupUnionTag:
             <i></i>
         """
         bs = to_bs(markup)
-        union = SoupUnionTag(
-            SoupUnionTag(ElementTag("a"), ElementTag("div")),
-            SoupUnionTag(ElementTag("b"), ElementTag("i")),
+        union = SelectorList(
+            SelectorList(ElementTag("a"), ElementTag("div")),
+            SelectorList(ElementTag("b"), ElementTag("i")),
         )
         result = union.find_all(bs)
         expected = [
@@ -204,7 +204,7 @@ class TestSoupUnionTag:
             <p>Hello 4</p>
         """
         bs = find_body_element(to_bs(text))
-        tag = SoupUnionTag(
+        tag = SelectorList(
             ElementTag(tag="a"),
             ElementTag(tag="p"),
         )
@@ -224,7 +224,7 @@ class TestSoupUnionTag:
             </div>
         """
         bs = find_body_element(to_bs(text))
-        tag = SoupUnionTag(
+        tag = SelectorList(
             ElementTag(tag="a"),
             ElementTag(tag="p"),
         )
@@ -243,7 +243,7 @@ class TestSoupUnionTag:
             </div>
         """
         bs = find_body_element(to_bs(text))
-        tag = SoupUnionTag(
+        tag = SelectorList(
             ElementTag(tag="a"),
             ElementTag(tag="p"),
         )
@@ -267,7 +267,7 @@ class TestSoupUnionTag:
             <span></span>
         """
         bs = find_body_element(to_bs(text))
-        tag = SoupUnionTag(
+        tag = SelectorList(
             ElementTag(tag="a"),
             ElementTag(tag="p"),
         )
@@ -293,7 +293,7 @@ class TestSoupUnionTag:
             </div>
         """
         bs = find_body_element(to_bs(text))
-        tag = SoupUnionTag(
+        tag = SelectorList(
             ElementTag(tag="a"),
             ElementTag(tag="p"),
         )
@@ -318,7 +318,7 @@ class TestSoupUnionTag:
             <a>Hello 3</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = SoupUnionTag(
+        tag = SelectorList(
             ElementTag(tag="a"),
             ElementTag(tag="p"),
         )
@@ -347,7 +347,7 @@ class TestSoupUnionTag:
             <a>Hello 3</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = SoupUnionTag(
+        tag = SelectorList(
             ElementTag(tag="a"),
             ElementTag(tag="p"),
         )
