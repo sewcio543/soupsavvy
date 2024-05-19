@@ -149,16 +149,59 @@ class TestChildCombinator:
         result = tag.find_all(bs)
         assert result == []
 
+    def test_find_returns_match_with_multiple_selectors(self):
+        """
+        Tests if find method returns the first tag that matches all selectors
+        in child combinator, if there are multiple selectors.
+        """
+        text = """
+            <p>Hello World</p>
+            <div>
+                <p>Hello 1</p>
+            </div>
+            <div>
+                <span>
+                    <p>Hello 2</p>
+                </span>
+            </div>
+            <div>
+                <a>
+                    <span>
+                        <a>
+                            <p>Hello 3</p>
+                            <h1>Hello 4</h1>
+                        </a>
+                    </span>
+                </a>
+            </div>
+            <div>
+                <span>
+                    <a>
+                        <h1>Hello 5</h1>
+                        <p>Hello 6</p>
+                    </a>
+                </span>
+            </div>
+        """
+        bs = to_bs(text)
+        tag = ChildCombinator(
+            TagSelector("div"),
+            TagSelector("span"),
+            TagSelector("a"),
+            TagSelector("p"),
+        )
+        result = tag.find(bs)
+        assert str(result) == strip("""<p>Hello 6</p>""")
+
     def test_gt_operator_returns_and_child_combinator(self):
         """
         Tests if greater than operator (__gt__) returns ChildCombinator instance.
         """
         tag1 = TagSelector("a")
         tag2 = AttributeSelector("class", "link")
-        intersection = tag1 > tag2
-        assert isinstance(intersection, ChildCombinator)
-        assert intersection.parent == tag1
-        assert intersection.child == tag2
+        combinator = tag1 > tag2
+        assert isinstance(combinator, ChildCombinator)
+        assert combinator.steps == [tag1, tag2]
 
     def test_gt_operator_raises_exception_if_not_selectable_soup(self):
         """

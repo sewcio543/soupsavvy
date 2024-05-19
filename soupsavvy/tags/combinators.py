@@ -23,7 +23,7 @@ https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Com
 
 from dataclasses import dataclass
 from functools import reduce
-from itertools import chain
+from itertools import chain, product
 from typing import Optional
 
 from bs4 import Tag
@@ -33,7 +33,8 @@ from soupsavvy.tags.namespace import FindResult
 from soupsavvy.tags.tag_utils import UniqueTag
 
 
-class ChildCombinator(SelectableSoup):
+@dataclass(init=False)
+class ChildCombinator(SelectableSoup, IterableSoup):
     """
     Class representing a child combinator in CSS selectors.
 
@@ -82,28 +83,44 @@ class ChildCombinator(SelectableSoup):
     https://developer.mozilla.org/en-US/docs/Web/CSS/Child_combinator
     """
 
-    def __init__(self, parent: SelectableSoup, child: SelectableSoup) -> None:
+    def __init__(
+        self,
+        tag1: SelectableSoup,
+        tag2: SelectableSoup,
+        /,
+        *tags: SelectableSoup,
+    ) -> None:
         """
-        Initializes ChildCombinator object with provided parent and child
-        SelectableSoup objects.
+        Initializes ChildCombinator object with provided positional arguments as tags.
+        At least two SelectableSoup objects are required to create ChildCombinator.
 
         Parameters
         ----------
-        parent : SelectableSoup
-            SelectableSoup object that represents parent element.
-        child : SelectableSoup
-            SelectableSoup object that represents child element.
+        tags: SelectableSoup
+            SelectableSoup objects to match accepted as positional arguments.
+            At least two SelectableSoup objects are required to create ChildCombinator.
+
+        Notes
+        -----
+        Object can be initialized with more than two SelectableSoup objects,
+        which would be equal to chaining multiple child combinators.
+
+        Example
+        -------
+        >>> div > a > span
+
+        translates to soupsavvy would be:
+
+        Example
+        -------
+        >>> ChildCombinator(ElementTag("div"), ElementTag("a"), ElementTag("span"))
 
         Raises
         ------
         NotSelectableSoupException
-            If any of provided objects is not an instance of SelectableSoup.
+            If any of provided parameters is not an instance of SelectableSoup.
         """
-        self._check_selector_type(parent)
-        self._check_selector_type(child)
-
-        self.parent = parent
-        self.child = child
+        super().__init__([tag1, tag2, *tags])
 
     def find_all(
         self,
@@ -111,16 +128,27 @@ class ChildCombinator(SelectableSoup):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Tag]:
-        # first find all parent tags
-        parents = self.parent.find_all(tag, recursive=recursive)
-        # find all direct matching children of parents
-        children = chain.from_iterable(
-            self.child.find_all(parent, recursive=False) for parent in parents
-        )
-        return list(children)[:limit]
+        elements = [tag]
+
+        for i, step in enumerate(self.steps):
+            # only first step follows recursive rule, the rest are not recursive
+            # to match only direct children
+            recursive_ = recursive if i == 0 else False
+
+            elements = reduce(
+                list.__add__,
+                (step.find_all(element, recursive=recursive_) for element in elements),
+            )
+
+            # break if no elements were found in the step
+            if not elements:
+                break
+
+        return elements[:limit]
 
 
-class NextSiblingCombinator(SelectableSoup):
+@dataclass(init=False)
+class NextSiblingCombinator(SelectableSoup, IterableSoup):
     """
     Class representing a next sibling combinator in CSS selectors.
 
@@ -159,29 +187,31 @@ class NextSiblingCombinator(SelectableSoup):
     This is also known as the adjacent sibling combinator.
     """
 
-    def __init__(self, previous: SelectableSoup, next: SelectableSoup):
+    def __init__(
+        self,
+        tag1: SelectableSoup,
+        tag2: SelectableSoup,
+        /,
+        *tags: SelectableSoup,
+    ) -> None:
         """
-        Initializes NextSiblingCombinator object with provided previous and next
-        SelectableSoup objects.
+        Initializes SubsequentSiblingCombinator object with provided
+        positional arguments as tags. At least two SelectableSoup object are required
+        to create SubsequentSiblingCombinator.
 
         Parameters
         ----------
-        previous : SelectableSoup
-            SelectableSoup object that represents preceding element.
-        next : SelectableSoup
-            SelectableSoup object that represents the element immediately following
-            the previous element.
+        tags: SelectableSoup
+            SelectableSoup objects to match accepted as positional arguments.
+            At least two SelectableSoup objects are required
+            to create SubsequentSiblingCombinator.
 
         Raises
         ------
         NotSelectableSoupException
-            If any of provided objects is not an instance of SelectableSoup.
+            If any of provided parameters is not an instance of SelectableSoup.
         """
-        self._check_selector_type(previous)
-        self._check_selector_type(next)
-
-        self.previous = previous
-        self.next = next
+        super().__init__([tag1, tag2, *tags])
 
     def find_all(
         self,
@@ -189,34 +219,46 @@ class NextSiblingCombinator(SelectableSoup):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Tag]:
-        previous = self.previous.find_all(tag, recursive=recursive)
-        # finds all direct matching children of parents
-        matches = []
 
-        for prev in previous:
-            if prev.parent is None:
-                continue
+        elements = [tag]
 
-            next_tag = prev.find_next_sibling()
-
-            if not isinstance(next_tag, Tag):
+        for i, step in enumerate(self.steps):
+            if i == 0:
+                # only first step follows recursive rule
+                elements = step.find_all(elements[0], recursive=recursive)
                 continue
 
             matching = {
                 UniqueTag(element)
-                for element in self.next.find_all(prev.parent, recursive=False)
+                for tag in elements
+                for element in step.find_all(tag.parent or tag, recursive=False)
             }
 
-            if UniqueTag(next_tag) in matching:
-                matches.append(next_tag)
+            next_siblings = [
+                UniqueTag(tag.find_next_sibling()) for tag in elements  # type: ignore
+            ]
 
-            if len(matches) == limit:
+            matches: list[UniqueTag] = []
+            last_step = i + 1 == len(self.steps)
+
+            for element in next_siblings:
+                if element in matching and element not in matches:
+                    matches.append(element)
+
+                    if len(matches) == limit and last_step:
+                        break
+
+            elements = [element.tag for element in matches]
+
+            # break if no elements were found in the step
+            if not elements:
                 break
 
-        return matches
+        return elements
 
 
-class SubsequentSiblingCombinator(SelectableSoup):
+@dataclass(init=False)
+class SubsequentSiblingCombinator(SelectableSoup, IterableSoup):
     """
     Class representing a subsequent sibling combinator in CSS selectors.
     Subsequent sibling combinator separates two selectors
@@ -259,29 +301,31 @@ class SubsequentSiblingCombinator(SelectableSoup):
     This is also known as the general sibling combinator.
     """
 
-    def __init__(self, previous: SelectableSoup, subsequent: SelectableSoup):
+    def __init__(
+        self,
+        tag1: SelectableSoup,
+        tag2: SelectableSoup,
+        /,
+        *tags: SelectableSoup,
+    ) -> None:
         """
-        Initializes SubsequentSiblingCombinator object
-        with provided previous and subsequent SelectableSoup objects.
+        Initializes SubsequentSiblingCombinator object with provided
+        positional arguments as tags. At least two SelectableSoup object are required
+        to create SubsequentSiblingCombinator.
 
         Parameters
         ----------
-        previous : SelectableSoup
-            SelectableSoup object that represents preceding element.
-        subsequent : SelectableSoup
-            SelectableSoup object that represents the element following
-            the previous element.
+        tags: SelectableSoup
+            SelectableSoup objects to match accepted as positional arguments.
+            At least two SelectableSoup objects are required
+            to create SubsequentSiblingCombinator.
 
         Raises
         ------
         NotSelectableSoupException
-            If any of provided objects is not an instance of SelectableSoup.
+            If any of provided parameters is not an instance of SelectableSoup.
         """
-        self._check_selector_type(previous)
-        self._check_selector_type(subsequent)
-
-        self.previous = previous
-        self.subsequent = subsequent
+        super().__init__([tag1, tag2, *tags])
 
     def find_all(
         self,
@@ -289,31 +333,44 @@ class SubsequentSiblingCombinator(SelectableSoup):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Tag]:
-        previous = self.previous.find_all(tag, recursive=recursive)
-        # finds all direct matching children of parents
-        matches: list[UniqueTag] = []
 
-        for prev in previous:
-            if prev.parent is None:
+        elements = [tag]
+
+        for i, step in enumerate(self.steps):
+            if i == 0:
+                # only first step follows recursive rule
+                elements = step.find_all(elements[0], recursive=recursive)
                 continue
-
-            next_siblings = prev.find_next_siblings()
 
             matching = {
                 UniqueTag(element)
-                for element in self.subsequent.find_all(prev.parent, recursive=False)
+                for tag in elements
+                for element in step.find_all(tag.parent or tag, recursive=False)
             }
 
-            for sibling in next_siblings:
-                unique = UniqueTag(sibling)  # type: ignore
+            next_siblings = [
+                UniqueTag(sibling)  # type: ignore
+                for tag in elements
+                for sibling in tag.find_next_siblings()
+            ]
 
-                if unique in matching and unique not in matches:
-                    matches.append(unique)
+            matches: list[UniqueTag] = []
+            last_step = i + 1 == len(self.steps)
 
-                if len(matches) == limit:
-                    break
+            for element in next_siblings:
+                if element in matching and element not in matches:
+                    matches.append(element)
 
-        return [element.tag for element in matches]
+                    if len(matches) == limit and last_step:
+                        break
+
+            elements = [element.tag for element in matches]
+
+            # break if no elements were found in the step
+            if not elements:
+                break
+
+        return elements
 
 
 @dataclass(init=False)

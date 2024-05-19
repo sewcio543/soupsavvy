@@ -175,6 +175,47 @@ class TestSubsequentSiblingCombinator:
         result = tag.find_all(bs)
         assert result == []
 
+    def test_find_tag_for_multiple_selectors(self):
+        """
+        Tests if find method returns the first tag that matches
+        subsequent sibling combinator with multiple selectors.
+        """
+        text = """
+            <div>
+                <a></a>
+                <span></span>
+                <p>Hello 1</p>
+            </div>
+
+            <div>
+                <a></a>
+                <span>
+                    <a></a>
+                    <p>Hello 2</p>
+                </span>
+            </div>
+
+            <div>
+                <a></a>
+                <div></div>
+                <span></span>
+                <div></div>
+                <a></a>
+                <div></div>
+                <p>Hello 3</p>
+            </div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = SubsequentSiblingCombinator(
+            TagSelector("a"),
+            TagSelector("span"),
+            TagSelector("a"),
+            TagSelector("p"),
+        )
+
+        result = tag.find(bs)
+        assert str(result) == strip("""<p>Hello 3</p>""")
+
     def test_add_operator_returns_and_child_combinator(self):
         """
         Tests if multiplication operator (__mul__) returns
@@ -184,8 +225,7 @@ class TestSubsequentSiblingCombinator:
         tag2 = AttributeSelector("class", "link")
         intersection = tag1 * tag2
         assert isinstance(intersection, SubsequentSiblingCombinator)
-        assert intersection.previous == tag1
-        assert intersection.subsequent == tag2
+        assert intersection.steps == [tag1, tag2]
 
     def test_add_operator_raises_exception_if_not_selectable_soup(self):
         """

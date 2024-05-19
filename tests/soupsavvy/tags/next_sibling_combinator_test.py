@@ -117,6 +117,39 @@ class TestNextSiblingCombinator:
             strip("""<p>Hello 4</p>"""),
         ]
 
+    def test_find_tag_for_multiple_selectors(self):
+        """
+        Tests if find method returns the first tag that matches
+        next sibling combinator for multiple selectors.
+        """
+        text = """
+            <div></div>
+            <a></a>
+            <span></span>
+            <p>Hello 1</p>
+
+            <div></div>
+            <span></span>
+            <a></a>
+            <div></div>
+            <p>Hello 2</p>
+
+            <div></div>
+            <span></span>
+            <a></a>
+            <p>Hello 3</p>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = NextSiblingCombinator(
+            TagSelector("div"),
+            TagSelector("span"),
+            TagSelector("a"),
+            TagSelector("p"),
+        )
+
+        result = tag.find(bs)
+        assert str(result) == strip("""<p>Hello 3</p>""")
+
     def test_find_all_returns_empty_list_if_no_tag_matches(self):
         """
         Tests if find_all method returns an empty list when no tag is found
@@ -146,8 +179,7 @@ class TestNextSiblingCombinator:
         tag2 = AttributeSelector("class", "link")
         intersection = tag1 + tag2
         assert isinstance(intersection, NextSiblingCombinator)
-        assert intersection.previous == tag1
-        assert intersection.next == tag2
+        assert intersection.steps == [tag1, tag2]
 
     def test_add_operator_raises_exception_if_not_selectable_soup(self):
         """

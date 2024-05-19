@@ -394,7 +394,7 @@ class NotSelector(SelectableSoup, IterableSoup):
         from soupsavvy.tags.combinators import SelectorList
 
         if not self._multiple:
-            return next(iter(self.steps))
+            return self.steps[0]
 
         return SelectorList(*self.steps)
 

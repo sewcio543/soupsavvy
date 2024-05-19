@@ -588,4 +588,4 @@ class IterableSoup(ABC):
                 f"Parameters {invalid} are not instances of SelectableSoup."
             )
 
-        self.steps = tags
+        self.steps = list(tags)
