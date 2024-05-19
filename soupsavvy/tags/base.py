@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from functools import reduce
-from typing import Any, Iterable, Literal, Optional, overload
+from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, overload
 
 from bs4 import NavigableString, Tag
 
@@ -16,6 +15,16 @@ from soupsavvy.tags.exceptions import (
 )
 from soupsavvy.tags.namespace import FindResult
 from soupsavvy.tags.tag_utils import TagIterator, UniqueTag
+
+if TYPE_CHECKING:
+    from soupsavvy.tags.combinators import (
+        ChildCombinator,
+        DescendantCombinator,
+        NextSiblingCombinator,
+        SelectorList,
+        SubsequentSiblingCombinator,
+    )
+    from soupsavvy.tags.components import AndSelector, NotSelector
 
 
 class SelectableSoup(ABC):
@@ -53,6 +62,7 @@ class SelectableSoup(ABC):
         self,
         tag: Tag,
         strict: Literal[False] = ...,
+        recursive: bool = ...,
     ) -> Optional[Tag]: ...
 
     @overload
@@ -60,9 +70,15 @@ class SelectableSoup(ABC):
         self,
         tag: Tag,
         strict: Literal[True] = ...,
+        recursive: bool = ...,
     ) -> Tag: ...
 
-    def find(self, tag: Tag, strict: bool = False) -> Optional[Tag]:
+    def find(
+        self,
+        tag: Tag,
+        strict: bool = False,
+        recursive: bool = True,
+    ) -> Optional[Tag]:
         """
         Finds a first matching element in provided BeautifulSoup Tag.
 
@@ -75,9 +91,10 @@ class SelectableSoup(ABC):
             if False and tag was not found, returns None by defaulting to BeautifulSoup
             implementation. Value of this parameter does not affect behavior if tag
             was successfully found in the markup. By default False.
-        exception: Exception, optional
-            Exception instance to be raised when strict parameter is set to True
-            and tag was not found in markup. By default TagNotFoundException is raised.
+        recursive : bool, optional
+            bs4.Tag.find method parameter that specifies if search should be recursive.
+            If set to False, only direct children of the tag will be searched.
+            By default True.
 
         Returns
         -------
@@ -96,7 +113,7 @@ class SelectableSoup(ABC):
         NavigableStringException
             If NavigableString was returned by bs4.
         """
-        result = self._find(tag)
+        result = self._find(tag, recursive=recursive)
 
         if result is None:
             if strict:
@@ -112,7 +129,12 @@ class SelectableSoup(ABC):
         return result
 
     @abstractmethod
-    def find_all(self, tag: Tag) -> list[Tag]:
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
         """
         Finds all matching elements in provided BeautifulSoup Tag.
 
@@ -120,6 +142,13 @@ class SelectableSoup(ABC):
         ----------
         tag : Tag
             Any BeautifulSoup Tag object.
+        recursive : bool, optional
+            bs4.Tag.find method parameter that specifies if search should be recursive.
+            If set to False, only direct children of the tag will be searched.
+            By default True.
+        limit : int, optional
+            bs4.Tag.find_all method parameter that specifies maximum number of elements
+            to return. If set to None, all elements are returned. By default None.
 
         Returns
         -------
@@ -132,7 +161,7 @@ class SelectableSoup(ABC):
             "and does not implement this method."
         )
 
-    def _find(self, tag: Tag) -> FindResult:
+    def _find(self, tag: Tag, recursive: bool = True) -> FindResult:
         """
         Returns an object that is a result of markup search.
 
@@ -140,16 +169,44 @@ class SelectableSoup(ABC):
         ----------
         tag : Tag
             Any BeautifulSoup Tag object.
+        recursive : bool, optional
+            bs4.Tag.find method parameter that specifies if search should be recursive.
+            If set to False, only direct children of the tag will be searched.
+            By default True.
 
         Returns
         -------
         NavigableString | Tag | None:
             Result of bs4.Tag find method with tag parameters.
         """
-        elements = self.find_all(tag)
+        elements = self.find_all(tag, recursive=recursive, limit=1)
         return elements[0] if elements else None
 
-    def __or__(self, x: SelectableSoup) -> SoupUnionTag:
+    def _check_selector_type(self, x: Any, message: Optional[str] = None) -> None:
+        """
+        Checks if provided object is an instance of SelectableSoup.
+
+        Parameters
+        ----------
+        x : Any
+            Any object to be checked if it is an instance of SelectableSoup.
+        message : str, optional
+            Custom message to be displayed in case of raising an exception.
+            By default None, which results in default message.
+
+        Raises
+        ------
+        NotSelectableSoupException
+            If provided object is not an instance of SelectableSoup.
+        """
+        message = (
+            message or f"Object {x} is not an instance of {SelectableSoup.__name__}."
+        )
+
+        if not isinstance(x, SelectableSoup):
+            raise NotSelectableSoupException(message)
+
+    def __or__(self, x: SelectableSoup) -> SelectorList:
         """
         Overrides __or__ method called also by pipe operator '|'.
         Syntactical Sugar for logical disjunction, that creates a SelectableSoup
@@ -168,16 +225,17 @@ class SelectableSoup(ABC):
 
         Raises
         ------
-        TypeError
+        NotSelectableSoupException
             If provided object is not of SelectableSoup type.
         """
-        if not isinstance(x, SelectableSoup):
-            raise TypeError(
-                f"Bitwise OR not supported for types {type(self)} and {type(x)}, "
-                f"expected an instance of {SelectableSoup.__name__}."
-            )
+        from soupsavvy.tags.combinators import SelectorList
 
-        return SoupUnionTag(self, x)
+        message = (
+            f"Bitwise OR not supported for types {type(self)} and {type(x)}, "
+            f"expected an instance of {SelectableSoup.__name__}."
+        )
+        self._check_selector_type(x, message=message)
+        return SelectorList(self, x)
 
     def __invert__(self) -> SelectableSoup:
         """
@@ -201,12 +259,14 @@ class SelectableSoup(ABC):
 
         Raises
         ------
-        TypeError
+        NotSelectableSoupException
             If provided object is not of SelectableSoup type.
         """
-        return NotElementTag(self)
+        from soupsavvy.tags.components import NotSelector
 
-    def __and__(self, x: SelectableSoup) -> AndElementTag:
+        return NotSelector(self)
+
+    def __and__(self, x: SelectableSoup) -> AndSelector:
         """
         Overrides __and__ method called also by ampersand operator '&'.
         Syntactical Sugar for bitwise AND operator, that creates an AndElementTag
@@ -226,16 +286,221 @@ class SelectableSoup(ABC):
 
         Raises
         ------
-        TypeError
+        NotSelectableSoupException
             If provided object is not of SelectableSoup type.
         """
-        if not isinstance(x, SelectableSoup):
-            raise TypeError(
-                f"Bitwise and not supported for types {type(self)} and {type(x)}, "
-                f"expected an instance of {SelectableSoup.__name__}."
-            )
+        from soupsavvy.tags.components import AndSelector
 
-        return AndElementTag(self, x)
+        message = (
+            f"Bitwise AND not supported for types {type(self)} and {type(x)}, "
+            f"expected an instance of {SelectableSoup.__name__}."
+        )
+        self._check_selector_type(x, message=message)
+        return AndSelector(self, x)
+
+    def __gt__(self, x: SelectableSoup) -> ChildCombinator:
+        """
+        Overrides __gt__ method called also by greater than operator '>'.
+        Syntactical Sugar for greater than operator, that creates a ChildCombinator
+        which is equivalent to child combinator in css.
+
+        Example
+        -------
+        >>> div > a
+
+        matches all 'a' elements that are direct children of 'div' elements.
+        The same can be achieved by using '>' operator on two SelectableSoup objects.
+
+        Example
+        -------
+        >>> ElementTag("div") > ElementTag("a")
+
+        Which results in
+
+        Example
+        -------
+        >>> ChildCombinator(ElementTag("div"), ElementTag("a"))
+
+        Parameters
+        ----------
+        x : SelectableSoup
+            SelectableSoup object to be combined into new ChildCombinator as child
+            of current SelectableSoup.
+
+        Returns
+        -------
+        ChildCombinator
+            ChildCombinator object that can be used to get all matching elements
+            that are direct children of the current SelectableSoup.
+
+        Raises
+        ------
+        NotSelectableSoupException
+            If provided object is not of SelectableSoup type.
+        """
+        from soupsavvy.tags.combinators import ChildCombinator
+
+        message = (
+            f"GT operator not supported for types {type(self)} and {type(x)}, "
+            f"expected an instance of {SelectableSoup.__name__}."
+        )
+        self._check_selector_type(x, message=message)
+        return ChildCombinator(self, x)
+
+    def __add__(self, x: SelectableSoup) -> NextSiblingCombinator:
+        """
+        Overrides __add__ method called also by plus operator '+'.
+        Syntactical Sugar for addition operator, that creates a NextSiblingCombinator
+        which is equivalent to next sibling element css selector.
+
+        Example
+        -------
+        >>> div + a
+
+        matches all 'a' elements that immediately follow 'div' elements,
+        it means that both elements are children of the same parent element.
+
+        The same can be achieved by using '+' operator on two SelectableSoup objects.
+
+        Example
+        -------
+        >>> ElementTag("div") + ElementTag("a")
+
+        Which results in
+
+        Example
+        -------
+        >>> NextSiblingCombinator(ElementTag("div"), ElementTag("a"))
+
+        Parameters
+        ----------
+        x : SelectableSoup
+            SelectableSoup object to be combined into new NextSiblingCombinator as next
+            sibling of current SelectableSoup.
+
+        Returns
+        -------
+        NextSiblingCombinator
+            NextSiblingCombinator object that can be used to get all matching elements
+            that are next siblings of the current SelectableSoup.
+
+        Raises
+        ------
+        NotSelectableSoupException
+            If provided object is not of SelectableSoup type.
+        """
+        from soupsavvy.tags.combinators import NextSiblingCombinator
+
+        message = (
+            f"ADD operator not supported for types {type(self)} and {type(x)}, "
+            f"expected an instance of {SelectableSoup.__name__}."
+        )
+        self._check_selector_type(x, message=message)
+        return NextSiblingCombinator(self, x)
+
+    def __mul__(self, x: SelectableSoup) -> SubsequentSiblingCombinator:
+        """
+        Overrides __mul__ method called also by multiplication operator '*'.
+        Syntactical Sugar for multiplication operator, that creates
+        a SubsequentSiblingCombinator which is equivalent to subsequent sibling
+        element css selector.
+
+        Example
+        -------
+        >>> div ~ a
+
+        matches all 'a' elements that follow 'div' elements and share the same parent.
+        The same can be achieved by using '*' operator on two SelectableSoup objects.
+
+        Example
+        -------
+        >>> ElementTag("div") * ElementTag("a")
+
+        Which results in
+
+        Example
+        -------
+        >>> SubsequentSiblingCombinator(ElementTag("div"), ElementTag("a"))
+
+        Parameters
+        ----------
+        x : SelectableSoup
+            SelectableSoup object to be combined into new SubsequentSiblingCombinator
+            as following sibling of current SelectableSoup.
+
+        Returns
+        -------
+        SubsequentSiblingCombinator
+            SubsequentSiblingCombinator object that can be used to get all
+            matching elements that are following siblings of the current SelectableSoup.
+
+        Raises
+        ------
+        NotSelectableSoupException
+            If provided object is not of SelectableSoup type.
+        """
+        from soupsavvy.tags.combinators import SubsequentSiblingCombinator
+
+        message = (
+            f"MUL operator not supported for types {type(self)} and {type(x)}, "
+            f"expected an instance of {SelectableSoup.__name__}."
+        )
+        self._check_selector_type(x, message=message)
+        return SubsequentSiblingCombinator(self, x)
+
+    def __rshift__(self, x: SelectableSoup) -> DescendantCombinator:
+        """
+        Overrides __rshift__ method called also by right shift operator '>>'.
+        Syntactical Sugar for right shift operator, that creates a StepsElementTag
+        which is equivalent to descendant combinator in css, typically represented
+        by a single space character.
+
+        Example
+        -------
+        >>> div a
+
+        matches all 'a' elements with 'div' as their ancestor.
+
+        Example
+        -------
+        >>> ElementTag("div") >> ElementTag("a")
+
+        Which results in
+
+        Example
+        -------
+        >>> StepsElementTag(ElementTag("div"), ElementTag("a"))
+
+        Parameters
+        ----------
+        x : SelectableSoup
+            SelectableSoup object to be combined into new StepsElementTag as descendant
+            of current SelectableSoup.
+
+        Returns
+        -------
+        StepsElementTag
+            StepsElementTag object that can be used to get all matching elements
+            that are descendants of the current SelectableSoup.
+
+        Raises
+        ------
+        NotSelectableSoupException
+            If provided object is not of SelectableSoup type.
+
+        Notes
+        -----
+        For more information on descendant combinator see:
+        https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_combinator
+        """
+        from soupsavvy.tags.combinators import DescendantCombinator
+
+        message = (
+            f"RIGHT SHIFT operator not supported for types {type(self)} and {type(x)}, "
+            f"expected an instance of {SelectableSoup.__name__}."
+        )
+        self._check_selector_type(x, message=message)
+        return DescendantCombinator(self, x)
 
 
 class SingleSelectableSoup(SelectableSoup):
@@ -249,11 +514,13 @@ class SingleSelectableSoup(SelectableSoup):
     and find_all parameters that are passed as keyword arguments into these methods.
     """
 
-    def find_all(self, tag: Tag) -> list[Tag]:
-        return tag.find_all(**self._find_params)
-
-    def _find(self, tag: Tag) -> FindResult:
-        return tag.find(**self._find_params)
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        return tag.find_all(**self._find_params, recursive=recursive, limit=limit)
 
     @property
     @abstractmethod
@@ -321,208 +588,4 @@ class IterableSoup(ABC):
                 f"Parameters {invalid} are not instances of SelectableSoup."
             )
 
-        self.steps = tags
-
-
-@dataclass(init=False)
-class SoupUnionTag(SelectableSoup, IterableSoup):
-    """
-    Class representing an Union of multiple soup selectors.
-    Provides elements matching any of the selectors in an Union.
-
-    Example
-    -------
-    >>> SoupUnionTag(
-    >>>     ElementTag("a"),
-    >>>     ElementTag("div", [AttributeTag(name="class", value="widget")])
-    >>> )
-
-    matches all elements that have "a" tag name OR 'class' attribute "widget".
-
-    Example
-    -------
-    >>> <a>Hello World</a> ✔️
-    >>> <div class="widget">Hello World</div> ✔️
-    >>> <div>Hello Python</div> ❌
-
-    Parameters
-    ----------
-    tags : SelectableSoup
-        SelectableSoup objects to match accepted as positional arguments.
-
-    Notes
-    -----
-    SoupUnionTag does not implement SelectableSoup interface
-    as it allows SelectableSoup as positional init arguments.
-    """
-
-    def __init__(
-        self,
-        tag1: SelectableSoup,
-        tag2: SelectableSoup,
-        /,
-        *tags: SelectableSoup,
-    ) -> None:
-        """
-        Initializes SoupUnionTag object with provided positional arguments as tags.
-        At least two SelectableSoup objects are required to create SoupUnionTag.
-
-        Parameters
-        ----------
-        tags: SelectableSoup
-            SelectableSoup objects to match accepted as positional arguments.
-
-        Raises
-        ------
-        NotSelectableSoupException
-            If any of provided parameters is not an instance of SelectableSoup.
-        """
-        super().__init__([tag1, tag2, *tags])
-
-    def _find(self, tag: Tag) -> FindResult:
-        # iterates all tags and returns first element that matches
-        for _tag_ in self.steps:
-            result = _tag_.find(tag)
-
-            if result is not None:
-                return result
-
-        return None
-
-    def find_all(self, tag: Tag) -> list[Tag]:
-        return reduce(list.__add__, (_tag_.find_all(tag) for _tag_ in self.steps))
-
-
-@dataclass(init=False)
-class NotElementTag(SelectableSoup, IterableSoup):
-    def __init__(
-        self,
-        tag: SelectableSoup,
-        /,
-        *tags: SelectableSoup,
-    ) -> None:
-        """
-        Initializes NotElementTags object with provided positional arguments as tags.
-        At least one SelectableSoup object is required to create NotElementTags.
-
-        Example
-        -------
-        >>> NotElementTag(ElementTag(tag="div")
-
-        matches all elements that do not have "div" tag name.
-
-        Example
-        -------
-        >>> <span> class="widget">Hello World</span> ✔️
-        >>> <div class="menu">Hello World</div> ❌
-
-        Object can be initialized with multiple selectors as well, in which case
-        all selectors must match for element to be excluded from the result.
-
-        Object can be created as well by using bitwise NOT operator '~'
-        on a SelectableSoup object.
-
-        Example
-        -------
-        >>> ~ElementTag(tag="div")
-
-        Which is equivalent to the first example.
-
-        Parameters
-        ----------
-        tags: SelectableSoup
-            SelectableSoup objects to negate match accepted as positional arguments.
-
-        Raises
-        ------
-        NotSelectableSoupException
-            If any of provided parameters is not an instance of SelectableSoup.
-        """
-        self._multiple = bool(tags)
-        super().__init__([tag, *tags])
-
-    def find_all(self, tag: Tag) -> list[Tag]:
-        matching = set()
-
-        for step in self.steps:
-            matching |= {UniqueTag(element) for element in step.find_all(tag)}
-
-        return [
-            element
-            for element in TagIterator(tag, recursive=True)
-            if UniqueTag(element) not in matching
-        ]
-
-    def __invert__(self) -> SelectableSoup:
-        """
-        Overrides __invert__ method to cancel out negation by returning
-        the tag in case of single selector, or SoupUnionTag in case of multiple.
-        """
-        if not self._multiple:
-            return next(iter(self.steps))
-
-        return SoupUnionTag(*self.steps)
-
-
-@dataclass(init=False)
-class AndElementTag(SelectableSoup, IterableSoup):
-    def __init__(
-        self,
-        tag1: SelectableSoup,
-        tag2: SelectableSoup,
-        /,
-        *tags: SelectableSoup,
-    ) -> None:
-        """
-        Initializes AndElementTag object with provided positional arguments as tags.
-        At least two SelectableSoup objects are required to create AndElementTag.
-
-        Example
-        -------
-        >>> AndElementTag(
-        ...    ElementTag(tag="div"),
-        ...    AttributeTag(name="class", value="widget")
-        ... )
-
-        matches all elements that have "div" tag name AND 'class' attribute "widget".
-
-        Example
-        -------
-        >>> <div class="widget">Hello World</div> ✔️
-        >>> <span class="widget">Hello World</span> ❌
-        >>> <div class="menu">Hello World</div> ❌
-
-        Object can be initialized with multiple selectors as well, in which case
-        all selectors must match for element to be included in the result.
-
-        Object can be created as well by using bitwise AND operator '&'
-        on two SelectableSoup objects.
-
-        Example
-        -------
-        >>> ElementTag(tag="div") & AttributeTag(name="class", value="widget")
-
-        Which is equivalent to the first example.
-
-        Parameters
-        ----------
-        tags: SelectableSoup
-            SelectableSoup objects to match accepted as positional arguments.
-
-        Raises
-        ------
-        NotSelectableSoupException
-            If any of provided parameters is not an instance of SelectableSoup.
-        """
-        super().__init__([tag1, tag2, *tags])
-
-    def find_all(self, tag: Tag) -> list[Tag]:
-        steps = iter(self.steps)
-        matching = [UniqueTag(element) for element in next(steps).find_all(tag)]
-
-        for step in steps:
-            # not using set on purpose to keep order of elements
-            step_elements = [UniqueTag(element) for element in step.find_all(tag)]
-            matching = [element for element in matching if element in step_elements]
-
-        return [element.tag for element in matching]
+        self.steps = list(tags)

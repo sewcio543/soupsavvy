@@ -1,25 +1,24 @@
-"""Testing module for AttributeTag class."""
+"""Testing module for AttributeSelector class."""
 
 import re
 
 import pytest
-from bs4 import Tag
 
-from soupsavvy.tags.components import AttributeTag
+from soupsavvy.tags.components import AttributeSelector
 from soupsavvy.tags.exceptions import TagNotFoundException
 
-from .conftest import strip, to_bs
+from .conftest import find_body_element, strip, to_bs
 
 
 @pytest.mark.soup
-class TestAttributeTag:
-    """Class for AttributeTag unit test suite."""
+class TestAttributeSelector:
+    """Class for AttributeSelector unit test suite."""
 
     def test_tag_was_found_based_on_exact_value_match(self):
         """Tests if bs4.Tag was found for exact value match."""
         markup = """<a class="widget"></a>"""
         bs = to_bs(markup)
-        tag = AttributeTag(name="class", value="widget")
+        tag = AttributeSelector(name="class", value="widget")
         result = tag.find(bs)
         assert str(result) == strip(markup)
 
@@ -34,11 +33,11 @@ class TestAttributeTag:
     def test_tag_was_found_based_on_partial_value_match(self, markup: str):
         """
         Tests if bs4.Tag was found when element attribute value
-        contains value specified in AttributeTag.
+        contains value specified in AttributeSelector.
         Case when re=True and re.Pattern is used for element search.
         """
         bs = to_bs(markup)
-        tag = AttributeTag(name="class", value="widget", re=True)
+        tag = AttributeSelector(name="class", value="widget", re=True)
         result = tag.find(bs)
         assert str(result) == strip(markup)
 
@@ -53,7 +52,7 @@ class TestAttributeTag:
     def test_pattern_as_string_matches_element_based_on_re_pattern(self, markup: str):
         """Tests if bs4.Tag was found based on regex string for attribute."""
         bs = to_bs(markup)
-        tag = AttributeTag(name="class", pattern=r"^widget.?\d{1,3}$")
+        tag = AttributeSelector(name="class", pattern=r"^widget.?\d{1,3}$")
         result = tag.find(bs)
         assert str(result) == strip(markup)
 
@@ -64,7 +63,7 @@ class TestAttributeTag:
         and pattern is used in find method.
         """
         bs = to_bs("""<a class="widgets"></a>""")
-        tag = AttributeTag(
+        tag = AttributeSelector(
             name="class", value="widget", re=True, pattern=r"^widget.?\d{1,3}$"
         )
         assert tag.selector == "[class*='widget']"
@@ -84,7 +83,7 @@ class TestAttributeTag:
         Tests if bs4.Tag was found based on regex pattern (re.Pattern) for attribute.
         """
         bs = to_bs(markup)
-        tag = AttributeTag(name="class", pattern=re.compile("widget"))
+        tag = AttributeSelector(name="class", pattern=re.compile("widget"))
         result = tag.find(bs)
         assert str(result) == strip(markup)
 
@@ -108,7 +107,7 @@ class TestAttributeTag:
         and first one is returned.
         """
         bs = to_bs(markup)
-        tag = AttributeTag(name="class")
+        tag = AttributeSelector(name="class")
         result = tag.find(bs)
         assert str(result) == strip(markup)
 
@@ -126,7 +125,7 @@ class TestAttributeTag:
         does not match specified regex pattern.
         """
         bs = to_bs(markup)
-        tag = AttributeTag(name="class", pattern=r"^widget.?\d{1,3}$")
+        tag = AttributeSelector(name="class", pattern=r"^widget.?\d{1,3}$")
         assert tag.find(bs) is None
 
     @pytest.mark.parametrize(
@@ -147,7 +146,7 @@ class TestAttributeTag:
         value is matched.
         """
         bs = to_bs(markup)
-        tag = AttributeTag(name="class")
+        tag = AttributeSelector(name="class")
         assert tag.find(bs) is None
 
     @pytest.mark.parametrize(
@@ -163,7 +162,7 @@ class TestAttributeTag:
         Tests find matches any attribute name, including custom like "awesomeness".
         """
         bs = to_bs(markup)
-        tag = AttributeTag(name="awesomeness", value="5")
+        tag = AttributeSelector(name="awesomeness", value="5")
         result = tag.find(bs)
         assert str(result) == strip(markup)
 
@@ -181,7 +180,7 @@ class TestAttributeTag:
         the tag value.
         """
         bs = to_bs(markup)
-        tag = AttributeTag(name="awesomeness", value="5")
+        tag = AttributeSelector(name="awesomeness", value="5")
         assert tag.find(bs) is None
 
     @pytest.mark.parametrize(
@@ -204,7 +203,7 @@ class TestAttributeTag:
         results in function raising exception in this case.
         """
         bs = to_bs(markup)
-        tag = AttributeTag(name="class", value="photo")
+        tag = AttributeSelector(name="class", value="photo")
 
         with pytest.raises(TagNotFoundException):
             tag.find(bs, strict=True)
@@ -224,7 +223,7 @@ class TestAttributeTag:
         match specified name exactly.
         """
         bs = to_bs(markup)
-        tag = AttributeTag(name="href", value="github", re=False)
+        tag = AttributeSelector(name="href", value="github", re=False)
         assert tag.find(bs) is None
 
     def test_find_all_returns_all_matching_elements_in_a_list(self):
@@ -238,11 +237,14 @@ class TestAttributeTag:
             <a href="github "></a>
         """
         bs = to_bs(text)
-        tag = AttributeTag(name="href", value="github", re=True)
+        tag = AttributeSelector(name="href", value="github", re=True)
         result = tag.find_all(bs)
-        assert len(result) == 3
-        assert isinstance(result, list)
-        assert all(isinstance(tag, Tag) for tag in result)
+        excepted = [
+            strip("""<a href="github/settings"></a>"""),
+            strip("""<a href="github pages"></a>"""),
+            strip("""<a href="github "></a>"""),
+        ]
+        assert list(map(str, result)) == excepted
 
     def test_find_all_returns_only_matching_elements(self):
         """
@@ -257,7 +259,7 @@ class TestAttributeTag:
             <a href="github pages"></a>
         """
         bs = to_bs(text)
-        tag = AttributeTag(name="href", value="github", re=False)
+        tag = AttributeSelector(name="href", value="github", re=False)
         result = tag.find_all(bs)
         excepted = [
             strip("""<a href="github"></a>"""),
@@ -277,7 +279,7 @@ class TestAttributeTag:
     def test_find_all_returns_empty_list_when_not_found(self, markup: str):
         """Tests if find returns an empty list if no element matches the tag."""
         bs = to_bs(markup)
-        tag = AttributeTag(name="href", value="photos")
+        tag = AttributeSelector(name="href", value="photos")
         result = tag.find_all(bs)
         assert result == []
 
@@ -294,7 +296,7 @@ class TestAttributeTag:
             </div>
         """
         bs = to_bs(text)
-        tag = AttributeTag(name="href", value="github", re=True)
+        tag = AttributeSelector(name="href", value="github", re=True)
         result = tag.find_all(bs)
         expected_1 = """
             <div href="github">
@@ -316,7 +318,7 @@ class TestAttributeTag:
         """
         markup = """<a name="github"></a>"""
         bs = to_bs(markup)
-        tag = AttributeTag(name="name", value="github")
+        tag = AttributeSelector(name="name", value="github")
         result = tag.find(bs)
         assert str(result) == strip(markup)
 
@@ -324,11 +326,14 @@ class TestAttributeTag:
     @pytest.mark.parametrize(
         argnames="tag, selector",
         argvalues=[
-            (AttributeTag("class", value="menu"), "[class='menu']"),
-            (AttributeTag("href", value="menu", re=True), "[href*='menu']"),
-            (AttributeTag("id", value=None, re=True), "[id]"),
-            (AttributeTag("level", value=None, re=False), "[level]"),
-            (AttributeTag("id", value="string", pattern="pattern"), "[id='string']"),
+            (AttributeSelector("class", value="menu"), "[class='menu']"),
+            (AttributeSelector("href", value="menu", re=True), "[href*='menu']"),
+            (AttributeSelector("id", value=None, re=True), "[id]"),
+            (AttributeSelector("level", value=None, re=False), "[level]"),
+            (
+                AttributeSelector("id", value="string", pattern="pattern"),
+                "[id='string']",
+            ),
         ],
         ids=[
             "exact_match",
@@ -338,30 +343,30 @@ class TestAttributeTag:
             "pattern_skipped_in_selector",
         ],
     )
-    def test_selector_is_correct(self, tag: AttributeTag, selector: str):
-        """Tests if css selector for AttributeTag is constructed as expected."""
+    def test_selector_is_correct(self, tag: AttributeSelector, selector: str):
+        """Tests if css selector for AttributeSelector is constructed as expected."""
         assert tag.selector == selector
 
     @pytest.mark.parametrize(
         argnames="tags",
         argvalues=[
             (
-                AttributeTag("class", value="widget"),
-                AttributeTag("class", value="widget"),
+                AttributeSelector("class", value="widget"),
+                AttributeSelector("class", value="widget"),
             ),
             (
-                AttributeTag("class", value="widget", re=True),
-                AttributeTag("class", value="widget", re=True),
+                AttributeSelector("class", value="widget", re=True),
+                AttributeSelector("class", value="widget", re=True),
             ),
             (
-                AttributeTag("class", pattern="^widget"),
-                AttributeTag("class", pattern="^widget"),
+                AttributeSelector("class", pattern="^widget"),
+                AttributeSelector("class", pattern="^widget"),
             ),
         ],
         ids=["re_false", "re_true", "pattern"],
     )
     def test_equal_method_returns_true_for_the_same_parameters(
-        self, tags: list[AttributeTag]
+        self, tags: list[AttributeSelector]
     ):
         """Tests if __eq__ returns True if tags have the same init parameters."""
         assert tags[0] == tags[1]
@@ -370,30 +375,171 @@ class TestAttributeTag:
         argnames="tags",
         argvalues=[
             (
-                AttributeTag("class", value="widget"),
-                AttributeTag("class", value="menu"),
+                AttributeSelector("class", value="widget"),
+                AttributeSelector("class", value="menu"),
             ),
             (
-                AttributeTag("class", value="widget"),
-                AttributeTag("id", value="widget"),
+                AttributeSelector("class", value="widget"),
+                AttributeSelector("id", value="widget"),
             ),
             (
-                AttributeTag("class", value="widget", re=False),
-                AttributeTag("class", value="widget", re=True),
+                AttributeSelector("class", value="widget", re=False),
+                AttributeSelector("class", value="widget", re=True),
             ),
             (
-                AttributeTag("class", pattern="^widget"),
-                AttributeTag("class", pattern="^menu"),
+                AttributeSelector("class", pattern="^widget"),
+                AttributeSelector("class", pattern="^menu"),
             ),
             (
-                AttributeTag("class", pattern="^widget", value="hello"),
-                AttributeTag("class", pattern="^menu", value="world"),
+                AttributeSelector("class", pattern="^widget", value="hello"),
+                AttributeSelector("class", pattern="^menu", value="world"),
             ),
         ],
         ids=["value", "name", "re", "pattern", "value_with_pattern"],
     )
     def test_equal_method_returns_false_for_the_different_parameters(
-        self, tags: list[AttributeTag]
+        self, tags: list[AttributeSelector]
     ):
         """Tests if __eq__ returns False if tags have different init parameters."""
         assert tags[0] != tags[1]
+
+    def test_find_returns_first_matching_child_if_recursive_false(self):
+        """
+        Tests if find returns first matching child element if recursive is False.
+        In this case first 'a' element with href="github" matches the selector,
+        but it's not a child of body element, so it's not returned.
+        """
+        text = """
+            <div class="google">
+                <a href="github">Hello 1</a>
+            </div>
+            <a href="github">Hello 2</a>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = AttributeSelector(name="href", value="github")
+        result = tag.find(bs, recursive=False)
+
+        assert str(result) == strip("""<a href="github">Hello 2</a>""")
+
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+        """
+        Tests if find returns None if no child element matches the selector
+        and recursive is False. In this case first 'a' element with href="github"
+        matches the selector, but it's not a child of body element,
+        so it's not returned.
+        """
+        text = """
+            <div class="google">
+                <a href="github">Hello 1</a>
+            </div>
+            <a class="github">Hello 2</a>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = AttributeSelector(name="href", value="github")
+        result = tag.find(bs, recursive=False)
+        assert result is None
+
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+        """
+        Tests if find raises TagNotFoundException if no child element
+        matches the selector, when recursive is False and strict is True.
+        """
+        text = """
+            <div class="google">
+                <a href="github">Hello 1</a>
+            </div>
+            <a class="github">Hello 2</a>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = AttributeSelector(name="href", value="github")
+
+        with pytest.raises(TagNotFoundException):
+            tag.find(bs, strict=True, recursive=False)
+
+    def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns an empty list if no child element matches the selector
+        and recursive is False.
+        """
+        text = """
+            <div class="google">
+                <a href="github">Hello 1</a>
+            </div>
+            <a class="github">Hello 2</a>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = AttributeSelector(name="href", value="github")
+        results = tag.find_all(bs, recursive=False)
+        assert results == []
+
+    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+        """
+        Tests if find_all returns all matching children if recursive is False.
+        It returns only matching children of the body element.
+        """
+        text = """
+            <div>
+                <a class="github">Hello 1</a>
+            </div>
+            <a class="github">Hello 2</a>
+            <div class="google"></div>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = AttributeSelector(name="class")
+        results = tag.find_all(bs, recursive=False)
+
+        assert list(map(str, results)) == [
+            strip("""<a class="github">Hello 2</a>"""),
+            strip("""<div class="google"></div>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+        """
+        Tests if find_all returns only x elements when limit is set.
+        In this case only 2 first in order elements are returned.
+        """
+        text = """
+            <span>
+                <a class="github">Hello 2</a>
+            </span>
+            <div class="menu"></div>
+            <div class="google"></div>
+            <span class="menu"></span>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = AttributeSelector(name="class")
+        results = tag.find_all(bs, limit=2)
+
+        assert list(map(str, results)) == [
+            strip("""<a class="github">Hello 2</a>"""),
+            strip("""<div class="menu"></div>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns only x elements when limit is set and recursive
+        is False. In this case only 2 first in order children matching
+        the selector are returned.
+        """
+        text = """
+            <span>
+                <a class="github">Hello 2</a>
+            </span>
+            <div class="menu"></div>
+            <div>
+                <div class="google"></div>
+            </div>
+            <span class="menu"></span>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = AttributeSelector(name="class")
+        results = tag.find_all(bs, recursive=False, limit=2)
+
+        assert list(map(str, results)) == [
+            strip("""<div class="menu"></div>"""),
+            strip("""<span class="menu"></span>"""),
+        ]
