@@ -1,4 +1,21 @@
-"""Module for components utilized to navigate html markup or BeautifulSoup Tags."""
+"""
+Module for components utilized to navigate html markup or BeautifulSoup Tags.
+
+They are used for selection of various elements in the markup,
+based on their tag name, attributes or text content.
+
+They can be considered soupsavvy equivalent of CSS selectors,
+but with more flexibility and power to navigate the markup.
+
+Classes
+-------
+AttributeSelector - Attribute Selector
+TagSelector - combines type and attribute selectors
+PatternSelector - matches elements based on text content and selector
+AnyTagSelector - universal selector (*)
+AndSelector - intersection of multiple selectors
+NotSelector - negation of a selector (~)
+"""
 
 from __future__ import annotations
 
@@ -9,24 +26,28 @@ from typing import Any, Iterable, Optional, Pattern
 
 from bs4 import Tag
 
-from soupsavvy.tags.base import SelectableCSS, SelectableSoup, SingleSelectableSoup
-from soupsavvy.tags.exceptions import NotSelectableSoupException, WildcardTagException
-from soupsavvy.tags.namespace import (
-    CSS_SELECTOR_WILDCARD,
-    DEFAULT_PATTERN,
-    FIND_RESULT,
-    NAME,
-    STRING,
+import soupsavvy.tags.namespace as ns
+from soupsavvy.tags.base import (
+    IterableSoup,
+    SelectableCSS,
+    SelectableSoup,
+    SingleSelectableSoup,
 )
+from soupsavvy.tags.exceptions import WildcardTagException
+from soupsavvy.tags.tag_utils import TagIterator, UniqueTag
 
 
 @dataclass
-class AttributeTag(SingleSelectableSoup, SelectableCSS):
+class AttributeSelector(SingleSelectableSoup, SelectableCSS):
     """
     Class representing attribute of the HTML element.
     If used directly, provides elements based only on a single attribute value.
-    For example 'AttributeTag(name="class", value="widget")' matches all html elements
-    that have class attribute with value "widget".
+
+    Example
+    -------
+    >>> AttributeSelector(name="class", value="widget")
+
+    matches all elements that have 'class' attribute with value "widget".
 
     Example
     -------
@@ -51,11 +72,11 @@ class AttributeTag(SingleSelectableSoup, SelectableCSS):
 
     Example
     -------
-    >>> attribute = AttributeTag(name="class", value="widget")
+    >>> attribute = AttributeSelector(name="class", value="widget")
     >>> attribute.selector
     [class=widget]
 
-    >>> attribute = AttributeTag(name="class", value="widget", re=True)
+    >>> attribute = AttributeSelector(name="class", value="widget", re=True)
     >>> attribute.selector
     [class*=widget]
     """
@@ -76,7 +97,7 @@ class AttributeTag(SingleSelectableSoup, SelectableCSS):
             return re.compile(self.pattern)
         # if pattern and value was not provided, fall back to default pattern
         if self.value is None:
-            return re.compile(DEFAULT_PATTERN)
+            return re.compile(ns.DEFAULT_PATTERN)
         # if only value was provided and re = True, create pattern from value
         if self.re:
             return re.compile(self.value)
@@ -95,22 +116,24 @@ class AttributeTag(SingleSelectableSoup, SelectableCSS):
 
     @property
     def _find_params(self) -> dict[str, Any]:
-        return {self.name: self._pattern}
+        # passing filters in attrs parameter as dict instead of kwargs
+        # to avoid overriding other find method parameters like ex. 'name'
+        return {ns.ATTRS: {self.name: self._pattern}}
 
 
 @dataclass
-class ElementTag(SingleSelectableSoup, SelectableCSS):
+class TagSelector(SingleSelectableSoup, SelectableCSS):
     """
     Class representing HTML element.
     Provides elements based on element tag and all defined attributes.
 
     Example
     -------
-    >>> ElementTag(
+    >>> TagSelector(
     >>>     tag="div",
     >>>     attributes=[
-    >>>         AttributeTag(name="class", value="widget"),
-    >>>         AttributeTag(name="role", value="button")
+    >>>         AttributeSelector(name="class", value="widget"),
+    >>>         AttributeSelector(name="role", value="button")
     >>>     ]
     >>> )
 
@@ -127,15 +150,15 @@ class ElementTag(SingleSelectableSoup, SelectableCSS):
     name : str, optional
         HTML tag name ex. "a", "div". By default None.
 
-    attributes : Iterable[AttributeTag], optional
-        Iterable of AttributeTag objects that specify element attributes.
+    attributes : Iterable[AttributeSelector], optional
+        Iterable of AttributeSelector objects that specify element attributes.
         By default empty list.
 
     Example
     -------
-    >>> element = ElementTag(
+    >>> element = TagSelector(
     >>>    tag="div",
-    >>>    attributes=[AttributeTag(name="class", value="widget")]
+    >>>    attributes=[AttributeSelector(name="class", value="widget")]
     >>> )
     >>> element.selector
     div[class=widget]
@@ -147,13 +170,13 @@ class ElementTag(SingleSelectableSoup, SelectableCSS):
     """
 
     tag: Optional[str] = None
-    attributes: Iterable[AttributeTag] = field(default_factory=list)
+    attributes: Iterable[AttributeSelector] = field(default_factory=list)
 
     def __post_init__(self) -> None:
-        """Raises exception if empty ElementTag was provided."""
+        """Raises exception if empty TagSelector was provided."""
         if self.tag is None and not self.attributes:
             raise WildcardTagException(
-                "Empty ElementTag is not a valid input, provide tag or attributes. "
+                "Empty TagSelector is not a valid input, provide tag or attributes. "
                 + "If you want to match all elements, use AnyTag component instead."
             )
 
@@ -167,23 +190,23 @@ class ElementTag(SingleSelectableSoup, SelectableCSS):
 
     @property
     def _find_params(self) -> dict[str, Any]:
-        params = [attr._find_params for attr in self.attributes]
+        params = [attr._find_params[ns.ATTRS] for attr in self.attributes]
         # reduce raises error when given an empty iterable
         attrs = dict(reduce(lambda x, y: {**x, **y}, params)) if params else {}
-        return {NAME: self.tag} | attrs
+        return {ns.NAME: self.tag} | {ns.ATTRS: attrs}
 
 
 @dataclass
-class PatternElementTag(SingleSelectableSoup):
+class PatternSelector(SingleSelectableSoup):
     """
     Class representing HTML element with specific string pattern for text.
-    Provides elements matching ElementTag with their text matching a pattern.
+    Provides elements matching TagSelector with their text matching a pattern.
 
     Example
     -------
-    >>> PatternElementTag(
+    >>> PatternSelector(
     >>>     pattern="Hello World",
-    >>>     tag=ElementTag("div")
+    >>>     tag=TagSelector("div")
     >>> )
 
     matches all elements that have "div" tag name
@@ -198,7 +221,7 @@ class PatternElementTag(SingleSelectableSoup):
     ----------
     tag: SingleSelectableSoup
         An SingleSelectableSoup instance representing desired HTML element.
-        Empty Tag is not a valid parameter and raises an exception.
+        AnyTagSelector is not a valid parameter and raises an exception.
     pattern: str | Pattern
         A pattern to match text of the element. Can be a string for exact match
         or Pattern for any more complex regular expressions.
@@ -218,8 +241,8 @@ class PatternElementTag(SingleSelectableSoup):
 
     Raises
     ------
-    EmptyElementTagException
-        When empty ElementTag was passed as a tag parameter.
+    EmptyTagSelectorException
+        When empty TagSelector was passed as a tag parameter.
     """
 
     tag: SingleSelectableSoup
@@ -229,51 +252,198 @@ class PatternElementTag(SingleSelectableSoup):
     def __post_init__(self) -> None:
         #! if only string is specified in case of wildcard tag - returns NavigableString
         #! which causes problems downstream
-        if isinstance(self.tag, AnyTag):
+        if isinstance(self.tag, AnyTagSelector):
             raise WildcardTagException(
                 "AnyTag which is a wildcard tag matching all elements, "
-                + "is not acceptable as a tag parameter for PatternElementTag."
+                + "is not acceptable as a tag parameter for PatternTagSelector."
             )
 
     @property
     def _find_params(self) -> dict[str, Any]:
         pattern = re.compile(self.pattern) if self.re else self.pattern
-        return {STRING: pattern} | self.tag._find_params
+        return {ns.STRING: pattern} | self.tag._find_params
 
 
-@dataclass(init=False)
-class StepsElementTag(SelectableSoup):
+class AnyTagSelector(SingleSelectableSoup, SelectableCSS):
     """
-    Class representing an list of steps of multiple soup selectors.
-    Finds nested elements that match all steps in order.
+    Class representing a wildcard tag that matches any tag in the markup.
+    Matches always the first tag in the markup.
+
+    AnyTagSelector implements SelectableCSS interface with wildcard css selector "*",
+    aka. universal selector, that matches all elements in the markup.
 
     Example
     -------
-    >>> StepsElementTag(
-    >>>     ElementTag("div", [AttributeTag(name="class", value="menu")]),
-    >>>     ElementTag("a", [AttributeTag(name="href", value="google", re=True)])
-    >>> )
-
-    matches all elements inside 'div' element with 'menu' class attribute
-    that are 'a' elements with href attribute containing 'google'.
-
-    Example
-    -------
-    >>> <div class="menu"><a href="google.com"></a></div> ✔️
-    >>> <div class="menu"><a href="duckduckgo.com"></a></div> ❌
-    >>> <div class="widget"><a href="google.com"></a></div> ❌
-    >>> <a href="google.com"></a> ❌
-    >>> <div class="widget"></div> ❌
-
-    Parameters
-    ----------
-    tags : SelectableSoup
-        SelectableSoup objects to match accepted as positional arguments.
+    >>> any_element = AnyTagSelector()
+    >>> any_element.selector
+    "*"
 
     Notes
     -----
-    StepsElementTag does not implement SelectableSoup interface
-    as it allows SelectableSoup as positional init arguments.
+    For more information on universal selector see:
+    https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors
+    """
+
+    @property
+    def _find_params(self) -> dict[str, Any]:
+        return {}
+
+    @property
+    def selector(self) -> str:
+        """Returns wildcard css selector matching all elements in the markup."""
+        return ns.CSS_SELECTOR_WILDCARD
+
+
+@dataclass(init=False)
+class NotSelector(SelectableSoup, IterableSoup):
+    """
+    Class representing selector of elements that do not match provided selectors.
+
+    Example
+    -------
+    >>> NotSelector(TagSelector(tag="div")
+
+    matches all elements that do not have "div" tag name.
+
+    Example
+    -------
+    >>> <span> class="widget">Hello World</span> ✔️
+    >>> <div class="menu">Hello World</div> ❌
+
+    Object can be initialized with multiple selectors as well, in which case
+    all selectors must match for element to be excluded from the result.
+
+    Object can be created as well by using bitwise NOT operator '~'
+    on a SelectableSoup object.
+
+    Example
+    -------
+    >>> ~TagSelector(tag="div")
+
+    Which is equivalent to the first example.
+
+    This is an equivalent of CSS :not() negation pseudo-class,
+    that represents elements that do not match a list of selectors
+
+    Example
+    -------
+    >>> div:not(.widget) { color: red; }
+    >>> :not(strong, .important) { color: red; }
+
+    The second example translated to soupsavvy would be:
+
+    Example
+    -------
+    >>> NotSelector(TagSelector("strong"), AttributeSelector("class", "important"))
+    >>> ~(TagSelector("strong") | AttributeSelector("class", "important"))
+
+    Notes
+    -----
+    For more information on :not() pseudo-class see:
+    https://developer.mozilla.org/en-US/docs/Web/CSS/:not
+    """
+
+    def __init__(
+        self,
+        tag: SelectableSoup,
+        /,
+        *tags: SelectableSoup,
+    ) -> None:
+        """
+        Initializes NotSelectors object with provided positional arguments as tags.
+        At least one SelectableSoup object is required to create NotSelectors.
+
+        Parameters
+        ----------
+        tags: SelectableSoup
+            SelectableSoup objects to negate match accepted as positional arguments.
+
+        Raises
+        ------
+        NotSelectableSoupException
+            If any of provided parameters is not an instance of SelectableSoup.
+        """
+        self._multiple = bool(tags)
+        super().__init__([tag, *tags])
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        matching = set()
+
+        for step in self.steps:
+            matching |= {
+                UniqueTag(element)
+                for element in step.find_all(tag, recursive=recursive)
+            }
+
+        return [
+            element
+            for element in TagIterator(tag, recursive=recursive)
+            if UniqueTag(element) not in matching
+        ][:limit]
+
+    def __invert__(self) -> SelectableSoup:
+        """
+        Overrides __invert__ method to cancel out negation by returning
+        the tag in case of single selector, or SoupUnionTag in case of multiple.
+        """
+        from soupsavvy.tags.combinators import SelectorList
+
+        if not self._multiple:
+            return self.steps[0]
+
+        return SelectorList(*self.steps)
+
+
+@dataclass(init=False)
+class AndSelector(SelectableSoup, IterableSoup):
+    """
+    Class representing an intersection of multiple soup selectors.
+    Provides elements matching all of the listed selectors.
+
+    Example
+    -------
+    >>> AndTagSelector(
+    ...    TagSelector(tag="div"),
+    ...    AttributeSelector(name="class", value="widget")
+    ... )
+
+    matches all elements that have "div" tag name AND 'class' attribute "widget".
+
+    Example
+    -------
+    >>> <div class="widget">Hello World</div> ✔️
+    >>> <span class="widget">Hello World</span> ❌
+    >>> <div class="menu">Hello World</div> ❌
+
+    Object can be initialized with multiple selectors as well, in which case
+    all selectors must match for element to be included in the result.
+
+    Object can be created as well by using bitwise AND operator '&'
+    on two SelectableSoup objects.
+
+    Example
+    -------
+    >>> TagSelector(tag="div") & AttributeSelector(name="class", value="widget")
+
+    Which is equivalent to the first example.
+
+    This is an equivalent of CSS selectors concatenation.
+
+    Example
+    -------
+    >>> div.class1#id1 { color: red; }
+
+    which translated to soupsavvy would be:
+
+    Example
+    -------
+    >>> TagSelector("div") & AttributeSelector("class", "class1") & AttributeSelector("id", "id1")
+    >>> TagSelector("div", attributes=[AttributeSelector("class", "class1"), AttributeSelector("id", "id1")])
     """
 
     def __init__(
@@ -284,8 +454,8 @@ class StepsElementTag(SelectableSoup):
         *tags: SelectableSoup,
     ) -> None:
         """
-        Initializes StepsElementTag object with provided positional arguments as tags.
-        At least two SelectableSoup object required to create StepsElementTag.
+        Initializes AndTagSelector object with provided positional arguments as tags.
+        At least two SelectableSoup objects are required to create AndTagSelector.
 
         Parameters
         ----------
@@ -297,54 +467,26 @@ class StepsElementTag(SelectableSoup):
         NotSelectableSoupException
             If any of provided parameters is not an instance of SelectableSoup.
         """
-        args = [tag1, tag2] + list(tags)
-        invalid = [arg for arg in args if not isinstance(arg, SelectableSoup)]
-        if invalid:
-            raise NotSelectableSoupException(
-                f"Parameters {invalid} are not instances of SelectableSoup."
-            )
-        self.steps = args
+        super().__init__([tag1, tag2, *tags])
 
-    def _find(self, tag: Tag) -> FIND_RESULT:
-        element = tag
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        steps = iter(self.steps)
+        matching = [
+            UniqueTag(element)
+            for element in next(steps).find_all(tag, recursive=recursive)
+        ]
 
-        for step in self.steps:
-            element = step.find(element, strict=False)  # type: ignore
-            if element is None:
-                break
+        for step in steps:
+            # not using set on purpose to keep order of elements
+            step_elements = [
+                UniqueTag(element)
+                for element in step.find_all(tag, recursive=recursive)
+            ]
+            matching = [element for element in matching if element in step_elements]
 
-        return element
-
-    def find_all(self, tag: Tag) -> list[Tag]:
-        elements = [tag]
-
-        for step in self.steps:
-            elements = reduce(
-                list.__add__, (step.find_all(element) for element in elements)
-            )
-
-        return elements
-
-
-class AnyTag(SingleSelectableSoup, SelectableCSS):
-    """
-    Class representing a wildcard tag that matches any tag in the markup.
-    Matches always the first tag in the markup.
-
-    AnyTag implements SelectableCSS interface with wildcard css selector "*".
-
-    Example
-    -------
-    >>> any_element = AnyTag()
-    >>> any_element.selector
-    "*"
-    """
-
-    @property
-    def _find_params(self) -> dict[str, Any]:
-        return {}
-
-    @property
-    def selector(self) -> str:
-        """Returns wildcard css selector matching all elements in the markup."""
-        return CSS_SELECTOR_WILDCARD
+        return [element.tag for element in matching][:limit]

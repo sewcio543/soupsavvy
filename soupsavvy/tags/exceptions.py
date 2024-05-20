@@ -51,7 +51,7 @@ class NavigableStringException(SelectableSoupException):
     """
 
 
-class NotSelectableSoupException(SelectableSoupException):
+class NotSelectableSoupException(SelectableSoupException, TypeError):
     """
     Exception to be raised when function excepted SelectableSoup as input
     and got argument of the different, invalid type.
