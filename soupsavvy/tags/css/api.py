@@ -8,7 +8,7 @@ Contains:
 * where: alias for is_, no difference in behavior in scraping context
 * not_: function to create NotSelector from list of selectors
 * and_: function to create AndSelector from list of selectors
-* has: ...
+* has: function to create HasSelector from list of selectors
 
 There is not similar functionality in css for AndSelector expect for selector concatenation,
 and_ is more to have and alternative way to create AndSelector for soupsavvy selectors.
@@ -18,8 +18,8 @@ used for convenience and readability in some cases.
 """
 
 from soupsavvy.tags.base import SelectableSoup
-from soupsavvy.tags.combinators import DescendantCombinator, SelectorList
-from soupsavvy.tags.components import AndSelector, NotSelector
+from soupsavvy.tags.combinators import SelectorList
+from soupsavvy.tags.components import AndSelector, HasSelector, NotSelector
 
 
 def is_(
@@ -124,11 +124,42 @@ def and_(
     return AndSelector(selector1, selector2, *selectors)
 
 
-#! TODO has selector
-# described in https://developer.mozilla.org/en-US/docs/Web/CSS/:has
 def has(
-    selector1: SelectableSoup,
-    selector2: SelectableSoup,
+    selector: SelectableSoup,
     /,
     *selectors: SelectableSoup,
-): ...
+) -> HasSelector:
+    """
+    Returns HasSelector whose behavior imitate css :has() pseudo-class,
+    that represents elements if any of the relative selectors that are passed as an argument
+    match at least one element when anchored against this element.
+
+    Parameters
+    ----------
+    selectors: SelectableSoup
+        SelectableSoup objects to match accepted as positional arguments.
+        At least two objects are required per AndSelector class requirements.
+
+    Example
+    -------
+    >>> has_(TagSelector(tag="div"), TagSelector(tag="div"))
+
+    This is an equivalent of CSS :has() pseudo-class:
+
+    Example
+    -------
+    >>> :has(div, a) { color: red; }
+
+    For now only default combinator (descendant) for 'relative' selectors is supported,
+    so imitating css behavior of this kind is not possible yet.
+
+    Example
+    -------
+    >>> :has(+ div, > a) { color: red; }
+
+    Notes
+    -----
+    For more information on :has() pseudo-class see:
+    https://developer.mozilla.org/en-US/docs/Web/CSS/:has
+    """
+    return HasSelector(selector, *selectors)

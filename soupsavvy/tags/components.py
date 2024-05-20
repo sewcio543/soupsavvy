@@ -351,7 +351,7 @@ class NotSelector(SelectableSoup, IterableSoup):
     ) -> None:
         """
         Initializes NotSelectors object with provided positional arguments as tags.
-        At least one SelectableSoup object is required to create NotSelectors.
+        At least one SelectableSoup object is required to create NotSelector.
 
         Parameters
         ----------
@@ -455,7 +455,7 @@ class AndSelector(SelectableSoup, IterableSoup):
     ) -> None:
         """
         Initializes AndTagSelector object with provided positional arguments as tags.
-        At least two SelectableSoup objects are required to create AndTagSelector.
+        At least two SelectableSoup objects are required to create AndSelector.
 
         Parameters
         ----------
@@ -490,3 +490,95 @@ class AndSelector(SelectableSoup, IterableSoup):
             matching = [element for element in matching if element in step_elements]
 
         return [element.tag for element in matching][:limit]
+
+
+@dataclass(init=False)
+class HasSelector(SelectableSoup, IterableSoup):
+    """
+    Class representing elements selected with respect to matching reference elements.
+    Element is selected if any of the provided selectors matched reference element.
+
+    Example
+    -------
+    >>> HasSelector(TagSelector(tag="div"))
+
+    matches all elements that have any descendant with "div" tag name.
+    For now, only default combinator of relative selector is supported, which is descendant.
+
+    Example
+    -------
+    >>> <span><div>Hello World</div></span> ✔️
+    >>> <span><a>Hello World</a></span> ❌
+
+    In this case, HasSelector is anchored against any element, and matches only elements
+    that have "div" tag name as a descendant.
+
+    Object can be initialized with multiple selectors as well, in which case
+    at least one selector must match for element to be included in the result.
+
+    This is an equivalent of CSS :has() pseudo-class,
+    that represents elements if any of the relative selectors that are passed as an argument
+    match at least one element when anchored against this element.
+
+    Example
+    -------
+    >>> :has(div, a) { color: red; }
+    >>> :has(+ div, > a) { color: red; }
+
+    The first example translated to soupsavvy would be:
+
+    Example
+    -------
+    >>> HasSelector(TagSelector("div"), TagSelector("a"))
+
+    Second example includes not default combinator,
+    which is not supported yet, but will be soon.
+
+    Notes
+    -----
+    For more information on :has() pseudo-class see:
+    https://developer.mozilla.org/en-US/docs/Web/CSS/:has
+    """
+
+    def __init__(
+        self,
+        selector: SelectableSoup,
+        /,
+        *selectors: SelectableSoup,
+    ) -> None:
+        """
+        Initializes AndTagSelector object with provided positional arguments as tags.
+        At least two SelectableSoup objects are required to create HasSelector.
+
+        Parameters
+        ----------
+        tags: SelectableSoup
+            SelectableSoup objects to match accepted as positional arguments.
+            At least one selector is required to create HasSelector.
+
+        Raises
+        ------
+        NotSelectableSoupException
+            If any of provided parameters is not an instance of SelectableSoup.
+        """
+        super().__init__([selector, *selectors])
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+
+        elements = TagIterator(tag, recursive=recursive)
+        matching: list[Tag] = []
+
+        for element in elements:
+            # we only care if anything matching was found
+            if any(step.find(element) for step in self.steps):
+                matching.append(element)
+
+                if len(matching) == limit:
+                    break
+
+        return matching

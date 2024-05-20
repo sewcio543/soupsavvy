@@ -23,7 +23,6 @@ https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Com
 
 from dataclasses import dataclass
 from functools import reduce
-from itertools import chain, product
 from typing import Optional
 
 from bs4 import Tag
