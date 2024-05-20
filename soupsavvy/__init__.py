@@ -7,7 +7,7 @@ from .tags import (
     TagSelector,
 )
 
-__version__ = "0.1.5-dev5"
+__version__ = "0.1.5-dev6"
 __author__ = "sewcio543"
 
 __all__ = [
