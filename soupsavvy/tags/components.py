@@ -27,6 +27,7 @@ from typing import Any, Iterable, Optional, Pattern
 from bs4 import Tag
 
 import soupsavvy.tags.namespace as ns
+from soupsavvy.tags.anchor import RelativeSelector
 from soupsavvy.tags.base import (
     IterableSoup,
     SelectableCSS,
