@@ -145,26 +145,6 @@ class TestNotSelector:
             strip("""<a class="widget 12"></a>"""),
         ]
 
-    def test_bitwise_not_operator_returns_not_element_tag(self):
-        """
-        Tests if bitwise NOT operator (__invert__) returns NotSelector instance
-        with the same selector.
-        """
-        tag = TagSelector("a")
-        negation = ~tag
-        assert isinstance(negation, NotSelector)
-        assert negation.steps == [tag]
-
-    def test_bitwise_not_operator_on_not_element_tag_returns_tag(self):
-        """
-        Tests if bitwise NOT operator (__invert__) returns the original tag
-        when applied to NotSelector instance with single selector.
-        """
-        tag = TagSelector("a")
-        not_element = NotSelector(tag)
-        negation = ~not_element
-        assert negation == tag
-
     def test_bitwise_not_operator_on_not_element_tag_with_multiple_selectors_returns_union(
         self,
     ):

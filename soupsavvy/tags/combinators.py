@@ -1,7 +1,7 @@
 """
 Module for combinators defined in css.
 
-They  they combine other selectors in a way that gives them a useful relationship
+They they combine other selectors in a way that gives them a useful relationship
 to each other and the location of content in the document.
 
 Soupsavvy provides combinators that are used to combine multiple SelectableSoup

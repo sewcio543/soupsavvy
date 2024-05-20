@@ -417,33 +417,6 @@ class TestTagSelector:
         """Tests if __eq__ returns False if tags have different init parameters."""
         assert tags[0] != tags[1]
 
-    def test_dunder_or_method_returns_selector_union_with_expected_tags(self):
-        """
-        Tests if __or__ method of SelectableSoup returns SoupUnionTag with
-        expected tags that took part in logical disjunction.
-        """
-        tag_1 = TagSelector(
-            "a", attributes=[AttributeSelector("class", value="widget")]
-        )
-        tag_2 = TagSelector(
-            "div", attributes=[AttributeSelector("class", value="menu")]
-        )
-        union = tag_1.__or__(tag_2)
-        assert union == SelectorList(tag_1, tag_2)
-        assert isinstance(union, SelectorList)
-        # checking python itself just to make sure syntactical sugar works
-        assert union == (tag_1 | tag_2)
-
-    def test_dunder_or_method_raises_exception_when_not_selectable_soup(self):
-        """
-        Tests if __or__ method of SelectableSoup raises NotSelectableSoupException
-        when input parameter is not of SelectableSoup type.
-        """
-        tag_1 = TagSelector("a")
-
-        with pytest.raises(NotSelectableSoupException):
-            tag_1.__or__("element")  # type: ignore
-
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.

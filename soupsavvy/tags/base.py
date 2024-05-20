@@ -3,8 +3,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, overload
+from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, Type, overload
 
 from bs4 import NavigableString, Tag
 
@@ -14,7 +13,6 @@ from soupsavvy.tags.exceptions import (
     TagNotFoundException,
 )
 from soupsavvy.tags.namespace import FindResult
-from soupsavvy.tags.tag_utils import TagIterator, UniqueTag
 
 if TYPE_CHECKING:
     from soupsavvy.tags.combinators import (
@@ -48,7 +46,7 @@ class SelectableSoup(ABC):
     Notes
     -----
     To implement SelectableSoup interface child class must implement:
-    * 'find_all' method that returns result of bs4.Tag 'find_all' method.
+    * 'find_all' method that returns a list of matching elements in bs4.Tag.
     It could optionally implement:
     * '_find' method that returns result of bs4.Tag 'find' method.
     By default '_find' method is implemented by calling 'find_all' method
@@ -235,6 +233,12 @@ class SelectableSoup(ABC):
             f"expected an instance of {SelectableSoup.__name__}."
         )
         self._check_selector_type(x, message=message)
+
+        if isinstance(self, SelectorList):
+            args = [*self.steps, x]
+            # return new SelectorList with updated steps
+            return SelectorList(*args)
+
         return SelectorList(self, x)
 
     def __invert__(self) -> SelectableSoup:
@@ -296,6 +300,12 @@ class SelectableSoup(ABC):
             f"expected an instance of {SelectableSoup.__name__}."
         )
         self._check_selector_type(x, message=message)
+
+        if isinstance(self, AndSelector):
+            args = [*self.steps, x]
+            # return new AndSelector with updated steps
+            return AndSelector(*args)
+
         return AndSelector(self, x)
 
     def __gt__(self, x: SelectableSoup) -> ChildCombinator:
@@ -345,6 +355,12 @@ class SelectableSoup(ABC):
             f"expected an instance of {SelectableSoup.__name__}."
         )
         self._check_selector_type(x, message=message)
+
+        if isinstance(self, ChildCombinator):
+            args = [*self.steps, x]
+            # return new ChildCombinator with updated steps
+            return ChildCombinator(*args)
+
         return ChildCombinator(self, x)
 
     def __add__(self, x: SelectableSoup) -> NextSiblingCombinator:
@@ -396,6 +412,12 @@ class SelectableSoup(ABC):
             f"expected an instance of {SelectableSoup.__name__}."
         )
         self._check_selector_type(x, message=message)
+
+        if isinstance(self, NextSiblingCombinator):
+            args = [*self.steps, x]
+            # return new NextSiblingCombinator with updated steps
+            return NextSiblingCombinator(*args)
+
         return NextSiblingCombinator(self, x)
 
     def __mul__(self, x: SelectableSoup) -> SubsequentSiblingCombinator:
@@ -446,6 +468,12 @@ class SelectableSoup(ABC):
             f"expected an instance of {SelectableSoup.__name__}."
         )
         self._check_selector_type(x, message=message)
+
+        if isinstance(self, SubsequentSiblingCombinator):
+            args = [*self.steps, x]
+            # return new SubsequentSiblingCombinator with updated steps
+            return SubsequentSiblingCombinator(*args)
+
         return SubsequentSiblingCombinator(self, x)
 
     def __rshift__(self, x: SelectableSoup) -> DescendantCombinator:
@@ -500,6 +528,12 @@ class SelectableSoup(ABC):
             f"expected an instance of {SelectableSoup.__name__}."
         )
         self._check_selector_type(x, message=message)
+
+        if isinstance(self, DescendantCombinator):
+            args = [*self.steps, x]
+            # return new DescendantCombinator with updated steps
+            return DescendantCombinator(*args)
+
         return DescendantCombinator(self, x)
 
 
