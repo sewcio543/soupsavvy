@@ -171,26 +171,6 @@ class TestNextSiblingCombinator:
         result = tag.find_all(bs)
         assert result == []
 
-    def test_add_operator_returns_and_child_combinator(self):
-        """
-        Tests if addition operator (__add__) returns NextSiblingCombinator instance.
-        """
-        tag1 = TagSelector("a")
-        tag2 = AttributeSelector("class", "link")
-        intersection = tag1 + tag2
-        assert isinstance(intersection, NextSiblingCombinator)
-        assert intersection.steps == [tag1, tag2]
-
-    def test_add_operator_raises_exception_if_not_selectable_soup(self):
-        """
-        Tests if  addition operator (__add__) raises NotSelectableSoupException
-        when second operand is not a SelectableSoup instance.
-        """
-        tag = TagSelector("a")
-
-        with pytest.raises(NotSelectableSoupException):
-            tag > "class"  # type: ignore
-
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.

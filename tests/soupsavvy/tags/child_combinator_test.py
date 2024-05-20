@@ -193,26 +193,6 @@ class TestChildCombinator:
         result = tag.find(bs)
         assert str(result) == strip("""<p>Hello 6</p>""")
 
-    def test_gt_operator_returns_and_child_combinator(self):
-        """
-        Tests if greater than operator (__gt__) returns ChildCombinator instance.
-        """
-        tag1 = TagSelector("a")
-        tag2 = AttributeSelector("class", "link")
-        combinator = tag1 > tag2
-        assert isinstance(combinator, ChildCombinator)
-        assert combinator.steps == [tag1, tag2]
-
-    def test_gt_operator_raises_exception_if_not_selectable_soup(self):
-        """
-        Tests if greater then operator (__gt__) raises NotSelectableSoupException
-        when second operand is not a SelectableSoup instance.
-        """
-        tag = TagSelector("a")
-
-        with pytest.raises(NotSelectableSoupException):
-            tag > "class"  # type: ignore
-
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.

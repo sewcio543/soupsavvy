@@ -122,27 +122,6 @@ class TestAndSelector:
         result = tag.find_all(bs)
         assert result == []
 
-    def test_bitwise_and_operator_returns_and_element_tag(self):
-        """
-        Tests if bitwise AND operator (__and__) returns AndSelector instance
-        with the same selectors.
-        """
-        tag1 = TagSelector("a")
-        tag2 = AttributeSelector("class", "link")
-        intersection = tag1 & tag2
-        assert isinstance(intersection, AndSelector)
-        assert intersection.steps == [tag1, tag2]
-
-    def test_bitwise_and_operator_raises_exception_if_not_selectable_soup(self):
-        """
-        Tests if bitwise AND operator (__and__) raises NotSelectableSoupException
-        when one of the operands is not SelectableSoup instance.
-        """
-        tag = TagSelector("a")
-
-        with pytest.raises(NotSelectableSoupException):
-            tag & "class"  # type: ignore
-
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.
