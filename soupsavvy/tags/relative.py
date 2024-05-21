@@ -47,7 +47,7 @@ class RelativeChild(RelativeSelector):
         self,
         tag: Tag,
         recursive: bool = True,
-        limit: Optional[None] = None,
+        limit: Optional[int] = None,
     ) -> list[Tag]:
         return self.selector.find_all(tag, recursive=False, limit=limit)
 
@@ -57,7 +57,7 @@ class RelativeDescendant(RelativeSelector):
         self,
         tag: Tag,
         recursive: bool = True,
-        limit: Optional[None] = None,
+        limit: Optional[int] = None,
     ) -> list[Tag]:
         return self.selector.find_all(tag, recursive=True, limit=limit)
 
@@ -67,7 +67,7 @@ class RelativeNextSibling(RelativeSelector):
         self,
         tag: Tag,
         recursive: bool = True,
-        limit: Optional[None] = None,
+        limit: Optional[int] = None,
     ) -> list[Tag]:
         search = tag.parent or tag
 
@@ -88,7 +88,7 @@ class RelativeSubsequentSibling(RelativeSelector):
         self,
         tag: Tag,
         recursive: bool = True,
-        limit: Optional[None] = None,
+        limit: Optional[int] = None,
     ) -> list[Tag]:
         search = tag.parent or tag
         matches: list[Tag] = []
