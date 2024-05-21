@@ -27,7 +27,6 @@ from typing import Any, Iterable, Optional, Pattern
 from bs4 import Tag
 
 import soupsavvy.tags.namespace as ns
-from soupsavvy.tags.anchor import RelativeSelector
 from soupsavvy.tags.base import (
     IterableSoup,
     SelectableCSS,
@@ -35,6 +34,7 @@ from soupsavvy.tags.base import (
     SingleSelectableSoup,
 )
 from soupsavvy.tags.exceptions import WildcardTagException
+from soupsavvy.tags.relative import RelativeSelector
 from soupsavvy.tags.tag_utils import TagIterator, UniqueTag
 
 
@@ -504,15 +504,36 @@ class HasSelector(SelectableSoup, IterableSoup):
     >>> HasSelector(TagSelector(tag="div"))
 
     matches all elements that have any descendant with "div" tag name.
-    For now, only default combinator of relative selector is supported, which is descendant.
+    It uses default combinator of relative selector, which is descendant.
 
     Example
     -------
     >>> <span><div>Hello World</div></span> ✔️
     >>> <span><a>Hello World</a></span> ❌
 
+    Other relative selectors can be used with Anchor element.
+
+    Example
+    -------
+    >>> from soupsavvy.tags.relative import Anchor
+    >>> HasSelector(Anchor > TagSelector("div"))
+    >>> HasSelector(Anchor + TagSelector("div"))
+
+    or by using RelativeSelector components directly:
+
+    Example
+    -------
+    >>> from soupsavvy.tags.relative import RelativeChild, RelativeNextSibling
+    >>> HasSelector(RelativeChild(TagSelector("div")))
+    >>> HasSelector(RelativeNextSibling(TagSelector("div"))
+
+    Example
+    -------
+    >>> <span><div>Hello World</div></span> ✔️
+    >>> <span><a><div>Hello World</div></a></span> ❌
+
     In this case, HasSelector is anchored against any element, and matches only elements
-    that have "div" tag name as a descendant.
+    that have "div" tag name as a child.
 
     Object can be initialized with multiple selectors as well, in which case
     at least one selector must match for element to be included in the result.
@@ -526,14 +547,13 @@ class HasSelector(SelectableSoup, IterableSoup):
     >>> :has(div, a) { color: red; }
     >>> :has(+ div, > a) { color: red; }
 
-    The first example translated to soupsavvy would be:
+    These examples translated to soupsavvy would be:
 
     Example
     -------
+    >>> from soupsavvy.tags.relative import Anchor
     >>> HasSelector(TagSelector("div"), TagSelector("a"))
-
-    Second example includes not default combinator,
-    which is not supported yet, but will be soon.
+    >>> HasSelector(Anchor + TagSelector("div"), Anchor > TagSelector("a"))
 
     Notes
     -----
