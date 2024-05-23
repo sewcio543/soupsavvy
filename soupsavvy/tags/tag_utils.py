@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterator
+from typing import Iterator, Optional
 
 from bs4 import Tag
 
@@ -89,3 +89,62 @@ class UniqueTag:
         In any other case, returns False.
         """
         return isinstance(other, UniqueTag) and hash(self) == hash(other)
+
+    def __str__(self):
+        """Returns string representation of UniqueTag instance."""
+        return f"{self.__class__.__name__}({id(self.tag)})"
+
+
+class TagResultSet:
+    _ORDER_ATTR = "_order"
+    _IS_BASE = "_base"
+
+    def __init__(self, tags: Optional[list[Tag]] = None) -> None:
+        self.tags = tags or []
+
+    def get_unique(self) -> list[Tag]:
+        set_ = self._setup(base=True)
+        ordered = self._order(set_)
+        return ordered
+
+    def _setup(self, base: bool) -> set[UniqueTag]:
+        tags = [UniqueTag(tag) for tag in self.tags]
+
+        for i, tag in enumerate(tags):
+            setattr(tag, self._ORDER_ATTR, i)
+            setattr(tag, self._IS_BASE, int(base))
+
+        return set(tags)
+
+    def _order(self, set_: set[UniqueTag]) -> list[Tag]:
+        return [
+            unique.tag
+            for unique in sorted(
+                set_,
+                key=lambda x: (
+                    # Sorting by base descending - base goes first
+                    -getattr(x, self.__class__._IS_BASE, -1),
+                    # Sorting by order ascending
+                    getattr(x, self._ORDER_ATTR, -1),
+                ),
+            )
+        ]
+
+    def intersection(self, other: TagResultSet) -> TagResultSet:
+        intersection = self._setup(base=True) & other._setup(base=False)
+        ordered = self._order(intersection)
+        return TagResultSet(ordered)
+
+    def update(self, other: TagResultSet, limit: Optional[int] = None) -> TagResultSet:
+        updated = self._setup(base=True) | other._setup(base=False)
+        ordered = self._order(updated)
+        return TagResultSet(ordered)
+
+    def __and__(self, other: TagResultSet) -> TagResultSet:
+        return self.intersection(other)
+
+    def __or__(self, other: TagResultSet) -> TagResultSet:
+        return self.update(other)
+
+    def __len__(self) -> int:
+        return len(self.tags)
