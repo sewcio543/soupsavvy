@@ -2,18 +2,16 @@
 Module that contains relative selectors and utility components.
 """
 
-from dataclasses import dataclass
 from typing import Callable, Optional
 
 from bs4 import Tag
 
 from soupsavvy.tags.base import SelectableSoup
-from soupsavvy.tags.tag_utils import UniqueTag
+from soupsavvy.tags.tag_utils import TagResultSet
 
 Operator = Callable[[SelectableSoup, SelectableSoup], SelectableSoup]
 
 
-@dataclass
 class RelativeSelector(SelectableSoup):
     """
     Base class for relative selectors, that are used to find tags relative
@@ -32,14 +30,36 @@ class RelativeSelector(SelectableSoup):
 
     Uses RelativeChild selector to find any div tag that is a direct child of the
     tag that is being searched (passed as an argument).
-
-    Parameters
-    ----------
-    selector : SelectableSoup
-        Selector that is used to find tags relative to the anchor tag.
     """
 
-    selector: SelectableSoup
+    def __init__(self, selector: SelectableSoup) -> None:
+        """
+        Initializes RelativeSelector instance with specified selector.
+
+        Parameters
+        ----------
+        selector : SelectableSoup
+            Selector that is used to find tags relative to the anchor tag.
+        """
+        self.selector = selector
+
+
+class BaseRelativeSibling(RelativeSelector):
+    _limit: Optional[int] = None
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        search = tag.parent or tag
+        matching = TagResultSet(
+            self.selector.find_all(search, recursive=False),
+        )
+        next_ = TagResultSet(tag.find_next_siblings(limit=self._limit))  # type: ignore
+        matches = matching.intersection(next_)
+        return matches.tags[:limit]
 
 
 class RelativeChild(RelativeSelector):
@@ -62,51 +82,12 @@ class RelativeDescendant(RelativeSelector):
         return self.selector.find_all(tag, recursive=True, limit=limit)
 
 
-class RelativeNextSibling(RelativeSelector):
-    def find_all(
-        self,
-        tag: Tag,
-        recursive: bool = True,
-        limit: Optional[int] = None,
-    ) -> list[Tag]:
-        search = tag.parent or tag
-
-        matching = {
-            UniqueTag(element)
-            for element in self.selector.find_all(search, recursive=False)
-        }
-        next_sibling = UniqueTag(tag.find_next_sibling())  # type: ignore
-
-        if next_sibling not in matching:
-            return []
-
-        return [next_sibling.tag]
+class RelativeNextSibling(BaseRelativeSibling):
+    _limit = 1
 
 
-class RelativeSubsequentSibling(RelativeSelector):
-    def find_all(
-        self,
-        tag: Tag,
-        recursive: bool = True,
-        limit: Optional[int] = None,
-    ) -> list[Tag]:
-        search = tag.parent or tag
-        matches: list[Tag] = []
-
-        matching = {
-            UniqueTag(element)
-            for element in self.selector.find_all(search, recursive=False)
-        }
-        next_siblings = [UniqueTag(sibling) for sibling in tag.find_next_siblings()]  # type: ignore
-
-        for element in next_siblings:
-            if element in matching and element not in matches:
-                matches.append(element.tag)
-
-                if len(matches) == limit:
-                    break
-
-        return matches
+class RelativeSubsequentSibling(BaseRelativeSibling):
+    _limit = None
 
 
 class _Anchor:

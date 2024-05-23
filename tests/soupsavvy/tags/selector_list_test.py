@@ -367,3 +367,25 @@ class TestSelectorList:
             strip("""<a>Hello 3</a>"""),
             strip("""<p>Empty</p>"""),
         ]
+
+    def test_find_all_does_not_duplicate_if_tag_matches_multiple_selectors(
+        self,
+    ):
+        """
+        Tests if find_all does not duplicate elements if they match multiple selectors.
+        """
+        text = """
+            <a href="github">Hello 1</a>
+            <a class="widget">Hello 2</a>
+        """
+        bs = find_body_element(to_bs(text))
+        tag = SelectorList(
+            TagSelector(tag="a"),
+            AttributeSelector("class", "widget"),
+        )
+        results = tag.find_all(bs)
+
+        assert list(map(str, results)) == [
+            strip("""<a href="github">Hello 1</a>"""),
+            strip("""<a class="widget">Hello 2</a>"""),
+        ]
