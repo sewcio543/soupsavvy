@@ -13,7 +13,6 @@ Soupsavvy's documentation!
    soupsavvy.tags
    soupsavvy.utils
    soupsavvy.testing
-   soupsavvy.test_dir
 
 
 .. mdinclude:: ../../README.md
