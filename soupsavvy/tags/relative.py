@@ -50,6 +50,7 @@ class RelativeSelector(SelectableSoup):
         selector : SelectableSoup
             Selector that is used to find tags relative to the anchor tag.
         """
+        self._check_selector_type(selector)
         self.selector = selector
 
 
