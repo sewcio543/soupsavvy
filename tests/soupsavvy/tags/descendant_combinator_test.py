@@ -15,6 +15,7 @@ from .conftest import find_body_element, strip, to_bs
 
 
 @pytest.mark.soup
+@pytest.mark.combinator
 class TestDescendantCombinator:
     """Class for DescendantCombinator unit test suite."""
 

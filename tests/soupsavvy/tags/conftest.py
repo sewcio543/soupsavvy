@@ -24,7 +24,20 @@ def find_body_element(bs: Tag) -> Tag:
     return bs.find("body")  # type: ignore
 
 
-class MockLinkSelector(SelectableSoup):
+class MockSelector(SelectableSoup):
+    """Mock class for testing SelectableSoup interface."""
+
+    def __eq__(self, x: object) -> bool:
+        return id(self) == id(x)
+
+    def __hash__(self) -> int:
+        return hash(id(self))
+
+    def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+        return []
+
+
+class MockLinkSelector(MockSelector):
     """
     Mock selector class for testing purposes.
     Find every instance of link tag (with tag name 'a').
@@ -35,7 +48,7 @@ class MockLinkSelector(SelectableSoup):
         return tag.find_all("a", recursive=recursive, limit=limit)
 
 
-class MockDivSelector(SelectableSoup):
+class MockDivSelector(MockSelector):
     """
     Mock selector class for testing purposes.
     Find every instance of div tag (with tag name 'div').

@@ -30,6 +30,7 @@ def mock_soup_union() -> SelectorList:
 
 
 @pytest.mark.soup
+@pytest.mark.combinator
 class TestSelectorList:
     """Class for SelectorList unit test suite."""
 

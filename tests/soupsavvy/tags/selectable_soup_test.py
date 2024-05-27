@@ -8,9 +8,8 @@ import operator
 from typing import Any, Callable, Type
 
 import pytest
-from bs4 import Tag
 
-from soupsavvy.tags.base import IterableSoup, SelectableSoup
+from soupsavvy.tags.base import IterableSoup
 from soupsavvy.tags.combinators import (
     ChildCombinator,
     DescendantCombinator,
@@ -20,21 +19,10 @@ from soupsavvy.tags.combinators import (
 )
 from soupsavvy.tags.components import AndSelector, NotSelector
 from soupsavvy.tags.exceptions import NotSelectableSoupException
+from tests.soupsavvy.tags.conftest import MockSelector
 
 
-class MockSelector(SelectableSoup):
-    """Mock class for testing SelectableSoup interface."""
-
-    def __eq__(self, x: object) -> bool:
-        return id(self) == id(x)
-
-    def __hash__(self) -> int:
-        return hash(id(self))
-
-    def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
-        return []
-
-
+@pytest.mark.soup
 class BaseOperatorTest:
     """
     Class with base test cases covering functionality of how standard operators
@@ -171,6 +159,7 @@ class TestRSHIFTOperator(BaseOperatorTest):
     OPERATOR = operator.rshift
 
 
+@pytest.mark.soup
 class TestNOTOperator:
     """
     Class for testing bitwise NOT operator for SelectableSoup interface.

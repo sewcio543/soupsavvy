@@ -25,6 +25,7 @@ from .conftest import MockLinkSelector, find_body_element, strip, to_bs
 
 
 @pytest.mark.soup
+@pytest.mark.combinator
 class BaseRelativeCombinatorTest(ABC):
     """
     Base suite of tests for RelativeSelector classes.

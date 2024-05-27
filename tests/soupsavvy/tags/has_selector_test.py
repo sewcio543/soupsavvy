@@ -4,6 +4,7 @@ import pytest
 
 from soupsavvy.tags.components import HasSelector
 from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
+from soupsavvy.tags.relative import RelativeChild
 
 from .conftest import MockDivSelector, MockLinkSelector, find_body_element, strip, to_bs
 
@@ -14,7 +15,8 @@ class TestHasSelector:
 
     def test_raises_exception_when_invalid_input(self):
         """
-        Tests if HasSelector raises NotSelectableSoupException when invalid input is provided.
+        Tests if HasSelector raises NotSelectableSoupException
+        when invalid input is provided.
         It requires all selectors to be SelectableSoup instances.
         """
         with pytest.raises(NotSelectableSoupException):
@@ -30,7 +32,7 @@ class TestHasSelector:
     ):
         """
         Tests if find method returns the first tag that has an descendant element that
-        matches a single selector.
+        matches a single selector. In this case, recursive parameter is not relevant.
         """
         text = """
             <p>Don't have</p>
@@ -130,14 +132,13 @@ class TestHasSelector:
         """
         text = """
             <p>Don't have</p>
-            <div><a>1</a><a>Duplicate</a></div>
             <div>
                 <span>Hello World</span>
             </div>
-            <span><p></p><a>2</a></span>
+            <span><p></p><a>1</a></span>
             <a>Don't have</a>
-            <div><a>3</a></div>
-            <div><span><a>4</a></span></div>
+            <div><a>2</a></div>
+            <div><span><a>3</a></span></div>
         """
         bs = find_body_element(to_bs(text))
 
@@ -145,10 +146,9 @@ class TestHasSelector:
         result = selector.find_all(bs, recursive=False)
 
         assert list(map(str, result)) == [
-            strip("""<div><a>1</a><a>Duplicate</a></div>"""),
-            strip("""<span><p></p><a>2</a></span>"""),
-            strip("""<div><a>3</a></div>"""),
-            strip("""<div><span><a>4</a></span></div>"""),
+            strip("""<span><p></p><a>1</a></span>"""),
+            strip("""<div><a>2</a></div>"""),
+            strip("""<div><span><a>3</a></span></div>"""),
         ]
 
     @pytest.mark.parametrize(
@@ -175,205 +175,115 @@ class TestHasSelector:
         result = selector.find_all(bs, recursive=recursive)
         assert result == []
 
-    # def test_find_returns_first_matching_child_if_recursive_false(self):
-    #     """
-    #     Tests if find returns first matching child element if recursive is False.
-    #     In this case first 'p' element matches the selector, but it's not a child
-    #     of body element, so it's not returned.
-    #     """
-    #     text = """
-    #         <div>
-    #             <a href="github">
-    #                 <p>Hello 1</p>
-    #             </a>
-    #         </div>
-    #         <a class="github">Hello 2</a>
-    #         <p>Hello 3</p>
-    #         <a class="github"><p>Text</p></a>
-    #     """
-    #     bs = find_body_element(to_bs(text))
-    #     tag = ChildCombinator(
-    #         TagSelector("a"),
-    #         TagSelector("p"),
-    #     )
-    #     result = tag.find(bs, recursive=False)
-    #     assert str(result) == strip("""<p>Text</p>""")
+    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+        """
+        Tests if find_all returns only x elements when limit is set.
+        In this case only 2 first in order elements are returned.
+        """
+        text = """
+            <p>Don't have</p>
+            <div>
+                <span>Hello World</span>
+            </div>
+            <span><p></p><a>1</a></span>
+            <a>Don't have</a>
+            <div><a>2</a></div>
+            <div><span><a>3</a></span></div>
+        """
+        bs = find_body_element(to_bs(text))
 
-    # def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
-    #     """
-    #     Tests if find returns None if no child element matches the selector
-    #     and recursive is False.
-    #     """
-    #     text = """
-    #         <div>
-    #             <a href="github">
-    #                 <p>Hello 1</p>
-    #             </a>
-    #         </div>
-    #         <a class="github">Hello 2</a>
-    #         <p>Hello 3</p>
-    #     """
-    #     bs = find_body_element(to_bs(text))
-    #     tag = ChildCombinator(
-    #         TagSelector("a"),
-    #         TagSelector("p"),
-    #     )
-    #     result = tag.find(bs, recursive=False)
-    #     assert result is None
+        selector = HasSelector(MockLinkSelector())
+        result = selector.find_all(bs, limit=2)
 
-    # def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
-    #     """
-    #     Tests if find raises TagNotFoundException if no child element
-    #     matches the selector, when recursive is False and strict is True.
-    #     """
-    #     text = """
-    #         <div>
-    #             <a href="github">
-    #                 <p>Hello 1</p>
-    #             </a>
-    #         </div>
-    #         <a class="github">Hello 2</a>
-    #         <p>Hello 3</p>
-    #     """
-    #     bs = find_body_element(to_bs(text))
-    #     tag = ChildCombinator(
-    #         TagSelector("a"),
-    #         TagSelector("p"),
-    #     )
+        assert list(map(str, result)) == [
+            strip("""<span><p></p><a>1</a></span>"""),
+            strip("""<div><a>2</a></div>"""),
+        ]
 
-    #     with pytest.raises(TagNotFoundException):
-    #         tag.find(bs, strict=True, recursive=False)
+    def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns only x elements when limit is set and recursive
+        is False. In this case only 2 first in order children matching
+        the selector are returned.
+        """
+        text = """
+            <p>Don't have</p>
+            <div><span><a>1</a></span></div>
+            <div>
+                <span>Hello World</span>
+            </div>
+            <div><a>2</a></div>
+            <span><p></p><a>2</a></span>
+            <a>Don't have</a>
+        """
+        bs = find_body_element(to_bs(text))
 
-    # def test_find_all_returns_all_matching_children_when_recursive_false(self):
-    #     """
-    #     Tests if find_all returns all matching children if recursive is False.
-    #     It returns only matching children of the body element.
-    #     """
-    #     text = """
-    #         <a class="link">
-    #             <div class="link"></div>
-    #             <p>Text 1</p>
-    #         </a>
-    #         <a>
-    #             <div>
-    #                 <span class="widget">Hello 1</span>
-    #             </div>
-    #             <p>Text 2</p>
-    #         </a>
-    #         <div>
-    #             <a>
-    #                 <span>Hello 2</span>
-    #                 <p>Text 3</p>
-    #             </a>
-    #         </div>
-    #     """
-    #     bs = find_body_element(to_bs(text))
-    #     tag = ChildCombinator(
-    #         TagSelector("a"),
-    #         TagSelector("p"),
-    #     )
-    #     results = tag.find_all(bs, recursive=False)
+        selector = HasSelector(MockLinkSelector())
+        result = selector.find_all(bs, limit=2, recursive=False)
 
-    #     assert list(map(str, results)) == [
-    #         strip("""<p>Text 1</p>"""),
-    #         strip("""<p>Text 2</p>"""),
-    #     ]
+        assert list(map(str, result)) == [
+            strip("""<div><span><a>1</a></span></div>"""),
+            strip("""<div><a>2</a></div>"""),
+        ]
 
-    # def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
-    #     self,
-    # ):
-    #     """
-    #     Tests if find_all returns an empty list if no child element matches the selector
-    #     and recursive is False.
-    #     """
-    #     text = """
-    #         <div>
-    #             <a href="github">
-    #                 <p>Hello 1</p>
-    #             </a>
-    #         </div>
-    #         <a class="github">Hello 2</a>
-    #         <p>Hello 3</p>
-    #     """
-    #     bs = find_body_element(to_bs(text))
-    #     tag = ChildCombinator(
-    #         TagSelector("a"),
-    #         TagSelector("p"),
-    #     )
+    def test_find_all_returns_all_tags_matching_at_least_one_selector(
+        self,
+    ):
+        """
+        Tests if find_all method returns all tags that have descendant elements
+        matching at least one of the selectors, when multiple selectors are provided.
+        """
+        text = """
+            <p>Don't have</p>
+            <span><a>1</a></span>
+            <div>
+                <span>Hello World</span>
+            </div>
+            <span><div>2</div></span>
+            <span><span><div>Have both</div><a></a></span></span>
+            <a>Don't have</a>
+        """
+        bs = find_body_element(to_bs(text))
 
-    #     results = tag.find_all(bs, recursive=False)
-    #     assert results == []
+        selector = HasSelector(MockLinkSelector(), MockDivSelector())
+        result = selector.find_all(bs)
 
-    # def test_find_all_returns_only_x_elements_when_limit_is_set(self):
-    #     """
-    #     Tests if find_all returns only x elements when limit is set.
-    #     In this case only 2 first in order elements are returned.
-    #     """
-    #     text = """
-    #         <a class="link">
-    #             <div class="link"></div>
-    #             <p>Text 1</p>
-    #         </a>
-    #         <div>
-    #             <a>
-    #                 <span>Hello 1</span>
-    #                 <p>Text 2</p>
-    #             </a>
-    #         </div>
-    #         <a>
-    #             <div>
-    #                 <span class="widget">Hello 2</span>
-    #             </div>
-    #             <p>Text 3</p>
-    #         </a>
-    #     """
-    #     bs = find_body_element(to_bs(text))
-    #     tag = ChildCombinator(
-    #         TagSelector("a"),
-    #         TagSelector("p"),
-    #     )
-    #     results = tag.find_all(bs, limit=2)
+        assert list(map(str, result)) == [
+            strip("""<span><a>1</a></span>"""),
+            strip("""<span><div>2</div></span>"""),
+            strip("""<span><span><div>Have both</div><a></a></span></span>"""),
+            strip("""<span><div>Have both</div><a></a></span>"""),
+        ]
 
-    #     assert list(map(str, results)) == [
-    #         strip("""<p>Text 1</p>"""),
-    #         strip("""<p>Text 2</p>"""),
-    #     ]
+    @pytest.mark.integration
+    def test_find_all_returns_all_tags_matching_relative_selector(
+        self,
+    ):
+        """
+        Tests if find_all method returns all tags that anchored to relative selector
+        find at least one matching tag. In this case, only elements that have
+        a link tag as a child are returned.
+        """
+        text = """
+            <p>Don't have</p>
+            <div>
+                <span><a>1</a></span>
+            </div>
+            <span>
+                <div>
+                    <span><a>2</a></span>
+                </div>
+            </span>
+            <a>Don't have</a>
+        """
+        bs = find_body_element(to_bs(text))
 
-    # def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
-    #     self,
-    # ):
-    #     """
-    #     Tests if find_all returns only x elements when limit is set and recursive
-    #     is False. In this case only 2 first in order children matching
-    #     the selector are returned.
-    #     """
-    #     text = """
-    #         <a class="link">
-    #             <div class="link"></div>
-    #             <p>Text 1</p>
-    #         </a>
-    #         <div>
-    #             <a>
-    #                 <span>Hello 1</span>
-    #                 <p>Text 2</p>
-    #             </a>
-    #         </div>
-    #         <a>
-    #             <div>
-    #                 <span class="widget">Hello 2</span>
-    #             </div>
-    #             <p>Text 3</p>
-    #             <p>Text 4</p>
-    #         </a>
-    #     """
-    #     bs = find_body_element(to_bs(text))
-    #     tag = ChildCombinator(
-    #         TagSelector("a"),
-    #         TagSelector("p"),
-    #     )
-    #     results = tag.find_all(bs, recursive=False, limit=2)
+        selector = HasSelector(RelativeChild(MockLinkSelector()))
+        result = selector.find_all(bs)
 
-    #     assert list(map(str, results)) == [
-    #         strip("""<p>Text 1</p>"""),
-    #         strip("""<p>Text 3</p>"""),
-    #     ]
+        assert list(map(str, result)) == [
+            strip("""<span><a>1</a></span>"""),
+            strip("""<span><a>2</a></span>"""),
+        ]
