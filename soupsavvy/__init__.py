@@ -1,13 +1,20 @@
 from .tags import (
+    Anchor,
+    AndSelector,
     AnyTagSelector,
     AttributeSelector,
+    ChildCombinator,
     DescendantCombinator,
+    HasSelector,
+    NextSiblingCombinator,
+    NotSelector,
     PatternSelector,
     SelectorList,
+    SubsequentSiblingCombinator,
     TagSelector,
 )
 
-__version__ = "0.1.5"
+__version__ = "0.1.6-dev3"
 __author__ = "sewcio543"
 
 __all__ = [
@@ -17,4 +24,11 @@ __all__ = [
     "PatternSelector",
     "SelectorList",
     "DescendantCombinator",
+    "AndSelector",
+    "NotSelector",
+    "ChildCombinator",
+    "NextSiblingCombinator",
+    "SubsequentSiblingCombinator",
+    "HasSelector",
+    "Anchor",
 ]

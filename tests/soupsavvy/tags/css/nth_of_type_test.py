@@ -8,6 +8,8 @@ from soupsavvy.tags.exceptions import TagNotFoundException
 from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
+@pytest.mark.css_selector
+@pytest.mark.soup
 class TestNthOfType:
     """Class with unit tests for NthOfType tag selector."""
 
