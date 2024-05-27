@@ -20,7 +20,6 @@
 - [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgements](#acknowledgements)
-- [In the future](#in-the-future)
 
 ## About
 
@@ -88,23 +87,23 @@ with savvier version:
 ```python
 import re
 
-from soupsavvy import AttributeTag, ElementTag, PatternElementTag, StepsElementTag
+from soupsavvy import AttributeSelector, ElementSelector, PatternSelector, DescendantCombinator
 
-# define your complex tag once
-tag = StepsElementTag(
-    ElementTag(
+# define your complex selector once
+selector = DescendantCombinator(
+    ElementSelector(
         "div",
         attributes=[
-            AttributeTag(name="class", value="menu"),
-            AttributeTag(name="role", value="search"),
+            AttributeSelector(name="class", value="menu"),
+            AttributeSelector(name="role", value="search"),
         ],
     ),
-    PatternElementTag(
-        tag=ElementTag(
+    PatternSelector(
+        tag=ElementSelector(
             "a",
             attributes=[
-                AttributeTag(name="class", value="option"),
-                AttributeTag(name="href", value="github.com", re=True),
+                AttributeSelector(name="class", value="option"),
+                AttributeSelector(name="href", value="github.com", re=True),
             ],
         ),
         pattern="Github",
@@ -112,10 +111,10 @@ tag = StepsElementTag(
     ),
 )
 # reuse it in any place to search for tag in any markup, if not found, strict mode raises exception
-a = tag.find(markup, strict=True)
+a = selector.find(markup, strict=True)
 ```
 
-This streamlined soupsavvy approach and encapsulating complex tag(s) into single objects transforms web scraping tasks from a potential 'soup sandwich'🥪 into a 'duck soup' 🦆 scenario.
+This streamlined soupsavvy approach and encapsulating complex selector(s) into single objects.
 
 With soupsavvy's robust features, developers can avoid common problems encountered in web scraping, such as exception handling or integration with type checkers.
 
@@ -138,10 +137,3 @@ Soupsavvy is built upon the foundation of excellent BeautifulSoup. We extend our
 
 **Let's soap this soup!**  
 **Happy scraping!** ✨
-
-## In the future
-
-- Scraping workflows from soup to nuts
-- New Tag components
-- Enhanced CI pipeline
-- Documentation  
