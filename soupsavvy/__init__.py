@@ -1,20 +1,20 @@
 from .tags import (
-    AnyTag,
-    AttributeTag,
-    ElementTag,
-    PatternElementTag,
-    SoupUnionTag,
-    StepsElementTag,
+    AnyTagSelector,
+    AttributeSelector,
+    DescendantCombinator,
+    PatternSelector,
+    SelectorList,
+    TagSelector,
 )
 
-__version__ = "0.1.4-dev2"
+__version__ = "0.1.6-dev1"
 __author__ = "sewcio543"
 
 __all__ = [
-    "AnyTag",
-    "AttributeTag",
-    "ElementTag",
-    "PatternElementTag",
-    "SoupUnionTag",
-    "StepsElementTag",
+    "AnyTagSelector",
+    "AttributeSelector",
+    "TagSelector",
+    "PatternSelector",
+    "SelectorList",
+    "DescendantCombinator",
 ]

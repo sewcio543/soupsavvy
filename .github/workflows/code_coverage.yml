@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install -r requirements.txt
-          python -m pip install -r config/requirements_dev.txt
+          python -m pip install -r requirements_dev.txt
 
       - name: Test with coverage
         run: |
@@ -41,3 +41,5 @@ jobs:
         run: |
           echo "Using codecov version: $(codecov --version)"
           python -m codecov --verbose
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

@@ -1,6 +1,6 @@
 """
 Module for testing the deprecation module from utils.
-It is respnsible for handling the deprecation of functions and warnings.
+It is responsible for handling the deprecation of functions and warnings.
 """
 
 import warnings
@@ -371,7 +371,7 @@ class TestDeprecatedClass:
         @deprecated_function("DEPRECATED", warning=warning)
         class TestClass: ...
 
-        # set the warning filter to ignore the sepcific warning
+        # set the warning filter to ignore the specific warning
         warnings.filterwarnings("ignore", category=warning)
 
         with warnings.catch_warnings(record=True) as w:

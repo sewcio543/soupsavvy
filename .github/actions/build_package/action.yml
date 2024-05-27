@@ -6,8 +6,8 @@ runs:
   steps:
     - name: Install dependencies
       run: |
-        python -m pip install $(grep build config/requirements_dev.txt | xargs)
-        python -m pip install $(grep twine config/requirements_dev.txt | xargs)
+        python -m pip install $(grep build requirements_dev.txt | xargs)
+        python -m pip install $(grep twine requirements_dev.txt | xargs)
       shell: bash
 
     - name: Build project and create distribution files

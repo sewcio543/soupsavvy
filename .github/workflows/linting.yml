@@ -33,7 +33,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install $(grep flake8 config/requirements_dev.txt | xargs)
+          python -m pip install $(grep flake8 requirements_dev.txt | xargs)
 
       - name: Lint with flake8
         run: |

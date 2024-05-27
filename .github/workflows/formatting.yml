@@ -28,7 +28,7 @@ jobs:
 
       - name: Install black
         run: |
-          python -m pip install $(grep black config/requirements_dev.txt | xargs)
+          python -m pip install $(grep black requirements_dev.txt | xargs)
           python -m pip install black[jupyter]
 
       - name: Format with black

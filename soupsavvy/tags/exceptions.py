@@ -27,7 +27,7 @@ class WildcardTagException(SelectableSoupException):
     In this example wildcard AnyTag is not accepted as input tag and this exception
     is raised. PatternElementTag without any tag search parameters except for 'string'
     returns NavigableString in find method,
-    which causes unexpected behaviour downstream that would rather be avoided in line
+    which causes unexpected behavior downstream that would rather be avoided in line
     with 'asking for permission' programming style.
     """
 
@@ -46,12 +46,12 @@ class NavigableStringException(SelectableSoupException):
     <html><body><p>Hello World</p></body></html>
 
     BeautifulSoup constructor always wraps NavigableString in <p> element.
-    It is rather an unexpected behaviour and should rather be avoided in SelectableSoup
+    It is rather an unexpected behavior and should rather be avoided in SelectableSoup
     find method, thus this exception is raised.
     """
 
 
-class NotSelectableSoupException(SelectableSoupException):
+class NotSelectableSoupException(SelectableSoupException, TypeError):
     """
     Exception to be raised when function excepted SelectableSoup as input
     and got argument of the different, invalid type.

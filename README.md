@@ -1,10 +1,13 @@
 ![SoupSavvy](resources/logo.png)
+========
+
+## Python package that makes web-scraping better than ever
 
 | | |
 | --- | --- |
-| Package | ![Deployment PyPI](https://github.com/sewcio543/soupsavvy/actions/workflows/production_release.yml/badge.svg) ![Deployment test PyPI](https://github.com/sewcio543/soupsavvy/actions/workflows/development_release.yml/badge.svg) [![GitHub](https://img.shields.io/badge/GitHub-sewcio543-181717.svg?style=flat&logo=github)](https://github.com/sewcio543) [![PyPI](https://img.shields.io/pypi/v/soupsavvy?color=orange)](https://pypi.org/project/soupsavvy/) [![Python Versions](https://img.shields.io/pypi/pyversions/soupsavvy)](https://www.python.org/)|
+| Package | ![Deployment PyPI](https://github.com/sewcio543/soupsavvy/actions/workflows/production_release.yml/badge.svg) [![GitHub](https://img.shields.io/badge/GitHub-sewcio543-181717.svg?style=flat&logo=github)](https://github.com/sewcio543) [![PyPI](https://img.shields.io/pypi/v/soupsavvy?color=orange)](https://pypi.org/project/soupsavvy/) [![Python Versions](https://img.shields.io/pypi/pyversions/soupsavvy)](https://www.python.org/)|
 | Testing | ![Tests](https://github.com/sewcio543/soupsavvy/actions/workflows/tests.yml/badge.svg) [![Codecov](https://codecov.io/gh/sewcio543/soupsavvy/graph/badge.svg?token=RZ51VS3QLB)](https://codecov.io/gh/sewcio543/soupsavvy)|
-| Code Quality | ![Build](https://github.com/sewcio543/soupsavvy/actions/workflows/build_package.yml/badge.svg) ![Linting](https://github.com/sewcio543/soupsavvy/actions/workflows/linting.yml/badge.svg) ![Formatting](https://github.com/sewcio543/soupsavvy/actions/workflows/formatting.yml/badge.svg) ![Type Checking](https://github.com/sewcio543/soupsavvy/actions/workflows/type_checking.yml/badge.svg) [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/sewcio543/soupsavvy/main.svg)](https://results.pre-commit.ci/latest/github/sewcio543/soupsavvy/main)|
+| Code Quality | ![Build](https://github.com/sewcio543/soupsavvy/actions/workflows/build_package.yml/badge.svg) ![Linting](https://github.com/sewcio543/soupsavvy/actions/workflows/linting.yml/badge.svg) [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/sewcio543/soupsavvy/main.svg)](https://results.pre-commit.ci/latest/github/sewcio543/soupsavvy/main)|
 | Documentation | [![readthedocs](https://img.shields.io/readthedocs/pip?logo=readthedocs)](https://github.com/sewcio543/soupsavvy/actions/workflows/documentation.yml/badge.svg) [![Docs link](https://img.shields.io/badge/docs-check_out-blue)](https://sewcio543.github.io/soupsavvy/)|
 
 ## Table of Contents
@@ -16,25 +19,24 @@
 - [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgements](#acknowledgements)
-- [In the future](#in-the-future)
 
 ## About
 
-**SoupSavvy** is a library designed to make web scraping tasks more efficient and manageable. Automating web scraping can be a thankless and time-consuming job. SoupSavvy builds around [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) library enabling developers to create more complex workflows and advanced searches with ease.
+**soupsavvy** is a library designed to make web scraping tasks more efficient and manageable. Automating web scraping can be a thankless and time-consuming job. It builds around [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) library enabling developers to create more complex workflows and advanced searches with ease.
 
 ## Key Features
 
-- **Automated Web Scraping**: SoupSavvy simplifies the process of web scraping by providing intuitive interfaces and tools for automating tasks.
+- **Automated Web Scraping**: soupsavvy simplifies the process of web scraping by providing intuitive interfaces and tools for automating tasks.
 
-- **Complex Workflows**: With SoupSavvy, developers can create complex scraping workflows effortlessly, allowing for more intricate data extraction.
+- **Complex Workflows**: With soupsavvy, developers can create complex scraping workflows effortlessly, allowing for more intricate data extraction.
 
-- **Productionalize Scraping Code**: By providing structured workflows and error handling mechanisms, SoupSavvy facilitates the productionalization of scraping code, making it easier to integrate into larger projects and pipelines.
+- **Productionalize Scraping Code**: By providing structured workflows and error handling mechanisms, soupsavvy facilitates the productionalization of scraping code, making it easier to integrate into larger projects and pipelines.
 
 ## Getting Started
 
 ### Installation
 
-SoupSavvy is published on PyPi and can be installed via pip:
+soupsavvy is published on PyPi and can be installed via pip:
 
 ```bash
 pip install soupsavvy
@@ -84,23 +86,23 @@ with savvier version:
 ```python
 import re
 
-from soupsavvy import AttributeTag, ElementTag, PatternElementTag, StepsElementTag
+from soupsavvy import AttributeSelector, ElementSelector, PatternSelector, DescendantCombinator
 
-# define your complex tag once
-tag = StepsElementTag(
-    ElementTag(
+# define your complex selector once
+selector = DescendantCombinator(
+    ElementSelector(
         "div",
         attributes=[
-            AttributeTag(name="class", value="menu"),
-            AttributeTag(name="role", value="search"),
+            AttributeSelector(name="class", value="menu"),
+            AttributeSelector(name="role", value="search"),
         ],
     ),
-    PatternElementTag(
-        tag=ElementTag(
+    PatternSelector(
+        tag=ElementSelector(
             "a",
             attributes=[
-                AttributeTag(name="class", value="option"),
-                AttributeTag(name="href", value="github.com", re=True),
+                AttributeSelector(name="class", value="option"),
+                AttributeSelector(name="href", value="github.com", re=True),
             ],
         ),
         pattern="Github",
@@ -108,36 +110,29 @@ tag = StepsElementTag(
     ),
 )
 # reuse it in any place to search for tag in any markup, if not found, strict mode raises exception
-a = tag.find(markup, strict=True)
+a = selector.find(markup, strict=True)
 ```
 
-This streamlined SoupSavvy approach and encapsulating complex tag(s) into single objects transforms web scraping tasks from a potential 'soup sandwich'🥪 into a 'duck soup' 🦆 scenario.
+This streamlined soupsavvy approach and encapsulating complex selector(s) into single objects.
 
-With SoupSavvy's robust features, developers can avoid common problems encountered in web scraping, such as exception handling or integration with type checkers.
+With soupsavvy's robust features, developers can avoid common problems encountered in web scraping, such as exception handling or integration with type checkers.
 
-Full documentation can be found at **[Soupsavvy Docs](https://sewcio543.github.io/soupsavvy/)**
+Full documentation can be found at **[soupsavvy Docs](https://sewcio543.github.io/soupsavvy/)**
 
 ## Contributing
 
-If you'd like to contribute to SoupSavvy, feel free to check out the [GitHub repository](https://github.com/sewcio543/soupsavvy) and submit pull requests into one of development branches. Any feedback, bug reports, or feature requests are welcome!
+If you'd like to contribute to soupsavvy, feel free to check out the [GitHub repository](https://github.com/sewcio543/soupsavvy) and submit pull requests into one of development branches. Any feedback, bug reports, or feature requests are welcome!
 
 ## License
 
 [![MIT License](https://img.shields.io/badge/license-MIT-green?style=plastic)](https://choosealicense.com/licenses/mit/)  
-SoupSavvy is licensed under the [MIT License](https://opensource.org/licenses/MIT), allowing for both personal and commercial use. See the `LICENSE` file for more information.
+soupsavvy is licensed under the [MIT License](https://opensource.org/licenses/MIT), allowing for both personal and commercial use. See the `LICENSE` file for more information.
 
 ## Acknowledgements
 
-SoupSavvy is built upon the foundation of excellent BeautifulSoup. We extend our gratitude to the developers and contributors of this projects for their invaluable contributions to the Python community and making our life a lot easier!
+Soupsavvy is built upon the foundation of excellent BeautifulSoup. We extend our gratitude to the developers and contributors of this projects for their invaluable contributions to the Python community and making our life a lot easier!
 
----
+-----------------
 
 **Let's soap this soup!**  
-**Happy scraping!** 🍲✨
-
-## In the future
-
-- Scraping workflows from soup to nuts
-- New Tag components
-- Enhanced CI pipeline
-- Documentation  
+**Happy scraping!** ✨

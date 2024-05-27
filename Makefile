@@ -5,7 +5,8 @@ build:
 	twine check dist/*
 setup:
 	python -m pip install -r requirements.txt
-	python -m pip install -r config/requirements_dev.txt
+	python -m pip install -r requirements_dev.txt
+	python -m pip install -r docs/requirements.txt
 install:
 	python -m pip install -e .
 	python -m pip show soupsavvy
