@@ -1,4 +1,4 @@
-![SoupSavvy](resources/logo.png)
+![SoupSavvy](https://github.com/sewcio543/soupsavvy/blob/main/resources/logo.png?raw=true)
 ========
 
 ## Python package that makes web-scraping better than ever
