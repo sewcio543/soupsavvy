@@ -557,6 +557,17 @@ class HasSelector(SelectableSoup, IterableSoup):
 
     Notes
     -----
+    Passing RelativeDescendant selector into HasSelector is equivalent to using
+    its selector directly, as descendant combinator is default option.
+
+    Example
+    -------
+    >>> HasSelector(RelativeDescendant(TagSelector("div")))
+    >>> HasSelector(Anchor > TagSelector("div"))
+    >>> HasSelector(TagSelector("div"))
+
+    Three of the above examples are equivalent.
+
     For more information on :has() pseudo-class see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:has
     """

@@ -11,7 +11,6 @@ from typing import Type
 import pytest
 from bs4 import Tag
 
-from soupsavvy.tags.base import SelectableSoup
 from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
 from soupsavvy.tags.relative import (
     Anchor,
@@ -22,17 +21,7 @@ from soupsavvy.tags.relative import (
     RelativeSubsequentSibling,
 )
 
-from .conftest import find_body_element, strip, to_bs
-
-
-class MockLinkSelector(SelectableSoup):
-    """
-    Mock selector class for testing purposes.
-    Find every instance of link tag (with tag name 'a').
-    """
-
-    def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
-        return tag.find_all("a", recursive=recursive, limit=limit)
+from .conftest import MockLinkSelector, find_body_element, strip, to_bs
 
 
 @pytest.mark.soup
