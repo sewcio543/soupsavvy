@@ -38,6 +38,8 @@ jobs:
           python docs/source/update_index.py
 
           if [ "$(git status --porcelain)" ]; then
+            git config --global user.name "update-docs-gha[bot]"
+            git config --global user.email "username@users.noreply.github.com"
             git add docs/source/index.rst
             git commit -m "Update index.rst [skip ci]"
             git push
