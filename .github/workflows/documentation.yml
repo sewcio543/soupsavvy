@@ -33,6 +33,18 @@ jobs:
           python -m pip install -r docs/requirements.txt
           pip install -e .
 
+      - name: Update index.rst
+        run: |
+          python update_index.py
+
+          if [ "$(git status --porcelain)" ]; then
+            git add docs/source/index.rst
+            git commit -m "Update index.rst"
+            git push
+          else
+            echo "No update needed for docs/source/index.rst"
+          fi
+
       - name: Sphinx build rst files
         run: |
           sphinx-apidoc -o docs/source soupsavvy --separate --force
