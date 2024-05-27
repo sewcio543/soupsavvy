@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterator
+from typing import Iterable, Iterator, Optional
 
 from bs4 import Tag
 
@@ -89,3 +89,170 @@ class UniqueTag:
         In any other case, returns False.
         """
         return isinstance(other, UniqueTag) and hash(self) == hash(other)
+
+    def __str__(self):
+        """Returns string representation of UniqueTag instance."""
+        return f"{self.__class__.__name__}({id(self.tag)})"
+
+
+class TagResultSet:
+    """
+    TagResultSet class is collection that stores and manages results of find_all
+    method of selectors. Prerequisites for returned results are:
+    * bs4.Tag instances are unique
+    * the order of results == order of their appearance in html
+
+    This components consumes list of bs4.Tag instances and provides methods
+    for fetching unique results with preserved order.
+    It provides operations on sets of results like intersection and union.
+    """
+
+    # constants used inside the class
+    _ORDER_ATTR = "_order"
+    _IS_BASE = "_base"
+
+    def __init__(self, tags: Optional[list[Tag]] = None) -> None:
+        """
+        Initializes TagResultSet instance.
+
+        Parameters
+        ----------
+        tags : list[Tag], optional
+            List of bs4.Tag instances to store in the collection.
+            Default is None, which initializes empty collection.
+        """
+        self._tags = tags or []
+
+    def fetch(self, n: Optional[int] = None) -> list[Tag]:
+        """
+        Fetches n first unique bs4.Tag instances from collection.
+        Ensures that the order of the initial list is preserved.
+
+        Parameters
+        ----------
+        n : int, optional
+            Number of bs4.Tag instances to fetch.
+            If default None, fetches all unique bs4.Tag instances.
+
+        Returns
+        -------
+        list[Tag]
+            List of bs4.Tag instances fetched from collection.
+        """
+        set_ = self._to_set(base=True)
+        ordered = self._sort(set_)
+        return ordered[:n]
+
+    def _to_set(self, base: bool) -> set[UniqueTag]:
+        """
+        Converts list of bs4.Tags from collection to set of UniqueTag instances.
+
+        Parameters
+        ----------
+        base : bool
+            If True, sets the tag as base, otherwise as non-base.
+            If TagResultSet is used in set operations as a base, it should be True.
+
+        Returns
+        -------
+        set[UniqueTag]
+            Set of UniqueTag instances with set helper attributes.
+        """
+        # converting to UniqueTag instances due to known hashing issue
+        tags = [UniqueTag(tag) for tag in self._tags]
+
+        for i, tag in enumerate(tags):
+            # setting attributes used for restoring order
+            setattr(tag, self._ORDER_ATTR, i)
+            setattr(tag, self._IS_BASE, int(base))
+
+        return set(tags)
+
+    def _sort(self, it: Iterable[UniqueTag]) -> list[Tag]:
+        """
+        Sorts an iterable of UniqueTag instances by order and base attributes.
+
+        Parameters
+        ----------
+        it : Iterable[UniqueTag]
+            Iterable of UniqueTag instances to sort.
+
+        Returns
+        -------
+        list[Tag]
+            List of bs4.Tag instances sorted by order and base attributes.
+        """
+        return [
+            unique.tag
+            for unique in sorted(
+                it,
+                key=lambda x: (
+                    # Sorting by base descending - base goes first
+                    -getattr(x, self.__class__._IS_BASE, -1),
+                    # Sorting by order ascending
+                    getattr(x, self._ORDER_ATTR, -1),
+                ),
+            )
+        ]
+
+    def __and__(self, other: TagResultSet) -> TagResultSet:
+        """
+        Performs an intersection operation on two TagResultSet instances
+        with current instance as a base,
+        preserving the order of tags from the base instance.
+
+        Parameters
+        ----------
+        other : TagResultSet
+            TagResultSet instance to perform intersection with.
+
+        Example
+        -------
+        >>> base = TagResultSet([x, y, b])
+        >>> other = TagResultSet([c, y, x])
+        >>> base & other
+        TagResultSet([x, y])
+
+        Returns
+        -------
+        TagResultSet
+            New TagResultSet instance with results of intersection operation.
+        """
+        base = self._to_set(base=True)
+        right = other._to_set(base=False)
+        intersection = [obj for obj in base if obj in right]
+        ordered = self._sort(intersection)
+        return TagResultSet(ordered)
+
+    def __or__(self, other: TagResultSet) -> TagResultSet:
+        """
+        Performs a union operation on two TagResultSet instances
+        with current instance list of tags as a base, appending new tags
+        from other instance at the end of the list.
+
+        Parameters
+        ----------
+        other : TagResultSet
+            TagResultSet instance to perform union with.
+
+        Example
+        -------
+        >>> base = TagResultSet([x, y, b])
+        >>> other = TagResultSet([c, y, x])
+        >>> base | other
+        TagResultSet([x, y, b, c])
+
+        Returns
+        -------
+        TagResultSet
+            New TagResultSet instance with results of union operation.
+        """
+        base = self._to_set(base=True)
+        right = other._to_set(base=False)
+        updated = base | right
+        ordered = self._sort(updated)
+        return TagResultSet(ordered)
+
+    def __len__(self) -> int:
+        """Returns the number of bs4.Tag instances in the collection."""
+        return len(self._tags)

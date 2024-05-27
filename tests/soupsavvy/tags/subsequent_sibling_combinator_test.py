@@ -10,6 +10,7 @@ from .conftest import find_body_element, strip, to_bs
 
 
 @pytest.mark.soup
+@pytest.mark.combinator
 class TestSubsequentSiblingCombinator:
     """Class for SubsequentSiblingCombinator unit test suite."""
 
