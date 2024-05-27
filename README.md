@@ -86,11 +86,16 @@ with savvier version:
 ```python
 import re
 
-from soupsavvy import AttributeSelector, ElementSelector, PatternSelector, DescendantCombinator
+from soupsavvy import (
+    AttributeSelector,
+    DescendantCombinator,
+    PatternSelector,
+    TagSelector,
+)
 
 # define your complex selector once
 selector = DescendantCombinator(
-    ElementSelector(
+    TagSelector(
         "div",
         attributes=[
             AttributeSelector(name="class", value="menu"),
@@ -98,7 +103,7 @@ selector = DescendantCombinator(
         ],
     ),
     PatternSelector(
-        tag=ElementSelector(
+        tag=TagSelector(
             "a",
             attributes=[
                 AttributeSelector(name="class", value="option"),
@@ -110,7 +115,7 @@ selector = DescendantCombinator(
     ),
 )
 # reuse it in any place to search for tag in any markup, if not found, strict mode raises exception
-a = selector.find(markup, strict=True)
+element = selector.find(markup, strict=True)
 ```
 
 This streamlined soupsavvy approach and encapsulating complex selector(s) into single objects.

@@ -1,9 +1,16 @@
 from .tags import (
+    Anchor,
+    AndSelector,
     AnyTagSelector,
     AttributeSelector,
+    ChildCombinator,
     DescendantCombinator,
+    HasSelector,
+    NextSiblingCombinator,
+    NotSelector,
     PatternSelector,
     SelectorList,
+    SubsequentSiblingCombinator,
     TagSelector,
 )
 
@@ -17,4 +24,11 @@ __all__ = [
     "PatternSelector",
     "SelectorList",
     "DescendantCombinator",
+    "AndSelector",
+    "NotSelector",
+    "ChildCombinator",
+    "NextSiblingCombinator",
+    "SubsequentSiblingCombinator",
+    "HasSelector",
+    "Anchor",
 ]
