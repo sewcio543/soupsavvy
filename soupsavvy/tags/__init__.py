@@ -11,12 +11,14 @@ from .components import AnyTagSelector
 from .components import AnyTagSelector as AnyTag
 from .components import AttributeSelector
 from .components import AttributeSelector as AttributeTag
+from .components import HasSelector
 from .components import NotSelector
 from .components import NotSelector as NotElementTag
 from .components import PatternSelector
 from .components import PatternSelector as PatternElementTag
 from .components import TagSelector
 from .components import TagSelector as ElementTag
+from .relative import Anchor
 
 __all__ = [
     "AnyTagSelector",
@@ -38,4 +40,6 @@ __all__ = [
     "AttributeTag",
     "ElementTag",
     "PatternElementTag",
+    "HasSelector",
+    "Anchor",
 ]
