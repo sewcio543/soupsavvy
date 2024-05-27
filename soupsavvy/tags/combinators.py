@@ -85,17 +85,19 @@ class BaseCombinator(SelectableSoup, IterableSoup):
     @abstractmethod
     def _selector(self) -> Type[RelativeSelector]:
         """
-        Returns type of the relative selector that is used to perform a single step search
-        in the combinator selector.
+        Returns type of the relative selector that is used
+        to perform a single step search in the combinator selector.
 
         Returns
         -------
         Type[RelativeSelector]
             Type of the relative selector that is used in the combinator.
-            Selector instance of this type is initialized with each step in the combinator.
+            Selector instance of this type is initialized
+            with each step in the combinator.
         """
         raise NotImplementedError(
-            f"{self.__class__.__name__} is a base class and does not implement '_selector' property."
+            f"{self.__class__.__name__} is a base class "
+            "and does not implement '_selector' property."
         )
 
     def find_all(
@@ -104,7 +106,7 @@ class BaseCombinator(SelectableSoup, IterableSoup):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Tag]:
-        results = TagResultSet()
+        elements: list[Tag] = []
 
         for i, step in enumerate(self.steps):
             if i == 0:
@@ -123,9 +125,11 @@ class BaseCombinator(SelectableSoup, IterableSoup):
                     (selector.find_all(element) for element in elements),
                 )
             )
-            elements = results.get_unique()
 
-        return elements[:limit]
+            n = limit if i + 1 == len(self.steps) else None
+            elements = results.fetch(n)
+
+        return elements
 
 
 @dataclass(init=False)
@@ -441,4 +445,4 @@ class SelectorList(SelectableSoup, IterableSoup):
             if limit and len(results) >= limit:
                 break
 
-        return results.tags[:limit]
+        return results.fetch(limit)

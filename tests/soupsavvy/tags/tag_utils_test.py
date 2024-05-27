@@ -1,11 +1,9 @@
 """Module for testing utilities for tag selectors."""
 
-from unittest.mock import patch
-
 import pytest
 from bs4 import Tag
 
-from soupsavvy.tags.tag_utils import TagIterator, UniqueTag
+from soupsavvy.tags.tag_utils import TagIterator, TagResultSet, UniqueTag
 
 from .conftest import find_body_element, strip, to_bs
 
@@ -201,3 +199,181 @@ class TestTagIterator:
         tag = TagWrapper(mock_tag)
         tag_iterator = TagIterator(tag)  # type: ignore
         assert list(tag_iterator) == []
+
+
+class TestTagResultSet:
+    """Class with unit tests for TagResultSet class."""
+
+    @pytest.fixture(scope="class")
+    def mock_tags(self) -> list[Tag]:
+        text = """
+            <a class="menu"></a>
+            <a class="menu"></a>
+            <a class="menu1"></a>
+            <a class="menu2"></a>
+        """
+        return to_bs(text).body.find_all()  # type: ignore
+
+    def test_result_set_can_be_initialized_with_empty_collection(self):
+        """
+        Tests that TagResultSet can be initialized with empty collection.
+        When initialized with no arguments, result set is empty
+        and fetch method returns an empty list.
+        """
+        results = TagResultSet().fetch()
+        assert results == []
+
+    def test_fetch_returns_all_tags_if_they_are_unique(self, mock_tags: list[Tag]):
+        """
+        Tests that fetch method returns all tags if they are unique.
+        When all tags have unique id, there is no repetition and all tags are returned.
+        """
+        results_set = TagResultSet(mock_tags)
+        results = results_set.fetch()
+
+        assert list(map(str, results)) == [
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu1"></a>"""),
+            strip("""<a class="menu2"></a>"""),
+        ]
+
+    def test_fetch_returns_n_tags_when_limit_is_set(self, mock_tags: list[Tag]):
+        """Tests that fetch method returns n first unique tags when limit is set."""
+        results_set = TagResultSet(mock_tags)
+        results = results_set.fetch(3)
+
+        assert list(map(str, results)) == [
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu1"></a>"""),
+        ]
+
+    def test_fetch_returns_all_unique_tags_when_duplicated(self, mock_tags: list[Tag]):
+        """
+        Tests that fetch method returns all unique tags when there are duplicates.
+        Initial collection has duplicated tags, but fetch should filter them out
+        and return only unique tags in order of appearance.
+        """
+        results_set = TagResultSet(mock_tags + mock_tags)
+        results = results_set.fetch()
+
+        assert list(map(str, results)) == [
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu1"></a>"""),
+            strip("""<a class="menu2"></a>"""),
+        ]
+
+    def test_updates_return_new_result_set_with_updated_collection(
+        self, mock_tags: list[Tag]
+    ):
+        """
+        Tests that | operator updates collection and returns new result set.
+        New collection is a union of two collections with first as a base,
+        which means that all new tags should be appended at the end in order
+        of their appearance in the second collection.
+
+        To test this assumption, second collection is reversed to have
+        different order of common tags then the base collection.
+        """
+        base = TagResultSet(mock_tags[:2])
+        right = TagResultSet(list(reversed(mock_tags[1:3])))
+
+        new = base | right
+        results = new.fetch()
+
+        assert list(map(str, results)) == [
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu1"></a>"""),
+        ]
+
+    def test_updates_when_one_result_set_is_empty(self, mock_tags: list[Tag]):
+        """
+        Tests that | operator updates collection and returns new result set
+        when one of the collections is empty, whether base or right.
+        """
+        base = TagResultSet()
+        right = TagResultSet(mock_tags)
+
+        expected = [
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu1"></a>"""),
+            strip("""<a class="menu2"></a>"""),
+        ]
+
+        new = base | right
+        results = new.fetch()
+        assert list(map(str, results)) == expected
+
+        new = right | base
+        results = new.fetch()
+        assert list(map(str, results)) == expected
+
+    def test_updates_when_collections_are_the_same_return_base_collection(
+        self, mock_tags: list[Tag]
+    ):
+        """
+        Tests that | operator updates collection and returns base collection
+        when both collections are the same.
+
+        In this case testing on reversed collection to have different order of tags
+        and asserting that result set is in the same order as the base collection.
+        """
+        base = TagResultSet(mock_tags)
+        right = TagResultSet(list(reversed(mock_tags)))
+
+        new = base | right
+        results = new.fetch()
+
+        expected = [
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu1"></a>"""),
+            strip("""<a class="menu2"></a>"""),
+        ]
+        assert list(map(str, results)) == expected
+
+    def test_and_return_new_result_set_with_intersection_of_collections(
+        self, mock_tags: list[Tag]
+    ):
+        """
+        Tests that & operator returns new result set with intersection of collections.
+        New collection is an intersection of two collections with first as a base,
+        which preserves the order of first collection in the result.
+
+        To test this assumption, second collection is reversed to have
+        different order of common tags then the base collection.
+        """
+        base = TagResultSet(mock_tags[:3])
+        right = TagResultSet(list(reversed(mock_tags[1:])))
+
+        new = base & right
+        results = new.fetch()
+
+        assert list(map(str, results)) == [
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu1"></a>"""),
+        ]
+
+    def test_and_returns_empty_result_set_when_no_intersection(
+        self, mock_tags: list[Tag]
+    ):
+        """
+        Tests that & operator returns empty result set when there is no intersection.
+        In that case, result set should be empty.
+        """
+        base = TagResultSet(mock_tags[:2])
+        right = TagResultSet(mock_tags[2:])
+
+        new = base & right
+        results = new.fetch()
+        assert results == []
+
+    def test_len_returns_number_of_tags_in_collection(self, mock_tags: list[Tag]):
+        """Tests that len method returns number of tags in collection."""
+        assert len(TagResultSet(mock_tags)) == 4
+        assert len(TagResultSet(mock_tags[:2])) == 2
+        assert len(TagResultSet()) == 0

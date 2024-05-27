@@ -30,6 +30,15 @@ class RelativeSelector(SelectableSoup):
 
     Uses RelativeChild selector to find any div tag that is a direct child of the
     tag that is being searched (passed as an argument).
+
+    In css such selectors can be used in :has pseudo-class, where selector
+    is anchored to the element:
+
+    Example
+    -------
+    >>> div:has(> a, + p)
+
+    Selects any div tag that has a direct child 'a' tag or a next sibling 'p' tag.
     """
 
     def __init__(self, selector: SelectableSoup) -> None:
@@ -45,6 +54,14 @@ class RelativeSelector(SelectableSoup):
 
 
 class BaseRelativeSibling(RelativeSelector):
+    """
+    Base class with implementation for relative sibling selectors,
+    searches for next sibling(s) of the anchor tag.
+    Child class needs to define '_limit' class attribute to specify
+    how many next siblings to search for.
+    """
+
+    # limit of next siblings to check
     _limit: Optional[int] = None
 
     def find_all(
@@ -54,15 +71,60 @@ class BaseRelativeSibling(RelativeSelector):
         limit: Optional[int] = None,
     ) -> list[Tag]:
         search = tag.parent or tag
+        # find al sibling tags that match the selector
         matching = TagResultSet(
             self.selector.find_all(search, recursive=False),
         )
+        # find n next sibling tags
         next_ = TagResultSet(tag.find_next_siblings(limit=self._limit))  # type: ignore
-        matches = matching.intersection(next_)
-        return matches.tags[:limit]
+        # find intersection between two sets
+        matches = matching & next_
+        return matches.fetch(limit)
 
 
 class RelativeChild(RelativeSelector):
+    """
+    RelativeChild selector is used to find tags matching selector that are
+    direct children of the tag that is being searched.
+
+    For RelativeChild selector, with TagSelector targeting 'p' tag.
+
+    Example
+    -------
+    >>> RelativeChild(TagSelector("p"))
+
+    when 'div' element is passed into find methods:
+
+    Example
+    -------
+    >>> <div><p></p><a></a></div> ✔️
+    >>> <div><a><p></p></a></div> ❌
+    >>> <div><a></a></div> ❌
+
+    Returns element only if it is a direct child of the anchor element
+    and matches the selector.
+
+    RelativeChild selector is equivalent to using '>' combinator in css selectors:
+
+    Example
+    -------
+    >>> div > p { color: red; }
+
+    It can be created with Anchor instance as well with use of '>' operator:
+
+    Example
+    -------
+    >>> Anchor > TagSelector("p")
+
+    Which is equivalent to the first example and returns RelativeChild selector.
+
+    Notes
+    -------
+    Behavior of RelativeChild selector is equivalent to using find methods of
+    selector with recursive=False parameter and is implemented to support
+    'has' and ChildCombinator selector.
+    """
+
     def find_all(
         self,
         tag: Tag,
@@ -73,6 +135,50 @@ class RelativeChild(RelativeSelector):
 
 
 class RelativeDescendant(RelativeSelector):
+    """
+    RelativeDescendant selector is used to find tags matching selector that are
+    descendants of the tag that is being searched.
+
+    For RelativeDescendant selector, with TagSelector targeting 'p' tag,
+
+    Example
+    -------
+    >>> RelativeDescendant(TagSelector("p"))
+
+    when 'div' element is passed into find methods:
+
+    Example
+    -------
+    >>> <div><p></p><a></a></div> ✔️
+    >>> <div><a><p></p></a></div> ✔️
+    >>> <div><a></a></div> ❌
+    >>> <div></div><p></p> ❌
+
+    Returns element only if it is a descendant of the anchor element
+    and matches the selector.
+
+    RelativeDescendant selector is equivalent to using whitespace " " combinator
+    in css selectors.
+
+    Example
+    -------
+    >>> div p { color: red; }
+
+    It can be created with Anchor instance as well with use of '>>' operator:
+
+    Example
+    -------
+    >>> Anchor >> TagSelector("p")
+
+    Which is equivalent to the first example and returns RelativeDescendant selector.
+
+    Notes
+    -------
+    Behavior of RelativeDescendant selector is equivalent to using find methods of
+    selector with default recursive=True parameter and is implemented to support
+    'has' and DescendantCombinator selector.
+    """
+
     def find_all(
         self,
         tag: Tag,
@@ -83,10 +189,85 @@ class RelativeDescendant(RelativeSelector):
 
 
 class RelativeNextSibling(BaseRelativeSibling):
+    """
+    RelativeNextSibling selector is used to find tags matching selector that are
+    next siblings of the tag that is being searched.
+
+    For RelativeNextSibling selector, with TagSelector targeting 'p' tag,
+
+    Example
+    -------
+    >>> RelativeNextSibling(TagSelector("p"))
+
+    when 'div' element is passed into find methods:
+
+    Example
+    -------
+    >>> <div></div><p></p> ✔️
+    >>> <div></div><a></a><p></p>  ❌
+    >>> <p></p><div></div> ❌
+
+    Returns element only if it is a next sibling of the anchor element
+    and matches the selector.
+
+    RelativeNextSibling selector is equivalent to using + combinator in css selectors.
+
+    Example
+    -------
+    >>> div + p { color: red; }
+
+    It can be created with Anchor instance as well with use of '+' operator:
+
+    Example
+    -------
+    >>> Anchor + TagSelector("p")
+
+    Which is equivalent to the first example and returns RelativeNextSibling selector.
+    """
+
     _limit = 1
 
 
 class RelativeSubsequentSibling(BaseRelativeSibling):
+    """
+    RelativeSubsequentSibling selector is used to find tags matching selector that are
+    subsequent siblings of the tag that is being searched.
+
+    For RelativeSubsequentSibling selector, with TagSelector targeting 'p' tag,
+
+    Example
+    -------
+    >>> RelativeSubsequentSibling(TagSelector("p"))
+
+    when 'div' element is passed into find methods:
+
+    Example
+    -------
+    >>> <div></div><p></p> ✔️
+    >>> <div></div><a></a><p></p> ✔️
+    >>> <p></p><div></div> ❌
+    >>> <div></div><span><p></p></span> ❌
+
+    Returns element only if it is a subsequent sibling of the anchor element
+    and matches the selector.
+
+    RelativeSubsequentSibling selector is equivalent
+    to using ~ combinator in css selectors.
+
+    Example
+    -------
+    >>> div ~ p { color: red; }
+
+    It can be created with Anchor instance as well with use of '*' operator:
+
+    Example
+    -------
+    >>> Anchor * TagSelector("p")
+
+    Which is equivalent to the first example
+    and returns RelativeSubsequentSibling selector.
+    """
+
     _limit = None
 
 
