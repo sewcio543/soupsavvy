@@ -35,11 +35,11 @@ jobs:
 
       - name: Update index.rst
         run: |
-          python update_index.py
+          python docs/source/update_index.py
 
           if [ "$(git status --porcelain)" ]; then
             git add docs/source/index.rst
-            git commit -m "Update index.rst"
+            git commit -m "Update index.rst [skip ci]"
             git push
           else
             echo "No update needed for docs/source/index.rst"
