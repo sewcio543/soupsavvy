@@ -4,7 +4,7 @@ import pytest
 
 from soupsavvy.tags.combinators import ChildCombinator
 from soupsavvy.tags.components import AttributeSelector, TagSelector
-from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
+from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
 from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
@@ -15,13 +15,13 @@ class TestChildCombinator:
 
     def test_raises_exception_when_invalid_input(self):
         """
-        Tests if ChildCombinator raises NotSelectableSoupException when
+        Tests if ChildCombinator raises NotSoupSelectorException when
         invalid input is provided.
         """
-        with pytest.raises(NotSelectableSoupException):
+        with pytest.raises(NotSoupSelectorException):
             ChildCombinator(TagSelector("a"), "p")  # type: ignore
 
-        with pytest.raises(NotSelectableSoupException):
+        with pytest.raises(NotSoupSelectorException):
             ChildCombinator("a", TagSelector("p"))  # type: ignore
 
     def test_find_returns_first_tag_matching_all_selectors(self):

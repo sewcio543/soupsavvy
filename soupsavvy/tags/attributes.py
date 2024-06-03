@@ -16,12 +16,12 @@ from dataclasses import dataclass
 from typing import Any, Optional
 
 import soupsavvy.tags.namespace as ns
-from soupsavvy.tags.base import SelectableCSS, SingleSelectableSoup
+from soupsavvy.tags.base import SelectableCSS, SingleSoupSelector
 from soupsavvy.tags.namespace import PatternType
 
 
 @dataclass
-class AttributeSelector(SingleSelectableSoup, SelectableCSS):
+class AttributeSelector(SingleSoupSelector, SelectableCSS):
     """
     Class representing attribute of the HTML element.
     If used directly, provides elements based only on a single attribute value.
@@ -51,7 +51,7 @@ class AttributeSelector(SingleSelectableSoup, SelectableCSS):
         If True, attribute value needs to be contained in the name to be matched.
     pattern : Pattern | str, optional
         Regular Expression pattern to match the attribute value.
-        Applicable only for SelectableSoup find operations, skipped in selector.
+        Applicable only for SoupSelector find operations, skipped in selector.
         Value always takes precedence over pattern, if both are provided.
 
     Implements SelectableCSS interface for CSS selector generation.
@@ -88,7 +88,7 @@ class AttributeSelector(SingleSelectableSoup, SelectableCSS):
     pattern: Optional[PatternType] = None
 
     def __post_init__(self) -> None:
-        """Sets pattern attribute used in SelectableSoup find operations."""
+        """Sets pattern attribute used in SoupSelector find operations."""
         self._pattern = self._parse_pattern()
 
     def _parse_pattern(self) -> PatternType:
@@ -154,7 +154,7 @@ class _SpecificAttributeSelector(AttributeSelector):
             If True, attribute value needs to be contained in the name to be matched.
         pattern : Pattern | str, optional
             Regular Expression pattern to match the attribute value.
-            Applicable only for SelectableSoup find operations, skipped in selector.
+            Applicable only for SoupSelector find operations, skipped in selector.
         """
         super().__init__(name=self._NAME, value=value, re=re, pattern=pattern)
 

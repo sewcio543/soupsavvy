@@ -17,16 +17,16 @@ These utils do not brings extra functionality into the package, but they can be
 used for convenience and readability in some cases.
 """
 
-from soupsavvy.tags.base import SelectableSoup
+from soupsavvy.tags.base import SoupSelector
 from soupsavvy.tags.combinators import SelectorList
 from soupsavvy.tags.components import AndSelector, HasSelector, NotSelector
 
 
 def is_(
-    selector1: SelectableSoup,
-    selector2: SelectableSoup,
+    selector1: SoupSelector,
+    selector2: SoupSelector,
     /,
-    *selectors: SelectableSoup,
+    *selectors: SoupSelector,
 ) -> SelectorList:
     """
     Returns an union of multiple soup selectors.
@@ -34,8 +34,8 @@ def is_(
 
     Parameters
     ----------
-    selectors: SelectableSoup
-        SelectableSoup objects to match accepted as positional arguments.
+    selectors: SoupSelector
+        SoupSelector objects to match accepted as positional arguments.
         At least two objects are required per SelectorList class requirements.
 
     Example
@@ -66,15 +66,15 @@ def is_(
 where = is_
 
 
-def not_(selector: SelectableSoup, /, *selectors: SelectableSoup) -> NotSelector:
+def not_(selector: SoupSelector, /, *selectors: SoupSelector) -> NotSelector:
     """
     Returns an negation of multiple soup selectors.
     NotSelector represents elements that do not match a list of selectors.
 
     Parameters
     ----------
-    selectors: SelectableSoup
-        SelectableSoup objects to negate match accepted as positional arguments.
+    selectors: SoupSelector
+        SoupSelector objects to negate match accepted as positional arguments.
 
     Example
     -------
@@ -96,10 +96,10 @@ def not_(selector: SelectableSoup, /, *selectors: SelectableSoup) -> NotSelector
 
 
 def and_(
-    selector1: SelectableSoup,
-    selector2: SelectableSoup,
+    selector1: SoupSelector,
+    selector2: SoupSelector,
     /,
-    *selectors: SelectableSoup,
+    *selectors: SoupSelector,
 ) -> AndSelector:
     """
     Returns an intersection of multiple soup selectors.
@@ -107,8 +107,8 @@ def and_(
 
     Parameters
     ----------
-    selectors: SelectableSoup
-        SelectableSoup objects to match accepted as positional arguments.
+    selectors: SoupSelector
+        SoupSelector objects to match accepted as positional arguments.
         At least two objects are required per AndSelector class requirements.
 
     Example
@@ -125,9 +125,9 @@ def and_(
 
 
 def has(
-    selector: SelectableSoup,
+    selector: SoupSelector,
     /,
-    *selectors: SelectableSoup,
+    *selectors: SoupSelector,
 ) -> HasSelector:
     """
     Returns HasSelector whose behavior imitate css :has() pseudo-class,
@@ -136,8 +136,8 @@ def has(
 
     Parameters
     ----------
-    selectors: SelectableSoup
-        SelectableSoup objects to match accepted as positional arguments.
+    selectors: SoupSelector
+        SoupSelector objects to match accepted as positional arguments.
         At least two objects are required per AndSelector class requirements.
 
     Example

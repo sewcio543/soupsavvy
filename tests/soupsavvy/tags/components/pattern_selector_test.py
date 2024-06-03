@@ -342,7 +342,7 @@ class LegalWildcardTag(TagSelector):
     This enables to create hypothetical case when find method returns NavigableString
     instead of Tag (only string parameter was passed into bs4.find method).
     This should raise NavigableStringException that is an invalid output of
-    SelectableSoup.find method.
+    SoupSelector.find method.
     """
 
     def __post_init__(self):
@@ -354,7 +354,7 @@ class LegalWildcardTag(TagSelector):
 def test_exception_is_raised_when_navigable_string_is_a_result():
     """
     Tests if NavigableStringException is raised when bs4.find returns NavigableString.
-    Child classes of SelectableSoup should always always prevent that,
+    Child classes of SoupSelector should always always prevent that,
     thus this is a hypothetical case that is covered anyway to ensure that it does
     not break code downstream.
     """
