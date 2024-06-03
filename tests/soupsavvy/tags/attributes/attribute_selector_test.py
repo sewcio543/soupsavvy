@@ -4,10 +4,9 @@ import re
 
 import pytest
 
-from soupsavvy.tags.components import AttributeSelector
+from soupsavvy.tags.attributes import AttributeSelector, ClassSelector, IdSelector
 from soupsavvy.tags.exceptions import TagNotFoundException
-
-from .conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
 @pytest.mark.soup
