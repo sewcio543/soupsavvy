@@ -5,8 +5,13 @@ import pytest
 from soupsavvy.tags.components import HasSelector
 from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
 from soupsavvy.tags.relative import RelativeChild
-
-from .conftest import MockDivSelector, MockLinkSelector, find_body_element, strip, to_bs
+from tests.soupsavvy.tags.conftest import (
+    MockDivSelector,
+    MockLinkSelector,
+    find_body_element,
+    strip,
+    to_bs,
+)
 
 
 @pytest.mark.soup

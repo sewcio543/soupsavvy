@@ -9,7 +9,6 @@ but with more flexibility and power to navigate the markup.
 
 Classes
 -------
-AttributeSelector - Attribute Selector
 TagSelector - combines type and attribute selectors
 PatternSelector - matches elements based on text content and selector
 AnyTagSelector - universal selector (*)
@@ -27,6 +26,7 @@ from typing import Any, Iterable, Optional, Pattern
 from bs4 import Tag
 
 import soupsavvy.tags.namespace as ns
+from soupsavvy.tags.attributes import AttributeSelector
 from soupsavvy.tags.base import (
     IterableSoup,
     SelectableCSS,
@@ -34,92 +34,7 @@ from soupsavvy.tags.base import (
     SingleSelectableSoup,
 )
 from soupsavvy.tags.exceptions import WildcardTagException
-from soupsavvy.tags.relative import RelativeSelector
 from soupsavvy.tags.tag_utils import TagIterator, UniqueTag
-
-
-@dataclass
-class AttributeSelector(SingleSelectableSoup, SelectableCSS):
-    """
-    Class representing attribute of the HTML element.
-    If used directly, provides elements based only on a single attribute value.
-
-    Example
-    -------
-    >>> AttributeSelector(name="class", value="widget")
-
-    matches all elements that have 'class' attribute with value "widget".
-
-    Example
-    -------
-    >>> <div class="widget">Hello World</div> ✔️
-    >>> <div class="menu">Hello World</div> ❌
-
-    Parameters
-    ----------
-    name : str
-        HTML element attribute name ex. "class", "href"
-    value : str, optional
-        Value of the attribute, like a class name.
-        By default None, if not provided pattern will be used.
-        If both pattern and value are None, pattern falls back to default,
-        that matches any sequence of characters.
-    re : bool, optional
-        Whether to use a pattern to match the attribute value, by default False.
-        If True, attribute value needs to be contained in the name to be matched.
-    pattern : Pattern | str, optional
-        Regular Expression pattern to match the attribute value.
-        Applicable only for SelectableSoup find operations, skipped in selector.
-
-    Example
-    -------
-    >>> attribute = AttributeSelector(name="class", value="widget")
-    >>> attribute.selector
-    [class=widget]
-
-    >>> attribute = AttributeSelector(name="class", value="widget", re=True)
-    >>> attribute.selector
-    [class*=widget]
-    """
-
-    name: str
-    value: str | None = None
-    re: bool = False
-    pattern: Pattern[str] | str | None = None
-
-    def __post_init__(self) -> None:
-        """Sets pattern attribute used in SelectableSoup find operations."""
-        self._pattern = self._parse_pattern()
-
-    def _parse_pattern(self) -> Pattern[str] | str:
-        """Parses pattern used in find methods based on provided init parameters."""
-        # if any pattern was provided, it takes precedence before value and re
-        if self.pattern is not None:
-            return re.compile(self.pattern)
-        # if pattern and value was not provided, fall back to default pattern
-        if self.value is None:
-            return re.compile(ns.DEFAULT_PATTERN)
-        # if only value was provided and re = True, create pattern from value
-        if self.re:
-            return re.compile(self.value)
-        # if only value was provided and re = False, use str value as pattern
-        return self.value
-
-    @property
-    def selector(self) -> str:
-        # undefined value - bs Tag matches all elements with attribute if css is
-        # provided without a value in ex. format '[href]'
-        if self.value is None:
-            return f"[{self.name}]"
-
-        operator = "*=" if self.re else "="
-        return f"[{self.name}{operator}'{self.value}']"
-
-    @property
-    def _find_params(self) -> dict[str, Any]:
-        # passing filters in attrs parameter as dict instead of kwargs
-        # to avoid overriding other find method parameters like ex. 'name'
-        return {ns.ATTRS: {self.name: self._pattern}}
 
 
 @dataclass

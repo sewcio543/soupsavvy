@@ -6,8 +6,7 @@ from bs4 import Tag
 from soupsavvy.tags.components import AnyTagSelector
 from soupsavvy.tags.exceptions import TagNotFoundException
 from soupsavvy.tags.namespace import CSS_SELECTOR_WILDCARD
-
-from .conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
 def find_tag(bs: Tag, name: str = "body") -> Tag:
