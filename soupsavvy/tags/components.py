@@ -28,17 +28,17 @@ from bs4 import Tag
 import soupsavvy.tags.namespace as ns
 from soupsavvy.tags.attributes import AttributeSelector
 from soupsavvy.tags.base import (
-    IterableSoup,
+    MultipleSoupSelector,
     SelectableCSS,
-    SelectableSoup,
-    SingleSelectableSoup,
+    SingleSoupSelector,
+    SoupSelector,
 )
 from soupsavvy.tags.exceptions import WildcardTagException
 from soupsavvy.tags.tag_utils import TagIterator, UniqueTag
 
 
 @dataclass
-class TagSelector(SingleSelectableSoup, SelectableCSS):
+class TagSelector(SingleSoupSelector, SelectableCSS):
     """
     Class representing HTML element.
     Provides elements based on element tag and all defined attributes.
@@ -113,7 +113,7 @@ class TagSelector(SingleSelectableSoup, SelectableCSS):
 
 
 @dataclass
-class PatternSelector(SingleSelectableSoup):
+class PatternSelector(SingleSoupSelector):
     """
     Class representing HTML element with specific string pattern for text.
     Provides elements matching TagSelector with their text matching a pattern.
@@ -135,8 +135,8 @@ class PatternSelector(SingleSelectableSoup):
 
     Parameters
     ----------
-    tag: SingleSelectableSoup
-        An SingleSelectableSoup instance representing desired HTML element.
+    tag: SingleSoupSelector
+        An SingleSoupSelector instance representing desired HTML element.
         AnyTagSelector is not a valid parameter and raises an exception.
     pattern: str | Pattern
         A pattern to match text of the element. Can be a string for exact match
@@ -161,7 +161,7 @@ class PatternSelector(SingleSelectableSoup):
         When empty TagSelector was passed as a tag parameter.
     """
 
-    tag: SingleSelectableSoup
+    tag: SingleSoupSelector
     pattern: str | Pattern[str]
     re: bool = False
 
@@ -180,7 +180,7 @@ class PatternSelector(SingleSelectableSoup):
         return {ns.STRING: pattern} | self.tag._find_params
 
 
-class AnyTagSelector(SingleSelectableSoup, SelectableCSS):
+class AnyTagSelector(SingleSoupSelector, SelectableCSS):
     """
     Class representing a wildcard tag that matches any tag in the markup.
     Matches always the first tag in the markup.
@@ -211,7 +211,7 @@ class AnyTagSelector(SingleSelectableSoup, SelectableCSS):
 
 
 @dataclass(init=False)
-class NotSelector(SelectableSoup, IterableSoup):
+class NotSelector(SoupSelector, MultipleSoupSelector):
     """
     Class representing selector of elements that do not match provided selectors.
 
@@ -230,7 +230,7 @@ class NotSelector(SelectableSoup, IterableSoup):
     all selectors must match for element to be excluded from the result.
 
     Object can be created as well by using bitwise NOT operator '~'
-    on a SelectableSoup object.
+    on a SoupSelector object.
 
     Example
     -------
@@ -261,23 +261,23 @@ class NotSelector(SelectableSoup, IterableSoup):
 
     def __init__(
         self,
-        tag: SelectableSoup,
+        tag: SoupSelector,
         /,
-        *tags: SelectableSoup,
+        *tags: SoupSelector,
     ) -> None:
         """
         Initializes NotSelectors object with provided positional arguments as tags.
-        At least one SelectableSoup object is required to create NotSelector.
+        At least one SoupSelector object is required to create NotSelector.
 
         Parameters
         ----------
-        tags: SelectableSoup
-            SelectableSoup objects to negate match accepted as positional arguments.
+        tags: SoupSelector
+            SoupSelector objects to negate match accepted as positional arguments.
 
         Raises
         ------
-        NotSelectableSoupException
-            If any of provided parameters is not an instance of SelectableSoup.
+        NotSoupSelectorException
+            If any of provided parameters is not an instance of SoupSelector.
         """
         self._multiple = bool(tags)
         super().__init__([tag, *tags])
@@ -302,7 +302,7 @@ class NotSelector(SelectableSoup, IterableSoup):
             if UniqueTag(element) not in matching
         ][:limit]
 
-    def __invert__(self) -> SelectableSoup:
+    def __invert__(self) -> SoupSelector:
         """
         Overrides __invert__ method to cancel out negation by returning
         the tag in case of single selector, or SoupUnionTag in case of multiple.
@@ -316,7 +316,7 @@ class NotSelector(SelectableSoup, IterableSoup):
 
 
 @dataclass(init=False)
-class AndSelector(SelectableSoup, IterableSoup):
+class AndSelector(SoupSelector, MultipleSoupSelector):
     """
     Class representing an intersection of multiple soup selectors.
     Provides elements matching all of the listed selectors.
@@ -340,7 +340,7 @@ class AndSelector(SelectableSoup, IterableSoup):
     all selectors must match for element to be included in the result.
 
     Object can be created as well by using bitwise AND operator '&'
-    on two SelectableSoup objects.
+    on two SoupSelector objects.
 
     Example
     -------
@@ -364,24 +364,24 @@ class AndSelector(SelectableSoup, IterableSoup):
 
     def __init__(
         self,
-        tag1: SelectableSoup,
-        tag2: SelectableSoup,
+        tag1: SoupSelector,
+        tag2: SoupSelector,
         /,
-        *tags: SelectableSoup,
+        *tags: SoupSelector,
     ) -> None:
         """
         Initializes AndTagSelector object with provided positional arguments as tags.
-        At least two SelectableSoup objects are required to create AndSelector.
+        At least two SoupSelector objects are required to create AndSelector.
 
         Parameters
         ----------
-        tags: SelectableSoup
-            SelectableSoup objects to match accepted as positional arguments.
+        tags: SoupSelector
+            SoupSelector objects to match accepted as positional arguments.
 
         Raises
         ------
-        NotSelectableSoupException
-            If any of provided parameters is not an instance of SelectableSoup.
+        NotSoupSelectorException
+            If any of provided parameters is not an instance of SoupSelector.
         """
         super().__init__([tag1, tag2, *tags])
 
@@ -409,7 +409,7 @@ class AndSelector(SelectableSoup, IterableSoup):
 
 
 @dataclass(init=False)
-class HasSelector(SelectableSoup, IterableSoup):
+class HasSelector(SoupSelector, MultipleSoupSelector):
     """
     Class representing elements selected with respect to matching reference elements.
     Element is selected if any of the provided selectors matched reference element.
@@ -489,24 +489,24 @@ class HasSelector(SelectableSoup, IterableSoup):
 
     def __init__(
         self,
-        selector: SelectableSoup,
+        selector: SoupSelector,
         /,
-        *selectors: SelectableSoup,
+        *selectors: SoupSelector,
     ) -> None:
         """
         Initializes AndTagSelector object with provided positional arguments as tags.
-        At least two SelectableSoup objects are required to create HasSelector.
+        At least two SoupSelector objects are required to create HasSelector.
 
         Parameters
         ----------
-        tags: SelectableSoup
-            SelectableSoup objects to match accepted as positional arguments.
+        tags: SoupSelector
+            SoupSelector objects to match accepted as positional arguments.
             At least one selector is required to create HasSelector.
 
         Raises
         ------
-        NotSelectableSoupException
-            If any of provided parameters is not an instance of SelectableSoup.
+        NotSoupSelectorException
+            If any of provided parameters is not an instance of SoupSelector.
         """
         super().__init__([selector, *selectors])
 

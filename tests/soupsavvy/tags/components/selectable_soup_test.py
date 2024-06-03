@@ -1,5 +1,5 @@
 """
-Testing module for testing basic functionality of SelectableSoup interface.
+Testing module for testing basic functionality of SoupSelector interface.
 Tests cover implementation of dunder method that are shared among all soupsavvy
 selectors. There are syntactical sugar methods for creating complex selectors.
 """
@@ -9,7 +9,7 @@ from typing import Any, Callable, Type
 
 import pytest
 
-from soupsavvy.tags.base import IterableSoup
+from soupsavvy.tags.base import MultipleSoupSelector
 from soupsavvy.tags.combinators import (
     ChildCombinator,
     DescendantCombinator,
@@ -18,7 +18,7 @@ from soupsavvy.tags.combinators import (
     SubsequentSiblingCombinator,
 )
 from soupsavvy.tags.components import AndSelector, NotSelector
-from soupsavvy.tags.exceptions import NotSelectableSoupException
+from soupsavvy.tags.exceptions import NotSoupSelectorException
 from tests.soupsavvy.tags.conftest import MockSelector
 
 
@@ -26,10 +26,10 @@ from tests.soupsavvy.tags.conftest import MockSelector
 class BaseOperatorTest:
     """
     Class with base test cases covering functionality of how standard operators
-    should work with SelectableSoup objects.
+    should work with SoupSelector objects.
     """
 
-    TYPE: Type[IterableSoup]
+    TYPE: Type[MultipleSoupSelector]
     OPERATOR: Callable[[Any, Any], Any]
 
     def test_operator_returns_expected_type_with_steps(self):
@@ -64,20 +64,20 @@ class BaseOperatorTest:
 
         assert result.steps == [selector1, selector2, selector3]
 
-    def test_operator_raises_exception_if_not_selectable_soup(self):
+    def test_operator_raises_exception_if_not_soup_selector(self):
         """
-        Tests if operator raises NotSelectableSoupException if right
-        operand is not SelectableSoup.
+        Tests if operator raises NotSoupSelectorException if right
+        operand is not SoupSelector.
         """
         selector = MockSelector()
 
-        with pytest.raises(NotSelectableSoupException):
+        with pytest.raises(NotSoupSelectorException):
             self.OPERATOR(selector, "string")
 
 
 class TestMULOperator(BaseOperatorTest):
     """
-    Class for testing MUL operator for SelectableSoup interface.
+    Class for testing MUL operator for SoupSelector interface.
     __mul__ operator applied correctly creates DescendantCombinator instance.
 
     Example
@@ -91,7 +91,7 @@ class TestMULOperator(BaseOperatorTest):
 
 class TestADDOperator(BaseOperatorTest):
     """
-    Class for testing ADD operator for SelectableSoup interface.
+    Class for testing ADD operator for SoupSelector interface.
     __add__ operator applied correctly creates NextSiblingCombinator instance.
 
     Example
@@ -105,7 +105,7 @@ class TestADDOperator(BaseOperatorTest):
 
 class TestANDOperator(BaseOperatorTest):
     """
-    Class for testing bitwise AND operator for SelectableSoup interface.
+    Class for testing bitwise AND operator for SoupSelector interface.
     __and__ operator applied correctly creates AndSelector instance.
 
     Example
@@ -119,7 +119,7 @@ class TestANDOperator(BaseOperatorTest):
 
 class TestOROperator(BaseOperatorTest):
     """
-    Class for testing bitwise OR operator for SelectableSoup interface.
+    Class for testing bitwise OR operator for SoupSelector interface.
     __or__ operator applied correctly creates SelectorList instance.
 
     Example
@@ -133,7 +133,7 @@ class TestOROperator(BaseOperatorTest):
 
 class TestGTOperator(BaseOperatorTest):
     """
-    Class for testing GT operator for SelectableSoup interface.
+    Class for testing GT operator for SoupSelector interface.
     __gt__ operator applied correctly creates ChildCombinator instance.
 
     Example
@@ -147,7 +147,7 @@ class TestGTOperator(BaseOperatorTest):
 
 class TestRSHIFTOperator(BaseOperatorTest):
     """
-    Class for testing RSHIFT operator for SelectableSoup interface.
+    Class for testing RSHIFT operator for SoupSelector interface.
     __rshift__ operator applied correctly creates DescendantCombinator instance.
 
     Example
@@ -162,7 +162,7 @@ class TestRSHIFTOperator(BaseOperatorTest):
 @pytest.mark.soup
 class TestNOTOperator:
     """
-    Class for testing bitwise NOT operator for SelectableSoup interface.
+    Class for testing bitwise NOT operator for SoupSelector interface.
     It's a special operator, that is applied on a single selector and returns
     its negation.
 

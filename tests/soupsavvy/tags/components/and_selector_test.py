@@ -4,7 +4,7 @@ import pytest
 
 from soupsavvy.tags.combinators import DescendantCombinator
 from soupsavvy.tags.components import AndSelector, AttributeSelector, TagSelector
-from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
+from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
 from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
@@ -14,10 +14,10 @@ class TestAndSelector:
 
     def test_raises_exception_when_no_invalid_input(self):
         """
-        Tests if init raises NotSelectableSoupException when invalid input is provided.
-        All of the parameters must be SelectableSoup instances.
+        Tests if init raises NotSoupSelectorException when invalid input is provided.
+        All of the parameters must be SoupSelector instances.
         """
-        with pytest.raises(NotSelectableSoupException):
+        with pytest.raises(NotSoupSelectorException):
             AndSelector("div", AttributeSelector("class"))  # type: ignore
 
     def test_find_returns_first_tag_matching_all_selectors(self):

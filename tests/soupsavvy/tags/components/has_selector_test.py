@@ -3,7 +3,7 @@
 import pytest
 
 from soupsavvy.tags.components import HasSelector
-from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
+from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
 from soupsavvy.tags.relative import RelativeChild
 from tests.soupsavvy.tags.conftest import (
     MockDivSelector,
@@ -20,11 +20,11 @@ class TestHasSelector:
 
     def test_raises_exception_when_invalid_input(self):
         """
-        Tests if HasSelector raises NotSelectableSoupException
+        Tests if HasSelector raises NotSoupSelectorException
         when invalid input is provided.
-        It requires all selectors to be SelectableSoup instances.
+        It requires all selectors to be SoupSelector instances.
         """
-        with pytest.raises(NotSelectableSoupException):
+        with pytest.raises(NotSoupSelectorException):
             HasSelector(MockLinkSelector(), "p")  # type: ignore
 
     @pytest.mark.parametrize(

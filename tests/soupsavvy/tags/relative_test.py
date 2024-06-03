@@ -11,7 +11,7 @@ from typing import Type
 import pytest
 from bs4 import Tag
 
-from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
+from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
 from soupsavvy.tags.relative import (
     Anchor,
     RelativeChild,
@@ -98,10 +98,10 @@ class BaseRelativeCombinatorTest(ABC):
 
     def test_raises_exception_when_invalid_input(self):
         """
-        Tests if selector raises NotSelectableSoupException when invalid input is provided
-        on object initialization. It only accepts SelectableSoup instances.
+        Tests if selector raises NotSoupSelectorException when invalid input is provided
+        on object initialization. It only accepts SoupSelector instances.
         """
-        with pytest.raises(NotSelectableSoupException):
+        with pytest.raises(NotSoupSelectorException):
             self.base("p")  # type: ignore
 
     @pytest.mark.parametrize(
@@ -374,7 +374,7 @@ class TestAnchor:
     objects for different combinators.
 
     It's sole responsibility is to implement dunder methods for creating RelativeSelector
-    that follow those implemented in SelectableSoup interface for combinator selectors:
+    that follow those implemented in SoupSelector interface for combinator selectors:
 
     * gt operator for RelativeChild
     * rshift operator for RelativeDescendant

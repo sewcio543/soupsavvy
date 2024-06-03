@@ -3,7 +3,7 @@
 from bs4 import BeautifulSoup as BS
 from bs4 import Tag
 
-from soupsavvy.tags.base import SelectableSoup
+from soupsavvy.tags.base import SoupSelector
 
 # default bs4 parser
 PARSER = "lxml"
@@ -24,8 +24,8 @@ def find_body_element(bs: Tag) -> Tag:
     return bs.find("body")  # type: ignore
 
 
-class MockSelector(SelectableSoup):
-    """Mock class for testing SelectableSoup interface."""
+class MockSelector(SoupSelector):
+    """Mock class for testing SoupSelector interface."""
 
     def __eq__(self, x: object) -> bool:
         return id(self) == id(x)

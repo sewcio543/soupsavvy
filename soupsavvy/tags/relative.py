@@ -6,13 +6,13 @@ from typing import Callable, Optional
 
 from bs4 import Tag
 
-from soupsavvy.tags.base import SelectableSoup
+from soupsavvy.tags.base import SoupSelector
 from soupsavvy.tags.tag_utils import TagResultSet
 
-Operator = Callable[[SelectableSoup, SelectableSoup], SelectableSoup]
+Operator = Callable[[SoupSelector, SoupSelector], SoupSelector]
 
 
-class RelativeSelector(SelectableSoup):
+class RelativeSelector(SoupSelector):
     """
     Base class for relative selectors, that are used to find tags relative
     to the tag that is being searched, which is considered an anchor.
@@ -41,13 +41,13 @@ class RelativeSelector(SelectableSoup):
     Selects any div tag that has a direct child 'a' tag or a next sibling 'p' tag.
     """
 
-    def __init__(self, selector: SelectableSoup) -> None:
+    def __init__(self, selector: SoupSelector) -> None:
         """
         Initializes RelativeSelector instance with specified selector.
 
         Parameters
         ----------
-        selector : SelectableSoup
+        selector : SoupSelector
             Selector that is used to find tags relative to the anchor tag.
         """
         self._check_selector_type(selector)
