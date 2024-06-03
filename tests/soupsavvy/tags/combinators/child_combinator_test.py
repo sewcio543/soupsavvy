@@ -5,8 +5,7 @@ import pytest
 from soupsavvy.tags.combinators import ChildCombinator
 from soupsavvy.tags.components import AttributeSelector, TagSelector
 from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
-
-from .conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
 @pytest.mark.soup
