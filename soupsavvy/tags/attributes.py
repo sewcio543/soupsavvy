@@ -13,10 +13,11 @@ ClassSelector - Selects element based on 'class' attribute value.
 
 import re
 from dataclasses import dataclass
-from typing import Any, Pattern
+from typing import Any, Optional
 
 import soupsavvy.tags.namespace as ns
 from soupsavvy.tags.base import SelectableCSS, SingleSelectableSoup
+from soupsavvy.tags.namespace import PatternType
 
 
 @dataclass
@@ -82,15 +83,15 @@ class AttributeSelector(SingleSelectableSoup, SelectableCSS):
     """
 
     name: str
-    value: str | None = None
+    value: Optional[str] = None
     re: bool = False
-    pattern: Pattern[str] | str | None = None
+    pattern: Optional[PatternType] = None
 
     def __post_init__(self) -> None:
         """Sets pattern attribute used in SelectableSoup find operations."""
         self._pattern = self._parse_pattern()
 
-    def _parse_pattern(self) -> Pattern[str] | str:
+    def _parse_pattern(self) -> PatternType:
         """Parses pattern used in find methods based on provided init parameters."""
         # if any pattern was provided, it takes precedence before value and re
         if self.pattern is not None:
@@ -134,9 +135,9 @@ class _SpecificAttributeSelector(AttributeSelector):
 
     def __init__(
         self,
-        value: str | None = None,
+        value: Optional[str] = None,
         re: bool = False,
-        pattern: Pattern[str] | str | None = None,
+        pattern: Optional[PatternType] = None,
     ) -> None:
         """
         Initializes specific attribute selector with default attribute name.

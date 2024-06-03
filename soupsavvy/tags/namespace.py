@@ -1,6 +1,6 @@
 """Namespace with constants and types for tag components."""
 
-from typing import Union
+from typing import Pattern, Union
 
 from bs4 import NavigableString, Tag
 
@@ -17,3 +17,5 @@ FindResult = Union[NavigableString, Tag, None]
 DEFAULT_PATTERN = "(.*?)"
 # css selector wildcard
 CSS_SELECTOR_WILDCARD = "*"
+# allowed pattern types for attribute selectors
+PatternType = Union[Pattern[str], str]
