@@ -94,7 +94,9 @@ jobs:
 
       - name: Get interested tags
         run: |
+          sleep 3
           git checkout main
+          git fetch --tags
           tag=$(git describe --abbrev=0)
           echo "Release tag: $tag"
           echo "tag=$tag" >> $GITHUB_ENV

@@ -9,9 +9,8 @@ from soupsavvy.tags.components import (
     PatternSelector,
     TagSelector,
 )
-from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
-
-from .conftest import find_body_element, strip, to_bs
+from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
+from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
 @pytest.mark.soup
@@ -19,12 +18,12 @@ from .conftest import find_body_element, strip, to_bs
 class TestDescendantCombinator:
     """Class for DescendantCombinator unit test suite."""
 
-    def test_not_selectablesoup_in_init_raises_exception(self):
+    def test_not_SoupSelector_in_init_raises_exception(self):
         """
-        Tests if NotSelectableSoupException is raised when one of input parameters
-        is not a SelectableSoup object.
+        Tests if NotSoupSelectorException is raised when one of input parameters
+        is not a SoupSelector object.
         """
-        with pytest.raises(NotSelectableSoupException):
+        with pytest.raises(NotSoupSelectorException):
             DescendantCombinator(TagSelector(tag="div"), "string")  # type: ignore
 
     @pytest.mark.parametrize(

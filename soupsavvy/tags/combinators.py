@@ -4,7 +4,7 @@ Module for combinators defined in css.
 They they combine other selectors in a way that gives them a useful relationship
 to each other and the location of content in the document.
 
-Soupsavvy provides combinators that are used to combine multiple SelectableSoup
+Soupsavvy provides combinators that are used to combine multiple SoupSelector
 objects in a similar fashion to CSS combinators.
 
 Classes
@@ -28,7 +28,7 @@ from typing import Optional, Type
 
 from bs4 import Tag
 
-from soupsavvy.tags.base import IterableSoup, SelectableSoup
+from soupsavvy.tags.base import MultipleSoupSelector, SoupSelector
 from soupsavvy.tags.namespace import FindResult
 from soupsavvy.tags.relative import (
     RelativeChild,
@@ -40,26 +40,26 @@ from soupsavvy.tags.relative import (
 from soupsavvy.tags.tag_utils import TagResultSet
 
 
-class BaseCombinator(SelectableSoup, IterableSoup):
+class BaseCombinator(SoupSelector, MultipleSoupSelector):
     def __init__(
         self,
-        selector1: SelectableSoup,
-        selector2: SelectableSoup,
+        selector1: SoupSelector,
+        selector2: SoupSelector,
         /,
-        *selectors: SelectableSoup,
+        *selectors: SoupSelector,
     ) -> None:
         """
         Initializes Combinator object with provided positional arguments.
-        At least two SelectableSoup object are required to create Combinator.
+        At least two SoupSelector object are required to create Combinator.
 
         Parameters
         ----------
-        selectors: SelectableSoup
-            SelectableSoup objects to match accepted as positional arguments.
+        selectors: SoupSelector
+            SoupSelector objects to match accepted as positional arguments.
 
         Notes
         -----
-        Object can be initialized with more than two SelectableSoup objects,
+        Object can be initialized with more than two SoupSelector objects,
         which would be equal to chaining multiple combinators of the same type.
 
         For example, chaining child combinator in css:
@@ -76,8 +76,8 @@ class BaseCombinator(SelectableSoup, IterableSoup):
 
         Raises
         ------
-        NotSelectableSoupException
-            If any of provided parameters is not an instance of SelectableSoup.
+        NotSoupSelectorException
+            If any of provided parameters is not an instance of SoupSelector.
         """
         super().__init__([selector1, selector2, *selectors])
 
@@ -151,7 +151,7 @@ class ChildCombinator(BaseCombinator):
     >>> <div class="menu"><span>Hello World</span></div> ❌
 
     Object can be created as well by using greater than operator '>'
-    on two SelectableSoup objects.
+    on two SoupSelector objects.
 
     Example
     -------
@@ -206,7 +206,7 @@ class NextSiblingCombinator(BaseCombinator):
     >>> <div class="widget"></div><span></span><a>Hello World</a> ❌
 
     Object can be created as well by using plus operator '+'
-    on two SelectableSoup objects.
+    on two SoupSelector objects.
 
     Example
     -------
@@ -254,7 +254,7 @@ class SubsequentSiblingCombinator(BaseCombinator):
     >>> <a>Hello World</a><div class="menu"></div> ❌
 
     Object can be created as well by using multiplication operator '*'
-    on two SelectableSoup objects, due to the lack of support for '~' operator
+    on two SoupSelector objects, due to the lack of support for '~' operator
     between two operands.
 
     Example
@@ -288,7 +288,7 @@ class DescendantCombinator(BaseCombinator):
     Descent combinator separates two selectors and matches all instances
     of the second element that are descendants of the first element.
 
-    Two SelectableSoup objects are required to create DescentCombinator,
+    Two SoupSelector objects are required to create DescentCombinator,
     but more can be provided as positional arguments, which binds them
     in a sequence of steps to match.
 
@@ -312,7 +312,7 @@ class DescendantCombinator(BaseCombinator):
     >>> <div class="widget"></div> ❌
 
     Object can be created as well by using right shift operator '>>'
-    on two SelectableSoup objects.
+    on two SoupSelector objects.
 
     Example
     -------
@@ -337,7 +337,7 @@ class DescendantCombinator(BaseCombinator):
 
 
 @dataclass(init=False)
-class SelectorList(SelectableSoup, IterableSoup):
+class SelectorList(SoupSelector, MultipleSoupSelector):
     """
     Class representing a list of selectors in CSS,
     a selector list is a comma-separated list of selectors,
@@ -346,7 +346,7 @@ class SelectorList(SelectableSoup, IterableSoup):
     Class represents an Union of multiple soup selectors.
     Provides elements matching any of the selectors in an Union.
 
-    At least two SelectableSoup objects are required to create SelectorList,
+    At least two SoupSelector objects are required to create SelectorList,
     but more can be provided as positional arguments.
 
     Example
@@ -379,7 +379,7 @@ class SelectorList(SelectableSoup, IterableSoup):
     >>> ElementTag("h1") | ElementTag("h2")
 
     Object can be created as well by using bitwise OR operator '|'
-    on two SelectableSoup objects.
+    on two SoupSelector objects.
 
     Example
     -------
@@ -398,24 +398,24 @@ class SelectorList(SelectableSoup, IterableSoup):
 
     def __init__(
         self,
-        selector1: SelectableSoup,
-        selector2: SelectableSoup,
+        selector1: SoupSelector,
+        selector2: SoupSelector,
         /,
-        *selectors: SelectableSoup,
+        *selectors: SoupSelector,
     ) -> None:
         """
         Initializes SelectorList object with provided positional arguments.
-        At least two SelectableSoup objects are required to create SelectorList.
+        At least two SoupSelector objects are required to create SelectorList.
 
         Parameters
         ----------
-        selectors: SelectableSoup
-            SelectableSoup objects to match accepted as positional arguments.
+        selectors: SoupSelector
+            SoupSelector objects to match accepted as positional arguments.
 
         Raises
         ------
-        NotSelectableSoupException
-            If any of provided parameters is not an instance of SelectableSoup.
+        NotSoupSelectorException
+            If any of provided parameters is not an instance of SoupSelector.
         """
         super().__init__([selector1, selector2, *selectors])
 

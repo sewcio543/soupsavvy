@@ -9,7 +9,6 @@ but with more flexibility and power to navigate the markup.
 
 Classes
 -------
-AttributeSelector - Attribute Selector
 TagSelector - combines type and attribute selectors
 PatternSelector - matches elements based on text content and selector
 AnyTagSelector - universal selector (*)
@@ -27,103 +26,19 @@ from typing import Any, Iterable, Optional, Pattern
 from bs4 import Tag
 
 import soupsavvy.tags.namespace as ns
+from soupsavvy.tags.attributes import AttributeSelector
 from soupsavvy.tags.base import (
-    IterableSoup,
+    MultipleSoupSelector,
     SelectableCSS,
-    SelectableSoup,
-    SingleSelectableSoup,
+    SingleSoupSelector,
+    SoupSelector,
 )
 from soupsavvy.tags.exceptions import WildcardTagException
-from soupsavvy.tags.relative import RelativeSelector
 from soupsavvy.tags.tag_utils import TagIterator, UniqueTag
 
 
 @dataclass
-class AttributeSelector(SingleSelectableSoup, SelectableCSS):
-    """
-    Class representing attribute of the HTML element.
-    If used directly, provides elements based only on a single attribute value.
-
-    Example
-    -------
-    >>> AttributeSelector(name="class", value="widget")
-
-    matches all elements that have 'class' attribute with value "widget".
-
-    Example
-    -------
-    >>> <div class="widget">Hello World</div> ✔️
-    >>> <div class="menu">Hello World</div> ❌
-
-    Parameters
-    ----------
-    name : str
-        HTML element attribute name ex. "class", "href"
-    value : str, optional
-        Value of the attribute, like a class name.
-        By default None, if not provided pattern will be used.
-        If both pattern and value are None, pattern falls back to default,
-        that matches any sequence of characters.
-    re : bool, optional
-        Whether to use a pattern to match the attribute value, by default False.
-        If True, attribute value needs to be contained in the name to be matched.
-    pattern : Pattern | str, optional
-        Regular Expression pattern to match the attribute value.
-        Applicable only for SelectableSoup find operations, skipped in selector.
-
-    Example
-    -------
-    >>> attribute = AttributeSelector(name="class", value="widget")
-    >>> attribute.selector
-    [class=widget]
-
-    >>> attribute = AttributeSelector(name="class", value="widget", re=True)
-    >>> attribute.selector
-    [class*=widget]
-    """
-
-    name: str
-    value: str | None = None
-    re: bool = False
-    pattern: Pattern[str] | str | None = None
-
-    def __post_init__(self) -> None:
-        """Sets pattern attribute used in SelectableSoup find operations."""
-        self._pattern = self._parse_pattern()
-
-    def _parse_pattern(self) -> Pattern[str] | str:
-        """Parses pattern used in find methods based on provided init parameters."""
-        # if any pattern was provided, it takes precedence before value and re
-        if self.pattern is not None:
-            return re.compile(self.pattern)
-        # if pattern and value was not provided, fall back to default pattern
-        if self.value is None:
-            return re.compile(ns.DEFAULT_PATTERN)
-        # if only value was provided and re = True, create pattern from value
-        if self.re:
-            return re.compile(self.value)
-        # if only value was provided and re = False, use str value as pattern
-        return self.value
-
-    @property
-    def selector(self) -> str:
-        # undefined value - bs Tag matches all elements with attribute if css is
-        # provided without a value in ex. format '[href]'
-        if self.value is None:
-            return f"[{self.name}]"
-
-        operator = "*=" if self.re else "="
-        return f"[{self.name}{operator}'{self.value}']"
-
-    @property
-    def _find_params(self) -> dict[str, Any]:
-        # passing filters in attrs parameter as dict instead of kwargs
-        # to avoid overriding other find method parameters like ex. 'name'
-        return {ns.ATTRS: {self.name: self._pattern}}
-
-
-@dataclass
-class TagSelector(SingleSelectableSoup, SelectableCSS):
+class TagSelector(SingleSoupSelector, SelectableCSS):
     """
     Class representing HTML element.
     Provides elements based on element tag and all defined attributes.
@@ -198,7 +113,7 @@ class TagSelector(SingleSelectableSoup, SelectableCSS):
 
 
 @dataclass
-class PatternSelector(SingleSelectableSoup):
+class PatternSelector(SingleSoupSelector):
     """
     Class representing HTML element with specific string pattern for text.
     Provides elements matching TagSelector with their text matching a pattern.
@@ -220,8 +135,8 @@ class PatternSelector(SingleSelectableSoup):
 
     Parameters
     ----------
-    tag: SingleSelectableSoup
-        An SingleSelectableSoup instance representing desired HTML element.
+    tag: SingleSoupSelector
+        An SingleSoupSelector instance representing desired HTML element.
         AnyTagSelector is not a valid parameter and raises an exception.
     pattern: str | Pattern
         A pattern to match text of the element. Can be a string for exact match
@@ -246,7 +161,7 @@ class PatternSelector(SingleSelectableSoup):
         When empty TagSelector was passed as a tag parameter.
     """
 
-    tag: SingleSelectableSoup
+    tag: SingleSoupSelector
     pattern: str | Pattern[str]
     re: bool = False
 
@@ -265,7 +180,7 @@ class PatternSelector(SingleSelectableSoup):
         return {ns.STRING: pattern} | self.tag._find_params
 
 
-class AnyTagSelector(SingleSelectableSoup, SelectableCSS):
+class AnyTagSelector(SingleSoupSelector, SelectableCSS):
     """
     Class representing a wildcard tag that matches any tag in the markup.
     Matches always the first tag in the markup.
@@ -296,7 +211,7 @@ class AnyTagSelector(SingleSelectableSoup, SelectableCSS):
 
 
 @dataclass(init=False)
-class NotSelector(SelectableSoup, IterableSoup):
+class NotSelector(SoupSelector, MultipleSoupSelector):
     """
     Class representing selector of elements that do not match provided selectors.
 
@@ -315,7 +230,7 @@ class NotSelector(SelectableSoup, IterableSoup):
     all selectors must match for element to be excluded from the result.
 
     Object can be created as well by using bitwise NOT operator '~'
-    on a SelectableSoup object.
+    on a SoupSelector object.
 
     Example
     -------
@@ -346,23 +261,23 @@ class NotSelector(SelectableSoup, IterableSoup):
 
     def __init__(
         self,
-        tag: SelectableSoup,
+        tag: SoupSelector,
         /,
-        *tags: SelectableSoup,
+        *tags: SoupSelector,
     ) -> None:
         """
         Initializes NotSelectors object with provided positional arguments as tags.
-        At least one SelectableSoup object is required to create NotSelector.
+        At least one SoupSelector object is required to create NotSelector.
 
         Parameters
         ----------
-        tags: SelectableSoup
-            SelectableSoup objects to negate match accepted as positional arguments.
+        tags: SoupSelector
+            SoupSelector objects to negate match accepted as positional arguments.
 
         Raises
         ------
-        NotSelectableSoupException
-            If any of provided parameters is not an instance of SelectableSoup.
+        NotSoupSelectorException
+            If any of provided parameters is not an instance of SoupSelector.
         """
         self._multiple = bool(tags)
         super().__init__([tag, *tags])
@@ -387,7 +302,7 @@ class NotSelector(SelectableSoup, IterableSoup):
             if UniqueTag(element) not in matching
         ][:limit]
 
-    def __invert__(self) -> SelectableSoup:
+    def __invert__(self) -> SoupSelector:
         """
         Overrides __invert__ method to cancel out negation by returning
         the tag in case of single selector, or SoupUnionTag in case of multiple.
@@ -401,7 +316,7 @@ class NotSelector(SelectableSoup, IterableSoup):
 
 
 @dataclass(init=False)
-class AndSelector(SelectableSoup, IterableSoup):
+class AndSelector(SoupSelector, MultipleSoupSelector):
     """
     Class representing an intersection of multiple soup selectors.
     Provides elements matching all of the listed selectors.
@@ -425,7 +340,7 @@ class AndSelector(SelectableSoup, IterableSoup):
     all selectors must match for element to be included in the result.
 
     Object can be created as well by using bitwise AND operator '&'
-    on two SelectableSoup objects.
+    on two SoupSelector objects.
 
     Example
     -------
@@ -449,24 +364,24 @@ class AndSelector(SelectableSoup, IterableSoup):
 
     def __init__(
         self,
-        tag1: SelectableSoup,
-        tag2: SelectableSoup,
+        tag1: SoupSelector,
+        tag2: SoupSelector,
         /,
-        *tags: SelectableSoup,
+        *tags: SoupSelector,
     ) -> None:
         """
         Initializes AndTagSelector object with provided positional arguments as tags.
-        At least two SelectableSoup objects are required to create AndSelector.
+        At least two SoupSelector objects are required to create AndSelector.
 
         Parameters
         ----------
-        tags: SelectableSoup
-            SelectableSoup objects to match accepted as positional arguments.
+        tags: SoupSelector
+            SoupSelector objects to match accepted as positional arguments.
 
         Raises
         ------
-        NotSelectableSoupException
-            If any of provided parameters is not an instance of SelectableSoup.
+        NotSoupSelectorException
+            If any of provided parameters is not an instance of SoupSelector.
         """
         super().__init__([tag1, tag2, *tags])
 
@@ -494,7 +409,7 @@ class AndSelector(SelectableSoup, IterableSoup):
 
 
 @dataclass(init=False)
-class HasSelector(SelectableSoup, IterableSoup):
+class HasSelector(SoupSelector, MultipleSoupSelector):
     """
     Class representing elements selected with respect to matching reference elements.
     Element is selected if any of the provided selectors matched reference element.
@@ -574,24 +489,24 @@ class HasSelector(SelectableSoup, IterableSoup):
 
     def __init__(
         self,
-        selector: SelectableSoup,
+        selector: SoupSelector,
         /,
-        *selectors: SelectableSoup,
+        *selectors: SoupSelector,
     ) -> None:
         """
         Initializes AndTagSelector object with provided positional arguments as tags.
-        At least two SelectableSoup objects are required to create HasSelector.
+        At least two SoupSelector objects are required to create HasSelector.
 
         Parameters
         ----------
-        tags: SelectableSoup
-            SelectableSoup objects to match accepted as positional arguments.
+        tags: SoupSelector
+            SoupSelector objects to match accepted as positional arguments.
             At least one selector is required to create HasSelector.
 
         Raises
         ------
-        NotSelectableSoupException
-            If any of provided parameters is not an instance of SelectableSoup.
+        NotSoupSelectorException
+            If any of provided parameters is not an instance of SoupSelector.
         """
         super().__init__([selector, *selectors])
 

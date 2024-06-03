@@ -4,9 +4,8 @@ import pytest
 
 from soupsavvy.tags.combinators import SelectorList
 from soupsavvy.tags.components import AttributeSelector, TagSelector
-from soupsavvy.tags.exceptions import NotSelectableSoupException, TagNotFoundException
-
-from .conftest import find_body_element, strip, to_bs
+from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
+from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
 @pytest.fixture(scope="session")
@@ -34,18 +33,18 @@ def mock_soup_union() -> SelectorList:
 class TestSelectorList:
     """Class for SelectorList unit test suite."""
 
-    def test_init_raises_exception_if_at_least_one_argument_is_not_selectable_soup(
+    def test_init_raises_exception_if_at_least_one_argument_is_not_soup_selector(
         self,
     ):
         """
-        Tests if init raises a NotSelectableSoupException exception if at least one
-        of the positional parameters is not an instance of SelectableSoup.
+        Tests if init raises a NotSoupSelectorException exception if at least one
+        of the positional parameters is not an instance of SoupSelector.
         """
         tag_1 = TagSelector(
             "a", attributes=[AttributeSelector("class", value="widget")]
         )
 
-        with pytest.raises(NotSelectableSoupException):
+        with pytest.raises(NotSoupSelectorException):
             SelectorList(tag_1, "string")  # type: ignore
 
     def test_soup_union_is_instantiated_with_correct_tags_attribute(self):
@@ -69,7 +68,7 @@ class TestSelectorList:
         """
         Tests if tags attribute of SelectorList is assigned properly is a list
         containing all Tags provided in init. Init can take any number of positional
-        arguments above 2 that are SelectableSoup.
+        arguments above 2 that are SoupSelector.
         In this case testing arguments of mixed types: ElementTag and AttributeTag.
         """
         tag_1 = TagSelector(

@@ -4,7 +4,7 @@ Module with classes for tag selection based on CSS selectors.
 Contains implementation of basic CSS pseudo-classes like
 :only-child, :empty, :nth-child().
 
-They can be used in combination with other SelectableSoup objects
+They can be used in combination with other SoupSelector objects
 to create more complex tag selection conditions.
 """
 
@@ -14,13 +14,13 @@ from typing import Iterable, Optional
 import soupsieve as sv
 from bs4 import Tag
 
-from soupsavvy.tags.base import SelectableCSS, SelectableSoup
+from soupsavvy.tags.base import SelectableCSS, SoupSelector
 from soupsavvy.tags.css.exceptions import InvalidCSSSelector
 from soupsavvy.tags.namespace import FindResult
 from soupsavvy.tags.tag_utils import TagIterator
 
 
-class CSSSelectorSoup(SelectableSoup, SelectableCSS):
+class _CSSSoupSelector(SoupSelector, SelectableCSS):
     """
     Base class for CSS selector based tag selection.
     Classes that base their selection on CSS selectors should inherit from this class
@@ -29,8 +29,8 @@ class CSSSelectorSoup(SelectableSoup, SelectableCSS):
     By default, the `find` methods are implemented using the soupsieve library
     to match the selector.
 
-    CSSSelectorSoup objects are based on SelectableSoup interface
-    and can be easily used in combination with other SelectableSoup objects.
+    CSSSoupSelector objects are based on SoupSelector interface
+    and can be easily used in combination with other SoupSelector objects.
     """
 
     def find_all(
@@ -99,7 +99,7 @@ class CSSSelectorSoup(SelectableSoup, SelectableCSS):
 
 
 @dataclass
-class OnlyChild(CSSSelectorSoup):
+class OnlyChild(_CSSSoupSelector):
     """
     Class to select tags that are the only child of their parent.
     It uses the CSS selector `:only-child`.
@@ -149,7 +149,7 @@ class OnlyChild(CSSSelectorSoup):
 
 
 @dataclass
-class Empty(CSSSelectorSoup):
+class Empty(_CSSSoupSelector):
     """
     Class to select tags that are empty, i.e., have no children.
     It uses the CSS selector `:empty`.
@@ -207,7 +207,7 @@ class Empty(CSSSelectorSoup):
 
 
 @dataclass
-class FirstChild(CSSSelectorSoup):
+class FirstChild(_CSSSoupSelector):
     """
     Class to select tags that are the first child of their parent.
     It uses the CSS selector `:first-child`.
@@ -261,7 +261,7 @@ class FirstChild(CSSSelectorSoup):
 
 
 @dataclass
-class LastChild(CSSSelectorSoup):
+class LastChild(_CSSSoupSelector):
     """
     Class to select tags that are the last child of their parent.
     It uses the CSS selector `:last-child`.
@@ -316,7 +316,7 @@ class LastChild(CSSSelectorSoup):
 
 
 @dataclass
-class NthChild(CSSSelectorSoup):
+class NthChild(_CSSSoupSelector):
     """
     Class to select tags that are the nth child of their parent.
     It uses the CSS selector `:nth-child(n)`.
@@ -361,7 +361,7 @@ class NthChild(CSSSelectorSoup):
 
 
 @dataclass
-class NthLastChild(CSSSelectorSoup):
+class NthLastChild(_CSSSoupSelector):
     """
     Class to select tags that are the nth last child of their parent.
     It uses the CSS selector `:nth-last-child(n)`.
@@ -406,7 +406,7 @@ class NthLastChild(CSSSelectorSoup):
 
 
 @dataclass
-class FirstOfType(CSSSelectorSoup):
+class FirstOfType(_CSSSoupSelector):
     """
     Class to select tags that are the first of their type in their parent.
     It uses the CSS selector `:first-of-type`.
@@ -462,7 +462,7 @@ class FirstOfType(CSSSelectorSoup):
 
 
 @dataclass
-class LastOfType(CSSSelectorSoup):
+class LastOfType(_CSSSoupSelector):
     """
     Class to select tags that are the last of their type in their parent.
     It uses the CSS selector `:last-of-type`.
@@ -519,7 +519,7 @@ class LastOfType(CSSSelectorSoup):
 
 
 @dataclass
-class NthOfType(CSSSelectorSoup):
+class NthOfType(_CSSSoupSelector):
     """
     Class to select tags that are the nth of their type in their parent.
     It uses the CSS selector `:nth-of-type(n)`.
@@ -564,7 +564,7 @@ class NthOfType(CSSSelectorSoup):
 
 
 @dataclass
-class NthLastOfType(CSSSelectorSoup):
+class NthLastOfType(_CSSSoupSelector):
     """
     Class to select tags that are the nth last of their type in their parent.
     It uses the CSS selector `:nth-last-of-type(n)`.
@@ -609,7 +609,7 @@ class NthLastOfType(CSSSelectorSoup):
 
 
 @dataclass
-class OnlyOfType(CSSSelectorSoup):
+class OnlyOfType(_CSSSoupSelector):
     """
     Class to select tags that are the only of their type in their parent.
     It uses the CSS selector `:only-of-type`.
