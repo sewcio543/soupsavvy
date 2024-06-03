@@ -51,6 +51,7 @@ class AttributeSelector(SingleSelectableSoup, SelectableCSS):
     pattern : Pattern | str, optional
         Regular Expression pattern to match the attribute value.
         Applicable only for SelectableSoup find operations, skipped in selector.
+        Value always takes precedence over pattern, if both are provided.
 
     Implements SelectableCSS interface for CSS selector generation.
 
