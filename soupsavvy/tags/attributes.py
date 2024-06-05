@@ -121,6 +121,14 @@ class AttributeSelector(SingleSoupSelector, SelectableCSS):
         # to avoid overriding other find method parameters like ex. 'name'
         return {ns.ATTRS: {self.name: self._pattern}}
 
+    def __eq__(self, other: object) -> bool:
+        """Check self and other object for equality."""
+
+        if not isinstance(other, AttributeSelector):
+            return False
+
+        return self._pattern == other._pattern and self.name == other.name
+
 
 class _SpecificAttributeSelector(AttributeSelector):
     """

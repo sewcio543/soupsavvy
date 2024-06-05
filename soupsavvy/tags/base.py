@@ -628,3 +628,13 @@ class MultipleSoupSelector(ABC):
             )
 
         self.steps = list(tags)
+
+    def __eq__(self, other: object) -> bool:
+        """Check self and other object for equality."""
+
+        if not isinstance(other, MultipleSoupSelector):
+            return False
+        elif type(self) is not type(other):
+            return False
+
+        return self.steps == other.steps
