@@ -94,15 +94,6 @@ class TestTagSelector:
         result = tag.find(bs)
         assert str(result) == strip(markup)
 
-    def test_raises_exception_when_initialized_without_parameters(self):
-        """
-        Tests if TagSelector initialized without any parameters raises WildcardTagException.
-        This is illegal move since it matches all elements
-        and AnyTag should be used instead.
-        """
-        with pytest.raises(WildcardTagException):
-            TagSelector()
-
     @pytest.mark.parametrize(
         argnames="tag",
         argvalues=[

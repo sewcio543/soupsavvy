@@ -359,6 +359,41 @@ class TestTagResultSet:
             strip("""<a class="menu1"></a>"""),
         ]
 
+    def test_and_returns_empty_result_set_when_no_difference(
+        self, mock_tags: list[Tag]
+    ):
+        """
+        Tests that - operator returns empty result set when there is no difference.
+        All elements from base collection are in the right collection.
+        In that case, result set should be empty.
+        """
+        base = TagResultSet(mock_tags[:2])
+        right = TagResultSet(mock_tags)
+
+        new = base - right
+        results = new.fetch()
+        assert results == []
+
+    def test_and_return_new_result_set_with_difference_of_collections(
+        self, mock_tags: list[Tag]
+    ):
+        """
+        Tests that - operator returns new result set with difference of collections.
+        New collection is a difference between base and right collections,
+        output set should contain only tags that are in the base collection
+        but not in the right collection with base collection initial order preserved.
+        """
+        base = TagResultSet(mock_tags)
+        right = TagResultSet(list(reversed(mock_tags[:2])))
+
+        new = base - right
+        results = new.fetch()
+
+        assert list(map(str, results)) == [
+            strip("""<a class="menu1"></a>"""),
+            strip("""<a class="menu2"></a>"""),
+        ]
+
     def test_and_returns_empty_result_set_when_no_intersection(
         self, mock_tags: list[Tag]
     ):
