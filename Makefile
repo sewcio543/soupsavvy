@@ -15,7 +15,7 @@ lint:
 format:
 	black . --line-length 88 --diff --check
 test:
-	python -m pytest -v -ra
+	python -m pytest
 coverage:
 	python -m coverage run -m pytest
 	python -m coverage report

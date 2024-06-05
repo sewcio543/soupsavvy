@@ -8,8 +8,9 @@ import operator
 from typing import Any, Callable, Type
 
 import pytest
+from bs4 import Tag
 
-from soupsavvy.tags.base import MultipleSoupSelector
+from soupsavvy.tags.base import MultipleSoupSelector, SoupSelector
 from soupsavvy.tags.combinators import (
     ChildCombinator,
     DescendantCombinator,
@@ -18,8 +19,8 @@ from soupsavvy.tags.combinators import (
     SubsequentSiblingCombinator,
 )
 from soupsavvy.tags.components import AndSelector, NotSelector
-from soupsavvy.tags.exceptions import NotSoupSelectorException
-from tests.soupsavvy.tags.conftest import MockSelector
+from soupsavvy.tags.exceptions import NavigableStringException, NotSoupSelectorException
+from tests.soupsavvy.tags.conftest import MockSelector, to_bs
 
 
 @pytest.mark.soup
@@ -212,3 +213,34 @@ class TestNOTOperator:
 
         assert isinstance(result, SelectorList)
         assert result.steps == [selector1, selector2]
+
+
+@pytest.mark.soup
+@pytest.mark.edge_case
+def test_exception_is_raised_when_navigable_string_is_a_result():
+    """
+    Tests if NavigableStringException is raised when bs4.find returns NavigableString.
+    Child classes of SoupSelector should always always prevent that,
+    thus this is a hypothetical case that is covered anyway to ensure that it does
+    not break code downstream.
+    """
+    from bs4 import NavigableString
+
+    class NavigableStringSelector(SoupSelector):
+        """
+        Mock selector that returns NavigableString in find method
+        to force NavigableStringException in SoupSelector base class.
+        """
+
+        def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+            return []
+
+        def _find(self, tag: Tag, recursive: bool = True):
+            return NavigableString("Hello World")
+
+    markup = """<div class="widget">Hello World</div>"""
+    bs = to_bs(markup)
+    tag = NavigableStringSelector()
+
+    with pytest.raises(NavigableStringException):
+        tag.find(bs, strict=True)
