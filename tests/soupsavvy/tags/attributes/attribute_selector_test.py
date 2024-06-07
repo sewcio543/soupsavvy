@@ -4,9 +4,14 @@ import re
 
 import pytest
 
-from soupsavvy.tags.attributes import AttributeSelector
+from soupsavvy.tags.attributes import AttributeSelector, ClassSelector
 from soupsavvy.tags.exceptions import TagNotFoundException
-from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.tags.conftest import (
+    MockDivSelector,
+    find_body_element,
+    strip,
+    to_bs,
+)
 
 
 @pytest.mark.soup
@@ -553,6 +558,15 @@ class TestAttributeSelector:
                 AttributeSelector("class", pattern="widget"),
                 AttributeSelector("class", pattern=re.compile(r"widget")),
             ),
+            # equal if subclass of AttributeSelector and same parameters
+            (
+                AttributeSelector("class", value="widget"),
+                ClassSelector("widget"),
+            ),
+            (
+                AttributeSelector("class", re=False, pattern="widget$"),
+                ClassSelector(re=True, value="summer", pattern="widget$"),
+            ),
         ],
     )
     def test_two_attribute_selectors_are_equal(
@@ -600,6 +614,20 @@ class TestAttributeSelector:
             (
                 AttributeSelector("class", pattern="menu"),
                 AttributeSelector("class", value="menu"),
+            ),
+            # if not subclass of AttributeSelector, it is not equal
+            (
+                AttributeSelector("class", pattern="menu"),
+                MockDivSelector(),
+            ),
+            # if subclass with different parameters, it is not equal
+            (
+                AttributeSelector("id", value="widget"),
+                ClassSelector(value="widget"),
+            ),
+            (
+                AttributeSelector("class", value="widget"),
+                ClassSelector(pattern="widget"),
             ),
         ],
     )
