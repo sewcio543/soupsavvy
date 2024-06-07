@@ -104,11 +104,10 @@ class TagSelector(SingleSoupSelector, SelectableCSS):
         return {ns.NAME: self.tag} | {ns.ATTRS: attrs}
 
     def __eq__(self, other: object) -> bool:
-        """Check self and other object for equality."""
-
         if not isinstance(other, TagSelector):
             return False
 
+        # TagSelector produces the same results only if attributes are in the same order
         return self.tag == other.tag and self.attributes == other.attributes
 
 
@@ -179,8 +178,6 @@ class PatternSelector(SoupSelector):
         return list(itertools.islice(filter_, limit))
 
     def __eq__(self, other: object) -> bool:
-        """Check self and other object for equality."""
-
         if not isinstance(other, PatternSelector):
             return False
 
@@ -217,7 +214,8 @@ class AnyTagSelector(SingleSoupSelector, SelectableCSS):
         return ns.CSS_SELECTOR_WILDCARD
 
     def __eq__(self, other: object) -> bool:
-        """Check self and other object for equality."""
+        # TagSelector produces the same results only if it does not have
+        # any parameters specified
         if isinstance(other, TagSelector):
             return other.tag is None and not other.attributes
 
@@ -225,7 +223,7 @@ class AnyTagSelector(SingleSoupSelector, SelectableCSS):
 
 
 @dataclass(init=False)
-class NotSelector(SoupSelector, MultipleSoupSelector):
+class NotSelector(MultipleSoupSelector):
     """
     Class representing selector of elements that do not match provided selectors.
 
@@ -327,7 +325,7 @@ class NotSelector(SoupSelector, MultipleSoupSelector):
 
 
 @dataclass(init=False)
-class AndSelector(SoupSelector, MultipleSoupSelector):
+class AndSelector(MultipleSoupSelector):
     """
     Class representing an intersection of multiple soup selectors.
     Provides elements matching all of the listed selectors.
@@ -413,7 +411,7 @@ class AndSelector(SoupSelector, MultipleSoupSelector):
 
 
 @dataclass(init=False)
-class HasSelector(SoupSelector, MultipleSoupSelector):
+class HasSelector(MultipleSoupSelector):
     """
     Class representing elements selected with respect to matching reference elements.
     Element is selected if any of the provided selectors matched reference element.

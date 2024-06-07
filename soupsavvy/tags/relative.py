@@ -53,6 +53,12 @@ class RelativeSelector(SoupSelector):
         self._check_selector_type(selector)
         self.selector = selector
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, self.__class__):
+            return False
+
+        return self.selector == other.selector
+
 
 class BaseRelativeSibling(RelativeSelector):
     """

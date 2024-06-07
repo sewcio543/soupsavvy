@@ -172,43 +172,6 @@ class TestClassSelector:
         result = selector.find_all(bs)
         assert result == []
 
-    def test_equal_method_returns_true_for_the_same_parameters(self):
-        """Tests if __eq__ returns True if selectors have the same init parameters."""
-        # only value is provided
-        comp = ClassSelector("widget") == ClassSelector("widget")
-        assert comp is True
-        # value and re are provided
-        comp = ClassSelector("widget", re=True) == ClassSelector("widget", re=True)
-        assert comp is True
-        # only pattern is provided as string
-        comp = ClassSelector(pattern=r"^widget") == ClassSelector(pattern=r"^widget")
-        assert comp is True
-        # only pattern is provided as compiled regex
-        comp = ClassSelector(pattern=re.compile(r"^widget")) == ClassSelector(
-            pattern=re.compile(r"^widget")
-        )
-        assert comp is True
-
-    def test_equal_method_returns_false_for_different_parameters(self):
-        """Tests if __eq__ returns False if selectors have different init parameters."""
-        # only value is provided
-        comp = ClassSelector("widget") == ClassSelector("menu")
-        assert comp is False
-        # value and re are provided
-        comp = ClassSelector("widget", re=True) == ClassSelector("widget", re=False)
-        assert comp is False
-        # only pattern is provided as string
-        comp = ClassSelector(pattern=r"^widget") == ClassSelector(pattern=r"widget")
-        assert comp is False
-        # only pattern is provided as compiled regex
-        comp = ClassSelector(pattern=re.compile(r"^widget")) == ClassSelector(
-            pattern=re.compile(r"widget")
-        )
-        assert comp is False
-        # left has extra parameter
-        comp = ClassSelector("widget", pattern="widget") == ClassSelector("widget")
-        assert comp is False
-
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.

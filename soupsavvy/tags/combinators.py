@@ -40,7 +40,7 @@ from soupsavvy.tags.relative import (
 from soupsavvy.tags.tag_utils import TagResultSet
 
 
-class BaseCombinator(SoupSelector, MultipleSoupSelector):
+class BaseCombinator(MultipleSoupSelector):
     def __init__(
         self,
         selector1: SoupSelector,
@@ -337,7 +337,7 @@ class DescendantCombinator(BaseCombinator):
 
 
 @dataclass(init=False)
-class SelectorList(SoupSelector, MultipleSoupSelector):
+class SelectorList(MultipleSoupSelector):
     """
     Class representing a list of selectors in CSS,
     a selector list is a comma-separated list of selectors,

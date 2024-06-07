@@ -226,7 +226,7 @@ def test_exception_is_raised_when_navigable_string_is_a_result():
     """
     from bs4 import NavigableString
 
-    class NavigableStringSelector(SoupSelector):
+    class NavigableStringSelector(MockSelector):
         """
         Mock selector that returns NavigableString in find method
         to force NavigableStringException in SoupSelector base class.

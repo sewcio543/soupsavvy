@@ -97,6 +97,9 @@ class _CSSSoupSelector(SoupSelector, SelectableCSS):
         """
         return TagIterator(tag, recursive=recursive)
 
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, _CSSSoupSelector) and self.selector == other.selector
+
 
 @dataclass
 class OnlyChild(_CSSSoupSelector):
