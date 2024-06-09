@@ -6,7 +6,12 @@ import pytest
 
 from soupsavvy.tags.components import PatternSelector
 from soupsavvy.tags.exceptions import TagNotFoundException
-from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.tags.conftest import (
+    MockLinkSelector,
+    find_body_element,
+    strip,
+    to_bs,
+)
 
 
 @pytest.mark.soup
@@ -337,3 +342,54 @@ class TestPatternSelector:
             strip("""<p>Hello</p>"""),
             strip("""<a>Hello</a>"""),
         ]
+
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # pattern is the same string
+            (PatternSelector("menu"), PatternSelector("menu")),
+            # pattern is the same string and re=True for both
+            (PatternSelector("menu", re=True), PatternSelector("menu", re=True)),
+            # pattern is the same compiled regex
+            (
+                PatternSelector(re.compile("^menu")),
+                PatternSelector(re.compile("^menu")),
+            ),
+            # when pattern is the same compiled regex, re is ignored
+            (
+                PatternSelector(re.compile("^menu"), re=True),
+                PatternSelector(re.compile("^menu"), re=False),
+            ),
+            # string pattern with re=True and the same compiled regex with re=False
+            (
+                PatternSelector("^menu", re=True),
+                PatternSelector(re.compile("^menu"), re=False),
+            ),
+        ],
+    )
+    def test_two_selectors_are_equal(
+        self, selectors: tuple[PatternSelector, PatternSelector]
+    ):
+        """Tests if two PatternSelectors are equal."""
+        assert (selectors[0] == selectors[1]) is True
+
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # string pattern is different
+            (PatternSelector("menu"), PatternSelector("widget")),
+            # string pattern is the same, but re is different
+            (PatternSelector("menu", re=True), PatternSelector("menu")),
+            # string pattern with re=False not equal to compiled regex
+            (PatternSelector(re.compile("menu")), PatternSelector("menu")),
+            # compiled regex patterns are different
+            (PatternSelector(re.compile("menu")), PatternSelector(re.compile("^menu"))),
+            # not PatternSelector instance
+            (PatternSelector("menu"), MockLinkSelector()),
+        ],
+    )
+    def test_two_selectors_are_not_equal(
+        self, selectors: tuple[PatternSelector, PatternSelector]
+    ):
+        """Tests if two PatternSelectors are not equal."""
+        assert (selectors[0] == selectors[1]) is False

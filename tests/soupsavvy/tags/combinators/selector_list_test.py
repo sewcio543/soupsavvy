@@ -61,8 +61,8 @@ class TestSelectorList:
 
         union = SelectorList(tag_1, tag_2)
 
-        assert isinstance(union.steps, list)
-        assert union.steps == [tag_1, tag_2]
+        assert isinstance(union.selectors, list)
+        assert union.selectors == [tag_1, tag_2]
 
     def test_soup_union_is_instantiated_with_more_than_two_arguments(self):
         """
@@ -81,8 +81,8 @@ class TestSelectorList:
 
         union = SelectorList(tag_1, tag_2, tag_3)
 
-        assert isinstance(union.steps, list)
-        assert union.steps == [tag_1, tag_2, tag_3]
+        assert isinstance(union.selectors, list)
+        assert union.selectors == [tag_1, tag_2, tag_3]
 
     @pytest.mark.parametrize(
         argnames="markup",

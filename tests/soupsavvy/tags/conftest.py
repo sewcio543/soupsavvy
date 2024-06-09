@@ -47,6 +47,9 @@ class MockLinkSelector(MockSelector):
     def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
         return tag.find_all("a", recursive=recursive, limit=limit)
 
+    def __eq__(self, x: object) -> bool:
+        return isinstance(x, MockLinkSelector)
+
 
 class MockDivSelector(MockSelector):
     """
@@ -57,3 +60,6 @@ class MockDivSelector(MockSelector):
 
     def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
         return tag.find_all("div", recursive=recursive, limit=limit)
+
+    def __eq__(self, x: object) -> bool:
+        return isinstance(x, MockDivSelector)

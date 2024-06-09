@@ -10,7 +10,7 @@ from typing import Any, Callable, Type
 import pytest
 from bs4 import Tag
 
-from soupsavvy.tags.base import MultipleSoupSelector, SoupSelector
+from soupsavvy.tags.base import MultipleSoupSelector
 from soupsavvy.tags.combinators import (
     ChildCombinator,
     DescendantCombinator,
@@ -20,7 +20,12 @@ from soupsavvy.tags.combinators import (
 )
 from soupsavvy.tags.components import AndSelector, NotSelector
 from soupsavvy.tags.exceptions import NavigableStringException, NotSoupSelectorException
-from tests.soupsavvy.tags.conftest import MockSelector, to_bs
+from tests.soupsavvy.tags.conftest import (
+    MockDivSelector,
+    MockLinkSelector,
+    MockSelector,
+    to_bs,
+)
 
 
 @pytest.mark.soup
@@ -43,7 +48,7 @@ class BaseOperatorTest:
         result = self.OPERATOR(selector1, selector2)
 
         assert isinstance(result, self.TYPE)
-        assert result.steps == [selector1, selector2]
+        assert result.selectors == [selector1, selector2]
 
     def test_operator_returns_expected_type_with_updated_tags(self):
         """
@@ -63,7 +68,7 @@ class BaseOperatorTest:
         assert isinstance(result, self.TYPE)
         assert id(result) != id(combined)
 
-        assert result.steps == [selector1, selector2, selector3]
+        assert result.selectors == [selector1, selector2, selector3]
 
     def test_operator_raises_exception_if_not_soup_selector(self):
         """
@@ -180,7 +185,7 @@ class TestNOTOperator:
         selector = MockSelector()
         result = ~selector
         assert isinstance(result, NotSelector)
-        assert result.steps == [selector]
+        assert result.selectors == [selector]
 
     def test_bitwise_not_operator_on_single_not_selector_returns_selector(self):
         """
@@ -212,7 +217,7 @@ class TestNOTOperator:
         result = ~combined
 
         assert isinstance(result, SelectorList)
-        assert result.steps == [selector1, selector2]
+        assert result.selectors == [selector1, selector2]
 
 
 @pytest.mark.soup
@@ -244,3 +249,89 @@ def test_exception_is_raised_when_navigable_string_is_a_result():
 
     with pytest.raises(NavigableStringException):
         tag.find(bs, strict=True)
+
+
+class TestMultipleSoupSelector:
+    """
+    Class for testing MultipleSoupSelector interface.
+    It's a base class for testing multiple selectors that are combined
+    with different operators.
+    """
+
+    class MockMultipleSoupSelector(MultipleSoupSelector):
+        """Mock class for testing MultipleSoupSelector interface."""
+
+        def __init__(self, *selectors):
+            super().__init__(list(selectors))
+
+        def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+            return []
+
+    class MockMultipleSoupSelectorNotEqual(MockMultipleSoupSelector):
+        """
+        Mock class for testing equality of MultipleSoupSelector,
+        if right operand is instance of MultipleSoupSelector and have the same
+        type as left operand, they are equal.
+        """
+
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # with two equal steps
+            (
+                MockMultipleSoupSelector(MockLinkSelector(), MockDivSelector()),
+                MockMultipleSoupSelector(MockLinkSelector(), MockDivSelector()),
+            ),
+            # without any steps
+            (
+                MockMultipleSoupSelector(),
+                MockMultipleSoupSelector(),
+            ),
+            # with one equal step
+            (
+                MockMultipleSoupSelector(MockDivSelector()),
+                MockMultipleSoupSelector(MockDivSelector()),
+            ),
+        ],
+    )
+    def test_two_selectors_are_equal(
+        self, selectors: tuple[MockSelector, MockSelector]
+    ):
+        """Tests if two multiple soup selectors are equal."""
+        assert (selectors[0] == selectors[1]) is True
+
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # with equal steps but in different order
+            (
+                MockMultipleSoupSelector(MockLinkSelector(), MockDivSelector()),
+                MockMultipleSoupSelector(MockDivSelector(), MockLinkSelector()),
+            ),
+            # without one equal step and one step different
+            (
+                MockMultipleSoupSelector(MockDivSelector(), MockLinkSelector()),
+                MockMultipleSoupSelector(MockDivSelector(), MockDivSelector()),
+            ),
+            # with one different step
+            (
+                MockMultipleSoupSelector(MockDivSelector()),
+                MockMultipleSoupSelector(MockLinkSelector()),
+            ),
+            # not instance of MultipleSoupSelector
+            (
+                MockMultipleSoupSelector(MockDivSelector()),
+                MockLinkSelector(),
+            ),
+            # not the same type as left operand
+            (
+                MockMultipleSoupSelector(MockDivSelector()),
+                MockMultipleSoupSelectorNotEqual(MockDivSelector()),
+            ),
+        ],
+    )
+    def test_two_selectors_are_not_equal(
+        self, selectors: tuple[MockSelector, MockSelector]
+    ):
+        """Tests if two multiple soup selectors are not equal."""
+        assert (selectors[0] == selectors[1]) is False
