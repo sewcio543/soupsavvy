@@ -132,7 +132,6 @@ class BaseCombinator(MultipleSoupSelector):
         return elements
 
 
-@dataclass(init=False)
 class ChildCombinator(BaseCombinator):
     """
     Class representing a child combinator in CSS selectors.
@@ -187,7 +186,6 @@ class ChildCombinator(BaseCombinator):
         return RelativeChild
 
 
-@dataclass(init=False)
 class NextSiblingCombinator(BaseCombinator):
     """
     Class representing a next sibling combinator in CSS selectors.
@@ -232,7 +230,6 @@ class NextSiblingCombinator(BaseCombinator):
         return RelativeNextSibling
 
 
-@dataclass(init=False)
 class SubsequentSiblingCombinator(BaseCombinator):
     """
     Class representing a subsequent sibling combinator in CSS selectors.
@@ -281,7 +278,6 @@ class SubsequentSiblingCombinator(BaseCombinator):
         return RelativeSubsequentSibling
 
 
-@dataclass(init=False)
 class DescendantCombinator(BaseCombinator):
     """
     Class representing a descent combinator in CSS selectors.
@@ -336,7 +332,6 @@ class DescendantCombinator(BaseCombinator):
         return RelativeDescendant
 
 
-@dataclass(init=False)
 class SelectorList(MultipleSoupSelector):
     """
     Class representing a list of selectors in CSS,
