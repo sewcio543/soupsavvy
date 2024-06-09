@@ -1,0 +1,7 @@
+soupsavvy
+=========
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>soupsavvy.tags.relative &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.tags.html">tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">soupsavvy.tags.relative</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for soupsavvy.tags.relative</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module that contains relative selectors and utility components.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">Tag</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.tags.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.tags.tag_utils</span> <span class="kn">import</span> <span class="n">TagResultSet</span>
+
+<span class="n">Operator</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">SoupSelector</span><span class="p">,</span> <span class="n">SoupSelector</span><span class="p">],</span> <span class="n">SoupSelector</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="RelativeSelector">
+<a class="viewcode-back" href="../../../soupsavvy.tags.relative.html#soupsavvy.tags.relative.RelativeSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">RelativeSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for relative selectors, that are used to find tags relative</span>
+<span class="sd">    to the tag that is being searched, which is considered an anchor.</span>
+
+<span class="sd">    CSS definition of relative selectors states that it is a selector representing</span>
+<span class="sd">    an element relative to one or more anchor elements preceded by a combinator.</span>
+
+<span class="sd">    In this use case, the anchor element is the tag that is being searched, and</span>
+<span class="sd">    the combinator is the logic of specific relative selector that is used.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; selector = Anchor &gt; TagSelector(&quot;div&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; selector.find_all(tag)</span>
+
+<span class="sd">    Uses RelativeChild selector to find any div tag that is a direct child of the</span>
+<span class="sd">    tag that is being searched (passed as an argument).</span>
+
+<span class="sd">    In css such selectors can be used in :has pseudo-class, where selector</span>
+<span class="sd">    is anchored to the element:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; div:has(&gt; a, + p)</span>
+
+<span class="sd">    Selects any div tag that has a direct child &#39;a&#39; tag or a next sibling &#39;p&#39; tag.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RelativeSelector.__init__">
+<a class="viewcode-back" href="../../../soupsavvy.tags.relative.html#soupsavvy.tags.relative.RelativeSelector.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes RelativeSelector instance with specified selector.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        selector : SoupSelector</span>
+<span class="sd">            Selector that is used to find tags relative to the anchor tag.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_selector_type</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">selector</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="c1"># check for RelativeSelector type for type checking sake</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">RelativeSelector</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="c1"># checking for exact type match - isinstance(other, self.__class__)</span>
+            <span class="c1"># when other is subclass of self.__class__ would call other.__eq__(self)</span>
+            <span class="c1"># which is not desired behavior, as it returns False</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">selector</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="BaseRelativeSibling">
+<a class="viewcode-back" href="../../../soupsavvy.tags.relative.html#soupsavvy.tags.relative.BaseRelativeSibling">[docs]</a>
+<span class="k">class</span> <span class="nc">BaseRelativeSibling</span><span class="p">(</span><span class="n">RelativeSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class with implementation for relative sibling selectors,</span>
+<span class="sd">    searches for next sibling(s) of the anchor tag.</span>
+<span class="sd">    Child class needs to define &#39;_limit&#39; class attribute to specify</span>
+<span class="sd">    how many next siblings to search for.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># limit of next siblings to check</span>
+    <span class="n">_limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="BaseRelativeSibling.find_all">
+<a class="viewcode-back" href="../../../soupsavvy.tags.relative.html#soupsavvy.tags.relative.BaseRelativeSibling.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+        <span class="n">search</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">parent</span> <span class="ow">or</span> <span class="n">tag</span>
+        <span class="c1"># find al sibling tags that match the selector</span>
+        <span class="n">matching</span> <span class="o">=</span> <span class="n">TagResultSet</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">search</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="c1"># find n next sibling tags</span>
+        <span class="n">next_</span> <span class="o">=</span> <span class="n">TagResultSet</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">find_next_siblings</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_limit</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
+        <span class="c1"># find intersection between two sets</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="n">matching</span> <span class="o">&amp;</span> <span class="n">next_</span>
+        <span class="k">return</span> <span class="n">matches</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RelativeChild">
+<a class="viewcode-back" href="../../../soupsavvy.tags.relative.html#soupsavvy.tags.relative.RelativeChild">[docs]</a>
+<span class="k">class</span> <span class="nc">RelativeChild</span><span class="p">(</span><span class="n">RelativeSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    RelativeChild selector is used to find tags matching selector that are</span>
+<span class="sd">    direct children of the tag that is being searched.</span>
+
+<span class="sd">    For RelativeChild selector, with TagSelector targeting &#39;p&#39; tag.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; RelativeChild(TagSelector(&quot;p&quot;))</span>
+
+<span class="sd">    when &#39;div&#39; element is passed into find methods:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;a&gt;&lt;/a&gt;&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;a&gt;&lt;p&gt;&lt;/p&gt;&lt;/a&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;a&gt;&lt;/a&gt;&lt;/div&gt; ❌</span>
+
+<span class="sd">    Returns element only if it is a direct child of the anchor element</span>
+<span class="sd">    and matches the selector.</span>
+
+<span class="sd">    RelativeChild selector is equivalent to using &#39;&gt;&#39; combinator in css selectors:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; div &gt; p { color: red; }</span>
+
+<span class="sd">    It can be created with Anchor instance as well with use of &#39;&gt;&#39; operator:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; Anchor &gt; TagSelector(&quot;p&quot;)</span>
+
+<span class="sd">    Which is equivalent to the first example and returns RelativeChild selector.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -------</span>
+<span class="sd">    Behavior of RelativeChild selector is equivalent to using find methods of</span>
+<span class="sd">    selector with recursive=False parameter and is implemented to support</span>
+<span class="sd">    &#39;has&#39; and ChildCombinator selector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RelativeChild.find_all">
+<a class="viewcode-back" href="../../../soupsavvy.tags.relative.html#soupsavvy.tags.relative.RelativeChild.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RelativeDescendant">
+<a class="viewcode-back" href="../../../soupsavvy.tags.relative.html#soupsavvy.tags.relative.RelativeDescendant">[docs]</a>
+<span class="k">class</span> <span class="nc">RelativeDescendant</span><span class="p">(</span><span class="n">RelativeSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    RelativeDescendant selector is used to find tags matching selector that are</span>
+<span class="sd">    descendants of the tag that is being searched.</span>
+
+<span class="sd">    For RelativeDescendant selector, with TagSelector targeting &#39;p&#39; tag,</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; RelativeDescendant(TagSelector(&quot;p&quot;))</span>
+
+<span class="sd">    when &#39;div&#39; element is passed into find methods:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;a&gt;&lt;/a&gt;&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;a&gt;&lt;p&gt;&lt;/p&gt;&lt;/a&gt;&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;a&gt;&lt;/a&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;/div&gt;&lt;p&gt;&lt;/p&gt; ❌</span>
+
+<span class="sd">    Returns element only if it is a descendant of the anchor element</span>
+<span class="sd">    and matches the selector.</span>
+
+<span class="sd">    RelativeDescendant selector is equivalent to using whitespace &quot; &quot; combinator</span>
+<span class="sd">    in css selectors.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; div p { color: red; }</span>
+
+<span class="sd">    It can be created with Anchor instance as well with use of &#39;&gt;&gt;&#39; operator:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; Anchor &gt;&gt; TagSelector(&quot;p&quot;)</span>
+
+<span class="sd">    Which is equivalent to the first example and returns RelativeDescendant selector.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -------</span>
+<span class="sd">    Behavior of RelativeDescendant selector is equivalent to using find methods of</span>
+<span class="sd">    selector with default recursive=True parameter and is implemented to support</span>
+<span class="sd">    &#39;has&#39; and DescendantCombinator selector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RelativeDescendant.find_all">
+<a class="viewcode-back" href="../../../soupsavvy.tags.relative.html#soupsavvy.tags.relative.RelativeDescendant.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RelativeNextSibling">
+<a class="viewcode-back" href="../../../soupsavvy.tags.relative.html#soupsavvy.tags.relative.RelativeNextSibling">[docs]</a>
+<span class="k">class</span> <span class="nc">RelativeNextSibling</span><span class="p">(</span><span class="n">BaseRelativeSibling</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    RelativeNextSibling selector is used to find tags matching selector that are</span>
+<span class="sd">    next siblings of the tag that is being searched.</span>
+
+<span class="sd">    For RelativeNextSibling selector, with TagSelector targeting &#39;p&#39; tag,</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; RelativeNextSibling(TagSelector(&quot;p&quot;))</span>
+
+<span class="sd">    when &#39;div&#39; element is passed into find methods:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;/div&gt;&lt;p&gt;&lt;/p&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;/div&gt;&lt;a&gt;&lt;/a&gt;&lt;p&gt;&lt;/p&gt;  ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;p&gt;&lt;/p&gt;&lt;div&gt;&lt;/div&gt; ❌</span>
+
+<span class="sd">    Returns element only if it is a next sibling of the anchor element</span>
+<span class="sd">    and matches the selector.</span>
+
+<span class="sd">    RelativeNextSibling selector is equivalent to using + combinator in css selectors.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; div + p { color: red; }</span>
+
+<span class="sd">    It can be created with Anchor instance as well with use of &#39;+&#39; operator:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; Anchor + TagSelector(&quot;p&quot;)</span>
+
+<span class="sd">    Which is equivalent to the first example and returns RelativeNextSibling selector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_limit</span> <span class="o">=</span> <span class="mi">1</span></div>
+
+
+
+<div class="viewcode-block" id="RelativeSubsequentSibling">
+<a class="viewcode-back" href="../../../soupsavvy.tags.relative.html#soupsavvy.tags.relative.RelativeSubsequentSibling">[docs]</a>
+<span class="k">class</span> <span class="nc">RelativeSubsequentSibling</span><span class="p">(</span><span class="n">BaseRelativeSibling</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    RelativeSubsequentSibling selector is used to find tags matching selector that are</span>
+<span class="sd">    subsequent siblings of the tag that is being searched.</span>
+
+<span class="sd">    For RelativeSubsequentSibling selector, with TagSelector targeting &#39;p&#39; tag,</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; RelativeSubsequentSibling(TagSelector(&quot;p&quot;))</span>
+
+<span class="sd">    when &#39;div&#39; element is passed into find methods:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;/div&gt;&lt;p&gt;&lt;/p&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;/div&gt;&lt;a&gt;&lt;/a&gt;&lt;p&gt;&lt;/p&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;p&gt;&lt;/p&gt;&lt;div&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;/div&gt;&lt;span&gt;&lt;p&gt;&lt;/p&gt;&lt;/span&gt; ❌</span>
+
+<span class="sd">    Returns element only if it is a subsequent sibling of the anchor element</span>
+<span class="sd">    and matches the selector.</span>
+
+<span class="sd">    RelativeSubsequentSibling selector is equivalent</span>
+<span class="sd">    to using ~ combinator in css selectors.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; div ~ p { color: red; }</span>
+
+<span class="sd">    It can be created with Anchor instance as well with use of &#39;*&#39; operator:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; Anchor * TagSelector(&quot;p&quot;)</span>
+
+<span class="sd">    Which is equivalent to the first example</span>
+<span class="sd">    and returns RelativeSubsequentSibling selector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_limit</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<span class="k">class</span> <span class="nc">_Anchor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Anchor components is a way to create relative selectors in a more</span>
+<span class="sd">    readable way by using operators.</span>
+
+<span class="sd">    _Anchor is an internal class and it&#39;s advisable to use the Anchor</span>
+<span class="sd">    instance instead, which can be considered like a singleton.</span>
+
+<span class="sd">    Component supports the following operators:</span>
+<span class="sd">    * `&gt;`: RelativeChild</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; Anchor &gt; TagSelector(&quot;div&quot;)</span>
+
+<span class="sd">    Creates a RelativeChild selector, that selects any div tag that is a direct</span>
+<span class="sd">    child of the tag that is being searched.</span>
+
+<span class="sd">    * `&gt;&gt;`: RelativeDescendant</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; Anchor &gt;&gt; TagSelector(&quot;div&quot;)</span>
+
+<span class="sd">    Creates a RelativeDescendant selector, that selects any div tag that is a descendant</span>
+<span class="sd">    of the tag that is being searched. This is default behavior of selectors,</span>
+<span class="sd">    and is equivalent to using the TagSelector directly, but is implemented</span>
+<span class="sd">    for the sake of consistency.</span>
+
+<span class="sd">    * `+`: RelativeNextSibling</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; Anchor + TagSelector(&quot;div&quot;)</span>
+
+<span class="sd">    Creates a RelativeNextSibling selector, that selects any div tag that is next</span>
+<span class="sd">    sibling of the tag that is being searched, it can logically return at most one tag.</span>
+
+<span class="sd">    * `*`: RelativeSubsequentSibling</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; Anchor * TagSelector(&quot;div&quot;)</span>
+
+<span class="sd">    Creates a RelativeSubsequentSibling selector, that selects any div tag</span>
+<span class="sd">    that is a subsequent sibling of the tag that is being searched.</span>
+
+<span class="sd">    This imitates css selector relative selectors that are used for example in</span>
+<span class="sd">    :has pseudo-class, that accepts relative selector list as an argument.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; :has(&gt; div, + a)</span>
+
+<span class="sd">    This translated to soupsavvy would be:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; HasSelector(Anchor &gt; TagSelector(&quot;div&quot;), Anchor + TagSelector(&quot;a&quot;))</span>
+
+<span class="sd">    Which would match any tag that has a direct child &#39;div&#39; and a next sibling &#39;a&#39; tag.</span>
+<span class="sd">    Selected tag is the anchor tag that is being searched.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -------</span>
+<span class="sd">    For more information on relative selectors, see:</span>
+<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors/Selector_structure#relative_selector</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelativeSelector</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RelativeChild</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelativeSelector</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RelativeDescendant</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelativeSelector</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RelativeNextSibling</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelativeSelector</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RelativeSubsequentSibling</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+
+<span class="c1"># instance of Anchor class with purpose to be used as a singleton</span>
+<span class="n">Anchor</span> <span class="o">=</span> <span class="n">_Anchor</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, sewcio543.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

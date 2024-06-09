@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>soupsavvy.tags.attributes &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.tags.html">tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">soupsavvy.tags.attributes</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for soupsavvy.tags.attributes</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module for selectors that are based on HTML element attributes.</span>
+
+<span class="sd">They are used for selection of various elements in the markup,</span>
+<span class="sd">based on attributes values.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">AttributeSelector - Selects element for any attribute value.</span>
+<span class="sd">IdSelector - Selects element based on &#39;id&#39; attribute value.</span>
+<span class="sd">ClassSelector - Selects element based on &#39;class&#39; attribute value.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Pattern</span>
+
+<span class="kn">import</span> <span class="nn">soupsavvy.tags.namespace</span> <span class="k">as</span> <span class="nn">ns</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.tags.base</span> <span class="kn">import</span> <span class="n">SelectableCSS</span><span class="p">,</span> <span class="n">SingleSoupSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.tags.namespace</span> <span class="kn">import</span> <span class="n">PatternType</span>
+
+
+<div class="viewcode-block" id="AttributeSelector">
+<a class="viewcode-back" href="../../../soupsavvy.tags.attributes.html#soupsavvy.AttributeSelector">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">AttributeSelector</span><span class="p">(</span><span class="n">SingleSoupSelector</span><span class="p">,</span> <span class="n">SelectableCSS</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class representing attribute of the HTML element.</span>
+<span class="sd">    If used directly, provides elements based only on a single attribute value.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; AttributeSelector(name=&quot;class&quot;, value=&quot;widget&quot;)</span>
+
+<span class="sd">    matches all elements that have &#39;class&#39; attribute with value &quot;widget&quot;.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;Hello World&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;menu&quot;&gt;Hello World&lt;/div&gt; ❌</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        HTML element attribute name ex. &quot;class&quot;, &quot;href&quot;</span>
+<span class="sd">    value : str | Pattern, optional</span>
+<span class="sd">        Value of the attribute, like a class name. Can be regex pattern,</span>
+<span class="sd">        which results in using re.search to match the attribute value.</span>
+<span class="sd">        By default None, if not provided, default pattern matching any sequence</span>
+<span class="sd">        of characters is used.</span>
+<span class="sd">    re : bool, optional</span>
+<span class="sd">        Whether to use a regex pattern to match the attribute value, by default False.</span>
+<span class="sd">        If True, re.search is used to match the attribute value.</span>
+
+<span class="sd">    Implements SelectableCSS interface for CSS selector generation.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; selector = AttributeSelector(name=&quot;class&quot;, value=&quot;widget&quot;)</span>
+<span class="sd">    ... selector.selector</span>
+<span class="sd">    [class=widget]</span>
+
+<span class="sd">    &gt;&gt;&gt; selector = AttributeSelector(name=&quot;class&quot;, value=&quot;widget&quot;, re=True)</span>
+<span class="sd">    ... selector.selector</span>
+<span class="sd">    [class*=widget]</span>
+
+<span class="sd">    &gt;&gt;&gt; selector = AttributeSelector(&quot;class&quot;)</span>
+<span class="sd">    ... selector.selector</span>
+<span class="sd">    [class]</span>
+
+<span class="sd">    It is a simplified version and it will not be equivalent in results</span>
+<span class="sd">    in case of using regex patterns, which are not supported in CSS,</span>
+<span class="sd">    it defaults to *= containment operator.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; selector = AttributeSelector(name=&quot;class&quot;, value=re.compile(&quot;^main[0-9]&quot;))</span>
+<span class="sd">    ... selector.selector</span>
+<span class="sd">    [class*=&#39;^main[0-9]&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PatternType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">re</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets pattern attribute used in SoupSelector find operations.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_pattern</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_parse_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PatternType</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parses pattern used in find methods based on provided init parameters.&quot;&quot;&quot;</span>
+        <span class="c1"># if value was not provided, fall back to default pattern</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">ns</span><span class="o">.</span><span class="n">DEFAULT_PATTERN</span><span class="p">)</span>
+        <span class="c1"># if value was provided and re = True, create pattern from value</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">re</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="c1"># if value was provided and re = False, use str value as pattern</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">selector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># undefined value - bs Tag matches all elements with attribute if css is</span>
+        <span class="c1"># provided without a value in ex. format &#39;[href]&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">]&quot;</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span>
+        <span class="n">re</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">re</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">):</span>
+            <span class="c1"># extract regex pattern string from compiled regex</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="o">.</span><span class="n">pattern</span>
+            <span class="c1"># always reduce to containment operator for regex patterns</span>
+            <span class="n">re</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">operator</span> <span class="o">=</span> <span class="s2">&quot;*=&quot;</span> <span class="k">if</span> <span class="n">re</span> <span class="k">else</span> <span class="s2">&quot;=&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}{</span><span class="n">operator</span><span class="si">}</span><span class="s2">&#39;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39;]&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_find_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="c1"># passing filters in attrs parameter as dict instead of kwargs</span>
+        <span class="c1"># to avoid overriding other find method parameters like ex. &#39;name&#39;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">ns</span><span class="o">.</span><span class="n">ATTRS</span><span class="p">:</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="p">}}</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">AttributeSelector</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># pattern is what is used in find methods</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_pattern</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span></div>
+
+
+
+<span class="k">class</span> <span class="nc">_SpecificAttributeSelector</span><span class="p">(</span><span class="n">AttributeSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for specific attribute selectors,</span>
+<span class="sd">    that wraps AttributeSelector with default attribute name for user convenience.</span>
+
+<span class="sd">    Child classes should define _NAME attribute with default attribute name,</span>
+<span class="sd">    that will be used in the AttributeSelector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_NAME</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PatternType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">re</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes specific attribute selector with default attribute name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : str | Pattern, optional</span>
+<span class="sd">            Value of the attribute, like a class name. Can be regex pattern,</span>
+<span class="sd">            which results in using re.search to match the attribute value.</span>
+<span class="sd">            By default None, if not provided, default pattern matching any sequence</span>
+<span class="sd">            of characters is used.</span>
+<span class="sd">        re : bool, optional</span>
+<span class="sd">            Whether to use a regex pattern to match the attribute value,</span>
+<span class="sd">            by default False. If True, re.search is used to match the attribute value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_NAME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">re</span><span class="o">=</span><span class="n">re</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="IdSelector">
+<a class="viewcode-back" href="../../../soupsavvy.tags.attributes.html#soupsavvy.IdSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">IdSelector</span><span class="p">(</span><span class="n">_SpecificAttributeSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Component for selecting HTML elements based on &#39;id&#39; attribute value.</span>
+<span class="sd">    Convenience wrapper for AttributeSelector with default attribute name &#39;id&#39;,</span>
+<span class="sd">    as its use is very common in CSS selectors.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; IdSelector(&quot;main&quot;)</span>
+
+<span class="sd">    matches all elements that have &#39;id&#39; attribute with value &quot;main&quot;.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div id=&quot;main&quot;&gt;Hello World&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div id=&quot;content&quot;&gt;Hello World&lt;/div&gt; ❌</span>
+
+<span class="sd">    Implements SelectableCSS interface for CSS selector generation,</span>
+<span class="sd">    provides simplified, more css native selector for id attribute,</span>
+<span class="sd">    when value is provided, and no pattern is used.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; selector = IdSelector(&quot;main&quot;)</span>
+<span class="sd">    ... selector.selector</span>
+<span class="sd">    #main</span>
+
+<span class="sd">    It is a simplified version and it will not be equivalent in results</span>
+<span class="sd">    in case of using regex patterns, which are not supported in CSS,</span>
+<span class="sd">    it defaults to *= containment operator.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; selector = IdSelector(re.compile(&quot;^main[0-9]&quot;))</span>
+<span class="sd">    ... selector.selector</span>
+<span class="sd">    [id*=&#39;^main[0-9]&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_NAME</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">selector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># returns &#39;#&#39; css syntax if selecting string value</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;#</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">selector</span></div>
+
+
+
+<div class="viewcode-block" id="ClassSelector">
+<a class="viewcode-back" href="../../../soupsavvy.tags.attributes.html#soupsavvy.ClassSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">ClassSelector</span><span class="p">(</span><span class="n">_SpecificAttributeSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Component for selecting HTML elements based on &#39;class&#39; attribute value.</span>
+<span class="sd">    Convenience wrapper for AttributeSelector with default attribute name &#39;class&#39;,</span>
+<span class="sd">    as its use is very common in CSS selectors.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; ClassSelector(&quot;main&quot;)</span>
+
+<span class="sd">    matches all elements that have &#39;class&#39; attribute with value &quot;main&quot;.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;main&quot;&gt;Hello World&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;content&quot;&gt;Hello World&lt;/div&gt; ❌</span>
+
+<span class="sd">    Implements SelectableCSS interface for CSS selector generation,</span>
+<span class="sd">    provides simplified, more css native selector for class attribute,</span>
+<span class="sd">    when value is provided, and no pattern is used.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; selector = ClassSelector(&quot;main&quot;)</span>
+<span class="sd">    ... selector.selector</span>
+<span class="sd">    .main</span>
+
+<span class="sd">    It is a simplified version and it will not be equivalent in results</span>
+<span class="sd">    in case of using regex patterns, which are not supported in CSS,</span>
+<span class="sd">    it defaults to *= containment operator.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; selector = ClassSelector(re.compile(&quot;^main[0-9]&quot;))</span>
+<span class="sd">    ... selector.selector</span>
+<span class="sd">    [class*=&#39;^main[0-9]&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_NAME</span> <span class="o">=</span> <span class="s2">&quot;class&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">selector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># returns &#39;.&#39; css syntax if selecting string value</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">selector</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, sewcio543.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

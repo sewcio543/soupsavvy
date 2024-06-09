@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tags.relative &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tags.tag_utils" href="soupsavvy.tags.tag_utils.html" />
+    <link rel="prev" title="tags.exceptions" href="soupsavvy.tags.exceptions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="soupsavvy.tags.html">tags</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.tags.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="soupsavvy.tags.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.attributes.html">tags.attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.base.html">tags.base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.combinators.html">tags.combinators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.components.html">tags.components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.exceptions.html">tags.exceptions</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tags.relative</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.relative.BaseRelativeSibling"><code class="docutils literal notranslate"><span class="pre">BaseRelativeSibling</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.relative.RelativeChild"><code class="docutils literal notranslate"><span class="pre">RelativeChild</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.relative.RelativeDescendant"><code class="docutils literal notranslate"><span class="pre">RelativeDescendant</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.relative.RelativeNextSibling"><code class="docutils literal notranslate"><span class="pre">RelativeNextSibling</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.relative.RelativeSelector"><code class="docutils literal notranslate"><span class="pre">RelativeSelector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.relative.RelativeSubsequentSibling"><code class="docutils literal notranslate"><span class="pre">RelativeSubsequentSibling</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.tag_utils.html">tags.tag_utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.tags.html#module-soupsavvy.tags">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="soupsavvy.tags.html">tags</a></li>
+      <li class="breadcrumb-item active">tags.relative</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/soupsavvy.tags.relative.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-soupsavvy.tags.relative">
+<span id="tags-relative"></span><h1>tags.relative<a class="headerlink" href="#module-soupsavvy.tags.relative" title="Link to this heading"></a></h1>
+<p>Module that contains relative selectors and utility components.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.relative.BaseRelativeSibling">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseRelativeSibling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/tags/relative.html#BaseRelativeSibling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.relative.BaseRelativeSibling" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.tags.relative.RelativeSelector" title="soupsavvy.tags.relative.RelativeSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">RelativeSelector</span></code></a></p>
+<p>Base class with implementation for relative sibling selectors,
+searches for next sibling(s) of the anchor tag.
+Child class needs to define ‘_limit’ class attribute to specify
+how many next siblings to search for.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.relative.BaseRelativeSibling.find_all">
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/tags/relative.html#BaseRelativeSibling.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.relative.BaseRelativeSibling.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all matching elements in provided BeautifulSoup Tag.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
+</dd>
+<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>bs4.Tag.find method parameter that specifies if search should be recursive.
+If set to False, only direct children of the tag will be searched.
+By default True.</p>
+</dd>
+<dt>limit<span class="classifier">int, optional</span></dt><dd><p>bs4.Tag.find_all method parameter that specifies maximum number of elements
+to return. If set to None, all elements are returned. By default None.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>list[Tag]</dt><dd><p>A list of Tag objects matching tag specifications.
+If none found, the list is empty.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.relative.RelativeChild">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RelativeChild</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/tags/relative.html#RelativeChild"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.relative.RelativeChild" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.tags.relative.RelativeSelector" title="soupsavvy.tags.relative.RelativeSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">RelativeSelector</span></code></a></p>
+<p>RelativeChild selector is used to find tags matching selector that are
+direct children of the tag that is being searched.</p>
+<p>For RelativeChild selector, with TagSelector targeting ‘p’ tag.</p>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">RelativeChild</span><span class="p">(</span><span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>when ‘div’ element is passed into find methods:</p>
+</section>
+<section id="id1">
+<h2>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;a&gt;&lt;/a&gt;&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;div&gt;&lt;a&gt;&lt;p&gt;&lt;/p&gt;&lt;/a&gt;&lt;/div&gt; ❌
+&gt;&gt;&gt; &lt;div&gt;&lt;a&gt;&lt;/a&gt;&lt;/div&gt; ❌
+</pre></div>
+</div>
+<p>Returns element only if it is a direct child of the anchor element
+and matches the selector.</p>
+<p>RelativeChild selector is equivalent to using ‘&gt;’ combinator in css selectors:</p>
+</section>
+<section id="id2">
+<h2>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span> <span class="o">&gt;</span> <span class="n">p</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>It can be created with Anchor instance as well with use of ‘&gt;’ operator:</p>
+</section>
+<section id="id3">
+<h2>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Anchor</span> <span class="o">&gt;</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Which is equivalent to the first example and returns RelativeChild selector.</p>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>Behavior of RelativeChild selector is equivalent to using find methods of
+selector with recursive=False parameter and is implemented to support
+‘has’ and ChildCombinator selector.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.relative.RelativeChild.find_all">
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/tags/relative.html#RelativeChild.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.relative.RelativeChild.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all matching elements in provided BeautifulSoup Tag.</p>
+<section id="id4">
+<h3>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
+</dd>
+<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>bs4.Tag.find method parameter that specifies if search should be recursive.
+If set to False, only direct children of the tag will be searched.
+By default True.</p>
+</dd>
+<dt>limit<span class="classifier">int, optional</span></dt><dd><p>bs4.Tag.find_all method parameter that specifies maximum number of elements
+to return. If set to None, all elements are returned. By default None.</p>
+</dd>
+</dl>
+</section>
+<section id="id5">
+<h3>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>list[Tag]</dt><dd><p>A list of Tag objects matching tag specifications.
+If none found, the list is empty.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.relative.RelativeDescendant">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RelativeDescendant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/tags/relative.html#RelativeDescendant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.relative.RelativeDescendant" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.tags.relative.RelativeSelector" title="soupsavvy.tags.relative.RelativeSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">RelativeSelector</span></code></a></p>
+<p>RelativeDescendant selector is used to find tags matching selector that are
+descendants of the tag that is being searched.</p>
+<p>For RelativeDescendant selector, with TagSelector targeting ‘p’ tag,</p>
+<section id="id6">
+<h2>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">RelativeDescendant</span><span class="p">(</span><span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>when ‘div’ element is passed into find methods:</p>
+</section>
+<section id="id7">
+<h2>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;a&gt;&lt;/a&gt;&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;div&gt;&lt;a&gt;&lt;p&gt;&lt;/p&gt;&lt;/a&gt;&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;div&gt;&lt;a&gt;&lt;/a&gt;&lt;/div&gt; ❌
+&gt;&gt;&gt; &lt;div&gt;&lt;/div&gt;&lt;p&gt;&lt;/p&gt; ❌
+</pre></div>
+</div>
+<p>Returns element only if it is a descendant of the anchor element
+and matches the selector.</p>
+<p>RelativeDescendant selector is equivalent to using whitespace “ “ combinator
+in css selectors.</p>
+</section>
+<section id="id8">
+<h2>Example<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span> <span class="n">p</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>It can be created with Anchor instance as well with use of ‘&gt;&gt;’ operator:</p>
+</section>
+<section id="id9">
+<h2>Example<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Anchor</span> <span class="o">&gt;&gt;</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Which is equivalent to the first example and returns RelativeDescendant selector.</p>
+</section>
+<section id="id10">
+<h2>Notes<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<p>Behavior of RelativeDescendant selector is equivalent to using find methods of
+selector with default recursive=True parameter and is implemented to support
+‘has’ and DescendantCombinator selector.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.relative.RelativeDescendant.find_all">
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/tags/relative.html#RelativeDescendant.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.relative.RelativeDescendant.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all matching elements in provided BeautifulSoup Tag.</p>
+<section id="id11">
+<h3>Parameters<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
+</dd>
+<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>bs4.Tag.find method parameter that specifies if search should be recursive.
+If set to False, only direct children of the tag will be searched.
+By default True.</p>
+</dd>
+<dt>limit<span class="classifier">int, optional</span></dt><dd><p>bs4.Tag.find_all method parameter that specifies maximum number of elements
+to return. If set to None, all elements are returned. By default None.</p>
+</dd>
+</dl>
+</section>
+<section id="id12">
+<h3>Returns<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>list[Tag]</dt><dd><p>A list of Tag objects matching tag specifications.
+If none found, the list is empty.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.relative.RelativeNextSibling">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RelativeNextSibling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/tags/relative.html#RelativeNextSibling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.relative.RelativeNextSibling" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.tags.relative.BaseRelativeSibling" title="soupsavvy.tags.relative.BaseRelativeSibling"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseRelativeSibling</span></code></a></p>
+<p>RelativeNextSibling selector is used to find tags matching selector that are
+next siblings of the tag that is being searched.</p>
+<p>For RelativeNextSibling selector, with TagSelector targeting ‘p’ tag,</p>
+<section id="id13">
+<h2>Example<a class="headerlink" href="#id13" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">RelativeNextSibling</span><span class="p">(</span><span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>when ‘div’ element is passed into find methods:</p>
+</section>
+<section id="id14">
+<h2>Example<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;&lt;/div&gt;&lt;p&gt;&lt;/p&gt; ✔️
+&gt;&gt;&gt; &lt;div&gt;&lt;/div&gt;&lt;a&gt;&lt;/a&gt;&lt;p&gt;&lt;/p&gt;  ❌
+&gt;&gt;&gt; &lt;p&gt;&lt;/p&gt;&lt;div&gt;&lt;/div&gt; ❌
+</pre></div>
+</div>
+<p>Returns element only if it is a next sibling of the anchor element
+and matches the selector.</p>
+<p>RelativeNextSibling selector is equivalent to using + combinator in css selectors.</p>
+</section>
+<section id="id15">
+<h2>Example<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span> <span class="o">+</span> <span class="n">p</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>It can be created with Anchor instance as well with use of ‘+’ operator:</p>
+</section>
+<section id="id16">
+<h2>Example<a class="headerlink" href="#id16" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Anchor</span> <span class="o">+</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Which is equivalent to the first example and returns RelativeNextSibling selector.</p>
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.relative.RelativeSelector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RelativeSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/tags/relative.html#RelativeSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.relative.RelativeSelector" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupSelector</span></code></a></p>
+<p>Base class for relative selectors, that are used to find tags relative
+to the tag that is being searched, which is considered an anchor.</p>
+<p>CSS definition of relative selectors states that it is a selector representing
+an element relative to one or more anchor elements preceded by a combinator.</p>
+<p>In this use case, the anchor element is the tag that is being searched, and
+the combinator is the logic of specific relative selector that is used.</p>
+<section id="id17">
+<h2>Example<a class="headerlink" href="#id17" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">selector</span> <span class="o">=</span> <span class="n">Anchor</span> <span class="o">&gt;</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Uses RelativeChild selector to find any div tag that is a direct child of the
+tag that is being searched (passed as an argument).</p>
+<p>In css such selectors can be used in :has pseudo-class, where selector
+is anchored to the element:</p>
+</section>
+<section id="id18">
+<h2>Example<a class="headerlink" href="#id18" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span><span class="p">:</span><span class="n">has</span><span class="p">(</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">,</span> <span class="o">+</span> <span class="n">p</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Selects any div tag that has a direct child ‘a’ tag or a next sibling ‘p’ tag.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.relative.RelativeSelector.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/tags/relative.html#RelativeSelector.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.relative.RelativeSelector.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes RelativeSelector instance with specified selector.</p>
+<section id="id19">
+<h3>Parameters<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>selector<span class="classifier">SoupSelector</span></dt><dd><p>Selector that is used to find tags relative to the anchor tag.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.relative.RelativeSubsequentSibling">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RelativeSubsequentSibling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/tags/relative.html#RelativeSubsequentSibling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.relative.RelativeSubsequentSibling" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.tags.relative.BaseRelativeSibling" title="soupsavvy.tags.relative.BaseRelativeSibling"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseRelativeSibling</span></code></a></p>
+<p>RelativeSubsequentSibling selector is used to find tags matching selector that are
+subsequent siblings of the tag that is being searched.</p>
+<p>For RelativeSubsequentSibling selector, with TagSelector targeting ‘p’ tag,</p>
+<section id="id20">
+<h2>Example<a class="headerlink" href="#id20" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">RelativeSubsequentSibling</span><span class="p">(</span><span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>when ‘div’ element is passed into find methods:</p>
+</section>
+<section id="id21">
+<h2>Example<a class="headerlink" href="#id21" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;&lt;/div&gt;&lt;p&gt;&lt;/p&gt; ✔️
+&gt;&gt;&gt; &lt;div&gt;&lt;/div&gt;&lt;a&gt;&lt;/a&gt;&lt;p&gt;&lt;/p&gt; ✔️
+&gt;&gt;&gt; &lt;p&gt;&lt;/p&gt;&lt;div&gt;&lt;/div&gt; ❌
+&gt;&gt;&gt; &lt;div&gt;&lt;/div&gt;&lt;span&gt;&lt;p&gt;&lt;/p&gt;&lt;/span&gt; ❌
+</pre></div>
+</div>
+<p>Returns element only if it is a subsequent sibling of the anchor element
+and matches the selector.</p>
+<p>RelativeSubsequentSibling selector is equivalent
+to using ~ combinator in css selectors.</p>
+</section>
+<section id="id22">
+<h2>Example<a class="headerlink" href="#id22" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span> <span class="o">~</span> <span class="n">p</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>It can be created with Anchor instance as well with use of ‘*’ operator:</p>
+</section>
+<section id="id23">
+<h2>Example<a class="headerlink" href="#id23" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Anchor</span> <span class="o">*</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Which is equivalent to the first example
+and returns RelativeSubsequentSibling selector.</p>
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="soupsavvy.tags.exceptions.html" class="btn btn-neutral float-left" title="tags.exceptions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soupsavvy.tags.tag_utils.html" class="btn btn-neutral float-right" title="tags.tag_utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, sewcio543.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

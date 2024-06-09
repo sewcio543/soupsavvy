@@ -1,0 +1,29 @@
+testing.generators
+====================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.testing.generators.templates
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.testing.generators.base
+   soupsavvy.testing.generators.exceptions
+   soupsavvy.testing.generators.generators
+   soupsavvy.testing.generators.namespace
+
+Module contents
+---------------
+
+.. automodule:: soupsavvy.testing.generators
+   :members:
+   :undoc-members:
+   :show-inheritance:

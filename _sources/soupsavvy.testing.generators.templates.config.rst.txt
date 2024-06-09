@@ -1,0 +1,7 @@
+testing.generators.templates.config
+====================================================
+
+.. automodule:: soupsavvy.testing.generators.templates.config
+   :members:
+   :undoc-members:
+   :show-inheritance:

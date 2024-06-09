@@ -1,0 +1,7 @@
+utils.deprecation
+==================================
+
+.. automodule:: soupsavvy.utils.deprecation
+   :members:
+   :undoc-members:
+   :show-inheritance:

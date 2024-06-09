@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>soupsavvy.tags.base &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.tags.html">tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">soupsavvy.tags.base</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for soupsavvy.tags.base</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module for base classes and interfaces for tag selectors.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">overload</span>
+
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">NavigableString</span><span class="p">,</span> <span class="n">Tag</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.tags.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">NavigableStringException</span><span class="p">,</span>
+    <span class="n">NotSoupSelectorException</span><span class="p">,</span>
+    <span class="n">TagNotFoundException</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.tags.namespace</span> <span class="kn">import</span> <span class="n">FindResult</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">soupsavvy.tags.combinators</span> <span class="kn">import</span> <span class="p">(</span>
+        <span class="n">ChildCombinator</span><span class="p">,</span>
+        <span class="n">DescendantCombinator</span><span class="p">,</span>
+        <span class="n">NextSiblingCombinator</span><span class="p">,</span>
+        <span class="n">SelectorList</span><span class="p">,</span>
+        <span class="n">SubsequentSiblingCombinator</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">soupsavvy.tags.components</span> <span class="kn">import</span> <span class="n">AndSelector</span><span class="p">,</span> <span class="n">NotSelector</span>
+
+
+<div class="viewcode-block" id="SoupSelector">
+<a class="viewcode-back" href="../../../soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">SoupSelector</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interface for classes that define tags and provide functionality</span>
+<span class="sd">    to find them in BeautifulSoup Tags.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    find(tag: Tag, strict: bool = False)</span>
+<span class="sd">        Finds tag element in BeautifulSoup Tag by wrapping Tag find method</span>
+<span class="sd">        and passing parameters specific to given tag.</span>
+<span class="sd">        If strict parameter is set to True and element is not found exception is raised.</span>
+<span class="sd">        If strict is set to False, which is a default and element is not found</span>
+<span class="sd">        result of Tag.find is return, which is None.</span>
+<span class="sd">        Otherwise matching Tag is returned.</span>
+<span class="sd">    find_all(tag: Tag)</span>
+<span class="sd">        Finds all tag elements in BeautifulSoup Tag by wrapping Tag find_all method</span>
+<span class="sd">        and passing parameters specific to given tag.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    To implement SoupSelector interface child class must implement:</span>
+<span class="sd">    * &#39;find_all&#39; method that returns a list of matching elements in bs4.Tag.</span>
+<span class="sd">    It could optionally implement:</span>
+<span class="sd">    * &#39;_find&#39; method that returns result of bs4.Tag &#39;find&#39; method.</span>
+<span class="sd">    By default &#39;_find&#39; method is implemented by calling &#39;find_all&#39; method</span>
+<span class="sd">    and returning first element if any found or None otherwise.</span>
+<span class="sd">    If different logic is required or performance can be improved, &#39;_find&#39; method</span>
+<span class="sd">    can be overridden in child class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@overload</span>
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">strict</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span> <span class="o">...</span>
+
+    <span class="nd">@overload</span>
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">strict</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tag</span><span class="p">:</span> <span class="o">...</span>
+
+<div class="viewcode-block" id="SoupSelector.find">
+<a class="viewcode-back" href="../../../soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector.find">[docs]</a>
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds a first matching element in provided BeautifulSoup Tag.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tag : Tag</span>
+<span class="sd">            Any BeautifulSoup Tag object.</span>
+<span class="sd">        strict : bool, optional</span>
+<span class="sd">            If True, raises an exception if tag was not found in markup,</span>
+<span class="sd">            if False and tag was not found, returns None by defaulting to BeautifulSoup</span>
+<span class="sd">            implementation. Value of this parameter does not affect behavior if tag</span>
+<span class="sd">            was successfully found in the markup. By default False.</span>
+<span class="sd">        recursive : bool, optional</span>
+<span class="sd">            bs4.Tag.find method parameter that specifies if search should be recursive.</span>
+<span class="sd">            If set to False, only direct children of the tag will be searched.</span>
+<span class="sd">            By default True.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tag | None</span>
+<span class="sd">            BeautifulSoup Tag if it tag was found in the markup, else None.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        If result is an instance of NavigableString,</span>
+<span class="sd">        exception is raised to avoid any type of inconsistency downstream.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TagNotFoundException</span>
+<span class="sd">            If strict parameter is set to True and tag was not found in markup.</span>
+<span class="sd">        NavigableStringException</span>
+<span class="sd">            If NavigableString was returned by bs4.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">strict</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">TagNotFoundException</span><span class="p">(</span><span class="s2">&quot;Tag was not found in markup.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">NavigableString</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">NavigableStringException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;NavigableString was returned for </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2"> string search, &quot;</span>
+                <span class="s2">&quot;invalid operation for SoupSelector find.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="SoupSelector.find_all">
+<a class="viewcode-back" href="../../../soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector.find_all">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds all matching elements in provided BeautifulSoup Tag.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tag : Tag</span>
+<span class="sd">            Any BeautifulSoup Tag object.</span>
+<span class="sd">        recursive : bool, optional</span>
+<span class="sd">            bs4.Tag.find method parameter that specifies if search should be recursive.</span>
+<span class="sd">            If set to False, only direct children of the tag will be searched.</span>
+<span class="sd">            By default True.</span>
+<span class="sd">        limit : int, optional</span>
+<span class="sd">            bs4.Tag.find_all method parameter that specifies maximum number of elements</span>
+<span class="sd">            to return. If set to None, all elements are returned. By default None.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[Tag]</span>
+<span class="sd">            A list of Tag objects matching tag specifications.</span>
+<span class="sd">            If none found, the list is empty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an interface, &quot;</span>
+            <span class="s2">&quot;and does not implement this method.&quot;</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FindResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns an object that is a result of markup search.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tag : Tag</span>
+<span class="sd">            Any BeautifulSoup Tag object.</span>
+<span class="sd">        recursive : bool, optional</span>
+<span class="sd">            bs4.Tag.find method parameter that specifies if search should be recursive.</span>
+<span class="sd">            If set to False, only direct children of the tag will be searched.</span>
+<span class="sd">            By default True.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NavigableString | Tag | None:</span>
+<span class="sd">            Result of bs4.Tag find method with tag parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">elements</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_check_selector_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if provided object is an instance of SoupSelector.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : Any</span>
+<span class="sd">            Any object to be checked if it is an instance of SoupSelector.</span>
+<span class="sd">        message : str, optional</span>
+<span class="sd">            Custom message to be displayed in case of raising an exception.</span>
+<span class="sd">            By default None, which results in default message.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotSoupSelectorException</span>
+<span class="sd">            If provided object is not an instance of SoupSelector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">message</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;Object </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2"> is not an instance of </span><span class="si">{</span><span class="n">SoupSelector</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">SoupSelector</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">NotSoupSelectorException</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check self and other object for equality.</span>
+
+<span class="sd">        This method is abstract and must be implemented by all selectors.</span>
+<span class="sd">        Selectors are considered equal if their find methods return the same result.</span>
+
+<span class="sd">        Calling find or find_all methods on selectors that are equal</span>
+<span class="sd">        should return the same results.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; selector1 = ElementTag(&quot;div&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; selector2 = ElementTag(&quot;div&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; selector1 == selector2</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; selector1.find(tag) == selector2.find(tag)</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an interface, &quot;</span>
+            <span class="s2">&quot;and does not implement this method.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SelectorList</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overrides __or__ method called also by pipe operator &#39;|&#39;.</span>
+<span class="sd">        Syntactical Sugar for logical disjunction, that creates a SoupSelector</span>
+<span class="sd">        matching at least one of the elements.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : SoupSelector</span>
+<span class="sd">            SoupSelector object to be combined into new SoupUnionTag.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        SoupUnionTag</span>
+<span class="sd">            Union of two SoupSelector that can be used to get all elements</span>
+<span class="sd">            that match at least one of the elements in the Union.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotSoupSelectorException</span>
+<span class="sd">            If provided object is not of SoupSelector type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">soupsavvy.tags.combinators</span> <span class="kn">import</span> <span class="n">SelectorList</span>
+
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Bitwise OR not supported for types </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;expected an instance of </span><span class="si">{</span><span class="n">SoupSelector</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_selector_type</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SelectorList</span><span class="p">):</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">selectors</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span>
+            <span class="c1"># return new SelectorList with updated steps</span>
+            <span class="k">return</span> <span class="n">SelectorList</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">SelectorList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__invert__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SoupSelector</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overrides __invert__ method called also by tilde operator &#39;~&#39;.</span>
+<span class="sd">        Syntactical Sugar for bitwise NOT operator, that creates a NotElementTag</span>
+<span class="sd">        matching everything that is not matched by the SoupSelector.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : SoupSelector</span>
+<span class="sd">            SoupSelector object to be negated into new NotElementTag.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NotElementTag</span>
+<span class="sd">            Negation of SoupSelector that can be used to get all elements</span>
+<span class="sd">            that do not match the SoupSelector.</span>
+<span class="sd">        SoupSelector</span>
+<span class="sd">            Any SoupSelector object in case of directly inverting</span>
+<span class="sd">            NotElementTag to get original SoupSelector.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotSoupSelectorException</span>
+<span class="sd">            If provided object is not of SoupSelector type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">soupsavvy.tags.components</span> <span class="kn">import</span> <span class="n">NotSelector</span>
+
+        <span class="k">return</span> <span class="n">NotSelector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AndSelector</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overrides __and__ method called also by ampersand operator &#39;&amp;&#39;.</span>
+<span class="sd">        Syntactical Sugar for bitwise AND operator, that creates an AndElementTag</span>
+<span class="sd">        matching everything that is matched by both SoupSelector.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : SoupSelector</span>
+<span class="sd">            SoupSelector object to be combined into new AndElementTag</span>
+<span class="sd">            with current SoupSelector.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        AndElementTag</span>
+<span class="sd">            Intersection of two SoupSelector that can be used to get all elements</span>
+<span class="sd">            that match both SoupSelector.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotSoupSelectorException</span>
+<span class="sd">            If provided object is not of SoupSelector type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">soupsavvy.tags.components</span> <span class="kn">import</span> <span class="n">AndSelector</span>
+
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Bitwise AND not supported for types </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;expected an instance of </span><span class="si">{</span><span class="n">SoupSelector</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_selector_type</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">AndSelector</span><span class="p">):</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">selectors</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span>
+            <span class="c1"># return new AndSelector with updated steps</span>
+            <span class="k">return</span> <span class="n">AndSelector</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">AndSelector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChildCombinator</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overrides __gt__ method called also by greater than operator &#39;&gt;&#39;.</span>
+<span class="sd">        Syntactical Sugar for greater than operator, that creates a ChildCombinator</span>
+<span class="sd">        which is equivalent to child combinator in css.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; div &gt; a</span>
+
+<span class="sd">        matches all &#39;a&#39; elements that are direct children of &#39;div&#39; elements.</span>
+<span class="sd">        The same can be achieved by using &#39;&gt;&#39; operator on two SoupSelector objects.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; ElementTag(&quot;div&quot;) &gt; ElementTag(&quot;a&quot;)</span>
+
+<span class="sd">        Which results in</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; ChildCombinator(ElementTag(&quot;div&quot;), ElementTag(&quot;a&quot;))</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : SoupSelector</span>
+<span class="sd">            SoupSelector object to be combined into new ChildCombinator as child</span>
+<span class="sd">            of current SoupSelector.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ChildCombinator</span>
+<span class="sd">            ChildCombinator object that can be used to get all matching elements</span>
+<span class="sd">            that are direct children of the current SoupSelector.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotSoupSelectorException</span>
+<span class="sd">            If provided object is not of SoupSelector type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">soupsavvy.tags.combinators</span> <span class="kn">import</span> <span class="n">ChildCombinator</span>
+
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;GT operator not supported for types </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;expected an instance of </span><span class="si">{</span><span class="n">SoupSelector</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_selector_type</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ChildCombinator</span><span class="p">):</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">selectors</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span>
+            <span class="c1"># return new ChildCombinator with updated steps</span>
+            <span class="k">return</span> <span class="n">ChildCombinator</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ChildCombinator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NextSiblingCombinator</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overrides __add__ method called also by plus operator &#39;+&#39;.</span>
+<span class="sd">        Syntactical Sugar for addition operator, that creates a NextSiblingCombinator</span>
+<span class="sd">        which is equivalent to next sibling element css selector.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; div + a</span>
+
+<span class="sd">        matches all &#39;a&#39; elements that immediately follow &#39;div&#39; elements,</span>
+<span class="sd">        it means that both elements are children of the same parent element.</span>
+
+<span class="sd">        The same can be achieved by using &#39;+&#39; operator on two SoupSelector objects.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; ElementTag(&quot;div&quot;) + ElementTag(&quot;a&quot;)</span>
+
+<span class="sd">        Which results in</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; NextSiblingCombinator(ElementTag(&quot;div&quot;), ElementTag(&quot;a&quot;))</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : SoupSelector</span>
+<span class="sd">            SoupSelector object to be combined into new NextSiblingCombinator as next</span>
+<span class="sd">            sibling of current SoupSelector.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NextSiblingCombinator</span>
+<span class="sd">            NextSiblingCombinator object that can be used to get all matching elements</span>
+<span class="sd">            that are next siblings of the current SoupSelector.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotSoupSelectorException</span>
+<span class="sd">            If provided object is not of SoupSelector type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">soupsavvy.tags.combinators</span> <span class="kn">import</span> <span class="n">NextSiblingCombinator</span>
+
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;ADD operator not supported for types </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;expected an instance of </span><span class="si">{</span><span class="n">SoupSelector</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_selector_type</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">NextSiblingCombinator</span><span class="p">):</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">selectors</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span>
+            <span class="c1"># return new NextSiblingCombinator with updated steps</span>
+            <span class="k">return</span> <span class="n">NextSiblingCombinator</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">NextSiblingCombinator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SubsequentSiblingCombinator</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overrides __mul__ method called also by multiplication operator &#39;*&#39;.</span>
+<span class="sd">        Syntactical Sugar for multiplication operator, that creates</span>
+<span class="sd">        a SubsequentSiblingCombinator which is equivalent to subsequent sibling</span>
+<span class="sd">        element css selector.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; div ~ a</span>
+
+<span class="sd">        matches all &#39;a&#39; elements that follow &#39;div&#39; elements and share the same parent.</span>
+<span class="sd">        The same can be achieved by using &#39;*&#39; operator on two SoupSelector objects.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; ElementTag(&quot;div&quot;) * ElementTag(&quot;a&quot;)</span>
+
+<span class="sd">        Which results in</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; SubsequentSiblingCombinator(ElementTag(&quot;div&quot;), ElementTag(&quot;a&quot;))</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : SoupSelector</span>
+<span class="sd">            SoupSelector object to be combined into new SubsequentSiblingCombinator</span>
+<span class="sd">            as following sibling of current SoupSelector.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        SubsequentSiblingCombinator</span>
+<span class="sd">            SubsequentSiblingCombinator object that can be used to get all</span>
+<span class="sd">            matching elements that are following siblings of the current SoupSelector.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotSoupSelectorException</span>
+<span class="sd">            If provided object is not of SoupSelector type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">soupsavvy.tags.combinators</span> <span class="kn">import</span> <span class="n">SubsequentSiblingCombinator</span>
+
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;MUL operator not supported for types </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;expected an instance of </span><span class="si">{</span><span class="n">SoupSelector</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_selector_type</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SubsequentSiblingCombinator</span><span class="p">):</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">selectors</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span>
+            <span class="c1"># return new SubsequentSiblingCombinator with updated steps</span>
+            <span class="k">return</span> <span class="n">SubsequentSiblingCombinator</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">SubsequentSiblingCombinator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DescendantCombinator</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overrides __rshift__ method called also by right shift operator &#39;&gt;&gt;&#39;.</span>
+<span class="sd">        Syntactical Sugar for right shift operator, that creates a StepsElementTag</span>
+<span class="sd">        which is equivalent to descendant combinator in css, typically represented</span>
+<span class="sd">        by a single space character.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; div a</span>
+
+<span class="sd">        matches all &#39;a&#39; elements with &#39;div&#39; as their ancestor.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; ElementTag(&quot;div&quot;) &gt;&gt; ElementTag(&quot;a&quot;)</span>
+
+<span class="sd">        Which results in</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; StepsElementTag(ElementTag(&quot;div&quot;), ElementTag(&quot;a&quot;))</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : SoupSelector</span>
+<span class="sd">            SoupSelector object to be combined into new StepsElementTag as descendant</span>
+<span class="sd">            of current SoupSelector.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        StepsElementTag</span>
+<span class="sd">            StepsElementTag object that can be used to get all matching elements</span>
+<span class="sd">            that are descendants of the current SoupSelector.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotSoupSelectorException</span>
+<span class="sd">            If provided object is not of SoupSelector type.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        For more information on descendant combinator see:</span>
+<span class="sd">        https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_combinator</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">soupsavvy.tags.combinators</span> <span class="kn">import</span> <span class="n">DescendantCombinator</span>
+
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;RIGHT SHIFT operator not supported for types </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;expected an instance of </span><span class="si">{</span><span class="n">SoupSelector</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_selector_type</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">DescendantCombinator</span><span class="p">):</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">selectors</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span>
+            <span class="c1"># return new DescendantCombinator with updated steps</span>
+            <span class="k">return</span> <span class="n">DescendantCombinator</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">DescendantCombinator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="SingleSoupSelector">
+<a class="viewcode-back" href="../../../soupsavvy.tags.base.html#soupsavvy.tags.base.SingleSoupSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">SingleSoupSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extension of SoupSelector interface that defines a single element.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    To implement SingleSoupSelector interface, child class must implement:</span>
+<span class="sd">    * &#39;_find_params&#39; property that returns dict representing Tag.find</span>
+<span class="sd">    and find_all parameters that are passed as keyword arguments into these methods.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SingleSoupSelector.find_all">
+<a class="viewcode-back" href="../../../soupsavvy.tags.base.html#soupsavvy.tags.base.SingleSoupSelector.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">tag</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_find_params</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_find_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns keyword arguments for Tag.find and Tag.find_all in form of dictionary,</span>
+<span class="sd">        Arguments are specific for searched Tag.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an interface, &quot;</span>
+            <span class="s2">&quot;and does not implement this property.&quot;</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="SelectableCSS">
+<a class="viewcode-back" href="../../../soupsavvy.tags.base.html#soupsavvy.tags.base.SelectableCSS">[docs]</a>
+<span class="k">class</span> <span class="nc">SelectableCSS</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interface for Tags that can be searched with css selector.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    To implement SelectableCSS interface, child class must implement:</span>
+<span class="sd">    * &#39;selector&#39; property, which return a string representing element css selector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">selector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns string representing element css selector.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an interface, &quot;</span>
+            <span class="s2">&quot;and does not implement this property.&quot;</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="MultipleSoupSelector">
+<a class="viewcode-back" href="../../../soupsavvy.tags.base.html#soupsavvy.tags.base.MultipleSoupSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">MultipleSoupSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interface for Tags that uses multiple steps to find elements.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    To implement MultipleSoupSelector interface, child class must implement</span>
+<span class="sd">    call super init method with provided tags as arguments to check and assign them.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    selectors : list[SoupSelector]</span>
+<span class="sd">        List of SoupSelector objects passed to MultipleSoupSelector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MultipleSoupSelector.__init__">
+<a class="viewcode-back" href="../../../soupsavvy.tags.base.html#soupsavvy.tags.base.MultipleSoupSelector.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selectors</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">SoupSelector</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes MultipleSoupSelector object with provided tags.</span>
+<span class="sd">        Checks if all tags are instances of SoupSelector and assigns</span>
+<span class="sd">        them to &#39;selectors&#39; attribute.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        selectors: Iterable[SoupSelector]</span>
+<span class="sd">            SoupSelector objects passed to MultipleSoupSelector.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotSoupSelectorException</span>
+<span class="sd">            If any of provided parameters is not an instance of SoupSelector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">invalid</span> <span class="o">=</span> <span class="p">[</span><span class="n">arg</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">selectors</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">SoupSelector</span><span class="p">)]</span>
+
+        <span class="k">if</span> <span class="n">invalid</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotSoupSelectorException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Parameters </span><span class="si">{</span><span class="n">invalid</span><span class="si">}</span><span class="s2"> are not instances of SoupSelector.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">selectors</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">selectors</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="c1"># check for MultipleSoupSelector type for type checking sake</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">MultipleSoupSelector</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="c1"># checking for exact type match - isinstance(other, self.__class__)</span>
+            <span class="c1"># when other is subclass of self.__class__ would call other.__eq__(self)</span>
+            <span class="c1"># which is not desired behavior, as it returns False</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectors</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">selectors</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">selectors</span><span class="p">))</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, sewcio543.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

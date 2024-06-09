@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>soupsavvy.tags.components &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.tags.html">tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">soupsavvy.tags.components</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for soupsavvy.tags.components</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module for components utilized to navigate html markup or BeautifulSoup Tags.</span>
+
+<span class="sd">They are used for selection of various elements in the markup,</span>
+<span class="sd">based on their tag name, attributes or text content.</span>
+
+<span class="sd">They can be considered soupsavvy equivalent of CSS selectors,</span>
+<span class="sd">but with more flexibility and power to navigate the markup.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">TagSelector - combines type and attribute selectors</span>
+<span class="sd">PatternSelector - matches elements based on text content and selector</span>
+<span class="sd">AnyTagSelector - universal selector (*)</span>
+<span class="sd">AndSelector - intersection of multiple selectors</span>
+<span class="sd">NotSelector - negation of a selector (~)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Pattern</span>
+
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">SoupStrainer</span><span class="p">,</span> <span class="n">Tag</span>
+
+<span class="kn">import</span> <span class="nn">soupsavvy.tags.namespace</span> <span class="k">as</span> <span class="nn">ns</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.tags.attributes</span> <span class="kn">import</span> <span class="n">AttributeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.tags.base</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">MultipleSoupSelector</span><span class="p">,</span>
+    <span class="n">SelectableCSS</span><span class="p">,</span>
+    <span class="n">SingleSoupSelector</span><span class="p">,</span>
+    <span class="n">SoupSelector</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.tags.tag_utils</span> <span class="kn">import</span> <span class="n">TagIterator</span><span class="p">,</span> <span class="n">TagResultSet</span>
+
+
+<div class="viewcode-block" id="TagSelector">
+<a class="viewcode-back" href="../../../soupsavvy.tags.components.html#soupsavvy.TagSelector">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">TagSelector</span><span class="p">(</span><span class="n">SingleSoupSelector</span><span class="p">,</span> <span class="n">SelectableCSS</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class representing HTML element.</span>
+<span class="sd">    Provides elements based on element tag and all defined attributes.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; TagSelector(</span>
+<span class="sd">    &gt;&gt;&gt;     tag=&quot;div&quot;,</span>
+<span class="sd">    &gt;&gt;&gt;     attributes=[</span>
+<span class="sd">    &gt;&gt;&gt;         AttributeSelector(name=&quot;class&quot;, value=&quot;widget&quot;),</span>
+<span class="sd">    &gt;&gt;&gt;         AttributeSelector(name=&quot;role&quot;, value=&quot;button&quot;)</span>
+<span class="sd">    &gt;&gt;&gt;     ]</span>
+<span class="sd">    &gt;&gt;&gt; )</span>
+
+<span class="sd">    matches all elements that have &quot;div&quot; tag name, &#39;class&#39; attribute &quot;widget&quot;</span>
+<span class="sd">    and &#39;role&#39; attribute &quot;button&quot;.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot; role=&quot;button&quot;&gt;Hello World&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;menu&quot; role=&quot;button&quot;&gt;Hello World&lt;/div&gt; ❌</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        HTML tag name ex. &quot;a&quot;, &quot;div&quot;. By default None, all tag names will be matched.</span>
+
+<span class="sd">    attributes : Iterable[AttributeSelector], optional</span>
+<span class="sd">        Iterable of AttributeSelector objects that specify element attributes.</span>
+<span class="sd">        By default empty list, no attribute will be checked.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; element = TagSelector(</span>
+<span class="sd">    &gt;&gt;&gt;    tag=&quot;div&quot;,</span>
+<span class="sd">    &gt;&gt;&gt;    attributes=[AttributeSelector(name=&quot;class&quot;, value=&quot;widget&quot;)]</span>
+<span class="sd">    &gt;&gt;&gt; )</span>
+<span class="sd">    &gt;&gt;&gt; element.selector</span>
+<span class="sd">    div[class=widget]</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Initializing object without passing any parameters is equal to selector for all elements,</span>
+<span class="sd">    which is equivalent to using AnyTagSelector object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">attributes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">AttributeSelector</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">selector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ns</span><span class="o">.</span><span class="n">CSS_SELECTOR_WILDCARD</span>
+
+        <span class="c1"># drop duplicated css attribute selectors and preserve order</span>
+        <span class="n">selectors</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">attr</span><span class="p">:</span> <span class="n">attr</span><span class="o">.</span><span class="n">selector</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="p">))</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">selectors</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">selectors</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="c1"># at least one of tag or attributes must be provided</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_find_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="n">attr</span><span class="o">.</span><span class="n">_find_params</span><span class="p">[</span><span class="n">ns</span><span class="o">.</span><span class="n">ATTRS</span><span class="p">]</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="p">]</span>
+        <span class="c1"># reduce raises error when given an empty iterable</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="p">{</span><span class="o">**</span><span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">y</span><span class="p">},</span> <span class="n">params</span><span class="p">))</span> <span class="k">if</span> <span class="n">params</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">ns</span><span class="o">.</span><span class="n">NAME</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="p">}</span> <span class="o">|</span> <span class="p">{</span><span class="n">ns</span><span class="o">.</span><span class="n">ATTRS</span><span class="p">:</span> <span class="n">attrs</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">AnyTagSelector</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">other</span> <span class="o">==</span> <span class="bp">self</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TagSelector</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># TagSelector produces the same results only if attributes are in the same order</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">tag</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">attributes</span></div>
+
+
+
+<div class="viewcode-block" id="PatternSelector">
+<a class="viewcode-back" href="../../../soupsavvy.tags.components.html#soupsavvy.PatternSelector">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">PatternSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class representing HTML element with specific string pattern for text.</span>
+<span class="sd">    Provides elements matching with text matching the pattern.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; PatternSelector(pattern=&quot;Hello World&quot;)</span>
+
+<span class="sd">    matches all element with exact text content &quot;Hello World&quot;.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello World&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello Python&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello World 3&lt;/div&gt; ❌</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pattern: str | Pattern</span>
+<span class="sd">        A pattern to match text of the element. Can be a string for exact match</span>
+<span class="sd">        or Pattern for any more complex regular expressions.</span>
+<span class="sd">    re: bool, optional</span>
+<span class="sd">        Whether to use a pattern to match the text, by default False.</span>
+<span class="sd">        If True, text of element needs to be contained in the pattern to be matched.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Selector uses re.search function to match text content if re=True</span>
+<span class="sd">    or compiled regex is passed as pattern.</span>
+<span class="sd">    Providing &#39;re.compile(r&quot;[0-9]&quot;)&#39; as pattern will much any element with a digit in text.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; import re</span>
+<span class="sd">    &gt;&gt;&gt; PatternSelector(pattern=re.compile(r&quot;[0-9]&quot;))</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello World 123&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello World&lt;/div&gt; ❌</span>
+
+<span class="sd">    Due to bs4 implementation, element does not match the pattern if it has any children.</span>
+<span class="sd">    Only leaf nodes can be returned by PatternSelector find methods.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello World&lt;span&gt;&lt;/span&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pattern</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Pattern</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">re</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets up compiled regex pattern used for SoupStrainer in find methods.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">re</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span>
+
+<div class="viewcode-block" id="PatternSelector.find_all">
+<a class="viewcode-back" href="../../../soupsavvy.tags.components.html#soupsavvy.PatternSelector.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+        <span class="n">iterator</span> <span class="o">=</span> <span class="n">TagIterator</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
+        <span class="n">strainer</span> <span class="o">=</span> <span class="n">SoupStrainer</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="p">)</span>
+        <span class="n">filter_</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="n">strainer</span><span class="o">.</span><span class="n">search_tag</span><span class="p">,</span> <span class="n">iterator</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">islice</span><span class="p">(</span><span class="n">filter_</span><span class="p">,</span> <span class="n">limit</span><span class="p">))</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_pattern</span></div>
+
+
+
+<div class="viewcode-block" id="AnyTagSelector">
+<a class="viewcode-back" href="../../../soupsavvy.tags.components.html#soupsavvy.AnyTagSelector">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">AnyTagSelector</span><span class="p">(</span><span class="n">SingleSoupSelector</span><span class="p">,</span> <span class="n">SelectableCSS</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class representing a wildcard tag that matches any tag in the markup.</span>
+<span class="sd">    Matches always the first tag in the markup.</span>
+
+<span class="sd">    AnyTagSelector implements SelectableCSS interface with wildcard css selector &quot;*&quot;,</span>
+<span class="sd">    aka. universal selector, that matches all elements in the markup.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; any_element = AnyTagSelector()</span>
+<span class="sd">    &gt;&gt;&gt; any_element.selector</span>
+<span class="sd">    &quot;*&quot;</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    For more information on universal selector see:</span>
+<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_find_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">selector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns wildcard css selector matching all elements in the markup.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ns</span><span class="o">.</span><span class="n">CSS_SELECTOR_WILDCARD</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="c1"># TagSelector produces the same results only if it does not have</span>
+        <span class="c1"># any parameters specified</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TagSelector</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">tag</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">other</span><span class="o">.</span><span class="n">attributes</span>
+
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">AnyTagSelector</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="NotSelector">
+<a class="viewcode-back" href="../../../soupsavvy.tags.components.html#soupsavvy.NotSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">NotSelector</span><span class="p">(</span><span class="n">MultipleSoupSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class representing selector of elements that do not match provided selectors.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; NotSelector(TagSelector(tag=&quot;div&quot;)</span>
+
+<span class="sd">    matches all elements that do not have &quot;div&quot; tag name.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;span&gt; class=&quot;widget&quot;&gt;Hello World&lt;/span&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;menu&quot;&gt;Hello World&lt;/div&gt; ❌</span>
+
+<span class="sd">    Object can be initialized with multiple selectors as well, in which case</span>
+<span class="sd">    all selectors must match for element to be excluded from the result.</span>
+
+<span class="sd">    Object can be created as well by using bitwise NOT operator &#39;~&#39;</span>
+<span class="sd">    on a SoupSelector object.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; ~TagSelector(tag=&quot;div&quot;)</span>
+
+<span class="sd">    Which is equivalent to the first example.</span>
+
+<span class="sd">    This is an equivalent of CSS :not() negation pseudo-class,</span>
+<span class="sd">    that represents elements that do not match a list of selectors</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; div:not(.widget) { color: red; }</span>
+<span class="sd">    &gt;&gt;&gt; :not(strong, .important) { color: red; }</span>
+
+<span class="sd">    The second example translated to soupsavvy would be:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; NotSelector(TagSelector(&quot;strong&quot;), AttributeSelector(&quot;class&quot;, &quot;important&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; ~(TagSelector(&quot;strong&quot;) | AttributeSelector(&quot;class&quot;, &quot;important&quot;))</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    For more information on :not() pseudo-class see:</span>
+<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:not</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="NotSelector.__init__">
+<a class="viewcode-back" href="../../../soupsavvy.tags.components.html#soupsavvy.NotSelector.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
+        <span class="o">/</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">tags</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes NotSelectors object with provided positional arguments as tags.</span>
+<span class="sd">        At least one SoupSelector object is required to create NotSelector.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tags: SoupSelector</span>
+<span class="sd">            SoupSelector objects to negate match accepted as positional arguments.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotSoupSelectorException</span>
+<span class="sd">            If any of provided parameters is not an instance of SoupSelector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_multiple</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">([</span><span class="n">tag</span><span class="p">,</span> <span class="o">*</span><span class="n">tags</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="NotSelector.find_all">
+<a class="viewcode-back" href="../../../soupsavvy.tags.components.html#soupsavvy.NotSelector.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+        <span class="n">matching</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span>
+            <span class="n">TagResultSet</span><span class="o">.</span><span class="fm">__or__</span><span class="p">,</span>
+            <span class="p">(</span>
+                <span class="n">TagResultSet</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectors</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">all_tags</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">TagIterator</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">))</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">TagResultSet</span><span class="p">(</span><span class="n">all_tags</span><span class="p">)</span> <span class="o">-</span> <span class="n">matching</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__invert__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SoupSelector</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overrides __invert__ method to cancel out negation by returning</span>
+<span class="sd">        the tag in case of single selector, or SoupUnionTag in case of multiple.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">soupsavvy.tags.combinators</span> <span class="kn">import</span> <span class="n">SelectorList</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multiple</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">SelectorList</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">selectors</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="AndSelector">
+<a class="viewcode-back" href="../../../soupsavvy.tags.components.html#soupsavvy.AndSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">AndSelector</span><span class="p">(</span><span class="n">MultipleSoupSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class representing an intersection of multiple soup selectors.</span>
+<span class="sd">    Provides elements matching all of the listed selectors.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; AndTagSelector(</span>
+<span class="sd">    ...    TagSelector(tag=&quot;div&quot;),</span>
+<span class="sd">    ...    AttributeSelector(name=&quot;class&quot;, value=&quot;widget&quot;)</span>
+<span class="sd">    ... )</span>
+
+<span class="sd">    matches all elements that have &quot;div&quot; tag name AND &#39;class&#39; attribute &quot;widget&quot;.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;Hello World&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;span class=&quot;widget&quot;&gt;Hello World&lt;/span&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;menu&quot;&gt;Hello World&lt;/div&gt; ❌</span>
+
+<span class="sd">    Object can be initialized with multiple selectors as well, in which case</span>
+<span class="sd">    all selectors must match for element to be included in the result.</span>
+
+<span class="sd">    Object can be created as well by using bitwise AND operator &#39;&amp;&#39;</span>
+<span class="sd">    on two SoupSelector objects.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; TagSelector(tag=&quot;div&quot;) &amp; AttributeSelector(name=&quot;class&quot;, value=&quot;widget&quot;)</span>
+
+<span class="sd">    Which is equivalent to the first example.</span>
+
+<span class="sd">    This is an equivalent of CSS selectors concatenation.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; div.class1#id1 { color: red; }</span>
+
+<span class="sd">    which translated to soupsavvy would be:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; TagSelector(&quot;div&quot;) &amp; AttributeSelector(&quot;class&quot;, &quot;class1&quot;) &amp; AttributeSelector(&quot;id&quot;, &quot;id1&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; TagSelector(&quot;div&quot;, attributes=[AttributeSelector(&quot;class&quot;, &quot;class1&quot;), AttributeSelector(&quot;id&quot;, &quot;id1&quot;)])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AndSelector.__init__">
+<a class="viewcode-back" href="../../../soupsavvy.tags.components.html#soupsavvy.AndSelector.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag1</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
+        <span class="n">tag2</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
+        <span class="o">/</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">tags</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes AndTagSelector object with provided positional arguments as tags.</span>
+<span class="sd">        At least two SoupSelector objects are required to create AndSelector.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tags: SoupSelector</span>
+<span class="sd">            SoupSelector objects to match accepted as positional arguments.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotSoupSelectorException</span>
+<span class="sd">            If any of provided parameters is not an instance of SoupSelector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">([</span><span class="n">tag1</span><span class="p">,</span> <span class="n">tag2</span><span class="p">,</span> <span class="o">*</span><span class="n">tags</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="AndSelector.find_all">
+<a class="viewcode-back" href="../../../soupsavvy.tags.components.html#soupsavvy.AndSelector.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+        <span class="n">matching</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span>
+            <span class="n">TagResultSet</span><span class="o">.</span><span class="fm">__and__</span><span class="p">,</span>
+            <span class="p">(</span>
+                <span class="n">TagResultSet</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectors</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">matching</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="HasSelector">
+<a class="viewcode-back" href="../../../soupsavvy.tags.components.html#soupsavvy.HasSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">HasSelector</span><span class="p">(</span><span class="n">MultipleSoupSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class representing elements selected with respect to matching reference elements.</span>
+<span class="sd">    Element is selected if any of the provided selectors matched reference element.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; HasSelector(TagSelector(tag=&quot;div&quot;))</span>
+
+<span class="sd">    matches all elements that have any descendant with &quot;div&quot; tag name.</span>
+<span class="sd">    It uses default combinator of relative selector, which is descendant.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;span&gt;&lt;div&gt;Hello World&lt;/div&gt;&lt;/span&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;span&gt;&lt;a&gt;Hello World&lt;/a&gt;&lt;/span&gt; ❌</span>
+
+<span class="sd">    Other relative selectors can be used with Anchor element.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from soupsavvy.tags.relative import Anchor</span>
+<span class="sd">    &gt;&gt;&gt; HasSelector(Anchor &gt; TagSelector(&quot;div&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; HasSelector(Anchor + TagSelector(&quot;div&quot;))</span>
+
+<span class="sd">    or by using RelativeSelector components directly:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from soupsavvy.tags.relative import RelativeChild, RelativeNextSibling</span>
+<span class="sd">    &gt;&gt;&gt; HasSelector(RelativeChild(TagSelector(&quot;div&quot;)))</span>
+<span class="sd">    &gt;&gt;&gt; HasSelector(RelativeNextSibling(TagSelector(&quot;div&quot;))</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;span&gt;&lt;div&gt;Hello World&lt;/div&gt;&lt;/span&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;span&gt;&lt;a&gt;&lt;div&gt;Hello World&lt;/div&gt;&lt;/a&gt;&lt;/span&gt; ❌</span>
+
+<span class="sd">    In this case, HasSelector is anchored against any element, and matches only elements</span>
+<span class="sd">    that have &quot;div&quot; tag name as a child.</span>
+
+<span class="sd">    Object can be initialized with multiple selectors as well, in which case</span>
+<span class="sd">    at least one selector must match for element to be included in the result.</span>
+
+<span class="sd">    This is an equivalent of CSS :has() pseudo-class,</span>
+<span class="sd">    that represents elements if any of the relative selectors that are passed as an argument</span>
+<span class="sd">    match at least one element when anchored against this element.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; :has(div, a) { color: red; }</span>
+<span class="sd">    &gt;&gt;&gt; :has(+ div, &gt; a) { color: red; }</span>
+
+<span class="sd">    These examples translated to soupsavvy would be:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from soupsavvy.tags.relative import Anchor</span>
+<span class="sd">    &gt;&gt;&gt; HasSelector(TagSelector(&quot;div&quot;), TagSelector(&quot;a&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; HasSelector(Anchor + TagSelector(&quot;div&quot;), Anchor &gt; TagSelector(&quot;a&quot;))</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Passing RelativeDescendant selector into HasSelector is equivalent to using</span>
+<span class="sd">    its selector directly, as descendant combinator is default option.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; HasSelector(RelativeDescendant(TagSelector(&quot;div&quot;)))</span>
+<span class="sd">    &gt;&gt;&gt; HasSelector(Anchor &gt; TagSelector(&quot;div&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; HasSelector(TagSelector(&quot;div&quot;))</span>
+
+<span class="sd">    Three of the above examples are equivalent.</span>
+
+<span class="sd">    For more information on :has() pseudo-class see:</span>
+<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:has</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="HasSelector.__init__">
+<a class="viewcode-back" href="../../../soupsavvy.tags.components.html#soupsavvy.HasSelector.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">selector</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
+        <span class="o">/</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">selectors</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes AndTagSelector object with provided positional arguments as tags.</span>
+<span class="sd">        At least two SoupSelector objects are required to create HasSelector.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tags: SoupSelector</span>
+<span class="sd">            SoupSelector objects to match accepted as positional arguments.</span>
+<span class="sd">            At least one selector is required to create HasSelector.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotSoupSelectorException</span>
+<span class="sd">            If any of provided parameters is not an instance of SoupSelector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">([</span><span class="n">selector</span><span class="p">,</span> <span class="o">*</span><span class="n">selectors</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="HasSelector.find_all">
+<a class="viewcode-back" href="../../../soupsavvy.tags.components.html#soupsavvy.HasSelector.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+
+        <span class="n">elements</span> <span class="o">=</span> <span class="n">TagIterator</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
+        <span class="n">matching</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+            <span class="c1"># we only care if anything matching was found</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">step</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectors</span><span class="p">):</span>
+                <span class="n">matching</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matching</span><span class="p">)</span> <span class="o">==</span> <span class="n">limit</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">matching</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, sewcio543.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

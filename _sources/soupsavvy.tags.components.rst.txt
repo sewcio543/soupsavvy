@@ -1,0 +1,7 @@
+tags.components
+================================
+
+.. automodule:: soupsavvy.tags.components
+   :members:
+   :undoc-members:
+   :show-inheritance:

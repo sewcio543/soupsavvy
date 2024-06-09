@@ -1,0 +1,7 @@
+tags.combinators
+=================================
+
+.. automodule:: soupsavvy.tags.combinators
+   :members:
+   :undoc-members:
+   :show-inheritance:

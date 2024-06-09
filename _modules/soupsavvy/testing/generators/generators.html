@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>soupsavvy.testing.generators.generators &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.tags.html">tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.testing.html">testing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">soupsavvy.testing.generators.generators</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for soupsavvy.testing.generators.generators</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module with HTML generators.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">soupsavvy.testing.generators.exceptions</span> <span class="k">as</span> <span class="nn">exc</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.testing.generators</span> <span class="kn">import</span> <span class="n">namespace</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.testing.generators.base</span> <span class="kn">import</span> <span class="n">BaseGenerator</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.testing.generators.templates.base</span> <span class="kn">import</span> <span class="n">BaseTemplate</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.testing.generators.templates.config</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DEFAULT_TEXT_TEMPLATE</span><span class="p">,</span>
+    <span class="n">DEFAULT_VALUE_TEMPLATE</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.testing.generators.templates.templates</span> <span class="kn">import</span> <span class="n">ConstantTemplate</span>
+
+<span class="c1"># types for generators</span>
+<span class="n">TemplateType</span> <span class="o">=</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">BaseTemplate</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
+
+<span class="n">AttributeType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;AttributeGenerator&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TemplateType</span><span class="p">]]</span>
+<span class="n">ChildType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;TagGenerator&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+
+<span class="n">AttributeList</span> <span class="o">=</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">AttributeType</span><span class="p">]</span>
+<span class="n">ChildList</span> <span class="o">=</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ChildType</span><span class="p">]</span>
+
+<span class="n">AttributeGeneratorInitExceptions</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="ne">TypeError</span><span class="p">,</span>
+    <span class="n">exc</span><span class="o">.</span><span class="n">InvalidTemplateException</span><span class="p">,</span>
+    <span class="n">exc</span><span class="o">.</span><span class="n">EmptyNameException</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_template_type</span><span class="p">(</span>
+    <span class="n">value</span><span class="p">:</span> <span class="n">TemplateType</span><span class="p">,</span> <span class="n">param</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">BaseTemplate</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseTemplate</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the template type from the input value.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    value : TemplateType</span>
+<span class="sd">        The value to get the template type from.</span>
+<span class="sd">    param : str</span>
+<span class="sd">        The name of the parameter.</span>
+<span class="sd">    default : BaseTemplate</span>
+<span class="sd">        The default template to use if the value is None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    BaseTemplate</span>
+<span class="sd">        The template instance.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    InvalidTemplateException</span>
+<span class="sd">        If the value is not a string, BaseTemplate or None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">default</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ConstantTemplate</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">BaseTemplate</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">InvalidTemplateException</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">param</span><span class="si">}</span><span class="s2"> must be a string or a BaseTemplate, not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">value</span>
+
+
+<div class="viewcode-block" id="AttributeGenerator">
+<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.AttributeGenerator">[docs]</a>
+<span class="k">class</span> <span class="nc">AttributeGenerator</span><span class="p">(</span><span class="n">BaseGenerator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for generating HTML attribute strings.</span>
+
+<span class="sd">    AttributeGenerator allows to generate empty HTML attribute with specific name:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; gen = AttributeGenerator(&quot;class&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    &#39;class=&quot;&quot;&#39;</span>
+
+<span class="sd">    Attribute can also be generated with specified constant value:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; gen = AttributeGenerator(&quot;class&quot;, value=&quot;container&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    &#39;class=&quot;container&quot;&#39;</span>
+
+<span class="sd">    Value can be passed as BaseTemplate instance as well:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from soupsavvy.testing.generators import RandomTemplate</span>
+<span class="sd">    &gt;&gt;&gt; template = RandomTemplate(length=4, seed=42)</span>
+<span class="sd">    &gt;&gt;&gt; gen = AttributeGenerator(&quot;id&quot;, value=template)</span>
+<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    &#39;id=&quot;Nbrn&quot;&#39;</span>
+
+<span class="sd">    For more information on available Templates, how to use them</span>
+<span class="sd">    and customize for your needs, see the documentation.</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    soupsavvy.testing.generators.templates module</span>
+<span class="sd">    soupsavvy.testing.generators.TagGenerator class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AttributeGenerator.__init__">
+<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.AttributeGenerator.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">TemplateType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the AttributeGenerator.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            The name of the attribute.</span>
+<span class="sd">        value : TemplateType, optional</span>
+<span class="sd">            The value of the attribute. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">_get_template_type</span><span class="p">(</span>
+            <span class="n">value</span><span class="p">,</span>
+            <span class="n">param</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="n">DEFAULT_VALUE_TEMPLATE</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_check_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the input name is a valid HTML attribute name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            The name to check.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            If the name is not a string.</span>
+<span class="sd">        EmptyNameException</span>
+<span class="sd">            If the name is an empty string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;name&#39; parameter must be a string, not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">EmptyNameException</span><span class="p">(</span>
+                <span class="s2">&quot;Empty string is not allowed html attribute name, &quot;</span>
+                <span class="s2">&quot;not-empty string must be provided for &#39;name&#39; parameter.&quot;</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="AttributeGenerator.generate">
+<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.AttributeGenerator.generate">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the HTML attribute string.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            The generated HTML attribute string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">=&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1">&quot;&#39;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="TagGenerator">
+<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.TagGenerator">[docs]</a>
+<span class="k">class</span> <span class="nc">TagGenerator</span><span class="p">(</span><span class="n">BaseGenerator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for generating HTML tag strings.</span>
+
+<span class="sd">    TagGenerator allows to generate empty HTML tag with specific name:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; gen = TagGenerator(&quot;div&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    &#39;&lt;div&gt;&lt;/div&gt;&#39;</span>
+
+<span class="sd">    Tag can also be generated with specified attributes:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; gen = TagGenerator(&quot;div&quot;, attrs=[(&quot;class&quot;, &quot;container&quot;)])</span>
+<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    &#39;&lt;div class=&quot;container&quot;&gt;&lt;/div&gt;&#39;</span>
+
+<span class="sd">    Attributes can be passed as an iterable of of mixed types:</span>
+<span class="sd">    * AttributeGenerator - instance of AttributeGenerator class</span>
+<span class="sd">    * str - attribute name, value would be a default Template (empty string)</span>
+<span class="sd">    * tuple[str, TemplateType] - attribute name and literal value or Template</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; gen = TagGenerator(</span>
+<span class="sd">    &gt;&gt;&gt;     name=&quot;a&quot;,</span>
+<span class="sd">    &gt;&gt;&gt;     attrs=[</span>
+<span class="sd">    &gt;&gt;&gt;         (&quot;id&quot;, &quot;link&quot;),</span>
+<span class="sd">    &gt;&gt;&gt;         AttributeGenerator(&quot;href&quot;, &quot;/endpoint&quot;),</span>
+<span class="sd">    &gt;&gt;&gt;         &quot;class&quot;,</span>
+<span class="sd">    &gt;&gt;&gt;     ],</span>
+<span class="sd">    &gt;&gt;&gt; )</span>
+<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    &#39;&lt;div id=&quot;link&quot; href=&quot;/endpoint&quot;, class=&quot;&quot;&gt;&lt;/div&gt;&#39;</span>
+
+<span class="sd">    Similarly, children can be passed as an iterable of mixed types:</span>
+<span class="sd">    * TagGenerator - instance of TagGenerator class</span>
+<span class="sd">    * str - tag name, children tags would be empty</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; gen = TagGenerator(</span>
+<span class="sd">    &gt;&gt;&gt;     name=&quot;div&quot;,</span>
+<span class="sd">    &gt;&gt;&gt;     children=[</span>
+<span class="sd">    &gt;&gt;&gt;         &quot;a&quot;,</span>
+<span class="sd">    &gt;&gt;&gt;         TagGenerator(&quot;span&quot;, attrs=[(&quot;class&quot;, &quot;container&quot;)],</span>
+<span class="sd">    &gt;&gt;&gt;     ],</span>
+<span class="sd">    &gt;&gt;&gt; )</span>
+<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    &#39;&lt;div&gt;&lt;a&gt;&lt;/a&gt;&lt;span class=&quot;container&quot;&gt;&lt;/span&gt;&lt;/div&gt;&#39;</span>
+
+<span class="sd">    Text of the tag can be passed as a string or a Template:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; gen = TagGenerator(&quot;p&quot;, text=&quot;Hello, World!&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    &#39;&lt;p&gt;Hello, World!&lt;/p&gt;&#39;</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from soupsavvy.testing.generators import RandomTemplate</span>
+<span class="sd">    &gt;&gt;&gt; template = RandomTemplate(length=4, seed=42)</span>
+<span class="sd">    &gt;&gt;&gt; gen = TagGenerator(&quot;p&quot;, text=template)</span>
+<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    &#39;&lt;p&gt;Nbrn&lt;/p&gt;&#39;</span>
+
+<span class="sd">    For more information on available Templates, how to use them</span>
+<span class="sd">    and customize for your needs, see the documentation.</span>
+
+<span class="sd">    Void tags like &lt;img&gt;, &lt;br&gt;, &lt;hr&gt; etc. can be generated as well</span>
+<span class="sd">    and are automatically closed:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; gen = TagGenerator(&quot;img&quot;, attrs=[(&quot;src&quot;, &quot;/path/to/image.jpg&quot;)])</span>
+<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    &#39;&lt;img src=&quot;/path/to/image.jpg&quot;/&gt;&#39;</span>
+
+<span class="sd">    No children are allowed for void tags, and an error will be raised.</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    soupsavvy.testing.generators.templates module</span>
+<span class="sd">    soupsavvy.testing.generators.AttributeGenerator class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TagGenerator.__init__">
+<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.TagGenerator.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">attrs</span><span class="p">:</span> <span class="n">AttributeList</span> <span class="o">=</span> <span class="p">(),</span>
+        <span class="n">children</span><span class="p">:</span> <span class="n">ChildList</span> <span class="o">=</span> <span class="p">(),</span>
+        <span class="n">text</span><span class="p">:</span> <span class="n">TemplateType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the TagGenerator.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            The name of the HTML tag.</span>
+<span class="sd">        attrs : AttributeList, optional</span>
+<span class="sd">            The attributes of the tag. Defaults to empty tuple.</span>
+<span class="sd">        children : ChildList, optional</span>
+<span class="sd">            The children of the tag. Defaults to empty tuple.</span>
+<span class="sd">        text : TemplateType, optional</span>
+<span class="sd">            The text content of the tag.</span>
+<span class="sd">            Defaults to None, which generates empty string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_void</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">namespace</span><span class="o">.</span><span class="n">VOID_TAGS</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_void</span> <span class="ow">and</span> <span class="n">children</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">VoidTagWithChildrenException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> is a void tag and cannot have children&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">_get_template_type</span><span class="p">(</span>
+            <span class="n">text</span><span class="p">,</span>
+            <span class="n">param</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="n">DEFAULT_TEXT_TEMPLATE</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_attributes</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">child</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">TagGenerator</span><span class="p">)</span> <span class="k">else</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span>
+        <span class="p">]</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_check_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the input name is a valid HTML tag name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            The name to check.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            If the name is not a string.</span>
+<span class="sd">        EmptyNameException</span>
+<span class="sd">            If the name is an empty string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;name&#39; parameter must be a string, not </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">EmptyNameException</span><span class="p">(</span>
+                <span class="s2">&quot;Empty string is not allowed html tag name, &quot;</span>
+                <span class="s2">&quot;not-empty string must be provided for &#39;name&#39; parameter.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_process_attributes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="n">AttributeList</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">AttributeGenerator</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Process the input attributes of the tag.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        attributes : AttributeList</span>
+<span class="sd">            The attributes to process.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[AttributeGenerator]</span>
+<span class="sd">            The processed instances of AttributeGenerators.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        AttributeParsingError</span>
+<span class="sd">            If the input attributes could not be parsed into AttributeGenerators.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># dict approach for uniqueness check</span>
+        <span class="n">attr_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AttributeGenerator</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attributes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">attr</span> <span class="o">=</span> <span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">AttributeGenerator</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">attr</span> <span class="o">=</span> <span class="n">AttributeGenerator</span><span class="p">(</span><span class="o">*</span><span class="n">attr</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">AttributeGeneratorInitExceptions</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">AttributeParsingError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Attribute </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2"> could not be parsed into AttributeGenerator &quot;</span>
+                        <span class="s2">&quot;due to following error.&quot;</span>
+                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+            <span class="n">attr_name</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">name</span>
+
+            <span class="k">if</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="n">attr_dict</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">NotUniqueAttributesException</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Input attribute </span><span class="si">{</span><span class="n">attr_name</span><span class="si">}</span><span class="s2"> is not unique.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">attr_dict</span><span class="p">[</span><span class="n">attr_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">attr</span>
+
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">attr_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+<div class="viewcode-block" id="TagGenerator.generate">
+<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.TagGenerator.generate">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the HTML tag string.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            The generated HTML tag string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="p">)</span>
+        <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="k">if</span> <span class="n">attrs</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">children</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
+        <span class="n">tag_content</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}{</span><span class="n">sep</span><span class="si">}{</span><span class="n">attrs</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_void</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="n">tag_content</span><span class="si">}</span><span class="s2">/&gt;&quot;</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="n">tag_content</span><span class="si">}</span><span class="s2">&gt;</span><span class="si">{</span><span class="n">children</span><span class="si">}{</span><span class="n">text</span><span class="si">}</span><span class="s2">&lt;/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&gt;&quot;</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, sewcio543.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
