@@ -45,7 +45,7 @@ class TestDescendantCombinator:
             ),
             DescendantCombinator(
                 TagSelector(tag="div"),
-                PatternSelector(tag=TagSelector("a"), pattern="Welcome"),
+                PatternSelector(pattern="Welcome"),
             ),
         ],
         ids=[
@@ -90,7 +90,7 @@ class TestDescendantCombinator:
             ),
             DescendantCombinator(
                 TagSelector(tag="div"),
-                PatternSelector(tag=TagSelector("a"), pattern="Goodbye"),
+                PatternSelector(pattern="Goodbye"),
             ),
         ],
         ids=[

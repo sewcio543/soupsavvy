@@ -188,9 +188,9 @@ class TagResultSet:
                 it,
                 key=lambda x: (
                     # Sorting by base descending - base goes first
-                    -getattr(x, self.__class__._IS_BASE, -1),
+                    -getattr(x, self.__class__._IS_BASE),
                     # Sorting by order ascending
-                    getattr(x, self._ORDER_ATTR, -1),
+                    getattr(x, self._ORDER_ATTR),
                 ),
             )
         ]
@@ -220,6 +220,7 @@ class TagResultSet:
         """
         base = self._to_set(base=True)
         right = other._to_set(base=False)
+        # if set intersection, objects are taken from right operant, which messes up the order
         intersection = [obj for obj in base if obj in right]
         ordered = self._sort(intersection)
         return TagResultSet(ordered)
@@ -251,6 +252,35 @@ class TagResultSet:
         right = other._to_set(base=False)
         updated = base | right
         ordered = self._sort(updated)
+        return TagResultSet(ordered)
+
+    def __sub__(self, other: TagResultSet) -> TagResultSet:
+        """
+        Performs a difference operation on two TagResultSet instances
+        with current instance as a base,
+        preserving the order of tags from the base instance.
+
+        Parameters
+        ----------
+        other : TagResultSet
+            TagResultSet instance to perform difference with.
+
+        Example
+        -------
+        >>> base = TagResultSet([x, y, b])
+        >>> other = TagResultSet([c, y, x])
+        >>> base - other
+        TagResultSet([b])
+
+        Returns
+        -------
+        TagResultSet
+            New TagResultSet instance with results of difference operation.
+        """
+        base = self._to_set(base=True)
+        right = other._to_set(base=False)
+        difference = base - right
+        ordered = self._sort(difference)
         return TagResultSet(ordered)
 
     def __len__(self) -> int:

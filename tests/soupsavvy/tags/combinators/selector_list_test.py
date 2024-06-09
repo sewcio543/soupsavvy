@@ -23,7 +23,7 @@ def mock_soup_union() -> SelectorList:
     """
     tag_1 = TagSelector("a", attributes=[AttributeSelector("class", value="widget")])
     tag_2 = TagSelector("div", attributes=[AttributeSelector("class", value="menu")])
-    tag_3 = AttributeSelector(name="awesomeness", pattern=r"\d")
+    tag_3 = AttributeSelector(name="awesomeness", value=r"\d", re=True)
     union = SelectorList(tag_1, tag_2, tag_3)
     return union
 
@@ -61,8 +61,8 @@ class TestSelectorList:
 
         union = SelectorList(tag_1, tag_2)
 
-        assert isinstance(union.steps, list)
-        assert union.steps == [tag_1, tag_2]
+        assert isinstance(union.selectors, list)
+        assert union.selectors == [tag_1, tag_2]
 
     def test_soup_union_is_instantiated_with_more_than_two_arguments(self):
         """
@@ -81,8 +81,8 @@ class TestSelectorList:
 
         union = SelectorList(tag_1, tag_2, tag_3)
 
-        assert isinstance(union.steps, list)
-        assert union.steps == [tag_1, tag_2, tag_3]
+        assert isinstance(union.selectors, list)
+        assert union.selectors == [tag_1, tag_2, tag_3]
 
     @pytest.mark.parametrize(
         argnames="markup",

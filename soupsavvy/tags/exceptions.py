@@ -13,25 +13,6 @@ class TagNotFoundException(SoupSelectorException):
     """
 
 
-class WildcardTagException(SoupSelectorException):
-    """
-    Exception to be raised when wildcard SoupSelector is provided in place where
-    it's not expected. AnyTag is a wildcard tag that matches any html elements.
-    This could be useful in some cases, but can render code unpredictable.
-
-    Example
-    -------
-    >>> PatternElementTag(AnyTag(), pattern="Hello World")
-    WildcardElementTagException
-
-    In this example wildcard AnyTag is not accepted as input tag and this exception
-    is raised. PatternElementTag without any tag search parameters except for 'string'
-    returns NavigableString in find method,
-    which causes unexpected behavior downstream that would rather be avoided in line
-    with 'asking for permission' programming style.
-    """
-
-
 class NavigableStringException(SoupSelectorException):
     """
     Exception to be raised when NavigableString was found in find method.

@@ -1,11 +1,19 @@
 """Testing module for TagSelector class."""
 
+import re
+
 import pytest
 from bs4 import Tag
 
-from soupsavvy.tags.components import AttributeSelector, TagSelector
-from soupsavvy.tags.exceptions import TagNotFoundException, WildcardTagException
-from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
+import soupsavvy.tags.namespace as ns
+from soupsavvy.tags.components import AnyTagSelector, AttributeSelector, TagSelector
+from soupsavvy.tags.exceptions import TagNotFoundException
+from tests.soupsavvy.tags.conftest import (
+    MockLinkSelector,
+    find_body_element,
+    strip,
+    to_bs,
+)
 
 
 @pytest.mark.soup
@@ -27,7 +35,8 @@ class TestTagSelector:
                 attributes=[AttributeSelector(name="class", value="widget", re=True)],
             ),
             TagSelector(
-                tag="a", attributes=[AttributeSelector(name="class", pattern="widget")]
+                tag="a",
+                attributes=[AttributeSelector(name="class", value="widget", re=True)],
             ),
             TagSelector(tag="a", attributes=[AttributeSelector(name="class")]),
         ],
@@ -73,7 +82,7 @@ class TestTagSelector:
             ),
             TagSelector(
                 tag=None,
-                attributes=[AttributeSelector(name="id", pattern=r"^menu.?\d$")],
+                attributes=[AttributeSelector(name="id", value=r"^menu.?\d$", re=True)],
             ),
         ],
         ids=[
@@ -93,15 +102,6 @@ class TestTagSelector:
         bs = to_bs(markup)
         result = tag.find(bs)
         assert str(result) == strip(markup)
-
-    def test_raises_exception_when_initialized_without_parameters(self):
-        """
-        Tests if TagSelector initialized without any parameters raises WildcardTagException.
-        This is illegal move since it matches all elements
-        and AnyTag should be used instead.
-        """
-        with pytest.raises(WildcardTagException):
-            TagSelector()
 
     @pytest.mark.parametrize(
         argnames="tag",
@@ -199,6 +199,26 @@ class TestTagSelector:
         assert isinstance(result, list)
         assert all(isinstance(tag, Tag) for tag in result)
 
+    def test_empty_tag_selector_matches_all_elements(self):
+        """
+        Tests if find_all returns a list of all elements in the markup
+        if it was initialized without any tag or attribute selectors.
+        """
+        text = """
+            <a href="github/settings"></a>
+            <a></a>
+            <div class="github"><a>Hello</a></div>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = TagSelector()
+        result = selector.find_all(bs)
+        assert list(map(str, result)) == [
+            strip("""<a href="github/settings"></a>"""),
+            strip("""<a></a>"""),
+            strip("""<div class="github"><a>Hello</a></div>"""),
+            strip("""<a>Hello</a>"""),
+        ]
+
     def test_find_all_returns_only_matching_elements(self):
         """
         Tests if find_all returns a list of all matching elements.
@@ -218,7 +238,7 @@ class TestTagSelector:
             tag="a",
             attributes=[
                 AttributeSelector(name="href", value="github"),
-                AttributeSelector(name="id", pattern=r"\d"),
+                AttributeSelector(name="id", value=r"\d", re=True),
             ],
         )
         result = tag.find_all(bs)
@@ -239,7 +259,7 @@ class TestTagSelector:
             tag="a",
             attributes=[
                 AttributeSelector(name="href", value="github"),
-                AttributeSelector(name="id", pattern=r"\d"),
+                AttributeSelector(name="id", value=r"\d", re=True),
             ],
         )
         result = tag.find_all(bs)
@@ -341,6 +361,7 @@ class TestTagSelector:
                 "a[class='menu']",
             ),
             (TagSelector(tag="a", attributes=[AttributeSelector("class")]), "a[class]"),
+            (TagSelector(), ns.CSS_SELECTOR_WILDCARD),
             (
                 TagSelector(
                     tag="a",
@@ -349,24 +370,17 @@ class TestTagSelector:
                 "a[class='widget menu']",
             ),
         ],
-        ids=[
-            "only_attribute",
-            "only_multiple_attributes",
-            "tag_and_attributes",
-            "tag_and_re_attributes",
-            "duplicated_attributes",
-            "tag_and_any_value_attribute",
-            "attribute_value_with_whitespace",
-        ],
     )
     def test_selector_is_correct(self, tag: TagSelector, selector: str):
         """Tests if css selector for TagSelector is constructed as expected."""
         assert tag.selector == selector
 
     @pytest.mark.parametrize(
-        argnames="tags",
+        argnames="selectors",
         argvalues=[
+            # tags must be equal
             (TagSelector("a"), TagSelector("a")),
+            # tags and attributes must be equal
             (
                 TagSelector(
                     "a", attributes=[AttributeSelector("class", value="widget")]
@@ -375,41 +389,77 @@ class TestTagSelector:
                     "a", attributes=[AttributeSelector("class", value="widget")]
                 ),
             ),
+            # self.attributes must be equal to other.attributes
             (
-                TagSelector(attributes=[AttributeSelector("class", value="widget")]),
-                TagSelector(attributes=[AttributeSelector("class", value="widget")]),
+                TagSelector(
+                    attributes=[
+                        AttributeSelector("class", value="widget"),
+                        AttributeSelector("id", value="footnote", re=True),
+                    ]
+                ),
+                TagSelector(
+                    attributes=[
+                        AttributeSelector("class", value="widget"),
+                        AttributeSelector("id", value=re.compile("footnote")),
+                    ]
+                ),
             ),
+            # empty TagSelectors and AnyTagSelectors are equal
+            (TagSelector(), AnyTagSelector()),
         ],
-        ids=["without_attributes", "with_attributes", "without_tag"],
     )
-    def test_equal_method_returns_true_for_the_same_parameters(
-        self, tags: list[TagSelector]
+    def test_two_tag_selectors_are_equal(
+        self, selectors: tuple[TagSelector, TagSelector]
     ):
-        """Tests if __eq__ returns True if tags have the same init parameters."""
-        assert tags[0] == tags[1]
+        """Tests if two TagSelectors are equal."""
+        assert (selectors[0] == selectors[1]) is True
 
     @pytest.mark.parametrize(
-        argnames="tags",
+        argnames="selectors",
         argvalues=[
+            # tags are different
             (TagSelector("a"), TagSelector("div")),
+            # not TagSelector instance
+            (TagSelector("a"), MockLinkSelector()),
+            # attributes in wrong order
             (
                 TagSelector(
-                    "a", attributes=[AttributeSelector("class", value="widget")]
+                    "a",
+                    attributes=[
+                        AttributeSelector("class", value="widget"),
+                        AttributeSelector("id", value="menu"),
+                    ],
                 ),
-                TagSelector("a", attributes=[AttributeSelector("class", value="menu")]),
+                TagSelector(
+                    "a",
+                    attributes=[
+                        AttributeSelector("id", value="menu"),
+                        AttributeSelector("class", value="widget"),
+                    ],
+                ),
             ),
+            # one attribute is different
             (
-                TagSelector(attributes=[AttributeSelector("class", value="widget")]),
-                TagSelector(attributes=[AttributeSelector("class", value="menu")]),
+                TagSelector(
+                    attributes=[
+                        AttributeSelector("class", value="widget"),
+                        AttributeSelector("id", value="menu"),
+                    ]
+                ),
+                TagSelector(
+                    attributes=[
+                        AttributeSelector("class", value="widget"),
+                        AttributeSelector("id", value="footnote"),
+                    ]
+                ),
             ),
         ],
-        ids=["without_attributes", "with_attributes", "without_tag"],
     )
-    def test_equal_method_returns_false_for_the_different_parameters(
-        self, tags: list[TagSelector]
+    def test_two_tag_selectors_are_not_equal(
+        self, selectors: tuple[TagSelector, TagSelector]
     ):
-        """Tests if __eq__ returns False if tags have different init parameters."""
-        assert tags[0] != tags[1]
+        """Tests if two TagSelectors are not equal."""
+        assert (selectors[0] == selectors[1]) is False
 
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """

@@ -8,8 +8,7 @@ from soupsavvy.testing.generators.templates.templates import (
     BaseTemplate,
     ConstantTemplate,
 )
-
-from .conftest import TEMPLATE_VALUE, MockTemplate
+from tests.soupsavvy.testing.generators.conftest import TEMPLATE_VALUE, MockTemplate
 
 
 @pytest.mark.generator

@@ -84,16 +84,16 @@ if not isinstance(a, Tag):
 with savvier version:
 
 ```python
-import re
+from bs4 import BeautifulSoup
 
 from soupsavvy import (
+    AndSelector,
     AttributeSelector,
     DescendantCombinator,
     PatternSelector,
     TagSelector,
 )
 
-# define your complex selector once
 selector = DescendantCombinator(
     TagSelector(
         "div",
@@ -102,16 +102,15 @@ selector = DescendantCombinator(
             AttributeSelector(name="role", value="search"),
         ],
     ),
-    PatternSelector(
-        tag=TagSelector(
+    AndSelector(
+        PatternSelector(pattern="Github", re=True),
+        TagSelector(
             "a",
             attributes=[
                 AttributeSelector(name="class", value="option"),
                 AttributeSelector(name="href", value="github.com", re=True),
             ],
         ),
-        pattern="Github",
-        re=True,
     ),
 )
 # reuse it in any place to search for tag in any markup, if not found, strict mode raises exception
@@ -130,7 +129,7 @@ If you'd like to contribute to soupsavvy, feel free to check out the [GitHub rep
 
 ## License
 
-[![MIT License](https://img.shields.io/badge/license-MIT-green?style=plastic)](https://choosealicense.com/licenses/mit/)  
+[![MIT License](https://img.shields.io/badge/license-MIT-green?style=plastic)](https://choosealicense.com/licenses/mit/)
 soupsavvy is licensed under the [MIT License](https://opensource.org/licenses/MIT), allowing for both personal and commercial use. See the `LICENSE` file for more information.
 
 ## Acknowledgements
@@ -139,5 +138,5 @@ Soupsavvy is built upon the foundation of excellent BeautifulSoup. We extend our
 
 -----------------
 
-**Let's soap this soup!**  
+**Let's soap this soup!**
 **Happy scraping!** ✨

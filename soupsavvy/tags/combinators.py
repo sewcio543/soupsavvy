@@ -40,7 +40,7 @@ from soupsavvy.tags.relative import (
 from soupsavvy.tags.tag_utils import TagResultSet
 
 
-class BaseCombinator(SoupSelector, MultipleSoupSelector):
+class BaseCombinator(MultipleSoupSelector):
     def __init__(
         self,
         selector1: SoupSelector,
@@ -108,7 +108,7 @@ class BaseCombinator(SoupSelector, MultipleSoupSelector):
     ) -> list[Tag]:
         elements: list[Tag] = []
 
-        for i, step in enumerate(self.steps):
+        for i, step in enumerate(self.selectors):
             if i == 0:
                 # only first step follows recursive rule
                 elements = step.find_all(tag, recursive=recursive)
@@ -126,13 +126,12 @@ class BaseCombinator(SoupSelector, MultipleSoupSelector):
                 )
             )
 
-            n = limit if i + 1 == len(self.steps) else None
+            n = limit if i + 1 == len(self.selectors) else None
             elements = results.fetch(n)
 
         return elements
 
 
-@dataclass(init=False)
 class ChildCombinator(BaseCombinator):
     """
     Class representing a child combinator in CSS selectors.
@@ -187,7 +186,6 @@ class ChildCombinator(BaseCombinator):
         return RelativeChild
 
 
-@dataclass(init=False)
 class NextSiblingCombinator(BaseCombinator):
     """
     Class representing a next sibling combinator in CSS selectors.
@@ -232,7 +230,6 @@ class NextSiblingCombinator(BaseCombinator):
         return RelativeNextSibling
 
 
-@dataclass(init=False)
 class SubsequentSiblingCombinator(BaseCombinator):
     """
     Class representing a subsequent sibling combinator in CSS selectors.
@@ -281,7 +278,6 @@ class SubsequentSiblingCombinator(BaseCombinator):
         return RelativeSubsequentSibling
 
 
-@dataclass(init=False)
 class DescendantCombinator(BaseCombinator):
     """
     Class representing a descent combinator in CSS selectors.
@@ -336,8 +332,7 @@ class DescendantCombinator(BaseCombinator):
         return RelativeDescendant
 
 
-@dataclass(init=False)
-class SelectorList(SoupSelector, MultipleSoupSelector):
+class SelectorList(MultipleSoupSelector):
     """
     Class representing a list of selectors in CSS,
     a selector list is a comma-separated list of selectors,
@@ -421,7 +416,7 @@ class SelectorList(SoupSelector, MultipleSoupSelector):
 
     def _find(self, tag: Tag, recursive: bool = True) -> FindResult:
         # iterates all tags and returns first element that matches
-        for selector in self.steps:
+        for selector in self.selectors:
             result = selector.find(tag, recursive=recursive)
 
             if result is not None:
@@ -437,7 +432,7 @@ class SelectorList(SoupSelector, MultipleSoupSelector):
     ) -> list[Tag]:
         results = TagResultSet()
 
-        for selector in self.steps:
+        for selector in self.selectors:
             results |= TagResultSet(
                 selector.find_all(tag, recursive=recursive),
             )

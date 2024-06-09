@@ -53,6 +53,24 @@ class RelativeSelector(SoupSelector):
         self._check_selector_type(selector)
         self.selector = selector
 
+    def __eq__(self, other: object) -> bool:
+        # check for RelativeSelector type for type checking sake
+        if not isinstance(other, RelativeSelector):
+            return False
+        elif type(self) is not type(other):
+            # checking for exact type match - isinstance(other, self.__class__)
+            # when other is subclass of self.__class__ would call other.__eq__(self)
+            # which is not desired behavior, as it returns False
+            return False
+
+        return self.selector == other.selector
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.selector})"
+
+    def __repr__(self) -> str:
+        return str(self)
+
 
 class BaseRelativeSibling(RelativeSelector):
     """

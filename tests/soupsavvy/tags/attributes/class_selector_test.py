@@ -97,12 +97,12 @@ class TestClassSelector:
         pattern = r"^widget.?\d{1,3}$"
         expected = strip("""<div class="widget 123"></div>""")
 
-        selector = ClassSelector(pattern=pattern)
+        selector = ClassSelector(value=pattern, re=True)
         result = selector.find(bs)
         assert str(result) == expected
 
         # already compiled regex pattern should work the same way
-        selector = ClassSelector(pattern=re.compile(pattern))
+        selector = ClassSelector(value=re.compile(pattern))
         result = selector.find(bs)
         assert str(result) == expected
 
@@ -171,43 +171,6 @@ class TestClassSelector:
         selector = ClassSelector("widget")
         result = selector.find_all(bs)
         assert result == []
-
-    def test_equal_method_returns_true_for_the_same_parameters(self):
-        """Tests if __eq__ returns True if selectors have the same init parameters."""
-        # only value is provided
-        comp = ClassSelector("widget") == ClassSelector("widget")
-        assert comp is True
-        # value and re are provided
-        comp = ClassSelector("widget", re=True) == ClassSelector("widget", re=True)
-        assert comp is True
-        # only pattern is provided as string
-        comp = ClassSelector(pattern=r"^widget") == ClassSelector(pattern=r"^widget")
-        assert comp is True
-        # only pattern is provided as compiled regex
-        comp = ClassSelector(pattern=re.compile(r"^widget")) == ClassSelector(
-            pattern=re.compile(r"^widget")
-        )
-        assert comp is True
-
-    def test_equal_method_returns_false_for_different_parameters(self):
-        """Tests if __eq__ returns False if selectors have different init parameters."""
-        # only value is provided
-        comp = ClassSelector("widget") == ClassSelector("menu")
-        assert comp is False
-        # value and re are provided
-        comp = ClassSelector("widget", re=True) == ClassSelector("widget", re=False)
-        assert comp is False
-        # only pattern is provided as string
-        comp = ClassSelector(pattern=r"^widget") == ClassSelector(pattern=r"widget")
-        assert comp is False
-        # only pattern is provided as compiled regex
-        comp = ClassSelector(pattern=re.compile(r"^widget")) == ClassSelector(
-            pattern=re.compile(r"widget")
-        )
-        assert comp is False
-        # left has extra parameter
-        comp = ClassSelector("widget", pattern="widget") == ClassSelector("widget")
-        assert comp is False
 
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
@@ -366,23 +329,17 @@ class TestClassSelector:
             (ClassSelector("menu"), ".menu"),
             # selector is constructed as default if re is True
             (ClassSelector("menu", re=True), "[class*='menu']"),
-            # when no value, it's always [class]
-            (ClassSelector(pattern="pattern"), "[class]"),
             (ClassSelector(re=True), "[class]"),
             (ClassSelector(re=False), "[class]"),
-            # pattern is not considered in selector
+            # pattern is reduced to containment operator *=
             (
-                ClassSelector("menu", pattern="pattern"),
-                "[class='menu']",
+                ClassSelector(re.compile(r"^menu"), re=True),
+                "[class*='^menu']",
             ),
-        ],
-        ids=[
-            "exact_match",
-            "contains_match",
-            "match_all_pattern",
-            "match_all_re_true",
-            "match_all_re_false",
-            "pattern_skipped_in_selector",
+            (
+                ClassSelector(re.compile(r"^menu"), re=False),
+                "[class*='^menu']",
+            ),
         ],
     )
     def test_selector_is_correct(self, selector: ClassSelector, css: str):

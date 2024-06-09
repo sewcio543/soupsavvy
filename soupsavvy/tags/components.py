@@ -18,12 +18,13 @@ NotSelector - negation of a selector (~)
 
 from __future__ import annotations
 
+import itertools
 import re
 from dataclasses import dataclass, field
 from functools import reduce
 from typing import Any, Iterable, Optional, Pattern
 
-from bs4 import Tag
+from bs4 import SoupStrainer, Tag
 
 import soupsavvy.tags.namespace as ns
 from soupsavvy.tags.attributes import AttributeSelector
@@ -33,8 +34,7 @@ from soupsavvy.tags.base import (
     SingleSoupSelector,
     SoupSelector,
 )
-from soupsavvy.tags.exceptions import WildcardTagException
-from soupsavvy.tags.tag_utils import TagIterator, UniqueTag
+from soupsavvy.tags.tag_utils import TagIterator, TagResultSet
 
 
 @dataclass
@@ -64,11 +64,11 @@ class TagSelector(SingleSoupSelector, SelectableCSS):
     Parameters
     ----------
     name : str, optional
-        HTML tag name ex. "a", "div". By default None.
+        HTML tag name ex. "a", "div". By default None, all tag names will be matched.
 
     attributes : Iterable[AttributeSelector], optional
         Iterable of AttributeSelector objects that specify element attributes.
-        By default empty list.
+        By default empty list, no attribute will be checked.
 
     Example
     -------
@@ -81,23 +81,18 @@ class TagSelector(SingleSoupSelector, SelectableCSS):
 
     Notes
     -----
-    Initializing object without passing any parameters is a legal move.
-    It results in matching all elements in markup and wildcard selector "*".
+    Initializing object without passing any parameters is equal to selector for all elements,
+    which is equivalent to using AnyTagSelector object.
     """
 
     tag: Optional[str] = None
     attributes: Iterable[AttributeSelector] = field(default_factory=list)
 
-    def __post_init__(self) -> None:
-        """Raises exception if empty TagSelector was provided."""
-        if self.tag is None and not self.attributes:
-            raise WildcardTagException(
-                "Empty TagSelector is not a valid input, provide tag or attributes. "
-                + "If you want to match all elements, use AnyTag component instead."
-            )
-
     @property
     def selector(self) -> str:
+        if not self.tag and not self.attributes:
+            return ns.CSS_SELECTOR_WILDCARD
+
         # drop duplicated css attribute selectors and preserve order
         selectors = list(map(lambda attr: attr.selector, self.attributes))
         attrs = sorted(set(selectors), key=selectors.index)
@@ -111,33 +106,36 @@ class TagSelector(SingleSoupSelector, SelectableCSS):
         attrs = dict(reduce(lambda x, y: {**x, **y}, params)) if params else {}
         return {ns.NAME: self.tag} | {ns.ATTRS: attrs}
 
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, AnyTagSelector):
+            return other == self
+        if not isinstance(other, TagSelector):
+            return False
+
+        # TagSelector produces the same results only if attributes are in the same order
+        return self.tag == other.tag and self.attributes == other.attributes
+
 
 @dataclass
-class PatternSelector(SingleSoupSelector):
+class PatternSelector(SoupSelector):
     """
     Class representing HTML element with specific string pattern for text.
-    Provides elements matching TagSelector with their text matching a pattern.
+    Provides elements matching with text matching the pattern.
 
     Example
     -------
-    >>> PatternSelector(
-    >>>     pattern="Hello World",
-    >>>     tag=TagSelector("div")
-    >>> )
+    >>> PatternSelector(pattern="Hello World")
 
-    matches all elements that have "div" tag name
-    AND their text is equal to "Hello World".
+    matches all element with exact text content "Hello World".
 
     Example
     -------
     >>> <div>Hello World</div> ✔️
     >>> <div>Hello Python</div> ❌
+    >>> <div>Hello World 3</div> ❌
 
     Parameters
     ----------
-    tag: SingleSoupSelector
-        An SingleSoupSelector instance representing desired HTML element.
-        AnyTagSelector is not a valid parameter and raises an exception.
     pattern: str | Pattern
         A pattern to match text of the element. Can be a string for exact match
         or Pattern for any more complex regular expressions.
@@ -147,39 +145,51 @@ class PatternSelector(SingleSoupSelector):
 
     Notes
     -----
-    Pattern can be a regex pattern.
-    Providing 're.compile(r"[0-9]")' as pattern will much any digit in text:
+    Selector uses re.search function to match text content if re=True
+    or compiled regex is passed as pattern.
+    Providing 're.compile(r"[0-9]")' as pattern will much any element with a digit in text.
+
+    Example
+    -------
+    >>> import re
+    >>> PatternSelector(pattern=re.compile(r"[0-9]"))
 
     Example
     -------
     >>> <div>Hello World 123</div> ✔️
     >>> <div>Hello World</div> ❌
 
-    Raises
-    ------
-    EmptyTagSelectorException
-        When empty TagSelector was passed as a tag parameter.
+    Due to bs4 implementation, element does not match the pattern if it has any children.
+    Only leaf nodes can be returned by PatternSelector find methods.
+
+    Example
+    -------
+    >>> <div>Hello World<span></span></div> ❌
     """
 
-    tag: SingleSoupSelector
     pattern: str | Pattern[str]
     re: bool = False
 
     def __post_init__(self) -> None:
-        #! if only string is specified in case of wildcard tag - returns NavigableString
-        #! which causes problems downstream
-        if isinstance(self.tag, AnyTagSelector):
-            raise WildcardTagException(
-                "AnyTag which is a wildcard tag matching all elements, "
-                + "is not acceptable as a tag parameter for PatternTagSelector."
-            )
+        """Sets up compiled regex pattern used for SoupStrainer in find methods."""
+        self._pattern = re.compile(self.pattern) if self.re else self.pattern
 
-    @property
-    def _find_params(self) -> dict[str, Any]:
-        pattern = re.compile(self.pattern) if self.re else self.pattern
-        return {ns.STRING: pattern} | self.tag._find_params
+    def find_all(
+        self, tag: Tag, recursive: bool = True, limit: Optional[int] = None
+    ) -> list[Tag]:
+        iterator = TagIterator(tag, recursive=recursive)
+        strainer = SoupStrainer(string=self._pattern)
+        filter_ = filter(strainer.search_tag, iterator)
+        return list(itertools.islice(filter_, limit))
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, PatternSelector):
+            return False
+
+        return self._pattern == other._pattern
 
 
+@dataclass
 class AnyTagSelector(SingleSoupSelector, SelectableCSS):
     """
     Class representing a wildcard tag that matches any tag in the markup.
@@ -209,9 +219,16 @@ class AnyTagSelector(SingleSoupSelector, SelectableCSS):
         """Returns wildcard css selector matching all elements in the markup."""
         return ns.CSS_SELECTOR_WILDCARD
 
+    def __eq__(self, other: object) -> bool:
+        # TagSelector produces the same results only if it does not have
+        # any parameters specified
+        if isinstance(other, TagSelector):
+            return other.tag is None and not other.attributes
 
-@dataclass(init=False)
-class NotSelector(SoupSelector, MultipleSoupSelector):
+        return isinstance(other, AnyTagSelector)
+
+
+class NotSelector(MultipleSoupSelector):
     """
     Class representing selector of elements that do not match provided selectors.
 
@@ -288,19 +305,16 @@ class NotSelector(SoupSelector, MultipleSoupSelector):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Tag]:
-        matching = set()
-
-        for step in self.steps:
-            matching |= {
-                UniqueTag(element)
-                for element in step.find_all(tag, recursive=recursive)
-            }
-
-        return [
-            element
-            for element in TagIterator(tag, recursive=recursive)
-            if UniqueTag(element) not in matching
-        ][:limit]
+        matching = reduce(
+            TagResultSet.__or__,
+            (
+                TagResultSet(step.find_all(tag, recursive=recursive))
+                for step in self.selectors
+            ),
+        )
+        all_tags = list(TagIterator(tag, recursive=recursive))
+        result = TagResultSet(all_tags) - matching
+        return result.fetch(limit)
 
     def __invert__(self) -> SoupSelector:
         """
@@ -310,13 +324,12 @@ class NotSelector(SoupSelector, MultipleSoupSelector):
         from soupsavvy.tags.combinators import SelectorList
 
         if not self._multiple:
-            return self.steps[0]
+            return self.selectors[0]
 
-        return SelectorList(*self.steps)
+        return SelectorList(*self.selectors)
 
 
-@dataclass(init=False)
-class AndSelector(SoupSelector, MultipleSoupSelector):
+class AndSelector(MultipleSoupSelector):
     """
     Class representing an intersection of multiple soup selectors.
     Provides elements matching all of the listed selectors.
@@ -391,25 +404,17 @@ class AndSelector(SoupSelector, MultipleSoupSelector):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Tag]:
-        steps = iter(self.steps)
-        matching = [
-            UniqueTag(element)
-            for element in next(steps).find_all(tag, recursive=recursive)
-        ]
-
-        for step in steps:
-            # not using set on purpose to keep order of elements
-            step_elements = [
-                UniqueTag(element)
-                for element in step.find_all(tag, recursive=recursive)
-            ]
-            matching = [element for element in matching if element in step_elements]
-
-        return [element.tag for element in matching][:limit]
+        matching = reduce(
+            TagResultSet.__and__,
+            (
+                TagResultSet(step.find_all(tag, recursive=recursive))
+                for step in self.selectors
+            ),
+        )
+        return matching.fetch(limit)
 
 
-@dataclass(init=False)
-class HasSelector(SoupSelector, MultipleSoupSelector):
+class HasSelector(MultipleSoupSelector):
     """
     Class representing elements selected with respect to matching reference elements.
     Element is selected if any of the provided selectors matched reference element.
@@ -522,7 +527,7 @@ class HasSelector(SoupSelector, MultipleSoupSelector):
 
         for element in elements:
             # we only care if anything matching was found
-            if any(step.find(element) for step in self.steps):
+            if any(step.find(element) for step in self.selectors):
                 matching.append(element)
 
                 if len(matching) == limit:

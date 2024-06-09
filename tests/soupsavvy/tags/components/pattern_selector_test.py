@@ -4,186 +4,213 @@ import re
 
 import pytest
 
-from soupsavvy.tags.components import (
-    AnyTagSelector,
-    AttributeSelector,
-    PatternSelector,
-    TagSelector,
+from soupsavvy.tags.components import PatternSelector
+from soupsavvy.tags.exceptions import TagNotFoundException
+from tests.soupsavvy.tags.conftest import (
+    MockLinkSelector,
+    find_body_element,
+    strip,
+    to_bs,
 )
-from soupsavvy.tags.exceptions import (
-    NavigableStringException,
-    TagNotFoundException,
-    WildcardTagException,
-)
-from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
 @pytest.mark.soup
 class TestPatternSelector:
     """Class for PatternSelector unit test suite."""
 
-    @pytest.mark.parametrize(
-        argnames="tag",
-        argvalues=[
-            PatternSelector(
-                pattern="Hello World",
-                tag=TagSelector(
-                    "div", attributes=[AttributeSelector("class", value="widget")]
-                ),
-            ),
-            PatternSelector(tag=TagSelector("div"), pattern="Hello World"),
-            PatternSelector(tag=TagSelector("div"), pattern="Hello", re=True),
-            PatternSelector(
-                tag=TagSelector(
-                    attributes=[AttributeSelector("class", value="widget")]
-                ),
-                pattern=re.compile("World"),
-            ),
-        ],
-        ids=[
-            "match_with_name_and_attrs",
-            "match_with_tag_name",
-            "match_with_re",
-            "match_with_re_pattern",
-        ],
-    )
-    def test_element_is_found_for_valid_pattern_tags(self, tag: PatternSelector):
+    def test_find_returns_first_match_with_exact_value(self):
         """
-        Tests if element was found for various valid PatternSelectors.
-        Element is returned if it matches the ElementTag and has text matching
-        provided pattern.
+        Tests if find returns first tag with text content that matches the specified value.
         """
-        markup = """<div class="widget">Hello World</div>"""
-        bs = to_bs(markup)
-        result = tag.find(bs)
-        assert str(result) == strip(markup)
+        text = """
+            <div class="Hello"></div>
+            <div>Hi Hi Hello</div>
+            <div>
+                <div>Good morning</div>
+            </div>
+            <a>Hello</a>
+        """
+        bs = to_bs(text)
+        selector = PatternSelector("Hello")
+        result = selector.find(bs)
+        assert str(result) == strip("""<a>Hello</a>""")
 
-    @pytest.mark.parametrize(
-        argnames="tag",
-        argvalues=[
-            PatternSelector(
-                pattern="Hello World",
-                tag=TagSelector(
-                    "div", attributes=[AttributeSelector("class", value="menu")]
-                ),
-            ),
-            PatternSelector(tag=TagSelector("div"), pattern="Hello Python"),
-            PatternSelector(
-                tag=TagSelector(
-                    attributes=[AttributeSelector("class", value="widget")]
-                ),
-                pattern=re.compile(r"World \d"),
-            ),
-        ],
-        ids=["not_match_attr", "not_match_text", "not_match_pattern"],
-    )
-    def test_element_is_not_found_for_not_matching_pattern_tags(
-        self, tag: PatternSelector
-    ):
+    def test_find_returns_first_match_with_re_true(self):
         """
-        Tests if element was not found and method returns None
-        for various PatternSelectors that does not match element.
+        Tests if find returns first tag with text content
+        that matches the specified regex pattern. Checks as wel if if in case of
+        compiled regex pattern, re.search is used instead of re.match.
         """
-        markup = """<div class="widget">Hello World</div>"""
-        bs = to_bs(markup)
-        assert tag.find(bs) is None
+        text = """
+            <div class="Hello">Good Morning</div>
+            <div>
+                <div>Good morning</div>
+            </div>
+            <a>Helllo</a>
+            <div>Hi Hi Hello</div>
+        """
+        bs = to_bs(text)
 
-    def test_find_raises_exception_when_tag_not_found_in_strict_mode(self):
+        # all these selectors should behave the same way
+        selectors = [
+            PatternSelector(pattern="Hello", re=True),
+            PatternSelector(pattern=re.compile("Hello"), re=True),
+            PatternSelector(pattern=re.compile("Hello"), re=False),
+        ]
+        assert all(
+            str(selector.find(bs)) == strip("""<div>Hi Hi Hello</div>""")
+            for selector in selectors
+        )
+
+    def test_find_returns_first_match_with_pattern(self):
         """
-        Tests if find raises TagNotFoundException exception if no element was found
-        and method was called in a strict mode.
+        Tests if find returns first tag with text content that matches compiled regex pattern,
+        ignoring re parameter. The same behavior should be observed when passing
+        string of the same regex pattern and re=True.
         """
-        markup = """<div class="widget">Hello World</div>"""
-        bs = to_bs(markup)
-        tag = PatternSelector(tag=TagSelector("div"), pattern="Hello Python")
+        text = """
+            <div>Good Morning</div>
+            <div>Morning, Hello 12</div>
+            <a>Hello 1234</a>
+            <div>
+                <p>Hello 12 World</p>
+                <div>Good morning</div>
+            </div>
+            <a>Hello 123</a>
+        """
+        bs = to_bs(text)
+
+        # all these selectors should behave the same way
+        selectors = [
+            PatternSelector(pattern=r"^Hello.?\d{1,3}$", re=True),
+            PatternSelector(pattern=re.compile(r"^Hello.?\d{1,3}$"), re=True),
+            PatternSelector(pattern=re.compile(r"^Hello.?\d{1,3}$"), re=False),
+        ]
+        assert all(
+            str(selector.find(bs)) == strip("""<a>Hello 123</a>""")
+            for selector in selectors
+        )
+
+    def test_find_returns_first_match_with_raw_string_as_pattern(self):
+        """
+        Tests if find returns first tag with text content
+        that matches the specified raw string. When raw string is used, and re is False,
+        the pattern is treated as a literal string.
+        """
+        text = """
+            <div>Hello</div>
+            <div>
+                <div>Hello, Good morning</div>
+            </div>
+            <a>^Hello World</a>
+            <div>Hi Hi Hello</div>
+            <a>^Hello</a>
+        """
+        bs = to_bs(text)
+        selector = PatternSelector(r"^Hello")
+        result = selector.find(bs)
+        assert str(result) == strip("""<a>^Hello</a>""")
+
+    def test_find_does_not_return_element_with_children_that_matches_text(self):
+        """
+        Tests if find does not return element that has children, even though
+        its text content matches the selector. It's due to bs4 implementation
+        that does not match element on text if it has children.
+        """
+        text = """
+            <div>Hello<div></div></div>
+        """
+        bs = to_bs(text)
+        selector = PatternSelector("Hello", re=True)
+        result = selector.find(bs)
+        assert result is None
+
+    def test_find_returns_none_if_no_match_and_strict_false(self):
+        """
+        Tests if find returns None if no element matches the selector
+        and strict is False.
+        """
+        text = """
+            <div class="Hello"></div>
+            <div>Hi Hi Hello</div>
+            <div>
+                <div>Good morning</div>
+            </div>
+        """
+        bs = to_bs(text)
+        selector = PatternSelector("Hello")
+        result = selector.find(bs)
+        assert result is None
+
+    def test_find_raises_exception_if_no_match_and_strict_true(self):
+        """
+        Tests find raises TagNotFoundException if no element matches the selector
+        and strict is True.
+        """
+        text = """
+            <div class="Hello"></div>
+            <div>Hi Hi Hello</div>
+            <div>
+                <div>Good morning</div>
+            </div>
+        """
+        bs = to_bs(text)
+        selector = PatternSelector("Hello")
 
         with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True)
+            selector.find(bs, strict=True)
 
-    def test_init_raises_exception_if_input_tag_is_anytag(self):
-        """
-        Tests if init raises WildcardElementTagException if tag passed
-        to pattern tag is AnyTag. This is not allowed since AnyTag is a wildcard tag.
-        """
-        with pytest.raises(WildcardTagException):
-            PatternSelector(tag=AnyTagSelector(), pattern="Hello")
-
-    def test_find_all_returns_list_of_matched_elements(self):
-        """
-        Tests if PatternSelector find_all method returns
-        a list of all matched elements.
-        """
+    def test_find_all_returns_all_matching_elements(self):
+        """Tests if find_all returns a list of all matching elements."""
         text = """
-            <a href="github">Hello World</a>
-            <div href="github">Hello World</div>
-            <a href="github/settings">Hello World</a>
-            <a href="github">Hello</a>
-            <a href="github">World</a>
-            <a class="github">Hello World</a>
-            <a href="github">Hello Python</a>
+            <div class="Hello"></div>
+            <div>Hello</div>
+            <div>Hi Hi Hello</div>
+            <div>
+                <div>Good morning</div>
+                <a>Hello</a>
+            </div>
+            <p>Hello</p>
         """
         bs = to_bs(text)
-        tag = PatternSelector(
-            tag=TagSelector(
-                "a", attributes=[AttributeSelector(name="href", value="github")]
-            ),
-            pattern="Hello",
-            re=True,
-        )
-        result = tag.find_all(bs)
-        expected = [
-            strip("""<a href="github">Hello World</a>"""),
-            strip("""<a href="github">Hello</a>"""),
-            strip("""<a href="github">Hello Python</a>"""),
+        selector = PatternSelector("Hello")
+
+        result = selector.find_all(bs)
+        excepted = [
+            strip("""<div>Hello</div>"""),
+            strip("""<a>Hello</a>"""),
+            strip("""<p>Hello</p>"""),
         ]
-        assert list(map(str, result)) == expected
+        assert list(map(str, result)) == excepted
 
-    def test_find_all_returns_empty_list_if_no_matched_elements(self):
-        """
-        Tests if PatternSelector find_all method returns empty list if
-        no element matches the tag.
-        """
+    def test_find_all_returns_empty_list_when_no_match(self):
+        """Tests if find returns an empty list if no element matches the selector."""
         text = """
-            <div href="github">Hello World</div>
-            <a href="github/settings">Hello World</a>
-            <a href="github">Hello</a>
-            <a href="github">World</a>
-            <a class="github">Hello World</a>
-            <a href="github">Hello Python</a>
+            <div class="Hello"></div>
+            <div>Hi Hi Hello</div>
+            <div>
+                <div>Good morning</div>
+            </div>
         """
         bs = to_bs(text)
-        tag = PatternSelector(
-            tag=TagSelector(
-                "a", attributes=[AttributeSelector(name="href", value="github")]
-            ),
-            pattern="Hello World",
-        )
-        result = tag.find_all(bs)
+        selector = PatternSelector("Hello")
+        result = selector.find_all(bs)
         assert result == []
 
     def test_find_returns_first_matching_child_if_recursive_false(self):
-        """
-        Tests if find returns first matching child element if recursive is False.
-        In this case first span and <div>Hello 1</div> do not match
-        because they are not div and not direct child in this order.
-        """
+        """Tests if find returns first matching child element if recursive is False."""
         text = """
-            <span>Hello</span>
-            <div class="Hello"></div>
+            <div class="Hello 2"></div>
             <div>
-                <div>Hello 1</div>
+                <div>Hello</div>
             </div>
-            <div>Hello 2</div>
+            <div>Hi Hi Hello</div>
+            <span>Hello</span>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternSelector(
-            TagSelector(tag="div"),
-            pattern="Hello",
-            re=True,
-        )
+        tag = PatternSelector(pattern="Hello")
         result = tag.find(bs, recursive=False)
-
-        assert str(result) == strip("""<div>Hello 2</div>""")
+        assert str(result) == strip("""<span>Hello</span>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
@@ -191,18 +218,14 @@ class TestPatternSelector:
         and recursive is False.
         """
         text = """
-            <span>Hello</span>
-            <div class="Hello"></div>
+            <div class="Hello 2"></div>
             <div>
-                <div>Hello 1</div>
+                <div>Hello</div>
             </div>
+            <div>Hi Hi Hello</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternSelector(
-            TagSelector(tag="div"),
-            pattern="Hello",
-            re=True,
-        )
+        tag = PatternSelector(pattern="Hello")
         result = tag.find(bs, recursive=False)
         assert result is None
 
@@ -212,18 +235,14 @@ class TestPatternSelector:
         matches the selector, when recursive is False and strict is True.
         """
         text = """
-            <span>Hello</span>
-            <div class="Hello"></div>
+            <div class="Hello 2"></div>
             <div>
-                <div>Hello 1</div>
+                <div>Hello</div>
             </div>
+            <div>Hi Hi Hello</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternSelector(
-            TagSelector(tag="div"),
-            pattern="Hello",
-            re=True,
-        )
+        tag = PatternSelector(pattern="Hello")
 
         with pytest.raises(TagNotFoundException):
             tag.find(bs, strict=True, recursive=False)
@@ -234,25 +253,23 @@ class TestPatternSelector:
         It returns only matching children of the body element.
         """
         text = """
-            <span>Hello</span>
-            <div class="Hello"></div>
+            <p>Hello</p>
+            <div class="Hello 2"></div>
+            <div>Hi Hi Hello</div>
             <div>
-                <div>Hello 1</div>
+                <div>Hello</div>
             </div>
-            <div>Hello 2</div>
-            <div>Morning, Hello</div>
+            <a>Hello</a>
+            <span>Hello</span>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternSelector(
-            TagSelector(tag="div"),
-            pattern="Hello",
-            re=True,
-        )
+        tag = PatternSelector(pattern="Hello")
         results = tag.find_all(bs, recursive=False)
 
         assert list(map(str, results)) == [
-            strip("""<div>Hello 2</div>"""),
-            strip("""<div>Morning, Hello</div>"""),
+            strip("""<p>Hello</p>"""),
+            strip("""<a>Hello</a>"""),
+            strip("""<span>Hello</span>"""),
         ]
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
@@ -263,18 +280,14 @@ class TestPatternSelector:
         and recursive is False.
         """
         text = """
-            <span>Hello</span>
-            <div class="Hello"></div>
+            <div class="Hello 2"></div>
             <div>
-                <div>Hello 1</div>
+                <div>Hello</div>
             </div>
+            <div>Hi Hi Hello</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternSelector(
-            TagSelector(tag="div"),
-            pattern="Hello",
-            re=True,
-        )
+        tag = PatternSelector(pattern="Hello")
 
         results = tag.find_all(bs, recursive=False)
         assert results == []
@@ -285,24 +298,22 @@ class TestPatternSelector:
         In this case only 2 first in order elements are returned.
         """
         text = """
-            <span>
-                <div>Hello 1</div>
-            </span>
-            <div>Github</div>
-            <div>Hello 2</div>
-            <div>Hello 3</div>
+            <p>Hello</p>
+            <div class="Hello 2"></div>
+            <div>Hi Hi Hello</div>
+            <div>
+                <div>Hello</div>
+            </div>
+            <a>Hello</a>
+            <span>Hello</span>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternSelector(
-            TagSelector(tag="div"),
-            pattern="Hello",
-            re=True,
-        )
+        tag = PatternSelector(pattern="Hello")
         results = tag.find_all(bs, limit=2)
 
         assert list(map(str, results)) == [
-            strip("""<div>Hello 1</div>"""),
-            strip("""<div>Hello 2</div>"""),
+            strip("""<p>Hello</p>"""),
+            strip("""<div>Hello</div>"""),
         ]
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
@@ -314,53 +325,71 @@ class TestPatternSelector:
         the selector are returned.
         """
         text = """
-            <span>
-                <div>Hello 1</div>
-            </span>
-            <div>Github</div>
-            <div>Hello 2</div>
-            <div>Hello 3</div>
+            <p>Hello</p>
+            <div class="Hello 2"></div>
+            <div>Hi Hi Hello</div>
+            <div>
+                <div>Hello</div>
+            </div>
+            <a>Hello</a>
+            <span>Hello</span>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternSelector(
-            TagSelector(tag="div"),
-            pattern="Hello",
-            re=True,
-        )
+        tag = PatternSelector(pattern="Hello")
         results = tag.find_all(bs, recursive=False, limit=2)
 
         assert list(map(str, results)) == [
-            strip("""<div>Hello 2</div>"""),
-            strip("""<div>Hello 3</div>"""),
+            strip("""<p>Hello</p>"""),
+            strip("""<a>Hello</a>"""),
         ]
 
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # pattern is the same string
+            (PatternSelector("menu"), PatternSelector("menu")),
+            # pattern is the same string and re=True for both
+            (PatternSelector("menu", re=True), PatternSelector("menu", re=True)),
+            # pattern is the same compiled regex
+            (
+                PatternSelector(re.compile("^menu")),
+                PatternSelector(re.compile("^menu")),
+            ),
+            # when pattern is the same compiled regex, re is ignored
+            (
+                PatternSelector(re.compile("^menu"), re=True),
+                PatternSelector(re.compile("^menu"), re=False),
+            ),
+            # string pattern with re=True and the same compiled regex with re=False
+            (
+                PatternSelector("^menu", re=True),
+                PatternSelector(re.compile("^menu"), re=False),
+            ),
+        ],
+    )
+    def test_two_selectors_are_equal(
+        self, selectors: tuple[PatternSelector, PatternSelector]
+    ):
+        """Tests if two PatternSelectors are equal."""
+        assert (selectors[0] == selectors[1]) is True
 
-class LegalWildcardTag(TagSelector):
-    """
-    Mock class that is ElementTag that allows no parameters passed to init.
-    This way wildcard tag can be created that is a valid input into PatternSelector.
-    This enables to create hypothetical case when find method returns NavigableString
-    instead of Tag (only string parameter was passed into bs4.find method).
-    This should raise NavigableStringException that is an invalid output of
-    SoupSelector.find method.
-    """
-
-    def __post_init__(self):
-        """Overridden post init to not raise exception on empty tag and attributes."""
-
-
-@pytest.mark.soup
-@pytest.mark.edge_case
-def test_exception_is_raised_when_navigable_string_is_a_result():
-    """
-    Tests if NavigableStringException is raised when bs4.find returns NavigableString.
-    Child classes of SoupSelector should always always prevent that,
-    thus this is a hypothetical case that is covered anyway to ensure that it does
-    not break code downstream.
-    """
-    markup = """<div class="widget">Hello World</div>"""
-    bs = to_bs(markup)
-    tag = PatternSelector(tag=LegalWildcardTag(), pattern="Hello World")
-
-    with pytest.raises(NavigableStringException):
-        tag.find(bs, strict=True)
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # string pattern is different
+            (PatternSelector("menu"), PatternSelector("widget")),
+            # string pattern is the same, but re is different
+            (PatternSelector("menu", re=True), PatternSelector("menu")),
+            # string pattern with re=False not equal to compiled regex
+            (PatternSelector(re.compile("menu")), PatternSelector("menu")),
+            # compiled regex patterns are different
+            (PatternSelector(re.compile("menu")), PatternSelector(re.compile("^menu"))),
+            # not PatternSelector instance
+            (PatternSelector("menu"), MockLinkSelector()),
+        ],
+    )
+    def test_two_selectors_are_not_equal(
+        self, selectors: tuple[PatternSelector, PatternSelector]
+    ):
+        """Tests if two PatternSelectors are not equal."""
+        assert (selectors[0] == selectors[1]) is False
