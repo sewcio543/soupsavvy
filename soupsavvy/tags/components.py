@@ -189,6 +189,7 @@ class PatternSelector(SoupSelector):
         return self._pattern == other._pattern
 
 
+@dataclass
 class AnyTagSelector(SingleSoupSelector, SelectableCSS):
     """
     Class representing a wildcard tag that matches any tag in the markup.
@@ -227,7 +228,6 @@ class AnyTagSelector(SingleSoupSelector, SelectableCSS):
         return isinstance(other, AnyTagSelector)
 
 
-@dataclass(init=False)
 class NotSelector(MultipleSoupSelector):
     """
     Class representing selector of elements that do not match provided selectors.
@@ -329,7 +329,6 @@ class NotSelector(MultipleSoupSelector):
         return SelectorList(*self.selectors)
 
 
-@dataclass(init=False)
 class AndSelector(MultipleSoupSelector):
     """
     Class representing an intersection of multiple soup selectors.
@@ -415,7 +414,6 @@ class AndSelector(MultipleSoupSelector):
         return matching.fetch(limit)
 
 
-@dataclass(init=False)
 class HasSelector(MultipleSoupSelector):
     """
     Class representing elements selected with respect to matching reference elements.

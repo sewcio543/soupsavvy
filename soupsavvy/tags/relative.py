@@ -65,6 +65,12 @@ class RelativeSelector(SoupSelector):
 
         return self.selector == other.selector
 
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.selector})"
+
+    def __repr__(self) -> str:
+        return str(self)
+
 
 class BaseRelativeSibling(RelativeSelector):
     """

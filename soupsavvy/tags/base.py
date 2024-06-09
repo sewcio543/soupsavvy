@@ -666,3 +666,9 @@ class MultipleSoupSelector(SoupSelector):
             return False
 
         return self.selectors == other.selectors
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({', '.join(map(str, self.selectors))})"
+
+    def __repr__(self) -> str:
+        return str(self)
