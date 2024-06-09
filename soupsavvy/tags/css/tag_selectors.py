@@ -98,6 +98,7 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
         return TagIterator(tag, recursive=recursive)
 
     def __eq__(self, other: object) -> bool:
+        # we only care if selector is equal with current implementation
         return isinstance(other, CSSSoupSelector) and self.selector == other.selector
 
 

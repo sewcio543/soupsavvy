@@ -206,7 +206,24 @@ class SoupSelector(ABC):
 
     @abstractmethod
     def __eq__(self, other: object) -> bool:
-        """Check self and other object for equality."""
+        """
+        Check self and other object for equality.
+
+        This method is abstract and must be implemented by all selectors.
+        Selectors are considered equal if their find methods return the same result.
+
+        Calling find or find_all methods on selectors that are equal
+        should return the same results.
+
+        Example
+        -------
+        >>> selector1 = ElementTag("div")
+        >>> selector2 = ElementTag("div")
+        >>> selector1 == selector2
+        True
+        >>> selector1.find(tag) == selector2.find(tag)
+        True
+        """
 
         raise NotImplementedError(
             f"{self.__class__.__name__} is an interface, "
@@ -639,9 +656,13 @@ class MultipleSoupSelector(SoupSelector):
         self.selectors = list(selectors)
 
     def __eq__(self, other: object) -> bool:
+        # check for MultipleSoupSelector type for type checking sake
         if not isinstance(other, MultipleSoupSelector):
             return False
         elif type(self) is not type(other):
+            # checking for exact type match - isinstance(other, self.__class__)
+            # when other is subclass of self.__class__ would call other.__eq__(self)
+            # which is not desired behavior, as it returns False
             return False
 
         return self.selectors == other.selectors
