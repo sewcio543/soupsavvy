@@ -4,8 +4,7 @@ import pytest
 from bs4 import Tag
 
 from soupsavvy.tags.tag_utils import TagIterator, TagResultSet, UniqueTag
-
-from .conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
 @pytest.fixture(scope="module")

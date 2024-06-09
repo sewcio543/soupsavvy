@@ -3,7 +3,7 @@
 import pytest
 from bs4 import Tag
 
-from soupsavvy.tags.components import AnyTagSelector
+from soupsavvy.tags.components import AnyTagSelector, TagSelector
 from soupsavvy.tags.exceptions import TagNotFoundException
 from soupsavvy.tags.namespace import CSS_SELECTOR_WILDCARD
 from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
@@ -183,3 +183,26 @@ class TestAnyTagSelector:
             strip("""<div><a>Hello 1</a></div>"""),
             strip("""<div>Hello 2</div>"""),
         ]
+
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # Two AnyTagSelectors
+            (AnyTagSelector(), AnyTagSelector()),
+            # AnyTagSelector and empty TagSelector
+            (AnyTagSelector(), TagSelector()),
+        ],
+    )
+    def test_two_selectors_are_equal(
+        self, selectors: tuple[AnyTagSelector, AnyTagSelector]
+    ):
+        """Tests if two selectors are equal."""
+        assert (selectors[0] == selectors[1]) is True
+
+    def test_two_selectors_are_not_equal(self):
+        """
+        Tests if two selectors are not equal. In case of AnyTagSelector,
+        any other selector that is not AnyTagSelector or empty TagSelector
+        is not equal to it.
+        """
+        assert AnyTagSelector() != TagSelector("div")
