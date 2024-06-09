@@ -107,7 +107,9 @@ class AttributeSelector(SingleSoupSelector, SelectableCSS):
         re = self.re
 
         if isinstance(self._pattern, Pattern):
+            # extract regex pattern string from compiled regex
             value = self._pattern.pattern
+            # always reduce to containment operator for regex patterns
             re = True
 
         operator = "*=" if re else "="
