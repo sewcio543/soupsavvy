@@ -1,5 +1,7 @@
 """Testing module for TagSelector class."""
 
+import re
+
 import pytest
 from bs4 import Tag
 
@@ -392,13 +394,13 @@ class TestTagSelector:
                 TagSelector(
                     attributes=[
                         AttributeSelector("class", value="widget"),
-                        AttributeSelector("id", value="kitchen", pattern="footnote"),
+                        AttributeSelector("id", value="footnote", re=True),
                     ]
                 ),
                 TagSelector(
                     attributes=[
                         AttributeSelector("class", value="widget"),
-                        AttributeSelector("id", value="menu", pattern="footnote"),
+                        AttributeSelector("id", value=re.compile("footnote")),
                     ]
                 ),
             ),
