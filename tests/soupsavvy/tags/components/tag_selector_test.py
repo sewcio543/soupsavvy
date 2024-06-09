@@ -190,6 +190,26 @@ class TestTagSelector:
         assert isinstance(result, list)
         assert all(isinstance(tag, Tag) for tag in result)
 
+    def test_empty_tag_selector_matches_all_elements(self):
+        """
+        Tests if find_all returns a list of all elements in the markup
+        if it was initialized without any tag or attribute selectors.
+        """
+        text = """
+            <a href="github/settings"></a>
+            <a></a>
+            <div class="github"><a>Hello</a></div>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = TagSelector()
+        result = selector.find_all(bs)
+        assert list(map(str, result)) == [
+            strip("""<a href="github/settings"></a>"""),
+            strip("""<a></a>"""),
+            strip("""<div class="github"><a>Hello</a></div>"""),
+            strip("""<a>Hello</a>"""),
+        ]
+
     def test_find_all_returns_only_matching_elements(self):
         """
         Tests if find_all returns a list of all matching elements.

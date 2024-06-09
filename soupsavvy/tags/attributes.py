@@ -52,7 +52,7 @@ class AttributeSelector(SingleSoupSelector, SelectableCSS):
     pattern : Pattern | str, optional
         Regular Expression pattern to match the attribute value.
         Applicable only for SoupSelector find operations, skipped in selector.
-        Value always takes precedence over pattern, if both are provided.
+        Pattern always takes precedence over value, if both are provided.
 
     Implements SelectableCSS interface for CSS selector generation.
 
@@ -120,6 +120,13 @@ class AttributeSelector(SingleSoupSelector, SelectableCSS):
         # passing filters in attrs parameter as dict instead of kwargs
         # to avoid overriding other find method parameters like ex. 'name'
         return {ns.ATTRS: {self.name: self._pattern}}
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, AttributeSelector):
+            return False
+
+        # at the end of the day, pattern is what is used in find methods
+        return self._pattern == other._pattern and self.name == other.name
 
 
 class _SpecificAttributeSelector(AttributeSelector):

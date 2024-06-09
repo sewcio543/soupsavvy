@@ -4,9 +4,14 @@ import re
 
 import pytest
 
-from soupsavvy.tags.attributes import AttributeSelector
+from soupsavvy.tags.attributes import AttributeSelector, ClassSelector
 from soupsavvy.tags.exceptions import TagNotFoundException
-from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.tags.conftest import (
+    MockDivSelector,
+    find_body_element,
+    strip,
+    to_bs,
+)
 
 
 @pytest.mark.soup
@@ -346,62 +351,6 @@ class TestAttributeSelector:
         """Tests if css selector for AttributeSelector is constructed as expected."""
         assert tag.selector == selector
 
-    @pytest.mark.parametrize(
-        argnames="tags",
-        argvalues=[
-            (
-                AttributeSelector("class", value="widget"),
-                AttributeSelector("class", value="widget"),
-            ),
-            (
-                AttributeSelector("class", value="widget", re=True),
-                AttributeSelector("class", value="widget", re=True),
-            ),
-            (
-                AttributeSelector("class", pattern="^widget"),
-                AttributeSelector("class", pattern="^widget"),
-            ),
-        ],
-        ids=["re_false", "re_true", "pattern"],
-    )
-    def test_equal_method_returns_true_for_the_same_parameters(
-        self, tags: list[AttributeSelector]
-    ):
-        """Tests if __eq__ returns True if tags have the same init parameters."""
-        assert tags[0] == tags[1]
-
-    @pytest.mark.parametrize(
-        argnames="tags",
-        argvalues=[
-            (
-                AttributeSelector("class", value="widget"),
-                AttributeSelector("class", value="menu"),
-            ),
-            (
-                AttributeSelector("class", value="widget"),
-                AttributeSelector("id", value="widget"),
-            ),
-            (
-                AttributeSelector("class", value="widget", re=False),
-                AttributeSelector("class", value="widget", re=True),
-            ),
-            (
-                AttributeSelector("class", pattern="^widget"),
-                AttributeSelector("class", pattern="^menu"),
-            ),
-            (
-                AttributeSelector("class", pattern="^widget", value="hello"),
-                AttributeSelector("class", pattern="^menu", value="world"),
-            ),
-        ],
-        ids=["value", "name", "re", "pattern", "value_with_pattern"],
-    )
-    def test_equal_method_returns_false_for_the_different_parameters(
-        self, tags: list[AttributeSelector]
-    ):
-        """Tests if __eq__ returns False if tags have different init parameters."""
-        assert tags[0] != tags[1]
-
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.
@@ -542,3 +491,148 @@ class TestAttributeSelector:
             strip("""<div class="menu"></div>"""),
             strip("""<span class="menu"></span>"""),
         ]
+
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # if only name is provided, it must be equal
+            (AttributeSelector("class"), AttributeSelector("class")),
+            # re does not matter if value is not provided
+            (AttributeSelector("class", re=True), AttributeSelector("class", re=False)),
+            # if value is provided, it must be equal
+            (
+                AttributeSelector("class", value="hello_world"),
+                AttributeSelector("class", value="hello_world"),
+            ),
+            # if value is provided, re parameter must match
+            (
+                AttributeSelector("class", value="hello_world", re=True),
+                AttributeSelector("class", value="hello_world", re=True),
+            ),
+            # value + re is equal to the same pattern
+            (
+                AttributeSelector("class", value="hello_world", re=True),
+                AttributeSelector("class", pattern="hello_world"),
+            ),
+            # if pattern is provided, value is ignored
+            (
+                AttributeSelector("class", value="pizza", pattern="^hello_world"),
+                AttributeSelector("class", value="pasta", pattern="^hello_world"),
+            ),
+            # if pattern is provided, re parameter is ignored
+            (
+                AttributeSelector("class", re=True, pattern="^hello_world"),
+                AttributeSelector("class", re=False, pattern="^hello_world"),
+            ),
+            # if pattern is provided, both re and value are ignored
+            (
+                AttributeSelector(
+                    "class", value="pizza", re=True, pattern="^hello_world"
+                ),
+                AttributeSelector(
+                    "class", value="pasta", re=False, pattern="^hello_world"
+                ),
+            ),
+            # if compiled pattern is provided, it must be equal
+            (
+                AttributeSelector("class", pattern=re.compile(r"^hello_world")),
+                AttributeSelector("class", pattern=re.compile(r"^hello_world")),
+            ),
+            # if compiled pattern is provided, other parameters are ignored
+            (
+                AttributeSelector(
+                    "class",
+                    value="pizza",
+                    re=True,
+                    pattern=re.compile(r"^hello_world"),
+                ),
+                AttributeSelector(
+                    "class",
+                    value="pasta",
+                    re=False,
+                    pattern=re.compile(r"^hello_world"),
+                ),
+            ),
+            # compiled and string patterns are equal
+            (
+                AttributeSelector("class", pattern="widget"),
+                AttributeSelector("class", pattern=re.compile(r"widget")),
+            ),
+            # equal if subclass of AttributeSelector and same parameters
+            (
+                AttributeSelector("class", value="widget"),
+                ClassSelector("widget"),
+            ),
+            (
+                AttributeSelector("class", re=False, pattern="widget$"),
+                ClassSelector(re=True, value="summer", pattern="widget$"),
+            ),
+        ],
+    )
+    def test_two_attribute_selectors_are_equal(
+        self, selectors: tuple[AttributeSelector, AttributeSelector]
+    ):
+        """Tests if two AttributeSelector instances are equal."""
+        assert (selectors[0] == selectors[1]) is True
+
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # if only name is provided, it must not be equal
+            (AttributeSelector("class"), AttributeSelector("id")),
+            # if value is provided, names or values must not match
+            (
+                AttributeSelector("class", value="widget"),
+                AttributeSelector("class", value="menu"),
+            ),
+            # different re parameter when pattern not provided
+            (
+                AttributeSelector("class", value="widget", re=False),
+                AttributeSelector("class", value="widget", re=True),
+            ),
+            # if pattern is provided, is must not be equal
+            (
+                AttributeSelector("class", pattern="^widget"),
+                AttributeSelector("class", pattern="widget"),
+            ),
+            # if pattern is provided, other parameters are ignored
+            (
+                AttributeSelector("class", value="pizza", re=True, pattern="^widget"),
+                AttributeSelector("class", value="pizza", re=True, pattern="^menu"),
+            ),
+            # pattern is the same, but name is different
+            (
+                AttributeSelector("class", pattern="^widget"),
+                AttributeSelector("id", pattern="^widget"),
+            ),
+            # compiled patterns are different
+            (
+                AttributeSelector("class", pattern=re.compile("^widget")),
+                AttributeSelector("class", pattern=re.compile("widget")),
+            ),
+            # pattern and value with the same strings are not equal
+            (
+                AttributeSelector("class", pattern="menu"),
+                AttributeSelector("class", value="menu"),
+            ),
+            # if not subclass of AttributeSelector, it is not equal
+            (
+                AttributeSelector("class", pattern="menu"),
+                MockDivSelector(),
+            ),
+            # if subclass with different parameters, it is not equal
+            (
+                AttributeSelector("id", value="widget"),
+                ClassSelector(value="widget"),
+            ),
+            (
+                AttributeSelector("class", value="widget"),
+                ClassSelector(pattern="widget"),
+            ),
+        ],
+    )
+    def test_two_attribute_selectors_are_not_equal(
+        self, selectors: tuple[AttributeSelector, AttributeSelector]
+    ):
+        """Tests if two AttributeSelector instances are not equal."""
+        assert (selectors[0] == selectors[1]) is False

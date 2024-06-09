@@ -103,6 +103,13 @@ class TagSelector(SingleSoupSelector, SelectableCSS):
         attrs = dict(reduce(lambda x, y: {**x, **y}, params)) if params else {}
         return {ns.NAME: self.tag} | {ns.ATTRS: attrs}
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, TagSelector):
+            return False
+
+        # TagSelector produces the same results only if attributes are in the same order
+        return self.tag == other.tag and self.attributes == other.attributes
+
 
 @dataclass
 class PatternSelector(SoupSelector):
@@ -158,14 +165,23 @@ class PatternSelector(SoupSelector):
     pattern: str | Pattern[str]
     re: bool = False
 
+    def __post_init__(self) -> None:
+        """Sets up compiled regex pattern used for SoupStrainer in find methods."""
+        self._pattern = re.compile(self.pattern) if self.re else self.pattern
+
     def find_all(
         self, tag: Tag, recursive: bool = True, limit: Optional[int] = None
     ) -> list[Tag]:
         iterator = TagIterator(tag, recursive=recursive)
-        pattern = re.compile(self.pattern) if self.re else self.pattern
-        strainer = SoupStrainer(string=pattern)
+        strainer = SoupStrainer(string=self._pattern)
         filter_ = filter(strainer.search_tag, iterator)
         return list(itertools.islice(filter_, limit))
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, PatternSelector):
+            return False
+
+        return self._pattern == other._pattern
 
 
 class AnyTagSelector(SingleSoupSelector, SelectableCSS):
@@ -197,9 +213,17 @@ class AnyTagSelector(SingleSoupSelector, SelectableCSS):
         """Returns wildcard css selector matching all elements in the markup."""
         return ns.CSS_SELECTOR_WILDCARD
 
+    def __eq__(self, other: object) -> bool:
+        # TagSelector produces the same results only if it does not have
+        # any parameters specified
+        if isinstance(other, TagSelector):
+            return other.tag is None and not other.attributes
+
+        return isinstance(other, AnyTagSelector)
+
 
 @dataclass(init=False)
-class NotSelector(SoupSelector, MultipleSoupSelector):
+class NotSelector(MultipleSoupSelector):
     """
     Class representing selector of elements that do not match provided selectors.
 
@@ -301,7 +325,7 @@ class NotSelector(SoupSelector, MultipleSoupSelector):
 
 
 @dataclass(init=False)
-class AndSelector(SoupSelector, MultipleSoupSelector):
+class AndSelector(MultipleSoupSelector):
     """
     Class representing an intersection of multiple soup selectors.
     Provides elements matching all of the listed selectors.
@@ -387,7 +411,7 @@ class AndSelector(SoupSelector, MultipleSoupSelector):
 
 
 @dataclass(init=False)
-class HasSelector(SoupSelector, MultipleSoupSelector):
+class HasSelector(MultipleSoupSelector):
     """
     Class representing elements selected with respect to matching reference elements.
     Element is selected if any of the provided selectors matched reference element.

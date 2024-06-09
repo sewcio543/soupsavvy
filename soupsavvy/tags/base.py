@@ -204,6 +204,15 @@ class SoupSelector(ABC):
         if not isinstance(x, SoupSelector):
             raise NotSoupSelectorException(message)
 
+    @abstractmethod
+    def __eq__(self, other: object) -> bool:
+        """Check self and other object for equality."""
+
+        raise NotImplementedError(
+            f"{self.__class__.__name__} is an interface, "
+            "and does not implement this method."
+        )
+
     def __or__(self, x: SoupSelector) -> SelectorList:
         """
         Overrides __or__ method called also by pipe operator '|'.
@@ -589,7 +598,7 @@ class SelectableCSS(ABC):
         )
 
 
-class MultipleSoupSelector(ABC):
+class MultipleSoupSelector(SoupSelector):
     """
     Interface for Tags that uses multiple steps to find elements.
 
@@ -628,3 +637,11 @@ class MultipleSoupSelector(ABC):
             )
 
         self.steps = list(tags)
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, MultipleSoupSelector):
+            return False
+        elif type(self) is not type(other):
+            return False
+
+        return self.steps == other.steps

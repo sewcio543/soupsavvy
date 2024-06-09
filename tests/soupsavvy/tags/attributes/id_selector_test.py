@@ -146,43 +146,6 @@ class TestIdSelector:
         result = selector.find_all(bs)
         assert result == []
 
-    def test_equal_method_returns_true_for_the_same_parameters(self):
-        """Tests if __eq__ returns True if selectors have the same init parameters."""
-        # only value is provided
-        comp = IdSelector("widget") == IdSelector("widget")
-        assert comp is True
-        # value and re are provided
-        comp = IdSelector("widget", re=True) == IdSelector("widget", re=True)
-        assert comp is True
-        # only pattern is provided as string
-        comp = IdSelector(pattern=r"^widget") == IdSelector(pattern=r"^widget")
-        assert comp is True
-        # only pattern is provided as compiled regex
-        comp = IdSelector(pattern=re.compile(r"^widget")) == IdSelector(
-            pattern=re.compile(r"^widget")
-        )
-        assert comp is True
-
-    def test_equal_method_returns_false_for_different_parameters(self):
-        """Tests if __eq__ returns False if selectors have different init parameters."""
-        # only value is provided
-        comp = IdSelector("widget") == IdSelector("menu")
-        assert comp is False
-        # value and re are provided
-        comp = IdSelector("widget", re=True) == IdSelector("widget", re=False)
-        assert comp is False
-        # only pattern is provided as string
-        comp = IdSelector(pattern=r"^widget") == IdSelector(pattern=r"widget")
-        assert comp is False
-        # only pattern is provided as compiled regex
-        comp = IdSelector(pattern=re.compile(r"^widget")) == IdSelector(
-            pattern=re.compile(r"widget")
-        )
-        assert comp is False
-        # left has extra parameter
-        comp = IdSelector("widget", pattern="widget") == IdSelector("widget")
-        assert comp is False
-
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.
