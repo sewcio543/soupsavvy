@@ -71,12 +71,12 @@ class TestIdSelector:
         pattern = r"^widget.?\d{1,3}$"
         expected = strip("""<div id="widget 123"></div>""")
 
-        selector = IdSelector(pattern=pattern)
+        selector = IdSelector(value=pattern, re=True)
         result = selector.find(bs)
         assert str(result) == expected
 
         # already compiled regex pattern should work the same way
-        selector = IdSelector(pattern=re.compile(pattern))
+        selector = IdSelector(value=re.compile(pattern))
         result = selector.find(bs)
         assert str(result) == expected
 
@@ -303,23 +303,17 @@ class TestIdSelector:
             (IdSelector("menu"), "#menu"),
             # selector is constructed as default if re is True
             (IdSelector("menu", re=True), "[id*='menu']"),
-            # when no value, it's always [id]
-            (IdSelector(pattern="pattern"), "[id]"),
             (IdSelector(re=True), "[id]"),
             (IdSelector(re=False), "[id]"),
-            # pattern is not considered in selector
+            # pattern is reduced to containment operator *=
             (
-                IdSelector("menu", pattern="pattern"),
-                "[id='menu']",
+                IdSelector(re.compile(r"^menu"), re=True),
+                "[id*='^menu']",
             ),
-        ],
-        ids=[
-            "exact_match",
-            "contains_match",
-            "match_all_pattern",
-            "match_all_re_true",
-            "match_all_re_false",
-            "pattern_skipped_in_selector",
+            (
+                IdSelector(re.compile(r"^menu"), re=False),
+                "[id*='^menu']",
+            ),
         ],
     )
     def test_selector_is_correct(self, selector: IdSelector, css: str):

@@ -13,7 +13,7 @@ ClassSelector - Selects element based on 'class' attribute value.
 
 import re
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any, Optional, Pattern
 
 import soupsavvy.tags.namespace as ns
 from soupsavvy.tags.base import SelectableCSS, SingleSoupSelector
@@ -41,18 +41,14 @@ class AttributeSelector(SingleSoupSelector, SelectableCSS):
     ----------
     name : str
         HTML element attribute name ex. "class", "href"
-    value : str, optional
-        Value of the attribute, like a class name.
-        By default None, if not provided pattern will be used.
-        If both pattern and value are None, pattern falls back to default,
-        that matches any sequence of characters.
+    value : str | Pattern, optional
+        Value of the attribute, like a class name. Can be regex pattern,
+        which results in using re.search to match the attribute value.
+        By default None, if not provided, default pattern matching any sequence
+        of characters is used.
     re : bool, optional
-        Whether to use a pattern to match the attribute value, by default False.
-        If True, attribute value needs to be contained in the name to be matched.
-    pattern : Pattern | str, optional
-        Regular Expression pattern to match the attribute value.
-        Applicable only for SoupSelector find operations, skipped in selector.
-        Pattern always takes precedence over value, if both are provided.
+        Whether to use a regex pattern to match the attribute value, by default False.
+        If True, re.search is used to match the attribute value.
 
     Implements SelectableCSS interface for CSS selector generation.
 
@@ -72,20 +68,18 @@ class AttributeSelector(SingleSoupSelector, SelectableCSS):
 
     It is a simplified version and it will not be equivalent in results
     in case of using regex patterns, which are not supported in CSS,
-    it defaults to selector matching all elements with the attribute
-    if value is not provided.
+    it defaults to *= containment operator.
 
     Example
     -------
-    >>> selector = AttributeSelector(name="class", pattern="^main[0-9]+$")
+    >>> selector = AttributeSelector(name="class", value=re.compile("^main[0-9]"))
     ... selector.selector
-    [class]
+    [class*='^main[0-9]']
     """
 
     name: str
-    value: Optional[str] = None
+    value: Optional[PatternType] = None
     re: bool = False
-    pattern: Optional[PatternType] = None
 
     def __post_init__(self) -> None:
         """Sets pattern attribute used in SoupSelector find operations."""
@@ -93,16 +87,13 @@ class AttributeSelector(SingleSoupSelector, SelectableCSS):
 
     def _parse_pattern(self) -> PatternType:
         """Parses pattern used in find methods based on provided init parameters."""
-        # if any pattern was provided, it takes precedence before value and re
-        if self.pattern is not None:
-            return re.compile(self.pattern)
-        # if pattern and value was not provided, fall back to default pattern
+        # if value was not provided, fall back to default pattern
         if self.value is None:
             return re.compile(ns.DEFAULT_PATTERN)
-        # if only value was provided and re = True, create pattern from value
+        # if value was provided and re = True, create pattern from value
         if self.re:
             return re.compile(self.value)
-        # if only value was provided and re = False, use str value as pattern
+        # if value was provided and re = False, use str value as pattern
         return self.value
 
     @property
@@ -112,8 +103,15 @@ class AttributeSelector(SingleSoupSelector, SelectableCSS):
         if self.value is None:
             return f"[{self.name}]"
 
-        operator = "*=" if self.re else "="
-        return f"[{self.name}{operator}'{self.value}']"
+        value = self._pattern
+        re = self.re
+
+        if isinstance(self._pattern, Pattern):
+            value = self._pattern.pattern
+            re = True
+
+        operator = "*=" if re else "="
+        return f"[{self.name}{operator}'{value}']"
 
     @property
     def _find_params(self) -> dict[str, Any]:
@@ -125,14 +123,14 @@ class AttributeSelector(SingleSoupSelector, SelectableCSS):
         if not isinstance(other, AttributeSelector):
             return False
 
-        # at the end of the day, pattern is what is used in find methods
+        # pattern is what is used in find methods
         return self._pattern == other._pattern and self.name == other.name
 
 
 class _SpecificAttributeSelector(AttributeSelector):
     """
     Base class for specific attribute selectors,
-    that wrap AttributeSelector with default attribute name for user convenience.
+    that wraps AttributeSelector with default attribute name for user convenience.
 
     Child classes should define _NAME attribute with default attribute name,
     that will be used in the AttributeSelector.
@@ -142,28 +140,24 @@ class _SpecificAttributeSelector(AttributeSelector):
 
     def __init__(
         self,
-        value: Optional[str] = None,
+        value: Optional[PatternType] = None,
         re: bool = False,
-        pattern: Optional[PatternType] = None,
     ) -> None:
         """
         Initializes specific attribute selector with default attribute name.
 
         Parameters
         ----------
-        value : str, optional
-            Value of the attribute, like a class name.
-            By default None, if not provided pattern will be used.
-            If both pattern and value are None, pattern falls back to default,
-            that matches any sequence of characters.
+        value : str | Pattern, optional
+            Value of the attribute, like a class name. Can be regex pattern,
+            which results in using re.search to match the attribute value.
+            By default None, if not provided, default pattern matching any sequence
+            of characters is used.
         re : bool, optional
-            Whether to use a pattern to match the attribute value, by default False.
-            If True, attribute value needs to be contained in the name to be matched.
-        pattern : Pattern | str, optional
-            Regular Expression pattern to match the attribute value.
-            Applicable only for SoupSelector find operations, skipped in selector.
+            Whether to use a regex pattern to match the attribute value,
+            by default False. If True, re.search is used to match the attribute value.
         """
-        super().__init__(name=self._NAME, value=value, re=re, pattern=pattern)
+        super().__init__(name=self._NAME, value=value, re=re)
 
 
 class IdSelector(_SpecificAttributeSelector):
@@ -193,8 +187,15 @@ class IdSelector(_SpecificAttributeSelector):
     ... selector.selector
     #main
 
-    In case of using patterns or not specifying value, it falls back to
-    the default AttributeSelector implementation.
+    It is a simplified version and it will not be equivalent in results
+    in case of using regex patterns, which are not supported in CSS,
+    it defaults to *= containment operator.
+
+    Example
+    -------
+    >>> selector = IdSelector(re.compile("^main[0-9]"))
+    ... selector.selector
+    [id*='^main[0-9]']
     """
 
     _NAME = "id"
@@ -235,8 +236,15 @@ class ClassSelector(_SpecificAttributeSelector):
     ... selector.selector
     .main
 
-    In case of using patterns or not specifying value, it falls back to
-    the default AttributeSelector implementation.
+    It is a simplified version and it will not be equivalent in results
+    in case of using regex patterns, which are not supported in CSS,
+    it defaults to *= containment operator.
+
+    Example
+    -------
+    >>> selector = ClassSelector(re.compile("^main[0-9]"))
+    ... selector.selector
+    [class*='^main[0-9]']
     """
 
     _NAME = "class"

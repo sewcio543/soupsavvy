@@ -23,7 +23,7 @@ def mock_soup_union() -> SelectorList:
     """
     tag_1 = TagSelector("a", attributes=[AttributeSelector("class", value="widget")])
     tag_2 = TagSelector("div", attributes=[AttributeSelector("class", value="menu")])
-    tag_3 = AttributeSelector(name="awesomeness", pattern=r"\d")
+    tag_3 = AttributeSelector(name="awesomeness", value=r"\d", re=True)
     union = SelectorList(tag_1, tag_2, tag_3)
     return union
 

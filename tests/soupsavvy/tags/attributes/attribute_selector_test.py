@@ -18,338 +18,198 @@ from tests.soupsavvy.tags.conftest import (
 class TestAttributeSelector:
     """Class for AttributeSelector unit test suite."""
 
-    def test_tag_was_found_based_on_exact_value_match(self):
-        """Tests if bs4.Tag was found for exact value match."""
-        markup = """<a class="widget"></a>"""
-        bs = to_bs(markup)
-        tag = AttributeSelector(name="class", value="widget")
-        result = tag.find(bs)
-        assert str(result) == strip(markup)
+    def test_find_returns_first_matching_tag_with_specific_attribute(self):
+        """Tests if find method returns first matching tag with specific attribute."""
+        text = """
+            <div href="github"></div>
+            <a></a>
+            <a class="widget"></a>
+        """
+        bs = to_bs(text)
+        selector = AttributeSelector(name="class")
+        result = selector.find(bs)
+        assert str(result) == strip("""<a class="widget"></a>""")
+
+    def test_find_returns_first_matching_tag_with_exact_attribute_value(self):
+        """
+        Tests if find method returns first matching tag with exact attribute value.
+        """
+        text = """
+            <div href="github" class="menu"></div>
+            <a></a>
+            <span class="widgets"></span>
+            <a class="widget"></a>
+        """
+        bs = to_bs(text)
+        selector = AttributeSelector(name="class", value="widget")
+        result = selector.find(bs)
+        assert str(result) == strip("""<a class="widget"></a>""")
 
     @pytest.mark.parametrize(
-        argnames="markup",
+        argnames="selector",
         argvalues=[
-            """<a class="widget_2"></a>""",
-            """<a class="widget menu"></a>""",
+            AttributeSelector(name="class", value="^widget", re=True),
+            # re parameter is ignored if value is compiled pattern
+            AttributeSelector(name="class", value=re.compile("^widget"), re=False),
+            AttributeSelector(name="class", value=re.compile("^widget"), re=True),
         ],
-        ids=["with_underscore", "with_space"],
     )
-    def test_tag_was_found_based_on_partial_value_match(self, markup: str):
-        """
-        Tests if bs4.Tag was found when element attribute value
-        contains value specified in AttributeSelector.
-        Case when re=True and re.Pattern is used for element search.
-        """
-        bs = to_bs(markup)
-        tag = AttributeSelector(name="class", value="widget", re=True)
-        result = tag.find(bs)
-        assert str(result) == strip(markup)
-
-    @pytest.mark.parametrize(
-        argnames="markup",
-        argvalues=[
-            """<a class="widget_1"></a>""",
-            """<a class="widget 345"></a>""",
-        ],
-        ids=["one_digit", "three_digits"],
-    )
-    def test_pattern_as_string_matches_element_based_on_re_pattern(self, markup: str):
-        """Tests if bs4.Tag was found based on regex string for attribute."""
-        bs = to_bs(markup)
-        tag = AttributeSelector(name="class", pattern=r"^widget.?\d{1,3}$")
-        result = tag.find(bs)
-        assert str(result) == strip(markup)
-
-    @pytest.mark.css_selector
-    def test_when_pattern_and_value_pattern_used_in_find_value_in_selector(self):
-        """
-        Tests if both value and pattern are passed, value is used in selector attribute
-        and pattern is used in find method.
-        """
-        bs = to_bs("""<a class="widgets"></a>""")
-        tag = AttributeSelector(
-            name="class", value="widget", re=True, pattern=r"^widget.?\d{1,3}$"
-        )
-        assert tag.selector == "[class*='widget']"
-        # tag does not match pattern, on the contrary to css selector
-        assert tag.find(bs) is None
-
-    @pytest.mark.parametrize(
-        argnames="markup",
-        argvalues=[
-            """<a class="widget_1"></a>""",
-            """<a class="widget 345"></a>""",
-        ],
-        ids=["one_digit", "three_digits"],
-    )
-    def test_pattern_as_re_pattern(self, markup: str):
-        """
-        Tests if bs4.Tag was found based on regex pattern (re.Pattern) for attribute.
-        """
-        bs = to_bs(markup)
-        tag = AttributeSelector(name="class", pattern=re.compile("widget"))
-        result = tag.find(bs)
-        assert str(result) == strip(markup)
-
-    @pytest.mark.parametrize(
-        argnames="markup",
-        argvalues=[
-            """<a class="profile"></a>""",
-            """<a class="photo" href="github" id="123"></a>""",
-            """
-            <div class="container">
-                <span class="record"></span>
-                <a class="menu"></a>
-            </div>
-            """,
-        ],
-        ids=["only_class", "additional_parameters", "nested"],
-    )
-    def test_pattern_and_value_are_none_matches_anything(self, markup: str):
-        """
-        Tests if neither pattern nor value was specified any element matches tag
-        and first one is returned.
-        """
-        bs = to_bs(markup)
-        tag = AttributeSelector(name="class")
-        result = tag.find(bs)
-        assert str(result) == strip(markup)
-
-    @pytest.mark.parametrize(
-        argnames="markup",
-        argvalues=[
-            """<a class="widget_1_menu"></a>""",
-            """<a class="widget 3454"></a>""",
-        ],
-        ids=["suffix", "too_many_digits"],
-    )
-    def test_pattern_does_not_match(self, markup: str):
-        """
-        Tests find return None if class of the element in html
-        does not match specified regex pattern.
-        """
-        bs = to_bs(markup)
-        tag = AttributeSelector(name="class", pattern=r"^widget.?\d{1,3}$")
-        assert tag.find(bs) is None
-
-    @pytest.mark.parametrize(
-        argnames="markup",
-        argvalues=[
-            """<a id="widget_1"></a>""",
-            """<div id="widget 3454"></div>""",
-        ],
-        ids=["suffix", "too_many_digits"],
-    )
-    def test_does_not_find_element_without_attribute_despite_match_anything_pattern(
-        self,
-        markup: str,
+    def test_find_returns_first_matching_tag_with_regex(
+        self, selector: AttributeSelector
     ):
         """
-        Tests find return None if element does not have class attribute
-        even when value and pattern are not specified and any attribute
-        value is matched.
-        """
-        bs = to_bs(markup)
-        tag = AttributeSelector(name="class")
-        assert tag.find(bs) is None
+        Tests if find method returns first matching tag with regex pattern.
+        Selector should behave the same way when value is compiled regex pattern
+        and when value is string pattern with re parameter set to True.
 
-    @pytest.mark.parametrize(
-        argnames="markup",
-        argvalues=[
-            """<a awesomeness="5"></a>""",
-            """<div awesomeness="5"></div>""",
-        ],
-        ids=["a", "div"],
-    )
-    def test_matches_any_attribute_name(self, markup: str):
         """
-        Tests find matches any attribute name, including custom like "awesomeness".
+        text = """
+            <div href="github" class="menu"></div>
+            <a></a>
+            <span class="super_widget"></span>
+            <a class="wid__get"></a>
+            <span class="widget_123"></span>
         """
-        bs = to_bs(markup)
-        tag = AttributeSelector(name="awesomeness", value="5")
-        result = tag.find(bs)
-        assert str(result) == strip(markup)
+        bs = to_bs(text)
+        result = selector.find(bs)
+        assert str(result) == strip("""<span class="widget_123"></span>""")
 
-    @pytest.mark.parametrize(
-        argnames="markup",
-        argvalues=[
-            """<a awesomeness="2"></a>""",
-            """<div awesomeness="-5"></div>""",
-        ],
-        ids=["a", "div"],
-    )
-    def test_does_not_match_random_attribute_name(self, markup: str):
+    def test_find_returns_none_if_no_match_and_strict_false(self):
         """
-        Tests find returns none for custom attribute name if element does not match
-        the tag value.
+        Tests if find returns None if no element matches the selector
+        and strict is False.
         """
-        bs = to_bs(markup)
-        tag = AttributeSelector(name="awesomeness", value="5")
-        assert tag.find(bs) is None
+        text = """
+            <div href="github" class="menu"></div>
+            <a></a>
+            <span class="widgets"></span>
+            <a class="super_widget"></a>
+            <a class="widget_2"></a>
+        """
+        bs = to_bs(text)
+        selector = AttributeSelector(name="class", value="widget")
+        result = selector.find(bs)
+        assert result is None
 
-    @pytest.mark.parametrize(
-        argnames="markup",
-        argvalues=[
-            """<a class="menu"></a>""",
-            """
-            <div>
-                <span class="record"></span>
-                <a class="menu"></a>
-            </div>
-            """,
-        ],
-        ids=["single_tag", "nested_tag"],
-    )
-    def test_raises_exception_if_element_not_found_in_strict_mode(self, markup: str):
+    def test_find_raises_exception_if_no_match_and_strict_true(self):
         """
-        Tests find raises a TagNotFoundException exception if no element matches
-        the value and thus None was returned. Setting strict parameter to True
-        results in function raising exception in this case.
+        Tests if find raises TagNotFoundException if no element matches the selector
+        and strict is True.
         """
-        bs = to_bs(markup)
-        tag = AttributeSelector(name="class", value="photo")
+        text = """
+            <div href="github" class="menu"></div>
+            <a></a>
+            <span class="widgets"></span>
+            <a class="super_widget"></a>
+            <a class="widget_2"></a>
+        """
+        bs = to_bs(text)
+        selector = AttributeSelector(name="class", value="widget")
 
         with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True)
+            selector.find(bs, strict=True)
 
-    @pytest.mark.parametrize(
-        argnames="markup",
-        argvalues=[
-            """<a href="github/settings"></a>""",
-            """<a href="github pages"></a>""",
-            """<a href="github "></a>""",
-        ],
-        ids=["with_slash", "with_space", "with_trailing_whitespace"],
-    )
-    def test_setting_re_false_matches_only_exact_attribute_name(self, markup: str):
+    def test_find_returns_tag_that_matches_custom_attribute_name(self):
         """
-        Tests if finds returns None if re was set to False and elements don't
-        match specified name exactly.
-        """
-        bs = to_bs(markup)
-        tag = AttributeSelector(name="href", value="github", re=False)
-        assert tag.find(bs) is None
-
-    def test_find_all_returns_all_matching_elements_in_a_list(self):
-        """
-        Tests if find_all returns a list of all matching elements.
-        Elements of this list should be the instances of bs4.Tag.
+        Tests find returns first matching element with custom attribute name
+        matching the selector value.
         """
         text = """
-            <a href="github/settings"></a>
-            <a href="github pages"></a>
-            <a href="github "></a>
+            <div href="github" class="menu"></div>
+            <a class="5"></a>
+            <span awesomeness="4"></span>
+            <a class="super_widget"></a>
+            <span awesomeness="5"></span>
         """
         bs = to_bs(text)
-        tag = AttributeSelector(name="href", value="github", re=True)
-        result = tag.find_all(bs)
-        excepted = [
-            strip("""<a href="github/settings"></a>"""),
-            strip("""<a href="github pages"></a>"""),
-            strip("""<a href="github "></a>"""),
-        ]
-        assert list(map(str, result)) == excepted
+        selector = AttributeSelector(name="awesomeness", value="5")
+        result = selector.find(bs)
+        assert str(result) == strip("""<span awesomeness="5"></span>""")
 
-    def test_find_all_returns_only_matching_elements(self):
-        """
-        Tests if find_all returns a list of all matching elements.
-        It does not contain not exact match if re=False.
-        It should match based on element attribute value and not by element name.
-        """
+    def test_find_all_returns_all_matching_elements(self):
+        """Tests if find_all returns a list of all matching elements."""
         text = """
-            <a href="github"></a>
-            <div href="github"></div>
-            <a id="github"></a>
-            <a href="github pages"></a>
+            <div href="github" class="menu"></div>
+            <div>
+                <a class="widget">1</a>
+            </div>
+            <span class="widgets"></span>
+            <a class="widget" href="github">2</a>
+            <a class="widget_2"></a>
+            <div class="widget"><a>3</a></div>
         """
         bs = to_bs(text)
-        tag = AttributeSelector(name="href", value="github", re=False)
-        result = tag.find_all(bs)
-        excepted = [
-            strip("""<a href="github"></a>"""),
-            strip("""<div href="github"></div>"""),
-        ]
-        assert list(map(str, result)) == excepted
+        selector = AttributeSelector(name="class", value="widget")
 
-    @pytest.mark.parametrize(
-        argnames="markup",
-        argvalues=[
-            """<a href="github"></a>""",
-            """<div class="photos"></div>""",
-            """<span id="photos "></span>""",
-        ],
-        ids=["wrong_href", "div_class", "span_id"],
-    )
-    def test_find_all_returns_empty_list_when_not_found(self, markup: str):
-        """Tests if find returns an empty list if no element matches the tag."""
-        bs = to_bs(markup)
-        tag = AttributeSelector(name="href", value="photos")
-        result = tag.find_all(bs)
+        result = selector.find_all(bs)
+        assert list(map(str, result)) == [
+            strip("""<a class="widget">1</a>"""),
+            strip("""<a class="widget" href="github">2</a>"""),
+            strip("""<div class="widget"><a>3</a></div>"""),
+        ]
+
+    def test_find_all_returns_empty_list_when_no_match(self):
+        """Tests if find returns an empty list if no element matches the selector."""
+        text = """
+            <div href="github" class="menu"></div>
+            <a></a>
+            <span class="widgets"></span>
+            <a class="super_widget"></a>
+            <a class="widget_2"></a>
+        """
+        bs = to_bs(text)
+        selector = AttributeSelector(name="class", value="widget")
+
+        result = selector.find_all(bs)
         assert result == []
-
-    def test_find_all_matches_all_nested_elements(self):
-        """
-        Tests if find_all matches both parent and child element
-        in html tree if they match the tag.
-        """
-        text = """
-            <div href="github">
-                <a class="github/settings"></a>
-                <a id="github pages"></a>
-                <a href="github "></a>
-            </div>
-        """
-        bs = to_bs(text)
-        tag = AttributeSelector(name="href", value="github", re=True)
-        result = tag.find_all(bs)
-        expected_1 = """
-            <div href="github">
-                <a class="github/settings"></a>
-                <a id="github pages"></a>
-                <a href="github "></a>
-            </div>
-        """
-        expected_2 = """<a href="github "></a>"""
-        assert list(map(str, result)) == [strip(expected_1), strip(expected_2)]
 
     def test_do_not_shadow_bs4_find_method_parameters(self):
         """
-        Tests that find method does not shadow bs4.Tag find method parameters.
-        If attribute name is the same as bs4.Tag find method parameter
+        Tests that find method does not shadow bs4.selector find method parameters.
+        If attribute name is the same as bs4.selector find method parameter
         like ex. 'string' or 'name' it should not cause any conflicts.
         The way to avoid it is to pass attribute filters as a dictionary to 'attrs'
-        parameter in bs4.Tag find method instead of as keyword arguments.
+        parameter in bs4.selector find method instead of as keyword arguments.
         """
-        markup = """<a name="github"></a>"""
-        bs = to_bs(markup)
-        tag = AttributeSelector(name="name", value="github")
-        result = tag.find(bs)
-        assert str(result) == strip(markup)
+        text = """
+            <div href="github" class="menu"></div>
+            <a class="github"></a>
+            <span name="github"></span>
+        """
+        bs = to_bs(text)
+        selector = AttributeSelector(name="name", value="github")
+        result = selector.find(bs)
+        assert str(result) == strip("""<span name="github"></span>""")
 
     @pytest.mark.css_selector
     @pytest.mark.parametrize(
-        argnames="tag, selector",
+        argnames="selector, css",
         argvalues=[
             (AttributeSelector("class", value="menu"), "[class='menu']"),
             (AttributeSelector("href", value="menu", re=True), "[href*='menu']"),
             (AttributeSelector("id", value=None, re=True), "[id]"),
-            (AttributeSelector("level", value=None, re=False), "[level]"),
+            (AttributeSelector("id", value=None, re=False), "[id]"),
             (
-                AttributeSelector("id", value="string", pattern="pattern"),
-                "[id='string']",
+                AttributeSelector("id", value=re.compile("menu"), re=True),
+                "[id*='menu']",
+            ),
+            (
+                AttributeSelector("id", value=re.compile("menu"), re=False),
+                "[id*='menu']",
+            ),
+            (
+                AttributeSelector("id", value=re.compile("^menu[0-9]$"), re=False),
+                "[id*='^menu[0-9]$']",
+            ),
+            (
+                AttributeSelector("id", value=re.compile("^menu[0-9]$"), re=True),
+                "[id*='^menu[0-9]$']",
             ),
         ],
-        ids=[
-            "exact_match",
-            "contains_match",
-            "match_all_re_true",
-            "match_all_re_false",
-            "pattern_skipped_in_selector",
-        ],
     )
-    def test_selector_is_correct(self, tag: AttributeSelector, selector: str):
+    def test_selector_is_correct(self, selector: AttributeSelector, css: str):
         """Tests if css selector for AttributeSelector is constructed as expected."""
-        assert tag.selector == selector
+        assert selector.selector == css
 
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
@@ -364,8 +224,8 @@ class TestAttributeSelector:
             <a href="github">Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = AttributeSelector(name="href", value="github")
-        result = tag.find(bs, recursive=False)
+        selector = AttributeSelector(name="href", value="github")
+        result = selector.find(bs, recursive=False)
 
         assert str(result) == strip("""<a href="github">Hello 2</a>""")
 
@@ -383,8 +243,8 @@ class TestAttributeSelector:
             <a class="github">Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = AttributeSelector(name="href", value="github")
-        result = tag.find(bs, recursive=False)
+        selector = AttributeSelector(name="href", value="github")
+        result = selector.find(bs, recursive=False)
         assert result is None
 
     def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
@@ -399,10 +259,10 @@ class TestAttributeSelector:
             <a class="github">Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = AttributeSelector(name="href", value="github")
+        selector = AttributeSelector(name="href", value="github")
 
         with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True, recursive=False)
+            selector.find(bs, strict=True, recursive=False)
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
         self,
@@ -418,8 +278,8 @@ class TestAttributeSelector:
             <a class="github">Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = AttributeSelector(name="href", value="github")
-        results = tag.find_all(bs, recursive=False)
+        selector = AttributeSelector(name="href", value="github")
+        results = selector.find_all(bs, recursive=False)
         assert results == []
 
     def test_find_all_returns_all_matching_children_when_recursive_false(self):
@@ -435,8 +295,8 @@ class TestAttributeSelector:
             <div class="google"></div>
         """
         bs = find_body_element(to_bs(text))
-        tag = AttributeSelector(name="class")
-        results = tag.find_all(bs, recursive=False)
+        selector = AttributeSelector(name="class")
+        results = selector.find_all(bs, recursive=False)
 
         assert list(map(str, results)) == [
             strip("""<a class="github">Hello 2</a>"""),
@@ -457,8 +317,8 @@ class TestAttributeSelector:
             <span class="menu"></span>
         """
         bs = find_body_element(to_bs(text))
-        tag = AttributeSelector(name="class")
-        results = tag.find_all(bs, limit=2)
+        selector = AttributeSelector(name="class")
+        results = selector.find_all(bs, limit=2)
 
         assert list(map(str, results)) == [
             strip("""<a class="github">Hello 2</a>"""),
@@ -484,8 +344,8 @@ class TestAttributeSelector:
             <span class="menu"></span>
         """
         bs = find_body_element(to_bs(text))
-        tag = AttributeSelector(name="class")
-        results = tag.find_all(bs, recursive=False, limit=2)
+        selector = AttributeSelector(name="class")
+        results = selector.find_all(bs, recursive=False, limit=2)
 
         assert list(map(str, results)) == [
             strip("""<div class="menu"></div>"""),
@@ -512,60 +372,22 @@ class TestAttributeSelector:
             # value + re is equal to the same pattern
             (
                 AttributeSelector("class", value="hello_world", re=True),
-                AttributeSelector("class", pattern="hello_world"),
+                AttributeSelector("class", value=re.compile("hello_world")),
             ),
-            # if pattern is provided, value is ignored
+            # the same compiled pattern
             (
-                AttributeSelector("class", value="pizza", pattern="^hello_world"),
-                AttributeSelector("class", value="pasta", pattern="^hello_world"),
+                AttributeSelector("class", value=re.compile("hello_world")),
+                AttributeSelector("class", value=re.compile("hello_world")),
             ),
-            # if pattern is provided, re parameter is ignored
+            # if compiled pattern is provided, re is ignored
             (
-                AttributeSelector("class", re=True, pattern="^hello_world"),
-                AttributeSelector("class", re=False, pattern="^hello_world"),
+                AttributeSelector("class", value=re.compile("hello_world"), re=True),
+                AttributeSelector("class", value=re.compile("hello_world"), re=False),
             ),
-            # if pattern is provided, both re and value are ignored
-            (
-                AttributeSelector(
-                    "class", value="pizza", re=True, pattern="^hello_world"
-                ),
-                AttributeSelector(
-                    "class", value="pasta", re=False, pattern="^hello_world"
-                ),
-            ),
-            # if compiled pattern is provided, it must be equal
-            (
-                AttributeSelector("class", pattern=re.compile(r"^hello_world")),
-                AttributeSelector("class", pattern=re.compile(r"^hello_world")),
-            ),
-            # if compiled pattern is provided, other parameters are ignored
-            (
-                AttributeSelector(
-                    "class",
-                    value="pizza",
-                    re=True,
-                    pattern=re.compile(r"^hello_world"),
-                ),
-                AttributeSelector(
-                    "class",
-                    value="pasta",
-                    re=False,
-                    pattern=re.compile(r"^hello_world"),
-                ),
-            ),
-            # compiled and string patterns are equal
-            (
-                AttributeSelector("class", pattern="widget"),
-                AttributeSelector("class", pattern=re.compile(r"widget")),
-            ),
-            # equal if subclass of AttributeSelector and same parameters
+            # equal if subclass of AttributeSelector and same value
             (
                 AttributeSelector("class", value="widget"),
                 ClassSelector("widget"),
-            ),
-            (
-                AttributeSelector("class", re=False, pattern="widget$"),
-                ClassSelector(re=True, value="summer", pattern="widget$"),
             ),
         ],
     )
@@ -590,44 +412,25 @@ class TestAttributeSelector:
                 AttributeSelector("class", value="widget", re=False),
                 AttributeSelector("class", value="widget", re=True),
             ),
-            # if pattern is provided, is must not be equal
+            # different compiled patterns
             (
-                AttributeSelector("class", pattern="^widget"),
-                AttributeSelector("class", pattern="widget"),
+                AttributeSelector("class", value=re.compile("widget")),
+                AttributeSelector("class", value=re.compile("^widget")),
             ),
-            # if pattern is provided, other parameters are ignored
+            # compiled pattern string is not equal to string pattern with re=True
             (
-                AttributeSelector("class", value="pizza", re=True, pattern="^widget"),
-                AttributeSelector("class", value="pizza", re=True, pattern="^menu"),
-            ),
-            # pattern is the same, but name is different
-            (
-                AttributeSelector("class", pattern="^widget"),
-                AttributeSelector("id", pattern="^widget"),
-            ),
-            # compiled patterns are different
-            (
-                AttributeSelector("class", pattern=re.compile("^widget")),
-                AttributeSelector("class", pattern=re.compile("widget")),
-            ),
-            # pattern and value with the same strings are not equal
-            (
-                AttributeSelector("class", pattern="menu"),
-                AttributeSelector("class", value="menu"),
+                AttributeSelector("class", value="widget", re=True),
+                AttributeSelector("class", value=re.compile("^widget")),
             ),
             # if not subclass of AttributeSelector, it is not equal
             (
-                AttributeSelector("class", pattern="menu"),
+                AttributeSelector("class", value="menu"),
                 MockDivSelector(),
             ),
             # if subclass with different parameters, it is not equal
             (
                 AttributeSelector("id", value="widget"),
                 ClassSelector(value="widget"),
-            ),
-            (
-                AttributeSelector("class", value="widget"),
-                ClassSelector(pattern="widget"),
             ),
         ],
     )
@@ -636,3 +439,28 @@ class TestAttributeSelector:
     ):
         """Tests if two AttributeSelector instances are not equal."""
         assert (selectors[0] == selectors[1]) is False
+
+    @pytest.mark.edge_case
+    def test_find_matches_element_with_list_of_values_if_one_matches(self):
+        """
+        Tests if find returns first tag with that has a list of values
+        of specific attribute, if one of the values matches the selector.
+
+        Example
+        -------
+        >>> <div class="menu widget"></div>
+
+        In this case, the tag has two classes 'menu' and 'widget'.
+        If selector looks for 'widget' or 'menu' class, it should match.
+        """
+        markup = """
+            <div href="menu"></div>
+            <div class="widget_class menu"></div>
+            <div class="it has a long list of widget classes"></div>
+        """
+        bs = to_bs(markup)
+        selector = AttributeSelector("class", value="widget")
+        result = selector.find(bs)
+        assert str(result) == strip(
+            """<div class="it has a long list of widget classes"></div>"""
+        )
