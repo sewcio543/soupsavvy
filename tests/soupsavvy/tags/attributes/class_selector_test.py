@@ -97,12 +97,12 @@ class TestClassSelector:
         pattern = r"^widget.?\d{1,3}$"
         expected = strip("""<div class="widget 123"></div>""")
 
-        selector = ClassSelector(pattern=pattern)
+        selector = ClassSelector(value=pattern, re=True)
         result = selector.find(bs)
         assert str(result) == expected
 
         # already compiled regex pattern should work the same way
-        selector = ClassSelector(pattern=re.compile(pattern))
+        selector = ClassSelector(value=re.compile(pattern))
         result = selector.find(bs)
         assert str(result) == expected
 
@@ -329,23 +329,17 @@ class TestClassSelector:
             (ClassSelector("menu"), ".menu"),
             # selector is constructed as default if re is True
             (ClassSelector("menu", re=True), "[class*='menu']"),
-            # when no value, it's always [class]
-            (ClassSelector(pattern="pattern"), "[class]"),
             (ClassSelector(re=True), "[class]"),
             (ClassSelector(re=False), "[class]"),
-            # pattern is not considered in selector
+            # pattern is reduced to containment operator *=
             (
-                ClassSelector("menu", pattern="pattern"),
-                "[class='menu']",
+                ClassSelector(re.compile(r"^menu"), re=True),
+                "[class*='^menu']",
             ),
-        ],
-        ids=[
-            "exact_match",
-            "contains_match",
-            "match_all_pattern",
-            "match_all_re_true",
-            "match_all_re_false",
-            "pattern_skipped_in_selector",
+            (
+                ClassSelector(re.compile(r"^menu"), re=False),
+                "[class*='^menu']",
+            ),
         ],
     )
     def test_selector_is_correct(self, selector: ClassSelector, css: str):

@@ -1,5 +1,7 @@
 """Testing module for TagSelector class."""
 
+import re
+
 import pytest
 from bs4 import Tag
 
@@ -33,7 +35,8 @@ class TestTagSelector:
                 attributes=[AttributeSelector(name="class", value="widget", re=True)],
             ),
             TagSelector(
-                tag="a", attributes=[AttributeSelector(name="class", pattern="widget")]
+                tag="a",
+                attributes=[AttributeSelector(name="class", value="widget", re=True)],
             ),
             TagSelector(tag="a", attributes=[AttributeSelector(name="class")]),
         ],
@@ -79,7 +82,7 @@ class TestTagSelector:
             ),
             TagSelector(
                 tag=None,
-                attributes=[AttributeSelector(name="id", pattern=r"^menu.?\d$")],
+                attributes=[AttributeSelector(name="id", value=r"^menu.?\d$", re=True)],
             ),
         ],
         ids=[
@@ -235,7 +238,7 @@ class TestTagSelector:
             tag="a",
             attributes=[
                 AttributeSelector(name="href", value="github"),
-                AttributeSelector(name="id", pattern=r"\d"),
+                AttributeSelector(name="id", value=r"\d", re=True),
             ],
         )
         result = tag.find_all(bs)
@@ -256,7 +259,7 @@ class TestTagSelector:
             tag="a",
             attributes=[
                 AttributeSelector(name="href", value="github"),
-                AttributeSelector(name="id", pattern=r"\d"),
+                AttributeSelector(name="id", value=r"\d", re=True),
             ],
         )
         result = tag.find_all(bs)
@@ -391,13 +394,13 @@ class TestTagSelector:
                 TagSelector(
                     attributes=[
                         AttributeSelector("class", value="widget"),
-                        AttributeSelector("id", value="kitchen", pattern="footnote"),
+                        AttributeSelector("id", value="footnote", re=True),
                     ]
                 ),
                 TagSelector(
                     attributes=[
                         AttributeSelector("class", value="widget"),
-                        AttributeSelector("id", value="menu", pattern="footnote"),
+                        AttributeSelector("id", value=re.compile("footnote")),
                     ]
                 ),
             ),
