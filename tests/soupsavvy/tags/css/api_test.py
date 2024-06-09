@@ -23,7 +23,7 @@ class TestCSSApi:
         selectors = [MockSelector() for _ in range(count)]
         result = api.is_(*selectors)
         assert isinstance(result, SelectorList)
-        assert result.steps == selectors
+        assert result.selectors == selectors
 
     @pytest.mark.parametrize(argnames="count", argvalues=[2, 3], ids=["two", "three"])
     def test_where_returns_selector_list_with_specified_steps(self, count: int):
@@ -34,7 +34,7 @@ class TestCSSApi:
         selectors = [MockSelector() for _ in range(count)]
         result = api.where(*selectors)
         assert isinstance(result, SelectorList)
-        assert result.steps == selectors
+        assert result.selectors == selectors
 
     @pytest.mark.parametrize(argnames="count", argvalues=[1, 3], ids=["one", "three"])
     def test_not_returns_not_selector_with_specified_steps(self, count: int):
@@ -46,7 +46,7 @@ class TestCSSApi:
         selectors = [MockSelector() for _ in range(count)]
         result = api.not_(*selectors)
         assert isinstance(result, NotSelector)
-        assert result.steps == selectors
+        assert result.selectors == selectors
 
     @pytest.mark.parametrize(argnames="count", argvalues=[2, 3], ids=["two", "three"])
     def test_and_returns_and_selector_with_specified_steps(self, count: int):
@@ -54,7 +54,7 @@ class TestCSSApi:
         selectors = [MockSelector() for _ in range(count)]
         result = api.and_(*selectors)
         assert isinstance(result, AndSelector)
-        assert result.steps == selectors
+        assert result.selectors == selectors
 
     @pytest.mark.parametrize(argnames="count", argvalues=[2, 3], ids=["two", "three"])
     def test_has_returns_has_selector_with_specified_steps(self, count: int):
@@ -62,4 +62,4 @@ class TestCSSApi:
         selectors = [MockSelector() for _ in range(count)]
         result = api.has(*selectors)
         assert isinstance(result, HasSelector)
-        assert result.steps == selectors
+        assert result.selectors == selectors

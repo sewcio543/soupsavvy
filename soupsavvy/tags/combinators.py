@@ -108,7 +108,7 @@ class BaseCombinator(MultipleSoupSelector):
     ) -> list[Tag]:
         elements: list[Tag] = []
 
-        for i, step in enumerate(self.steps):
+        for i, step in enumerate(self.selectors):
             if i == 0:
                 # only first step follows recursive rule
                 elements = step.find_all(tag, recursive=recursive)
@@ -126,7 +126,7 @@ class BaseCombinator(MultipleSoupSelector):
                 )
             )
 
-            n = limit if i + 1 == len(self.steps) else None
+            n = limit if i + 1 == len(self.selectors) else None
             elements = results.fetch(n)
 
         return elements
@@ -421,7 +421,7 @@ class SelectorList(MultipleSoupSelector):
 
     def _find(self, tag: Tag, recursive: bool = True) -> FindResult:
         # iterates all tags and returns first element that matches
-        for selector in self.steps:
+        for selector in self.selectors:
             result = selector.find(tag, recursive=recursive)
 
             if result is not None:
@@ -437,7 +437,7 @@ class SelectorList(MultipleSoupSelector):
     ) -> list[Tag]:
         results = TagResultSet()
 
-        for selector in self.steps:
+        for selector in self.selectors:
             results |= TagResultSet(
                 selector.find_all(tag, recursive=recursive),
             )

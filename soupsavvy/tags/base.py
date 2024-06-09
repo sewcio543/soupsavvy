@@ -244,7 +244,7 @@ class SoupSelector(ABC):
         self._check_selector_type(x, message=message)
 
         if isinstance(self, SelectorList):
-            args = [*self.steps, x]
+            args = [*self.selectors, x]
             # return new SelectorList with updated steps
             return SelectorList(*args)
 
@@ -311,7 +311,7 @@ class SoupSelector(ABC):
         self._check_selector_type(x, message=message)
 
         if isinstance(self, AndSelector):
-            args = [*self.steps, x]
+            args = [*self.selectors, x]
             # return new AndSelector with updated steps
             return AndSelector(*args)
 
@@ -366,7 +366,7 @@ class SoupSelector(ABC):
         self._check_selector_type(x, message=message)
 
         if isinstance(self, ChildCombinator):
-            args = [*self.steps, x]
+            args = [*self.selectors, x]
             # return new ChildCombinator with updated steps
             return ChildCombinator(*args)
 
@@ -423,7 +423,7 @@ class SoupSelector(ABC):
         self._check_selector_type(x, message=message)
 
         if isinstance(self, NextSiblingCombinator):
-            args = [*self.steps, x]
+            args = [*self.selectors, x]
             # return new NextSiblingCombinator with updated steps
             return NextSiblingCombinator(*args)
 
@@ -479,7 +479,7 @@ class SoupSelector(ABC):
         self._check_selector_type(x, message=message)
 
         if isinstance(self, SubsequentSiblingCombinator):
-            args = [*self.steps, x]
+            args = [*self.selectors, x]
             # return new SubsequentSiblingCombinator with updated steps
             return SubsequentSiblingCombinator(*args)
 
@@ -539,7 +539,7 @@ class SoupSelector(ABC):
         self._check_selector_type(x, message=message)
 
         if isinstance(self, DescendantCombinator):
-            args = [*self.steps, x]
+            args = [*self.selectors, x]
             # return new DescendantCombinator with updated steps
             return DescendantCombinator(*args)
 
@@ -609,19 +609,19 @@ class MultipleSoupSelector(SoupSelector):
 
     Attributes
     ----------
-    steps : list[SoupSelector]
+    selectors : list[SoupSelector]
         List of SoupSelector objects passed to MultipleSoupSelector.
     """
 
-    def __init__(self, tags: Iterable[SoupSelector]) -> None:
+    def __init__(self, selectors: Iterable[SoupSelector]) -> None:
         """
         Initializes MultipleSoupSelector object with provided tags.
         Checks if all tags are instances of SoupSelector and assigns
-        them to 'steps' attribute.
+        them to 'selectors' attribute.
 
         Parameters
         ----------
-        tags: Iterable[SoupSelector]
+        selectors: Iterable[SoupSelector]
             SoupSelector objects passed to MultipleSoupSelector.
 
         Raises
@@ -629,14 +629,14 @@ class MultipleSoupSelector(SoupSelector):
         NotSoupSelectorException
             If any of provided parameters is not an instance of SoupSelector.
         """
-        invalid = [arg for arg in tags if not isinstance(arg, SoupSelector)]
+        invalid = [arg for arg in selectors if not isinstance(arg, SoupSelector)]
 
         if invalid:
             raise NotSoupSelectorException(
                 f"Parameters {invalid} are not instances of SoupSelector."
             )
 
-        self.steps = list(tags)
+        self.selectors = list(selectors)
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, MultipleSoupSelector):
@@ -644,4 +644,4 @@ class MultipleSoupSelector(SoupSelector):
         elif type(self) is not type(other):
             return False
 
-        return self.steps == other.steps
+        return self.selectors == other.selectors

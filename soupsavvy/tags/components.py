@@ -90,6 +90,9 @@ class TagSelector(SingleSoupSelector, SelectableCSS):
 
     @property
     def selector(self) -> str:
+        if not self.tag and not self.attributes:
+            return ns.CSS_SELECTOR_WILDCARD
+
         # drop duplicated css attribute selectors and preserve order
         selectors = list(map(lambda attr: attr.selector, self.attributes))
         attrs = sorted(set(selectors), key=selectors.index)
@@ -104,6 +107,8 @@ class TagSelector(SingleSoupSelector, SelectableCSS):
         return {ns.NAME: self.tag} | {ns.ATTRS: attrs}
 
     def __eq__(self, other: object) -> bool:
+        if isinstance(other, AnyTagSelector):
+            return other == self
         if not isinstance(other, TagSelector):
             return False
 
@@ -304,7 +309,7 @@ class NotSelector(MultipleSoupSelector):
             TagResultSet.__or__,
             (
                 TagResultSet(step.find_all(tag, recursive=recursive))
-                for step in self.steps
+                for step in self.selectors
             ),
         )
         all_tags = list(TagIterator(tag, recursive=recursive))
@@ -319,9 +324,9 @@ class NotSelector(MultipleSoupSelector):
         from soupsavvy.tags.combinators import SelectorList
 
         if not self._multiple:
-            return self.steps[0]
+            return self.selectors[0]
 
-        return SelectorList(*self.steps)
+        return SelectorList(*self.selectors)
 
 
 @dataclass(init=False)
@@ -404,7 +409,7 @@ class AndSelector(MultipleSoupSelector):
             TagResultSet.__and__,
             (
                 TagResultSet(step.find_all(tag, recursive=recursive))
-                for step in self.steps
+                for step in self.selectors
             ),
         )
         return matching.fetch(limit)
@@ -524,7 +529,7 @@ class HasSelector(MultipleSoupSelector):
 
         for element in elements:
             # we only care if anything matching was found
-            if any(step.find(element) for step in self.steps):
+            if any(step.find(element) for step in self.selectors):
                 matching.append(element)
 
                 if len(matching) == limit:

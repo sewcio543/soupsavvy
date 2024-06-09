@@ -20,8 +20,13 @@ from soupsavvy.tags.relative import (
     RelativeSelector,
     RelativeSubsequentSibling,
 )
-
-from .conftest import MockLinkSelector, find_body_element, strip, to_bs
+from tests.soupsavvy.tags.conftest import (
+    MockDivSelector,
+    MockLinkSelector,
+    find_body_element,
+    strip,
+    to_bs,
+)
 
 
 @pytest.mark.soup
@@ -421,3 +426,71 @@ class TestAnchor:
         result = Anchor * base
         assert isinstance(result, RelativeSubsequentSibling)
         assert result.selector == base
+
+
+class TestRelativeSelectorEquality:
+    """
+    Class for testing RelativeSelector base class __eq__ method.
+    """
+
+    class MockRelativeSelector(RelativeSelector):
+        """
+        Mock class for testing equality of RelativeSelector,
+        if right operand is instance of RelativeSelector and has the same
+        selector, they are equal.
+        """
+
+        def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+            return []
+
+    class MockRelativeSelectorNotEqual(RelativeSelector):
+        """
+        Mock class for testing equality of RelativeSelector,
+        if right operand is instance of RelativeSelector but is of the
+        different type, they are not equal.
+        """
+
+        def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+            return []
+
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # the same subclass of RelativeSelector and the same selector
+            (
+                MockRelativeSelector(MockLinkSelector()),
+                MockRelativeSelector(MockLinkSelector()),
+            ),
+        ],
+    )
+    def test_two_selectors_are_equal(
+        self, selectors: tuple[RelativeSelector, RelativeSelector]
+    ):
+        """Tests if two multiple soup selectors are equal."""
+        assert (selectors[0] == selectors[1]) is True
+
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # the same subclass of RelativeSelector but different selector
+            (
+                MockRelativeSelector(MockLinkSelector()),
+                MockRelativeSelector(MockDivSelector()),
+            ),
+            # not instances of RelativeSelector
+            (
+                MockRelativeSelector(MockLinkSelector()),
+                MockLinkSelector(),
+            ),
+            # the same selector but different subclass of RelativeSelector
+            (
+                MockRelativeSelector(MockLinkSelector()),
+                MockRelativeSelectorNotEqual(MockLinkSelector()),
+            ),
+        ],
+    )
+    def test_two_selectors_are_not_equal(
+        self, selectors: tuple[RelativeSelector, RelativeSelector]
+    ):
+        """Tests if two multiple soup selectors are not equal."""
+        assert (selectors[0] == selectors[1]) is False

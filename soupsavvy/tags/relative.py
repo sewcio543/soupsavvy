@@ -54,7 +54,9 @@ class RelativeSelector(SoupSelector):
         self.selector = selector
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, self.__class__):
+        if not isinstance(other, RelativeSelector):
+            return False
+        elif type(self) is not type(other):
             return False
 
         return self.selector == other.selector
