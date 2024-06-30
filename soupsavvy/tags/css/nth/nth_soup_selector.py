@@ -4,7 +4,7 @@ Searches for nth-of-type element in similar fashion to CSS nth-of-type selector,
 but type is any SoupSelector instance. It also supports nth-last-of-type selector.
 """
 
-from typing import Optional
+from typing import Iterable, Optional
 
 from bs4 import Tag
 
@@ -42,7 +42,7 @@ class BaseNthOfSelector(SoupSelector):
         tag_iterator = (
             TagIterator(tag, recursive=recursive, include_self=True)
             if recursive
-            else [tag]
+            else iter([tag])
         )
 
         matches = []
