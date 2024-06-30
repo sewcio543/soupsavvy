@@ -51,7 +51,7 @@ class TestFirstOfType:
         bs = find_body_element(to_bs(html))
         tag = FirstOfType()
         result = tag.find(bs)
-        assert str(result) == strip("<div><p>text 1</p></div>")
+        assert strip(str(result)) == strip("<div><p>text 1</p></div>")
 
     def test_find_returns_first_element_of_type_with_tag(self):
         """
@@ -72,7 +72,7 @@ class TestFirstOfType:
         bs = find_body_element(to_bs(html))
         tag = FirstOfType("a")
         result = tag.find(bs)
-        assert str(result) == strip("<a>text 2</a>")
+        assert strip(str(result)) == strip("<a>text 2</a>")
 
     def test_find_raises_exception_with_specified_tag_if_not_found_in_strict_mode(self):
         """
@@ -128,7 +128,7 @@ class TestFirstOfType:
         bs = find_body_element(to_bs(html))
         tag = FirstOfType()
         result = tag.find_all(bs)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<div><p>text 1</p></div>"),
             strip("<p>text 1</p>"),
             strip("<span><p>text 2</p><p>text 3</p></span>"),
@@ -157,7 +157,7 @@ class TestFirstOfType:
         tag = FirstOfType("div")
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<div><p>text 1</p></div>"),
             strip("<div>Hello 1</div>"),
         ]

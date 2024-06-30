@@ -107,7 +107,7 @@ class TestNthLastOfType:
         bs = find_body_element(to_bs(html))
         tag = NthLastOfType("2")
         result = tag.find(bs)
-        assert str(result) == strip("<p>text 3</p>")
+        assert strip(str(result)) == strip("<p>text 3</p>")
 
     def test_find_returns_first_nth_last_of_type_with_tag(self):
         """
@@ -129,7 +129,7 @@ class TestNthLastOfType:
         bs = find_body_element(to_bs(html))
         tag = NthLastOfType(n="2", tag="div")
         result = tag.find(bs)
-        assert str(result) == strip("<div>Hello 2</div>")
+        assert strip(str(result)) == strip("<div>Hello 2</div>")
 
     def test_find_raises_exception_without_specified_tag_if_not_found_in_strict_mode(
         self,
@@ -248,7 +248,7 @@ class TestNthLastOfType:
         tag = NthLastOfType("2")
 
         result = tag.find_all(bs)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<p>text 1</p>"),
             strip("<span>Hello</span>"),
             strip("<a>text 4</a>"),
@@ -276,7 +276,7 @@ class TestNthLastOfType:
         tag = NthLastOfType(n="2n", tag="p")
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<p>text 1</p>"),
             strip("<p>text 3</p>"),
             strip("<p>text 5</p>"),
@@ -303,7 +303,7 @@ class TestNthLastOfType:
         tag = NthLastOfType(n)
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<p>text 1</p>"),
             strip("<p>text 3</p>"),
             strip("<span>Hello</span>"),
@@ -331,7 +331,7 @@ class TestNthLastOfType:
         tag = NthLastOfType(n)
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<p>text 2</p>"),
             strip("<p>text 4</p>"),
             strip("<div>Hello</div>"),
@@ -358,7 +358,7 @@ class TestNthLastOfType:
         tag = NthLastOfType(" 2n +  1")
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<p>text 2</p>"),
             strip("<div>Hello</div>"),
             strip("<span>Hello 2</span>"),

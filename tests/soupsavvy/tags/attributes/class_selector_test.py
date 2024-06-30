@@ -34,7 +34,7 @@ class TestClassSelector:
         bs = to_bs(markup)
         selector = ClassSelector("widget")
         result = selector.find(bs)
-        assert str(result) == strip(
+        assert strip(str(result)) == strip(
             """<div class="it has a long list of widget classes"></div>"""
         )
 
@@ -51,7 +51,7 @@ class TestClassSelector:
         bs = to_bs(markup)
         selector = ClassSelector()
         result = selector.find(bs)
-        assert str(result) == strip("""<div class=""></div>""")
+        assert strip(str(result)) == strip("""<div class=""></div>""")
 
     def test_find_returns_first_match_with_specific_value(self):
         """Tests if find returns first tag with class attribute with specific value."""
@@ -64,7 +64,7 @@ class TestClassSelector:
         bs = to_bs(markup)
         selector = ClassSelector("widget")
         result = selector.find(bs)
-        assert str(result) == strip("""<a class="widget"></a>""")
+        assert strip(str(result)) == strip("""<a class="widget"></a>""")
 
     def test_find_returns_first_match_with_re_true(self):
         """
@@ -79,7 +79,7 @@ class TestClassSelector:
         bs = to_bs(markup)
         selector = ClassSelector("widget", re=True)
         result = selector.find(bs)
-        assert str(result) == strip("""<div class="widget_menu"></div>""")
+        assert strip(str(result)) == strip("""<div class="widget_menu"></div>""")
 
     def test_find_returns_first_match_with_pattern(self):
         """
@@ -99,12 +99,12 @@ class TestClassSelector:
 
         selector = ClassSelector(value=pattern, re=True)
         result = selector.find(bs)
-        assert str(result) == expected
+        assert strip(str(result)) == expected
 
         # already compiled regex pattern should work the same way
         selector = ClassSelector(value=re.compile(pattern))
         result = selector.find(bs)
-        assert str(result) == expected
+        assert strip(str(result)) == expected
 
     def test_find_returns_none_if_no_match_and_strict_false(self):
         """
@@ -158,7 +158,7 @@ class TestClassSelector:
             strip("""<a class="widget"></a>"""),
             strip("""<a class="widget">Hello</a>"""),
         ]
-        assert list(map(str, result)) == excepted
+        assert list(map(lambda x: strip(str(x)), result)) == excepted
 
     def test_find_all_returns_empty_list_when_no_match(self):
         """Tests if find returns an empty list if no element matches the selector."""
@@ -187,7 +187,7 @@ class TestClassSelector:
         bs = find_body_element(to_bs(markup))
         selector = ClassSelector("widget")
         result = selector.find(bs, recursive=False)
-        assert str(result) == strip("""<a class="widget"></a>""")
+        assert strip(str(result)) == strip("""<a class="widget"></a>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
@@ -263,7 +263,7 @@ class TestClassSelector:
         selector = ClassSelector("widget")
         result = selector.find_all(bs, recursive=False)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="widget" href="menu"></a>"""),
             strip("""<div class="widget"></div>"""),
             strip("""<div class="widget"></div>"""),
@@ -288,7 +288,7 @@ class TestClassSelector:
         selector = ClassSelector("widget")
         result = selector.find_all(bs, limit=2)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="widget" href="menu"></a>"""),
             strip("""<a class="widget">Hello</a>"""),
         ]
@@ -316,7 +316,7 @@ class TestClassSelector:
         selector = ClassSelector("widget")
         result = selector.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="widget" href="menu"></a>"""),
             strip("""<div class="widget"></div>"""),
         ]

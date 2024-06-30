@@ -34,7 +34,7 @@ class TestLastChild:
         bs = find_body_element(to_bs(html))
         tag = LastChild()
         result = tag.find(bs)
-        assert str(result) == strip("<p>text</p>")
+        assert strip(str(result)) == strip("<p>text</p>")
 
     def test_find_returns_none_if_no_last_child_with_specified_tag(self):
         """
@@ -90,7 +90,7 @@ class TestLastChild:
         bs = find_body_element(to_bs(html))
         tag = LastChild("a")
         result = tag.find(bs)
-        assert str(result) == strip("<a>text 4</a>")
+        assert strip(str(result)) == strip("<a>text 4</a>")
 
     def test_find_raises_exception_if_not_found_in_strict_mode(self):
         """
@@ -144,7 +144,7 @@ class TestLastChild:
         bs = find_body_element(to_bs(html))
         tag = LastChild()
         result = tag.find_all(bs)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<div><p>text 1</p><p>text 2</p></div>"),
             strip("<p>text 2</p>"),
             strip("<div><p>text 3</p></div>"),
@@ -171,7 +171,7 @@ class TestLastChild:
         tag = LastChild("div")
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<div>Hello 1</div>"),
             strip("<div><p>text 3</p></div>"),
         ]

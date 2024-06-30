@@ -20,7 +20,7 @@ class TestPatternSelector:
 
     def test_find_returns_first_match_with_exact_value(self):
         """
-        Tests if find returns first tag with text content that matches the specified value.
+        Tests if find returns first selector with text content that matches the specified value.
         """
         text = """
             <div class="Hello"></div>
@@ -33,11 +33,11 @@ class TestPatternSelector:
         bs = to_bs(text)
         selector = PatternSelector("Hello")
         result = selector.find(bs)
-        assert str(result) == strip("""<a>Hello</a>""")
+        assert strip(str(result)) == strip("""<a>Hello</a>""")
 
     def test_find_returns_first_match_with_re_true(self):
         """
-        Tests if find returns first tag with text content
+        Tests if find returns first selector with text content
         that matches the specified regex pattern. Checks as wel if if in case of
         compiled regex pattern, re.search is used instead of re.match.
         """
@@ -64,7 +64,7 @@ class TestPatternSelector:
 
     def test_find_returns_first_match_with_pattern(self):
         """
-        Tests if find returns first tag with text content that matches compiled regex pattern,
+        Tests if find returns first selector with text content that matches compiled regex pattern,
         ignoring re parameter. The same behavior should be observed when passing
         string of the same regex pattern and re=True.
         """
@@ -93,7 +93,7 @@ class TestPatternSelector:
 
     def test_find_returns_first_match_with_raw_string_as_pattern(self):
         """
-        Tests if find returns first tag with text content
+        Tests if find returns first selector with text content
         that matches the specified raw string. When raw string is used, and re is False,
         the pattern is treated as a literal string.
         """
@@ -109,7 +109,7 @@ class TestPatternSelector:
         bs = to_bs(text)
         selector = PatternSelector(r"^Hello")
         result = selector.find(bs)
-        assert str(result) == strip("""<a>^Hello</a>""")
+        assert strip(str(result)) == strip("""<a>^Hello</a>""")
 
     def test_find_does_not_return_element_with_children_that_matches_text(self):
         """
@@ -181,7 +181,7 @@ class TestPatternSelector:
             strip("""<a>Hello</a>"""),
             strip("""<p>Hello</p>"""),
         ]
-        assert list(map(str, result)) == excepted
+        assert list(map(lambda x: strip(str(x)), result)) == excepted
 
     def test_find_all_returns_empty_list_when_no_match(self):
         """Tests if find returns an empty list if no element matches the selector."""
@@ -208,9 +208,9 @@ class TestPatternSelector:
             <span>Hello</span>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternSelector(pattern="Hello")
-        result = tag.find(bs, recursive=False)
-        assert str(result) == strip("""<span>Hello</span>""")
+        selector = PatternSelector(pattern="Hello")
+        result = selector.find(bs, recursive=False)
+        assert strip(str(result)) == strip("""<span>Hello</span>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
@@ -225,8 +225,8 @@ class TestPatternSelector:
             <div>Hi Hi Hello</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternSelector(pattern="Hello")
-        result = tag.find(bs, recursive=False)
+        selector = PatternSelector(pattern="Hello")
+        result = selector.find(bs, recursive=False)
         assert result is None
 
     def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
@@ -242,10 +242,10 @@ class TestPatternSelector:
             <div>Hi Hi Hello</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternSelector(pattern="Hello")
+        selector = PatternSelector(pattern="Hello")
 
         with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True, recursive=False)
+            selector.find(bs, strict=True, recursive=False)
 
     def test_find_all_returns_all_matching_children_when_recursive_false(self):
         """
@@ -263,10 +263,10 @@ class TestPatternSelector:
             <span>Hello</span>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternSelector(pattern="Hello")
-        results = tag.find_all(bs, recursive=False)
+        selector = PatternSelector(pattern="Hello")
+        results = selector.find_all(bs, recursive=False)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<p>Hello</p>"""),
             strip("""<a>Hello</a>"""),
             strip("""<span>Hello</span>"""),
@@ -287,9 +287,9 @@ class TestPatternSelector:
             <div>Hi Hi Hello</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternSelector(pattern="Hello")
+        selector = PatternSelector(pattern="Hello")
 
-        results = tag.find_all(bs, recursive=False)
+        results = selector.find_all(bs, recursive=False)
         assert results == []
 
     def test_find_all_returns_only_x_elements_when_limit_is_set(self):
@@ -308,10 +308,10 @@ class TestPatternSelector:
             <span>Hello</span>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternSelector(pattern="Hello")
-        results = tag.find_all(bs, limit=2)
+        selector = PatternSelector(pattern="Hello")
+        results = selector.find_all(bs, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<p>Hello</p>"""),
             strip("""<div>Hello</div>"""),
         ]
@@ -335,10 +335,10 @@ class TestPatternSelector:
             <span>Hello</span>
         """
         bs = find_body_element(to_bs(text))
-        tag = PatternSelector(pattern="Hello")
-        results = tag.find_all(bs, recursive=False, limit=2)
+        selector = PatternSelector(pattern="Hello")
+        results = selector.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<p>Hello</p>"""),
             strip("""<a>Hello</a>"""),
         ]

@@ -51,7 +51,7 @@ class TestLastOfType:
         bs = find_body_element(to_bs(html))
         tag = LastOfType()
         result = tag.find(bs)
-        assert str(result) == strip("<span>text 3</span>")
+        assert strip(str(result)) == strip("<span>text 3</span>")
 
     def test_find_returns_last_element_of_type_with_tag(self):
         """
@@ -72,7 +72,7 @@ class TestLastOfType:
         bs = find_body_element(to_bs(html))
         tag = LastOfType("a")
         result = tag.find(bs)
-        assert str(result) == strip("<a>text 3</a>")
+        assert strip(str(result)) == strip("<a>text 3</a>")
 
     def test_find_raises_exception_with_specified_tag_if_not_found_in_strict_mode(self):
         """
@@ -128,7 +128,7 @@ class TestLastOfType:
         bs = find_body_element(to_bs(html))
         tag = LastOfType()
         result = tag.find_all(bs)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<span><p>text 1</p><p>text 2</p></span>"),
             strip("<p>text 2</p>"),
             strip("<p>text 3</p>"),
@@ -157,7 +157,7 @@ class TestLastOfType:
         tag = LastOfType("div")
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<div>Hello 2</div>"),
             strip("<div><p>text 5</p></div>"),
         ]

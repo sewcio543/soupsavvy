@@ -122,7 +122,7 @@ class BaseRelativeCombinatorTest(ABC):
         the anchor (tag passed as parameter to find method) element.
         """
         result = selector.find(self.match, recursive=recursive)
-        assert str(result) == strip("""<a>1</a>""")
+        assert strip(str(result)) == strip("""<a>1</a>""")
 
     @pytest.mark.parametrize(
         argnames="recursive",
@@ -168,7 +168,7 @@ class BaseRelativeCombinatorTest(ABC):
         relative to the anchor element.
         """
         result = selector.find_all(self.match, recursive=recursive)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a>1</a>"""),
             strip("""<a>2</a>"""),
             strip("""<a>3</a>"""),
@@ -202,7 +202,7 @@ class BaseRelativeCombinatorTest(ABC):
         In this case only 2 first in order elements are returned.
         """
         results = selector.find_all(self.match, limit=2, recursive=recursive)
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a>1</a>"""),
             strip("""<a>2</a>"""),
         ]
@@ -353,7 +353,7 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
         in case of RelativeNextSibling it should return only one element (next sibling).
         """
         result = selector.find_all(self.match, recursive=recursive)
-        assert list(map(str, result)) == [strip("""<a>1</a>""")]
+        assert list(map(lambda x: strip(str(x)), result)) == [strip("""<a>1</a>""")]
 
     @pytest.mark.parametrize(
         argnames="recursive",
@@ -369,7 +369,7 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
         but in case of RelativeNextSibling it should return only one element (next sibling).
         """
         results = selector.find_all(self.match, limit=2, recursive=recursive)
-        assert list(map(str, results)) == [strip("""<a>1</a>""")]
+        assert list(map(lambda x: strip(str(x)), results)) == [strip("""<a>1</a>""")]
 
 
 class TestAnchor:

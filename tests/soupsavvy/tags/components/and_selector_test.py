@@ -33,7 +33,7 @@ class TestAndSelector:
 
         tag = AndSelector(TagSelector("a"), AttributeSelector("class", "widget"))
         result = tag.find(bs)
-        assert str(result) == strip("""<a class="widget"></a>""")
+        assert strip(str(result)) == strip("""<a class="widget"></a>""")
 
     def test_find_raises_exception_when_no_tags_match_in_strict_mode(self):
         """
@@ -78,7 +78,7 @@ class TestAndSelector:
             DescendantCombinator(TagSelector("div"), TagSelector("a")),
         )
         result = tag.find(bs)
-        assert str(result) == strip("""<a class="widget 12"></a>""")
+        assert strip(str(result)) == strip("""<a class="widget 12"></a>""")
 
     def test_finds_all_tags_matching_selectors(self):
         """
@@ -98,7 +98,7 @@ class TestAndSelector:
         tag = AndSelector(TagSelector("a"), AttributeSelector("class", "1", re=True))
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="widget 12"></a>"""),
             strip("""<a class="11"></a>"""),
             strip("""<a class="123"></a>"""),
@@ -137,7 +137,7 @@ class TestAndSelector:
         bs = find_body_element(to_bs(text))
         tag = AndSelector(TagSelector("a"), AttributeSelector("class"))
         result = tag.find(bs, recursive=False)
-        assert str(result) == strip("""<a class="github">Hello 3</a>""")
+        assert strip(str(result)) == strip("""<a class="github">Hello 3</a>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
@@ -190,7 +190,7 @@ class TestAndSelector:
         tag = AndSelector(TagSelector("a"), AttributeSelector("class"))
         results = tag.find_all(bs, recursive=False)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a class="github">Hello 2</a>"""),
             strip("""<a class="">Hello 4</a>"""),
         ]
@@ -233,7 +233,7 @@ class TestAndSelector:
         tag = AndSelector(TagSelector("div"), AttributeSelector("class"))
         results = tag.find_all(bs, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<div class="">Hello 1</div>"""),
             strip("""<div class="link">Hello 3</div>"""),
         ]
@@ -260,7 +260,7 @@ class TestAndSelector:
         tag = AndSelector(TagSelector("div"), AttributeSelector("class"))
         results = tag.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<div class="link">Hello 3</div>"""),
             strip("""<div class="menu">Hello 4</div>"""),
         ]

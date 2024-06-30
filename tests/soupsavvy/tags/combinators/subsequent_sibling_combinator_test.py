@@ -46,7 +46,7 @@ class TestSubsequentSiblingCombinator:
             TagSelector("p"),
         )
         result = tag.find(bs)
-        assert str(result) == strip("""<p>Hello 3</p>""")
+        assert strip(str(result)) == strip("""<p>Hello 3</p>""")
 
     def test_find_raises_exception_when_no_tags_match_in_strict_mode(self):
         """
@@ -120,7 +120,7 @@ class TestSubsequentSiblingCombinator:
         )
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<p>Hello 1</p>"""),
             strip("""<p>Hello 3</p>"""),
             strip("""<p>Hello 4</p>"""),
@@ -148,7 +148,7 @@ class TestSubsequentSiblingCombinator:
         )
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<p>Hello 2</p>"""),
             strip("""<p>Hello 3</p>"""),
         ]
@@ -214,7 +214,7 @@ class TestSubsequentSiblingCombinator:
         )
 
         result = tag.find(bs)
-        assert str(result) == strip("""<p>Hello 3</p>""")
+        assert strip(str(result)) == strip("""<p>Hello 3</p>""")
 
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
@@ -239,7 +239,7 @@ class TestSubsequentSiblingCombinator:
             TagSelector("p"),
         )
         result = tag.find(bs, recursive=False)
-        assert str(result) == strip("""<p>Hello 2</p>""")
+        assert strip(str(result)) == strip("""<p>Hello 2</p>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
@@ -321,7 +321,7 @@ class TestSubsequentSiblingCombinator:
         )
         results = tag.find_all(bs, recursive=False)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<p>Hello 2</p>"""),
             strip("""<p>Hello 3</p>"""),
         ]
@@ -382,7 +382,7 @@ class TestSubsequentSiblingCombinator:
         )
         results = tag.find_all(bs, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<p>Hello 1</p>"""),
             strip("""<p>Hello 2</p>"""),
         ]
@@ -418,7 +418,7 @@ class TestSubsequentSiblingCombinator:
         )
         results = tag.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<p>Hello 2</p>"""),
             strip("""<p>Hello 3</p>"""),
         ]

@@ -37,14 +37,14 @@ class TestAnyTagSelector:
         markup = """<a class="widget"></a>"""
         bs = find_tag(to_bs(markup))
         result = tag.find(bs)
-        assert str(result) == strip(markup)
+        assert strip(str(result)) == strip(markup)
 
     def test_find_extracts_first_tag_when_there_are_many(self, tag: AnyTagSelector):
         """Test if first tag is extracted when there are many tags."""
         markup = """<a class="widget"></a><a class="widget_2"></a>"""
         bs = find_tag(to_bs(markup))
         result = tag.find(bs)
-        assert str(result) == strip("""<a class="widget"></a>""")
+        assert strip(str(result)) == strip("""<a class="widget"></a>""")
 
     def test_find_extracts_first_tag_parent_tag(self, tag: AnyTagSelector):
         """Test if first tag is extracted if it is parent tag with children tags."""
@@ -54,7 +54,7 @@ class TestAnyTagSelector:
         """
         bs = find_tag(to_bs(markup))
         result = tag.find(bs)
-        assert str(result) == strip("""<div><a class="widget"></a></div>""")
+        assert strip(str(result)) == strip("""<div><a class="widget"></a></div>""")
 
     def test_find_all_extracts_all_tags(self, tag: AnyTagSelector):
         """
@@ -73,7 +73,7 @@ class TestAnyTagSelector:
             strip("""<div><a class="widget_2"></a></div>"""),
             strip("""<a class="widget_2"></a>"""),
         ]
-        assert list(map(str, result)) == expected
+        assert list(map(lambda x: strip(str(x)), result)) == expected
 
     def test_find_returns_none_if_there_are_no_child_tags(self, tag: AnyTagSelector):
         """Test if None is returned when there are no child tags in bs4 object."""
@@ -115,7 +115,7 @@ class TestAnyTagSelector:
         markup = """<a class="widget"></a><a class="widget_2"></a>"""
         bs = find_tag(to_bs(markup))
         result = tag.find(bs, recursive=False)
-        assert str(result) == strip("""<a class="widget"></a>""")
+        assert strip(str(result)) == strip("""<a class="widget"></a>""")
 
     def test_find_all_returns_all_children_when_recursive_false(
         self, tag: AnyTagSelector
@@ -133,7 +133,7 @@ class TestAnyTagSelector:
         bs = find_body_element(to_bs(text))
         results = tag.find_all(bs, recursive=False)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<div><a>Hello 1</a></div>"""),
             strip("""<a class="link">Hello 2</a>"""),
             strip("""<div class="google"><span>Hello</span></div>"""),
@@ -156,7 +156,7 @@ class TestAnyTagSelector:
         bs = find_body_element(to_bs(text))
         results = tag.find_all(bs, limit=3)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<div><a>Hello 1</a></div>"""),
             strip("""<a>Hello 1</a>"""),
             strip("""<div>Hello 2</div>"""),
@@ -179,7 +179,7 @@ class TestAnyTagSelector:
         bs = find_body_element(to_bs(text))
         results = tag.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<div><a>Hello 1</a></div>"""),
             strip("""<div>Hello 2</div>"""),
         ]

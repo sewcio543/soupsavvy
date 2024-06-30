@@ -8,6 +8,8 @@ runs:
       run: |
         python -m pip install $(grep build requirements_dev.txt | xargs)
         python -m pip install $(grep twine requirements_dev.txt | xargs)
+        python -m pip install importlib_metadata~=7.0
+
       shell: bash
 
     - name: Build project and create distribution files

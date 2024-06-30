@@ -107,7 +107,7 @@ class TestNthOfType:
         bs = find_body_element(to_bs(html))
         tag = NthOfType("2")
         result = tag.find(bs)
-        assert str(result) == strip("<p>text 4</p>")
+        assert strip(str(result)) == strip("<p>text 4</p>")
 
     def test_find_returns_first_nth_of_type_with_tag(self):
         """
@@ -129,7 +129,7 @@ class TestNthOfType:
         bs = find_body_element(to_bs(html))
         tag = NthOfType(n="2", tag="div")
         result = tag.find(bs)
-        assert str(result) == strip("<div>Hello 3</div>")
+        assert strip(str(result)) == strip("<div>Hello 3</div>")
 
     def test_find_raises_exception_without_specified_tag_if_not_found_in_strict_mode(
         self,
@@ -248,7 +248,7 @@ class TestNthOfType:
         tag = NthOfType("2")
 
         result = tag.find_all(bs)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<p>text 2</p>"),
             strip("<a>text 5</a>"),
             strip("<span>Hello</span>"),
@@ -276,7 +276,7 @@ class TestNthOfType:
         tag = NthOfType(n="2n", tag="p")
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<p>text 2</p>"),
             strip("<p>text 4</p>"),
             strip("<p>text 7</p>"),
@@ -302,7 +302,7 @@ class TestNthOfType:
         tag = NthOfType(n)
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<p>text 2</p>"),
             strip("<p>text 5</p>"),
             strip("<span>Hello</span>"),
@@ -328,7 +328,7 @@ class TestNthOfType:
         tag = NthOfType(n)
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<div>Hello</div>"),
             strip("<p>text 1</p>"),
             strip("<p>text 3</p>"),
@@ -355,7 +355,7 @@ class TestNthOfType:
         tag = NthOfType(" 2n +  1")
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<div>Hello</div>"),
             strip("<p>text 1</p>"),
             strip("<span>Hello 1</span>"),

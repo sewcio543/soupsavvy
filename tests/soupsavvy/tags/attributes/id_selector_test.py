@@ -26,7 +26,7 @@ class TestIdSelector:
         bs = to_bs(markup)
         selector = IdSelector()
         result = selector.find(bs)
-        assert str(result) == strip("""<div id=""></div>""")
+        assert strip(str(result)) == strip("""<div id=""></div>""")
 
     def test_find_returns_first_match_with_specific_value(self):
         """Tests if find returns first tag with id attribute with specific value."""
@@ -38,7 +38,7 @@ class TestIdSelector:
         bs = to_bs(markup)
         selector = IdSelector("widget")
         result = selector.find(bs)
-        assert str(result) == strip("""<a id="widget"></a>""")
+        assert strip(str(result)) == strip("""<a id="widget"></a>""")
 
     def test_find_returns_first_match_with_re_true(self):
         """
@@ -53,7 +53,7 @@ class TestIdSelector:
         bs = to_bs(markup)
         selector = IdSelector(value="widget", re=True)
         result = selector.find(bs)
-        assert str(result) == strip("""<div id="widget_menu"></div>""")
+        assert strip(str(result)) == strip("""<div id="widget_menu"></div>""")
 
     def test_find_returns_first_match_with_pattern(self):
         """
@@ -73,12 +73,12 @@ class TestIdSelector:
 
         selector = IdSelector(value=pattern, re=True)
         result = selector.find(bs)
-        assert str(result) == expected
+        assert strip(str(result)) == expected
 
         # already compiled regex pattern should work the same way
         selector = IdSelector(value=re.compile(pattern))
         result = selector.find(bs)
-        assert str(result) == expected
+        assert strip(str(result)) == expected
 
     def test_find_returns_none_if_no_match_and_strict_false(self):
         """
@@ -132,7 +132,7 @@ class TestIdSelector:
             strip("""<a id="widget"></a>"""),
             strip("""<a id="widget">Hello</a>"""),
         ]
-        assert list(map(str, result)) == excepted
+        assert list(map(lambda x: strip(str(x)), result)) == excepted
 
     def test_find_all_returns_empty_list_when_no_match(self):
         """Tests if find returns an empty list if no element matches the selector."""
@@ -161,7 +161,7 @@ class TestIdSelector:
         bs = find_body_element(to_bs(markup))
         selector = IdSelector("widget")
         result = selector.find(bs, recursive=False)
-        assert str(result) == strip("""<a id="widget"></a>""")
+        assert strip(str(result)) == strip("""<a id="widget"></a>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
@@ -237,7 +237,7 @@ class TestIdSelector:
         selector = IdSelector("widget")
         result = selector.find_all(bs, recursive=False)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a id="widget"></a>"""),
             strip("""<div id="widget"></div>"""),
             strip("""<div id="widget"></div>"""),
@@ -262,7 +262,7 @@ class TestIdSelector:
         selector = IdSelector("widget")
         result = selector.find_all(bs, limit=2)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a id="widget"></a>"""),
             strip("""<a id="widget">Hello</a>"""),
         ]
@@ -290,7 +290,7 @@ class TestIdSelector:
         selector = IdSelector("widget")
         result = selector.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a id="widget"></a>"""),
             strip("""<div id="widget"></div>"""),
         ]

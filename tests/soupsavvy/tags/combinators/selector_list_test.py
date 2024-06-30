@@ -101,7 +101,7 @@ class TestSelectorList:
         """
         bs = to_bs(markup)
         result = mock_soup_union.find(bs)
-        assert str(result) == strip(markup)
+        assert strip(str(result)) == strip(markup)
 
     def test_find_returns_none_if_no_element_matches_the_tags(
         self, mock_soup_union: SelectorList
@@ -155,7 +155,7 @@ class TestSelectorList:
             strip("""<div class="menu"></div>"""),
             strip("""<i awesomeness="italics 5"></i>"""),
         ]
-        assert list(map(str, result)) == expected
+        assert list(map(lambda x: strip(str(x)), result)) == expected
 
     def test_finds_all_returns_empty_list_if_no_element_matches(
         self, mock_soup_union: SelectorList
@@ -197,7 +197,7 @@ class TestSelectorList:
             strip("<b></b>"),
             strip("<i></i>"),
         ]
-        assert list(map(str, result)) == expected
+        assert list(map(lambda x: strip(str(x)), result)) == expected
 
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
@@ -220,7 +220,7 @@ class TestSelectorList:
         )
         result = tag.find(bs, recursive=False)
 
-        assert str(result) == strip("""<a href="github">Hello 3</a>""")
+        assert strip(str(result)) == strip("""<a href="github">Hello 3</a>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
@@ -283,7 +283,7 @@ class TestSelectorList:
         )
         results = tag.find_all(bs, recursive=False)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a href="github">Hello 3</a>"""),
             strip("""<p>Empty</p>"""),
             strip("""<p>Hello 4</p>"""),
@@ -334,7 +334,7 @@ class TestSelectorList:
         )
         results = tag.find_all(bs, limit=3)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a href="github">Hello 1</a>"""),
             strip("""<a>Hello 3</a>"""),
             strip("""<p>Empty</p>"""),
@@ -363,7 +363,7 @@ class TestSelectorList:
         )
         results = tag.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a>Hello 3</a>"""),
             strip("""<p>Empty</p>"""),
         ]
@@ -385,7 +385,7 @@ class TestSelectorList:
         )
         results = tag.find_all(bs)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a href="github">Hello 1</a>"""),
             strip("""<a class="widget">Hello 2</a>"""),
         ]

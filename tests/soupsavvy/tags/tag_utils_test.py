@@ -118,7 +118,7 @@ class TestTagIterator:
             strip("""<a class="menu"></a>"""),
             strip("""<span class="widget"></span>"""),
         ]
-        assert [str(tag) for tag in tag_iterator] == expected
+        assert [strip(str(tag)) for tag in tag_iterator] == expected
 
     def test_iterates_correctly_over_children_if_recursive_set_to_false(
         self, mock_tag: Tag
@@ -142,7 +142,7 @@ class TestTagIterator:
             ),
             strip("""<span class="widget"></span>"""),
         ]
-        assert [str(tag) for tag in tag_iterator] == expected
+        assert [strip(str(tag)) for tag in tag_iterator] == expected
 
     def test_iterator_resets_when_called_again(self, mock_tag: Tag):
         """
@@ -165,10 +165,10 @@ class TestTagIterator:
                 </div>
             """
         )
-        assert str(next(iter_)) == expected
+        assert strip(str(next(iter_))) == expected
 
         iter_ = iter(tag_iterator)
-        assert str(next(iter_)) == expected
+        assert strip(str(next(iter_))) == expected
 
     def test_iterates_over_no_elements_iterable(self, mock_tag: Tag):
         """
@@ -199,6 +199,95 @@ class TestTagIterator:
         tag = TagWrapper(mock_tag)
         tag_iterator = TagIterator(tag)  # type: ignore
         assert list(tag_iterator) == []
+
+    def test_includes_provided_tag_and_descendants_if_include_self_true(
+        self, mock_tag: Tag
+    ):
+        """
+        Tests that TagIterator iterates over descendants and includes the tag itself
+        at the beginning if include_self is set to True.
+        """
+        tag = find_body_element(mock_tag)
+        tag_iterator = TagIterator(tag, include_self=True)
+        expected = [
+            strip(
+                """
+                <body>
+                    <div>
+                        <a class="link"></a>
+                        <div class="link">
+                            <a class="menu"></a>
+                            <a class="menu"></a>
+                        </div>
+                    </div>
+                    <span class="widget"></span>
+                </body>
+                """
+            ),
+            strip(
+                """
+                <div>
+                    <a class="link"></a>
+                    <div class="link">
+                        <a class="menu"></a>
+                        <a class="menu"></a>
+                    </div>
+                </div>
+                """
+            ),
+            strip("""<a class="link"></a>"""),
+            strip(
+                """
+                <div class="link">
+                    <a class="menu"></a>
+                    <a class="menu"></a>
+                </div>
+                """
+            ),
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu"></a>"""),
+            strip("""<span class="widget"></span>"""),
+        ]
+        assert [strip(str(tag)) for tag in tag_iterator] == expected
+
+    def test_includes_provided_tag_and_children_if_include_self_true(
+        self, mock_tag: Tag
+    ):
+        """
+        Tests that TagIterator iterates over children and includes the tag itself
+        at the beginning if include_self is set to True and recursive is False.
+        """
+        tag = find_body_element(mock_tag)
+        tag_iterator = TagIterator(tag, recursive=False, include_self=True)
+        expected = [
+            strip(
+                """
+                <body>
+                    <div>
+                        <a class="link"></a>
+                        <div class="link">
+                            <a class="menu"></a>
+                            <a class="menu"></a>
+                        </div>
+                    </div>
+                    <span class="widget"></span>
+                </body>
+                """
+            ),
+            strip(
+                """
+                <div>
+                    <a class="link"></a>
+                    <div class="link">
+                        <a class="menu"></a>
+                        <a class="menu"></a>
+                    </div>
+                </div>
+                """
+            ),
+            strip("""<span class="widget"></span>"""),
+        ]
+        assert [strip(str(tag)) for tag in tag_iterator] == expected
 
 
 class TestTagResultSet:
@@ -231,7 +320,7 @@ class TestTagResultSet:
         results_set = TagResultSet(mock_tags)
         results = results_set.fetch()
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu1"></a>"""),
@@ -243,7 +332,7 @@ class TestTagResultSet:
         results_set = TagResultSet(mock_tags)
         results = results_set.fetch(3)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu1"></a>"""),
@@ -258,7 +347,7 @@ class TestTagResultSet:
         results_set = TagResultSet(mock_tags + mock_tags)
         results = results_set.fetch()
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu1"></a>"""),
@@ -283,7 +372,7 @@ class TestTagResultSet:
         new = base | right
         results = new.fetch()
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu1"></a>"""),
@@ -306,11 +395,11 @@ class TestTagResultSet:
 
         new = base | right
         results = new.fetch()
-        assert list(map(str, results)) == expected
+        assert list(map(lambda x: strip(str(x)), results)) == expected
 
         new = right | base
         results = new.fetch()
-        assert list(map(str, results)) == expected
+        assert list(map(lambda x: strip(str(x)), results)) == expected
 
     def test_updates_when_collections_are_the_same_return_base_collection(
         self, mock_tags: list[Tag]
@@ -334,7 +423,7 @@ class TestTagResultSet:
             strip("""<a class="menu1"></a>"""),
             strip("""<a class="menu2"></a>"""),
         ]
-        assert list(map(str, results)) == expected
+        assert list(map(lambda x: strip(str(x)), results)) == expected
 
     def test_and_return_new_result_set_with_intersection_of_collections(
         self, mock_tags: list[Tag]
@@ -353,7 +442,7 @@ class TestTagResultSet:
         new = base & right
         results = new.fetch()
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu1"></a>"""),
         ]
@@ -388,7 +477,7 @@ class TestTagResultSet:
         new = base - right
         results = new.fetch()
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a class="menu1"></a>"""),
             strip("""<a class="menu2"></a>"""),
         ]

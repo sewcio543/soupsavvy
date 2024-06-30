@@ -22,7 +22,7 @@ class TestNotSelector:
 
         tag = NotSelector(TagSelector("a"))
         result = tag.find(bs)
-        assert str(result) == strip("""<div class="widget"></div>""")
+        assert strip(str(result)) == strip("""<div class="widget"></div>""")
 
     def test_raises_exception_when_no_invalid_input(self):
         """
@@ -70,7 +70,7 @@ class TestNotSelector:
 
         tag = NotSelector(TagSelector("a"), AttributeSelector("class", "1", re=True))
         result = tag.find(bs)
-        assert str(result) == strip("""<div class="link"></div>""")
+        assert strip(str(result)) == strip("""<div class="link"></div>""")
 
     def test_find_all_not_matching_tags(self):
         """
@@ -88,7 +88,7 @@ class TestNotSelector:
         tag = NotSelector(TagSelector("a"), AttributeSelector("class", "1", re=True))
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<span class="empty"></span>"""),
             strip("""<div class="link"></div>"""),
         ]
@@ -123,7 +123,7 @@ class TestNotSelector:
         tag = NotSelector(TagSelector("span"))
         result = tag.find(bs)
 
-        assert str(result) == strip("""<div><a class="widget 12"></a></div>""")
+        assert strip(str(result)) == strip("""<div><a class="widget 12"></a></div>""")
 
     def test_finds_all_returns_all_parents_and_children_tags_not_matching(self):
         """
@@ -139,7 +139,7 @@ class TestNotSelector:
         tag = NotSelector(TagSelector("span"))
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<div><a class="widget 12"></a></div>"""),
             strip("""<a class="widget 12"></a>"""),
         ]
@@ -173,7 +173,7 @@ class TestNotSelector:
         bs = find_body_element(to_bs(text))
         tag = NotSelector(TagSelector(tag="a"))
         result = tag.find(bs, recursive=False)
-        assert str(result) == strip("""<div>Hello 3</div>""")
+        assert strip(str(result)) == strip("""<div>Hello 3</div>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
@@ -227,7 +227,7 @@ class TestNotSelector:
         tag = NotSelector(TagSelector(tag="a"))
         results = tag.find_all(bs, recursive=False)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<div>Hello 3</div>"""),
             strip("""<span>Hello 5</span>"""),
         ]
@@ -268,7 +268,7 @@ class TestNotSelector:
         tag = NotSelector(TagSelector(tag="a"))
         results = tag.find_all(bs, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<div>Hello 1</div>"""),
             strip("""<span>Hello 2</span>"""),
         ]
@@ -293,7 +293,7 @@ class TestNotSelector:
         tag = NotSelector(TagSelector(tag="a"))
         results = tag.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<span>Hello 2</span>"""),
             strip("""<div>Hello 3</div>"""),
         ]

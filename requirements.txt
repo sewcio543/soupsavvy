@@ -1,2 +1,2 @@
-beautifulsoup4==4.12.2
-lxml==5.2.2
+beautifulsoup4>=4.0
+lxml>=4.0
