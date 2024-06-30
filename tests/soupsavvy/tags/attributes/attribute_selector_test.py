@@ -28,7 +28,7 @@ class TestAttributeSelector:
         bs = to_bs(text)
         selector = AttributeSelector(name="class")
         result = selector.find(bs)
-        assert str(result) == strip("""<a class="widget"></a>""")
+        assert strip(str(result)) == strip("""<a class="widget"></a>""")
 
     def test_find_returns_first_matching_tag_with_exact_attribute_value(self):
         """
@@ -43,7 +43,7 @@ class TestAttributeSelector:
         bs = to_bs(text)
         selector = AttributeSelector(name="class", value="widget")
         result = selector.find(bs)
-        assert str(result) == strip("""<a class="widget"></a>""")
+        assert strip(str(result)) == strip("""<a class="widget"></a>""")
 
     @pytest.mark.parametrize(
         argnames="selector",
@@ -72,7 +72,7 @@ class TestAttributeSelector:
         """
         bs = to_bs(text)
         result = selector.find(bs)
-        assert str(result) == strip("""<span class="widget_123"></span>""")
+        assert strip(str(result)) == strip("""<span class="widget_123"></span>""")
 
     def test_find_returns_none_if_no_match_and_strict_false(self):
         """
@@ -124,7 +124,7 @@ class TestAttributeSelector:
         bs = to_bs(text)
         selector = AttributeSelector(name="awesomeness", value="5")
         result = selector.find(bs)
-        assert str(result) == strip("""<span awesomeness="5"></span>""")
+        assert strip(str(result)) == strip("""<span awesomeness="5"></span>""")
 
     def test_find_all_returns_all_matching_elements(self):
         """Tests if find_all returns a list of all matching elements."""
@@ -142,7 +142,7 @@ class TestAttributeSelector:
         selector = AttributeSelector(name="class", value="widget")
 
         result = selector.find_all(bs)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="widget">1</a>"""),
             strip("""<a class="widget" href="github">2</a>"""),
             strip("""<div class="widget"><a>3</a></div>"""),
@@ -179,7 +179,7 @@ class TestAttributeSelector:
         bs = to_bs(text)
         selector = AttributeSelector(name="name", value="github")
         result = selector.find(bs)
-        assert str(result) == strip("""<span name="github"></span>""")
+        assert strip(str(result)) == strip("""<span name="github"></span>""")
 
     @pytest.mark.css_selector
     @pytest.mark.parametrize(
@@ -227,7 +227,7 @@ class TestAttributeSelector:
         selector = AttributeSelector(name="href", value="github")
         result = selector.find(bs, recursive=False)
 
-        assert str(result) == strip("""<a href="github">Hello 2</a>""")
+        assert strip(str(result)) == strip("""<a href="github">Hello 2</a>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
@@ -298,7 +298,7 @@ class TestAttributeSelector:
         selector = AttributeSelector(name="class")
         results = selector.find_all(bs, recursive=False)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a class="github">Hello 2</a>"""),
             strip("""<div class="google"></div>"""),
         ]
@@ -320,7 +320,7 @@ class TestAttributeSelector:
         selector = AttributeSelector(name="class")
         results = selector.find_all(bs, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a class="github">Hello 2</a>"""),
             strip("""<div class="menu"></div>"""),
         ]
@@ -347,7 +347,7 @@ class TestAttributeSelector:
         selector = AttributeSelector(name="class")
         results = selector.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<div class="menu"></div>"""),
             strip("""<span class="menu"></span>"""),
         ]
@@ -461,6 +461,6 @@ class TestAttributeSelector:
         bs = to_bs(markup)
         selector = AttributeSelector("class", value="widget")
         result = selector.find(bs)
-        assert str(result) == strip(
+        assert strip(str(result)) == strip(
             """<div class="it has a long list of widget classes"></div>"""
         )

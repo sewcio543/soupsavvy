@@ -47,7 +47,7 @@ class TestChildCombinator:
             AttributeSelector("class", "widget"),
         )
         result = tag.find(bs)
-        assert str(result) == strip("""<span class="widget"></span>""")
+        assert strip(str(result)) == strip("""<span class="widget"></span>""")
 
     def test_find_raises_exception_when_no_tags_match_in_strict_mode(self):
         """
@@ -123,7 +123,7 @@ class TestChildCombinator:
         )
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<div class="widget">Helo 2</div>"""),
             strip("""<span class="widget">Hello 4</span>"""),
         ]
@@ -191,7 +191,7 @@ class TestChildCombinator:
             TagSelector("p"),
         )
         result = tag.find(bs)
-        assert str(result) == strip("""<p>Hello 6</p>""")
+        assert strip(str(result)) == strip("""<p>Hello 6</p>""")
 
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
@@ -215,7 +215,7 @@ class TestChildCombinator:
             TagSelector("p"),
         )
         result = tag.find(bs, recursive=False)
-        assert str(result) == strip("""<p>Text</p>""")
+        assert strip(str(result)) == strip("""<p>Text</p>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
@@ -292,7 +292,7 @@ class TestChildCombinator:
         )
         results = tag.find_all(bs, recursive=False)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<p>Text 1</p>"""),
             strip("""<p>Text 2</p>"""),
         ]
@@ -352,7 +352,7 @@ class TestChildCombinator:
         )
         results = tag.find_all(bs, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<p>Text 1</p>"""),
             strip("""<p>Text 2</p>"""),
         ]
@@ -391,7 +391,7 @@ class TestChildCombinator:
         )
         results = tag.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<p>Text 1</p>"""),
             strip("""<p>Text 3</p>"""),
         ]

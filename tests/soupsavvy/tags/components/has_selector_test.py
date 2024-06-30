@@ -32,11 +32,12 @@ class TestHasSelector:
         argvalues=[True, False],
         ids=["recursive", "not_recursive"],
     )
+    #! TODO: it does matter
     def test_find_returns_first_tag_that_has_element_matching_single_selector(
         self, recursive: bool
     ):
         """
-        Tests if find method returns the first tag that has an descendant element that
+        Tests if find method returns the first tag that has a descendant element that
         matches a single selector. In this case, recursive parameter is not relevant.
         """
         text = """
@@ -50,7 +51,7 @@ class TestHasSelector:
         bs = find_body_element(to_bs(text))
         selector = HasSelector(MockLinkSelector())
         result = selector.find(bs, recursive=recursive)
-        assert str(result) == strip("""<div><a>1</a></div>""")
+        assert strip(str(result)) == strip("""<div><a>1</a></div>""")
 
     @pytest.mark.parametrize(
         argnames="recursive",
@@ -122,7 +123,7 @@ class TestHasSelector:
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, recursive=True)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<div><a>1</a><a>Duplicate</a></div>"""),
             strip("""<span><p></p><a>2</a></span>"""),
             strip("""<div><a>3</a></div>"""),
@@ -150,7 +151,7 @@ class TestHasSelector:
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, recursive=False)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<span><p></p><a>1</a></span>"""),
             strip("""<div><a>2</a></div>"""),
             strip("""<div><span><a>3</a></span></div>"""),
@@ -200,7 +201,7 @@ class TestHasSelector:
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, limit=2)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<span><p></p><a>1</a></span>"""),
             strip("""<div><a>2</a></div>"""),
         ]
@@ -228,7 +229,7 @@ class TestHasSelector:
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, limit=2, recursive=False)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<div><span><a>1</a></span></div>"""),
             strip("""<div><a>2</a></div>"""),
         ]
@@ -255,7 +256,7 @@ class TestHasSelector:
         selector = HasSelector(MockLinkSelector(), MockDivSelector())
         result = selector.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<span><a>1</a></span>"""),
             strip("""<span><div>2</div></span>"""),
             strip("""<span><span><div>Have both</div><a></a></span></span>"""),
@@ -288,7 +289,7 @@ class TestHasSelector:
         selector = HasSelector(RelativeChild(MockLinkSelector()))
         result = selector.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<span><a>1</a></span>"""),
             strip("""<span><a>2</a></span>"""),
         ]
