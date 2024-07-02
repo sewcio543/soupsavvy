@@ -91,7 +91,7 @@ class TestOnlyOfType:
         bs = find_body_element(to_bs(html))
         tag = OnlyOfType()
         result = tag.find(bs)
-        assert str(result) == strip("<p>text 3</p>")
+        assert strip(str(result)) == strip("<p>text 3</p>")
 
     def test_find_returns_first_only_element_of_type_with_tag(self):
         """
@@ -113,7 +113,7 @@ class TestOnlyOfType:
         bs = find_body_element(to_bs(html))
         tag = OnlyOfType("a")
         result = tag.find(bs)
-        assert str(result) == strip("<a>text 4</a>")
+        assert strip(str(result)) == strip("<a>text 4</a>")
 
     def test_find_raises_exception_without_specified_tag_if_not_found_in_strict_mode(
         self,
@@ -209,7 +209,7 @@ class TestOnlyOfType:
         tag = OnlyOfType()
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<p>text 1</p>"),
             strip("<a>text 2</a>"),
             strip("<p>text 3</p>"),
@@ -237,7 +237,7 @@ class TestOnlyOfType:
         tag = OnlyOfType("p")
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<p>text 1</p>"),
             strip("<p>text 3</p>"),
         ]

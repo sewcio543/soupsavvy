@@ -87,7 +87,7 @@ class TestOnlyChild:
         bs = find_body_element(to_bs(html))
         tag = OnlyChild()
         result = tag.find(bs)
-        assert str(result) == strip("<p>text 1</p>")
+        assert strip(str(result)) == strip("<p>text 1</p>")
 
     def test_find_returns_first_only_child_with_tag(self):
         """
@@ -106,7 +106,7 @@ class TestOnlyChild:
         bs = find_body_element(to_bs(html))
         tag = OnlyChild("a")
         result = tag.find(bs)
-        assert str(result) == strip("<a>text 2</a>")
+        assert strip(str(result)) == strip("<a>text 2</a>")
 
     def test_find_raises_exception_without_specified_tag_if_not_found_in_strict_mode(
         self,
@@ -196,7 +196,7 @@ class TestOnlyChild:
         bs = find_body_element(to_bs(html))
         tag = OnlyChild()
         result = tag.find_all(bs)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<p>text 1</p>"),
             strip("<div><p>text 2</p></div>"),
             strip("<p>text 2</p>"),
@@ -213,7 +213,7 @@ class TestOnlyChild:
         bs = find_body_element(to_bs(html))
         tag = OnlyChild("div")
         result = tag.find_all(bs)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<div><div><p>text 2</p></div></div>"),
             strip("<div><p>text 2</p></div>"),
         ]

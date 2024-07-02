@@ -58,7 +58,7 @@ class TestTagSelector:
         markup = """<a class="widget"></a>"""
         bs = to_bs(markup)
         result = tag.find(bs)
-        assert str(result) == strip(markup)
+        assert strip(str(result)) == strip(markup)
 
     @pytest.mark.parametrize(
         argnames="tag",
@@ -101,7 +101,7 @@ class TestTagSelector:
         markup = """<a class="widget menu" id="menu 1"></a>"""
         bs = to_bs(markup)
         result = tag.find(bs)
-        assert str(result) == strip(markup)
+        assert strip(str(result)) == strip(markup)
 
     @pytest.mark.parametrize(
         argnames="tag",
@@ -166,7 +166,7 @@ class TestTagSelector:
             tag="a", attributes=[AttributeSelector(name="class", value="widget")]
         )
         result = tag.find(bs)
-        assert str(result) == strip(markup)
+        assert strip(str(result)) == strip(markup)
 
     def test_find_raises_exception_in_strict_mode_if_non_matching(self):
         """
@@ -212,7 +212,7 @@ class TestTagSelector:
         bs = find_body_element(to_bs(text))
         selector = TagSelector()
         result = selector.find_all(bs)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a href="github/settings"></a>"""),
             strip("""<a></a>"""),
             strip("""<div class="github"><a>Hello</a></div>"""),
@@ -246,7 +246,7 @@ class TestTagSelector:
             strip("""<a href="github" id="1"></a>"""),
             strip("""<a href="github" id="2"></a>"""),
         ]
-        assert list(map(str, result)) == excepted
+        assert list(map(lambda x: strip(str(x)), result)) == excepted
 
     def test_find_all_returns_empty_list_when_not_found(self):
         """Tests if find returns an empty list if no element matches the tag."""
@@ -291,7 +291,10 @@ class TestTagSelector:
             </div>
         """
         expected_2 = """<a href="github "></a>"""
-        assert list(map(str, result)) == [strip(expected_1), strip(expected_2)]
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip(expected_1),
+            strip(expected_2),
+        ]
 
     def test_do_not_shadow_bs4_find_method_parameters(self):
         """
@@ -311,7 +314,7 @@ class TestTagSelector:
             ],
         )
         result = tag.find(bs)
-        assert str(result) == strip(markup)
+        assert strip(str(result)) == strip(markup)
 
     @pytest.mark.css_selector
     @pytest.mark.parametrize(
@@ -477,7 +480,7 @@ class TestTagSelector:
         tag = TagSelector(tag="a")
         result = tag.find(bs, recursive=False)
 
-        assert str(result) == strip("""<a href="github">Hello 2</a>""")
+        assert strip(str(result)) == strip("""<a href="github">Hello 2</a>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
@@ -533,7 +536,7 @@ class TestTagSelector:
         tag = TagSelector(tag="a")
         results = tag.find_all(bs, recursive=False)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a class="link">Hello 2</a>"""),
             strip("""<a>Hello 3</a>"""),
         ]
@@ -577,7 +580,7 @@ class TestTagSelector:
         tag = TagSelector(tag="div")
         results = tag.find_all(bs, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<div>Hello 1</div>"""),
             strip("""<div>Hello 2</div>"""),
         ]
@@ -606,7 +609,7 @@ class TestTagSelector:
         tag = TagSelector(tag="div")
         results = tag.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<div>Hello 1</div>"""),
             strip("""<div>Hello 3</div>"""),
         ]
