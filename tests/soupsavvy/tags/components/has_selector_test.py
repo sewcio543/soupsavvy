@@ -4,7 +4,12 @@ import pytest
 
 from soupsavvy.tags.components import HasSelector
 from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
-from soupsavvy.tags.relative import RelativeChild
+from soupsavvy.tags.relative import (
+    RelativeChild,
+    RelativeDescendant,
+    RelativeNextSibling,
+    RelativeSubsequentSibling,
+)
 from tests.soupsavvy.tags.conftest import (
     MockDivSelector,
     MockLinkSelector,
@@ -32,7 +37,6 @@ class TestHasSelector:
         argvalues=[True, False],
         ids=["recursive", "not_recursive"],
     )
-    #! TODO: it does matter
     def test_find_returns_first_tag_that_has_element_matching_single_selector(
         self, recursive: bool
     ):
@@ -264,7 +268,7 @@ class TestHasSelector:
         ]
 
     @pytest.mark.integration
-    def test_find_all_returns_all_tags_matching_relative_selector(
+    def test_find_all_returns_all_tags_matching_relative_child(
         self,
     ):
         """
@@ -292,4 +296,84 @@ class TestHasSelector:
         assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<span><a>1</a></span>"""),
             strip("""<span><a>2</a></span>"""),
+        ]
+
+    @pytest.mark.integration
+    def test_find_all_returns_all_tags_matching_relative_descendants(
+        self,
+    ):
+        """
+        Tests if find_all method returns all tags that anchored to relative selector
+        find at least one matching tag. In this case, all elements that have
+        a link tag as a descendant are returned, this is a default behavior,
+        which is equivalent to just passing the link selector.
+        """
+        text = """
+            <p>Don't have</p>
+            <div><a>1</a></div>
+            <div><span><a>2</a></span></div>
+            <a>Don't have</a>
+        """
+        bs = find_body_element(to_bs(text))
+
+        selector = HasSelector(RelativeDescendant(MockLinkSelector()))
+        result = selector.find_all(bs)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<div><a>1</a></div>"""),
+            strip("""<div><span><a>2</a></span></div>"""),
+            strip("""<span><a>2</a></span>"""),
+        ]
+
+    @pytest.mark.integration
+    def test_find_all_returns_all_tags_matching_relative_next_sibling(
+        self,
+    ):
+        """
+        Tests if find_all method returns all tags that anchored to relative selector
+        find at least one matching tag. In this case, all elements that have
+        a link tag as a next sibling are returned.
+        """
+        text = """
+            <p>Don't have</p>
+            <div><span>1</span><a></a></div>
+            <span><a>2</a></span>
+            <a>Don't have</a>
+        """
+        bs = find_body_element(to_bs(text))
+
+        selector = HasSelector(RelativeNextSibling(MockLinkSelector()))
+        result = selector.find_all(bs)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<span>1</span>"""),
+            strip("""<span><a>2</a></span>"""),
+        ]
+
+    @pytest.mark.integration
+    def test_find_all_returns_all_tags_matching_relative_subsequent_sibling(
+        self,
+    ):
+        """
+        Tests if find_all method returns all tags that anchored to relative selector
+        find at least one matching tag. In this case, all elements that have
+        a link tag as a subsequent sibling are returned.
+        """
+        text = """
+            <p>Don't have</p>
+            <a>This matches as well</a>
+            <a>!!!</a>
+            <div><span>1</span><span>2</span><a>!!!</a></div>
+            <span><a>2</a><span>After</span></span>
+        """
+        bs = find_body_element(to_bs(text))
+
+        selector = HasSelector(RelativeSubsequentSibling(MockLinkSelector()))
+        result = selector.find_all(bs)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<p>Don't have</p>"""),
+            strip("""<a>This matches as well</a>"""),
+            strip("""<span>1</span>"""),
+            strip("""<span>2</span>"""),
         ]
