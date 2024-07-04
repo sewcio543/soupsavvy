@@ -37,7 +37,17 @@ class MockSelector(SoupSelector):
         return []
 
 
-class MockLinkSelector(MockSelector):
+class _MockSimpleComparable(MockSelector):
+    """
+    Mock class for testing SoupSelector interface, that provides simple __eq__ method.
+    Instances are equal if they are of the same class.
+    """
+
+    def __eq__(self, x: object) -> bool:
+        return isinstance(x, self.__class__)
+
+
+class MockLinkSelector(_MockSimpleComparable):
     """
     Mock selector class for testing purposes.
     Find every instance of link tag (with tag name 'a').
@@ -47,11 +57,8 @@ class MockLinkSelector(MockSelector):
     def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
         return tag.find_all("a", recursive=recursive, limit=limit)
 
-    def __eq__(self, x: object) -> bool:
-        return isinstance(x, MockLinkSelector)
 
-
-class MockDivSelector(MockSelector):
+class MockDivSelector(_MockSimpleComparable):
     """
     Mock selector class for testing purposes.
     Find every instance of div tag (with tag name 'div').
@@ -61,11 +68,8 @@ class MockDivSelector(MockSelector):
     def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
         return tag.find_all("div", recursive=recursive, limit=limit)
 
-    def __eq__(self, x: object) -> bool:
-        return isinstance(x, MockDivSelector)
 
-
-class MockClassMenuSelector(MockSelector):
+class MockClassMenuSelector(_MockSimpleComparable):
     """
     Mock selector class for testing purposes.
     Find every element that has class attribute set to 'menu'.
@@ -74,5 +78,12 @@ class MockClassMenuSelector(MockSelector):
     def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
         return tag.find_all(attrs={"class": "menu"}, recursive=recursive, limit=limit)
 
-    def __eq__(self, x: object) -> bool:
-        return isinstance(x, MockClassMenuSelector)
+
+class MockClassWidgetSelector(_MockSimpleComparable):
+    """
+    Mock selector class for testing purposes.
+    Find every element that has class attribute set to 'widget'.
+    """
+
+    def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+        return tag.find_all(attrs={"class": "widget"}, recursive=recursive, limit=limit)

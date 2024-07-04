@@ -24,6 +24,7 @@ class TestAttributeSelector:
             <div href="github"></div>
             <a></a>
             <a class="widget"></a>
+            <div class="menu"></div>
         """
         bs = to_bs(text)
         selector = AttributeSelector(name="class")
@@ -39,6 +40,7 @@ class TestAttributeSelector:
             <a></a>
             <span class="widgets"></span>
             <a class="widget"></a>
+            <div class="widget"></div>
         """
         bs = to_bs(text)
         selector = AttributeSelector(name="class", value="widget")
@@ -69,6 +71,7 @@ class TestAttributeSelector:
             <span class="super_widget"></span>
             <a class="wid__get"></a>
             <span class="widget_123"></span>
+            <span class="widget_45"></span>
         """
         bs = to_bs(text)
         result = selector.find(bs)
@@ -120,6 +123,7 @@ class TestAttributeSelector:
             <span awesomeness="4"></span>
             <a class="super_widget"></a>
             <span awesomeness="5"></span>
+            <div awesomeness="5"></div>
         """
         bs = to_bs(text)
         selector = AttributeSelector(name="awesomeness", value="5")
@@ -159,7 +163,6 @@ class TestAttributeSelector:
         """
         bs = to_bs(text)
         selector = AttributeSelector(name="class", value="widget")
-
         result = selector.find_all(bs)
         assert result == []
 
@@ -175,6 +178,7 @@ class TestAttributeSelector:
             <div href="github" class="menu"></div>
             <a class="github"></a>
             <span name="github"></span>
+            <div name="github"></div>
         """
         bs = to_bs(text)
         selector = AttributeSelector(name="name", value="github")
@@ -214,14 +218,14 @@ class TestAttributeSelector:
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.
-        In this case first 'a' element with href="github" matches the selector,
-        but it's not a child of body element, so it's not returned.
         """
         text = """
             <div class="google">
                 <a href="github">Hello 1</a>
             </div>
+            <div href="github_12">Hello 2</div>
             <a href="github">Hello 2</a>
+            <a href="github">Hello 3</a>
         """
         bs = find_body_element(to_bs(text))
         selector = AttributeSelector(name="href", value="github")
@@ -232,14 +236,13 @@ class TestAttributeSelector:
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
         Tests if find returns None if no child element matches the selector
-        and recursive is False. In this case first 'a' element with href="github"
-        matches the selector, but it's not a child of body element,
-        so it's not returned.
+        and recursive is False.
         """
         text = """
             <div class="google">
                 <a href="github">Hello 1</a>
             </div>
+            <div href="github_12">Hello 2</div>
             <a class="github">Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
@@ -256,6 +259,7 @@ class TestAttributeSelector:
             <div class="google">
                 <a href="github">Hello 1</a>
             </div>
+            <div href="github_12">Hello 2</div>
             <a class="github">Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
@@ -275,12 +279,13 @@ class TestAttributeSelector:
             <div class="google">
                 <a href="github">Hello 1</a>
             </div>
+            <div href="github_12">Hello 2</div>
             <a class="github">Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
         selector = AttributeSelector(name="href", value="github")
-        results = selector.find_all(bs, recursive=False)
-        assert results == []
+        result = selector.find_all(bs, recursive=False)
+        assert result == []
 
     def test_find_all_returns_all_matching_children_when_recursive_false(self):
         """
@@ -289,18 +294,22 @@ class TestAttributeSelector:
         """
         text = """
             <div>
-                <a class="github">Hello 1</a>
+                <a class="github">Not a child</a>
             </div>
-            <a class="github">Hello 2</a>
-            <div class="google"></div>
+            <a class="github">1</a>
+            <div id="google"></div>
+            <div class="google">2</div>
+            <div class="menu"><span>3</span></div>
+            <a></a>
         """
         bs = find_body_element(to_bs(text))
         selector = AttributeSelector(name="class")
-        results = selector.find_all(bs, recursive=False)
+        result = selector.find_all(bs, recursive=False)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
-            strip("""<a class="github">Hello 2</a>"""),
-            strip("""<div class="google"></div>"""),
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="github">1</a>"""),
+            strip("""<div class="google">2</div>"""),
+            strip("""<div class="menu"><span>3</span></div>"""),
         ]
 
     def test_find_all_returns_only_x_elements_when_limit_is_set(self):
@@ -313,14 +322,15 @@ class TestAttributeSelector:
                 <a class="github">Hello 2</a>
             </span>
             <div class="menu"></div>
+            <div id="google"></div>
             <div class="google"></div>
             <span class="menu"></span>
         """
         bs = find_body_element(to_bs(text))
         selector = AttributeSelector(name="class")
-        results = selector.find_all(bs, limit=2)
+        result = selector.find_all(bs, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="github">Hello 2</a>"""),
             strip("""<div class="menu"></div>"""),
         ]
@@ -338,16 +348,19 @@ class TestAttributeSelector:
                 <a class="github">Hello 2</a>
             </span>
             <div class="menu"></div>
+            <div id="google"></div>
+            <span class="menu"></span>
             <div>
                 <div class="google"></div>
             </div>
-            <span class="menu"></span>
+            <div class="widget"></div>
+            <p class="menu"></p>
         """
         bs = find_body_element(to_bs(text))
         selector = AttributeSelector(name="class")
-        results = selector.find_all(bs, recursive=False, limit=2)
+        result = selector.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<div class="menu"></div>"""),
             strip("""<span class="menu"></span>"""),
         ]
@@ -457,6 +470,7 @@ class TestAttributeSelector:
             <div href="menu"></div>
             <div class="widget_class menu"></div>
             <div class="it has a long list of widget classes"></div>
+            <div class="another list of widget classes"></div>
         """
         bs = to_bs(markup)
         selector = AttributeSelector("class", value="widget")
