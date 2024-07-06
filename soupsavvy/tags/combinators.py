@@ -28,7 +28,6 @@ from typing import Optional, Type
 from bs4 import Tag
 
 from soupsavvy.tags.base import MultipleSoupSelector, SoupSelector
-from soupsavvy.tags.namespace import FindResult
 from soupsavvy.tags.relative import (
     RelativeChild,
     RelativeDescendant,

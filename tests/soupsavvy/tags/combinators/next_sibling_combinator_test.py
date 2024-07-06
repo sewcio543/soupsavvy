@@ -355,3 +355,14 @@ class TestNextSiblingCombinator:
             strip("""<a><p>1</p></a>"""),
             strip("""<a class="link">2</a>"""),
         ]
+
+    def test_find_returns_none_if_first_step_was_not_found(self):
+        """
+        Tests if find returns None if the first step was not found.
+        Ensures that combinators don't break when first step does not match anything.
+        """
+        text = """<a>First element</a>"""
+        bs = to_bs(text)
+        selector = NextSiblingCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs)
+        assert result == []
