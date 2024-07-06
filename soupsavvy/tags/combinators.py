@@ -22,7 +22,6 @@ https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Com
 """
 
 from abc import abstractmethod
-from dataclasses import dataclass
 from functools import reduce
 from typing import Optional, Type
 
@@ -37,7 +36,7 @@ from soupsavvy.tags.relative import (
     RelativeSelector,
     RelativeSubsequentSibling,
 )
-from soupsavvy.tags.tag_utils import TagResultSet
+from soupsavvy.tags.tag_utils import TagIterator, TagResultSet
 
 
 class BaseCombinator(MultipleSoupSelector):
@@ -414,16 +413,6 @@ class SelectorList(MultipleSoupSelector):
         """
         super().__init__([selector1, selector2, *selectors])
 
-    def _find(self, tag: Tag, recursive: bool = True) -> FindResult:
-        # iterates all tags and returns first element that matches
-        for selector in self.selectors:
-            result = selector.find(tag, recursive=recursive)
-
-            if result is not None:
-                return result
-
-        return None
-
     def find_all(
         self,
         tag: Tag,
@@ -437,7 +426,6 @@ class SelectorList(MultipleSoupSelector):
                 selector.find_all(tag, recursive=recursive),
             )
 
-            if limit and len(results) >= limit:
-                break
-
+        # keep order of tags and limit
+        results = TagResultSet(list(TagIterator(tag, recursive=recursive))) & results
         return results.fetch(limit)

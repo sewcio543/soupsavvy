@@ -20,8 +20,7 @@ class TestChildCombinator:
 
     def test_raises_exception_when_invalid_input(self):
         """
-        Tests if ChildCombinator raises NotSoupSelectorException when
-        invalid input is provided.
+        Tests if init raises NotSoupSelectorException when invalid input is provided.
         """
         with pytest.raises(NotSoupSelectorException):
             ChildCombinator(MockDivSelector(), "p")  # type: ignore
@@ -61,6 +60,7 @@ class TestChildCombinator:
             <div>
                 <span class="widget"></span>
                 <img src="image.jpg">
+                <span><a>Not child</a></span>
             </div>
         """
         bs = to_bs(text)
@@ -82,6 +82,7 @@ class TestChildCombinator:
             <div>
                 <span class="widget"></span>
                 <img src="image.jpg">
+                <span><a>Not child</a></span>
             </div>
         """
         bs = to_bs(text)
@@ -129,6 +130,7 @@ class TestChildCombinator:
             <div>
                 <span class="widget"></span>
                 <img src="image.jpg">
+                <span><a>Not child</a></span>
             </div>
         """
         bs = to_bs(text)
@@ -139,7 +141,7 @@ class TestChildCombinator:
     def test_find_returns_match_with_multiple_selectors(self):
         """
         Tests if find method returns the first tag that matches all selectors
-        in child combinator, if there are multiple selectors.
+        if there are multiple selectors are provided.
         """
         text = """
             <p>Hello World</p>
@@ -201,8 +203,8 @@ class TestChildCombinator:
                     <a href="github">Not child</a>
                 </div>
             </span>
-            <div><p>Hello 3</p></div>
-            <a class="github">Hello 2</a>
+            <div><p>Hello</p></div>
+            <a class="github">Hello</a>
             <div>
                 <a href="github">1</a>
                 <p>Hello</p>
@@ -228,13 +230,13 @@ class TestChildCombinator:
                     <a href="github">Not child</a>
                 </div>
             </span>
-            <div><p>Hello 3</p></div>
-            <a class="github">Hello 2</a>
+            <div><p>Hello</p></div>
+            <a class="github">Hello</a>
             <div>
                 <div>
-                    <a href="github">1</a>
+                    <a href="github">Hello</a>
                     <p>Hello</p>
-                    <a href="github">2</a>
+                    <a href="github">Hello</a>
                 </div>
             </div>
         """
