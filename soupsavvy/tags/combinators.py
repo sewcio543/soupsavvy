@@ -104,15 +104,15 @@ class BaseCombinator(MultipleSoupSelector):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Tag]:
-        elements: list[Tag] = []
+        results = TagResultSet()
 
         for i, step in enumerate(self.selectors):
             if i == 0:
                 # only first step follows recursive rule
-                elements = step.find_all(tag, recursive=recursive)
+                results |= TagResultSet(step.find_all(tag, recursive=recursive))
                 continue
 
-            if not elements:
+            if not results:
                 break
 
             selector = self._selector(step)
@@ -120,14 +120,13 @@ class BaseCombinator(MultipleSoupSelector):
                 reduce(
                     list.__add__,
                     # each relative selector has defined recursive behavior
-                    (selector.find_all(element) for element in elements),
+                    (selector.find_all(element) for element in results.fetch()),
                 )
             )
 
-            n = limit if i + 1 == len(self.selectors) else None
-            elements = results.fetch(n)
-
-        return elements
+        # keep order of tags and limit
+        results = TagResultSet(list(TagIterator(tag, recursive=True))) & results
+        return results.fetch(limit)
 
 
 class ChildCombinator(BaseCombinator):

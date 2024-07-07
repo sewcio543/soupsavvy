@@ -29,7 +29,7 @@ class TestSelectorList:
         with pytest.raises(NotSoupSelectorException):
             SelectorList("a", MockDivSelector())  # type: ignore
 
-    def test_find_returns_first_tag_matching_all_selectors(self):
+    def test_find_returns_first_tag_matching_selector(self):
         """Tests if find method returns the first tag that matches selector."""
         text = """
             <p>Hello</p>

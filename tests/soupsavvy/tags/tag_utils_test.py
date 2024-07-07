@@ -501,3 +501,9 @@ class TestTagResultSet:
         assert len(TagResultSet(mock_tags)) == 4
         assert len(TagResultSet(mock_tags[:2])) == 2
         assert len(TagResultSet()) == 0
+
+    def test_bool_returns_true_if_collection_not_empty(self, mock_tags: list[Tag]):
+        """Tests that bool method returns True if collection is not empty."""
+        assert bool(TagResultSet(mock_tags)) is True
+        assert bool(TagResultSet(mock_tags[:2])) is True
+        assert bool(TagResultSet()) is False

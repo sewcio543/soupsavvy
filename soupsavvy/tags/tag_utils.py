@@ -291,3 +291,7 @@ class TagResultSet:
     def __len__(self) -> int:
         """Returns the number of bs4.Tag instances in the collection."""
         return len(self._tags)
+
+    def __bool__(self) -> bool:
+        """Returns True if collection is not empty, otherwise False."""
+        return len(self) > 0

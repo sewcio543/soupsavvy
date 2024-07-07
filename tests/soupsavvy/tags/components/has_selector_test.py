@@ -42,7 +42,9 @@ class TestHasSelector:
     ):
         """
         Tests if find method returns the first tag that has a descendant element that
-        matches a single selector. In this case, recursive parameter is not relevant.
+        matches a single selector. In this case, recursive parameter is not relevant,
+        because by default HasSelector matches all descendants, if descendant 'has'
+        element, its parent has it as well, and is first in order.
         """
         text = """
             <p>Don't have</p>
