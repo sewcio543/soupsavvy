@@ -128,7 +128,7 @@ class TestSelectorList:
 
     def test_find_returns_match_with_multiple_selectors(self):
         """
-        Tests if find method returns the first tag that matches all selectors
+        Tests if find method returns the first tag that matches selector
         if there are multiple selectors are provided.
         """
         text = """

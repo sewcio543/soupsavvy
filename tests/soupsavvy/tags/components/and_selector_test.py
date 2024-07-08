@@ -37,14 +37,14 @@ class TestAndSelector:
         text = """
             <a class="link"></a>
             <div class="widget"></div>
+            <a class="menu">1</a>
             <div class="menu"></div>
-            <a class="menu"></a>
-            <a class="menu" href="github.com"></a>
+            <a class="menu">2</a>
         """
         bs = to_bs(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find(bs)
-        assert strip(str(result)) == strip("""<a class="menu"></a>""")
+        assert strip(str(result)) == strip("""<a class="menu">1</a>""")
 
     def test_find_raises_exception_when_no_tags_match_in_strict_mode(self):
         """
@@ -79,20 +79,19 @@ class TestAndSelector:
         result = selector.find(bs)
         assert result is None
 
-    def test_find_returns_first_tag_that_matches_more_than_two_selectors(self):
+    def test_find_returns_match_with_multiple_selectors(self):
         """
-        Tests if find method returns the first tag that matches all the selectors.
-        In this case testing for multiple selectors. For tag to be selected
-        it must match all the selectors.
+        Tests if find method returns the first tag that matches selector
+        if there are multiple selectors are provided.
         """
         text = """
             <div class="widget"></div>
             <span class="widget menu"></span>
             <a class="link"></a>
             <div class="menu page"></div>
-            <div class="widget menu"></div>
+            <div class="widget menu">1</div>
             <div class="link"></div>
-            <div class="menu widget"></div>
+            <div class="menu widget row">2</div>
         """
         bs = to_bs(text)
 
@@ -101,8 +100,11 @@ class TestAndSelector:
             MockClassMenuSelector(),
             MockClassWidgetSelector(),
         )
-        result = selector.find(bs)
-        assert strip(str(result)) == strip("""<div class="widget menu"></div>""")
+        result = selector.find_all(bs)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<div class="widget menu">1</div>"""),
+            strip("""<div class="menu widget row">2</div>"""),
+        ]
 
     def test_finds_all_tags_matching_selectors(self):
         """
@@ -162,10 +164,10 @@ class TestAndSelector:
                     <a class="menu">Not a child</a>
                 </div>
             </div>
-            <div class="widget"></div>
             <a class="menu">1</a>
-            <span>Hello</span>
+            <div class="widget"></div>
             <a class="menu">2</a>
+            <span>Hello</span>
         """
         bs = find_body_element(to_bs(text))
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())

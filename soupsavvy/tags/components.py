@@ -234,7 +234,7 @@ class NotSelector(MultipleSoupSelector):
 
     Example
     -------
-    >>> NotSelector(TagSelector(tag="div")
+    >>> NotSelector(TagSelector(tag="div"))
 
     matches all elements that do not have "div" tag name.
 
@@ -244,7 +244,7 @@ class NotSelector(MultipleSoupSelector):
     >>> <div class="menu">Hello World</div> ❌
 
     Object can be initialized with multiple selectors as well, in which case
-    all selectors must match for element to be excluded from the result.
+    at least one selector must match for element to be excluded from the result.
 
     Object can be created as well by using bitwise NOT operator '~'
     on a SoupSelector object.

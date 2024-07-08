@@ -296,174 +296,6 @@ class TestTagSelector:
             strip(expected_2),
         ]
 
-    def test_do_not_shadow_bs4_find_method_parameters(self):
-        """
-        Tests that find method does not shadow bs4.Tag find method parameters.
-        If attribute name is the same as bs4.Tag find method parameter
-        like ex. 'string' or 'name' it should not cause any conflicts.
-        The way to avoid it is to pass attribute filters as a dictionary to 'attrs'
-        parameter in bs4.Tag find method instead of as keyword arguments.
-        """
-        markup = """<div name="github" string="any"></div>"""
-        bs = to_bs(markup)
-        tag = TagSelector(
-            "div",
-            attributes=[
-                AttributeSelector("name", "github"),
-                AttributeSelector("string"),
-            ],
-        )
-        result = tag.find(bs)
-        assert strip(str(result)) == strip(markup)
-
-    @pytest.mark.css_selector
-    @pytest.mark.parametrize(
-        argnames="tag, selector",
-        argvalues=[
-            (
-                TagSelector(attributes=[AttributeSelector("class", value="menu")]),
-                "[class='menu']",
-            ),
-            (
-                TagSelector(
-                    attributes=[
-                        AttributeSelector("class", value="menu"),
-                        AttributeSelector("id", value="menu_2"),
-                    ]
-                ),
-                "[class='menu'][id='menu_2']",
-            ),
-            (
-                TagSelector(
-                    tag="div",
-                    attributes=[
-                        AttributeSelector("class", value="menu"),
-                        AttributeSelector("id", value="menu_2"),
-                    ],
-                ),
-                "div[class='menu'][id='menu_2']",
-            ),
-            (
-                TagSelector(
-                    tag="a",
-                    attributes=[
-                        AttributeSelector("class", value="menu", re=True),
-                        AttributeSelector("awesomeness", value="3", re=False),
-                    ],
-                ),
-                "a[class*='menu'][awesomeness='3']",
-            ),
-            (
-                TagSelector(
-                    tag="a",
-                    attributes=[
-                        AttributeSelector("class", value="menu"),
-                        AttributeSelector("class", value="menu"),
-                    ],
-                ),
-                "a[class='menu']",
-            ),
-            (TagSelector(tag="a", attributes=[AttributeSelector("class")]), "a[class]"),
-            (TagSelector(), ns.CSS_SELECTOR_WILDCARD),
-            (
-                TagSelector(
-                    tag="a",
-                    attributes=[AttributeSelector("class", value="widget menu")],
-                ),
-                "a[class='widget menu']",
-            ),
-        ],
-    )
-    def test_selector_is_correct(self, tag: TagSelector, selector: str):
-        """Tests if css selector for TagSelector is constructed as expected."""
-        assert tag.selector == selector
-
-    @pytest.mark.parametrize(
-        argnames="selectors",
-        argvalues=[
-            # tags must be equal
-            (TagSelector("a"), TagSelector("a")),
-            # tags and attributes must be equal
-            (
-                TagSelector(
-                    "a", attributes=[AttributeSelector("class", value="widget")]
-                ),
-                TagSelector(
-                    "a", attributes=[AttributeSelector("class", value="widget")]
-                ),
-            ),
-            # self.attributes must be equal to other.attributes
-            (
-                TagSelector(
-                    attributes=[
-                        AttributeSelector("class", value="widget"),
-                        AttributeSelector("id", value="footnote", re=True),
-                    ]
-                ),
-                TagSelector(
-                    attributes=[
-                        AttributeSelector("class", value="widget"),
-                        AttributeSelector("id", value=re.compile("footnote")),
-                    ]
-                ),
-            ),
-            # empty TagSelectors and AnyTagSelectors are equal
-            (TagSelector(), AnyTagSelector()),
-        ],
-    )
-    def test_two_tag_selectors_are_equal(
-        self, selectors: tuple[TagSelector, TagSelector]
-    ):
-        """Tests if two TagSelectors are equal."""
-        assert (selectors[0] == selectors[1]) is True
-
-    @pytest.mark.parametrize(
-        argnames="selectors",
-        argvalues=[
-            # tags are different
-            (TagSelector("a"), TagSelector("div")),
-            # not TagSelector instance
-            (TagSelector("a"), MockLinkSelector()),
-            # attributes in wrong order
-            (
-                TagSelector(
-                    "a",
-                    attributes=[
-                        AttributeSelector("class", value="widget"),
-                        AttributeSelector("id", value="menu"),
-                    ],
-                ),
-                TagSelector(
-                    "a",
-                    attributes=[
-                        AttributeSelector("id", value="menu"),
-                        AttributeSelector("class", value="widget"),
-                    ],
-                ),
-            ),
-            # one attribute is different
-            (
-                TagSelector(
-                    attributes=[
-                        AttributeSelector("class", value="widget"),
-                        AttributeSelector("id", value="menu"),
-                    ]
-                ),
-                TagSelector(
-                    attributes=[
-                        AttributeSelector("class", value="widget"),
-                        AttributeSelector("id", value="footnote"),
-                    ]
-                ),
-            ),
-        ],
-    )
-    def test_two_tag_selectors_are_not_equal(
-        self, selectors: tuple[TagSelector, TagSelector]
-    ):
-        """Tests if two TagSelectors are not equal."""
-        assert (selectors[0] == selectors[1]) is False
-
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.
@@ -613,3 +445,172 @@ class TestTagSelector:
             strip("""<div>Hello 1</div>"""),
             strip("""<div>Hello 3</div>"""),
         ]
+
+    @pytest.mark.css_selector
+    @pytest.mark.parametrize(
+        argnames="tag, selector",
+        argvalues=[
+            (
+                TagSelector(attributes=[AttributeSelector("class", value="menu")]),
+                "[class='menu']",
+            ),
+            (
+                TagSelector(
+                    attributes=[
+                        AttributeSelector("class", value="menu"),
+                        AttributeSelector("id", value="menu_2"),
+                    ]
+                ),
+                "[class='menu'][id='menu_2']",
+            ),
+            (
+                TagSelector(
+                    tag="div",
+                    attributes=[
+                        AttributeSelector("class", value="menu"),
+                        AttributeSelector("id", value="menu_2"),
+                    ],
+                ),
+                "div[class='menu'][id='menu_2']",
+            ),
+            (
+                TagSelector(
+                    tag="a",
+                    attributes=[
+                        AttributeSelector("class", value="menu", re=True),
+                        AttributeSelector("awesomeness", value="3", re=False),
+                    ],
+                ),
+                "a[class*='menu'][awesomeness='3']",
+            ),
+            (
+                TagSelector(
+                    tag="a",
+                    attributes=[
+                        AttributeSelector("class", value="menu"),
+                        AttributeSelector("class", value="menu"),
+                    ],
+                ),
+                "a[class='menu']",
+            ),
+            (TagSelector(tag="a", attributes=[AttributeSelector("class")]), "a[class]"),
+            (TagSelector(), ns.CSS_SELECTOR_WILDCARD),
+            (
+                TagSelector(
+                    tag="a",
+                    attributes=[AttributeSelector("class", value="widget menu")],
+                ),
+                "a[class='widget menu']",
+            ),
+        ],
+    )
+    def test_selector_is_correct(self, tag: TagSelector, selector: str):
+        """Tests if css selector for TagSelector is constructed as expected."""
+        assert tag.selector == selector
+
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # tags must be equal
+            (TagSelector("a"), TagSelector("a")),
+            # tags and attributes must be equal
+            (
+                TagSelector(
+                    "a", attributes=[AttributeSelector("class", value="widget")]
+                ),
+                TagSelector(
+                    "a", attributes=[AttributeSelector("class", value="widget")]
+                ),
+            ),
+            # self.attributes must be equal to other.attributes
+            (
+                TagSelector(
+                    attributes=[
+                        AttributeSelector("class", value="widget"),
+                        AttributeSelector("id", value="footnote", re=True),
+                    ]
+                ),
+                TagSelector(
+                    attributes=[
+                        AttributeSelector("class", value="widget"),
+                        AttributeSelector("id", value=re.compile("footnote")),
+                    ]
+                ),
+            ),
+            # empty TagSelectors and AnyTagSelectors are equal
+            (TagSelector(), AnyTagSelector()),
+        ],
+    )
+    def test_two_tag_selectors_are_equal(
+        self, selectors: tuple[TagSelector, TagSelector]
+    ):
+        """Tests if two TagSelectors are equal."""
+        assert (selectors[0] == selectors[1]) is True
+
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # tags are different
+            (TagSelector("a"), TagSelector("div")),
+            # not TagSelector instance
+            (TagSelector("a"), MockLinkSelector()),
+            # attributes in wrong order
+            (
+                TagSelector(
+                    "a",
+                    attributes=[
+                        AttributeSelector("class", value="widget"),
+                        AttributeSelector("id", value="menu"),
+                    ],
+                ),
+                TagSelector(
+                    "a",
+                    attributes=[
+                        AttributeSelector("id", value="menu"),
+                        AttributeSelector("class", value="widget"),
+                    ],
+                ),
+            ),
+            # one attribute is different
+            (
+                TagSelector(
+                    attributes=[
+                        AttributeSelector("class", value="widget"),
+                        AttributeSelector("id", value="menu"),
+                    ]
+                ),
+                TagSelector(
+                    attributes=[
+                        AttributeSelector("class", value="widget"),
+                        AttributeSelector("id", value="footnote"),
+                    ]
+                ),
+            ),
+        ],
+    )
+    def test_two_tag_selectors_are_not_equal(
+        self, selectors: tuple[TagSelector, TagSelector]
+    ):
+        """Tests if two TagSelectors are not equal."""
+        assert (selectors[0] == selectors[1]) is False
+
+    @pytest.mark.edge_case
+    def test_do_not_shadow_bs4_find_method_parameters(self):
+        """
+        Tests that find method does not shadow bs4.Tag find method parameters.
+        If attribute name is the same as bs4.Tag find method parameter
+        like ex. 'string' or 'name' it should not cause any conflicts.
+        The way to avoid it is to pass attribute filters as a dictionary to 'attrs'
+        parameter in bs4.Tag find method instead of as keyword arguments.
+        """
+        markup = """<div name="github" string="any"></div>"""
+        bs = to_bs(markup)
+        tag = TagSelector(
+            "div",
+            attributes=[
+                AttributeSelector("name", "github"),
+                AttributeSelector("string"),
+            ],
+        )
+        result = tag.find(bs)
+        assert strip(str(result)) == strip(markup)
