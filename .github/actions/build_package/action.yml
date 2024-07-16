@@ -19,3 +19,7 @@ runs:
     - name: Check distribution files with twine
       run: python -m twine check dist/*
       shell: bash
+
+    - name: Install source archive with pip
+      run: python -m pip install dist/*.tar.gz
+      shell: bash
