@@ -16,7 +16,7 @@ def to_bs(html: str, parser: str = PARSER) -> BS:
 
 def strip(markup: str) -> str:
     """Converts raw string html to format matching str(BS) format."""
-    return markup.replace("  ", "").strip("\n")
+    return markup.replace("  ", "").replace("\n", "")
 
 
 def find_body_element(bs: Tag) -> Tag:
@@ -63,3 +63,16 @@ class MockDivSelector(MockSelector):
 
     def __eq__(self, x: object) -> bool:
         return isinstance(x, MockDivSelector)
+
+
+class MockClassMenuSelector(MockSelector):
+    """
+    Mock selector class for testing purposes.
+    Find every element that has class attribute set to 'menu'.
+    """
+
+    def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+        return tag.find_all(attrs={"class": "menu"}, recursive=recursive, limit=limit)
+
+    def __eq__(self, x: object) -> bool:
+        return isinstance(x, MockClassMenuSelector)

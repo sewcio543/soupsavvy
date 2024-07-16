@@ -81,7 +81,7 @@ class TestEmptyChild:
         bs = find_body_element(to_bs(html))
         tag = Empty()
         result = tag.find(bs)
-        assert str(result) == strip("<div></div>")
+        assert strip(str(result)) == strip("<div></div>")
 
     def test_find_returns_first_empty_element_with_tag(self):
         """
@@ -96,7 +96,7 @@ class TestEmptyChild:
         bs = find_body_element(to_bs(html))
         tag = Empty("span")
         result = tag.find(bs)
-        assert str(result) == strip("<span></span>")
+        assert strip(str(result)) == strip("<span></span>")
 
     def test_find_raises_exception_without_tag_if_not_found_in_strict_mode(self):
         """
@@ -186,7 +186,7 @@ class TestEmptyChild:
         bs = find_body_element(to_bs(html))
         tag = Empty()
         result = tag.find_all(bs)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<p></p>"),
             strip("""<span></span>"""),
         ]
@@ -206,7 +206,7 @@ class TestEmptyChild:
         bs = find_body_element(to_bs(html))
         tag = Empty("div")
         result = tag.find_all(bs)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<div></div>"),
             strip("<div></div>"),
         ]
@@ -223,4 +223,4 @@ class TestEmptyChild:
         bs = find_body_element(to_bs(html))
         tag = Empty()
         result = tag.find(bs)
-        assert str(result) == strip("""<img src="picture.jpg"/>""")
+        assert strip(str(result)) == strip("""<img src="picture.jpg"/>""")

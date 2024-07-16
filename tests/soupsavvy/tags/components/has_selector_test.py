@@ -4,7 +4,12 @@ import pytest
 
 from soupsavvy.tags.components import HasSelector
 from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
-from soupsavvy.tags.relative import RelativeChild
+from soupsavvy.tags.relative import (
+    RelativeChild,
+    RelativeDescendant,
+    RelativeNextSibling,
+    RelativeSubsequentSibling,
+)
 from tests.soupsavvy.tags.conftest import (
     MockDivSelector,
     MockLinkSelector,
@@ -36,7 +41,7 @@ class TestHasSelector:
         self, recursive: bool
     ):
         """
-        Tests if find method returns the first tag that has an descendant element that
+        Tests if find method returns the first tag that has a descendant element that
         matches a single selector. In this case, recursive parameter is not relevant.
         """
         text = """
@@ -50,7 +55,7 @@ class TestHasSelector:
         bs = find_body_element(to_bs(text))
         selector = HasSelector(MockLinkSelector())
         result = selector.find(bs, recursive=recursive)
-        assert str(result) == strip("""<div><a>1</a></div>""")
+        assert strip(str(result)) == strip("""<div><a>1</a></div>""")
 
     @pytest.mark.parametrize(
         argnames="recursive",
@@ -122,7 +127,7 @@ class TestHasSelector:
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, recursive=True)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<div><a>1</a><a>Duplicate</a></div>"""),
             strip("""<span><p></p><a>2</a></span>"""),
             strip("""<div><a>3</a></div>"""),
@@ -150,7 +155,7 @@ class TestHasSelector:
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, recursive=False)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<span><p></p><a>1</a></span>"""),
             strip("""<div><a>2</a></div>"""),
             strip("""<div><span><a>3</a></span></div>"""),
@@ -200,7 +205,7 @@ class TestHasSelector:
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, limit=2)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<span><p></p><a>1</a></span>"""),
             strip("""<div><a>2</a></div>"""),
         ]
@@ -228,7 +233,7 @@ class TestHasSelector:
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, limit=2, recursive=False)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<div><span><a>1</a></span></div>"""),
             strip("""<div><a>2</a></div>"""),
         ]
@@ -255,7 +260,7 @@ class TestHasSelector:
         selector = HasSelector(MockLinkSelector(), MockDivSelector())
         result = selector.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<span><a>1</a></span>"""),
             strip("""<span><div>2</div></span>"""),
             strip("""<span><span><div>Have both</div><a></a></span></span>"""),
@@ -263,7 +268,7 @@ class TestHasSelector:
         ]
 
     @pytest.mark.integration
-    def test_find_all_returns_all_tags_matching_relative_selector(
+    def test_find_all_returns_all_tags_matching_relative_child(
         self,
     ):
         """
@@ -288,7 +293,87 @@ class TestHasSelector:
         selector = HasSelector(RelativeChild(MockLinkSelector()))
         result = selector.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<span><a>1</a></span>"""),
             strip("""<span><a>2</a></span>"""),
+        ]
+
+    @pytest.mark.integration
+    def test_find_all_returns_all_tags_matching_relative_descendants(
+        self,
+    ):
+        """
+        Tests if find_all method returns all tags that anchored to relative selector
+        find at least one matching tag. In this case, all elements that have
+        a link tag as a descendant are returned, this is a default behavior,
+        which is equivalent to just passing the link selector.
+        """
+        text = """
+            <p>Don't have</p>
+            <div><a>1</a></div>
+            <div><span><a>2</a></span></div>
+            <a>Don't have</a>
+        """
+        bs = find_body_element(to_bs(text))
+
+        selector = HasSelector(RelativeDescendant(MockLinkSelector()))
+        result = selector.find_all(bs)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<div><a>1</a></div>"""),
+            strip("""<div><span><a>2</a></span></div>"""),
+            strip("""<span><a>2</a></span>"""),
+        ]
+
+    @pytest.mark.integration
+    def test_find_all_returns_all_tags_matching_relative_next_sibling(
+        self,
+    ):
+        """
+        Tests if find_all method returns all tags that anchored to relative selector
+        find at least one matching tag. In this case, all elements that have
+        a link tag as a next sibling are returned.
+        """
+        text = """
+            <p>Don't have</p>
+            <div><span>1</span><a></a></div>
+            <span><a>2</a></span>
+            <a>Don't have</a>
+        """
+        bs = find_body_element(to_bs(text))
+
+        selector = HasSelector(RelativeNextSibling(MockLinkSelector()))
+        result = selector.find_all(bs)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<span>1</span>"""),
+            strip("""<span><a>2</a></span>"""),
+        ]
+
+    @pytest.mark.integration
+    def test_find_all_returns_all_tags_matching_relative_subsequent_sibling(
+        self,
+    ):
+        """
+        Tests if find_all method returns all tags that anchored to relative selector
+        find at least one matching tag. In this case, all elements that have
+        a link tag as a subsequent sibling are returned.
+        """
+        text = """
+            <p>Don't have</p>
+            <a>This matches as well</a>
+            <a>!!!</a>
+            <div><span>1</span><span>2</span><a>!!!</a></div>
+            <span><a>2</a><span>After</span></span>
+        """
+        bs = find_body_element(to_bs(text))
+
+        selector = HasSelector(RelativeSubsequentSibling(MockLinkSelector()))
+        result = selector.find_all(bs)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<p>Don't have</p>"""),
+            strip("""<a>This matches as well</a>"""),
+            strip("""<span>1</span>"""),
+            strip("""<span>2</span>"""),
         ]

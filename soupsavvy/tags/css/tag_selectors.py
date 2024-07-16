@@ -9,14 +9,14 @@ to create more complex tag selection conditions.
 """
 
 from dataclasses import dataclass
-from typing import Iterable, Optional
+from itertools import islice
+from typing import Optional
 
 import soupsieve as sv
 from bs4 import Tag
 
 from soupsavvy.tags.base import SelectableCSS, SoupSelector
 from soupsavvy.tags.css.exceptions import InvalidCSSSelector
-from soupsavvy.tags.namespace import FindResult
 from soupsavvy.tags.tag_utils import TagIterator
 
 
@@ -39,63 +39,17 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Tag]:
-        iterator = self._get_iterator(tag, recursive=recursive)
-        return [_tag_ for _tag_ in iterator if self._condition(_tag_)][:limit]
 
-    def _find(self, tag: Tag, recursive: bool = True) -> FindResult:
-        iterator = self._get_iterator(tag, recursive=recursive)
-
-        for _tag_ in iterator:
-            if self._condition(_tag_):
-                return _tag_
-
-        return None
-
-    def _condition(self, tag: Tag) -> bool:
-        """
-        Condition based on which the tag is selected.
-        By default, it uses the soupsieve library to match the selector.
-
-        Parameters
-        ----------
-        tag : Tag
-            Tag to be checked for selection.
-
-        Returns
-        -------
-        bool
-            True if the tag matches the selector, False otherwise.
-
-        Raises
-        ------
-        InvalidCSSSelector
-            If the css selector is not valid.
-        """
         try:
-            return sv.match(self.selector, tag)
+            selector = sv.compile(self.selector)
         except sv.SelectorSyntaxError:
             raise InvalidCSSSelector(
-                f"CSS selector constructed from provided parameters is not valid: {self.selector}"
+                "CSS selector constructed from provided parameters "
+                f"is not valid: {self.selector}"
             )
 
-    def _get_iterator(self, tag: Tag, recursive: bool) -> Iterable[Tag]:
-        """
-        Returns an iterators over the tags to be checked for selection.
-
-        Parameters
-        ----------
-        tag : Tag
-            Tag to be iterated over.
-        recursive : bool
-            Whether to iterate recursively over the tag or just
-            over the direct children.
-
-        Returns
-        -------
-        Iterable[Tag]
-            Iterator over the tags to be checked for selection.
-        """
-        return TagIterator(tag, recursive=recursive)
+        iterator = TagIterator(tag, recursive=recursive)
+        return list(islice(filter(selector.match, iterator), limit))
 
     def __eq__(self, other: object) -> bool:
         # we only care if selector is equal with current implementation
@@ -662,3 +616,41 @@ class OnlyOfType(CSSSoupSelector):
     def selector(self) -> str:
         tag = self.tag or ""
         return f"{tag}:only-of-type"
+
+
+@dataclass
+class CSS(CSSSoupSelector):
+    """
+    Soupsavvy wrapper for simple search with CSS selectors.
+    Uses soupsieve library to match the tag, based on the provided CSS selector.
+
+    Extends bs4 Tag.select implementation by adding non recursive search option.
+    Provided css selector might be any selector supported by soupsieve.
+
+    Parameters
+    ----------
+    css : str
+        CSS selector to be used for tag selection.
+
+    Example
+    --------
+    >>> CSS("div.menu")
+
+    Would match:
+
+    Example
+    --------
+    >>> <div class="widget"> ❌
+    ...    <div class="menu">Hello World</div> ✔️
+    ... </div>
+    ... <div class="menu_main"> ❌
+    ...    <a class="menu">Hello World</a> ❌
+    ... </div>
+    ... <div class="menu"></div> ✔️
+    """
+
+    css: str
+
+    @property
+    def selector(self) -> str:
+        return self.css

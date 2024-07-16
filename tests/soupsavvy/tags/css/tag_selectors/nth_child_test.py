@@ -104,7 +104,7 @@ class TestNthChild:
         bs = find_body_element(to_bs(html))
         tag = NthChild("2")
         result = tag.find(bs)
-        assert str(result) == strip("<p>text 2</p>")
+        assert strip(str(result)) == strip("<p>text 2</p>")
 
     def test_find_returns_first_nth_child_with_tag(self):
         """
@@ -125,7 +125,7 @@ class TestNthChild:
         bs = find_body_element(to_bs(html))
         tag = NthChild(n="2", tag="div")
         result = tag.find(bs)
-        assert str(result) == strip("<div>Hello 2</div>")
+        assert strip(str(result)) == strip("<div>Hello 2</div>")
 
     def test_find_raises_exception_without_specified_tag_if_not_found_in_strict_mode(
         self,
@@ -231,7 +231,7 @@ class TestNthChild:
         tag = NthChild("2")
 
         result = tag.find_all(bs)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<p>text 2</p>"),
             strip("<span><p>text 3</p></span>"),
         ]
@@ -252,7 +252,7 @@ class TestNthChild:
         tag = NthChild(n="2", tag="div")
         result = tag.find_all(bs)
 
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<div>Hello 1</div>"),
             strip("<div>Hello 2</div>"),
         ]
@@ -276,7 +276,7 @@ class TestNthChild:
         tag = NthChild(n)
 
         result = tag.find_all(bs)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<p>text 2</p>"),
             strip("<p>text 4</p>"),
             strip("<span><p>text 5</p><p>text 6</p></span>"),
@@ -301,7 +301,7 @@ class TestNthChild:
         tag = NthChild(n)
 
         result = tag.find_all(bs)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<span><p>text 1</p><p>text 2</p></span>"),
             strip("<p>text 1</p>"),
             strip("<p>text 3</p>"),
@@ -325,7 +325,7 @@ class TestNthChild:
         tag = NthChild(" 2n +  1")
 
         result = tag.find_all(bs)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("<span><p>text 1</p><p>text 2</p></span>"),
             strip("<p>text 1</p>"),
             strip("<p>text 3</p>"),

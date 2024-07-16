@@ -68,7 +68,9 @@ class TestDescendantCombinator:
         """
         bs = to_bs(text)
         result = tag.find(bs)
-        assert str(result) == strip("""<a class="link" href="search">Welcome</a>""")
+        assert strip(str(result)) == strip(
+            """<a class="link" href="search">Welcome</a>"""
+        )
 
     @pytest.mark.parametrize(
         argnames="tag",
@@ -155,7 +157,9 @@ class TestDescendantCombinator:
             TagSelector(tag="a"),
         )
         result = tag.find(bs)
-        assert str(result) == strip("""<a class="link" href="search">Welcome</a>""")
+        assert strip(str(result)) == strip(
+            """<a class="link" href="search">Welcome</a>"""
+        )
 
     def test_finds_for_multiple_options_with_soup_union_tag(self):
         """
@@ -238,7 +242,9 @@ class TestDescendantCombinator:
             TagSelector(tag="a"),
         )
         result = tag.find(bs)
-        assert str(result) == strip("""<a class="link" href="funhub.com">Welcome</a>""")
+        assert strip(str(result)) == strip(
+            """<a class="link" href="funhub.com">Welcome</a>"""
+        )
 
     def test_find_all_handles_multiple_different_levels_of_elements(self):
         """
@@ -278,7 +284,7 @@ class TestDescendantCombinator:
             strip("""<a class="link" href="funhub.com">Goodbye</a>"""),
             strip("""<a class="link" href="funhub.com">See you</a>"""),
         ]
-        assert list(map(str, results)) == expected
+        assert list(map(lambda x: strip(str(x)), results)) == expected
 
     def test_find_all_returns_list_of_matched_elements(self):
         """
@@ -318,7 +324,7 @@ class TestDescendantCombinator:
             strip("""<a class="link" href="search">Welcome there</a>"""),
             strip("""<a class="link" href="search">Goodbye</a>"""),
         ]
-        assert list(map(str, results)) == expected
+        assert list(map(lambda x: strip(str(x)), results)) == expected
 
     def test_find_all_returns_empty_list_if_no_matched_elements(self):
         """
@@ -375,7 +381,7 @@ class TestDescendantCombinator:
             TagSelector("span"),
         )
         result = tag.find(bs)
-        assert str(result) == strip("""<span>Welcome there</span>""")
+        assert strip(str(result)) == strip("""<span>Welcome there</span>""")
 
     def test_find_skips_elements_partially_matching_steps(self):
         """
@@ -397,7 +403,7 @@ class TestDescendantCombinator:
         result = tag.find(bs)
 
         expected = """<span class="link" href="search">Welcome</span>"""
-        assert str(result) == strip(expected)
+        assert strip(str(result)) == strip(expected)
 
     def test_returns_empty_list_if_first_step_was_not_matched(self):
         """
@@ -436,7 +442,7 @@ class TestDescendantCombinator:
             TagSelector("a"),
         )
         result = tag.find(bs, recursive=False)
-        assert str(result) == strip("""<a>Hello 1</a>""")
+        assert strip(str(result)) == strip("""<a>Hello 1</a>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
@@ -500,7 +506,7 @@ class TestDescendantCombinator:
         )
         results = tag.find_all(bs, recursive=False)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a>Hello 1</a>"""),
             strip("""<a>Hello 2</a>"""),
         ]
@@ -550,7 +556,7 @@ class TestDescendantCombinator:
         )
         results = tag.find_all(bs, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a>Hello 1</a>"""),
             strip("""<a>Hello 2</a>"""),
         ]
@@ -580,7 +586,7 @@ class TestDescendantCombinator:
         )
         results = tag.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), results)) == [
             strip("""<a>Hello 2</a>"""),
             strip("""<a>Hello 3</a>"""),
         ]
@@ -608,4 +614,4 @@ class TestDescendantCombinator:
             TagSelector("a"),
         )
         result = tag.find(bs, recursive=False)
-        assert str(result) == strip("""<a>Hello 1</a>""")
+        assert strip(str(result)) == strip("""<a>Hello 1</a>""")

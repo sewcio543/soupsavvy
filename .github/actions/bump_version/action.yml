@@ -6,7 +6,7 @@ inputs:
     description: "Type of version bump"
     required: true
     type: string
-    enum: ["release", "build"]
+    enum: ["patch", "minor", "major", "release", "build"]
   tag:
     description: "Create a new tag?"
     required: false
