@@ -39,6 +39,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }} # checkout at latest commit from previous job
+          fetch-depth: 0
 
       - name: Set up Python and Upgrade pip
         uses: ./.github/actions/setup_python
