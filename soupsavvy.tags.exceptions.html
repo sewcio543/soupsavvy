@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tags.exceptions &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tags.relative" href="soupsavvy.tags.relative.html" />
+    <link rel="prev" title="tags.components" href="soupsavvy.tags.components.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="soupsavvy.tags.html">tags</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.tags.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="soupsavvy.tags.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.attributes.html">tags.attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.base.html">tags.base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.combinators.html">tags.combinators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.components.html">tags.components</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tags.exceptions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.exceptions.NavigableStringException"><code class="docutils literal notranslate"><span class="pre">NavigableStringException</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.exceptions.NotSoupSelectorException"><code class="docutils literal notranslate"><span class="pre">NotSoupSelectorException</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.exceptions.SoupSelectorException"><code class="docutils literal notranslate"><span class="pre">SoupSelectorException</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.exceptions.TagNotFoundException"><code class="docutils literal notranslate"><span class="pre">TagNotFoundException</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.relative.html">tags.relative</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.tag_utils.html">tags.tag_utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.tags.html#module-soupsavvy.tags">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="soupsavvy.tags.html">tags</a></li>
+      <li class="breadcrumb-item active">tags.exceptions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/soupsavvy.tags.exceptions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-soupsavvy.tags.exceptions">
+<span id="tags-exceptions"></span><h1>tags.exceptions<a class="headerlink" href="#module-soupsavvy.tags.exceptions" title="Link to this heading"></a></h1>
+<p>Module for custom Tag exceptions.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.tags.exceptions.NavigableStringException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NavigableStringException</span></span><a class="reference internal" href="_modules/soupsavvy/tags/exceptions.html#NavigableStringException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.exceptions.NavigableStringException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.tags.exceptions.SoupSelectorException" title="soupsavvy.tags.exceptions.SoupSelectorException"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupSelectorException</span></code></a></p>
+<p>Exception to be raised when NavigableString was found in find method.
+It does not return expected bs4 markup after conversion to bs4.Tag.
+When bs4.Tag find method was used with only ‘string’ parameter if any tag
+matches NavigableString is returned which does not have information about the tag.</p>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nav_string</span> <span class="o">=</span> <span class="n">NavigableString</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">nav_string</span><span class="p">)</span>
+<span class="go">&lt;html&gt;&lt;body&gt;&lt;p&gt;Hello World&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</span>
+</pre></div>
+</div>
+<p>BeautifulSoup constructor always wraps NavigableString in &lt;p&gt; element.
+It is rather an unexpected behavior and should rather be avoided in SoupSelector
+find method, thus this exception is raised.</p>
+</section>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.tags.exceptions.NotSoupSelectorException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NotSoupSelectorException</span></span><a class="reference internal" href="_modules/soupsavvy/tags/exceptions.html#NotSoupSelectorException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.exceptions.NotSoupSelectorException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.tags.exceptions.SoupSelectorException" title="soupsavvy.tags.exceptions.SoupSelectorException"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupSelectorException</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">TypeError</span></code></p>
+<p>Exception to be raised when function excepted SoupSelector as input
+and got argument of the different, invalid type.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.tags.exceptions.SoupSelectorException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SoupSelectorException</span></span><a class="reference internal" href="_modules/soupsavvy/tags/exceptions.html#SoupSelectorException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.exceptions.SoupSelectorException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Custom Base Exception for SoupSelector specific Exceptions.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.tags.exceptions.TagNotFoundException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TagNotFoundException</span></span><a class="reference internal" href="_modules/soupsavvy/tags/exceptions.html#TagNotFoundException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.exceptions.TagNotFoundException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.tags.exceptions.SoupSelectorException" title="soupsavvy.tags.exceptions.SoupSelectorException"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupSelectorException</span></code></a></p>
+<p>Exception to be raised when SoupSelector element was not found in the markup.
+Raised by SoupSelector find method when strict parameter is set to True
+and target element was not found in provided bs4.Tag object.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="soupsavvy.tags.components.html" class="btn btn-neutral float-left" title="tags.components" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soupsavvy.tags.relative.html" class="btn btn-neutral float-right" title="tags.relative" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, sewcio543.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

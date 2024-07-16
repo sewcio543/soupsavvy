@@ -1,0 +1,18 @@
+testing
+=========================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.testing.generators
+
+Module contents
+---------------
+
+.. automodule:: soupsavvy.testing
+   :members:
+   :undoc-members:
+   :show-inheritance:

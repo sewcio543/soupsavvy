@@ -1,0 +1,19 @@
+tags.css.nth
+==============================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.tags.css.nth.nth_soup_selector
+   soupsavvy.tags.css.nth.nth_utils
+
+Module contents
+---------------
+
+.. automodule:: soupsavvy.tags.css.nth
+   :members:
+   :undoc-members:
+   :show-inheritance:

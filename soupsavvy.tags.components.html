@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tags.components &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tags.exceptions" href="soupsavvy.tags.exceptions.html" />
+    <link rel="prev" title="tags.combinators" href="soupsavvy.tags.combinators.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="soupsavvy.tags.html">tags</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.tags.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="soupsavvy.tags.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.attributes.html">tags.attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.base.html">tags.base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.combinators.html">tags.combinators</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tags.components</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.components.AndSelector"><code class="docutils literal notranslate"><span class="pre">AndSelector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.components.AnyTagSelector"><code class="docutils literal notranslate"><span class="pre">AnyTagSelector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.components.HasSelector"><code class="docutils literal notranslate"><span class="pre">HasSelector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.components.NotSelector"><code class="docutils literal notranslate"><span class="pre">NotSelector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.components.PatternSelector"><code class="docutils literal notranslate"><span class="pre">PatternSelector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.tags.components.TagSelector"><code class="docutils literal notranslate"><span class="pre">TagSelector</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.exceptions.html">tags.exceptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.relative.html">tags.relative</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.tags.tag_utils.html">tags.tag_utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.tags.html#module-soupsavvy.tags">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="soupsavvy.tags.html">tags</a></li>
+      <li class="breadcrumb-item active">tags.components</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/soupsavvy.tags.components.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-soupsavvy.tags.components">
+<span id="tags-components"></span><h1>tags.components<a class="headerlink" href="#module-soupsavvy.tags.components" title="Link to this heading"></a></h1>
+<p>Module for components utilized to navigate html markup or BeautifulSoup Tags.</p>
+<p>They are used for selection of various elements in the markup,
+based on their tag name, attributes or text content.</p>
+<p>They can be considered soupsavvy equivalent of CSS selectors,
+but with more flexibility and power to navigate the markup.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<p>TagSelector - combines type and attribute selectors
+PatternSelector - matches elements based on text content and selector
+AnyTagSelector - universal selector (*)
+AndSelector - intersection of multiple selectors
+NotSelector - negation of a selector (~)</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.AndSelector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AndSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#AndSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.AndSelector" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.MultipleSoupSelector" title="soupsavvy.tags.base.MultipleSoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleSoupSelector</span></code></a></p>
+<p>Class representing an intersection of multiple soup selectors.
+Provides elements matching all of the listed selectors.</p>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">AndTagSelector</span><span class="p">(</span>
+<span class="gp">... </span>   <span class="n">TagSelector</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">),</span>
+<span class="gp">... </span>   <span class="n">AttributeSelector</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;widget&quot;</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+<p>matches all elements that have “div” tag name AND ‘class’ attribute “widget”.</p>
+</section>
+<section id="id1">
+<h2>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;Hello World&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;span class=&quot;widget&quot;&gt;Hello World&lt;/span&gt; ❌
+&gt;&gt;&gt; &lt;div class=&quot;menu&quot;&gt;Hello World&lt;/div&gt; ❌
+</pre></div>
+</div>
+<p>Object can be initialized with multiple selectors as well, in which case
+all selectors must match for element to be included in the result.</p>
+<p>Object can be created as well by using bitwise AND operator ‘&amp;’
+on two SoupSelector objects.</p>
+</section>
+<section id="id2">
+<h2>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagSelector</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;widget&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Which is equivalent to the first example.</p>
+<p>This is an equivalent of CSS selectors concatenation.</p>
+</section>
+<section id="id3">
+<h2>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span><span class="o">.</span><span class="n">class1</span><span class="c1">#id1 { color: red; }</span>
+</pre></div>
+</div>
+<p>which translated to soupsavvy would be:</p>
+</section>
+<section id="id4">
+<h2>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;class1&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;id1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;class1&quot;</span><span class="p">),</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;id1&quot;</span><span class="p">)])</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.AndSelector.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#AndSelector.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.AndSelector.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes AndTagSelector object with provided positional arguments as tags.
+At least two SoupSelector objects are required to create AndSelector.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>tags: SoupSelector</dt><dd><p>SoupSelector objects to match accepted as positional arguments.</p>
+</dd>
+</dl>
+</section>
+<section id="raises">
+<h3>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>NotSoupSelectorException</dt><dd><p>If any of provided parameters is not an instance of SoupSelector.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.AndSelector.find_all">
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#AndSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.AndSelector.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all matching elements in provided BeautifulSoup Tag.</p>
+<section id="id5">
+<h3>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
+</dd>
+<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>bs4.Tag.find method parameter that specifies if search should be recursive.
+If set to False, only direct children of the tag will be searched.
+By default True.</p>
+</dd>
+<dt>limit<span class="classifier">int, optional</span></dt><dd><p>bs4.Tag.find_all method parameter that specifies maximum number of elements
+to return. If set to None, all elements are returned. By default None.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>list[Tag]</dt><dd><p>A list of Tag objects matching tag specifications.
+If none found, the list is empty.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.AnyTagSelector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnyTagSelector</span></span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#AnyTagSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.AnyTagSelector" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SingleSoupSelector" title="soupsavvy.tags.base.SingleSoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SingleSoupSelector</span></code></a>, <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SelectableCSS" title="soupsavvy.tags.base.SelectableCSS"><code class="xref py py-class docutils literal notranslate"><span class="pre">SelectableCSS</span></code></a></p>
+<p>Class representing a wildcard tag that matches any tag in the markup.
+Matches always the first tag in the markup.</p>
+<p>AnyTagSelector implements SelectableCSS interface with wildcard css selector “*”,
+aka. universal selector, that matches all elements in the markup.</p>
+<section id="id6">
+<h2>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">any_element</span> <span class="o">=</span> <span class="n">AnyTagSelector</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">any_element</span><span class="o">.</span><span class="n">selector</span>
+<span class="go">&quot;*&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>For more information on universal selector see:
+<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors">https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.AnyTagSelector.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#soupsavvy.tags.components.AnyTagSelector.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.AnyTagSelector.selector">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selector</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#soupsavvy.tags.components.AnyTagSelector.selector" title="Link to this definition"></a></dt>
+<dd><p>Returns wildcard css selector matching all elements in the markup.</p>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.HasSelector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HasSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#HasSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.HasSelector" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.MultipleSoupSelector" title="soupsavvy.tags.base.MultipleSoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleSoupSelector</span></code></a></p>
+<p>Class representing elements selected with respect to matching reference elements.
+Element is selected if any of the provided selectors matched reference element.</p>
+<section id="id7">
+<h2>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">HasSelector</span><span class="p">(</span><span class="n">TagSelector</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>matches all elements that have any descendant with “div” tag name.
+It uses default combinator of relative selector, which is descendant.</p>
+</section>
+<section id="id8">
+<h2>Example<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;span&gt;&lt;div&gt;Hello World&lt;/div&gt;&lt;/span&gt; ✔️
+&gt;&gt;&gt; &lt;span&gt;&lt;a&gt;Hello World&lt;/a&gt;&lt;/span&gt; ❌
+</pre></div>
+</div>
+<p>Other relative selectors can be used with Anchor element.</p>
+</section>
+<section id="id9">
+<h2>Example<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.tags.relative</span> <span class="kn">import</span> <span class="n">Anchor</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">HasSelector</span><span class="p">(</span><span class="n">Anchor</span> <span class="o">&gt;</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">HasSelector</span><span class="p">(</span><span class="n">Anchor</span> <span class="o">+</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>or by using RelativeSelector components directly:</p>
+</section>
+<section id="id10">
+<h2>Example<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.tags.relative</span> <span class="kn">import</span> <span class="n">RelativeChild</span><span class="p">,</span> <span class="n">RelativeNextSibling</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">HasSelector</span><span class="p">(</span><span class="n">RelativeChild</span><span class="p">(</span><span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">HasSelector</span><span class="p">(</span><span class="n">RelativeNextSibling</span><span class="p">(</span><span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="id11">
+<h2>Example<a class="headerlink" href="#id11" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;span&gt;&lt;div&gt;Hello World&lt;/div&gt;&lt;/span&gt; ✔️
+&gt;&gt;&gt; &lt;span&gt;&lt;a&gt;&lt;div&gt;Hello World&lt;/div&gt;&lt;/a&gt;&lt;/span&gt; ❌
+</pre></div>
+</div>
+<p>In this case, HasSelector is anchored against any element, and matches only elements
+that have “div” tag name as a child.</p>
+<p>Object can be initialized with multiple selectors as well, in which case
+at least one selector must match for element to be included in the result.</p>
+<p>This is an equivalent of CSS :has() pseudo-class,
+that represents elements if any of the relative selectors that are passed as an argument
+match at least one element when anchored against this element.</p>
+</section>
+<section id="id12">
+<h2>Example<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="n">has</span><span class="p">(</span><span class="n">div</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="n">has</span><span class="p">(</span><span class="o">+</span> <span class="n">div</span><span class="p">,</span> <span class="o">&gt;</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>These examples translated to soupsavvy would be:</p>
+</section>
+<section id="id13">
+<h2>Example<a class="headerlink" href="#id13" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.tags.relative</span> <span class="kn">import</span> <span class="n">Anchor</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">HasSelector</span><span class="p">(</span><span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">HasSelector</span><span class="p">(</span><span class="n">Anchor</span> <span class="o">+</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">Anchor</span> <span class="o">&gt;</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="id14">
+<h2>Notes<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
+<p>Passing RelativeDescendant selector into HasSelector is equivalent to using
+its selector directly, as descendant combinator is default option.</p>
+</section>
+<section id="id15">
+<h2>Example<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">HasSelector</span><span class="p">(</span><span class="n">RelativeDescendant</span><span class="p">(</span><span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">HasSelector</span><span class="p">(</span><span class="n">Anchor</span> <span class="o">&gt;</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">HasSelector</span><span class="p">(</span><span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Three of the above examples are equivalent.</p>
+<p>For more information on :has() pseudo-class see:
+<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:has">https://developer.mozilla.org/en-US/docs/Web/CSS/:has</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.HasSelector.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#HasSelector.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.HasSelector.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes AndTagSelector object with provided positional arguments as tags.
+At least two SoupSelector objects are required to create HasSelector.</p>
+<section id="id16">
+<h3>Parameters<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>tags: SoupSelector</dt><dd><p>SoupSelector objects to match accepted as positional arguments.
+At least one selector is required to create HasSelector.</p>
+</dd>
+</dl>
+</section>
+<section id="id17">
+<h3>Raises<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>NotSoupSelectorException</dt><dd><p>If any of provided parameters is not an instance of SoupSelector.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.HasSelector.find_all">
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#HasSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.HasSelector.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all matching elements in provided BeautifulSoup Tag.</p>
+<section id="id18">
+<h3>Parameters<a class="headerlink" href="#id18" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
+</dd>
+<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>bs4.Tag.find method parameter that specifies if search should be recursive.
+If set to False, only direct children of the tag will be searched.
+By default True.</p>
+</dd>
+<dt>limit<span class="classifier">int, optional</span></dt><dd><p>bs4.Tag.find_all method parameter that specifies maximum number of elements
+to return. If set to None, all elements are returned. By default None.</p>
+</dd>
+</dl>
+</section>
+<section id="id19">
+<h3>Returns<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>list[Tag]</dt><dd><p>A list of Tag objects matching tag specifications.
+If none found, the list is empty.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.NotSelector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NotSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#NotSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.NotSelector" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.MultipleSoupSelector" title="soupsavvy.tags.base.MultipleSoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleSoupSelector</span></code></a></p>
+<p>Class representing selector of elements that do not match provided selectors.</p>
+<section id="id20">
+<h2>Example<a class="headerlink" href="#id20" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">NotSelector</span><span class="p">(</span><span class="n">TagSelector</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>matches all elements that do not have “div” tag name.</p>
+</section>
+<section id="id21">
+<h2>Example<a class="headerlink" href="#id21" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;span&gt; class=&quot;widget&quot;&gt;Hello World&lt;/span&gt; ✔️
+&gt;&gt;&gt; &lt;div class=&quot;menu&quot;&gt;Hello World&lt;/div&gt; ❌
+</pre></div>
+</div>
+<p>Object can be initialized with multiple selectors as well, in which case
+all selectors must match for element to be excluded from the result.</p>
+<p>Object can be created as well by using bitwise NOT operator ‘~’
+on a SoupSelector object.</p>
+</section>
+<section id="id22">
+<h2>Example<a class="headerlink" href="#id22" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="o">~</span><span class="n">TagSelector</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Which is equivalent to the first example.</p>
+<p>This is an equivalent of CSS :not() negation pseudo-class,
+that represents elements that do not match a list of selectors</p>
+</section>
+<section id="id23">
+<h2>Example<a class="headerlink" href="#id23" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span><span class="p">:</span><span class="ow">not</span><span class="p">(</span><span class="o">.</span><span class="n">widget</span><span class="p">)</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="ow">not</span><span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="o">.</span><span class="n">important</span><span class="p">)</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>The second example translated to soupsavvy would be:</p>
+</section>
+<section id="id24">
+<h2>Example<a class="headerlink" href="#id24" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">NotSelector</span><span class="p">(</span><span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;strong&quot;</span><span class="p">),</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;important&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">~</span><span class="p">(</span><span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;strong&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;important&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="id25">
+<h2>Notes<a class="headerlink" href="#id25" title="Link to this heading"></a></h2>
+<p>For more information on :not() pseudo-class see:
+<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:not">https://developer.mozilla.org/en-US/docs/Web/CSS/:not</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.NotSelector.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#NotSelector.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.NotSelector.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes NotSelectors object with provided positional arguments as tags.
+At least one SoupSelector object is required to create NotSelector.</p>
+<section id="id26">
+<h3>Parameters<a class="headerlink" href="#id26" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>tags: SoupSelector</dt><dd><p>SoupSelector objects to negate match accepted as positional arguments.</p>
+</dd>
+</dl>
+</section>
+<section id="id27">
+<h3>Raises<a class="headerlink" href="#id27" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>NotSoupSelectorException</dt><dd><p>If any of provided parameters is not an instance of SoupSelector.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.NotSelector.find_all">
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#NotSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.NotSelector.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all matching elements in provided BeautifulSoup Tag.</p>
+<section id="id28">
+<h3>Parameters<a class="headerlink" href="#id28" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
+</dd>
+<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>bs4.Tag.find method parameter that specifies if search should be recursive.
+If set to False, only direct children of the tag will be searched.
+By default True.</p>
+</dd>
+<dt>limit<span class="classifier">int, optional</span></dt><dd><p>bs4.Tag.find_all method parameter that specifies maximum number of elements
+to return. If set to None, all elements are returned. By default None.</p>
+</dd>
+</dl>
+</section>
+<section id="id29">
+<h3>Returns<a class="headerlink" href="#id29" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>list[Tag]</dt><dd><p>A list of Tag objects matching tag specifications.
+If none found, the list is empty.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.PatternSelector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PatternSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Pattern</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#PatternSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.PatternSelector" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector" title="soupsavvy.tags.base.SoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupSelector</span></code></a></p>
+<p>Class representing HTML element with specific string pattern for text.
+Provides elements matching with text matching the pattern.</p>
+<section id="id30">
+<h2>Example<a class="headerlink" href="#id30" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">PatternSelector</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;Hello World&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>matches all element with exact text content “Hello World”.</p>
+</section>
+<section id="id31">
+<h2>Example<a class="headerlink" href="#id31" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;Hello World&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;div&gt;Hello Python&lt;/div&gt; ❌
+&gt;&gt;&gt; &lt;div&gt;Hello World 3&lt;/div&gt; ❌
+</pre></div>
+</div>
+</section>
+<section id="id32">
+<h2>Parameters<a class="headerlink" href="#id32" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>pattern: str | Pattern</dt><dd><p>A pattern to match text of the element. Can be a string for exact match
+or Pattern for any more complex regular expressions.</p>
+</dd>
+<dt>re: bool, optional</dt><dd><p>Whether to use a pattern to match the text, by default False.
+If True, text of element needs to be contained in the pattern to be matched.</p>
+</dd>
+</dl>
+</section>
+<section id="id33">
+<h2>Notes<a class="headerlink" href="#id33" title="Link to this heading"></a></h2>
+<p>Selector uses re.search function to match text content if re=True
+or compiled regex is passed as pattern.
+Providing ‘re.compile(r”[0-9]”)’ as pattern will much any element with a digit in text.</p>
+</section>
+<section id="id34">
+<h2>Example<a class="headerlink" href="#id34" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">re</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">PatternSelector</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[0-9]&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="id35">
+<h2>Example<a class="headerlink" href="#id35" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;Hello World 123&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;div&gt;Hello World&lt;/div&gt; ❌
+</pre></div>
+</div>
+<p>Due to bs4 implementation, element does not match the pattern if it has any children.
+Only leaf nodes can be returned by PatternSelector find methods.</p>
+</section>
+<section id="id36">
+<h2>Example<a class="headerlink" href="#id36" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;Hello World&lt;span&gt;&lt;/span&gt;&lt;/div&gt; ❌
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.PatternSelector.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Pattern</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">re</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#soupsavvy.tags.components.PatternSelector.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.PatternSelector.find_all">
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#PatternSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.PatternSelector.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all matching elements in provided BeautifulSoup Tag.</p>
+<section id="id37">
+<h3>Parameters<a class="headerlink" href="#id37" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
+</dd>
+<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>bs4.Tag.find method parameter that specifies if search should be recursive.
+If set to False, only direct children of the tag will be searched.
+By default True.</p>
+</dd>
+<dt>limit<span class="classifier">int, optional</span></dt><dd><p>bs4.Tag.find_all method parameter that specifies maximum number of elements
+to return. If set to None, all elements are returned. By default None.</p>
+</dd>
+</dl>
+</section>
+<section id="id38">
+<h3>Returns<a class="headerlink" href="#id38" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>list[Tag]</dt><dd><p>A list of Tag objects matching tag specifications.
+If none found, the list is empty.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.PatternSelector.pattern">
+<span class="sig-name descname"><span class="pre">pattern</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Pattern</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.tags.components.PatternSelector.pattern" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.PatternSelector.re">
+<span class="sig-name descname"><span class="pre">re</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#soupsavvy.tags.components.PatternSelector.re" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.TagSelector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TagSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes:</span> <span class="pre">~typing.Iterable[~soupsavvy.tags.attributes.AttributeSelector]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/tags/components.html#TagSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.tags.components.TagSelector" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SingleSoupSelector" title="soupsavvy.tags.base.SingleSoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SingleSoupSelector</span></code></a>, <a class="reference internal" href="soupsavvy.tags.base.html#soupsavvy.tags.base.SelectableCSS" title="soupsavvy.tags.base.SelectableCSS"><code class="xref py py-class docutils literal notranslate"><span class="pre">SelectableCSS</span></code></a></p>
+<p>Class representing HTML element.
+Provides elements based on element tag and all defined attributes.</p>
+<section id="id39">
+<h2>Example<a class="headerlink" href="#id39" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagSelector</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">attributes</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">AttributeSelector</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;widget&quot;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">AttributeSelector</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;role&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;button&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+</pre></div>
+</div>
+<p>matches all elements that have “div” tag name, ‘class’ attribute “widget”
+and ‘role’ attribute “button”.</p>
+</section>
+<section id="id40">
+<h2>Example<a class="headerlink" href="#id40" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div class=&quot;widget&quot; role=&quot;button&quot;&gt;Hello World&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;div class=&quot;menu&quot; role=&quot;button&quot;&gt;Hello World&lt;/div&gt; ❌
+</pre></div>
+</div>
+</section>
+<section id="id41">
+<h2>Parameters<a class="headerlink" href="#id41" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>name<span class="classifier">str, optional</span></dt><dd><p>HTML tag name ex. “a”, “div”. By default None, all tag names will be matched.</p>
+</dd>
+<dt>attributes<span class="classifier">Iterable[AttributeSelector], optional</span></dt><dd><p>Iterable of AttributeSelector objects that specify element attributes.
+By default empty list, no attribute will be checked.</p>
+</dd>
+</dl>
+</section>
+<section id="id42">
+<h2>Example<a class="headerlink" href="#id42" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">element</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">attributes</span><span class="o">=</span><span class="p">[</span><span class="n">AttributeSelector</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;widget&quot;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">element</span><span class="o">.</span><span class="n">selector</span>
+<span class="go">div[class=widget]</span>
+</pre></div>
+</div>
+</section>
+<section id="id43">
+<h2>Notes<a class="headerlink" href="#id43" title="Link to this heading"></a></h2>
+<p>Initializing object without passing any parameters is equal to selector for all elements,
+which is equivalent to using AnyTagSelector object.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.TagSelector.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes:</span> <span class="pre">~typing.Iterable[~soupsavvy.tags.attributes.AttributeSelector]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#soupsavvy.tags.components.TagSelector.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.TagSelector.attributes">
+<span class="sig-name descname"><span class="pre">attributes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.tags.attributes.html#soupsavvy.tags.attributes.AttributeSelector" title="soupsavvy.tags.attributes.AttributeSelector"><span class="pre">AttributeSelector</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.tags.components.TagSelector.attributes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.TagSelector.selector">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selector</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#soupsavvy.tags.components.TagSelector.selector" title="Link to this definition"></a></dt>
+<dd><p>Returns string representing element css selector.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="soupsavvy.tags.components.TagSelector.tag">
+<span class="sig-name descname"><span class="pre">tag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#soupsavvy.tags.components.TagSelector.tag" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="soupsavvy.tags.combinators.html" class="btn btn-neutral float-left" title="tags.combinators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soupsavvy.tags.exceptions.html" class="btn btn-neutral float-right" title="tags.exceptions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, sewcio543.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

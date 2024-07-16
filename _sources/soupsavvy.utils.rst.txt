@@ -1,0 +1,19 @@
+utils
+=======================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.utils.deprecation
+   soupsavvy.utils.logging
+
+Module contents
+---------------
+
+.. automodule:: soupsavvy.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
