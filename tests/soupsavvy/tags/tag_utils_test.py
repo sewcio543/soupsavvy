@@ -309,8 +309,8 @@ class TestTagResultSet:
         When initialized with no arguments, result set is empty
         and fetch method returns an empty list.
         """
-        results = TagResultSet().fetch()
-        assert results == []
+        result = TagResultSet().fetch()
+        assert result == []
 
     def test_fetch_returns_all_tags_if_they_are_unique(self, mock_tags: list[Tag]):
         """
@@ -318,9 +318,9 @@ class TestTagResultSet:
         When all tags have unique id, there is no repetition and all tags are returned.
         """
         results_set = TagResultSet(mock_tags)
-        results = results_set.fetch()
+        result = results_set.fetch()
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu1"></a>"""),
@@ -330,9 +330,9 @@ class TestTagResultSet:
     def test_fetch_returns_n_tags_when_limit_is_set(self, mock_tags: list[Tag]):
         """Tests that fetch method returns n first unique tags when limit is set."""
         results_set = TagResultSet(mock_tags)
-        results = results_set.fetch(3)
+        result = results_set.fetch(3)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu1"></a>"""),
@@ -345,9 +345,9 @@ class TestTagResultSet:
         and return only unique tags in order of appearance.
         """
         results_set = TagResultSet(mock_tags + mock_tags)
-        results = results_set.fetch()
+        result = results_set.fetch()
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu1"></a>"""),
@@ -370,9 +370,9 @@ class TestTagResultSet:
         right = TagResultSet(list(reversed(mock_tags[1:3])))
 
         new = base | right
-        results = new.fetch()
+        result = new.fetch()
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu1"></a>"""),
@@ -394,12 +394,12 @@ class TestTagResultSet:
         ]
 
         new = base | right
-        results = new.fetch()
-        assert list(map(lambda x: strip(str(x)), results)) == expected
+        result = new.fetch()
+        assert list(map(lambda x: strip(str(x)), result)) == expected
 
         new = right | base
-        results = new.fetch()
-        assert list(map(lambda x: strip(str(x)), results)) == expected
+        result = new.fetch()
+        assert list(map(lambda x: strip(str(x)), result)) == expected
 
     def test_updates_when_collections_are_the_same_return_base_collection(
         self, mock_tags: list[Tag]
@@ -415,7 +415,7 @@ class TestTagResultSet:
         right = TagResultSet(list(reversed(mock_tags)))
 
         new = base | right
-        results = new.fetch()
+        result = new.fetch()
 
         expected = [
             strip("""<a class="menu"></a>"""),
@@ -423,7 +423,7 @@ class TestTagResultSet:
             strip("""<a class="menu1"></a>"""),
             strip("""<a class="menu2"></a>"""),
         ]
-        assert list(map(lambda x: strip(str(x)), results)) == expected
+        assert list(map(lambda x: strip(str(x)), result)) == expected
 
     def test_and_return_new_result_set_with_intersection_of_collections(
         self, mock_tags: list[Tag]
@@ -440,9 +440,9 @@ class TestTagResultSet:
         right = TagResultSet(list(reversed(mock_tags[1:])))
 
         new = base & right
-        results = new.fetch()
+        result = new.fetch()
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu1"></a>"""),
         ]
@@ -459,8 +459,8 @@ class TestTagResultSet:
         right = TagResultSet(mock_tags)
 
         new = base - right
-        results = new.fetch()
-        assert results == []
+        result = new.fetch()
+        assert result == []
 
     def test_and_return_new_result_set_with_difference_of_collections(
         self, mock_tags: list[Tag]
@@ -475,9 +475,9 @@ class TestTagResultSet:
         right = TagResultSet(list(reversed(mock_tags[:2])))
 
         new = base - right
-        results = new.fetch()
+        result = new.fetch()
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="menu1"></a>"""),
             strip("""<a class="menu2"></a>"""),
         ]
@@ -493,8 +493,8 @@ class TestTagResultSet:
         right = TagResultSet(mock_tags[2:])
 
         new = base & right
-        results = new.fetch()
-        assert results == []
+        result = new.fetch()
+        assert result == []
 
     def test_len_returns_number_of_tags_in_collection(self, mock_tags: list[Tag]):
         """Tests that len method returns number of tags in collection."""

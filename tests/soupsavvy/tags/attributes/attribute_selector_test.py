@@ -166,25 +166,6 @@ class TestAttributeSelector:
         result = selector.find_all(bs)
         assert result == []
 
-    def test_do_not_shadow_bs4_find_method_parameters(self):
-        """
-        Tests that find method does not shadow bs4.selector find method parameters.
-        If attribute name is the same as bs4.selector find method parameter
-        like ex. 'string' or 'name' it should not cause any conflicts.
-        The way to avoid it is to pass attribute filters as a dictionary to 'attrs'
-        parameter in bs4.selector find method instead of as keyword arguments.
-        """
-        text = """
-            <div href="github" class="menu"></div>
-            <a class="github"></a>
-            <span name="github"></span>
-            <div name="github"></div>
-        """
-        bs = to_bs(text)
-        selector = AttributeSelector(name="name", value="github")
-        result = selector.find(bs)
-        assert strip(str(result)) == strip("""<span name="github"></span>""")
-
     @pytest.mark.css_selector
     @pytest.mark.parametrize(
         argnames="selector, css",
@@ -478,3 +459,23 @@ class TestAttributeSelector:
         assert strip(str(result)) == strip(
             """<div class="it has a long list of widget classes"></div>"""
         )
+
+    @pytest.mark.edge_case
+    def test_do_not_shadow_bs4_find_method_parameters(self):
+        """
+        Tests that find method does not shadow bs4.selector find method parameters.
+        If attribute name is the same as bs4.selector find method parameter
+        like ex. 'string' or 'name' it should not cause any conflicts.
+        The way to avoid it is to pass attribute filters as a dictionary to 'attrs'
+        parameter in bs4.selector find method instead of as keyword arguments.
+        """
+        text = """
+            <div href="github" class="menu"></div>
+            <a class="github"></a>
+            <span name="github"></span>
+            <div name="github"></div>
+        """
+        bs = to_bs(text)
+        selector = AttributeSelector(name="name", value="github")
+        result = selector.find(bs)
+        assert strip(str(result)) == strip("""<span name="github"></span>""")

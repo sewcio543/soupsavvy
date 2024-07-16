@@ -169,9 +169,9 @@ class TestAnyTagSelector:
             <p>3</p>
         """
         bs = find_body_element(to_bs(text))
-        results = selector.find_all(bs, recursive=False)
+        result = selector.find_all(bs, recursive=False)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<div><a></a><p><span>1</span></p></div>"""),
             strip("""<a class="widget">2</a>"""),
             strip("""<p>3</p>"""),
@@ -205,9 +205,9 @@ class TestAnyTagSelector:
             <p>4</p>
         """
         bs = find_body_element(to_bs(text))
-        results = selector.find_all(bs, limit=2)
+        result = selector.find_all(bs, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="widget">1</a>"""),
             strip("""<div><a>23</a></div>"""),
         ]
@@ -226,9 +226,9 @@ class TestAnyTagSelector:
             <p>3</p>
         """
         bs = find_body_element(to_bs(text))
-        results = selector.find_all(bs, recursive=False, limit=2)
+        result = selector.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<div><a></a><p><span>1</span></p></div>"""),
             strip("""<a class="widget">2</a>"""),
         ]

@@ -3,7 +3,6 @@
 import re
 
 import pytest
-from bs4 import Tag
 
 import soupsavvy.tags.namespace as ns
 from soupsavvy.tags.components import AnyTagSelector, AttributeSelector, TagSelector
@@ -18,317 +17,276 @@ from tests.soupsavvy.tags.conftest import (
 
 @pytest.mark.soup
 class TestTagSelector:
-    """Class for TagSelector unit test suite."""
+    """
+    Class for TagSelector unit test suite.
+    Idea behind these tests is to check find_all for more complex variations
+    of TagSelector and test basic functionality and behavior with simpler instances.
+    """
 
-    @pytest.mark.parametrize(
-        argnames="tag",
-        argvalues=[
-            TagSelector(
-                tag="a", attributes=[AttributeSelector(name="class", value="widget")]
-            ),
-            TagSelector(tag="a"),
-            TagSelector(
-                tag=None, attributes=[AttributeSelector(name="class", value="widget")]
-            ),
-            TagSelector(
-                tag="a",
-                attributes=[AttributeSelector(name="class", value="widget", re=True)],
-            ),
-            TagSelector(
-                tag="a",
-                attributes=[AttributeSelector(name="class", value="widget", re=True)],
-            ),
-            TagSelector(tag="a", attributes=[AttributeSelector(name="class")]),
-        ],
-        ids=[
-            "exact_tag_name_match",
-            "only_tag_name_match",
-            "any_tag_name_match",
-            "re_match",
-            "pattern_match",
-            "existing_attribute_match",
-        ],
-    )
-    def test_tag_was_found_based_on_valid_tag_and_attributes(self, tag: TagSelector):
-        """
-        Tests if bs4.Tag was found for various combinations of tag and attributes.
-        Element should be matched if tag is specified as 'a' or None
-        for any element name and matching attribute tag.
-        """
-        markup = """<a class="widget"></a>"""
-        bs = to_bs(markup)
-        result = tag.find(bs)
-        assert strip(str(result)) == strip(markup)
-
-    @pytest.mark.parametrize(
-        argnames="tag",
-        argvalues=[
-            TagSelector(
-                tag="a",
-                attributes=[
-                    AttributeSelector(name="class", value="widget menu"),
-                    AttributeSelector(name="id", value="menu 1"),
-                ],
-            ),
-            TagSelector(
-                tag="a",
-                attributes=[AttributeSelector(name="class", value="widget", re=True)],
-            ),
-            TagSelector(
-                tag="a",
-                attributes=[
-                    AttributeSelector(name="class", value="widget menu", re=False)
-                ],
-            ),
-            TagSelector(
-                tag=None,
-                attributes=[AttributeSelector(name="id", value=r"^menu.?\d$", re=True)],
-            ),
-        ],
-        ids=[
-            "element_match_with_multiple_attributes",
-            "element_match_with_one_attributes_re",
-            "element_match_with_one_attributes",
-            "any_match_with_one_attributes_pattern",
-        ],
-    )
-    def test_tag_with_attributes_was_found_for_valid_tags(self, tag: TagSelector):
-        """
-        Tests if bs4.Tag with multiple attributes was found for various tags
-        that should match them. Tag is found only if all defined attributes tags match
-        element's attribute and tag name is the same.
-        """
-        markup = """<a class="widget menu" id="menu 1"></a>"""
-        bs = to_bs(markup)
-        result = tag.find(bs)
-        assert strip(str(result)) == strip(markup)
-
-    @pytest.mark.parametrize(
-        argnames="tag",
-        argvalues=[
-            TagSelector(
-                tag="div",
-                attributes=[
-                    AttributeSelector(name="class", value="widget menu"),
-                    AttributeSelector(name="id", value="menu 1"),
-                ],
-            ),
-            TagSelector(
-                tag="a",
-                attributes=[
-                    AttributeSelector(name="class", value="wrong name"),
-                    AttributeSelector(name="id", value="wrong name"),
-                ],
-            ),
-            TagSelector(
-                tag="a",
-                attributes=[
-                    AttributeSelector(name="class", value="widget menu"),
-                    AttributeSelector(name="id", value="wrong name"),
-                ],
-            ),
-            TagSelector(
-                tag=None, attributes=[AttributeSelector(name="id", value="menu")]
-            ),
-            TagSelector(
-                tag=None, attributes=[AttributeSelector(name="name", value="123")]
-            ),
-        ],
-        ids=[
-            "tag_name_not_match",
-            "all_attribute_not_match",
-            "one_attribute_not_match",
-            "any_tag_not_match",
-            "not_existing_attribute_match",
-        ],
-    )
-    def test_tag_with_attributes_was_found_for_not_matching_tags(
-        self, tag: TagSelector
-    ):
-        """
-        Tests find return None for various tags that does not match given element.
-        Element should not be match if tag and all attributes are not matching.
-        """
-        markup = """<a class="widget menu" id="menu 1"></a>"""
-        bs = to_bs(markup)
-        assert tag.find(bs) is None
-
-    def test_additional_attribute_is_not_matched(self):
-        """
-        Tests find return element if it has attributes that are not specified
-        in TagSelector, they can take any value and are skipped in find.
-        In this case, the fact that element has 'id' attribute
-        does not affect the find method.
-        """
-        markup = """<a class="widget" id="menu 1"></a>"""
-        bs = to_bs(markup)
-        tag = TagSelector(
-            tag="a", attributes=[AttributeSelector(name="class", value="widget")]
-        )
-        result = tag.find(bs)
-        assert strip(str(result)) == strip(markup)
-
-    def test_find_raises_exception_in_strict_mode_if_non_matching(self):
-        """
-        Tests find raises TagNotFoundException exception if no element was matched.
-        """
-        markup = """<a class="widget menu" id="menu 1"></a>"""
-        bs = to_bs(markup)
-        tag = TagSelector(tag="div")
-
-        with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True)
-
-    def test_find_all_returns_all_matching_elements_in_a_list(self):
-        """
-        Tests if find_all returns a list of all matching elements.
-        Elements of this list should be the instances of bs4.Tag.
-        """
+    def test_find_all_returns_all_tags_for_empty_selector(self):
+        """Tests if find_all method returns all tags if selector is empty."""
         text = """
-            <a href="github/settings"></a>
-            <a href="github pages"></a>
-            <a href="github "></a>
-        """
-        bs = to_bs(text)
-        tag = TagSelector(
-            tag="a",
-            attributes=[AttributeSelector(name="href", value="github", re=True)],
-        )
-        result = tag.find_all(bs)
-        assert len(result) == 3
-        assert isinstance(result, list)
-        assert all(isinstance(tag, Tag) for tag in result)
-
-    def test_empty_tag_selector_matches_all_elements(self):
-        """
-        Tests if find_all returns a list of all elements in the markup
-        if it was initialized without any tag or attribute selectors.
-        """
-        text = """
-            <a href="github/settings"></a>
-            <a></a>
-            <div class="github"><a>Hello</a></div>
+            <div href="github">1</div>
+            <a><p>23</p></a>
+            <a class="widget">4</a>
         """
         bs = find_body_element(to_bs(text))
         selector = TagSelector()
         result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("""<a href="github/settings"></a>"""),
-            strip("""<a></a>"""),
-            strip("""<div class="github"><a>Hello</a></div>"""),
-            strip("""<a>Hello</a>"""),
+            strip("""<div href="github">1</div>"""),
+            strip("""<a><p>23</p></a>"""),
+            strip("""<p>23</p>"""),
+            strip("""<a class="widget">4</a>"""),
         ]
 
-    def test_find_all_returns_only_matching_elements(self):
+    def test_find_all_returns_all_matching_tags_for_selector_with_tag_name(self):
         """
-        Tests if find_all returns a list of all matching elements.
-        In this case it should match any 'a' element with href="github"
-        and id that contains a digit.
+        Tests if find_all method returns all matching tags if selector has tag name.
         """
         text = """
-            <a href="github" id="1"></a>
-            <a href="github" id="2"></a>
-            <a href="github", id="hello"></a>
-            <div href="github", id="6"></div>
-            <div id="github"></div>
-            <a href="github pages", id="5"></a>
+            <div href="github"></div>
+            <a class="widget">1</a>
+            <a><p>2</p></a>
+            <span>
+                <a>3</a>
+            </span>
         """
         bs = to_bs(text)
-        tag = TagSelector(
-            tag="a",
-            attributes=[
-                AttributeSelector(name="href", value="github"),
-                AttributeSelector(name="id", value=r"\d", re=True),
-            ],
-        )
-        result = tag.find_all(bs)
-        excepted = [
-            strip("""<a href="github" id="1"></a>"""),
-            strip("""<a href="github" id="2"></a>"""),
-        ]
-        assert list(map(lambda x: strip(str(x)), result)) == excepted
-
-    def test_find_all_returns_empty_list_when_not_found(self):
-        """Tests if find returns an empty list if no element matches the tag."""
-        text = """
-            <a href="github" id="hello"></a>
-            <a href="github pages", id="5"></a>
-        """
-        bs = to_bs(text)
-        tag = TagSelector(
-            tag="a",
-            attributes=[
-                AttributeSelector(name="href", value="github"),
-                AttributeSelector(name="id", value=r"\d", re=True),
-            ],
-        )
-        result = tag.find_all(bs)
-        assert result == []
-
-    def test_find_all_matches_all_nested_elements(self):
-        """
-        Tests if find_all matches both parent and child element
-        in html tree if they match the tag.
-        """
-        text = """
-            <div href="github">
-                <a class="github/settings"></a>
-                <a id="github pages"></a>
-                <a href="github "></a>
-            </div>
-        """
-        bs = to_bs(text)
-        tag = TagSelector(
-            tag=None,
-            attributes=[AttributeSelector(name="href", value="github", re=True)],
-        )
-        result = tag.find_all(bs)
-        expected_1 = """
-            <div href="github">
-                <a class="github/settings"></a>
-                <a id="github pages"></a>
-                <a href="github "></a>
-            </div>
-        """
-        expected_2 = """<a href="github "></a>"""
+        selector = TagSelector(tag="a")
+        result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
-            strip(expected_1),
-            strip(expected_2),
+            strip("""<a class="widget">1</a>"""),
+            strip("""<a><p>2</p></a>"""),
+            strip("""<a>3</a>"""),
         ]
+
+    def test_find_all_returns_all_matching_tags_for_selector_with_attributes(
+        self,
+    ):
+        """
+        Tests if find_all method returns all matching tags if selector has attributes
+        without tag name.
+        """
+        text = """
+            <div class="widget" href="github">1</div>
+            <a class="widget123" href="github">Hello</a>
+            <span class="widget"></span>
+            <a class="widget" href="github123">Hello</a>
+            <div href="github"></div>
+            <a class="widget" href="github"><p>2</p></a>
+            <span>
+                <a id="widget" class="github"></a>
+                <a class="widget" href="github" rel="help">3</a>
+            </span>
+        """
+        bs = to_bs(text)
+        selector = TagSelector(
+            attributes=[
+                AttributeSelector(name="class", value="widget"),
+                AttributeSelector(name="href", value="github"),
+            ],
+        )
+        result = selector.find_all(bs)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<div class="widget" href="github">1</div>"""),
+            strip("""<a class="widget" href="github"><p>2</p></a>"""),
+            strip("""<a class="widget" href="github" rel="help">3</a>"""),
+        ]
+
+    def test_find_all_returns_all_matching_tags_for_selector_with_tag_name_and_attribute(
+        self,
+    ):
+        """
+        Tests if find_all method returns all matching tags if selector has tag name
+        and one attribute selector.
+        """
+        text = """
+            <div href="github"></div>
+            <a class="widget123">Hello</a>
+            <div class="widget"></div>
+            <a class="widget">1</a>
+            <a href="widget"><p></p></a>
+            <a class="widget"><p>2</p></a>
+            <span>
+                <a id="widget" class="github"></a>
+                <a class="widget">3</a>
+            </span>
+        """
+        bs = to_bs(text)
+        selector = TagSelector(
+            tag="a",
+            attributes=[
+                AttributeSelector(name="class", value="widget"),
+            ],
+        )
+        result = selector.find_all(bs)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="widget">1</a>"""),
+            strip("""<a class="widget"><p>2</p></a>"""),
+            strip("""<a class="widget">3</a>"""),
+        ]
+
+    def test_find_all_returns_all_matching_tags_for_selector_with_tag_name_and_multiple_attributes(
+        self,
+    ):
+        """
+        Tests if find method returns first matching tag if selector has tag name
+        and one attribute selector.
+        """
+        text = """
+            <div class="widget" href="github" target="_blank"></div>
+            <a class="widget" href="github" target="_parent">Hello</a>
+            <div class="widget"></div>
+            <a class="widget" href="github" target="_blank">1</a>
+            <a class="widget123" href="github" target="_blank">Hello</a>
+            <a class="widget" href="facebook" target="_blank">Hello</a>
+            <a class="widget">World</a>
+            <a class="widget" href="github" rel="author" target="_blank"><p>2</p></a>
+            <a class="widget"><p>2</p></a>
+            <span>
+                <a id="widget" href="github" target="_blank"></a>
+                <a class="widget" href="github123" target="_blank">3</a>
+            </span>
+        """
+        bs = to_bs(text)
+        selector = TagSelector(
+            tag="a",
+            attributes=[
+                AttributeSelector(name="class", value="widget"),
+                AttributeSelector(name="href", value="github", re=True),
+                AttributeSelector(name="target", value="_blank"),
+            ],
+        )
+        result = selector.find_all(bs)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="widget" href="github" target="_blank">1</a>"""),
+            strip(
+                """<a class="widget" href="github" rel="author" target="_blank"><p>2</p></a>"""
+            ),
+            strip("""<a class="widget" href="github123" target="_blank">3</a>"""),
+        ]
+
+    def test_find_returns_first_tag_matching_selector(self):
+        """Tests if find method returns first tag matching selector."""
+        text = """
+            <div href="github"></div>
+            <a class="widget">1</a>
+            <a><p>2</p></a>
+            <span>
+                <a>3</a>
+            </span>
+        """
+        bs = to_bs(text)
+        selector = TagSelector(tag="a")
+        result = selector.find(bs)
+        assert strip(str(result)) == strip("""<a class="widget">1</a>""")
+
+    def test_find_returns_none_if_no_match_and_strict_false(self):
+        """
+        Tests if find returns None if no element matches the selector
+        and strict is False.
+        """
+        text = """
+            <div href="github"></div>
+            <span class="widget"></span>
+            <div><p>Hello</p></div>
+            <span>
+                <div>Hello</div>
+            </span>
+        """
+        bs = to_bs(text)
+        selector = TagSelector(tag="a")
+        result = selector.find(bs)
+        assert result is None
+
+    def test_find_raises_exception_if_no_match_and_strict_true(self):
+        """
+        Tests if find raises TagNotFoundException if no element matches the selector
+        and strict is True.
+        """
+        text = """
+            <div href="github"></div>
+            <span class="widget"></span>
+            <div><p>Hello</p></div>
+            <span>
+                <div>Hello</div>
+            </span>
+        """
+        bs = to_bs(text)
+        selector = TagSelector(tag="a")
+
+        with pytest.raises(TagNotFoundException):
+            selector.find(bs, strict=True)
+
+    def test_find_all_returns_all_matching_elements(self):
+        """Tests if find_all returns a list of all matching elements."""
+        text = """
+            <div href="github"></div>
+            <a class="widget">1</a>
+            <a><p>2</p></a>
+            <span>
+                <a>3</a>
+            </span>
+        """
+        bs = to_bs(text)
+        selector = TagSelector(tag="a")
+        result = selector.find_all(bs)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="widget">1</a>"""),
+            strip("""<a><p>2</p></a>"""),
+            strip("""<a>3</a>"""),
+        ]
+
+    def test_find_all_returns_empty_list_when_no_match(self):
+        """Tests if find returns an empty list if no element matches the selector."""
+        text = """
+            <div href="github"></div>
+            <span class="widget"></span>
+            <div><p>Hello</p></div>
+            <span>
+                <div>Hello</div>
+            </span>
+        """
+        bs = to_bs(text)
+        selector = TagSelector(tag="a")
+        result = selector.find_all(bs)
+        assert result == []
 
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.
-        In this case first 'a' element matches the selector,
-        but it's not a child of body element, so it's not returned.
         """
         text = """
             <div class="google">
-                <a href="github">Hello 1</a>
+                <a href="github">Not child</a>
             </div>
-            <a href="github">Hello 2</a>
+            <a href="github">1</a>
+            <div><a>Not child</a></div>
+            <a><p>2</p></a>
+            <span>Hello</span>
+            <a>3</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = TagSelector(tag="a")
-        result = tag.find(bs, recursive=False)
-
-        assert strip(str(result)) == strip("""<a href="github">Hello 2</a>""")
+        selector = TagSelector(tag="a")
+        result = selector.find(bs, recursive=False)
+        assert strip(str(result)) == strip("""<a href="github">1</a>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
         Tests if find returns None if no child element matches the selector
-        and recursive is False. In this case first 'a' element matches the selector,
-        but it's not a child of body element, so it's not returned.
+        and recursive is False.
         """
         text = """
             <div class="google">
-                <a href="github">Hello 1</a>
+                <a href="github">Not child</a>
             </div>
-            <span class="github">Hello 2</span>
+            <div><a>Not child</a></div>
+            <span>Hello</span>
         """
         bs = find_body_element(to_bs(text))
-        tag = TagSelector(tag="a")
-        result = tag.find(bs, recursive=False)
+        selector = TagSelector(tag="a")
+        result = selector.find(bs, recursive=False)
         assert result is None
 
     def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
@@ -338,18 +296,16 @@ class TestTagSelector:
         """
         text = """
             <div class="google">
-                <a class="google">Hello 1</a>
+                <a href="github">Not child</a>
             </div>
-            <a class="github">Hello 2</a>
+            <div><a>Not child</a></div>
+            <span>Hello</span>
         """
         bs = find_body_element(to_bs(text))
-        tag = TagSelector(
-            tag="a",
-            attributes=[AttributeSelector("class", value="google")],
-        )
+        selector = TagSelector(tag="a")
 
         with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True, recursive=False)
+            selector.find(bs, strict=True, recursive=False)
 
     def test_find_all_returns_all_matching_children_when_recursive_false(self):
         """
@@ -357,20 +313,23 @@ class TestTagSelector:
         It returns only matching children of the body element.
         """
         text = """
-            <div>
-                <a>Hello 1</a>
+            <div class="google">
+                <a href="github">Not child</a>
             </div>
-            <a class="link">Hello 2</a>
-            <div class="google"></div>
-            <a>Hello 3</a>
+            <a href="github">1</a>
+            <div><a>Not child</a></div>
+            <a><p>2</p></a>
+            <span>Hello</span>
+            <a>3</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = TagSelector(tag="a")
-        results = tag.find_all(bs, recursive=False)
+        selector = TagSelector(tag="a")
+        result = selector.find_all(bs, recursive=False)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
-            strip("""<a class="link">Hello 2</a>"""),
-            strip("""<a>Hello 3</a>"""),
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a href="github">1</a>"""),
+            strip("""<a><p>2</p></a>"""),
+            strip("""<a>3</a>"""),
         ]
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
@@ -382,18 +341,15 @@ class TestTagSelector:
         """
         text = """
             <div class="google">
-                <a class="google">Hello 1</a>
+                <a href="github">Not child</a>
             </div>
-            <a class="github">Hello 2</a>
+            <div><a>Not child</a></div>
+            <span>Hello</span>
         """
         bs = find_body_element(to_bs(text))
-        tag = TagSelector(
-            tag="a",
-            attributes=[AttributeSelector("class", value="google")],
-        )
-
-        results = tag.find_all(bs, recursive=False)
-        assert results == []
+        selector = TagSelector(tag="a")
+        result = selector.find_all(bs, recursive=False)
+        assert result == []
 
     def test_find_all_returns_only_x_elements_when_limit_is_set(self):
         """
@@ -401,20 +357,20 @@ class TestTagSelector:
         In this case only 2 first in order elements are returned.
         """
         text = """
+            <div href="github"></div>
+            <a class="widget">1</a>
+            <a><p>2</p></a>
             <span>
-                <div>Hello 1</div>
+                <a>3</a>
             </span>
-            <div>Hello 2</div>
-            <div>Hello 3</div>
-            <div>Hello 4</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = TagSelector(tag="div")
-        results = tag.find_all(bs, limit=2)
+        selector = TagSelector(tag="a")
+        result = selector.find_all(bs, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
-            strip("""<div>Hello 1</div>"""),
-            strip("""<div>Hello 2</div>"""),
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="widget">1</a>"""),
+            strip("""<a><p>2</p></a>"""),
         ]
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
@@ -426,24 +382,22 @@ class TestTagSelector:
         the selector are returned.
         """
         text = """
-            <span></span>
-            <span>
-                <div class="menu"></div>
-            </span>
-            <div>Hello 1</div>
-            <a>
-                <div>Hello 2</div>
-            </a>
-            <div>Hello 3</div>
-            <div>Hello 4</div>
+            <div class="google">
+                <a href="github">Not child</a>
+            </div>
+            <a href="github">1</a>
+            <div><a>Not child</a></div>
+            <a><p>2</p></a>
+            <span>Hello</span>
+            <a>3</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = TagSelector(tag="div")
-        results = tag.find_all(bs, recursive=False, limit=2)
+        selector = TagSelector(tag="a")
+        result = selector.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
-            strip("""<div>Hello 1</div>"""),
-            strip("""<div>Hello 3</div>"""),
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a href="github">1</a>"""),
+            strip("""<a><p>2</p></a>"""),
         ]
 
     @pytest.mark.css_selector
@@ -603,8 +557,19 @@ class TestTagSelector:
         The way to avoid it is to pass attribute filters as a dictionary to 'attrs'
         parameter in bs4.Tag find method instead of as keyword arguments.
         """
-        markup = """<div name="github" string="any"></div>"""
-        bs = to_bs(markup)
+        text = """
+            <div string="Hello"></div>
+            <div href="github" class="menu"></div>
+            <a class="github"></a>
+            <div name="github">Hello</div>
+            <github string="Hello"></github>
+            <div name="github"></div>
+            <span name="github" string="Hello"></span>
+            <div name="github" string="Hello">1</div>
+            <a name="github" string="Hello"></a>
+            <div name="github" string="Hello">2</div>
+        """
+        bs = to_bs(text)
         tag = TagSelector(
             "div",
             attributes=[
@@ -613,4 +578,6 @@ class TestTagSelector:
             ],
         )
         result = tag.find(bs)
-        assert strip(str(result)) == strip(markup)
+        assert strip(str(result)) == strip(
+            """<div name="github" string="Hello">1</div>"""
+        )

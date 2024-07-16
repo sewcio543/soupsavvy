@@ -269,9 +269,9 @@ class TestPatternSelector:
         """
         bs = find_body_element(to_bs(text))
         selector = PatternSelector(pattern="Hello")
-        results = selector.find_all(bs, recursive=False)
+        result = selector.find_all(bs, recursive=False)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<p>Hello</p>"""),
             strip("""<a>Hello</a>"""),
             strip("""<span>Hello</span>"""),
@@ -293,8 +293,8 @@ class TestPatternSelector:
         """
         bs = find_body_element(to_bs(text))
         selector = PatternSelector(pattern="Hello")
-        results = selector.find_all(bs, recursive=False)
-        assert results == []
+        result = selector.find_all(bs, recursive=False)
+        assert result == []
 
     def test_find_all_returns_only_x_elements_when_limit_is_set(self):
         """
@@ -313,9 +313,9 @@ class TestPatternSelector:
         """
         bs = find_body_element(to_bs(text))
         selector = PatternSelector(pattern="Hello")
-        results = selector.find_all(bs, limit=2)
+        result = selector.find_all(bs, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<p>Hello</p>"""),
             strip("""<div>Hello</div>"""),
         ]
@@ -340,9 +340,9 @@ class TestPatternSelector:
         """
         bs = find_body_element(to_bs(text))
         selector = PatternSelector(pattern="Hello")
-        results = selector.find_all(bs, recursive=False, limit=2)
+        result = selector.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<p>Hello</p>"""),
             strip("""<a>Hello</a>"""),
         ]

@@ -2,7 +2,7 @@
 Module with unit tests for relative module, that contains relative combinators components.
 They have a define recursion behavior when finding tags in the soup, so this parameter
 should behave in the same way whether it is set to True or False, hence parametrization
-and asserting the same results for both cases.
+and asserting the same result for both cases.
 """
 
 from abc import ABC, abstractmethod
@@ -201,8 +201,8 @@ class BaseRelativeCombinatorTest(ABC):
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
         """
-        results = selector.find_all(self.match, limit=2, recursive=recursive)
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        result = selector.find_all(self.match, limit=2, recursive=recursive)
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a>1</a>"""),
             strip("""<a>2</a>"""),
         ]
@@ -368,8 +368,8 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
         In this case only 2 first in order elements are returned,
         but in case of RelativeNextSibling it should return only one element (next sibling).
         """
-        results = selector.find_all(self.match, limit=2, recursive=recursive)
-        assert list(map(lambda x: strip(str(x)), results)) == [strip("""<a>1</a>""")]
+        result = selector.find_all(self.match, limit=2, recursive=recursive)
+        assert list(map(lambda x: strip(str(x)), result)) == [strip("""<a>1</a>""")]
 
 
 class TestAnchor:
