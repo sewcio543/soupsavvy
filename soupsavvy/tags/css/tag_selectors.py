@@ -619,7 +619,7 @@ class OnlyOfType(CSSSoupSelector):
 
 
 @dataclass
-class CSS(CSSSoupSelector, SelectableCSS):
+class CSS(CSSSoupSelector):
     """
     Soupsavvy wrapper for simple search with CSS selectors.
     Uses soupsieve library to match the tag, based on the provided CSS selector.
