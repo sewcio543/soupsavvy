@@ -219,25 +219,6 @@ class TestTagSelector:
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_all_returns_all_matching_elements(self):
-        """Tests if find_all returns a list of all matching elements."""
-        text = """
-            <div href="github"></div>
-            <a class="widget">1</a>
-            <a><p>2</p></a>
-            <span>
-                <a>3</a>
-            </span>
-        """
-        bs = to_bs(text)
-        selector = TagSelector(tag="a")
-        result = selector.find_all(bs)
-        assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("""<a class="widget">1</a>"""),
-            strip("""<a><p>2</p></a>"""),
-            strip("""<a>3</a>"""),
-        ]
-
     def test_find_all_returns_empty_list_when_no_match(self):
         """Tests if find returns an empty list if no element matches the selector."""
         text = """

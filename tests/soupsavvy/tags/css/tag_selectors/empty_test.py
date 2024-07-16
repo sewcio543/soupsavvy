@@ -20,207 +20,276 @@ class TestEmptyChild:
         """Tests if selector property returns correct value when specifying tag."""
         assert Empty("div").selector == "div:empty"
 
-    def test_find_returns_none_if_no_empty_element_without_tag(self):
-        """
-        Tests if find method returns None if no empty tag is found, if tag has any children
-        or text it's considered not empty.
-        Find method should return None if not-strict mode is enabled.
-        """
-        html = """
+    def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
+        """Tests if find_all method returns all tags for selector without tag name."""
+        text = """
             <div>Hello</div>
-            <div><a>soupsavvy</a></div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = Empty()
-        result = tag.find(bs)
-        assert result is None
-
-    def test_find_returns_none_if_tag_name_not_present(self):
-        """
-        Tests if find method returns None if specified tag is not present
-        in the tag markup. In this case, 'span' is not present in the markup.
-        """
-        html = """
-            <div>
-                <p>text</p>
-            </div>
             <div></div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = Empty("span")
-        result = tag.find(bs)
-        assert result is None
-
-    def test_find_returns_none_if_no_empty_element_with_tag(self):
-        """
-        Tests if find method returns None if no empty tag is found
-        when tag is specified, but no empty one of this name is found
-        and find is run in not-strict mode.
-        """
-        # p is the empty tag, but selector has specified div tag
-        html = """
-            <div><p></p></div>
-            <div><a>Hello</a></div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = Empty("div")
-        result = tag.find(bs)
-        assert result is None
-
-    def test_find_returns_first_empty_element_without_tag(self):
-        """
-        Tests if find method returns first empty tag when tag is not specified.
-        """
-        html = """
             <div>
                 <p>text 1</p>
+                <p class="empty"></p>
             </div>
-            <div></div>
-            <span></span>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = Empty()
-        result = tag.find(bs)
-        assert strip(str(result)) == strip("<div></div>")
-
-    def test_find_returns_first_empty_element_with_tag(self):
-        """
-        Tests if find method returns first empty tag which name matches
-        the specified tag. Even though div is the empty tag, it is skipped
-        because it does not match the specified tag 'span'.
-        """
-        html = """
-            <div></div>
-            <span></span>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = Empty("span")
-        result = tag.find(bs)
-        assert strip(str(result)) == strip("<span></span>")
-
-    def test_find_raises_exception_without_tag_if_not_found_in_strict_mode(self):
-        """
-        Tests if find method raises TagNotFoundException
-        if no empty tag is found in strict mode when tag is not specified.
-        """
-        html = """
-            <div>
-                <p>text 1</p>
-                <p>text 2</p>
-            </div>
-            <span>Hello</span>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = Empty()
-
-        with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True)
-
-    def test_find_raises_exception_with_tag_if_not_found_in_strict_mode(self):
-        """
-        Tests if find method raises TagNotFoundException
-        if no empty tag is found in strict mode when tag is specified.
-        """
-        html = """
-            <div>
-                <p>text 1</p>
-                <p>text 2</p>
-            </div>
-            <span></span>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = Empty("p")
-
-        with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True)
-
-    def test_find_all_return_empty_list_if_no_empty_element_without_tag(self):
-        """
-        Tests if find_all method returns empty list
-        if no empty tag is found, when tag is not specified.
-        """
-        html = """
-            <div>
-                <p>text 1</p>
-                <p>text 2</p>
-            </div>
-            <div>Hello</div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = Empty()
-        result = tag.find_all(bs)
-        assert result == []
-
-    def test_find_all_return_empty_list_if_no_empty_element_with_tag(self):
-        """
-        Tests if find_all method returns empty list if no empty tag is found
-        when tag is specified. Empty tag is skipped when its name does not match
-        the tag, as in this case for 'span'.
-        """
-        html = """
-            <div>
-                <p>text 1</p>
-                <p>text 2</p>
-            </div>
-            <span></span>
-            <div>Hello</div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = Empty("div")
-        result = tag.find_all(bs)
-        assert result == []
-
-    def test_find_all_return_all_empty_elements_without_tag(self):
-        """
-        Tests if find_all method returns all empty tags, when tag is not specified.
-        """
-        html = """
-            <div>
-                <p></p>
-            </div>
-            <span></span>
-            <span>
-                <div><p>text 2</p></div>
-            </span>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = Empty()
-        result = tag.find_all(bs)
-        assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("<p></p>"),
-            strip("""<span></span>"""),
-        ]
-
-    def test_find_all_return_all_empty_elements_with_tag(self):
-        """
-        Tests if find_all method returns all empty tags which name matches
-        the specified tag.
-        """
-        html = """
-            <div></div>
-            <span></span>
-            <span>  </span>
-            <div></div>
-            <div>Hello</div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = Empty("div")
-        result = tag.find_all(bs)
-        assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("<div></div>"),
-            strip("<div></div>"),
-        ]
-
-    def test_self_closing_tag_is_always_empty(self):
-        """
-        Tests if self closing tag like ex. image always matches the Empty tag.
-        Closing tags do not allow children or text.
-        """
-        html = """
+            <a class="widget"></a>
+            <span><a>Hello</a></span>
             <img src="picture.jpg"/>
-            <div>Hello</div>
+            <br/>
         """
-        bs = find_body_element(to_bs(html))
-        tag = Empty()
-        result = tag.find(bs)
-        assert strip(str(result)) == strip("""<img src="picture.jpg"/>""")
+        bs = find_body_element(to_bs(text))
+        selector = Empty()
+        result = selector.find_all(bs)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<div></div>"""),
+            strip("""<p class="empty"></p>"""),
+            strip("""<a class="widget"></a>"""),
+            strip("""<img src="picture.jpg"/>"""),
+            strip("""<br/>"""),
+        ]
+
+    def test_find_all_returns_all_tags_for_selector_with_tag_name(self):
+        """Tests if find_all method returns all tags for selector with tag name."""
+        text = """
+            <div>Hello</div>
+            <div></div>
+            <div>
+                <p>text 1</p>
+                <p class="empty"></p>
+            </div>
+            <div class="widget"></div>
+            <span><a>Hello</a></span>
+            <br/>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = Empty("div")
+        result = selector.find_all(bs)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<div></div>"""),
+            strip("""<div class="widget"></div>"""),
+        ]
+
+    def test_find_returns_first_tag_matching_selector(self):
+        """Tests if find method returns first tag matching selector."""
+        text = """
+            <div></div>
+            <span><a></a></span>
+            <a class="widget"></a>
+            <br/>
+        """
+        bs = to_bs(text)
+        selector = Empty()
+        result = selector.find(bs)
+        assert strip(str(result)) == strip("""<div></div>""")
+
+    def test_find_returns_none_if_no_match_and_strict_false(self):
+        """
+        Tests if find returns None if no element matches the selector
+        and strict is False.
+        """
+        text = """
+            <div>Hello</div>
+            <a><p>Hello</p></a>
+            <span><a>Hello</a></span>
+            <div>
+                <p>text 1</p>
+                <p>text 2</p>
+            </div>
+        """
+        bs = to_bs(text)
+        selector = Empty()
+        result = selector.find(bs)
+        assert result is None
+
+    def test_find_raises_exception_if_no_match_and_strict_true(self):
+        """
+        Tests if find raises TagNotFoundException if no element matches the selector
+        and strict is True.
+        """
+        text = """
+            <div>Hello</div>
+            <a><p>Hello</p></a>
+            <span><a>Hello</a></span>
+            <div>
+                <p>text 1</p>
+                <p>text 2</p>
+            </div>
+        """
+        bs = to_bs(text)
+        selector = Empty()
+
+        with pytest.raises(TagNotFoundException):
+            selector.find(bs, strict=True)
+
+    def test_find_all_returns_empty_list_when_no_match(self):
+        """Tests if find returns an empty list if no element matches the selector."""
+        text = """
+            <div>Hello</div>
+            <a><p>Hello</p></a>
+            <span><a>Hello</a></span>
+            <div>
+                <p>text 1</p>
+                <p>text 2</p>
+            </div>
+        """
+        bs = to_bs(text)
+        selector = Empty()
+        result = selector.find_all(bs)
+        assert result == []
+
+    def test_find_returns_first_matching_child_if_recursive_false(self):
+        """
+        Tests if find returns first matching child element if recursive is False.
+        """
+        text = """
+            <div>Hello</div>
+            <div>
+                <p>text 1</p>
+                <p class="empty"></p>
+            </div>
+            <div></div>
+            <span><a>Hello</a></span>
+            <a class="widget"></a>
+            <img src="picture.jpg"/>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = Empty()
+        result = selector.find(bs, recursive=False)
+        assert strip(str(result)) == strip("""<div></div>""")
+
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+        """
+        Tests if find returns None if no child element matches the selector
+        and recursive is False.
+        """
+        text = """
+            <div>Hello</div>
+            <div>
+                <p>text 1</p>
+                <p class="empty"></p>
+                <img src="picture.jpg"/>
+            </div>
+            <span><a>Hello</a></span>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = Empty()
+        result = selector.find(bs, recursive=False)
+        assert result is None
+
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+        """
+        Tests if find raises TagNotFoundException if no child element
+        matches the selector, when recursive is False and strict is True.
+        """
+        text = """
+            <div>Hello</div>
+            <div>
+                <p>text 1</p>
+                <p class="empty"></p>
+                <img src="picture.jpg"/>
+            </div>
+            <span><a>Hello</a></span>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = Empty()
+
+        with pytest.raises(TagNotFoundException):
+            selector.find(bs, strict=True, recursive=False)
+
+    def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns an empty list if no child element matches the selector
+        and recursive is False.
+        """
+        text = """
+            <div>Hello</div>
+            <div>
+                <p>text 1</p>
+                <p class="empty"></p>
+                <img src="picture.jpg"/>
+            </div>
+            <span><a>Hello</a></span>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = Empty()
+        result = selector.find_all(bs, recursive=False)
+        assert result == []
+
+    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+        """
+        Tests if find_all returns all matching children if recursive is False.
+        It returns only matching children of the body element.
+        """
+        text = """
+            <div>Hello</div>
+            <div>
+                <p>text 1</p>
+                <p class="empty"></p>
+            </div>
+            <div></div>
+            <span><a>Hello</a></span>
+            <a class="widget"></a>
+            <img src="picture.jpg"/>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = Empty()
+        result = selector.find_all(bs, recursive=False)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<div></div>"""),
+            strip("""<a class="widget"></a>"""),
+            strip("""<img src="picture.jpg"/>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+        """
+        Tests if find_all returns only x elements when limit is set.
+        In this case only 2 first in order elements are returned.
+        """
+        text = """
+            <div>Hello</div>
+            <div></div>
+            <div>
+                <p>text 1</p>
+                <p class="empty"></p>
+            </div>
+            <a class="widget"></a>
+            <span><a>Hello</a></span>
+            <img src="picture.jpg"/>
+            <br/>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = Empty()
+        result = selector.find_all(bs, limit=2)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<div></div>"""),
+            strip("""<p class="empty"></p>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns only x elements when limit is set and recursive
+        is False. In this case only 2 first in order children matching
+        the selector are returned.
+        """
+        text = """
+            <div>Hello</div>
+            <div>
+                <p>text 1</p>
+                <p class="empty"></p>
+            </div>
+            <div></div>
+            <span><a>Hello</a></span>
+            <a class="widget"></a>
+            <img src="picture.jpg"/>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = Empty()
+        result = selector.find_all(bs, recursive=False, limit=2)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<div></div>"""),
+            strip("""<a class="widget"></a>"""),
+        ]
