@@ -9,8 +9,8 @@ from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 @pytest.mark.css_selector
 @pytest.mark.soup
-class TestEmptyChild:
-    """Class with unit tests for EmptyChild tag selector."""
+class TestEmpty:
+    """Class with unit tests for Empty tag selector."""
 
     def test_selector_is_correct_without_tag(self):
         """Tests if selector property returns correct value without specifying tag."""
