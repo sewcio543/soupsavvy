@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, overload
 
 from bs4 import NavigableString, Tag
 
-from soupsavvy.tags.exceptions import (
+from soupsavvy.exceptions import (
     NavigableStringException,
     NotSoupSelectorException,
     TagNotFoundException,

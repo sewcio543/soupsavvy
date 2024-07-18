@@ -2,8 +2,8 @@
 
 import pytest
 
+from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
 from soupsavvy.tags.components import HasSelector
-from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
 from soupsavvy.tags.relative import (
     RelativeChild,
     RelativeDescendant,

@@ -2,8 +2,8 @@
 
 import pytest
 
+from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
 from soupsavvy.tags.css.nth.nth_soup_selector import NthOfSelector
-from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
 from tests.soupsavvy.tags.conftest import (
     MockClassMenuSelector,
     MockDivSelector,

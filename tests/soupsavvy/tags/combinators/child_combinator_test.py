@@ -2,8 +2,8 @@
 
 import pytest
 
+from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
 from soupsavvy.tags.combinators import ChildCombinator
-from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
 from tests.soupsavvy.tags.conftest import (
     MockDivSelector,
     MockLinkSelector,

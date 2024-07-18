@@ -2,7 +2,7 @@
 
 import pytest
 
-import soupsavvy.testing.generators.exceptions as exc
+import soupsavvy.exceptions as exc
 from soupsavvy.testing.generators.generators import AttributeGenerator, TagGenerator
 from soupsavvy.testing.generators.templates.templates import (
     BaseTemplate,
