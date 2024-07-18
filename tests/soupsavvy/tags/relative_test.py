@@ -11,7 +11,7 @@ from typing import Type
 import pytest
 from bs4 import Tag
 
-from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
+from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
 from soupsavvy.tags.relative import (
     Anchor,
     RelativeChild,
