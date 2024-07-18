@@ -3,31 +3,51 @@ name: Deployment [test PyPI]
 on:
   push:
     branches:
-      - "dev/[0-9]+.[0-9]+.[0-9]+"
-  workflow_dispatch: {}
+      - "main"
 
 jobs:
-  build:
-    name: Build distribution 📦
+  bump:
+    name: Bump version 🚀
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # this fetches all history
+          fetch-tags: true # this fetches all tags
+          token: ${{ secrets.GH_TOKEN }} # token for pushing to protected branch
 
       - name: Set up Python and Upgrade pip
         uses: ./.github/actions/setup_python
         with:
           python-version: "3.11"
 
-        # 3.0.1-dev2 -> 3.0.1-dev3 with build
+      # 3.0.1-dev5 -> 3.0.1-dev6 with build
       - name: Update development version
         uses: ./.github/actions/bump_version
         with:
           type: "build"
-          commit: false
-          tag: false
-          push: false
+          commit: true
+          tag: true
+          push: true
+
+  build:
+    name: Build dev distribution 📦
+    needs: bump
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }} # checkout at latest commit from previous job
+          fetch-depth: 0
+
+      - name: Set up Python and Upgrade pip
+        uses: ./.github/actions/setup_python
+        with:
+          python-version: "3.11"
 
       - name: Build package
         uses: ./.github/actions/build_package
@@ -39,6 +59,7 @@ jobs:
           path: dist/
 
   publish:
+    name: Publish distribution 📦 to Test PyPI
     needs: build
     runs-on: ubuntu-latest
 
@@ -72,11 +93,3 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
-
-      - name: Update development version with commit and tag
-        uses: ./.github/actions/bump_version
-        with:
-          type: "build"
-          commit: true
-          tag: true
-          push: true
