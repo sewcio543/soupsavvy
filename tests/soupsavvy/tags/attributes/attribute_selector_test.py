@@ -4,8 +4,8 @@ import re
 
 import pytest
 
+from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.tags.attributes import AttributeSelector, ClassSelector
-from soupsavvy.tags.exceptions import TagNotFoundException
 from tests.soupsavvy.tags.conftest import (
     MockDivSelector,
     find_body_element,

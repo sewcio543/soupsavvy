@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Iterable, Optional, Union
 
-import soupsavvy.testing.generators.exceptions as exc
+import soupsavvy.exceptions as exc
 from soupsavvy.testing.generators import namespace
 from soupsavvy.testing.generators.base import BaseGenerator
 from soupsavvy.testing.generators.templates.base import BaseTemplate

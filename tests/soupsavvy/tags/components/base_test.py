@@ -10,6 +10,7 @@ from typing import Any, Callable, Type
 import pytest
 from bs4 import Tag
 
+from soupsavvy.exceptions import NavigableStringException, NotSoupSelectorException
 from soupsavvy.tags.base import MultipleSoupSelector
 from soupsavvy.tags.combinators import (
     ChildCombinator,
@@ -19,7 +20,6 @@ from soupsavvy.tags.combinators import (
     SubsequentSiblingCombinator,
 )
 from soupsavvy.tags.components import AndSelector, NotSelector
-from soupsavvy.tags.exceptions import NavigableStringException, NotSoupSelectorException
 from tests.soupsavvy.tags.conftest import (
     MockDivSelector,
     MockLinkSelector,

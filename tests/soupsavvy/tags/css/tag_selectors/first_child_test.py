@@ -2,8 +2,8 @@
 
 import pytest
 
+from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.tags.css.tag_selectors import FirstChild
-from soupsavvy.tags.exceptions import TagNotFoundException
 from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 

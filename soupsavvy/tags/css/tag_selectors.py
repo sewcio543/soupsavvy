@@ -15,8 +15,8 @@ from typing import Optional
 import soupsieve as sv
 from bs4 import Tag
 
+from soupsavvy.exceptions import InvalidCSSSelector
 from soupsavvy.tags.base import SelectableCSS, SoupSelector
-from soupsavvy.tags.css.exceptions import InvalidCSSSelector
 from soupsavvy.tags.tag_utils import TagIterator
 
 

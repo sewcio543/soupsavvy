@@ -2,9 +2,9 @@
 
 import pytest
 
+from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
 from soupsavvy.tags.combinators import DescendantCombinator
 from soupsavvy.tags.components import AndSelector, AttributeSelector, TagSelector
-from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
 from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 

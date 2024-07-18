@@ -2,9 +2,8 @@
 
 import pytest
 
-from soupsavvy.tags.css.exceptions import InvalidCSSSelector
+from soupsavvy.exceptions import InvalidCSSSelector, TagNotFoundException
 from soupsavvy.tags.css.tag_selectors import NthLastChild
-from soupsavvy.tags.exceptions import TagNotFoundException
 from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
