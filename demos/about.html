@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soupsavvy &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="testing.generators.generators" href="../soupsavvy.testing.generators.generators.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.tags.html">tags</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.testing.html">testing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Demos:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Soupsavvy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#concept-of-selector">Concept of Selector</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#flaws">Flaws</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#solution">Solution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#selector">Selector</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#find-method"><code class="docutils literal notranslate"><span class="pre">find</span></code> method</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#docs">Docs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#find-all-method"><code class="docutils literal notranslate"><span class="pre">find_all</span></code> method</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Docs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#equality">Equality</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id4">Docs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#combining-selectors">Combining selectors</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id7">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Soupsavvy</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/demos/about.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="soupsavvy">
+<h1>Soupsavvy<a class="headerlink" href="#soupsavvy" title="Link to this heading"></a></h1>
+<section id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> is flexible search engine for <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>, designed to provide more powerful capabilities.
+While BeautifulSoup excels in excellent at parsing HTML documents, it falls short in performing more complex searches due to the lack of a robust <code class="docutils literal notranslate"><span class="pre">selector</span></code> concept. This limitation inspired the creation of <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code>, which integrates seamlessly with <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> to provide advanced search functionalities.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>, a <code class="docutils literal notranslate"><span class="pre">Tag</span></code> component serves dual roles as both a node in the HTML tree and a search engine. Its search engine allows for basic searches using tag names, attributes, and text, which suffices for simple scenarios. However, this approach becomes cumbersome for more complex searches. The lack of separation between the tree structure and the search engine also makes reusability challenging. Simplified, the public API of <code class="docutils literal notranslate"><span class="pre">Tag</span></code> looks like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>├── Tag
+│   ├── search
+│   │   ├── find
+│   │   ├── find_all
+│   │   ├── select
+│   │   ├── select_one
+│   │   ├── find_sibling
+│   ├── node
+│   │   ├── descendants
+│   │   ├── children
+│   │   ├── siblings
+│   │   ├── parent
+│   │   ├── next
+│   │   ├── previous
+</pre></div>
+</div>
+</section>
+<section id="concept-of-selector">
+<h2>Concept of Selector<a class="headerlink" href="#concept-of-selector" title="Link to this heading"></a></h2>
+<p>Imitating the concept of a <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> selector can be achieved in various ways. For simple searches where the Tag search engine is enough, dictionary of parameters can be assigned to variable and be reused throughout your code by passing it as keyword arguments to the <code class="docutils literal notranslate"><span class="pre">Tag</span></code> find methods. Here is an example:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="n">PRICE_SELECTOR</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="s2">&quot;attrs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;price&quot;</span><span class="p">}}</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="o">**</span><span class="n">PRICE_SELECTOR</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="o">**</span><span class="n">PRICE_SELECTOR</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>For more complex searches, we can define a function that takes a Tag as an argument and returns the desired element. This approach encapsulates the search logic, making it reusable across multiple places in your code. Here’s an example:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span><span class="p">,</span> <span class="n">Tag</span>
+
+<span class="c1"># CSS Selector equivalent: p.price &gt; span ~ a.link</span>
+
+
+<span class="k">def</span> <span class="nf">select_sth</span><span class="p">(</span><span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">):</span>
+    <span class="c1"># Find the first &lt;p&gt; tag with class &quot;price&quot;</span>
+    <span class="n">tag1</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;price&quot;</span><span class="p">})</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tag1</span><span class="p">,</span> <span class="n">Tag</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># Find the first &lt;span&gt; tag within the &lt;p&gt; tag</span>
+    <span class="n">tag2</span> <span class="o">=</span> <span class="n">tag1</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tag2</span><span class="p">,</span> <span class="n">Tag</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># Find the next sibling &lt;a&gt; tag with class &quot;link&quot;</span>
+    <span class="k">return</span> <span class="n">tag2</span><span class="o">.</span><span class="n">find_next_sibling</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;link&quot;</span><span class="p">})</span>
+
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;p class=&quot;price&quot;&gt;&lt;span&gt;Price: $10&lt;/span&gt;&lt;a class=&quot;link&quot;&gt;&lt;/a&gt;&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span>
+<span class="p">)</span>
+<span class="n">select_sth</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;a class=&quot;link&quot;&gt;&lt;/a&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<section id="flaws">
+<h3>Flaws<a class="headerlink" href="#flaws" title="Link to this heading"></a></h3>
+<p>Moving the search logic outside of the <code class="docutils literal notranslate"><span class="pre">Tag</span></code> class is a step towards a more structured search engine, but this approach has some limitations:</p>
+<ul class="simple">
+<li><p><strong>Handling Not Found</strong>: What if the function needs to raise an exception when the desired element is not found? In some scenarios, it is critical for the application to break if a required element is missing. This behavior is difficult to enforce with simple selector functions.</p></li>
+<li><p><strong>Parameter Passing</strong>: How to handle extra parameters for the <code class="docutils literal notranslate"><span class="pre">find</span></code> and <code class="docutils literal notranslate"><span class="pre">find_all</span></code> methods, such as <code class="docutils literal notranslate"><span class="pre">recursive</span></code> or <code class="docutils literal notranslate"><span class="pre">limit</span></code> for all functions in consistent way?</p></li>
+<li><p><strong>Maintainability</strong>: Maintaining multiple selector functions can become a nightmare. It makes the code harder to read and more prone to errors.</p></li>
+</ul>
+</section>
+<section id="solution">
+<h3>Solution<a class="headerlink" href="#solution" title="Link to this heading"></a></h3>
+<p>This is where <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> comes in with solution to all these problems. It allows you to define selectors declaratively, using a simple and readable syntax. It’s a powerful search engine for <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>, similar to the <a class="reference external" href="https://github.com/facelessuser/soupsieve" title="soupsieve">soupsieve</a> library, whose developers describe it as:</p>
+<ul>
+<li><blockquote>
+<div><p><em>“Soup Sieve is a CSS selector library designed to be used with Beautiful Soup 4.”</em></p>
+</div></blockquote>
+</li>
+<li><blockquote>
+<div><p><em>“Soup Sieve was written with the intent to replace Beautiful Soup’s builtin select feature, and as of Beautiful Soup version 4.7.0, it now is 🎊”</em></p>
+</div></blockquote>
+</li>
+</ul>
+<p>While <code class="docutils literal notranslate"><span class="pre">soupsieve</span></code> is an excellent tool for CSS selectors, <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> is a more general solution, offering greater flexibility in defining selectors.</p>
+<p>Perhaps one day <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> will be integrated with BeautifulSoup, but for now, it remains a standalone library.</p>
+</section>
+</section>
+<section id="selector">
+<h2>Selector<a class="headerlink" href="#selector" title="Link to this heading"></a></h2>
+<p>The most common feature of <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> is the <code class="docutils literal notranslate"><span class="pre">Selector</span></code>. This versatile component can be adjusted to suit various needs. All selectors implement the <code class="docutils literal notranslate"><span class="pre">SoupSelector</span></code> interface, which means:</p>
+<ul class="simple">
+<li><p><strong>Universal Usage</strong>: Selectors can be used in a consistent manner across different scenarios.</p></li>
+<li><p><strong>Combinability</strong>: Selectors can be easily combined and work seamlessly together.</p></li>
+<li><p><strong>Comparability</strong>: Selectors can be compared with one another.</p></li>
+<li><p><strong>Functionality</strong>: Selectors are used to find elements within the soup.</p></li>
+</ul>
+<section id="find-method">
+<h3><code class="docutils literal notranslate"><span class="pre">find</span></code> method<a class="headerlink" href="#find-method" title="Link to this heading"></a></h3>
+<section id="docs">
+<h4>Docs<a class="headerlink" href="#docs" title="Link to this heading"></a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.tags.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
+
+<span class="n">help</span><span class="p">(</span><span class="n">SoupSelector</span><span class="o">.</span><span class="n">find</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function find in module soupsavvy.tags.base:
+
+find(self, tag: &#39;Tag&#39;, strict: &#39;bool&#39; = False, recursive: &#39;bool&#39; = True) -&gt; &#39;Optional[Tag]&#39;
+    Finds a first matching element in provided BeautifulSoup Tag.
+    
+    Parameters
+    ----------
+    tag : Tag
+        Any BeautifulSoup Tag object.
+    strict : bool, optional
+        If True, raises an exception if tag was not found in markup,
+        if False and tag was not found, returns None by defaulting to BeautifulSoup
+        implementation. Value of this parameter does not affect behavior if tag
+        was successfully found in the markup. By default False.
+    recursive : bool, optional
+        bs4.Tag.find method parameter that specifies if search should be recursive.
+        If set to False, only direct children of the tag will be searched.
+        By default True.
+    
+    Returns
+    -------
+    Tag | None
+        BeautifulSoup Tag if it tag was found in the markup, else None.
+    
+    Notes
+    -----
+    If result is an instance of NavigableString,
+    exception is raised to avoid any type of inconsistency downstream.
+    
+    Raises
+    ------
+    TagNotFoundException
+        If strict parameter is set to True and tag was not found in markup.
+    NavigableStringException
+        If NavigableString was returned by bs4.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="overview">
+<h4>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">find</span></code> method is one of the two primary search methods in <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> selectors, alongside <code class="docutils literal notranslate"><span class="pre">find_all</span></code>. Much like the <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> <code class="docutils literal notranslate"><span class="pre">Tag.find</span></code> method, <code class="docutils literal notranslate"><span class="pre">find</span></code> returns the first element that matches the selector. In addition to the <code class="docutils literal notranslate"><span class="pre">recursive</span></code> option from <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>, it introduces a <code class="docutils literal notranslate"><span class="pre">strict</span></code> parameter.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">strict</span></code> parameter addresses a common issue: often, not finding an element is not expected and can break the application. Continuously checking if returned objects are <code class="docutils literal notranslate"><span class="pre">None</span></code> creates a lot of boilerplate code. By setting the <code class="docutils literal notranslate"><span class="pre">strict</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the <code class="docutils literal notranslate"><span class="pre">find</span></code> method will raise a <code class="docutils literal notranslate"><span class="pre">TagNotFoundException</span></code> if no element is found, ensuring that the application does not proceed in such cases. By default, <code class="docutils literal notranslate"><span class="pre">strict</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<p>A particular challenge with <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> arises when only a string is provided as a parameter to the <code class="docutils literal notranslate"><span class="pre">find</span></code> method, which if anything was matched returns <code class="docutils literal notranslate"><span class="pre">NavigableString</span></code> object. This makes searches based solely on text difficult. <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> tackles this problem with the <code class="docutils literal notranslate"><span class="pre">PatternSelector</span></code>, though it won’t be covered in this article.</p>
+<p>Furthermore, <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> raises <code class="docutils literal notranslate"><span class="pre">NavigableStringException</span></code> if any selector’s <code class="docutils literal notranslate"><span class="pre">find</span></code> method returns a <code class="docutils literal notranslate"><span class="pre">NavigableString</span></code> object, preventing unintended behavior.</p>
+<p>Generally, in most selectors, the <code class="docutils literal notranslate"><span class="pre">find</span></code> method operates by returning the first element from the results of the <code class="docutils literal notranslate"><span class="pre">find_all</span></code> method, but some selectors optimize this process.</p>
+</section>
+<section id="examples">
+<h4>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span>
+<span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span><span class="p">,</span> <span class="n">Tag</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span>
+
+<span class="n">soup</span><span class="p">:</span> <span class="n">Tag</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;div&gt;&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;&lt;/div&gt;&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">body</span>  <span class="c1"># type: ignore</span>
+
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.exceptions</span> <span class="kn">import</span> <span class="n">TagNotFoundException</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;&lt;a class=&quot;price&quot;&gt;Price: $10&lt;/a&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">TagNotFoundException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Tag was not found in markup.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="find-all-method">
+<h3><code class="docutils literal notranslate"><span class="pre">find_all</span></code> method<a class="headerlink" href="#find-all-method" title="Link to this heading"></a></h3>
+<section id="id1">
+<h4>Docs<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.tags.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
+
+<span class="n">help</span><span class="p">(</span><span class="n">SoupSelector</span><span class="o">.</span><span class="n">find_all</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function find_all in module soupsavvy.tags.base:
+
+find_all(self, tag: &#39;Tag&#39;, recursive: &#39;bool&#39; = True, limit: &#39;Optional[int]&#39; = None) -&gt; &#39;list[Tag]&#39;
+    Finds all matching elements in provided BeautifulSoup Tag.
+    
+    Parameters
+    ----------
+    tag : Tag
+        Any BeautifulSoup Tag object.
+    recursive : bool, optional
+        bs4.Tag.find method parameter that specifies if search should be recursive.
+        If set to False, only direct children of the tag will be searched.
+        By default True.
+    limit : int, optional
+        bs4.Tag.find_all method parameter that specifies maximum number of elements
+        to return. If set to None, all elements are returned. By default None.
+    
+    Returns
+    -------
+    list[Tag]
+        A list of Tag objects matching tag specifications.
+        If none found, the list is empty.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id2">
+<h4>Overview<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">find_all</span></code> method, similar to <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>’s <code class="docutils literal notranslate"><span class="pre">Tag.find_all</span></code> method, returns all elements that match the selector. It consistently returns a list, so there is no need for a <code class="docutils literal notranslate"><span class="pre">strict</span></code> parameter. If no elements match the selector, it simply returns an empty list. The <code class="docutils literal notranslate"><span class="pre">find_all</span></code> method also supports the <code class="docutils literal notranslate"><span class="pre">limit</span></code> and <code class="docutils literal notranslate"><span class="pre">recursive</span></code> parameters, familiar from <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>, allowing for controlled and flexible searches.</p>
+</section>
+<section id="id3">
+<h4>Examples<a class="headerlink" href="#id3" title="Link to this heading"></a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span>
+<span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;, &lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span><span class="p">,</span> <span class="n">Tag</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span>
+
+<span class="n">soup</span><span class="p">:</span> <span class="n">Tag</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;div&gt;&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;&lt;/div&gt;&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">body</span>  <span class="c1"># type: ignore</span>
+
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;&lt;a class=&quot;price&quot;&gt;Price: $10&lt;/a&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $30&lt;/p&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;, &lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="equality">
+<h3>Equality<a class="headerlink" href="#equality" title="Link to this heading"></a></h3>
+<section id="id4">
+<h4>Docs<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.tags.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
+
+<span class="n">help</span><span class="p">(</span><span class="n">SoupSelector</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function __eq__ in module soupsavvy.tags.base:
+
+__eq__(self, other: &#39;object&#39;) -&gt; &#39;bool&#39;
+    Check self and other object for equality.
+    
+    This method is abstract and must be implemented by all selectors.
+    Selectors are considered equal if their find methods return the same result.
+    
+    Calling find or find_all methods on selectors that are equal
+    should return the same results.
+    
+    Example
+    -------
+    &gt;&gt;&gt; selector1 = ElementTag(&quot;div&quot;)
+    &gt;&gt;&gt; selector2 = ElementTag(&quot;div&quot;)
+    &gt;&gt;&gt; selector1 == selector2
+    True
+    &gt;&gt;&gt; selector1.find(tag) == selector2.find(tag)
+    True
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id5">
+<h4>Overview<a class="headerlink" href="#id5" title="Link to this heading"></a></h4>
+<p>All <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> Selectors are comparable, meaning they can be checked for equality. If two selectors are equal, their search results will always be identical. However, if two selectors are not equal, their search results may still be the same, but this is not guaranteed and depends on the structure of the soup being queried.</p>
+</section>
+<section id="id6">
+<h4>Examples<a class="headerlink" href="#id6" title="Link to this heading"></a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span><span class="p">,</span> <span class="n">AnyTagSelector</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">TagSelector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">TagSelector</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">)</span><span class="w"> </span><span class="si">= }</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">TagSelector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">TagSelector</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="w"> </span><span class="si">= }</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># selectors of different types can be equal as well</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">TagSelector</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">AnyTagSelector</span><span class="p">()</span><span class="w"> </span><span class="si">= }</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TagSelector(&#39;p&#39;) == TagSelector(&#39;div&#39;) = False
+TagSelector(&#39;p&#39;) == TagSelector(&#39;a&#39;) = False
+TagSelector() == AnyTagSelector() = True
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="combining-selectors">
+<h3>Combining selectors<a class="headerlink" href="#combining-selectors" title="Link to this heading"></a></h3>
+<section id="id7">
+<h4>Overview<a class="headerlink" href="#id7" title="Link to this heading"></a></h4>
+<p>All selectors in <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> can be combined using Higher Order Selectors, such as <code class="docutils literal notranslate"><span class="pre">AndSelector</span></code>, or with syntactical sugar operators. This flexibility allows for complex and nuanced queries, enabling users to construct sophisticated search criteria. For more detailed information about combining selectors read that section of the documentation.</p>
+</section>
+<section id="id8">
+<h4>Examples<a class="headerlink" href="#id8" title="Link to this heading"></a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">AndSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># combine selector using Higher Order Selector initializer</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">AndSelector</span><span class="p">(</span><span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">),</span> <span class="n">PatternSelector</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;20&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">AndSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># combine selectors with the &amp; operator</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">PatternSelector</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;20&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> is crafted to be a powerful and intuitive search engine for <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>. By leveraging the concept of selectors, it encapsulates search logic in a structured and reusable manner, addressing the limitations of <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> and offering seamless integration with it.</p>
+<p><strong>Enjoy <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> and leave us feedback!</strong><br />
+<strong>Happy scraping!</strong></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../soupsavvy.testing.generators.generators.html" class="btn btn-neutral float-left" title="testing.generators.generators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, sewcio543.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

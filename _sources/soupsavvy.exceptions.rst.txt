@@ -1,0 +1,7 @@
+exceptions
+===========================
+
+.. automodule:: soupsavvy.exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:

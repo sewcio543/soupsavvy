@@ -16,7 +16,6 @@ Submodules
    :maxdepth: 4
 
    soupsavvy.testing.generators.base
-   soupsavvy.testing.generators.exceptions
    soupsavvy.testing.generators.generators
    soupsavvy.testing.generators.namespace
 

@@ -19,7 +19,6 @@ Submodules
    soupsavvy.tags.base
    soupsavvy.tags.combinators
    soupsavvy.tags.components
-   soupsavvy.tags.exceptions
    soupsavvy.tags.namespace
    soupsavvy.tags.relative
    soupsavvy.tags.tag_utils

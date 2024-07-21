@@ -16,7 +16,6 @@ Submodules
    :maxdepth: 4
 
    soupsavvy.tags.css.api
-   soupsavvy.tags.css.exceptions
    soupsavvy.tags.css.tag_selectors
 
 Module contents

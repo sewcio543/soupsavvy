@@ -1,7 +1,0 @@
-testing.generators.exceptions
-==============================================
-
-.. automodule:: soupsavvy.testing.generators.exceptions
-   :members:
-   :undoc-members:
-   :show-inheritance:

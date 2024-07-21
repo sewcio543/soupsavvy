@@ -1,7 +1,0 @@
-tags.exceptions
-================================
-
-.. automodule:: soupsavvy.tags.exceptions
-   :members:
-   :undoc-members:
-   :show-inheritance:

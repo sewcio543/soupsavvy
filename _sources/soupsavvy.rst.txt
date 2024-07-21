@@ -11,6 +11,14 @@ Subpackages
    soupsavvy.testing
    soupsavvy.utils
 
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.exceptions
+
 Module contents
 ---------------
 
