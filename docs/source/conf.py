@@ -23,6 +23,7 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
     "m2r2",
+    "myst_nb",
 ]
 
 templates_path = ["_templates"]
@@ -35,7 +36,7 @@ add_module_names = False
 
 html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
-source_suffix = [".rst", ".md"]
+source_suffix = [".rst", ".md", ".ipynb"]
 
 
 def skip(app, what, name, obj, would_skip, options):
