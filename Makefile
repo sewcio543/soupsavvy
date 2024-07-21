@@ -25,10 +25,5 @@ typecheck:
 	python -m mypy --install-types --non-interactive
 	python -m mypy . --ignore-missing-imports
 docu:
-	pip install -e .
-	python docs/source/update_index.py
-	sphinx-apidoc -o docs/source soupsavvy --separate --force
-	python docs/source/renaming.py -- docs/source
-	rm -rf build_/
-	sphinx-build docs/source build_/
+	bash docs/sphinx_run.sh
 	git clean -fd docs/source/*.rst

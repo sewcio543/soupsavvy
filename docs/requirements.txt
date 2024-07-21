@@ -1,3 +1,7 @@
+lxml_html_clean
 m2r2
-sphinx==7.2.6
-sphinx_rtd_theme==2.0.0
+myst_nb
+nbsphinx
+pandoc
+sphinx
+sphinx_rtd_theme
