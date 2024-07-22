@@ -83,7 +83,7 @@ class TestFirstOfType:
             <span><a>2</a><a></a></span>
             <span>Hello</span>
             <a>Hello</a>
-            <div><a><p>3</p></div>
+            <div><a><p>3</p></a></div>
         """
         bs = to_bs(text)
         selector = FirstOfType("a")

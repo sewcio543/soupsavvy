@@ -10,7 +10,7 @@ from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 @pytest.mark.css_selector
 @pytest.mark.soup
 class TestFirstChild:
-    """Class with unit tests for EmptyChild tag selector."""
+    """Class with unit tests for FirstChild tag selector."""
 
     def test_selector_is_correct_without_tag(self):
         """Tests if selector property returns correct value without specifying tag."""
@@ -46,7 +46,7 @@ class TestFirstChild:
             <div>1</div>
             <div>
                 <div><a>2</a><p></p></div>
-                <div class="menu">
+                <div class="menu"></div>
             </div>
             <div>
                 <p>Hello</p>
@@ -77,7 +77,7 @@ class TestFirstChild:
             </div>
             <span><a>2</a></span>
             <a class="widget"></a>
-            <div><a><p>3</p></div>
+            <div><a><p>3</p></a></div>
         """
         bs = to_bs(text)
         selector = FirstChild("a")
