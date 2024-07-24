@@ -20,144 +20,262 @@ class TestLastOfType:
         """Tests if selector property returns correct value when specifying tag."""
         assert LastOfType("div").selector == "div:last-of-type"
 
-    def test_find_returns_none_if_tag_name_not_present(self):
-        """
-        Tests if find method returns None if specified tag is not present
-        in the tag markup. In this case, 'span' is not present in the markup.
-        """
-        html = """
-            <div>
-                <p>text</p>
-            </div>
+    def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
+        """Tests if find_all method returns all tags for selector without tag name."""
+        text = """
             <div></div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = LastOfType("span")
-        result = tag.find(bs)
-        assert result is None
-
-    def test_find_returns_last_element_without_tag(self):
-        """
-        Tests if find method returns last element when tag is not specified.
-        When last-of-type is passed without a tag, it returns all last elements
-        of each type, so first found element is just the last element in the markup.
-        """
-        html = """
-            <div>text 1</div>
-            <span>text 2</span>
-            <span>text 3</span>
-            <div>text 4</div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = LastOfType()
-        result = tag.find(bs)
-        assert strip(str(result)) == strip("<span>text 3</span>")
-
-    def test_find_returns_last_element_of_type_with_tag(self):
-        """
-        Tests if find method returns last element of type which name matches
-        the specified tag. Even though div, span and p are last elements of
-        their type relative to parent element, only last 'a' is returned as it matches
-        the specified tag.
-        """
-        html = """
+            <a class="widget"></a>
             <div>
-                <p>text 1</p>
+                <p>Hello</p>
+                <p class="widget">1</p>
+                <a>2</a>
             </div>
-            <span>
-                <a>text 2</a>
-                <a>text 3</a>
-            </span>
+            <div>3</div>
+            <a href="widget">4</a>
+            <span><a></a><a>56</a></span>
         """
-        bs = find_body_element(to_bs(html))
-        tag = LastOfType("a")
-        result = tag.find(bs)
-        assert strip(str(result)) == strip("<a>text 3</a>")
-
-    def test_find_raises_exception_with_specified_tag_if_not_found_in_strict_mode(self):
-        """
-        Tests if find method raises TagNotFoundException
-        if no element of type is found in strict mode when tag is specified.
-        It only makes sense to test for exception when tag is specified,
-        as there is always a last element of type otherwise.
-        """
-        html = """
-            <div>
-                <p>text 1</p>
-                <div>Hello</div>
-            </div>
-            <span>Hello</span>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = LastOfType("a")
-
-        with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True)
-
-    def test_find_all_returns_empty_list_if_no_elements_of_type(self):
-        """
-        Tests if find_all method returns empty list if no elements of specified
-        type are found.
-        """
-        html = """
-            <div>
-                <p>text 1</p>
-            </div>
-            <span></span>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = LastOfType("a")
-        result = tag.find_all(bs)
-        assert result == []
-
-    def test_find_all_returns_all_last_of_type_without_tag(self):
-        """
-        Tests if find_all method returns all last elements of each type
-        relative to their parent element when tag is not specified.
-        """
-        html = """
-            <span><p>text 1</p><p>text 2</p></span>
-            <div>
-                <p>text 3</p>
-                <a>text 4</a>
-                <div>Hello 1</div>
-                <div>Hello 2</div>
-            </div>
-            <div><p>text 5</p></div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = LastOfType()
-        result = tag.find_all(bs)
+        bs = find_body_element(to_bs(text))
+        selector = LastOfType()
+        result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("<span><p>text 1</p><p>text 2</p></span>"),
-            strip("<p>text 2</p>"),
-            strip("<p>text 3</p>"),
-            strip("<a>text 4</a>"),
-            strip("<div>Hello 2</div>"),
-            strip("<div><p>text 5</p></div>"),
-            strip("<p>text 5</p>"),
+            strip("""<p class="widget">1</p>"""),
+            strip("""<a>2</a>"""),
+            strip("""<div>3</div>"""),
+            strip("""<a href="widget">4</a>"""),
+            strip("""<span><a></a><a>56</a></span>"""),
+            strip("""<a>56</a>"""),
         ]
 
-    def test_find_all_returns_all_last_of_type_elements_with_tag(self):
-        """
-        Tests if find_all method returns all last elements of type which name matches
-        the specified tag.
-        """
-        html = """
-            <span><p>text 1</p><p>text 2</p></span>
+    def test_find_all_returns_all_tags_for_selector_with_tag_name(self):
+        """Tests if find_all method returns all tags for selector with tag name."""
+        text = """
+            <div>Hello</div>
+            <a class="widget"></a>
             <div>
-                <p>text 3</p>
-                <a>text 4</a>
-                <div>Hello 1</div>
-                <div>Hello 2</div>
+                <p>text</p>
+                <div>
+                    <span>Hello</span>
+                    <a class="widget"></a>
+                    <a>1</a>
+                </div>
+                <p class="LastOfType"></p>
+                <a>Hello</a>
+                <a><span>2</span></a>
             </div>
-            <div><p>text 5</p></div>
+            <div></div>
+            <a href="widget">3</a>
         """
-        bs = find_body_element(to_bs(html))
-        tag = LastOfType("div")
-        result = tag.find_all(bs)
-
+        bs = find_body_element(to_bs(text))
+        selector = LastOfType("a")
+        result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("<div>Hello 2</div>"),
-            strip("<div><p>text 5</p></div>"),
+            strip("""<a>1</a>"""),
+            strip("""<a><span>2</span></a>"""),
+            strip("""<a href="widget">3</a>"""),
+        ]
+
+    def test_find_returns_first_tag_matching_selector(self):
+        """Tests if find method returns first tag matching selector."""
+        text = """
+            <div></div>
+            <a>Hello</a>
+            <div>Hello</div>
+            <span><a></a><a>1</a></span>
+            <span>Hello</span>
+            <a class="widget">2</a>
+            <div><a><p>3</p></a></div>
+        """
+        bs = to_bs(text)
+        selector = LastOfType("a")
+        result = selector.find(bs)
+        assert strip(str(result)) == strip("""<a>1</a>""")
+
+    def test_find_returns_none_if_no_match_and_strict_false(self):
+        """
+        Tests if find returns None if no element matches the selector
+        and strict is False.
+        """
+        text = """
+            <div></div>
+            <div>Hello</div>
+            <span><p>Not child</p></span>
+            <span>Hello</span>
+        """
+        bs = to_bs(text)
+        selector = LastOfType("a")
+        result = selector.find(bs)
+        assert result is None
+
+    def test_find_raises_exception_if_no_match_and_strict_true(self):
+        """
+        Tests if find raises TagNotFoundException if no element matches the selector
+        and strict is True.
+        """
+        text = """
+            <div></div>
+            <div>Hello</div>
+            <span><p>Not child</p></span>
+            <span>Hello</span>
+        """
+        bs = to_bs(text)
+        selector = LastOfType("a")
+
+        with pytest.raises(TagNotFoundException):
+            selector.find(bs, strict=True)
+
+    def test_find_all_returns_empty_list_when_no_match(self):
+        """Tests if find returns an empty list if no element matches the selector."""
+        text = """
+            <div></div>
+            <div>Hello</div>
+            <span><p>Not child</p></span>
+            <span>Hello</span>
+        """
+        bs = to_bs(text)
+        selector = LastOfType("a")
+        result = selector.find_all(bs)
+        assert result == []
+
+    def test_find_returns_first_matching_child_if_recursive_false(self):
+        """
+        Tests if find returns first matching child element if recursive is False.
+        """
+        text = """
+            <div></div>
+            <div>Hello</div>
+            <span><a></a><a>Not child</a></span>
+            <a>Hello</a>
+            <span>Hello</span>
+            <a class="widget">1</a>
+            <div><p></p></div>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = LastOfType("a")
+        result = selector.find(bs, recursive=False)
+        assert strip(str(result)) == strip("""<a class="widget">1</a>""")
+
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+        """
+        Tests if find returns None if no child element matches the selector
+        and recursive is False.
+        """
+        text = """
+            <div></div>
+            <div>Hello</div>
+            <span><a></a><a>Not child</a></span>
+            <span>Hello</span>
+            <div><p></p></div>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = LastOfType("a")
+        result = selector.find(bs, recursive=False)
+        assert result is None
+
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+        """
+        Tests if find raises TagNotFoundException if no child element
+        matches the selector, when recursive is False and strict is True.
+        """
+        text = """
+            <div></div>
+            <div>Hello</div>
+            <span><a></a><a>Not child</a></span>
+            <span>Hello</span>
+            <div><p></p></div>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = LastOfType("a")
+
+        with pytest.raises(TagNotFoundException):
+            selector.find(bs, strict=True, recursive=False)
+
+    def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns an empty list if no child element matches the selector
+        and recursive is False.
+        """
+        text = """
+            <div></div>
+            <div>Hello</div>
+            <span><a></a><a>Not child</a></span>
+            <span>Hello</span>
+            <div><p></p></div>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = LastOfType("a")
+        result = selector.find_all(bs, recursive=False)
+        assert result == []
+
+    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+        """
+        Tests if find_all returns all matching children if recursive is False.
+        It returns only matching children of the body element.
+        """
+        text = """
+            <div></div>
+            <a>Hello</a>
+            <span><a></a><a>No child</a></span>
+            <span>1</span>
+            <div>Hello</div>
+            <a class="widget">2</a>
+            <div><p>3</p></div>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = LastOfType()
+        result = selector.find_all(bs, recursive=False)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<span>1</span>"""),
+            strip("""<a class="widget">2</a>"""),
+            strip("""<div><p>3</p></div>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+        """
+        Tests if find_all returns only x elements when limit is set.
+        In this case only 2 first in order elements are returned.
+        """
+        text = """
+            <div></div>
+            <a class="widget"></a>
+            <div>
+                <p>Hello</p>
+                <p class="widget">1</p>
+            </div>
+            <div>2</div>
+            <a href="widget">3</a>
+            <span><a></a><a>45</a></span>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = LastOfType()
+        result = selector.find_all(bs, limit=2)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<p class="widget">1</p>"""),
+            strip("""<div>2</div>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns only x elements when limit is set and recursive
+        is False. In this case only 2 first in order children matching
+        the selector are returned.
+        """
+        text = """
+            <div></div>
+            <a>Hello</a>
+            <span><a></a><a>No child</a></span>
+            <span>1</span>
+            <div>Hello</div>
+            <a class="widget">2</a>
+            <div><p>3</p></div>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = LastOfType()
+        result = selector.find_all(bs, recursive=False, limit=2)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<span>1</span>"""),
+            strip("""<a class="widget">2</a>"""),
         ]

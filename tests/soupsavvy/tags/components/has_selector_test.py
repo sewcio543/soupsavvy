@@ -42,15 +42,18 @@ class TestHasSelector:
     ):
         """
         Tests if find method returns the first tag that has a descendant element that
-        matches a single selector. In this case, recursive parameter is not relevant.
+        matches a single selector. In this case, recursive parameter is not relevant,
+        because by default HasSelector matches all descendants, if descendant 'has'
+        element, its parent has it as well, and is first in order.
         """
         text = """
             <p>Don't have</p>
             <div>
                 <span>Hello World</span>
             </div>
-            <a>Don't have</a>
             <div><a>1</a></div>
+            <a>Don't have</a>
+            <div><a>2</a><span>Hello</span></div>
         """
         bs = find_body_element(to_bs(text))
         selector = HasSelector(MockLinkSelector())
@@ -120,7 +123,7 @@ class TestHasSelector:
             <span><p></p><a>2</a></span>
             <a>Don't have</a>
             <div><a>3</a></div>
-            <div><span><a>4</a></span></div>
+            <div><span><a>45</a></span></div>
         """
         bs = find_body_element(to_bs(text))
 
@@ -131,8 +134,8 @@ class TestHasSelector:
             strip("""<div><a>1</a><a>Duplicate</a></div>"""),
             strip("""<span><p></p><a>2</a></span>"""),
             strip("""<div><a>3</a></div>"""),
-            strip("""<div><span><a>4</a></span></div>"""),
-            strip("""<span><a>4</a></span>"""),
+            strip("""<div><span><a>45</a></span></div>"""),
+            strip("""<span><a>45</a></span>"""),
         ]
 
     def test_finds_all_tags_matching_single_selector_when_recursive_false(self):
@@ -238,12 +241,12 @@ class TestHasSelector:
             strip("""<div><a>2</a></div>"""),
         ]
 
-    def test_find_all_returns_all_tags_matching_at_least_one_selector(
+    def test_find_returns_match_with_multiple_selectors(
         self,
     ):
         """
-        Tests if find_all method returns all tags that have descendant elements
-        matching at least one of the selectors, when multiple selectors are provided.
+        Tests if find method returns the first tag that matches selector
+        if there are multiple selectors are provided.
         """
         text = """
             <p>Don't have</p>

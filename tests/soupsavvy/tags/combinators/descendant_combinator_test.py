@@ -3,14 +3,14 @@
 import pytest
 
 from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
-from soupsavvy.tags.combinators import DescendantCombinator, SelectorList
-from soupsavvy.tags.components import (
-    AnyTagSelector,
-    AttributeSelector,
-    PatternSelector,
-    TagSelector,
+from soupsavvy.tags.combinators import DescendantCombinator
+from tests.soupsavvy.tags.conftest import (
+    MockDivSelector,
+    MockLinkSelector,
+    find_body_element,
+    strip,
+    to_bs,
 )
-from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
 @pytest.mark.soup
@@ -18,431 +18,214 @@ from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 class TestDescendantCombinator:
     """Class for DescendantCombinator unit test suite."""
 
-    def test_not_SoupSelector_in_init_raises_exception(self):
+    def test_raises_exception_when_invalid_input(self):
         """
-        Tests if NotSoupSelectorException is raised when one of input parameters
-        is not a SoupSelector object.
+        Tests if init raises NotSoupSelectorException when invalid input is provided.
         """
         with pytest.raises(NotSoupSelectorException):
-            DescendantCombinator(TagSelector(tag="div"), "string")  # type: ignore
+            DescendantCombinator(MockDivSelector(), "string")  # type: ignore
 
-    @pytest.mark.parametrize(
-        argnames="tag",
-        argvalues=[
-            DescendantCombinator(TagSelector(tag="div"), TagSelector(tag="a")),
-            DescendantCombinator(
-                TagSelector(
-                    tag="div",
-                    attributes=[AttributeSelector(name="class", value="container")],
-                ),
-                TagSelector(
-                    tag="a", attributes=[AttributeSelector(name="href", value="search")]
-                ),
-            ),
-            DescendantCombinator(TagSelector(tag="div"), AnyTagSelector()),
-            DescendantCombinator(
-                AttributeSelector(name="href", value="google"), TagSelector("a")
-            ),
-            DescendantCombinator(
-                TagSelector(tag="div"),
-                PatternSelector(pattern="Welcome"),
-            ),
-        ],
-        ids=[
-            "with_only_tag_names",
-            "with_tags_attributes",
-            "with_any_tag",
-            "with_only_attribute",
-            "with_pattern_tag",
-        ],
-    )
-    def test_element_is_found_for_valid_steps_elements(self, tag: DescendantCombinator):
+        with pytest.raises(NotSoupSelectorException):
+            DescendantCombinator("string", MockDivSelector())  # type: ignore
+
+    def test_find_returns_first_tag_matching_selector(self):
+        """Tests if find method returns the first tag that matches selector."""
+        text = """
+            <a>Hello</a>
+            <div><span>Hello</span></div>
+            <span class="widget"><a>Hello</a></span>
+            <a class="link"><div class="link"></div></a>
+            <div>
+                <div>
+                    <a class="widget">1</a>
+                    <span class="widget"></span>
+                    <a>2</a>
+                </div>
+            </div>
         """
-        Tests if element was found for various valid DescendantCombinator.
-        Element is returned if it matches multi-step tags.
+        bs = find_body_element(to_bs(text))
+
+        selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find(bs)
+        assert strip(str(result)) == strip("""<a class="widget">1</a>""")
+
+    def test_find_returns_none_if_no_tags_match_in_not_strict_mode(self):
+        """
+        Tests if find method returns None when no tag is found that
+        matches selector in not strict mode.
         """
         text = """
-            <div class="container" href="google">
-                <a class="link" href="search">Welcome</a>
+            <a>Hello</a>
+            <div><span>Hello</span></div>
+            <span class="widget"><a>Hello</a></span>
+            <a class="link"><div class="link"></div></a>
+            <div>
+                <span class="widget"></span>
+                <img src="image.jpg">
             </div>
         """
         bs = to_bs(text)
-        result = tag.find(bs)
-        assert strip(str(result)) == strip(
-            """<a class="link" href="search">Welcome</a>"""
-        )
+        selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find(bs)
+        assert result is None
 
-    @pytest.mark.parametrize(
-        argnames="tag",
-        argvalues=[
-            DescendantCombinator(TagSelector(tag="div"), TagSelector(tag="span")),
-            DescendantCombinator(TagSelector(tag="footer"), TagSelector(tag="a")),
-            DescendantCombinator(
-                TagSelector(
-                    tag="div",
-                    attributes=[AttributeSelector(name="class", value="container")],
-                ),
-                TagSelector(
-                    tag="a",
-                    attributes=[AttributeSelector(name="href", value="funhub.com")],
-                ),
-            ),
-            DescendantCombinator(
-                AttributeSelector(name="href", value="funhub.com"), TagSelector("a")
-            ),
-            DescendantCombinator(
-                TagSelector(tag="div"),
-                PatternSelector(pattern="Goodbye"),
-            ),
-        ],
-        ids=[
-            "with_only_tag_names",
-            "with_tags_attributes",
-            "with_empty_element_tag",
-            "with_only_attribute",
-            "with_pattern_tag",
-        ],
-    )
-    def test_element_is_not_found_for_not_matching_steps_tags(
-        self, tag: DescendantCombinator
-    ):
+    def test_find_raises_exception_when_no_tags_match_in_strict_mode(self):
         """
-        Tests if element was not found for various invalid DescendantCombinator
-        and None was returned.
+        Tests if find method raises TagNotFoundException when no tag is found
+        that matches selector in strict mode.
         """
         text = """
-            <div class="container" href="google">
-                <a class="link" href="search">Welcome</a>
+            <a>Hello</a>
+            <div><span>Hello</span></div>
+            <span class="widget"><a>Hello</a></span>
+            <a class="link"><div class="link"></div></a>
+            <div>
+                <span class="widget"></span>
+                <img src="image.jpg">
             </div>
         """
         bs = to_bs(text)
-        assert tag.find(bs) is None
-
-    def test_find_raises_exception_when_tag_not_found_in_strict_mode(self):
-        """
-        Tests if find raises TagNotFoundException exception if no element was found
-        and method was called in a strict mode.
-        """
-        text = """
-             <div class="container" href="google">
-                <a class="link" href="search">Welcome</a>
-            </div>
-        """
-        bs = to_bs(text)
-        tag = DescendantCombinator(TagSelector(tag="div"), TagSelector(tag="span"))
+        selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True)
+            selector.find(bs, strict=True)
 
-    def test_finds_nested_elements_that_are_not_direct_children(self):
+    def test_find_returns_match_with_multiple_selectors(self):
         """
-        Tests if DescendantCombinator find method returns matching elements if they
-        are in markup as not direct children of previous element in steps.
+        Tests if find method returns the first tag that matches selector
+        if there are multiple selectors are provided.
         """
         text = """
-            <div class="wrapper">
-                <div class="container" href="google">
-                    <span>
-                        <a class="link" href="search">Welcome</a>
-                    </span>
-                </div>
-            </div>
-        """
-        bs = to_bs(text)
-        tag = DescendantCombinator(
-            TagSelector(
-                tag="div",
-                attributes=[AttributeSelector(name="class", value="container")],
-            ),
-            TagSelector(tag="a"),
-        )
-        result = tag.find(bs)
-        assert strip(str(result)) == strip(
-            """<a class="link" href="search">Welcome</a>"""
-        )
-
-    def test_finds_for_multiple_options_with_soup_union_tag(self):
-        """
-        Tests if DescendantCombinator find_all method returns matching elements if they
-        match any of tags that are part of SoupUnionTag at any step.
-        """
-        text = """
-            <div class="wrapper">
-                <a class="link">Welcome</a>
+            <p>Hello World</p>
+            <div>
+                <p>Hello 1</p>
             </div>
             <div>
-                <a class="link">Welcome</a>
-            </div>
-            <div class="container">
-                <a class="link">Goodbye</a>
-            </div>
-            <div class="wrapper">
-                <a class="wrong_link">Welcome</a>
-            </div>
-            <div class="container">
-                <a class="funhub">See you</a>
-            </div>
-        """
-        bs = to_bs(text)
-        tag = DescendantCombinator(
-            SelectorList(
-                TagSelector(
-                    tag="div",
-                    attributes=[AttributeSelector(name="class", value="container")],
-                ),
-                TagSelector(
-                    tag="div",
-                    attributes=[AttributeSelector(name="class", value="wrapper")],
-                ),
-            ),
-            SelectorList(
-                TagSelector(
-                    tag="a",
-                    attributes=[AttributeSelector(name="class", value="link")],
-                ),
-                TagSelector(
-                    tag="a",
-                    attributes=[AttributeSelector(name="class", value="funhub")],
-                ),
-            ),
-        )
-        results = tag.find_all(bs)
-        expected = {
-            strip("""<a class="link">Welcome</a>"""),
-            strip("""<a class="link">Goodbye</a>"""),
-            strip("""<a class="funhub">See you</a>"""),
-        }
-        # order is different in case of SoupUnionTag
-        assert set(map(str, results)) == expected
-
-    def test_finds_element_for_more_than_two_steps(self):
-        """
-        Tests if DescendantCombinator find method returns matching elements if there are
-        more than two tags are in steps.
-        """
-        text = """
-            <div class="wrapper">
-                <div class="container" href="google">
-                    <span id="funhub_link">
-                        <a class="link" href="funhub.com">Welcome</a>
-                    </span>
-                </div>
-            </div>
-        """
-        bs = to_bs(text)
-        tag = DescendantCombinator(
-            TagSelector(
-                tag="div",
-                attributes=[AttributeSelector(name="class", value="container")],
-            ),
-            TagSelector(
-                tag="span",
-                attributes=[AttributeSelector(name="id", value="funhub_link")],
-            ),
-            TagSelector(tag="a"),
-        )
-        result = tag.find(bs)
-        assert strip(str(result)) == strip(
-            """<a class="link" href="funhub.com">Welcome</a>"""
-        )
-
-    def test_find_all_handles_multiple_different_levels_of_elements(self):
-        """
-        Tests if DescendantCombinator find_all method returns matching elements
-        if there are at different depth levels.
-        """
-        text = """
-            <div class="wrapper">
-                <div class="container" href="google">
-                    <span class="funhub_link">
-                        <a class="link" href="funhub.com">Welcome</a>
-                    </span>
-                </div>
-            </div>
-            <div class="container" href="google">
-                <span class="funhub_link">
-                    <a class="link" href="funhub.com">Goodbye</a>
-                </span>
-            </div>
-            <span class="funhub_link">
-                <a class="link" href="funhub.com">See you</a>
-            </span>
-        """
-        bs = to_bs(text)
-        tag = DescendantCombinator(
-            TagSelector(
-                tag="span",
-                attributes=[AttributeSelector(name="class", value="funhub_link")],
-            ),
-            TagSelector(
-                tag="a", attributes=[AttributeSelector(name="class", value="link")]
-            ),
-        )
-        results = tag.find_all(bs)
-        expected = [
-            strip("""<a class="link" href="funhub.com">Welcome</a>"""),
-            strip("""<a class="link" href="funhub.com">Goodbye</a>"""),
-            strip("""<a class="link" href="funhub.com">See you</a>"""),
-        ]
-        assert list(map(lambda x: strip(str(x)), results)) == expected
-
-    def test_find_all_returns_list_of_matched_elements(self):
-        """
-        Tests if DescendantCombinator find_all method returns
-        a list of all matched elements.
-        """
-        text = """
-            <div class="container" href="google">
-                <a class="link" href="search">Welcome here</a>
-            </div>
-            <div class="wrapper">
-                <a class="funhub" href="search">Goodbye</a>
+                <a><p>Hello 2</p></a>
             </div>
             <div>
-                <a class="link" href="search">Welcome there</a>
-            </div>
-            <span class="wrapper">
-                <a class="link" href="search">Goodbye</a>
-            </span>
-            <div class="wrapper">
-                <a class="link" href="search">Goodbye</a>
-            </div>
-            <div>
-                <span class="link">Goodbye</span>
-            </div>
-        """
-        bs = to_bs(text)
-        tag = DescendantCombinator(
-            TagSelector("div"),
-            TagSelector(
-                "a", attributes=[AttributeSelector(name="class", value="link")]
-            ),
-        )
-        results = tag.find_all(bs)
-        expected = [
-            strip("""<a class="link" href="search">Welcome here</a>"""),
-            strip("""<a class="link" href="search">Welcome there</a>"""),
-            strip("""<a class="link" href="search">Goodbye</a>"""),
-        ]
-        assert list(map(lambda x: strip(str(x)), results)) == expected
-
-    def test_find_all_returns_empty_list_if_no_matched_elements(self):
-        """
-        Tests if DescendantCombinator find_all method returns empty list if
-        no element matches the tag.
-        """
-        text = """
-            <span class="container">
-                <a class="link" href="search">Welcome here</a>
-            </span>
-            <div>
-                <a class="funhub" href="search">Welcome there</a>
-            </div>
-            <div class="wrapper">
-                <span class="link"Goodbye</span>
-            </div>
-        """
-        bs = to_bs(text)
-        tag = DescendantCombinator(
-            TagSelector("div"),
-            TagSelector(
-                "a", attributes=[AttributeSelector(name="class", value="link")]
-            ),
-        )
-        results = tag.find_all(bs)
-        assert results == []
-
-    def test_find_element_with_nested_steps_elements(self):
-        """
-        Tests if DescendantCombinator can take another DescendantCombinator as a step
-        and find element that matches.
-        """
-        text = """
-            <span class="container">
-                <a class="link" href="search">Welcome here</a>
-            </span>
-            <div>
-                <a class="funhub" href="search">
-                    <span>Welcome there</span>
+                <a>
+                    <div>
+                        <p>Hello 3</p>
+                        <h1>Hello 4</h1>
+                    </div>
                 </a>
             </div>
-            <div class="wrapper">
-                <a class="funhub" href="search"></a>
+            <div>
+                <a>
+                    <div>
+                        <h1>Hello 5</h1>
+                        <a>1</a>
+                        <p>Hello 6</p>
+                        <span>
+                            <a><span>2</span></a>
+                        </span>
+                    </div>
+                </a>
+            </div>
+            <div>
+                <span>
+                    <a>
+                        <div>
+                            <h1>Hello 7</h1>
+                            <a>3</a>
+                        </div>
+                    </a>
+                </span>
             </div>
         """
         bs = to_bs(text)
-        tag = DescendantCombinator(
-            DescendantCombinator(
-                TagSelector("div"),
-                TagSelector(
-                    "a", attributes=[AttributeSelector(name="class", value="funhub")]
-                ),
-            ),
-            TagSelector("span"),
+        selector = DescendantCombinator(
+            MockDivSelector(),
+            MockLinkSelector(),
+            MockDivSelector(),
+            MockLinkSelector(),
         )
-        result = tag.find(bs)
-        assert strip(str(result)) == strip("""<span>Welcome there</span>""")
+        result = selector.find_all(bs)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a>1</a>"""),
+            strip("""<a><span>2</span></a>"""),
+            strip("""<a>3</a>"""),
+        ]
 
-    def test_find_skips_elements_partially_matching_steps(self):
+    def test_finds_all_tags_matching_selectors(self):
+        """Tests if find_all method returns all tags that match selector."""
+        text = """
+            <a>Hello</a>
+            <a class="link"><div class="link"></div></a>
+            <span class="widget"><a>Hello</a></span>
+            <div>
+                <a class="widget">1</a>
+                <span class="widget"></span>
+                <a>2</a>
+            </div>
+            <div><span>Hello</span></div>
+            <div>
+                <img src="image.jpg">
+                <a class="widget"><span>3</span></a>
+                <span>
+                    <div><a>4</a></div>
+                </span>
+            </div>
         """
-        Tests if DescendantCombinator find method skips elements that partially match
-        the steps and returns the first element that matches all steps.
-        In this case first tag matches only first step,
-        but second tag matches both steps.
+        bs = find_body_element(to_bs(text))
+        selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="widget">1</a>"""),
+            strip("""<a>2</a>"""),
+            strip("""<a class="widget"><span>3</span></a>"""),
+            strip("""<a>4</a>"""),
+        ]
+
+    def test_find_all_returns_empty_list_if_no_tag_matches(self):
+        """
+        Tests if find_all method returns an empty list when no tag is found
+        that matches selector.
         """
         text = """
-            <div class="container" href="google">
-                <a class="link" href="search">Welcome</a>
-            </div>
-            <div class="container" href="google">
-                <span class="link" href="search">Welcome</span>
+            <a>Hello</a>
+            <div><span>Hello</span></div>
+            <span class="widget"><a>Hello</a></span>
+            <a class="link"><div class="link"></div></a>
+            <div>
+                <span class="widget"></span>
+                <img src="image.jpg">
             </div>
         """
         bs = to_bs(text)
-        tag = DescendantCombinator(TagSelector(tag="div"), TagSelector(tag="span"))
-        result = tag.find(bs)
-
-        expected = """<span class="link" href="search">Welcome</span>"""
-        assert strip(str(result)) == strip(expected)
-
-    def test_returns_empty_list_if_first_step_was_not_matched(self):
-        """
-        Tests if DescendantCombinator find_all method returns an empty list
-        if the first step was not matched.
-        """
-        text = """
-            <div class="container" href="google">
-                <a class="link" href="search">Welcome</a>
-            </div>
-        """
-        bs = to_bs(text)
-        tag = DescendantCombinator(TagSelector(tag="span"), TagSelector(tag="a"))
-        result = tag.find_all(bs)
+        selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs)
         assert result == []
 
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.
-        In this case only last tag matches the selector and it child of body.
         """
         text = """
             <span>
-                <div><a>Hello 1</a></div>
+                <div>
+                    <a href="github">Not child</a>
+                </div>
             </span>
-            <div class="google"></div>
-            <a href="github">Hello 2</a>
+            <div><p>Hello 3</p></div>
+            <a class="github">Hello 2</a>
             <div>
-                <a>Hello 1</a>
-                <span>Hello</span>
+                <span>
+                    <a href="github">1</a>
+                </span>
+                <p>Hello</p>
+                <a href="github">2</a>
+            </div>
+            <div>
+                <a href="github">3</a>
             </div>
         """
         bs = find_body_element(to_bs(text))
-        tag = DescendantCombinator(
-            TagSelector("div"),
-            TagSelector("a"),
-        )
-        result = tag.find(bs, recursive=False)
-        assert strip(str(result)) == strip("""<a>Hello 1</a>""")
+        selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find(bs, recursive=False)
+        assert strip(str(result)) == strip("""<a href="github">1</a>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
@@ -451,17 +234,23 @@ class TestDescendantCombinator:
         """
         text = """
             <span>
-                <div><a>Hello 1</a></div>
+                <div>
+                    <a href="github">Not child</a>
+                </div>
             </span>
-            <div class="google"></div>
-            <a href="github">Hello 2</a>
+            <div><p>Hello 3</p></div>
+            <a class="github">Hello 2</a>
+            <span>
+                <div>
+                    <a href="github">1</a>
+                    <p>Hello</p>
+                </div>
+                <a href="github">Hello</a>
+            </span>
         """
         bs = find_body_element(to_bs(text))
-        tag = DescendantCombinator(
-            TagSelector("div"),
-            TagSelector("a"),
-        )
-        result = tag.find(bs, recursive=False)
+        selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find(bs, recursive=False)
         assert result is None
 
     def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
@@ -471,19 +260,25 @@ class TestDescendantCombinator:
         """
         text = """
             <span>
-                <div><a>Hello 1</a></div>
+                <div>
+                    <a href="github">Not child</a>
+                </div>
             </span>
-            <div class="google"></div>
-            <a href="github">Hello 2</a>
+            <div><p>Hello 3</p></div>
+            <a class="github">Hello 2</a>
+            <span>
+                <div>
+                    <a href="github">1</a>
+                    <p>Hello</p>
+                </div>
+                <a href="github">Hello</a>
+            </span>
         """
         bs = find_body_element(to_bs(text))
-        tag = DescendantCombinator(
-            TagSelector("div"),
-            TagSelector("a"),
-        )
+        selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True, recursive=False)
+            selector.find(bs, strict=True, recursive=False)
 
     def test_find_all_returns_all_matching_children_when_recursive_false(self):
         """
@@ -492,23 +287,33 @@ class TestDescendantCombinator:
         """
         text = """
             <span>
-                <div><a>Hello 1</a></div>
+                <div>
+                    <a href="github">Not child</a>
+                </div>
             </span>
-            <div class="google"></div>
-            <div><a>Hello 1</a></div>
-            <a href="github">Hello 2</a>
-            <div><a>Hello 2</a></div>
+            <div><p>Hello 3</p></div>
+            <a class="github">Hello 2</a>
+            <div>
+                <a href="github">1</a>
+                <p>Hello</p>
+                <div>
+                    <a href="github">2</a>
+                </div>
+            </div>
+            <div>
+                <span>
+                    <a href="github"><span>3</span></a>
+                </span>
+            </div>
         """
         bs = find_body_element(to_bs(text))
-        tag = DescendantCombinator(
-            TagSelector("div"),
-            TagSelector("a"),
-        )
-        results = tag.find_all(bs, recursive=False)
+        selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs, recursive=False)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
-            strip("""<a>Hello 1</a>"""),
-            strip("""<a>Hello 2</a>"""),
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a href="github">1</a>"""),
+            strip("""<a href="github">2</a>"""),
+            strip("""<a href="github"><span>3</span></a>"""),
         ]
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
@@ -520,19 +325,21 @@ class TestDescendantCombinator:
         """
         text = """
             <span>
-                <div><a>Hello 1</a></div>
+                <div>
+                    <a href="github">Not child</a>
+                </div>
             </span>
-            <div class="google"></div>
-            <a href="github">Hello 2</a>
+            <div><p>Hello 3</p></div>
+            <a class="github">Hello 2</a>
+            <div>
+                <div><p>Hello</p></div>
+                <span>Hello</span>
+            </div>
         """
         bs = find_body_element(to_bs(text))
-        tag = DescendantCombinator(
-            TagSelector("div"),
-            TagSelector("a"),
-        )
-
-        results = tag.find_all(bs, recursive=False)
-        assert results == []
+        selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs, recursive=False)
+        assert result == []
 
     def test_find_all_returns_only_x_elements_when_limit_is_set(self):
         """
@@ -540,25 +347,27 @@ class TestDescendantCombinator:
         In this case only 2 first in order elements are returned.
         """
         text = """
-            <a></a>
-            <span>
-                <div><a>Hello 1</a></div>
-            </span>
-            <div>Hello</div>
-            <div><a>Hello 2</a></div>
-            <div><a>Hello 3</a></div>
-            <div><a>Hello 4</a></div>
+            <a>Hello</a>
+            <a class="link"><div class="link"></div></a>
+            <span class="widget"><a>Hello</a></span>
+            <div>
+                <a class="widget">1</a>
+                <span class="widget"></span>
+                <span><a>2</a></span>
+            </div>
+            <div><span>Hello</span></div>
+            <div>
+                <img src="image.jpg">
+                <a class="widget"><span>3</span></a>
+            </div>
         """
         bs = find_body_element(to_bs(text))
-        tag = DescendantCombinator(
-            TagSelector("div"),
-            TagSelector("a"),
-        )
-        results = tag.find_all(bs, limit=2)
+        selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
-            strip("""<a>Hello 1</a>"""),
-            strip("""<a>Hello 2</a>"""),
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="widget">1</a>"""),
+            strip("""<a>2</a>"""),
         ]
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
@@ -570,48 +379,40 @@ class TestDescendantCombinator:
         the selector are returned.
         """
         text = """
-            <a></a>
             <span>
-                <div><a>Hello 1</a></div>
+                <div>
+                    <a href="github">Not child</a>
+                </div>
             </span>
-            <div>Hello</div>
-            <div><a>Hello 2</a></div>
-            <div><a>Hello 3</a></div>
-            <div><a>Hello 4</a></div>
-        """
-        bs = find_body_element(to_bs(text))
-        tag = DescendantCombinator(
-            TagSelector("div"),
-            TagSelector("a"),
-        )
-        results = tag.find_all(bs, recursive=False, limit=2)
-
-        assert list(map(lambda x: strip(str(x)), results)) == [
-            strip("""<a>Hello 2</a>"""),
-            strip("""<a>Hello 3</a>"""),
-        ]
-
-    def test_find_steps_after_first_are_always_recursive(self):
-        """
-        Tests if find recursive is only specified for first step,
-        next steps are always recursive.
-        """
-        text = """
+            <div><p>Hello 3</p></div>
+            <a class="github">Hello 2</a>
             <div>
-                <span>
-                    <div class="soo_deep_down">
-                        <span>
-                            <a>Hello 1</a>
-                        </span>
-                    </div>
-                </span>
+                <a href="github">1</a>
+                <p>Hello</p>
+                <div>
+                    <a href="github">2</a>
+                </div>
+            </div>
+            <div>
+                <a href="github"><span>3</span></a>
             </div>
         """
         bs = find_body_element(to_bs(text))
-        tag = DescendantCombinator(
-            TagSelector("div"),
-            TagSelector("div"),
-            TagSelector("a"),
-        )
-        result = tag.find(bs, recursive=False)
-        assert strip(str(result)) == strip("""<a>Hello 1</a>""")
+        selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs, recursive=False, limit=2)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a href="github">1</a>"""),
+            strip("""<a href="github">2</a>"""),
+        ]
+
+    def test_find_returns_none_if_first_step_was_not_found(self):
+        """
+        Tests if find returns None if the first step was not found.
+        Ensures that combinators don't break when first step does not match anything.
+        """
+        text = """<a>First element</a>"""
+        bs = to_bs(text)
+        selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs)
+        assert result == []
