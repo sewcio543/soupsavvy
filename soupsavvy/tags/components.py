@@ -168,6 +168,8 @@ class PatternSelector(SoupSelector):
 
     def __post_init__(self) -> None:
         """Sets up compiled regex pattern used for SoupStrainer in find methods."""
+        from typing import Union
+
         self._pattern = (
             str(self.pattern) if not isinstance(self.pattern, Pattern) else self.pattern
         )
@@ -176,7 +178,7 @@ class PatternSelector(SoupSelector):
         self, tag: Tag, recursive: bool = True, limit: Optional[int] = None
     ) -> list[Tag]:
         iterator = TagIterator(tag, recursive=recursive)
-        strainer = SoupStrainer(string=self._pattern)
+        strainer = SoupStrainer(string=self._pattern)  # type: ignore
         filter_ = filter(strainer.search_tag, iterator)
         return list(itertools.islice(filter_, limit))
 
