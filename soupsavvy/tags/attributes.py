@@ -46,9 +46,6 @@ class AttributeSelector(SingleSoupSelector, SelectableCSS):
         which results in using re.search to match the attribute value.
         By default None, if not provided, default pattern matching any sequence
         of characters is used.
-    re : bool, optional
-        Whether to use a regex pattern to match the attribute value, by default False.
-        If True, re.search is used to match the attribute value.
 
     Implements SelectableCSS interface for CSS selector generation.
 
@@ -79,7 +76,6 @@ class AttributeSelector(SingleSoupSelector, SelectableCSS):
 
     name: str
     value: Optional[PatternType] = None
-    re: bool = False
 
     def __post_init__(self) -> None:
         """Sets pattern attribute used in SoupSelector find operations."""
@@ -90,10 +86,10 @@ class AttributeSelector(SingleSoupSelector, SelectableCSS):
         # if value was not provided, fall back to default pattern
         if self.value is None:
             return re.compile(ns.DEFAULT_PATTERN)
-        # if value was provided and re = True, create pattern from value
-        if self.re:
-            return re.compile(self.value)
-        # if value was provided and re = False, use str value as pattern
+        # cast value to string if not a regex pattern
+        if not isinstance(self.value, Pattern):
+            return str(self.value)
+        # value is already a compiled regex pattern
         return self.value
 
     @property
@@ -104,7 +100,7 @@ class AttributeSelector(SingleSoupSelector, SelectableCSS):
             return f"[{self.name}]"
 
         value = self._pattern
-        re = self.re
+        re = False
 
         if isinstance(self._pattern, Pattern):
             # extract regex pattern string from compiled regex
@@ -140,11 +136,7 @@ class _SpecificAttributeSelector(AttributeSelector):
 
     _NAME: str
 
-    def __init__(
-        self,
-        value: Optional[PatternType] = None,
-        re: bool = False,
-    ) -> None:
+    def __init__(self, value: Optional[PatternType] = None) -> None:
         """
         Initializes specific attribute selector with default attribute name.
 
@@ -155,11 +147,8 @@ class _SpecificAttributeSelector(AttributeSelector):
             which results in using re.search to match the attribute value.
             By default None, if not provided, default pattern matching any sequence
             of characters is used.
-        re : bool, optional
-            Whether to use a regex pattern to match the attribute value,
-            by default False. If True, re.search is used to match the attribute value.
         """
-        super().__init__(name=self._NAME, value=value, re=re)
+        super().__init__(name=self._NAME, value=value)
 
 
 class IdSelector(_SpecificAttributeSelector):

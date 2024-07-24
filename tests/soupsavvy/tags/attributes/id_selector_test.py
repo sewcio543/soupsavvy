@@ -46,27 +46,10 @@ class TestIdSelector:
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a id="widget"></a>""")
 
-    def test_find_returns_first_match_with_re_true(self):
-        """
-        Tests if find returns first tag with id attribute that contains
-        specified value when re is set to True.
-        """
-        text = """
-            <div href="widget"></div>
-            <span id="menu"></span>
-            <div id="widget_menu"></div>
-            <div id="widget_123"></div>
-        """
-        bs = to_bs(text)
-        selector = IdSelector(value="widget", re=True)
-        result = selector.find(bs)
-        assert strip(str(result)) == strip("""<div id="widget_menu"></div>""")
-
     def test_find_returns_first_match_with_pattern(self):
         """
         Tests if find returns first tag with id attribute that matches
-        specified regex pattern. Testing for passing both string and compiled
-        regex pattern.
+        specified regex pattern
         """
         text = """
             <div id="menu widget 12"></div>
@@ -76,17 +59,9 @@ class TestIdSelector:
             <div id="widget 45"></div>
         """
         bs = to_bs(text)
-        pattern = r"^widget.?\d{1,3}$"
-        expected = strip("""<div id="widget 123"></div>""")
-
-        selector = IdSelector(value=pattern, re=True)
+        selector = IdSelector(value=re.compile(r"^widget.?\d{1,3}$"))
         result = selector.find(bs)
-        assert strip(str(result)) == expected
-
-        # already compiled regex pattern should work the same way
-        selector = IdSelector(value=re.compile(pattern))
-        result = selector.find(bs)
-        assert strip(str(result)) == expected
+        assert strip(str(result)) == strip("""<div id="widget 123"></div>""")
 
     def test_find_returns_none_if_no_match_and_strict_false(self):
         """
@@ -323,17 +298,9 @@ class TestIdSelector:
         argvalues=[
             # id overrides default css selector with # syntax
             (IdSelector("menu"), "#menu"),
-            # selector is constructed as default if re is True
-            (IdSelector("menu", re=True), "[id*='menu']"),
-            (IdSelector(re=True), "[id]"),
-            (IdSelector(re=False), "[id]"),
-            # pattern is reduced to containment operator *=
+            (IdSelector(), "[id]"),
             (
-                IdSelector(re.compile(r"^menu"), re=True),
-                "[id*='^menu']",
-            ),
-            (
-                IdSelector(re.compile(r"^menu"), re=False),
+                IdSelector(re.compile(r"^menu")),
                 "[id*='^menu']",
             ),
         ],

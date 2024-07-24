@@ -47,24 +47,8 @@ class TestAttributeSelector:
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget"></a>""")
 
-    @pytest.mark.parametrize(
-        argnames="selector",
-        argvalues=[
-            AttributeSelector(name="class", value="^widget", re=True),
-            # re parameter is ignored if value is compiled pattern
-            AttributeSelector(name="class", value=re.compile("^widget"), re=False),
-            AttributeSelector(name="class", value=re.compile("^widget"), re=True),
-        ],
-    )
-    def test_find_returns_first_matching_tag_with_regex(
-        self, selector: AttributeSelector
-    ):
-        """
-        Tests if find method returns first matching tag with regex pattern.
-        Selector should behave the same way when value is compiled regex pattern
-        and when value is string pattern with re parameter set to True.
-
-        """
+    def test_find_returns_first_matching_tag_with_regex(self):
+        """Tests if find method returns first matching tag with regex pattern."""
         text = """
             <div href="github" class="menu"></div>
             <a></a>
@@ -74,6 +58,7 @@ class TestAttributeSelector:
             <span class="widget_45"></span>
         """
         bs = to_bs(text)
+        selector = AttributeSelector(name="class", value=re.compile("^widget"))
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<span class="widget_123"></span>""")
 
@@ -171,23 +156,13 @@ class TestAttributeSelector:
         argnames="selector, css",
         argvalues=[
             (AttributeSelector("class", value="menu"), "[class='menu']"),
-            (AttributeSelector("href", value="menu", re=True), "[href*='menu']"),
-            (AttributeSelector("id", value=None, re=True), "[id]"),
-            (AttributeSelector("id", value=None, re=False), "[id]"),
+            (AttributeSelector("id", value=None), "[id]"),
             (
-                AttributeSelector("id", value=re.compile("menu"), re=True),
+                AttributeSelector("id", value=re.compile("menu")),
                 "[id*='menu']",
             ),
             (
-                AttributeSelector("id", value=re.compile("menu"), re=False),
-                "[id*='menu']",
-            ),
-            (
-                AttributeSelector("id", value=re.compile("^menu[0-9]$"), re=False),
-                "[id*='^menu[0-9]$']",
-            ),
-            (
-                AttributeSelector("id", value=re.compile("^menu[0-9]$"), re=True),
+                AttributeSelector("id", value=re.compile("^menu[0-9]$")),
                 "[id*='^menu[0-9]$']",
             ),
         ],
@@ -351,32 +326,20 @@ class TestAttributeSelector:
         argvalues=[
             # if only name is provided, it must be equal
             (AttributeSelector("class"), AttributeSelector("class")),
-            # re does not matter if value is not provided
-            (AttributeSelector("class", re=True), AttributeSelector("class", re=False)),
             # if value is provided, it must be equal
             (
                 AttributeSelector("class", value="hello_world"),
                 AttributeSelector("class", value="hello_world"),
-            ),
-            # if value is provided, re parameter must match
-            (
-                AttributeSelector("class", value="hello_world", re=True),
-                AttributeSelector("class", value="hello_world", re=True),
-            ),
-            # value + re is equal to the same pattern
-            (
-                AttributeSelector("class", value="hello_world", re=True),
-                AttributeSelector("class", value=re.compile("hello_world")),
             ),
             # the same compiled pattern
             (
                 AttributeSelector("class", value=re.compile("hello_world")),
                 AttributeSelector("class", value=re.compile("hello_world")),
             ),
-            # if compiled pattern is provided, re is ignored
+            # value is cast to string
             (
-                AttributeSelector("class", value=re.compile("hello_world"), re=True),
-                AttributeSelector("class", value=re.compile("hello_world"), re=False),
+                AttributeSelector("class", value=1),  # type: ignore
+                AttributeSelector("class", value="1"),
             ),
             # equal if subclass of AttributeSelector and same value
             (
@@ -401,20 +364,20 @@ class TestAttributeSelector:
                 AttributeSelector("class", value="widget"),
                 AttributeSelector("class", value="menu"),
             ),
-            # different re parameter when pattern not provided
+            # values are the same, but names are different
             (
-                AttributeSelector("class", value="widget", re=False),
-                AttributeSelector("class", value="widget", re=True),
+                AttributeSelector("class", value="widget"),
+                AttributeSelector("href", value="widget"),
             ),
             # different compiled patterns
             (
                 AttributeSelector("class", value=re.compile("widget")),
                 AttributeSelector("class", value=re.compile("^widget")),
             ),
-            # compiled pattern string is not equal to string pattern with re=True
+            # same compiled patterns, but different names
             (
-                AttributeSelector("class", value="widget", re=True),
-                AttributeSelector("class", value=re.compile("^widget")),
+                AttributeSelector("class", value=re.compile("widget")),
+                AttributeSelector("href", value=re.compile("widget")),
             ),
             # if not subclass of AttributeSelector, it is not equal
             (

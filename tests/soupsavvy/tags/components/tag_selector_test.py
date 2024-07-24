@@ -6,7 +6,8 @@ import pytest
 
 import soupsavvy.tags.namespace as ns
 from soupsavvy.exceptions import TagNotFoundException
-from soupsavvy.tags.components import AnyTagSelector, AttributeSelector, TagSelector
+from soupsavvy.tags.attributes import AttributeSelector, ClassSelector, IdSelector
+from soupsavvy.tags.components import AnyTagSelector, TagSelector
 from tests.soupsavvy.tags.conftest import (
     MockLinkSelector,
     find_body_element,
@@ -154,7 +155,7 @@ class TestTagSelector:
             tag="a",
             attributes=[
                 AttributeSelector(name="class", value="widget"),
-                AttributeSelector(name="href", value="github", re=True),
+                AttributeSelector(name="href", value=re.compile("github")),
                 AttributeSelector(name="target", value="_blank"),
             ],
         )
@@ -412,11 +413,18 @@ class TestTagSelector:
                 TagSelector(
                     tag="a",
                     attributes=[
-                        AttributeSelector("class", value="menu", re=True),
-                        AttributeSelector("awesomeness", value="3", re=False),
+                        AttributeSelector("class", value=re.compile("menu")),
+                        AttributeSelector("awesomeness", value="3"),
                     ],
                 ),
                 "a[class*='menu'][awesomeness='3']",
+            ),
+            (
+                TagSelector(
+                    tag="a",
+                    attributes=[ClassSelector("menu"), IdSelector("lunch")],
+                ),
+                "a.menu#lunch",
             ),
             (
                 TagSelector(
@@ -446,7 +454,9 @@ class TestTagSelector:
     @pytest.mark.parametrize(
         argnames="selectors",
         argvalues=[
-            # tags must be equal
+            # two wildcard tag selectors are equal
+            (TagSelector(), TagSelector()),
+            # tag names must be equal
             (TagSelector("a"), TagSelector("a")),
             # tags and attributes must be equal
             (
@@ -462,7 +472,7 @@ class TestTagSelector:
                 TagSelector(
                     attributes=[
                         AttributeSelector("class", value="widget"),
-                        AttributeSelector("id", value="footnote", re=True),
+                        AttributeSelector("id", value=re.compile("footnote")),
                     ]
                 ),
                 TagSelector(

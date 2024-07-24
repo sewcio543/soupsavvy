@@ -69,27 +69,10 @@ class TestClassSelector:
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget"></a>""")
 
-    def test_find_returns_first_match_with_re_true(self):
-        """
-        Tests if find returns first tag with class attribute that contains
-        specified value when re is set to True.
-        """
-        text = """
-            <div href="widget"></div>
-            <span class="menu"></span>
-            <div class="widget_menu"></div>
-            <div class="widget123"></div>
-        """
-        bs = to_bs(text)
-        selector = ClassSelector("widget", re=True)
-        result = selector.find(bs)
-        assert strip(str(result)) == strip("""<div class="widget_menu"></div>""")
-
     def test_find_returns_first_match_with_pattern(self):
         """
         Tests if find returns first tag with class attribute that matches
-        specified regex pattern. Testing for passing both string and compiled
-        regex pattern.
+        specified regex pattern.
         """
         text = """
             <div class="menu widget 12"></div>
@@ -98,17 +81,9 @@ class TestClassSelector:
             <div class="widget 123"></div>
         """
         bs = to_bs(text)
-        pattern = r"^widget.?\d{1,3}$"
-        expected = strip("""<div class="widget 123"></div>""")
-
-        selector = ClassSelector(value=pattern, re=True)
+        selector = ClassSelector(value=re.compile(r"^widget.?\d{1,3}$"))
         result = selector.find(bs)
-        assert strip(str(result)) == expected
-
-        # already compiled regex pattern should work the same way
-        selector = ClassSelector(value=re.compile(pattern))
-        result = selector.find(bs)
-        assert strip(str(result)) == expected
+        assert strip(str(result)) == strip("""<div class="widget 123"></div>""")
 
     def test_find_returns_none_if_no_match_and_strict_false(self):
         """
@@ -343,17 +318,10 @@ class TestClassSelector:
         argvalues=[
             # class overrides default css selector with . syntax
             (ClassSelector("menu"), ".menu"),
-            # selector is constructed as default if re is True
-            (ClassSelector("menu", re=True), "[class*='menu']"),
-            (ClassSelector(re=True), "[class]"),
-            (ClassSelector(re=False), "[class]"),
+            (ClassSelector(), "[class]"),
             # pattern is reduced to containment operator *=
             (
-                ClassSelector(re.compile(r"^menu"), re=True),
-                "[class*='^menu']",
-            ),
-            (
-                ClassSelector(re.compile(r"^menu"), re=False),
+                ClassSelector(re.compile(r"^menu")),
                 "[class*='^menu']",
             ),
         ],

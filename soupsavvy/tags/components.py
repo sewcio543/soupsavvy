@@ -139,14 +139,11 @@ class PatternSelector(SoupSelector):
     pattern: str | Pattern
         A pattern to match text of the element. Can be a string for exact match
         or Pattern for any more complex regular expressions.
-    re: bool, optional
-        Whether to use a pattern to match the text, by default False.
-        If True, text of element needs to be contained in the pattern to be matched.
 
     Notes
     -----
-    Selector uses re.search function to match text content if re=True
-    or compiled regex is passed as pattern.
+    Selector uses re.search function to match text content
+    if compiled regex is passed as pattern.
     Providing 're.compile(r"[0-9]")' as pattern will much any element with a digit in text.
 
     Example
@@ -168,11 +165,12 @@ class PatternSelector(SoupSelector):
     """
 
     pattern: str | Pattern[str]
-    re: bool = False
 
     def __post_init__(self) -> None:
         """Sets up compiled regex pattern used for SoupStrainer in find methods."""
-        self._pattern = re.compile(self.pattern) if self.re else self.pattern
+        self._pattern = (
+            str(self.pattern) if not isinstance(self.pattern, Pattern) else self.pattern
+        )
 
     def find_all(
         self, tag: Tag, recursive: bool = True, limit: Optional[int] = None
