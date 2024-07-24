@@ -25,10 +25,11 @@ class TestPatternSelector:
         text = """
             <div class="Hello"></div>
             <div>Hi Hi Hello</div>
+            <a>Hello</a>
             <div>
                 <div>Good morning</div>
             </div>
-            <a>Hello</a>
+            <div>Hello</div>
         """
         bs = to_bs(text)
         selector = PatternSelector("Hello")
@@ -43,24 +44,17 @@ class TestPatternSelector:
         """
         text = """
             <div class="Hello">Good Morning</div>
+            <a>Helllo</a>
+            <div>Hi Hi Hello</div>
             <div>
                 <div>Good morning</div>
             </div>
-            <a>Helllo</a>
-            <div>Hi Hi Hello</div>
+            <div>Hello Hello</div>
         """
         bs = to_bs(text)
-
-        # all these selectors should behave the same way
-        selectors = [
-            PatternSelector(pattern="Hello", re=True),
-            PatternSelector(pattern=re.compile("Hello"), re=True),
-            PatternSelector(pattern=re.compile("Hello"), re=False),
-        ]
-        assert all(
-            str(selector.find(bs)) == strip("""<div>Hi Hi Hello</div>""")
-            for selector in selectors
-        )
+        selector = PatternSelector(pattern=re.compile("Hello"))
+        result = selector.find(bs)
+        assert strip(str(result)) == strip("""<div>Hi Hi Hello</div>""")
 
     def test_find_returns_first_match_with_pattern(self):
         """
@@ -77,19 +71,12 @@ class TestPatternSelector:
                 <div>Good morning</div>
             </div>
             <a>Hello 123</a>
+            <a>Hello 456</a>
         """
         bs = to_bs(text)
-
-        # all these selectors should behave the same way
-        selectors = [
-            PatternSelector(pattern=r"^Hello.?\d{1,3}$", re=True),
-            PatternSelector(pattern=re.compile(r"^Hello.?\d{1,3}$"), re=True),
-            PatternSelector(pattern=re.compile(r"^Hello.?\d{1,3}$"), re=False),
-        ]
-        assert all(
-            str(selector.find(bs)) == strip("""<a>Hello 123</a>""")
-            for selector in selectors
-        )
+        selector = PatternSelector(pattern=re.compile(r"^Hello.?\d{1,3}$"))
+        result = selector.find(bs)
+        assert strip(str(result)) == strip("""<a>Hello 123</a>""")
 
     def test_find_returns_first_match_with_raw_string_as_pattern(self):
         """
@@ -103,8 +90,9 @@ class TestPatternSelector:
                 <div>Hello, Good morning</div>
             </div>
             <a>^Hello World</a>
-            <div>Hi Hi Hello</div>
             <a>^Hello</a>
+            <div>Hi Hi Hello</div>
+            <div>^Hello</div>
         """
         bs = to_bs(text)
         selector = PatternSelector(r"^Hello")
@@ -121,7 +109,7 @@ class TestPatternSelector:
             <div>Hello<div></div></div>
         """
         bs = to_bs(text)
-        selector = PatternSelector("Hello", re=True)
+        selector = PatternSelector(re.compile("Hello"))
         result = selector.find(bs)
         assert result is None
 
@@ -204,8 +192,9 @@ class TestPatternSelector:
             <div>
                 <div>Hello</div>
             </div>
-            <div>Hi Hi Hello</div>
             <span>Hello</span>
+            <div>Hi Hi Hello</div>
+            <div>Hello</div>
         """
         bs = find_body_element(to_bs(text))
         selector = PatternSelector(pattern="Hello")
@@ -264,9 +253,9 @@ class TestPatternSelector:
         """
         bs = find_body_element(to_bs(text))
         selector = PatternSelector(pattern="Hello")
-        results = selector.find_all(bs, recursive=False)
+        result = selector.find_all(bs, recursive=False)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<p>Hello</p>"""),
             strip("""<a>Hello</a>"""),
             strip("""<span>Hello</span>"""),
@@ -288,9 +277,8 @@ class TestPatternSelector:
         """
         bs = find_body_element(to_bs(text))
         selector = PatternSelector(pattern="Hello")
-
-        results = selector.find_all(bs, recursive=False)
-        assert results == []
+        result = selector.find_all(bs, recursive=False)
+        assert result == []
 
     def test_find_all_returns_only_x_elements_when_limit_is_set(self):
         """
@@ -309,9 +297,9 @@ class TestPatternSelector:
         """
         bs = find_body_element(to_bs(text))
         selector = PatternSelector(pattern="Hello")
-        results = selector.find_all(bs, limit=2)
+        result = selector.find_all(bs, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<p>Hello</p>"""),
             strip("""<div>Hello</div>"""),
         ]
@@ -336,9 +324,9 @@ class TestPatternSelector:
         """
         bs = find_body_element(to_bs(text))
         selector = PatternSelector(pattern="Hello")
-        results = selector.find_all(bs, recursive=False, limit=2)
+        result = selector.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<p>Hello</p>"""),
             strip("""<a>Hello</a>"""),
         ]
@@ -348,22 +336,10 @@ class TestPatternSelector:
         argvalues=[
             # pattern is the same string
             (PatternSelector("menu"), PatternSelector("menu")),
-            # pattern is the same string and re=True for both
-            (PatternSelector("menu", re=True), PatternSelector("menu", re=True)),
             # pattern is the same compiled regex
             (
                 PatternSelector(re.compile("^menu")),
                 PatternSelector(re.compile("^menu")),
-            ),
-            # when pattern is the same compiled regex, re is ignored
-            (
-                PatternSelector(re.compile("^menu"), re=True),
-                PatternSelector(re.compile("^menu"), re=False),
-            ),
-            # string pattern with re=True and the same compiled regex with re=False
-            (
-                PatternSelector("^menu", re=True),
-                PatternSelector(re.compile("^menu"), re=False),
             ),
         ],
     )
@@ -378,8 +354,6 @@ class TestPatternSelector:
         argvalues=[
             # string pattern is different
             (PatternSelector("menu"), PatternSelector("widget")),
-            # string pattern is the same, but re is different
-            (PatternSelector("menu", re=True), PatternSelector("menu")),
             # string pattern with re=False not equal to compiled regex
             (PatternSelector(re.compile("menu")), PatternSelector("menu")),
             # compiled regex patterns are different
