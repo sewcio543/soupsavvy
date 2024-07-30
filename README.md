@@ -1,14 +1,9 @@
 ![SoupSavvy](https://github.com/sewcio543/soupsavvy/blob/main/resources/logo.png?raw=true)
 ========
 
-## Python package that makes web-scraping better than ever
+## Powerful and flexible engine for BeautifulSoup
 
-| | |
-| --- | --- |
-| Package | ![Deployment PyPI](https://github.com/sewcio543/soupsavvy/actions/workflows/production_release.yml/badge.svg) [![GitHub](https://img.shields.io/badge/GitHub-sewcio543-181717.svg?style=flat&logo=github)](https://github.com/sewcio543) [![PyPI](https://img.shields.io/pypi/v/soupsavvy?color=orange)](https://pypi.org/project/soupsavvy/) [![Python Versions](https://img.shields.io/pypi/pyversions/soupsavvy)](https://www.python.org/)|
-| Testing | ![Tests](https://github.com/sewcio543/soupsavvy/actions/workflows/tests.yml/badge.svg) [![Codecov](https://codecov.io/gh/sewcio543/soupsavvy/graph/badge.svg?token=RZ51VS3QLB)](https://codecov.io/gh/sewcio543/soupsavvy)|
-| Code Quality | ![Build](https://github.com/sewcio543/soupsavvy/actions/workflows/build_package.yml/badge.svg) ![Linting](https://github.com/sewcio543/soupsavvy/actions/workflows/linting.yml/badge.svg) [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/sewcio543/soupsavvy/main.svg)](https://results.pre-commit.ci/latest/github/sewcio543/soupsavvy/main)|
-| Documentation | [![readthedocs](https://img.shields.io/readthedocs/pip?logo=readthedocs)](https://github.com/sewcio543/soupsavvy/actions/workflows/documentation.yml/badge.svg) [![Docs link](https://img.shields.io/badge/docs-check_out-blue)](https://sewcio543.github.io/soupsavvy/)|
+[![PyPI](https://img.shields.io/pypi/v/soupsavvy?color=orange)](https://pypi.org/project/soupsavvy/) [![Python Versions](https://img.shields.io/pypi/pyversions/soupsavvy)](https://www.python.org/) [![Codecov](https://codecov.io/gh/sewcio543/soupsavvy/graph/badge.svg?token=RZ51VS3QLB)](https://codecov.io/gh/sewcio543/soupsavvy) [![Docs link](https://img.shields.io/badge/docs-read-blue)](https://sewcio543.github.io/soupsavvy/)
 
 ## Table of Contents
 

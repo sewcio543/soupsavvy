@@ -10,7 +10,7 @@ from pathlib import Path
 demos_dir = Path("docs", "source", "demos")
 
 # The docs main index file to be updated
-index_file = Path("docs", "source", "index.rst")
+index_file = Path("docs", "source", "index.md")
 
 
 def main() -> None:
@@ -46,7 +46,7 @@ def main() -> None:
 
         # Add the new folders to the toctree
         for demo in new:
-            contents.insert(i + 1, f"   {demo}\n")
+            contents.insert(i + 1, f"{demo}\n")
 
     if deleted:
         print(f"Deleted demos detected: {deleted}")
