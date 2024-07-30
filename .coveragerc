@@ -16,6 +16,9 @@ exclude_lines =
     import
     def __repr__
     def __str__
+    pass
+    ...
 
 sort = cover
 show_missing = true
+fail_under = 100
