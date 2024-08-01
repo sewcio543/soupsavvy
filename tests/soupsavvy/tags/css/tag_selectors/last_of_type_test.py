@@ -98,7 +98,7 @@ class TestLastOfType:
         text = """
             <div></div>
             <div>Hello</div>
-            <span><p>Not child</p></span>
+            <span><p></p></span>
             <span>Hello</span>
         """
         bs = to_bs(text)
@@ -114,7 +114,7 @@ class TestLastOfType:
         text = """
             <div></div>
             <div>Hello</div>
-            <span><p>Not child</p></span>
+            <span><p></p></span>
             <span>Hello</span>
         """
         bs = to_bs(text)
@@ -128,7 +128,7 @@ class TestLastOfType:
         text = """
             <div></div>
             <div>Hello</div>
-            <span><p>Not child</p></span>
+            <span><p></p></span>
             <span>Hello</span>
         """
         bs = to_bs(text)

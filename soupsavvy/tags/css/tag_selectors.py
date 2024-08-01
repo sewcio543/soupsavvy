@@ -8,7 +8,6 @@ They can be used in combination with other SoupSelector objects
 to create more complex tag selection conditions.
 """
 
-from dataclasses import dataclass
 from itertools import islice
 from typing import Optional
 
@@ -33,6 +32,20 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
     and can be easily used in combination with other SoupSelector objects.
     """
 
+    def __init__(self, selector: str) -> None:
+        try:
+            self._compiled = sv.compile(selector)
+        except sv.SelectorSyntaxError:
+            raise InvalidCSSSelector(
+                "CSS selector constructed from provided parameters "
+                f"is not valid: {selector}"
+            )
+        self._selector = selector
+
+    @property
+    def selector(self) -> str:
+        return self._selector
+
     def find_all(
         self,
         tag: Tag,
@@ -40,23 +53,14 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
         limit: Optional[int] = None,
     ) -> list[Tag]:
 
-        try:
-            selector = sv.compile(self.selector)
-        except sv.SelectorSyntaxError:
-            raise InvalidCSSSelector(
-                "CSS selector constructed from provided parameters "
-                f"is not valid: {self.selector}"
-            )
-
         iterator = TagIterator(tag, recursive=recursive)
-        return list(islice(filter(selector.match, iterator), limit))
+        return list(islice(filter(self._compiled.match, iterator), limit))
 
     def __eq__(self, other: object) -> bool:
         # we only care if selector is equal with current implementation
         return isinstance(other, CSSSoupSelector) and self.selector == other.selector
 
 
-@dataclass
 class OnlyChild(CSSSoupSelector):
     """
     Class to select tags that are the only child of their parent.
@@ -98,15 +102,10 @@ class OnlyChild(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:only-child
     """
 
-    tag: Optional[str] = None
-
-    @property
-    def selector(self) -> str:
-        tag = self.tag or ""
-        return f"{tag}:only-child"
+    def __init__(self, tag: Optional[str] = None) -> None:
+        super().__init__(f"{tag or ''}:only-child")
 
 
-@dataclass
 class Empty(CSSSoupSelector):
     """
     Class to select tags that are empty, i.e., have no children.
@@ -156,15 +155,10 @@ class Empty(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:empty
     """
 
-    tag: Optional[str] = None
-
-    @property
-    def selector(self) -> str:
-        tag = self.tag or ""
-        return f"{tag}:empty"
+    def __init__(self, tag: Optional[str] = None) -> None:
+        super().__init__(f"{tag or ''}:empty")
 
 
-@dataclass
 class FirstChild(CSSSoupSelector):
     """
     Class to select tags that are the first child of their parent.
@@ -210,15 +204,10 @@ class FirstChild(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:first-child
     """
 
-    tag: Optional[str] = None
-
-    @property
-    def selector(self) -> str:
-        tag = self.tag or ""
-        return f"{tag}:first-child"
+    def __init__(self, tag: Optional[str] = None) -> None:
+        super().__init__(f"{tag or ''}:first-child")
 
 
-@dataclass
 class LastChild(CSSSoupSelector):
     """
     Class to select tags that are the last child of their parent.
@@ -265,15 +254,10 @@ class LastChild(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:last-child
     """
 
-    tag: Optional[str] = None
-
-    @property
-    def selector(self) -> str:
-        tag = self.tag or ""
-        return f"{tag}:last-child"
+    def __init__(self, tag: Optional[str] = None) -> None:
+        super().__init__(f"{tag or ''}:last-child")
 
 
-@dataclass
 class NthChild(CSSSoupSelector):
     """
     Class to select tags that are the nth child of their parent.
@@ -309,16 +293,10 @@ class NthChild(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-child
     """
 
-    n: str
-    tag: Optional[str] = None
-
-    @property
-    def selector(self) -> str:
-        tag = self.tag or ""
-        return f"{tag}:nth-child({self.n})"
+    def __init__(self, n: str, tag: Optional[str] = None) -> None:
+        super().__init__(f"{tag or ''}:nth-child({n})")
 
 
-@dataclass
 class NthLastChild(CSSSoupSelector):
     """
     Class to select tags that are the nth last child of their parent.
@@ -354,16 +332,10 @@ class NthLastChild(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-child
     """
 
-    n: str
-    tag: Optional[str] = None
-
-    @property
-    def selector(self) -> str:
-        tag = self.tag or ""
-        return f"{tag}:nth-last-child({self.n})"
+    def __init__(self, n: str, tag: Optional[str] = None) -> None:
+        super().__init__(f"{tag or ''}:nth-last-child({n})")
 
 
-@dataclass
 class FirstOfType(CSSSoupSelector):
     """
     Class to select tags that are the first of their type in their parent.
@@ -411,15 +383,10 @@ class FirstOfType(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:first-of-type
     """
 
-    tag: Optional[str] = None
-
-    @property
-    def selector(self) -> str:
-        tag = self.tag or ""
-        return f"{tag}:first-of-type"
+    def __init__(self, tag: Optional[str] = None) -> None:
+        super().__init__(f"{tag or ''}:first-of-type")
 
 
-@dataclass
 class LastOfType(CSSSoupSelector):
     """
     Class to select tags that are the last of their type in their parent.
@@ -468,15 +435,10 @@ class LastOfType(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:last-of-type
     """
 
-    tag: Optional[str] = None
-
-    @property
-    def selector(self) -> str:
-        tag = self.tag or ""
-        return f"{tag}:last-of-type"
+    def __init__(self, tag: Optional[str] = None) -> None:
+        super().__init__(f"{tag or ''}:last-of-type")
 
 
-@dataclass
 class NthOfType(CSSSoupSelector):
     """
     Class to select tags that are the nth of their type in their parent.
@@ -512,16 +474,10 @@ class NthOfType(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-of-type
     """
 
-    n: str
-    tag: Optional[str] = None
-
-    @property
-    def selector(self) -> str:
-        tag = self.tag or ""
-        return f"{tag}:nth-of-type({self.n})"
+    def __init__(self, n: str, tag: Optional[str] = None) -> None:
+        super().__init__(f"{tag or ''}:nth-of-type({n})")
 
 
-@dataclass
 class NthLastOfType(CSSSoupSelector):
     """
     Class to select tags that are the nth last of their type in their parent.
@@ -557,16 +513,10 @@ class NthLastOfType(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-of-type
     """
 
-    n: str
-    tag: Optional[str] = None
-
-    @property
-    def selector(self) -> str:
-        tag = self.tag or ""
-        return f"{tag}:nth-last-of-type({self.n})"
+    def __init__(self, n: str, tag: Optional[str] = None) -> None:
+        super().__init__(f"{tag or ''}:nth-last-of-type({n})")
 
 
-@dataclass
 class OnlyOfType(CSSSoupSelector):
     """
     Class to select tags that are the only of their type in their parent.
@@ -610,15 +560,10 @@ class OnlyOfType(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:only-of-type
     """
 
-    tag: Optional[str] = None
-
-    @property
-    def selector(self) -> str:
-        tag = self.tag or ""
-        return f"{tag}:only-of-type"
+    def __init__(self, tag: Optional[str] = None) -> None:
+        super().__init__(f"{tag or ''}:only-of-type")
 
 
-@dataclass
 class CSS(CSSSoupSelector):
     """
     Soupsavvy wrapper for simple search with CSS selectors.
@@ -649,8 +594,5 @@ class CSS(CSSSoupSelector):
     ... <div class="menu"></div> ✔️
     """
 
-    css: str
-
-    @property
-    def selector(self) -> str:
-        return self.css
+    def __init__(self, css: str) -> None:
+        super().__init__(css)

@@ -20,15 +20,6 @@ class TestNthOfType:
         """
         assert NthOfType(n="2n").selector == ":nth-of-type(2n)"
 
-    def test_passing_invalid_n_does_not_raise_exception_on_init(self):
-        """
-        Tests if passing invalid n parameter into NthOfType does not raise
-        exception on initialization. Invalid n parameter will raise exception
-        when find method is called.
-        """
-        tag = NthOfType(n="soupsavvy")
-        assert tag.selector == ":nth-of-type(soupsavvy)"
-
     def test_selector_is_correct_with_tag(self):
         """Tests if selector property returns correct value when specifying tag."""
         assert NthOfType(n="2n", tag="div").selector == "div:nth-of-type(2n)"
@@ -169,20 +160,13 @@ class TestNthOfType:
         with pytest.raises(TagNotFoundException):
             tag.find(bs, strict=True)
 
-    def test_find_and_find_all_raise_exception_with_invalid_selector(self):
+    def test_init_raise_exception_with_invalid_selector(self):
         """
-        Tests if find and find_all methods raise InvalidCSSSelector exception
+        Tests if init raise InvalidCSSSelector exception
         if invalid n parameter is passed into the selector.
         """
-        html = """<div></div>"""
-        bs = find_body_element(to_bs(html))
-        tag = NthOfType("2x+1")
-
         with pytest.raises(InvalidCSSSelector):
-            tag.find(bs)
-
-        with pytest.raises(InvalidCSSSelector):
-            tag.find_all(bs)
+            NthOfType("2x+1")
 
     def test_find_all_returns_empty_list_if_no_nth_of_type_without_tag(self):
         """

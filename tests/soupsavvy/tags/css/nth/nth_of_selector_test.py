@@ -425,7 +425,7 @@ class TestNthOfSelector:
         ],
     )
     def test_returns_elements_based_on_nth_selector(
-        self, nth: str, expected: list[str]
+        self, nth: str, expected: list[int]
     ):
         """Tests if find_all returns all elements matching various nth selectors."""
         text = """
