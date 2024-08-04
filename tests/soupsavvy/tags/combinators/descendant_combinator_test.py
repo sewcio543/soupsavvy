@@ -13,7 +13,7 @@ from tests.soupsavvy.tags.conftest import (
 )
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 @pytest.mark.combinator
 class TestDescendantCombinator:
     """Class for DescendantCombinator unit test suite."""

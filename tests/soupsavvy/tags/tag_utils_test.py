@@ -23,7 +23,7 @@ def mock_tag() -> Tag:
     return to_bs(text)
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestUniqueTag:
     """Class with unit tests for UniqueTag class."""
 

@@ -7,8 +7,8 @@ from soupsavvy.tags.css.tag_selectors import OnlyOfType
 from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
-@pytest.mark.css_selector
-@pytest.mark.soup
+@pytest.mark.css
+@pytest.mark.selector
 class TestOnlyOfType:
     """Class with unit tests for OnlyOfType tag selector."""
 
@@ -20,224 +20,256 @@ class TestOnlyOfType:
         """Tests if selector property returns correct value when specifying tag."""
         assert OnlyOfType("div").selector == "div:only-of-type"
 
-    def test_find_returns_none_if_tag_name_not_present(self):
-        """
-        Tests if find method returns None if specified tag is not present
-        in the tag markup. In this case, 'span' is not present in the markup.
-        """
-        html = """
-            <div>
-                <p>text</p>
-            </div>
+    def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
+        """Tests if find_all method returns all tags for selector without tag name."""
+        text = """
             <div></div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = OnlyOfType("span")
-        result = tag.find(bs)
-        assert result is None
-
-    def test_find_returns_none_if_no_only_of_type_without_specified_tag(self):
-        """
-        Tests if find method returns None if no only-of-type elements are
-        present in the tag markup and tag is not specified.
-        """
-        html = """
+            <div><p>1</p></div>
+            <div><p>Hello</p><p></p></div>
+            <span><p>2</p><p></p></span>
             <div>
-                <p>text 1</p>
-                <p>text 2</p>
+                <span><a>3</a><p>4</p></span>
+                <span></span>
             </div>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = OnlyOfType()
+        result = selector.find_all(bs)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<p>1</p>"""),
+            strip("""<span><p>2</p><p></p></span>"""),
+            strip("""<a>3</a>"""),
+            strip("""<p>4</p>"""),
+        ]
+
+    def test_find_all_returns_all_tags_for_selector_with_tag_name(self):
+        """Tests if find_all method returns all tags for selector with tag name."""
+        text = """
             <div></div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = OnlyOfType()
-        result = tag.find(bs)
-        assert result is None
-
-    def test_find_returns_none_if_no_only_of_type_with_specified_tag(self):
-        """
-        Tests if find method returns None if specified tag is not present
-        as the only-of-type element in the tag markup. In this case, 'p' and 'a'
-        are only-of-type elements, but they do not match the specified tag 'div'.
-        """
-        html = """
+            <p><a>1</a><a></a></p>
+            <div><p>Hello</p><p></p></div>
+            <span><p></p><p></p></span>
             <div>
-                <p>text 1</p>
-                <a>text 2</a>
+                <span><a></a><p>2</p></span>
+                <span></span>
             </div>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = OnlyOfType("p")
+        result = selector.find_all(bs)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<p><a>1</a><a></a></p>"""),
+            strip("""<p>2</p>"""),
+        ]
+
+    def test_find_returns_first_tag_matching_selector(self):
+        """Tests if find method returns first tag matching selector."""
+        text = """
             <div></div>
+            <div><p>1</p></div>
+            <div><p>Hello</p><p></p></div>
+            <span><p>2</p><p></p></span>
+            <div>
+                <span><a>3</a><p>4</p></span>
+                <span></span>
+            </div>
         """
-        bs = find_body_element(to_bs(html))
-        tag = OnlyOfType("div")
-        result = tag.find(bs)
-        assert result is None
+        bs = find_body_element(to_bs(text))
+        selector = OnlyOfType()
+        result = selector.find(bs)
+        assert strip(str(result)) == strip("""<p>1</p>""")
 
-    def test_find_returns_first_only_element_without_tag(self):
+    def test_find_returns_none_if_no_match_and_strict_false(self):
         """
-        Tests if find method returns first only element of type relative to its parent.
-        Div elements in root are not only-of-type as well as p elements
-        in th first div. 'p' and 'a' elements in second div are only-of-type,
-        first of them is returned.
+        Tests if find returns None if no element matches the selector
+        and strict is False.
         """
-        html = """
-            <div>
-                <p>text 1</p>
-                <p>text 2</p>
-            </div>
-            <div>
-                <p>text 3</p>
-                <a>text 4</a>
-            </div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = OnlyOfType()
-        result = tag.find(bs)
-        assert strip(str(result)) == strip("<p>text 3</p>")
-
-    def test_find_returns_first_only_element_of_type_with_tag(self):
-        """
-        Tests if find method returns first only element of type
-        relative to its parent, which name matches the specified tag.
-        In this case 'div', 'span' and 'p' in second div are only-of-type,
-        but they are skipped as they do not match the specified tag 'a'.
-        """
-        html = """
-            <div>
-                <p>text 1</p>
-                <p>text 2</p>
-            </div>
+        text = """
+            <div></div>
+            <div><p></p><p>Hello</p></div>
+            <span><p>hello</p><p></p></span>
             <span>
-                <p>text 3</p>
-                <a>text 4</a>
+                <span><a>Hello</a><a></a></span>
+                <span></span>
             </span>
         """
-        bs = find_body_element(to_bs(html))
-        tag = OnlyOfType("a")
-        result = tag.find(bs)
-        assert strip(str(result)) == strip("<a>text 4</a>")
+        bs = find_body_element(to_bs(text))
+        selector = OnlyOfType()
+        result = selector.find(bs)
+        assert result is None
 
-    def test_find_raises_exception_without_specified_tag_if_not_found_in_strict_mode(
+    def test_find_raises_exception_if_no_match_and_strict_true(self):
+        """
+        Tests if find raises TagNotFoundException if no element matches the selector
+        and strict is True.
+        """
+        text = """
+            <div></div>
+            <div><p></p><p>Hello</p></div>
+            <span><p>hello</p><p></p></span>
+            <span>
+                <span><a>Hello</a><a></a></span>
+                <span></span>
+            </span>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = OnlyOfType()
+
+        with pytest.raises(TagNotFoundException):
+            selector.find(bs, strict=True)
+
+    def test_find_all_returns_empty_list_when_no_match(self):
+        """Tests if find returns an empty list if no element matches the selector."""
+        text = """
+            <div></div>
+            <div><p></p><p>Hello</p></div>
+            <span><p>hello</p><p></p></span>
+            <span>
+                <span><a>Hello</a><a></a></span>
+                <span></span>
+            </span>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = OnlyOfType()
+        result = selector.find_all(bs)
+        assert result == []
+
+    def test_find_returns_first_matching_child_if_recursive_false(self):
+        """
+        Tests if find returns first matching child element if recursive is False.
+        """
+        text = """
+            <div></div>
+            <div><a>Not child</a><p>Not child</p></div>
+            <span>1</span>
+            <a><p>2</p></a>
+            <div>Hello</div>
+            <p>3</p>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = OnlyOfType()
+        result = selector.find(bs, recursive=False)
+        assert strip(str(result)) == strip("""<span>1</span>""")
+
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+        """
+        Tests if find returns None if no child element matches the selector
+        and recursive is False.
+        """
+        text = """
+            <div></div>
+            <div><a>Not child</a><p>Not child</p></div>
+            <span><a></a></span>
+            <div>Hello</div>
+            <span></span>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = OnlyOfType()
+        result = selector.find(bs, recursive=False)
+        assert result is None
+
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+        """
+        Tests if find raises TagNotFoundException if no child element
+        matches the selector, when recursive is False and strict is True.
+        """
+        text = """
+            <div></div>
+            <div><a>Not child</a><p>Not child</p></div>
+            <span><a></a></span>
+            <div>Hello</div>
+            <span></span>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = OnlyOfType()
+
+        with pytest.raises(TagNotFoundException):
+            selector.find(bs, strict=True, recursive=False)
+
+    def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
         self,
     ):
         """
-        Tests if find method raises TagNotFoundException
-        if no only-of-type element is found in strict mode when tag is not specified.
+        Tests if find_all returns an empty list if no child element matches the selector
+        and recursive is False.
         """
-        html = """
-            <div>
-                <p>text 1</p>
-                <p>text 2</p>
-            </div>
+        text = """
+            <div></div>
+            <div><a>Not child</a><p>Not child</p></div>
+            <span><a></a></span>
             <div>Hello</div>
+            <span></span>
         """
-        bs = find_body_element(to_bs(html))
-        tag = OnlyOfType()
-
-        with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True)
-
-    def test_find_raises_exception_with_specified_tag_if_not_found_in_strict_mode(self):
-        """
-        Tests if find method raises TagNotFoundException
-        if no only-of-type element is found in strict mode when tag is specified.
-        """
-        html = """
-            <div>
-                <p>text 1</p>
-                <p>text 2</p>
-            </div>
-            <span>Hello</span>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = OnlyOfType("p")
-
-        with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True)
-
-    def test_find_all_returns_empty_list_if_no_only_elements_found_without_tag(self):
-        """
-        Tests if find_all method returns empty list if no only-of-type elements
-        are present in the tag markup and tag is not specified.
-        """
-        html = """
-            <div>
-                <p>text 1</p>
-                <p>text 2</p>
-            </div>
-            <div></div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = OnlyOfType()
-        result = tag.find_all(bs)
+        bs = find_body_element(to_bs(text))
+        selector = OnlyOfType()
+        result = selector.find_all(bs, recursive=False)
         assert result == []
 
-    def test_find_all_returns_empty_list_if_no_only_elements_found_with_tag(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(self):
         """
-        Tests if find_all method returns empty list if no only-of-type elements
-        of defined type are present in the tag markup. In this case, 'p' and 'a'
-        are only-of-type elements, but they do not match the specified tag 'div'.
+        Tests if find_all returns all matching children if recursive is False.
+        It returns only matching children of the body element.
         """
-        html = """
-            <div>
-                <p>text 1</p>
-                <a>text 2</a>
-            </div>
+        text = """
             <div></div>
+            <div><a>Not child</a><p>Not child</p></div>
+            <span>1</span>
+            <a><p>2</p></a>
+            <div>Hello</div>
+            <p>3</p>
         """
-        bs = find_body_element(to_bs(html))
-        tag = OnlyOfType("div")
-        result = tag.find_all(bs)
-        assert result == []
-
-    def test_find_all_returns_all_only_of_type_elements_without_tag(self):
-        """
-        Tests if find_all method returns all only-of-type elements
-        relative to their parent element when tag is not specified.
-        """
-        html = """
-            <div>
-                <p>text 1</p>
-                <a>text 2</a>
-            </div>
-            <div>
-                <p>text 3</p>
-                <a>text 4</a>
-                <a>text 5</a>
-            </div>
-            <span>text 6</span>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = OnlyOfType()
-        result = tag.find_all(bs)
-
+        bs = find_body_element(to_bs(text))
+        selector = OnlyOfType()
+        result = selector.find_all(bs, recursive=False)
         assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("<p>text 1</p>"),
-            strip("<a>text 2</a>"),
-            strip("<p>text 3</p>"),
-            strip("<span>text 6</span>"),
+            strip("""<span>1</span>"""),
+            strip("""<a><p>2</p></a>"""),
+            strip("""<p>3</p>"""),
         ]
 
-    def test_find_all_returns_all_only_of_type_elements_with_tag(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
         """
-        Tests if find_all method returns all only-of-type elements
-        of defined type when tag is specified.
+        Tests if find_all returns only x elements when limit is set.
+        In this case only 2 first in order elements are returned.
         """
-        html = """
+        text = """
+            <div></div>
+            <div><p>1</p></div>
+            <div><p>Hello</p><p></p></div>
+            <span><p>2</p><p></p></span>
             <div>
-                <p>text 1</p>
-                <a>text 2</a>
+                <span><a>3</a><p>4</p></span>
+                <span></span>
             </div>
-            <div>
-                <p>text 3</p>
-                <a>text 4</a>
-                <a>text 5</a>
-            </div>
-            <span>text 6</span>
         """
-        bs = find_body_element(to_bs(html))
-        tag = OnlyOfType("p")
-        result = tag.find_all(bs)
-
+        bs = find_body_element(to_bs(text))
+        selector = OnlyOfType()
+        result = selector.find_all(bs, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("<p>text 1</p>"),
-            strip("<p>text 3</p>"),
+            strip("""<p>1</p>"""),
+            strip("""<span><p>2</p><p></p></span>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns only x elements when limit is set and recursive
+        is False. In this case only 2 first in order children matching
+        the selector are returned.
+        """
+        text = """
+            <div></div>
+            <div><a>Not child</a><p>Not child</p></div>
+            <span>1</span>
+            <a><p>2</p></a>
+            <div>Hello</div>
+            <p>3</p>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = OnlyOfType()
+        result = selector.find_all(bs, recursive=False, limit=2)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<span>1</span>"""),
+            strip("""<a><p>2</p></a>"""),
         ]

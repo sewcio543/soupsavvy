@@ -16,7 +16,7 @@ from tests.soupsavvy.tags.conftest import (
 )
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestTagSelector:
     """
     Class for TagSelector unit test suite.
@@ -382,7 +382,7 @@ class TestTagSelector:
             strip("""<a><p>2</p></a>"""),
         ]
 
-    @pytest.mark.css_selector
+    @pytest.mark.css
     @pytest.mark.parametrize(
         argnames="tag, selector",
         argvalues=[

@@ -7,8 +7,8 @@ from soupsavvy.tags.css.tag_selectors import Empty
 from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
-@pytest.mark.css_selector
-@pytest.mark.soup
+@pytest.mark.css
+@pytest.mark.selector
 class TestEmpty:
     """Class with unit tests for Empty tag selector."""
 

@@ -14,7 +14,7 @@ from tests.soupsavvy.tags.conftest import (
 )
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestNotSelector:
     """Class for NotSelector unit test suite."""
 

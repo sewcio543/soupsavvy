@@ -12,7 +12,7 @@ from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 #! this is not a valid html, but it is used for testing purposes
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestIdSelector:
     """Class for IdSelector unit test suite."""
 
@@ -292,7 +292,7 @@ class TestIdSelector:
             strip("""<div id="widget">2</div>"""),
         ]
 
-    @pytest.mark.css_selector
+    @pytest.mark.css
     @pytest.mark.parametrize(
         argnames="selector, css",
         argvalues=[

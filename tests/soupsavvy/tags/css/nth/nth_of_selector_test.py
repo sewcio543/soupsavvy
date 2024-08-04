@@ -13,7 +13,7 @@ from tests.soupsavvy.tags.conftest import (
 )
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestNthOfSelector:
     """Class for NthOfSelector unit test suite."""
 

@@ -29,7 +29,7 @@ from tests.soupsavvy.tags.conftest import (
 )
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 @pytest.mark.combinator
 class BaseRelativeCombinatorTest(ABC):
     """
@@ -208,7 +208,7 @@ class BaseRelativeCombinatorTest(ABC):
         ]
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestRelativeChild(BaseRelativeCombinatorTest):
     """Class for RelativeChild unit test suite."""
 

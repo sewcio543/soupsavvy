@@ -265,7 +265,7 @@ class NthChild(CSSSoupSelector):
 
     Parameters
     ----------
-    n : str
+    nth : str, positional
         Number of the child to be selected. Can be a number or a formula.
     tag : str, optional
         Tag to be selected. If None, any tag is selected.
@@ -293,8 +293,8 @@ class NthChild(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-child
     """
 
-    def __init__(self, n: str, tag: Optional[str] = None) -> None:
-        super().__init__(f"{tag or ''}:nth-child({n})")
+    def __init__(self, nth: str, /, tag: Optional[str] = None) -> None:
+        super().__init__(f"{tag or ''}:nth-child({nth})")
 
 
 class NthLastChild(CSSSoupSelector):
@@ -304,7 +304,7 @@ class NthLastChild(CSSSoupSelector):
 
     Parameters
     ----------
-    n : str
+    nth : str, positional
         Number of the child to be selected. Can be a number or a formula.
     tag : str, optional
         Tag to be selected. If None, any tag is selected.
@@ -332,8 +332,8 @@ class NthLastChild(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-child
     """
 
-    def __init__(self, n: str, tag: Optional[str] = None) -> None:
-        super().__init__(f"{tag or ''}:nth-last-child({n})")
+    def __init__(self, nth: str, /, tag: Optional[str] = None) -> None:
+        super().__init__(f"{tag or ''}:nth-last-child({nth})")
 
 
 class FirstOfType(CSSSoupSelector):
@@ -446,7 +446,7 @@ class NthOfType(CSSSoupSelector):
 
     Parameters
     ----------
-    n : str
+    nth : str, positional
         Number of the tag to be selected. Can be a number or a formula.
     tag : str, optional
         Tag to be selected. If None, any tag is selected.
@@ -474,8 +474,8 @@ class NthOfType(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-of-type
     """
 
-    def __init__(self, n: str, tag: Optional[str] = None) -> None:
-        super().__init__(f"{tag or ''}:nth-of-type({n})")
+    def __init__(self, nth: str, /, tag: Optional[str] = None) -> None:
+        super().__init__(f"{tag or ''}:nth-of-type({nth})")
 
 
 class NthLastOfType(CSSSoupSelector):
@@ -485,7 +485,7 @@ class NthLastOfType(CSSSoupSelector):
 
     Parameters
     ----------
-    n : str
+    nth : str, positional
         Number of the tag to be selected. Can be a number or a formula.
     tag : str, optional
         Tag to be selected. If None, any tag is selected.
@@ -513,8 +513,8 @@ class NthLastOfType(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-of-type
     """
 
-    def __init__(self, n: str, tag: Optional[str] = None) -> None:
-        super().__init__(f"{tag or ''}:nth-last-of-type({n})")
+    def __init__(self, nth: str, /, tag: Optional[str] = None) -> None:
+        super().__init__(f"{tag or ''}:nth-last-of-type({nth})")
 
 
 class OnlyOfType(CSSSoupSelector):

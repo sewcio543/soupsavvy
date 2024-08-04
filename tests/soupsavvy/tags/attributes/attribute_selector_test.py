@@ -14,7 +14,7 @@ from tests.soupsavvy.tags.conftest import (
 )
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestAttributeSelector:
     """Class for AttributeSelector unit test suite."""
 
@@ -151,7 +151,7 @@ class TestAttributeSelector:
         result = selector.find_all(bs)
         assert result == []
 
-    @pytest.mark.css_selector
+    @pytest.mark.css
     @pytest.mark.parametrize(
         argnames="selector, css",
         argvalues=[

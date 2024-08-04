@@ -7,8 +7,8 @@ from soupsavvy.tags.css.tag_selectors import NthChild
 from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
-@pytest.mark.css_selector
-@pytest.mark.soup
+@pytest.mark.css
+@pytest.mark.selector
 class TestNthChild:
     """Class with unit tests for NthChild tag selector."""
 
@@ -16,11 +16,11 @@ class TestNthChild:
         """
         Tests if selector property returns correct value without specifying tag.
         """
-        assert NthChild(n="2n").selector == ":nth-child(2n)"
+        assert NthChild("2n").selector == ":nth-child(2n)"
 
     def test_selector_is_correct_with_tag(self):
         """Tests if selector property returns correct value when specifying tag."""
-        assert NthChild(n="2n", tag="div").selector == "div:nth-child(2n)"
+        assert NthChild("2n", tag="div").selector == "div:nth-child(2n)"
 
     def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
         """Tests if find_all method returns all tags for selector without tag name."""
@@ -58,6 +58,8 @@ class TestNthChild:
                 <span><a></a><p>2</p></span>
             </div>
             <div>Not p</div>
+            <span>Hello</span>
+            <p><span>3</span><a></a></p>
         """
         bs = find_body_element(to_bs(text))
         selector = NthChild("2n", tag="p")
@@ -65,6 +67,7 @@ class TestNthChild:
         assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<p class="widget">1</p>"""),
             strip("""<p>2</p>"""),
+            strip("""<p><span>3</span><a></a></p>"""),
         ]
 
     def test_find_returns_first_tag_matching_selector(self):
@@ -278,85 +281,13 @@ class TestNthChild:
         with pytest.raises(InvalidCSSSelector):
             NthChild("2x+1")
 
-    @pytest.mark.parametrize(argnames="n", argvalues=["even", "2n"])
-    def test_find_all_returns_all_even_tags_with_matching_selectors(self, n: str):
-        """
-        Tests if find_all method returns all nth children
-        when n is set to selector that would select even children.
-        """
-        html = """
-            <div>
-                <p>text 1</p>
-                <p>text 2</p>
-                <p>text 3</p>
-                <p>text 4</p>
-            </div>
-            <span><p>text 5</p><p>text 6</p></span>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild(n)
-
-        result = tag.find_all(bs)
-        assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("<p>text 2</p>"),
-            strip("<p>text 4</p>"),
-            strip("<span><p>text 5</p><p>text 6</p></span>"),
-            strip("<p>text 6</p>"),
-        ]
-
-    @pytest.mark.parametrize(argnames="n", argvalues=["odd", "2n+1"])
-    def test_find_all_returns_all_odd_tags_with_matching_selectors(self, n: str):
-        """
-        Tests if find_all method returns all nth children
-        when n is set to selector that would select odd children.
-        """
-        html = """
-            <span><p>text 1</p><p>text 2</p></span>
-            <div>
-                <p>text 3</p>
-                <p>text 4</p>
-                <p>text 5</p>
-            </div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild(n)
-
-        result = tag.find_all(bs)
-        assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("<span><p>text 1</p><p>text 2</p></span>"),
-            strip("<p>text 1</p>"),
-            strip("<p>text 3</p>"),
-            strip("<p>text 5</p>"),
-        ]
-
-    def test_selector_works_with_whitespaces_the_same_way(self):
-        """
-        Tests if find_all method returns all nth children when provided selector
-        with whitespaces. It should work the same way as without whitespaces.
-        Parsing is delegated to soupsieve library.
-        """
-        html = """
-            <span><p>text 1</p><p>text 2</p></span>
-            <div>
-                <p>text 3</p>
-                <p>text 4</p>
-            </div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild(" 2n +  1")
-
-        result = tag.find_all(bs)
-        assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("<span><p>text 1</p><p>text 2</p></span>"),
-            strip("<p>text 1</p>"),
-            strip("<p>text 3</p>"),
-        ]
-
     @pytest.mark.parametrize(
         argnames="nth, expected",
         argvalues=[
             ("2n", [2, 4, 6]),
             ("2n+1", [1, 3, 5]),
+            # ignores whitespaces
+            ("   2n +  1", [1, 3, 5]),
             ("-n+3", [1, 2, 3]),
             ("even", [2, 4, 6]),
             ("odd", [1, 3, 5]),
@@ -396,6 +327,8 @@ class TestNthChild:
         argvalues=[
             ("2n", [2, 4, 6]),
             ("2n+1", [1, 3, 5]),
+            # ignores whitespaces
+            ("   2n +  1", [1, 3, 5]),
             ("-n+3", [1, 2, 3]),
             ("even", [2, 4, 6]),
             ("odd", [1, 3, 5]),
@@ -410,16 +343,21 @@ class TestNthChild:
         """Tests if find_all returns all elements matching various nth selectors."""
         text = """
             <div class="widget">1</div>
-            <div class="widget">2</div>
+            <a class="widget">2</a>
             <div class="widget">3</div>
-            <div class="widget">4</div>
+            <a class="widget">4</a>
             <div class="widget">5</div>
-            <div class="widget">6</div>
+            <a class="widget">6</a>
         """
         bs = find_body_element(to_bs(text))
         selector = NthChild(nth)
         results = selector.find_all(bs)
 
         assert list(map(lambda x: strip(str(x)), results)) == [
-            f"""<div class="widget">{i}</div>""" for i in expected
+            (
+                f"""<a class="widget">{i}</a>"""
+                if (i % 2) == 0
+                else f"""<div class="widget">{i}</div>"""
+            )
+            for i in expected
         ]
