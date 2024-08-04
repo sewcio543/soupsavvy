@@ -23,7 +23,7 @@ def find_tag(bs: Tag, name: str = "body") -> Tag:
     return bs.find(name)  # type: ignore
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestAnyTagSelector:
     """Class for AnyTagSelector unit test suite."""
 
@@ -233,7 +233,7 @@ class TestAnyTagSelector:
             strip("""<a class="widget">2</a>"""),
         ]
 
-    @pytest.mark.css_selector
+    @pytest.mark.css
     def test_selector_is_a_css_selector_wildcard(self, selector: AnyTagSelector):
         """Test if selector attribute is a css selector wildcard."""
         assert selector.selector == CSS_SELECTOR_WILDCARD

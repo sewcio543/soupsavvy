@@ -7,8 +7,8 @@ from soupsavvy.tags.css.tag_selectors import LastOfType
 from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
-@pytest.mark.css_selector
-@pytest.mark.soup
+@pytest.mark.css
+@pytest.mark.selector
 class TestLastOfType:
     """Class with unit tests for LastOfType tag selector."""
 
@@ -98,7 +98,7 @@ class TestLastOfType:
         text = """
             <div></div>
             <div>Hello</div>
-            <span><p>Not child</p></span>
+            <span><p></p></span>
             <span>Hello</span>
         """
         bs = to_bs(text)
@@ -114,7 +114,7 @@ class TestLastOfType:
         text = """
             <div></div>
             <div>Hello</div>
-            <span><p>Not child</p></span>
+            <span><p></p></span>
             <span>Hello</span>
         """
         bs = to_bs(text)
@@ -128,7 +128,7 @@ class TestLastOfType:
         text = """
             <div></div>
             <div>Hello</div>
-            <span><p>Not child</p></span>
+            <span><p></p></span>
             <span>Hello</span>
         """
         bs = to_bs(text)

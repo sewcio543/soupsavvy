@@ -19,7 +19,7 @@ from tests.soupsavvy.tags.conftest import (
 )
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestHasSelector:
     """Class for HasSelector unit test suite."""
 

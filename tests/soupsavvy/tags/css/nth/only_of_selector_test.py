@@ -13,7 +13,7 @@ from tests.soupsavvy.tags.conftest import (
 )
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestOnlyOfSelector:
     """Class for OnlyOfSelector unit test suite."""
 

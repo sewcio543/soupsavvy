@@ -9,7 +9,7 @@ from soupsavvy.tags.attributes import ClassSelector
 from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestClassSelector:
     """Class for ClassSelector unit test suite."""
 
@@ -312,7 +312,7 @@ class TestClassSelector:
             strip("""<div class="widget"></div>"""),
         ]
 
-    @pytest.mark.css_selector
+    @pytest.mark.css
     @pytest.mark.parametrize(
         argnames="selector, css",
         argvalues=[

@@ -14,7 +14,7 @@ from tests.soupsavvy.tags.conftest import (
 )
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 @pytest.mark.combinator
 class TestSubsequentSiblingCombinator:
     """Class for SubsequentSiblingCombinator unit test suite."""

@@ -28,7 +28,7 @@ from tests.soupsavvy.tags.conftest import (
 )
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class BaseOperatorTest:
     """
     Class with base test cases covering functionality of how standard operators
@@ -165,7 +165,7 @@ class TestRSHIFTOperator(BaseOperatorTest):
     OPERATOR = operator.rshift
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestNOTOperator:
     """
     Class for testing bitwise NOT operator for SoupSelector interface.
@@ -220,7 +220,7 @@ class TestNOTOperator:
         assert result.selectors == [selector1, selector2]
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 @pytest.mark.edge_case
 def test_exception_is_raised_when_navigable_string_is_a_result():
     """

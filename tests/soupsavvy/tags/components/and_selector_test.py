@@ -15,7 +15,7 @@ from tests.soupsavvy.tags.conftest import (
 )
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestAndSelector:
     """Class for AndSelector unit test suite."""
 

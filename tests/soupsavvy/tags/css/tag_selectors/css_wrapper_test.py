@@ -5,13 +5,13 @@ for css selector-based search.
 
 import pytest
 
-from soupsavvy.exceptions import TagNotFoundException
+from soupsavvy.exceptions import InvalidCSSSelector, TagNotFoundException
 from soupsavvy.tags.css.tag_selectors import CSS
 from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
-@pytest.mark.css_selector
-@pytest.mark.soup
+@pytest.mark.css
+@pytest.mark.selector
 class TestCSS:
     """
     Class with unit tests for CSS tag selector.
@@ -24,8 +24,7 @@ class TestCSS:
         argvalues=[
             ":not(div.menu, a)",
             "div",
-            # invalid attrs do not raise exceptions in the constructor
-            ":nth-attr(2n+1)",
+            ":nth-of-type(2n+1)",
         ],
     )
     def test_selector_attribute_is_equal_to_init_param(self, css: str):
@@ -34,6 +33,14 @@ class TestCSS:
         as string passed to the constructor.
         """
         assert CSS(css).selector == css
+
+    def test_raises_exception_when_invalid_css_selector(self):
+        """
+        Tests if InvalidCSSSelector exception is raised in init
+        when invalid selector that can't be parsed is passed.
+        """
+        with pytest.raises(InvalidCSSSelector):
+            CSS("div[1]")
 
     def test_find_returns_first_tag_matching_selector(self):
         """Tests if find method returns first tag matching selector."""
