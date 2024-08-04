@@ -16,11 +16,11 @@ class TestNthChild:
         """
         Tests if selector property returns correct value without specifying tag.
         """
-        assert NthChild("2n").selector == ":nth-child(2n)"
+        assert NthChild("2n").css == ":nth-child(2n)"
 
     def test_selector_is_correct_with_tag(self):
         """Tests if selector property returns correct value when specifying tag."""
-        assert NthChild("2n", tag="div").selector == "div:nth-child(2n)"
+        assert NthChild("2n", tag="div").css == "div:nth-child(2n)"
 
     def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
         """Tests if find_all method returns all tags for selector without tag name."""

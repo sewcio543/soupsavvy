@@ -236,7 +236,7 @@ class TestAnyTagSelector:
     @pytest.mark.css
     def test_selector_is_a_css_selector_wildcard(self, selector: AnyTagSelector):
         """Test if selector attribute is a css selector wildcard."""
-        assert selector.selector == CSS_SELECTOR_WILDCARD
+        assert selector.css == CSS_SELECTOR_WILDCARD
 
     @pytest.mark.parametrize(
         argnames="selectors",

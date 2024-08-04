@@ -291,20 +291,3 @@ class TestIdSelector:
             strip("""<a id="widget">1</a>"""),
             strip("""<div id="widget">2</div>"""),
         ]
-
-    @pytest.mark.css
-    @pytest.mark.parametrize(
-        argnames="selector, css",
-        argvalues=[
-            # id overrides default css selector with # syntax
-            (IdSelector("menu"), "#menu"),
-            (IdSelector(), "[id]"),
-            (
-                IdSelector(re.compile(r"^menu")),
-                "[id*='^menu']",
-            ),
-        ],
-    )
-    def test_selector_is_correct(self, selector: IdSelector, css: str):
-        """Tests if css selector for AttributeSelector is constructed as expected."""
-        assert selector.selector == css

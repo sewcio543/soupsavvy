@@ -23,7 +23,7 @@ class TestCSSSoupSelectorEquality:
             self._selector = selector
 
         @property
-        def selector(self) -> str:
+        def css(self) -> str:
             return self._selector
 
     class MockCSSSoupSelectorEqual(CSSSoupSelector):
@@ -38,7 +38,7 @@ class TestCSSSoupSelectorEquality:
             self._selector = selector
 
         @property
-        def selector(self) -> str:
+        def css(self) -> str:
             return self._selector
 
     class MockNotCSSSoupSelector(MockSelector):

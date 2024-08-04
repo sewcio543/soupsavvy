@@ -38,7 +38,7 @@ from soupsavvy.tags.tag_utils import TagIterator, TagResultSet
 
 
 @dataclass
-class TagSelector(SingleSoupSelector, SelectableCSS):
+class TagSelector(SingleSoupSelector):
     """
     Class representing HTML element.
     Provides elements based on element tag and all defined attributes.
@@ -70,15 +70,6 @@ class TagSelector(SingleSoupSelector, SelectableCSS):
         Iterable of AttributeSelector objects that specify element attributes.
         By default empty list, no attribute will be checked.
 
-    Example
-    -------
-    >>> element = TagSelector(
-    >>>    tag="div",
-    >>>    attributes=[AttributeSelector(name="class", value="widget")]
-    >>> )
-    >>> element.selector
-    div[class=widget]
-
     Notes
     -----
     Initializing object without passing any parameters is equal to selector for all elements,
@@ -87,17 +78,6 @@ class TagSelector(SingleSoupSelector, SelectableCSS):
 
     tag: Optional[str] = None
     attributes: Iterable[AttributeSelector] = field(default_factory=list)
-
-    @property
-    def selector(self) -> str:
-        if not self.tag and not self.attributes:
-            return ns.CSS_SELECTOR_WILDCARD
-
-        # drop duplicated css attribute selectors and preserve order
-        selectors = list(map(lambda attr: attr.selector, self.attributes))
-        attrs = sorted(set(selectors), key=selectors.index)
-        # at least one of tag or attributes must be provided
-        return (self.tag or "") + "".join(attrs)
 
     @property
     def _find_params(self) -> dict[str, Any]:
@@ -215,7 +195,7 @@ class AnyTagSelector(SingleSoupSelector, SelectableCSS):
         return {}
 
     @property
-    def selector(self) -> str:
+    def css(self) -> str:
         """Returns wildcard css selector matching all elements in the markup."""
         return ns.CSS_SELECTOR_WILDCARD
 

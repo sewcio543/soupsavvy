@@ -14,11 +14,11 @@ class TestLastChild:
 
     def test_selector_is_correct_without_tag(self):
         """Tests if selector property returns correct value without specifying tag."""
-        assert LastChild().selector == ":last-child"
+        assert LastChild().css == ":last-child"
 
     def test_selector_is_correct_with_tag(self):
         """Tests if selector property returns correct value when specifying tag."""
-        assert LastChild("div").selector == "div:last-child"
+        assert LastChild("div").css == "div:last-child"
 
     def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
         """Tests if find_all method returns all tags for selector without tag name."""
