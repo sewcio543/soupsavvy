@@ -7,11 +7,7 @@ from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, overload
 
 from bs4 import NavigableString, Tag
 
-from soupsavvy.exceptions import (
-    NavigableStringException,
-    NotSoupSelectorException,
-    TagNotFoundException,
-)
+import soupsavvy.exceptions as exc
 from soupsavvy.selectors.namespace import FindResult
 from soupsavvy.utils.deprecation import deprecated_function
 
@@ -116,11 +112,11 @@ class SoupSelector(ABC):
 
         if result is None:
             if strict:
-                raise TagNotFoundException("Tag was not found in markup.")
+                raise exc.TagNotFoundException("Tag was not found in markup.")
             return None
 
         if isinstance(result, NavigableString):
-            raise NavigableStringException(
+            raise exc.NavigableStringException(
                 f"NavigableString was returned for {result} string search, "
                 "invalid operation for SoupSelector find."
             )
@@ -181,9 +177,12 @@ class SoupSelector(ABC):
         elements = self.find_all(tag, recursive=recursive, limit=1)
         return elements[0] if elements else None
 
-    def _check_selector_type(self, x: Any, message: Optional[str] = None) -> None:
+    def _check_selector_type(
+        self, x: Any, message: Optional[str] = None
+    ) -> SoupSelector:
         """
         Checks if provided object is an instance of SoupSelector.
+        Returns provided object if fulfills the condition for convenience.
 
         Parameters
         ----------
@@ -203,7 +202,9 @@ class SoupSelector(ABC):
         )
 
         if not isinstance(x, SoupSelector):
-            raise NotSoupSelectorException(message)
+            raise exc.NotSoupSelectorException(message)
+
+        return x
 
     @abstractmethod
     def __eq__(self, other: object) -> bool:
@@ -658,14 +659,7 @@ class CompositeSoupSelector(SoupSelector):
         NotSoupSelectorException
             If any of provided parameters is not an instance of SoupSelector.
         """
-        invalid = [arg for arg in selectors if not isinstance(arg, SoupSelector)]
-
-        if invalid:
-            raise NotSoupSelectorException(
-                f"Parameters {invalid} are not instances of SoupSelector."
-            )
-
-        self.selectors = list(selectors)
+        self.selectors = [self._check_selector_type(selector) for selector in selectors]
 
     def __eq__(self, other: object) -> bool:
         # check for CompositeSoupSelector type for type checking sake

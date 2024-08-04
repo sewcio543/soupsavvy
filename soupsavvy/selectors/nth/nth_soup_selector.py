@@ -38,8 +38,7 @@ class _BaseNthOfSelector(SoupSelector):
         NotSoupSelectorException
             If selector is not an instance of SoupSelector.
         """
-        self._check_selector_type(selector)
-        self.selector = selector
+        self.selector = self._check_selector_type(selector)
         self.nth_selector = parse_nth(nth)
 
     def find_all(
@@ -184,8 +183,7 @@ class OnlyOfSelector(SoupSelector):
         NotSoupSelectorException
             If selector is not an instance of SoupSelector.
         """
-        self._check_selector_type(selector)
-        self.selector = selector
+        self.selector = self._check_selector_type(selector)
 
     def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
         tag_iterator = (

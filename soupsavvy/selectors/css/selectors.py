@@ -14,7 +14,7 @@ from typing import Optional
 import soupsieve as sv
 from bs4 import Tag
 
-from soupsavvy.exceptions import InvalidCSSSelector
+import soupsavvy.exceptions as exc
 from soupsavvy.selectors.base import SelectableCSS, SoupSelector
 from soupsavvy.selectors.tag_utils import TagIterator
 
@@ -36,7 +36,7 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
         try:
             self._compiled = sv.compile(selector)
         except sv.SelectorSyntaxError:
-            raise InvalidCSSSelector(
+            raise exc.InvalidCSSSelector(
                 "CSS selector constructed from provided parameters "
                 f"is not valid: {selector}"
             )
