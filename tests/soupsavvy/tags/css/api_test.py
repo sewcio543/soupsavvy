@@ -12,8 +12,8 @@ from soupsavvy.tags.css import api
 from tests.soupsavvy.tags.conftest import MockSelector
 
 
-@pytest.mark.css_selector
-@pytest.mark.soup
+@pytest.mark.css
+@pytest.mark.selector
 class TestCSSApi:
     """Class with unit tests suite for soupsavvy.tags.css.api module."""
 

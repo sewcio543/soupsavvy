@@ -16,6 +16,11 @@ exclude_lines =
     import
     def __repr__
     def __str__
+    pass
+    \.\.\.
+    deprecated_function
+    deprecated_class
 
 sort = cover
 show_missing = true
+fail_under = 100

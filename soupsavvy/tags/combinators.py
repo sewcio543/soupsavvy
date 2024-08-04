@@ -22,14 +22,12 @@ https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Com
 """
 
 from abc import abstractmethod
-from dataclasses import dataclass
 from functools import reduce
 from typing import Optional, Type
 
 from bs4 import Tag
 
 from soupsavvy.tags.base import MultipleSoupSelector, SoupSelector
-from soupsavvy.tags.namespace import FindResult
 from soupsavvy.tags.relative import (
     RelativeChild,
     RelativeDescendant,
@@ -37,7 +35,7 @@ from soupsavvy.tags.relative import (
     RelativeSelector,
     RelativeSubsequentSibling,
 )
-from soupsavvy.tags.tag_utils import TagResultSet
+from soupsavvy.tags.tag_utils import TagIterator, TagResultSet
 
 
 class BaseCombinator(MultipleSoupSelector):
@@ -106,15 +104,15 @@ class BaseCombinator(MultipleSoupSelector):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Tag]:
-        elements: list[Tag] = []
+        results = TagResultSet()
 
         for i, step in enumerate(self.selectors):
             if i == 0:
                 # only first step follows recursive rule
-                elements = step.find_all(tag, recursive=recursive)
+                results |= TagResultSet(step.find_all(tag, recursive=recursive))
                 continue
 
-            if not elements:
+            if not results:
                 break
 
             selector = self._selector(step)
@@ -122,14 +120,13 @@ class BaseCombinator(MultipleSoupSelector):
                 reduce(
                     list.__add__,
                     # each relative selector has defined recursive behavior
-                    (selector.find_all(element) for element in elements),
+                    (selector.find_all(element) for element in results.fetch()),
                 )
             )
 
-            n = limit if i + 1 == len(self.selectors) else None
-            elements = results.fetch(n)
-
-        return elements
+        # keep order of tags and limit
+        results = TagResultSet(list(TagIterator(tag, recursive=True))) & results
+        return results.fetch(limit)
 
 
 class ChildCombinator(BaseCombinator):
@@ -414,16 +411,6 @@ class SelectorList(MultipleSoupSelector):
         """
         super().__init__([selector1, selector2, *selectors])
 
-    def _find(self, tag: Tag, recursive: bool = True) -> FindResult:
-        # iterates all tags and returns first element that matches
-        for selector in self.selectors:
-            result = selector.find(tag, recursive=recursive)
-
-            if result is not None:
-                return result
-
-        return None
-
     def find_all(
         self,
         tag: Tag,
@@ -437,7 +424,6 @@ class SelectorList(MultipleSoupSelector):
                 selector.find_all(tag, recursive=recursive),
             )
 
-            if limit and len(results) >= limit:
-                break
-
+        # keep order of tags and limit
+        results = TagResultSet(list(TagIterator(tag, recursive=recursive))) & results
         return results.fetch(limit)

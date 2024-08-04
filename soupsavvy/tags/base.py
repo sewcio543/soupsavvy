@@ -7,12 +7,13 @@ from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, overload
 
 from bs4 import NavigableString, Tag
 
-from soupsavvy.tags.exceptions import (
+from soupsavvy.exceptions import (
     NavigableStringException,
     NotSoupSelectorException,
     TagNotFoundException,
 )
 from soupsavvy.tags.namespace import FindResult
+from soupsavvy.utils.deprecation import deprecated_function
 
 if TYPE_CHECKING:
     from soupsavvy.tags.combinators import (
@@ -607,12 +608,20 @@ class SelectableCSS(ABC):
 
     @property
     @abstractmethod
-    def selector(self) -> str:
+    def css(self) -> str:
         """Returns string representing element css selector."""
         raise NotImplementedError(
             f"{self.__class__.__name__} is an interface, "
             "and does not implement this property."
         )
+
+    @property
+    @deprecated_function(
+        message="'selector' property is deprecated, use 'css' instead."
+    )
+    def selector(self) -> str:
+        """Returns string representing element css selector."""
+        return self.css
 
 
 class MultipleSoupSelector(SoupSelector):

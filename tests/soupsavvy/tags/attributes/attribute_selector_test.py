@@ -4,8 +4,8 @@ import re
 
 import pytest
 
+from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.tags.attributes import AttributeSelector, ClassSelector
-from soupsavvy.tags.exceptions import TagNotFoundException
 from tests.soupsavvy.tags.conftest import (
     MockDivSelector,
     find_body_element,
@@ -14,7 +14,7 @@ from tests.soupsavvy.tags.conftest import (
 )
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestAttributeSelector:
     """Class for AttributeSelector unit test suite."""
 
@@ -24,6 +24,7 @@ class TestAttributeSelector:
             <div href="github"></div>
             <a></a>
             <a class="widget"></a>
+            <div class="menu"></div>
         """
         bs = to_bs(text)
         selector = AttributeSelector(name="class")
@@ -39,38 +40,25 @@ class TestAttributeSelector:
             <a></a>
             <span class="widgets"></span>
             <a class="widget"></a>
+            <div class="widget"></div>
         """
         bs = to_bs(text)
         selector = AttributeSelector(name="class", value="widget")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget"></a>""")
 
-    @pytest.mark.parametrize(
-        argnames="selector",
-        argvalues=[
-            AttributeSelector(name="class", value="^widget", re=True),
-            # re parameter is ignored if value is compiled pattern
-            AttributeSelector(name="class", value=re.compile("^widget"), re=False),
-            AttributeSelector(name="class", value=re.compile("^widget"), re=True),
-        ],
-    )
-    def test_find_returns_first_matching_tag_with_regex(
-        self, selector: AttributeSelector
-    ):
-        """
-        Tests if find method returns first matching tag with regex pattern.
-        Selector should behave the same way when value is compiled regex pattern
-        and when value is string pattern with re parameter set to True.
-
-        """
+    def test_find_returns_first_matching_tag_with_regex(self):
+        """Tests if find method returns first matching tag with regex pattern."""
         text = """
             <div href="github" class="menu"></div>
             <a></a>
             <span class="super_widget"></span>
             <a class="wid__get"></a>
             <span class="widget_123"></span>
+            <span class="widget_45"></span>
         """
         bs = to_bs(text)
+        selector = AttributeSelector(name="class", value=re.compile("^widget"))
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<span class="widget_123"></span>""")
 
@@ -120,6 +108,7 @@ class TestAttributeSelector:
             <span awesomeness="4"></span>
             <a class="super_widget"></a>
             <span awesomeness="5"></span>
+            <div awesomeness="5"></div>
         """
         bs = to_bs(text)
         selector = AttributeSelector(name="awesomeness", value="5")
@@ -159,69 +148,20 @@ class TestAttributeSelector:
         """
         bs = to_bs(text)
         selector = AttributeSelector(name="class", value="widget")
-
         result = selector.find_all(bs)
         assert result == []
-
-    def test_do_not_shadow_bs4_find_method_parameters(self):
-        """
-        Tests that find method does not shadow bs4.selector find method parameters.
-        If attribute name is the same as bs4.selector find method parameter
-        like ex. 'string' or 'name' it should not cause any conflicts.
-        The way to avoid it is to pass attribute filters as a dictionary to 'attrs'
-        parameter in bs4.selector find method instead of as keyword arguments.
-        """
-        text = """
-            <div href="github" class="menu"></div>
-            <a class="github"></a>
-            <span name="github"></span>
-        """
-        bs = to_bs(text)
-        selector = AttributeSelector(name="name", value="github")
-        result = selector.find(bs)
-        assert strip(str(result)) == strip("""<span name="github"></span>""")
-
-    @pytest.mark.css_selector
-    @pytest.mark.parametrize(
-        argnames="selector, css",
-        argvalues=[
-            (AttributeSelector("class", value="menu"), "[class='menu']"),
-            (AttributeSelector("href", value="menu", re=True), "[href*='menu']"),
-            (AttributeSelector("id", value=None, re=True), "[id]"),
-            (AttributeSelector("id", value=None, re=False), "[id]"),
-            (
-                AttributeSelector("id", value=re.compile("menu"), re=True),
-                "[id*='menu']",
-            ),
-            (
-                AttributeSelector("id", value=re.compile("menu"), re=False),
-                "[id*='menu']",
-            ),
-            (
-                AttributeSelector("id", value=re.compile("^menu[0-9]$"), re=False),
-                "[id*='^menu[0-9]$']",
-            ),
-            (
-                AttributeSelector("id", value=re.compile("^menu[0-9]$"), re=True),
-                "[id*='^menu[0-9]$']",
-            ),
-        ],
-    )
-    def test_selector_is_correct(self, selector: AttributeSelector, css: str):
-        """Tests if css selector for AttributeSelector is constructed as expected."""
-        assert selector.selector == css
 
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.
-        In this case first 'a' element with href="github" matches the selector,
-        but it's not a child of body element, so it's not returned.
         """
         text = """
             <div class="google">
                 <a href="github">Hello 1</a>
             </div>
+            <div href="github_12">Hello 2</div>
             <a href="github">Hello 2</a>
+            <a href="github">Hello 3</a>
         """
         bs = find_body_element(to_bs(text))
         selector = AttributeSelector(name="href", value="github")
@@ -232,14 +172,13 @@ class TestAttributeSelector:
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
         Tests if find returns None if no child element matches the selector
-        and recursive is False. In this case first 'a' element with href="github"
-        matches the selector, but it's not a child of body element,
-        so it's not returned.
+        and recursive is False.
         """
         text = """
             <div class="google">
                 <a href="github">Hello 1</a>
             </div>
+            <div href="github_12">Hello 2</div>
             <a class="github">Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
@@ -256,6 +195,7 @@ class TestAttributeSelector:
             <div class="google">
                 <a href="github">Hello 1</a>
             </div>
+            <div href="github_12">Hello 2</div>
             <a class="github">Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
@@ -275,12 +215,13 @@ class TestAttributeSelector:
             <div class="google">
                 <a href="github">Hello 1</a>
             </div>
+            <div href="github_12">Hello 2</div>
             <a class="github">Hello 2</a>
         """
         bs = find_body_element(to_bs(text))
         selector = AttributeSelector(name="href", value="github")
-        results = selector.find_all(bs, recursive=False)
-        assert results == []
+        result = selector.find_all(bs, recursive=False)
+        assert result == []
 
     def test_find_all_returns_all_matching_children_when_recursive_false(self):
         """
@@ -289,18 +230,22 @@ class TestAttributeSelector:
         """
         text = """
             <div>
-                <a class="github">Hello 1</a>
+                <a class="github">Not a child</a>
             </div>
-            <a class="github">Hello 2</a>
-            <div class="google"></div>
+            <a class="github">1</a>
+            <div id="google"></div>
+            <div class="google">2</div>
+            <div class="menu"><span>3</span></div>
+            <a></a>
         """
         bs = find_body_element(to_bs(text))
         selector = AttributeSelector(name="class")
-        results = selector.find_all(bs, recursive=False)
+        result = selector.find_all(bs, recursive=False)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
-            strip("""<a class="github">Hello 2</a>"""),
-            strip("""<div class="google"></div>"""),
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="github">1</a>"""),
+            strip("""<div class="google">2</div>"""),
+            strip("""<div class="menu"><span>3</span></div>"""),
         ]
 
     def test_find_all_returns_only_x_elements_when_limit_is_set(self):
@@ -313,14 +258,15 @@ class TestAttributeSelector:
                 <a class="github">Hello 2</a>
             </span>
             <div class="menu"></div>
+            <div id="google"></div>
             <div class="google"></div>
             <span class="menu"></span>
         """
         bs = find_body_element(to_bs(text))
         selector = AttributeSelector(name="class")
-        results = selector.find_all(bs, limit=2)
+        result = selector.find_all(bs, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="github">Hello 2</a>"""),
             strip("""<div class="menu"></div>"""),
         ]
@@ -338,16 +284,19 @@ class TestAttributeSelector:
                 <a class="github">Hello 2</a>
             </span>
             <div class="menu"></div>
+            <div id="google"></div>
+            <span class="menu"></span>
             <div>
                 <div class="google"></div>
             </div>
-            <span class="menu"></span>
+            <div class="widget"></div>
+            <p class="menu"></p>
         """
         bs = find_body_element(to_bs(text))
         selector = AttributeSelector(name="class")
-        results = selector.find_all(bs, recursive=False, limit=2)
+        result = selector.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<div class="menu"></div>"""),
             strip("""<span class="menu"></span>"""),
         ]
@@ -357,32 +306,20 @@ class TestAttributeSelector:
         argvalues=[
             # if only name is provided, it must be equal
             (AttributeSelector("class"), AttributeSelector("class")),
-            # re does not matter if value is not provided
-            (AttributeSelector("class", re=True), AttributeSelector("class", re=False)),
             # if value is provided, it must be equal
             (
                 AttributeSelector("class", value="hello_world"),
                 AttributeSelector("class", value="hello_world"),
-            ),
-            # if value is provided, re parameter must match
-            (
-                AttributeSelector("class", value="hello_world", re=True),
-                AttributeSelector("class", value="hello_world", re=True),
-            ),
-            # value + re is equal to the same pattern
-            (
-                AttributeSelector("class", value="hello_world", re=True),
-                AttributeSelector("class", value=re.compile("hello_world")),
             ),
             # the same compiled pattern
             (
                 AttributeSelector("class", value=re.compile("hello_world")),
                 AttributeSelector("class", value=re.compile("hello_world")),
             ),
-            # if compiled pattern is provided, re is ignored
+            # value is cast to string
             (
-                AttributeSelector("class", value=re.compile("hello_world"), re=True),
-                AttributeSelector("class", value=re.compile("hello_world"), re=False),
+                AttributeSelector("class", value=1),  # type: ignore
+                AttributeSelector("class", value="1"),
             ),
             # equal if subclass of AttributeSelector and same value
             (
@@ -407,20 +344,20 @@ class TestAttributeSelector:
                 AttributeSelector("class", value="widget"),
                 AttributeSelector("class", value="menu"),
             ),
-            # different re parameter when pattern not provided
+            # values are the same, but names are different
             (
-                AttributeSelector("class", value="widget", re=False),
-                AttributeSelector("class", value="widget", re=True),
+                AttributeSelector("class", value="widget"),
+                AttributeSelector("href", value="widget"),
             ),
             # different compiled patterns
             (
                 AttributeSelector("class", value=re.compile("widget")),
                 AttributeSelector("class", value=re.compile("^widget")),
             ),
-            # compiled pattern string is not equal to string pattern with re=True
+            # same compiled patterns, but different names
             (
-                AttributeSelector("class", value="widget", re=True),
-                AttributeSelector("class", value=re.compile("^widget")),
+                AttributeSelector("class", value=re.compile("widget")),
+                AttributeSelector("href", value=re.compile("widget")),
             ),
             # if not subclass of AttributeSelector, it is not equal
             (
@@ -457,6 +394,7 @@ class TestAttributeSelector:
             <div href="menu"></div>
             <div class="widget_class menu"></div>
             <div class="it has a long list of widget classes"></div>
+            <div class="another list of widget classes"></div>
         """
         bs = to_bs(markup)
         selector = AttributeSelector("class", value="widget")
@@ -464,3 +402,23 @@ class TestAttributeSelector:
         assert strip(str(result)) == strip(
             """<div class="it has a long list of widget classes"></div>"""
         )
+
+    @pytest.mark.edge_case
+    def test_do_not_shadow_bs4_find_method_parameters(self):
+        """
+        Tests that find method does not shadow bs4.selector find method parameters.
+        If attribute name is the same as bs4.selector find method parameter
+        like ex. 'string' or 'name' it should not cause any conflicts.
+        The way to avoid it is to pass attribute filters as a dictionary to 'attrs'
+        parameter in bs4.selector find method instead of as keyword arguments.
+        """
+        text = """
+            <div href="github" class="menu"></div>
+            <a class="github"></a>
+            <span name="github"></span>
+            <div name="github"></div>
+        """
+        bs = to_bs(text)
+        selector = AttributeSelector(name="name", value="github")
+        result = selector.find(bs)
+        assert strip(str(result)) == strip("""<span name="github"></span>""")

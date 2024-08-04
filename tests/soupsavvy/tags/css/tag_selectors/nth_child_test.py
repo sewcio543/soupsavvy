@@ -2,331 +2,362 @@
 
 import pytest
 
-from soupsavvy.tags.css.exceptions import InvalidCSSSelector
+from soupsavvy.exceptions import InvalidCSSSelector, TagNotFoundException
 from soupsavvy.tags.css.tag_selectors import NthChild
-from soupsavvy.tags.exceptions import TagNotFoundException
 from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
 
 
-@pytest.mark.css_selector
-@pytest.mark.soup
+@pytest.mark.css
+@pytest.mark.selector
 class TestNthChild:
     """Class with unit tests for NthChild tag selector."""
 
     def test_selector_is_correct_without_tag(self):
         """
         Tests if selector property returns correct value without specifying tag.
-        In case of NthChild n is a required parameter and is passed into
-        selector string as a parameter of :nth-child() pseudo-class.
         """
-        assert NthChild(n="2n").selector == ":nth-child(2n)"
-
-    def test_passing_invalid_n_does_not_raise_exception_on_init(self):
-        """
-        Tests if passing invalid n parameter into NthChild does not raise
-        exception on initialization. Invalid n parameter will raise exception
-        when find method is called.
-        """
-        tag = NthChild(n="soupsavvy")
-        assert tag.selector == ":nth-child(soupsavvy)"
+        assert NthChild("2n").css == ":nth-child(2n)"
 
     def test_selector_is_correct_with_tag(self):
         """Tests if selector property returns correct value when specifying tag."""
-        assert NthChild(n="2n", tag="div").selector == "div:nth-child(2n)"
+        assert NthChild("2n", tag="div").css == "div:nth-child(2n)"
 
-    @pytest.mark.parametrize(argnames="n", argvalues=["3n", "3n+3", "3"])
-    def test_finds_returns_none_if_no_nth_child_without_tag(self, n: str):
-        """
-        Tests if find method returns None if no nth child is found
-        when tag is not specified and strict mode is not enabled.
-        In this case n is set to values out of range of children, max depth is 2,
-        so no nth child is not found.
-        """
-        html = """
-            <div>
-                <p>text 1</p>
-                <p>text 2</p>
-            </div>
+    def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
+        """Tests if find_all method returns all tags for selector without tag name."""
+        text = """
             <div></div>
+            <a class="widget">1</a>
+            <div>
+                <p>Hello</p>
+                <p class="widget">2</p>
+                <a>Hello</a>
+                <span><a>3</a><p>4</p></span>
+            </div>
+            <div>5</div>
         """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild(n)
-        result = tag.find(bs)
+        bs = find_body_element(to_bs(text))
+        selector = NthChild("2n")
+        result = selector.find_all(bs)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="widget">1</a>"""),
+            strip("""<p class="widget">2</p>"""),
+            strip("""<span><a>3</a><p>4</p></span>"""),
+            strip("""<p>4</p>"""),
+            strip("""<div>5</div>"""),
+        ]
+
+    def test_find_all_returns_all_tags_for_selector_with_tag_name(self):
+        """Tests if find_all method returns all tags for selector with tag name."""
+        text = """
+            <div></div>
+            <a class="widget">Not p</a>
+            <div>
+                <p>Hello</p>
+                <p class="widget">1</p>
+                <a>Hello</a>
+                <span><a></a><p>2</p></span>
+            </div>
+            <div>Not p</div>
+            <span>Hello</span>
+            <p><span>3</span><a></a></p>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = NthChild("2n", tag="p")
+        result = selector.find_all(bs)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<p class="widget">1</p>"""),
+            strip("""<p>2</p>"""),
+            strip("""<p><span>3</span><a></a></p>"""),
+        ]
+
+    def test_find_returns_first_tag_matching_selector(self):
+        """Tests if find method returns first tag matching selector."""
+        text = """
+            <div></div>
+            <div>1</div>
+            <div>
+                <a></a>
+                <p><a>2</a></p>
+                <span></span>
+            </div>
+            <span>3</span>
+            <a class="widget"></a>
+            <div><a></a><p>45</p></div>
+        """
+        bs = to_bs(text)
+        selector = NthChild("2n")
+        result = selector.find(bs)
+        assert strip(str(result)) == strip("""<div>1</div>""")
+
+    def test_find_returns_none_if_no_match_and_strict_false(self):
+        """
+        Tests if find returns None if no element matches the selector
+        and strict is False.
+        """
+        text = """
+            <div></div>
+            <div><p></p><a></a></div>
+        """
+        bs = to_bs(text)
+        selector = NthChild("3n")
+        result = selector.find(bs)
         assert result is None
 
-    def test_find_returns_none_if_tag_name_not_present(self):
+    def test_find_raises_exception_if_no_match_and_strict_true(self):
         """
-        Tests if find method returns None if specified tag is not present
-        in the tag markup. In this case, 'span' is not present in the markup.
+        Tests if find raises TagNotFoundException if no element matches the selector
+        and strict is True.
         """
-        html = """
+        text = """
+            <div></div>
+            <div><p></p><a></a></div>
+        """
+        bs = to_bs(text)
+        selector = NthChild("3n")
+
+        with pytest.raises(TagNotFoundException):
+            selector.find(bs, strict=True)
+
+    def test_find_all_returns_empty_list_when_no_match(self):
+        """Tests if find returns an empty list if no element matches the selector."""
+        text = """
+            <div></div>
+            <div><p></p><a></a></div>
+        """
+        bs = to_bs(text)
+        selector = NthChild("3n")
+        result = selector.find_all(bs)
+        assert result == []
+
+    def test_find_returns_first_matching_child_if_recursive_false(self):
+        """
+        Tests if find returns first matching child element if recursive is False.
+        """
+        text = """
             <div>
-                <p>text</p>
+                <a></a>
+                <p><a>Not child</a></p>
+                <span></span>
             </div>
+            <div>1</div>
+            <div></div>
+            <span>2</span>
+            <a class="widget"></a>
+            <div><a></a><p>34</p></div>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = NthChild("2n")
+        result = selector.find(bs, recursive=False)
+        assert strip(str(result)) == strip("""<div>1</div>""")
+
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+        """
+        Tests if find returns None if no child element matches the selector
+        and recursive is False.
+        """
+        text = """
+            <div><p></p><a></a><p>Not child</p></div>
             <div></div>
         """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild(n="1", tag="span")
-        result = tag.find(bs)
+        bs = find_body_element(to_bs(text))
+        selector = NthChild("3n")
+        result = selector.find(bs, recursive=False)
         assert result is None
 
-    def test_find_returns_none_if_no_nth_child_with_tag(self):
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
         """
-        Tests if find method returns None if no nth child (2) is found
-        when tag is specified and strict mode is not enabled.
-        Nth child is skipped when its name does not match the tag,
-        as in this case for 'p' and 'a'.
+        Tests if find raises TagNotFoundException if no child element
+        matches the selector, when recursive is False and strict is True.
         """
-        html = """
-            <div>
-                <div>Hello</p>
-                <p>text 1</p>
-            </div>
-            <a>text 2</a>
+        text = """
+            <div><p></p><a></a><p>Not child</p></div>
             <div></div>
         """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild(n="2", tag="div")
-        result = tag.find(bs)
-        assert result is None
+        bs = find_body_element(to_bs(text))
+        selector = NthChild("3n")
 
-    def test_find_returns_first_nth_child_without_tag(self):
-        """
-        Tests if find method returns first nth child when tag is not specified.
-        """
-        html = """
-            <div>
-                <p>text 1</p>
-                <p>text 2</p>
-            </div>
-            <span></span>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild("2")
-        result = tag.find(bs)
-        assert strip(str(result)) == strip("<p>text 2</p>")
+        with pytest.raises(TagNotFoundException):
+            selector.find(bs, strict=True, recursive=False)
 
-    def test_find_returns_first_nth_child_with_tag(self):
-        """
-        Tests if find method returns first nth child which name matches
-        the specified tag. Even though 'p' and 'span' are the second children,
-        they are skipped because they do not match the specified tag.
-        """
-        html = """
-            <div>
-                <div>Hello</div>
-                <p>text 1</p>
-            </div>
-            <span>
-                <a>text 2</a>
-                <div>Hello 2</div>
-            </span>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild(n="2", tag="div")
-        result = tag.find(bs)
-        assert strip(str(result)) == strip("<div>Hello 2</div>")
-
-    def test_find_raises_exception_without_specified_tag_if_not_found_in_strict_mode(
+    def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
         self,
     ):
         """
-        Tests if find method raises TagNotFoundException
-        if no nth child is found in strict mode when tag is not specified.
+        Tests if find_all returns an empty list if no child element matches the selector
+        and recursive is False.
         """
-        html = """
-            <div>
-                <p>text 1</p>
-                <p>text 2</p>
-            </div>
-            <span>Hello</span>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild("3")
-
-        with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True)
-
-    def test_find_raises_exception_with_specified_tag_if_not_found_in_strict_mode(self):
-        """
-        Tests if find method raises TagNotFoundException
-        if no nth child is found in strict mode when tag is specified.
-        """
-        html = """
-            <div>
-                <p>text 1</p>
-                <div>Hello</div>
-            </div>
-            <span>Hello</span>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild(n="2", tag="p")
-
-        with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True)
-
-    def test_find_and_find_all_raise_exception_with_invalid_selector(self):
-        """
-        Tests if find and find_all methods raise InvalidCSSSelector exception
-        if invalid n parameter is passed into the selector.
-        """
-        html = """<div></div>"""
-        bs = find_body_element(to_bs(html))
-        tag = NthChild("2x+1")
-
-        with pytest.raises(InvalidCSSSelector):
-            tag.find(bs)
-
-        with pytest.raises(InvalidCSSSelector):
-            tag.find_all(bs)
-
-    def test_find_all_returns_empty_list_if_no_nth_child_without_tag(self):
-        """
-        Tests if find_all method returns empty list
-        if no nth child is found, when tag is not specified.
-        """
-        html = """
-            <div>
-                <p>text 1</p>
-                <p>text 2</p>
-            </div>
+        text = """
+            <div><p></p><a></a><p>Not child</p></div>
             <div></div>
         """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild("3")
-        result = tag.find_all(bs)
+        bs = find_body_element(to_bs(text))
+        selector = NthChild("3n")
+        result = selector.find_all(bs, recursive=False)
         assert result == []
 
-    def test_find_all_returns_empty_list_if_no_nth_child_with_tag(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(self):
         """
-        Tests if find_all method returns empty list if no nth child is found
-        when tag is specified. Nth child is skipped when
-        its name does not match the tag, as in this case for 'p'.
+        Tests if find_all returns all matching children if recursive is False.
+        It returns only matching children of the body element.
         """
-        html = """
+        text = """
             <div>
-                <p>text 1</p>
-                <p>text 2</p>
+                <a></a>
+                <p><a>Not child</a></p>
+                <span></span>
             </div>
-            <span></span>
+            <div>1</div>
+            <div></div>
+            <span>2</span>
+            <a class="widget"></a>
+            <div><a>3</a><p>Not child</p></div>
         """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild(n="2", tag="div")
-        result = tag.find_all(bs)
-        assert result == []
-
-    def test_find_all_returns_all_nth_children_without_tag(self):
-        """
-        Tests if find_all method returns all nth children
-        when tag is not specified.
-        """
-        html = """
-            <div>
-                <p>text 1</p>
-                <p>text 2</p>
-            </div>
-            <span><p>text 3</p></span>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild("2")
-
-        result = tag.find_all(bs)
+        bs = find_body_element(to_bs(text))
+        selector = NthChild("2n")
+        result = selector.find_all(bs, recursive=False)
         assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("<p>text 2</p>"),
-            strip("<span><p>text 3</p></span>"),
+            strip("""<div>1</div>"""),
+            strip("""<span>2</span>"""),
+            strip("""<div><a>3</a><p>Not child</p></div>"""),
         ]
 
-    def test_find_all_returns_all_nth_children_with_tag(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
         """
-        Tests if find_all method returns all nth children
-        which name matches the specified tag.
+        Tests if find_all returns only x elements when limit is set.
+        In this case only 2 first in order elements are returned.
         """
-        html = """
+        text = """
+            <div></div>
+            <a class="widget">1</a>
             <div>
-                <p>text 1</p>
-                <div>Hello 1</div>
+                <p>Hello</p>
+                <p class="widget">2</p>
+                <a>Hello</a>
+                <span><a>3</a><p>4</p></span>
             </div>
-            <div>Hello 2</div>
+            <div>5</div>
         """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild(n="2", tag="div")
-        result = tag.find_all(bs)
-
+        bs = to_bs(text)
+        selector = NthChild("2n")
+        result = selector.find_all(bs, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("<div>Hello 1</div>"),
-            strip("<div>Hello 2</div>"),
+            strip("""<a class="widget">1</a>"""),
+            strip("""<p class="widget">2</p>"""),
         ]
 
-    @pytest.mark.parametrize(argnames="n", argvalues=["even", "2n"])
-    def test_find_all_returns_all_even_tags_with_matching_selectors(self, n: str):
+    def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
+        self,
+    ):
         """
-        Tests if find_all method returns all nth children
-        when n is set to selector that would select even children.
+        Tests if find_all returns only x elements when limit is set and recursive
+        is False. In this case only 2 first in order children matching
+        the selector are returned.
         """
-        html = """
+        text = """
             <div>
-                <p>text 1</p>
-                <p>text 2</p>
-                <p>text 3</p>
-                <p>text 4</p>
+                <a></a>
+                <p><a>Not child</a></p>
+                <span></span>
             </div>
-            <span><p>text 5</p><p>text 6</p></span>
+            <div>1</div>
+            <div></div>
+            <span>2</span>
+            <a class="widget"></a>
+            <div><a>3</a><p>Not child</p></div>
         """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild(n)
-
-        result = tag.find_all(bs)
+        bs = find_body_element(to_bs(text))
+        selector = NthChild("2n")
+        result = selector.find_all(bs, recursive=False, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("<p>text 2</p>"),
-            strip("<p>text 4</p>"),
-            strip("<span><p>text 5</p><p>text 6</p></span>"),
-            strip("<p>text 6</p>"),
+            strip("""<div>1</div>"""),
+            strip("""<span>2</span>"""),
         ]
 
-    @pytest.mark.parametrize(argnames="n", argvalues=["odd", "2n+1"])
-    def test_find_all_returns_all_odd_tags_with_matching_selectors(self, n: str):
+    def test_init_raise_exception_with_invalid_selector(self):
         """
-        Tests if find_all method returns all nth children
-        when n is set to selector that would select odd children.
+        Tests if init raise InvalidCSSSelector exception
+        if invalid n parameter is passed into the selector.
         """
-        html = """
-            <span><p>text 1</p><p>text 2</p></span>
-            <div>
-                <p>text 3</p>
-                <p>text 4</p>
-                <p>text 5</p>
-            </div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild(n)
+        with pytest.raises(InvalidCSSSelector):
+            NthChild("2x+1")
 
-        result = tag.find_all(bs)
-        assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("<span><p>text 1</p><p>text 2</p></span>"),
-            strip("<p>text 1</p>"),
-            strip("<p>text 3</p>"),
-            strip("<p>text 5</p>"),
+    @pytest.mark.parametrize(
+        argnames="nth, expected",
+        argvalues=[
+            ("2n", [2, 4, 6]),
+            ("2n+1", [1, 3, 5]),
+            # ignores whitespaces
+            ("   2n +  1", [1, 3, 5]),
+            ("-n+3", [1, 2, 3]),
+            ("even", [2, 4, 6]),
+            ("odd", [1, 3, 5]),
+            ("3", [3]),
+            ("-3n", []),
+            ("-3n+10", [1, 4]),
+        ],
+    )
+    def test_returns_elements_based_on_nth_selector_and_tag(
+        self, nth: str, expected: list[int]
+    ):
+        """
+        Tests if find_all returns all elements with specified tag name
+        matching various nth selectors.
+        """
+        text = """
+            <div class="widget">1</div>
+            <div class="widget">2</div>
+            <div class="widget">3</div>
+            <div class="widget">4</div>
+            <div class="widget">5</div>
+            <div class="widget">6</div>
+            <a>Hello</a>
+            <span>Hello</span>
+            <p></p>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = NthChild(nth, tag="div")
+        results = selector.find_all(bs)
+
+        assert list(map(lambda x: strip(str(x)), results)) == [
+            f"""<div class="widget">{i}</div>""" for i in expected
         ]
 
-    def test_selector_works_with_whitespaces_the_same_way(self):
+    @pytest.mark.parametrize(
+        argnames="nth, expected",
+        argvalues=[
+            ("2n", [2, 4, 6]),
+            ("2n+1", [1, 3, 5]),
+            # ignores whitespaces
+            ("   2n +  1", [1, 3, 5]),
+            ("-n+3", [1, 2, 3]),
+            ("even", [2, 4, 6]),
+            ("odd", [1, 3, 5]),
+            ("3", [3]),
+            ("-3n", []),
+            ("-3n+10", [1, 4]),
+        ],
+    )
+    def test_returns_elements_based_on_nth_selector(
+        self, nth: str, expected: list[int]
+    ):
+        """Tests if find_all returns all elements matching various nth selectors."""
+        text = """
+            <div class="widget">1</div>
+            <a class="widget">2</a>
+            <div class="widget">3</div>
+            <a class="widget">4</a>
+            <div class="widget">5</div>
+            <a class="widget">6</a>
         """
-        Tests if find_all method returns all nth children when provided selector
-        with whitespaces. It should work the same way as without whitespaces.
-        Parsing is delegated to soupsieve library.
-        """
-        html = """
-            <span><p>text 1</p><p>text 2</p></span>
-            <div>
-                <p>text 3</p>
-                <p>text 4</p>
-            </div>
-        """
-        bs = find_body_element(to_bs(html))
-        tag = NthChild(" 2n +  1")
+        bs = find_body_element(to_bs(text))
+        selector = NthChild(nth)
+        results = selector.find_all(bs)
 
-        result = tag.find_all(bs)
-        assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("<span><p>text 1</p><p>text 2</p></span>"),
-            strip("<p>text 1</p>"),
-            strip("<p>text 3</p>"),
+        assert list(map(lambda x: strip(str(x)), results)) == [
+            (
+                f"""<a class="widget">{i}</a>"""
+                if (i % 2) == 0
+                else f"""<div class="widget">{i}</div>"""
+            )
+            for i in expected
         ]

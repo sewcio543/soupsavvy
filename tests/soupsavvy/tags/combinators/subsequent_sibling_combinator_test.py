@@ -2,244 +2,215 @@
 
 import pytest
 
+from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
 from soupsavvy.tags.combinators import SubsequentSiblingCombinator
-from soupsavvy.tags.components import TagSelector
-from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
-from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.tags.conftest import (
+    MockClassMenuSelector,
+    MockDivSelector,
+    MockLinkSelector,
+    find_body_element,
+    strip,
+    to_bs,
+)
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 @pytest.mark.combinator
 class TestSubsequentSiblingCombinator:
     """Class for SubsequentSiblingCombinator unit test suite."""
 
     def test_raises_exception_when_invalid_input(self):
         """
-        Tests if SubsequentSiblingCombinator raises NotSoupSelectorException when
-        invalid input is provided.
+        Tests if init raises NotSoupSelectorException when invalid input is provided.
         """
         with pytest.raises(NotSoupSelectorException):
-            SubsequentSiblingCombinator(TagSelector("a"), "p")  # type: ignore
+            SubsequentSiblingCombinator(MockLinkSelector(), "p")  # type: ignore
 
         with pytest.raises(NotSoupSelectorException):
-            SubsequentSiblingCombinator("a", TagSelector("p"))  # type: ignore
+            SubsequentSiblingCombinator("a", MockLinkSelector())  # type: ignore
 
-    def test_find_returns_first_tag_matching_all_selectors(self):
-        """
-        Tests if find method returns the first tag that matches
-        subsequent sibling combinator.
-        """
+    def test_find_returns_first_tag_matching_selector(self):
+        """Tests if find method returns the first tag that matches selector."""
         text = """
-            <p>Hello 1</p>
-            <a class="link"></a>
+            <a>Hello</a>
+            <div></div>
+            <div><span>Hello</span></div>
+            <span class="widget"><a>Not a sibling</a></span>
+            <a class="link">1</a>
             <div>
-                <p>Hello 2</p>
+                <div>Hello</div>
+                <a class="widget">2</a>
+                <span class="widget"></span>
+                <a>3</a>
             </div>
-            <p>Hello 3</p>
-            <a class="widget"></a>
-            <p>Hello 4</p>
+            <a class="widget"><p>4</p></a>
         """
         bs = find_body_element(to_bs(text))
 
-        tag = SubsequentSiblingCombinator(
-            TagSelector("a"),
-            TagSelector("p"),
-        )
-        result = tag.find(bs)
-        assert strip(str(result)) == strip("""<p>Hello 3</p>""")
+        selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find(bs)
+        assert strip(str(result)) == strip("""<a class="link">1</a>""")
 
     def test_find_raises_exception_when_no_tags_match_in_strict_mode(self):
         """
         Tests if find method raises TagNotFoundException when no tag is found
-        that matches subsequent sibling combinator in strict mode.
+        that matches selector in strict mode.
         """
         text = """
-            <p>Hello 1</p>
-            <a class="link"></a>
+            <a>Hello</a>
+            <div></div>
+            <div><span>Hello</span></div>
+            <span class="widget"><a>Not a sibling</a></span>
             <div>
-                <p>Hello 2</p>
+                <a class="widget"></a>
+                <div>Hello</div>
+                <span class="widget"></span>
             </div>
-            <div>Hello 3</div>
+            <span class="widget">Hello</span>
         """
         bs = to_bs(text)
-        tag = SubsequentSiblingCombinator(
-            TagSelector("a"),
-            TagSelector("p"),
-        )
+        selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True)
+            selector.find(bs, strict=True)
 
     def test_find_returns_none_if_no_tags_match_in_not_strict_mode(self):
         """
         Tests if find method returns None when no tag is found that
-        matches subsequent sibling combinator in not strict mode.
+        matches selector in not strict mode.
         """
         text = """
-            <p>Hello 1</p>
-            <a class="link"></a>
-            <div>
-                <p>Hello 2</p>
-            </div>
-            <div>Hello 3</div>
-        """
-        bs = to_bs(text)
-        tag = SubsequentSiblingCombinator(
-            TagSelector("a"),
-            TagSelector("p"),
-        )
-        assert tag.find(bs) is None
-
-    def test_finds_all_tags_matching_selectors(self):
-        """
-        Tests if find_all method returns all tags
-        that match subsequent sibling combinator.
-        """
-        text = """
-            <p>Hello</p>
+            <a>Hello</a>
+            <div></div>
+            <div><span>Hello</span></div>
+            <span class="widget"><a>Not a sibling</a></span>
             <div>
                 <a class="widget"></a>
-                <p>Hello 1</p>
-                <div>Text</div>
+                <div>Hello</div>
+                <span class="widget"></span>
             </div>
-            <a class="widget"></a>
-            <div>
-                <p>Hello 2</p>
-            </div>
-            <p>Hello 3</p>
-            <p>Hello 4</p>
-            <div class="link">
-                <p>Child</p>
-            </div>
+            <span class="widget">Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_bs(text)
+        selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find(bs)
+        assert result is None
 
-        tag = SubsequentSiblingCombinator(
-            TagSelector("a"),
-            TagSelector("p"),
-        )
-        result = tag.find_all(bs)
-
-        assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("""<p>Hello 1</p>"""),
-            strip("""<p>Hello 3</p>"""),
-            strip("""<p>Hello 4</p>"""),
-        ]
-
-    def test_finds_all_does_not_duplicate_elements(self):
-        """
-        Tests if find_all method returns all tags that match
-        subsequent sibling combinator without duplication in case of having
-        multiple tags that match first selector, like in this case with 'a' tag.
-        """
+    def test_finds_all_tags_matching_selectors(self):
+        """Tests if find_all method returns all tags that match selector."""
         text = """
-            <p>Hello</p>
-            <a class="link"></a>
-            <a class="widget"></a>
-            <div>Hello 1</div>
-            <p>Hello 2</p>
-            <p>Hello 3</p>
+            <a>Hello</a>
+            <div></div>
+            <div><span>Hello</span></div>
+            <span class="widget"><a>Not a sibling</a></span>
+            <a class="link">1</a>
+            <div>
+                <div>Hello</div>
+                <a class="widget">2</a>
+                <span class="widget"></span>
+                <a>3</a>
+            </div>
+            <a class="widget"><p>4</p></a>
         """
         bs = find_body_element(to_bs(text))
-
-        tag = SubsequentSiblingCombinator(
-            TagSelector("a"),
-            TagSelector("p"),
-        )
-        result = tag.find_all(bs)
+        selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs)
 
         assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("""<p>Hello 2</p>"""),
-            strip("""<p>Hello 3</p>"""),
+            strip("""<a class="link">1</a>"""),
+            strip("""<a class="widget">2</a>"""),
+            strip("""<a>3</a>"""),
+            strip("""<a class="widget"><p>4</p></a>"""),
         ]
 
     def test_find_all_returns_empty_list_if_no_tag_matches(self):
         """
         Tests if find_all method returns an empty list when no tag is found
-        that matches  subsequent sibling combinator.
+        that matches selector.
         """
         text = """
-            <p>Hello 1</p>
-            <a class="link"></a>
+            <a>Hello</a>
+            <div></div>
+            <div><span>Hello</span></div>
+            <span class="widget"><a>Not a sibling</a></span>
             <div>
-                <p>Hello 2</p>
+                <a class="widget"></a>
+                <div>Hello</div>
+                <span class="widget"></span>
             </div>
-            <div>Hello 3</div>
+            <span class="widget">Hello</span>
         """
         bs = to_bs(text)
-        tag = SubsequentSiblingCombinator(
-            TagSelector("a"),
-            TagSelector("p"),
-        )
-
-        result = tag.find_all(bs)
+        selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs)
         assert result == []
 
-    def test_find_tag_for_multiple_selectors(self):
+    def test_find_returns_match_with_multiple_selectors(self):
         """
-        Tests if find method returns the first tag that matches
-        subsequent sibling combinator with multiple selectors.
+        Tests if find method returns the first tag that matches selector
+        if there are multiple selectors are provided.
         """
         text = """
-            <div>
-                <a></a>
-                <span></span>
-                <p>Hello 1</p>
-            </div>
+            <div></div>
+            <span></span>
+
+            <div></div>
+            <span></span>
+            <a></a>
+            <p></p>
+            <span class="menu">1</span>
+
+            <div></div>
+            <a></a>
+            <p></p>
 
             <div>
                 <a></a>
-                <span>
-                    <a></a>
-                    <p>Hello 2</p>
-                </span>
-            </div>
-
-            <div>
-                <a></a>
-                <div></div>
-                <span></span>
                 <div></div>
                 <a></a>
                 <div></div>
-                <p>Hello 3</p>
+                <a>Hello</a>
+                <span>Hello</span>
+                <p></p>
+                <p class="menu"><a>2</a></p>
+                <div class="menu">3</div>
             </div>
         """
         bs = find_body_element(to_bs(text))
-        tag = SubsequentSiblingCombinator(
-            TagSelector("a"),
-            TagSelector("span"),
-            TagSelector("a"),
-            TagSelector("p"),
+        selector = SubsequentSiblingCombinator(
+            MockDivSelector(),
+            MockLinkSelector(),
+            MockClassMenuSelector(),
         )
+        result = selector.find_all(bs)
 
-        result = tag.find(bs)
-        assert strip(str(result)) == strip("""<p>Hello 3</p>""")
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<span class="menu">1</span>"""),
+            strip("""<p class="menu"><a>2</a></p>"""),
+            strip("""<div class="menu">3</div>"""),
+        ]
 
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.
-        In this case first 'p' element matches the selector, as it occurs after
-        "a" element, but it's not a child of body element.
         """
         text = """
-            <p>First element</p>
+            <a>Hello</a>
             <div>
-                <a class="widget"></a>
-                <div>Just hanging around</div>
-                <p>Hello 1</p>
+                <div>Hello</div>
+                <a class="widget">Not child</a>
+                <span class="widget"></span>
+                <a>Not child</a>
             </div>
-            <a class="widget"></a>
-            <div>Just hanging around too</div>
-            <p>Hello 2</p>
+            <div><span>Hello</span></div>
+            <a class="link">1</a>
+            <span class="widget"><a>Not a sibling</a></span>
+            <a class="widget"><p>2</p></a>
         """
         bs = find_body_element(to_bs(text))
-        tag = SubsequentSiblingCombinator(
-            TagSelector("a"),
-            TagSelector("p"),
-        )
-        result = tag.find(bs, recursive=False)
-        assert strip(str(result)) == strip("""<p>Hello 2</p>""")
+        selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find(bs, recursive=False)
+        assert strip(str(result)) == strip("""<a class="link">1</a>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
@@ -247,24 +218,19 @@ class TestSubsequentSiblingCombinator:
         and recursive is False.
         """
         text = """
-            <p>First element</p>
+            <a>Hello</a>
             <div>
-                <a class="widget"></a>
-                <div>Just hanging around</div>
-                <p>Hello 1</p>
+                <div>Hello</div>
+                <a class="widget">Not child</a>
+                <span class="widget"></span>
+                <a>Not child</a>
             </div>
-            <a class="widget"></a>
-            <div>
-                <p>Not a match</p>
-            </div>
-            <div>Just hanging around too</div>
+            <div><span>Hello</span></div>
+            <span class="widget"><a>Not a sibling</a></span>
         """
         bs = find_body_element(to_bs(text))
-        tag = SubsequentSiblingCombinator(
-            TagSelector("a"),
-            TagSelector("p"),
-        )
-        result = tag.find(bs, recursive=False)
+        selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find(bs, recursive=False)
         assert result is None
 
     def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
@@ -273,26 +239,21 @@ class TestSubsequentSiblingCombinator:
         matches the selector, when recursive is False and strict is True.
         """
         text = """
-            <p>First element</p>
+            <a>Hello</a>
             <div>
-                <a class="widget"></a>
-                <div>Just hanging around</div>
-                <p>Hello 1</p>
+                <div>Hello</div>
+                <a class="widget">Not child</a>
+                <span class="widget"></span>
+                <a>Not child</a>
             </div>
-            <a class="widget"></a>
-            <div>
-                <p>Not a match</p>
-            </div>
-            <div>Just hanging around too</div>
+            <div><span>Hello</span></div>
+            <span class="widget"><a>Not a sibling</a></span>
         """
         bs = find_body_element(to_bs(text))
-        tag = SubsequentSiblingCombinator(
-            TagSelector("a"),
-            TagSelector("p"),
-        )
+        selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True, recursive=False)
+            selector.find(bs, strict=True, recursive=False)
 
     def test_find_all_returns_all_matching_children_when_recursive_false(self):
         """
@@ -300,60 +261,51 @@ class TestSubsequentSiblingCombinator:
         It returns only matching children of the body element.
         """
         text = """
-            <p>First element</p>
+            <a>Hello</a>
             <div>
-                <a class="widget"></a>
-                <div>Just hanging around</div>
-                <p>Hello 1</p>
+                <div>Hello</div>
+                <a class="widget">Not child</a>
+                <span class="widget"></span>
+                <a>Not child</a>
             </div>
-            <a class="widget"></a>
-            <div>
-                <p>Not a match</p>
-            </div>
-            <p>Hello 2</p>
-            <span></span>
-            <p>Hello 3</p>
+            <a class="link">1</a>
+            <div><span>Hello</span></div>
+            <a class="widget"><p>2</p></a>
+            <span class="widget"><a>Not a sibling</a></span>
+            <a>3</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = SubsequentSiblingCombinator(
-            TagSelector("a"),
-            TagSelector("p"),
-        )
-        results = tag.find_all(bs, recursive=False)
+        selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs, recursive=False)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
-            strip("""<p>Hello 2</p>"""),
-            strip("""<p>Hello 3</p>"""),
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="link">1</a>"""),
+            strip("""<a class="widget"><p>2</p></a>"""),
+            strip("""<a>3</a>"""),
         ]
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
         self,
     ):
         """
-        Tests if find_all returns an empty list if no child element
-        matches the selector and recursive is False.
+        Tests if find_all returns an empty list if no child element matches the selector
+        and recursive is False.
         """
         text = """
-            <p>First element</p>
+            <a>Hello</a>
             <div>
-                <a class="widget"></a>
-                <div>Just hanging around</div>
-                <p>Hello 1</p>
+                <div>Hello</div>
+                <a class="widget">Not child</a>
+                <span class="widget"></span>
+                <a>Not child</a>
             </div>
-            <a class="widget"></a>
-            <div>
-                <p>Not a match</p>
-            </div>
-            <div>Just hanging around too</div>
+            <div><span>Hello</span></div>
+            <span class="widget"><a>Not a sibling</a></span>
         """
         bs = find_body_element(to_bs(text))
-        tag = SubsequentSiblingCombinator(
-            TagSelector("a"),
-            TagSelector("p"),
-        )
-
-        results = tag.find_all(bs, recursive=False)
-        assert results == []
+        selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs, recursive=False)
+        assert result == []
 
     def test_find_all_returns_only_x_elements_when_limit_is_set(self):
         """
@@ -361,30 +313,26 @@ class TestSubsequentSiblingCombinator:
         In this case only 2 first in order elements are returned.
         """
         text = """
-            <p>First element</p>
+            <a>Hello</a>
+            <div></div>
+            <div><span>Hello</span></div>
+            <span class="widget"><a>Not a sibling</a></span>
+            <a class="link">1</a>
             <div>
-                <a class="widget"></a>
-                <div>Just hanging around</div>
-                <p>Hello 1</p>
+                <div>Hello</div>
+                <a class="widget">2</a>
+                <span class="widget"></span>
+                <a>3</a>
             </div>
-            <a class="widget"></a>
-            <div>
-                <p>Not a match</p>
-            </div>
-            <p>Hello 2</p>
-            <span></span>
-            <p>Hello 3</p>
+            <a class="widget"><p>4</p></a>
         """
         bs = find_body_element(to_bs(text))
-        tag = SubsequentSiblingCombinator(
-            TagSelector("a"),
-            TagSelector("p"),
-        )
-        results = tag.find_all(bs, limit=2)
+        selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
-            strip("""<p>Hello 1</p>"""),
-            strip("""<p>Hello 2</p>"""),
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="link">1</a>"""),
+            strip("""<a class="widget">2</a>"""),
         ]
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
@@ -396,47 +344,35 @@ class TestSubsequentSiblingCombinator:
         the selector are returned.
         """
         text = """
-            <p>First element</p>
+            <a>Hello</a>
             <div>
-                <a class="widget"></a>
-                <div>Just hanging around</div>
-                <p>Hello 1</p>
+                <div>Hello</div>
+                <a class="widget">Not child</a>
+                <span class="widget"></span>
+                <a>Not child</a>
             </div>
-            <a class="widget"></a>
-            <div>
-                <p>Not a match</p>
-            </div>
-            <p>Hello 2</p>
-            <span></span>
-            <p>Hello 3</p>
-            <p>Hello 4</p>
+            <a class="link">1</a>
+            <div><span>Hello</span></div>
+            <a class="widget"><p>2</p></a>
+            <span class="widget"><a>Not a sibling</a></span>
+            <a>3</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = SubsequentSiblingCombinator(
-            TagSelector("a"),
-            TagSelector("p"),
-        )
-        results = tag.find_all(bs, recursive=False, limit=2)
+        selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
-            strip("""<p>Hello 2</p>"""),
-            strip("""<p>Hello 3</p>"""),
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="link">1</a>"""),
+            strip("""<a class="widget"><p>2</p></a>"""),
         ]
 
-    @pytest.mark.edge_case
-    def test_continue_if_first_element_has_no_parent(self):
+    def test_find_returns_none_if_first_step_was_not_found(self):
         """
-        Tests if find_all continues searching if first element has no parents.
-        It is only possible when html element is the first element in the markup.
-        This edge case test is only important for testing coverage and should not
-        an issue in normal use cases.
+        Tests if find returns None if the first step was not found.
+        Ensures that combinators don't break when first step does not match anything.
         """
-        text = """<p>First element</p>"""
+        text = """<a>First element</a>"""
         bs = to_bs(text)
-        tag = SubsequentSiblingCombinator(
-            TagSelector("html"),
-            TagSelector("p"),
-        )
-        # manipulate html Tag to have no parent (surprising it does have itself as parent)
-        bs.find("html").parent = None  # type: ignore
-        tag.find(bs)
+        selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs)
+        assert result == []

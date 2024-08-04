@@ -38,7 +38,7 @@ from soupsavvy.tags.tag_utils import TagIterator, TagResultSet
 
 
 @dataclass
-class TagSelector(SingleSoupSelector, SelectableCSS):
+class TagSelector(SingleSoupSelector):
     """
     Class representing HTML element.
     Provides elements based on element tag and all defined attributes.
@@ -70,15 +70,6 @@ class TagSelector(SingleSoupSelector, SelectableCSS):
         Iterable of AttributeSelector objects that specify element attributes.
         By default empty list, no attribute will be checked.
 
-    Example
-    -------
-    >>> element = TagSelector(
-    >>>    tag="div",
-    >>>    attributes=[AttributeSelector(name="class", value="widget")]
-    >>> )
-    >>> element.selector
-    div[class=widget]
-
     Notes
     -----
     Initializing object without passing any parameters is equal to selector for all elements,
@@ -87,17 +78,6 @@ class TagSelector(SingleSoupSelector, SelectableCSS):
 
     tag: Optional[str] = None
     attributes: Iterable[AttributeSelector] = field(default_factory=list)
-
-    @property
-    def selector(self) -> str:
-        if not self.tag and not self.attributes:
-            return ns.CSS_SELECTOR_WILDCARD
-
-        # drop duplicated css attribute selectors and preserve order
-        selectors = list(map(lambda attr: attr.selector, self.attributes))
-        attrs = sorted(set(selectors), key=selectors.index)
-        # at least one of tag or attributes must be provided
-        return (self.tag or "") + "".join(attrs)
 
     @property
     def _find_params(self) -> dict[str, Any]:
@@ -139,14 +119,11 @@ class PatternSelector(SoupSelector):
     pattern: str | Pattern
         A pattern to match text of the element. Can be a string for exact match
         or Pattern for any more complex regular expressions.
-    re: bool, optional
-        Whether to use a pattern to match the text, by default False.
-        If True, text of element needs to be contained in the pattern to be matched.
 
     Notes
     -----
-    Selector uses re.search function to match text content if re=True
-    or compiled regex is passed as pattern.
+    Selector uses re.search function to match text content
+    if compiled regex is passed as pattern.
     Providing 're.compile(r"[0-9]")' as pattern will much any element with a digit in text.
 
     Example
@@ -168,17 +145,20 @@ class PatternSelector(SoupSelector):
     """
 
     pattern: str | Pattern[str]
-    re: bool = False
 
     def __post_init__(self) -> None:
         """Sets up compiled regex pattern used for SoupStrainer in find methods."""
-        self._pattern = re.compile(self.pattern) if self.re else self.pattern
+        from typing import Union
+
+        self._pattern = (
+            str(self.pattern) if not isinstance(self.pattern, Pattern) else self.pattern
+        )
 
     def find_all(
         self, tag: Tag, recursive: bool = True, limit: Optional[int] = None
     ) -> list[Tag]:
         iterator = TagIterator(tag, recursive=recursive)
-        strainer = SoupStrainer(string=self._pattern)
+        strainer = SoupStrainer(string=self._pattern)  # type: ignore
         filter_ = filter(strainer.search_tag, iterator)
         return list(itertools.islice(filter_, limit))
 
@@ -215,7 +195,7 @@ class AnyTagSelector(SingleSoupSelector, SelectableCSS):
         return {}
 
     @property
-    def selector(self) -> str:
+    def css(self) -> str:
         """Returns wildcard css selector matching all elements in the markup."""
         return ns.CSS_SELECTOR_WILDCARD
 
@@ -234,7 +214,7 @@ class NotSelector(MultipleSoupSelector):
 
     Example
     -------
-    >>> NotSelector(TagSelector(tag="div")
+    >>> NotSelector(TagSelector(tag="div"))
 
     matches all elements that do not have "div" tag name.
 
@@ -244,7 +224,7 @@ class NotSelector(MultipleSoupSelector):
     >>> <div class="menu">Hello World</div> ❌
 
     Object can be initialized with multiple selectors as well, in which case
-    all selectors must match for element to be excluded from the result.
+    at least one selector must match for element to be excluded from the result.
 
     Object can be created as well by using bitwise NOT operator '~'
     on a SoupSelector object.

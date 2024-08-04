@@ -2,27 +2,21 @@
 
 import pytest
 
+from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
 from soupsavvy.tags.combinators import SelectorList
-from soupsavvy.tags.components import AttributeSelector, NotSelector, TagSelector
-from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
-from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
+from soupsavvy.tags.components import NotSelector
+from tests.soupsavvy.tags.conftest import (
+    MockDivSelector,
+    MockLinkSelector,
+    find_body_element,
+    strip,
+    to_bs,
+)
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestNotSelector:
     """Class for NotSelector unit test suite."""
-
-    def test_find_returns_first_tag_not_matching_selector(self):
-        """
-        Tests if find method returns the first tag that does not match the
-        selector. In this case testing for simple one element tag.
-        """
-        markup = """<a class="widget"></a><div class="widget"></div>"""
-        bs = find_body_element(to_bs(markup))
-
-        tag = NotSelector(TagSelector("a"))
-        result = tag.find(bs)
-        assert strip(str(result)) == strip("""<div class="widget"></div>""")
 
     def test_raises_exception_when_no_invalid_input(self):
         """
@@ -30,166 +24,150 @@ class TestNotSelector:
         All of the parameters must be SoupSelector instances.
         """
         with pytest.raises(NotSoupSelectorException):
-            NotSelector("div", AttributeSelector("class"))  # type: ignore
+            NotSelector("div", MockDivSelector())  # type: ignore
 
-    def test_find_raises_exception_when_all_tags_match_in_strict_mode(self):
+        with pytest.raises(NotSoupSelectorException):
+            NotSelector(MockLinkSelector(), "div")  # type: ignore
+
+    def test_find_returns_first_tag_matching_selector(self):
+        """
+        Tests if find method returns the first tag that matches all the selectors.
+        """
+        text = """
+            <a class="link"></a>
+            <a></a>
+            <div class="widget">1</div>
+            <a><p>2</p><a>Hello</a></a>
+            <p>3</p>
+            <div><a>4</a></div>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = NotSelector(MockLinkSelector())
+        result = selector.find(bs)
+        assert strip(str(result)) == strip("""<div class="widget">1</div>""")
+
+    def test_find_raises_exception_when_no_tags_match_in_strict_mode(self):
         """
         Tests if find method raises TagNotFoundException when no tag is found
-        that does not match the selector in strict mode.
+        that matches all the selectors in strict mode.
         """
-        markup = """<a class="widget"></a><a class="link"></a>"""
-        bs = find_body_element(to_bs(markup))
-        tag = NotSelector(TagSelector("a"))
+        text = """
+            <a class="link"></a>
+            <a></a>
+            <a><a>Hello</a></a>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = NotSelector(MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True)
+            selector.find(bs, strict=True)
 
-    def test_find_returns_none_if_all_tags_match_in_not_strict_mode(self):
+    def test_find_returns_none_if_no_tags_match_in_not_strict_mode(self):
         """
-        Tests if find method returns None when no tag is found that does not
-        match the selector in not strict mode.
+        Tests if find method returns None when no tag is found that
+        matches all the selectors in not strict mode.
         """
-        markup = """<a class="widget"></a><a class="link"></a>"""
-        bs = find_body_element(to_bs(markup))
-        tag = NotSelector(TagSelector("a"))
-        assert tag.find(bs) is None
-
-    def test_find_returns_first_tag_not_matching_selector_for_multiple_selectors(self):
-        """
-        Tests if find method returns the first tag that does not match the
-        selector. In this case testing for multiple selectors. For tag to be selected
-        it must not match any of the selectors.
-        """
-        markup = """
-            <a class="widget 12"></a>
-            <div class="123"></div>
+        text = """
             <a class="link"></a>
-            <div class="link"></div>
+            <a></a>
+            <a><a>Hello</a></a>
         """
-        bs = find_body_element(to_bs(markup))
+        bs = find_body_element(to_bs(text))
+        selector = NotSelector(MockLinkSelector())
+        result = selector.find(bs)
+        assert result is None
 
-        tag = NotSelector(TagSelector("a"), AttributeSelector("class", "1", re=True))
-        result = tag.find(bs)
-        assert strip(str(result)) == strip("""<div class="link"></div>""")
-
-    def test_find_all_not_matching_tags(self):
-        """
-        Tests if find_all method returns all tags that do not match the selector.
-        """
-        markup = """
-            <a class="widget 12"></a>
-            <div class="123"></div>
-            <span class="empty"></span>
+    def test_finds_all_tags_matching_selectors(self):
+        """Tests if find_all method returns all tags that match selector."""
+        text = """
             <a class="link"></a>
-            <div class="link"></div>
+            <a></a>
+            <div class="widget">1</div>
+            <a><p>2</p><a>Hello</a></a>
+            <div><p>34</p></div>
         """
-        bs = find_body_element(to_bs(markup))
-
-        tag = NotSelector(TagSelector("a"), AttributeSelector("class", "1", re=True))
-        result = tag.find_all(bs)
+        bs = find_body_element(to_bs(text))
+        selector = NotSelector(MockLinkSelector())
+        result = selector.find_all(bs)
 
         assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("""<span class="empty"></span>"""),
-            strip("""<div class="link"></div>"""),
+            strip("""<div class="widget">1</div>"""),
+            strip("""<p>2</p>"""),
+            strip("""<div><p>34</p></div>"""),
+            strip("""<p>34</p>"""),
         ]
 
-    def test_find_all_returns_empty_list_if_every_tag_matches(self):
+    def test_find_all_returns_empty_list_if_no_tag_matches(self):
         """
-        Tests if find_all method returns an empty list when all tags match the selector.
+        Tests if find_all method returns an empty list when no tag is found
+        that matches selector.
         """
-        markup = """
-            <a class="widget 12"></a>
-            <div class="123"></div>
+        text = """
             <a class="link"></a>
+            <a></a>
+            <a><a>Hello</a></a>
         """
-        bs = find_body_element(to_bs(markup))
-
-        tag = NotSelector(TagSelector("a"), AttributeSelector("class", "2", re=True))
-        result = tag.find_all(bs)
+        bs = find_body_element(to_bs(text))
+        selector = NotSelector(MockLinkSelector())
+        result = selector.find_all(bs)
         assert result == []
 
-    def test_find_returns_first_tag_with_children_if_does_not_match(self):
+    def test_find_returns_match_with_multiple_selectors(self):
         """
-        Tests if find method returns the first tag that does not match the selector.
-        It iterates recursively over the children of the tag and selects
-        the first tag that does not match the selector, in this case - parent 'div'.
+        Tests if find method returns the first tag that matches selector
+        if there are multiple selectors are provided.
         """
-        markup = """
-            <div><a class="widget 12"></a></div>
-            <span class="empty"></span>
+        text = """
+            <a class="menu"></a>
+            <div class="menu"></div>
+            <a><p>1</p></a>
+            <a>Hello</a>
+            <div><span>2</span><a>Hello</a></div>
+            <p>3</p>
         """
-        bs = find_body_element(to_bs(markup))
+        bs = find_body_element(to_bs(text))
 
-        tag = NotSelector(TagSelector("span"))
-        result = tag.find(bs)
-
-        assert strip(str(result)) == strip("""<div><a class="widget 12"></a></div>""")
-
-    def test_finds_all_returns_all_parents_and_children_tags_not_matching(self):
-        """
-        Tests if find_all method returns all tags that do not match the selector.
-        It should select both parents and all their children in this order
-        """
-        markup = """
-            <div><a class="widget 12"></a></div>
-            <span class="empty"></span>
-        """
-        bs = find_body_element(to_bs(markup))
-
-        tag = NotSelector(TagSelector("span"))
-        result = tag.find_all(bs)
-
+        selector = NotSelector(
+            MockDivSelector(),
+            MockLinkSelector(),
+        )
+        result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("""<div><a class="widget 12"></a></div>"""),
-            strip("""<a class="widget 12"></a>"""),
+            strip("""<p>1</p>"""),
+            strip("""<span>2</span>"""),
+            strip("""<p>3</p>"""),
         ]
-
-    def test_bitwise_not_operator_on_not_element_tag_with_multiple_selectors_returns_union(
-        self,
-    ):
-        """
-        Tests if bitwise NOT operator (__invert__) returns SoupUnionTag instance
-        when applied to NotSelector instance with multiple selectors.
-        """
-        tag1 = TagSelector("a")
-        tag2 = TagSelector("div")
-        not_element = NotSelector(tag1, tag2)
-        negation = ~not_element
-        assert negation == SelectorList(tag1, tag2)
 
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.
-        In this case first 'span' element matches the selector, but it's not a child
-        of body element, so it's not returned.
         """
         text = """
-            <a class="google">
-                <span>Hello 1</span>
-            </a>
-            <a href="github">Hello 2</a>
-            <div>Hello 3</div>
+            <a class="link"></a>
+            <a><p>Not a child</p><a>Hello</a></a>
+            <div><p>1</p></div>
+            <a></a>
+            <div class="widget">2</div>
+            <p><a>3</a></p>
         """
         bs = find_body_element(to_bs(text))
-        tag = NotSelector(TagSelector(tag="a"))
-        result = tag.find(bs, recursive=False)
-        assert strip(str(result)) == strip("""<div>Hello 3</div>""")
+        selector = NotSelector(MockLinkSelector())
+        result = selector.find(bs, recursive=False)
+        assert strip(str(result)) == strip("""<div><p>1</p></div>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
         Tests if find returns None if no child element matches the selector
-        and recursive is False. In this case first 'a' element matches the selector,
-        but it's not a child of body element, so it's not returned.
+        and recursive is False.
         """
         text = """
-            <a class="google">
-                <span>Hello 1</span>
-            </a>
-            <a>Hello 2</a>
+            <a class="link"></a>
+            <a><span>Not a child</span></a>
+            <a><p>Not a child</p></a>
         """
         bs = find_body_element(to_bs(text))
-        tag = NotSelector(TagSelector(tag="a"))
-        result = tag.find(bs, recursive=False)
+        selector = NotSelector(MockLinkSelector())
+        result = selector.find(bs, recursive=False)
         assert result is None
 
     def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
@@ -198,16 +176,15 @@ class TestNotSelector:
         matches the selector, when recursive is False and strict is True.
         """
         text = """
-            <a class="google">
-                <span>Hello 1</span>
-            </a>
-            <a>Hello 2</a>
+            <a class="link"></a>
+            <a><span>Not a child</span></a>
+            <a><p>Not a child</p></a>
         """
         bs = find_body_element(to_bs(text))
-        tag = NotSelector(TagSelector(tag="a"))
+        selector = NotSelector(MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True, recursive=False)
+            selector.find(bs, strict=True, recursive=False)
 
     def test_find_all_returns_all_matching_children_when_recursive_false(self):
         """
@@ -215,21 +192,19 @@ class TestNotSelector:
         It returns only matching children of the body element.
         """
         text = """
-            <a class="google">
-                <span>Hello 1</span>
-                <p>Hello 2</p>
-            </a>
-            <div>Hello 3</div>
-            <a class="link">Hello 4</a>
-            <span>Hello 5</span>
+            <a class="link"></a>
+            <div class="widget">1</div>
+            <a></a>
+            <div><p>23</p></div>
+            <a><p>4</p></a>
         """
         bs = find_body_element(to_bs(text))
-        tag = NotSelector(TagSelector(tag="a"))
-        results = tag.find_all(bs, recursive=False)
+        selector = NotSelector(MockLinkSelector())
+        result = selector.find_all(bs, recursive=False)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
-            strip("""<div>Hello 3</div>"""),
-            strip("""<span>Hello 5</span>"""),
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<div class="widget">1</div>"""),
+            strip("""<div><p>23</p></div>"""),
         ]
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
@@ -240,16 +215,14 @@ class TestNotSelector:
         and recursive is False.
         """
         text = """
-            <a class="google">
-                <span>Hello 1</span>
-            </a>
-            <a>Hello 2</a>
+            <a class="link"></a>
+            <a><span>Not a child</span></a>
+            <a><p>Not a child</p></a>
         """
         bs = find_body_element(to_bs(text))
-        tag = NotSelector(TagSelector(tag="a"))
-
-        results = tag.find_all(bs, recursive=False)
-        assert results == []
+        selector = NotSelector(MockLinkSelector())
+        result = selector.find_all(bs, recursive=False)
+        assert result == []
 
     def test_find_all_returns_only_x_elements_when_limit_is_set(self):
         """
@@ -257,20 +230,21 @@ class TestNotSelector:
         In this case only 2 first in order elements are returned.
         """
         text = """
-            <a>
-                <div>Hello 1</div>
-            </a>
-            <span>Hello 2</span>
-            <div>Hello 3</div>
-            <div>Hello 4</div>
+            <a class="link"></a>
+            <a><p>1</p></a>
+            <a></a>
+            <div class="widget">2</div>
+            <p><a>3</a></p>
+            <a class="link"></a>
+            <div>4</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = NotSelector(TagSelector(tag="a"))
-        results = tag.find_all(bs, limit=2)
+        selector = NotSelector(MockLinkSelector())
+        result = selector.find_all(bs, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
-            strip("""<div>Hello 1</div>"""),
-            strip("""<span>Hello 2</span>"""),
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<p>1</p>"""),
+            strip("""<div class="widget">2</div>"""),
         ]
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
@@ -282,18 +256,45 @@ class TestNotSelector:
         the selector are returned.
         """
         text = """
-            <a>
-                <div>Hello 1</div>
-            </a>
-            <span>Hello 2</span>
-            <div>Hello 3</div>
-            <div>Hello 4</div>
+            <a class="link"></a>
+            <div><p>1</p><a>Hello</a></div>
+            <a><p>Not child</p></a>
+            <a></a>
+            <div class="widget">2</div>
+            <p><a>3</a></p>
+            <a class="link"></a>
+            <div>4</div>
         """
         bs = find_body_element(to_bs(text))
-        tag = NotSelector(TagSelector(tag="a"))
-        results = tag.find_all(bs, recursive=False, limit=2)
+        selector = NotSelector(MockLinkSelector())
+        result = selector.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(lambda x: strip(str(x)), results)) == [
-            strip("""<span>Hello 2</span>"""),
-            strip("""<div>Hello 3</div>"""),
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<div><p>1</p><a>Hello</a></div>"""),
+            strip("""<div class="widget">2</div>"""),
         ]
+
+    def test_bitwise_not_operator_with_multiple_selectors_returns_union(
+        self,
+    ):
+        """
+        Tests if bitwise NOT operator (__invert__) returns SoupUnionTag instance
+        when applied to NotSelector instance with multiple selectors.
+        """
+        selector1 = MockDivSelector()
+        selector2 = MockLinkSelector()
+        not_selector = NotSelector(selector1, selector2)
+        negation = ~not_selector
+        assert negation == SelectorList(selector1, selector2)
+
+    def test_bitwise_not_operator_with_single_selector_returns_selector(
+        self,
+    ):
+        """
+        Tests if bitwise NOT operator (__invert__) returns NotSelector selector
+        when applied to NotSelector instance with single selector.
+        """
+        selector = MockDivSelector()
+        not_selector = NotSelector(selector)
+        negation = ~not_selector
+        assert negation == selector

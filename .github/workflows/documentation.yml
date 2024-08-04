@@ -1,27 +1,33 @@
-name: Documentation [Github Pages]
+name: Deploy Documentation
 
 on:
   push:
-    branches:
-      - "main"
-  workflow_dispatch: {}
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+$'
 
 permissions:
   contents: write
 
 env:
   BRANCH_NAME: gh-pages
-  BUILD_FOLDER: build_/
+  OUTPUT: docs/build/html/
 
 jobs:
-  docs:
+  build:
+    name: Build Documentation 📚
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          # gh-pages is protected branch
-          token: ${{ secrets.GH_TOKEN }}
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }} # token for pushing to protected branch
+
+      - name: Output branch name
+        run: |
+          echo "Running workflow on branch ${GITHUB_REF_NAME}"
+          echo "Current branch is `git branch --show-current`"
 
       - name: Set up Python and Upgrade pip
         uses: ./.github/actions/setup_python
@@ -30,40 +36,52 @@ jobs:
 
       - name: Install dependencies
         run: |
+          python -m pip install .
           python -m pip install -r docs/requirements.txt
-          pip install -e .
 
-      - name: Update index.rst
+      - name: Make docs with Sphinx
         run: |
-          python docs/source/update_index.py
+          bash docs/sphinx_run.sh
 
-          if [ "$(git status --porcelain)" ]; then
-            git config --global user.name "update-docs-gha[bot]"
-            git config --global user.email "username@users.noreply.github.com"
-            git add docs/source/index.rst
-            git commit -m "Update index.rst [skip ci]"
-            git push
-          else
-            echo "No update needed for docs/source/index.rst"
-          fi
-
-      - name: Sphinx build rst files
-        run: |
-          sphinx-apidoc -o docs/source soupsavvy --separate --force
-
-      - name: Transform rst files
-        working-directory: docs/source
-        run: python renaming.py
-
-      - name: Build HTML documentation
-        run: |
-          rm -rf ${BUILD_FOLDER}
-          sphinx-build docs/source ${BUILD_FOLDER}
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
         with:
-          publish_branch: gh-pages
-          github_token: ${{ secrets.GH_TOKEN }}
-          publish_dir: ${{ env.BUILD_FOLDER }}
-          force_orphan: true
+          name: html-docs
+          path: ${{ env.OUTPUT }}
+
+  deploy:
+    name: Deploy Documentation 🚀
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.BRANCH_NAME }}
+          fetch-depth: 0
+
+      - name: Clean root directory
+        run: |
+          # we want to rewrite the root directory
+          git rm -rf .
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: html-docs
+          # download to root directory
+          path: .
+
+      - name: Commit and Push to gh-pages
+        run: |
+          git config --global user.name "gh-pages[bot]"
+          git config --global user.email "username@users.noreply.github.com"
+
+          # add .nojekyll to allow serving of files starting with an underscore
+          touch .nojekyll
+
+          echo "Committing and pushing..."
+          git add .
+          git commit -m "Update documentation"
+          git push origin ${{ env.BRANCH_NAME }}
