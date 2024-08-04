@@ -19,7 +19,6 @@ NotSelector - negation of a selector (~)
 from __future__ import annotations
 
 import itertools
-import re
 from dataclasses import dataclass, field
 from functools import reduce
 from typing import Any, Iterable, Optional, Pattern
@@ -29,16 +28,16 @@ from bs4 import SoupStrainer, Tag
 import soupsavvy.selectors.namespace as ns
 from soupsavvy.selectors.attributes import AttributeSelector
 from soupsavvy.selectors.base import (
-    MultipleSoupSelector,
+    CompositeSoupSelector,
+    KeywordSoupSelector,
     SelectableCSS,
-    SingleSoupSelector,
     SoupSelector,
 )
 from soupsavvy.selectors.tag_utils import TagIterator, TagResultSet
 
 
 @dataclass
-class TagSelector(SingleSoupSelector):
+class TagSelector(KeywordSoupSelector):
     """
     Class representing HTML element.
     Provides elements based on element tag and all defined attributes.
@@ -170,7 +169,7 @@ class PatternSelector(SoupSelector):
 
 
 @dataclass
-class AnyTagSelector(SingleSoupSelector, SelectableCSS):
+class AnyTagSelector(KeywordSoupSelector, SelectableCSS):
     """
     Class representing a wildcard tag that matches any tag in the markup.
     Matches always the first tag in the markup.
@@ -208,7 +207,7 @@ class AnyTagSelector(SingleSoupSelector, SelectableCSS):
         return isinstance(other, AnyTagSelector)
 
 
-class NotSelector(MultipleSoupSelector):
+class NotSelector(CompositeSoupSelector):
     """
     Class representing selector of elements that do not match provided selectors.
 
@@ -309,7 +308,7 @@ class NotSelector(MultipleSoupSelector):
         return SelectorList(*self.selectors)
 
 
-class AndSelector(MultipleSoupSelector):
+class AndSelector(CompositeSoupSelector):
     """
     Class representing an intersection of multiple soup selectors.
     Provides elements matching all of the listed selectors.
@@ -394,7 +393,7 @@ class AndSelector(MultipleSoupSelector):
         return matching.fetch(limit)
 
 
-class HasSelector(MultipleSoupSelector):
+class HasSelector(CompositeSoupSelector):
     """
     Class representing elements selected with respect to matching reference elements.
     Element is selected if any of the provided selectors matched reference element.

@@ -11,7 +11,7 @@ import pytest
 from bs4 import Tag
 
 from soupsavvy.exceptions import NavigableStringException, NotSoupSelectorException
-from soupsavvy.selectors.base import MultipleSoupSelector
+from soupsavvy.selectors.base import CompositeSoupSelector
 from soupsavvy.selectors.combinators import (
     ChildCombinator,
     DescendantCombinator,
@@ -35,7 +35,7 @@ class BaseOperatorTest:
     should work with SoupSelector objects.
     """
 
-    TYPE: Type[MultipleSoupSelector]
+    TYPE: Type[CompositeSoupSelector]
     OPERATOR: Callable[[Any, Any], Any]
 
     def test_operator_returns_expected_type_with_steps(self):
@@ -258,7 +258,7 @@ class TestMultipleSoupSelector:
     with different operators.
     """
 
-    class MockMultipleSoupSelector(MultipleSoupSelector):
+    class MockMultipleSoupSelector(CompositeSoupSelector):
         """Mock class for testing MultipleSoupSelector interface."""
 
         def __init__(self, *selectors):

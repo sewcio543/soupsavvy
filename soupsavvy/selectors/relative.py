@@ -2,14 +2,12 @@
 Module that contains relative selectors and utility components.
 """
 
-from typing import Callable, Optional
+from typing import Optional
 
 from bs4 import Tag
 
 from soupsavvy.selectors.base import SoupSelector
 from soupsavvy.selectors.tag_utils import TagResultSet
-
-Operator = Callable[[SoupSelector, SoupSelector], SoupSelector]
 
 
 class RelativeSelector(SoupSelector):

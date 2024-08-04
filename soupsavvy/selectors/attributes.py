@@ -16,12 +16,12 @@ from dataclasses import dataclass
 from typing import Any, Optional, Pattern
 
 import soupsavvy.selectors.namespace as ns
-from soupsavvy.selectors.base import SingleSoupSelector
+from soupsavvy.selectors.base import KeywordSoupSelector
 from soupsavvy.selectors.namespace import PatternType
 
 
 @dataclass
-class AttributeSelector(SingleSoupSelector):
+class AttributeSelector(KeywordSoupSelector):
     """
     Class representing attribute of the HTML element.
     If used directly, provides elements based only on a single attribute value.

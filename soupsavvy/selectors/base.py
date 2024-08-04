@@ -564,13 +564,16 @@ class SoupSelector(ABC):
         return DescendantCombinator(self, x)
 
 
-class SingleSoupSelector(SoupSelector):
+class KeywordSoupSelector(SoupSelector):
     """
-    Extension of SoupSelector interface that defines a single element.
+    Extension of SoupSelector interface that defines keyword search arguments
+    to be passed to Tag.find and Tag.find_all methods. Implemented by selectors
+    that do not required specific operations, but delegate search to BeautifulSoup
+    with specified parameters.
 
     Notes
     -----
-    To implement SingleSoupSelector interface, child class must implement:
+    To implement KeywordSoupSelector interface, child class must implement:
     * '_find_params' property that returns dict representing Tag.find
     and find_all parameters that are passed as keyword arguments into these methods.
     """
@@ -624,31 +627,31 @@ class SelectableCSS(ABC):
         return self.css
 
 
-class MultipleSoupSelector(SoupSelector):
+class CompositeSoupSelector(SoupSelector):
     """
     Interface for Tags that uses multiple steps to find elements.
 
     Notes
     -----
-    To implement MultipleSoupSelector interface, child class must implement
+    To implement CompositeSoupSelector interface, child class must implement
     call super init method with provided tags as arguments to check and assign them.
 
     Attributes
     ----------
     selectors : list[SoupSelector]
-        List of SoupSelector objects passed to MultipleSoupSelector.
+        List of SoupSelector objects passed to CompositeSoupSelector.
     """
 
     def __init__(self, selectors: Iterable[SoupSelector]) -> None:
         """
-        Initializes MultipleSoupSelector object with provided tags.
+        Initializes CompositeSoupSelector object with provided tags.
         Checks if all tags are instances of SoupSelector and assigns
         them to 'selectors' attribute.
 
         Parameters
         ----------
         selectors: Iterable[SoupSelector]
-            SoupSelector objects passed to MultipleSoupSelector.
+            SoupSelector objects passed to CompositeSoupSelector.
 
         Raises
         ------
@@ -665,8 +668,8 @@ class MultipleSoupSelector(SoupSelector):
         self.selectors = list(selectors)
 
     def __eq__(self, other: object) -> bool:
-        # check for MultipleSoupSelector type for type checking sake
-        if not isinstance(other, MultipleSoupSelector):
+        # check for CompositeSoupSelector type for type checking sake
+        if not isinstance(other, CompositeSoupSelector):
             return False
         elif type(self) is not type(other):
             # checking for exact type match - isinstance(other, self.__class__)

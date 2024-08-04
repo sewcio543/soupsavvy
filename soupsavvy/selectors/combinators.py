@@ -27,7 +27,7 @@ from typing import Optional, Type
 
 from bs4 import Tag
 
-from soupsavvy.selectors.base import MultipleSoupSelector, SoupSelector
+from soupsavvy.selectors.base import CompositeSoupSelector, SoupSelector
 from soupsavvy.selectors.relative import (
     RelativeChild,
     RelativeDescendant,
@@ -38,7 +38,7 @@ from soupsavvy.selectors.relative import (
 from soupsavvy.selectors.tag_utils import TagIterator, TagResultSet
 
 
-class BaseCombinator(MultipleSoupSelector):
+class BaseCombinator(CompositeSoupSelector):
     def __init__(
         self,
         selector1: SoupSelector,
@@ -329,7 +329,7 @@ class DescendantCombinator(BaseCombinator):
         return RelativeDescendant
 
 
-class SelectorList(MultipleSoupSelector):
+class SelectorList(CompositeSoupSelector):
     """
     Class representing a list of selectors in CSS,
     a selector list is a comma-separated list of selectors,

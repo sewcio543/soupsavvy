@@ -4,7 +4,7 @@ from typing import Generator
 
 import pytest
 
-from soupsavvy.selectors.css.nth.nth_utils import NthGenerator, parse_nth
+from soupsavvy.selectors.nth.nth_utils import NthGenerator, parse_nth
 
 STOP = 10
 

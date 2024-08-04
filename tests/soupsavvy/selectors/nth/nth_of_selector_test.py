@@ -3,7 +3,7 @@
 import pytest
 
 from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
-from soupsavvy.selectors.css.nth.nth_soup_selector import NthOfSelector
+from soupsavvy.selectors.nth.nth_soup_selector import NthOfSelector
 from tests.soupsavvy.selectors.conftest import (
     MockClassMenuSelector,
     MockDivSelector,
