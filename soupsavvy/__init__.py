@@ -1,4 +1,4 @@
-from .tags import (
+from .selectors import (
     Anchor,
     AndSelector,
     AnyTagSelector,
