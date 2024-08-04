@@ -311,21 +311,3 @@ class TestClassSelector:
             strip("""<a class="widget" href="menu"></a>"""),
             strip("""<div class="widget"></div>"""),
         ]
-
-    @pytest.mark.css
-    @pytest.mark.parametrize(
-        argnames="selector, css",
-        argvalues=[
-            # class overrides default css selector with . syntax
-            (ClassSelector("menu"), ".menu"),
-            (ClassSelector(), "[class]"),
-            # pattern is reduced to containment operator *=
-            (
-                ClassSelector(re.compile(r"^menu")),
-                "[class*='^menu']",
-            ),
-        ],
-    )
-    def test_selector_is_correct(self, selector: ClassSelector, css: str):
-        """Tests if css selector for AttributeSelector is constructed as expected."""
-        assert selector.selector == css

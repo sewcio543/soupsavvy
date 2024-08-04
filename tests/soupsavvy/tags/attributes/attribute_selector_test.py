@@ -151,26 +151,6 @@ class TestAttributeSelector:
         result = selector.find_all(bs)
         assert result == []
 
-    @pytest.mark.css
-    @pytest.mark.parametrize(
-        argnames="selector, css",
-        argvalues=[
-            (AttributeSelector("class", value="menu"), "[class='menu']"),
-            (AttributeSelector("id", value=None), "[id]"),
-            (
-                AttributeSelector("id", value=re.compile("menu")),
-                "[id*='menu']",
-            ),
-            (
-                AttributeSelector("id", value=re.compile("^menu[0-9]$")),
-                "[id*='^menu[0-9]$']",
-            ),
-        ],
-    )
-    def test_selector_is_correct(self, selector: AttributeSelector, css: str):
-        """Tests if css selector for AttributeSelector is constructed as expected."""
-        assert selector.selector == css
-
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.

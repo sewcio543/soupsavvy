@@ -32,7 +32,7 @@ class TestCSS:
         Tests if selector property returns the same value
         as string passed to the constructor.
         """
-        assert CSS(css).selector == css
+        assert CSS(css).css == css
 
     def test_raises_exception_when_invalid_css_selector(self):
         """

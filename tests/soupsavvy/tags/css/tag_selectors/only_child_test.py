@@ -14,11 +14,11 @@ class TestOnlyChild:
 
     def test_selector_is_correct_without_tag(self):
         """Tests if selector property returns correct value without specifying tag."""
-        assert OnlyChild().selector == ":only-child"
+        assert OnlyChild().css == ":only-child"
 
     def test_selector_is_correct_with_tag(self):
         """Tests if selector property returns correct value when specifying tag."""
-        assert OnlyChild("div").selector == "div:only-child"
+        assert OnlyChild("div").css == "div:only-child"
 
     def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
         """Tests if find_all method returns all tags for selector without tag name."""

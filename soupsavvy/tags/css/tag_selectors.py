@@ -43,7 +43,7 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
         self._selector = selector
 
     @property
-    def selector(self) -> str:
+    def css(self) -> str:
         return self._selector
 
     def find_all(
@@ -58,7 +58,7 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
 
     def __eq__(self, other: object) -> bool:
         # we only care if selector is equal with current implementation
-        return isinstance(other, CSSSoupSelector) and self.selector == other.selector
+        return isinstance(other, CSSSoupSelector) and self.css == other.css
 
 
 class OnlyChild(CSSSoupSelector):

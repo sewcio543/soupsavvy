@@ -16,12 +16,12 @@ from dataclasses import dataclass
 from typing import Any, Optional, Pattern
 
 import soupsavvy.tags.namespace as ns
-from soupsavvy.tags.base import SelectableCSS, SingleSoupSelector
+from soupsavvy.tags.base import SingleSoupSelector
 from soupsavvy.tags.namespace import PatternType
 
 
 @dataclass
-class AttributeSelector(SingleSoupSelector, SelectableCSS):
+class AttributeSelector(SingleSoupSelector):
     """
     Class representing attribute of the HTML element.
     If used directly, provides elements based only on a single attribute value.
@@ -46,32 +46,6 @@ class AttributeSelector(SingleSoupSelector, SelectableCSS):
         which results in using re.search to match the attribute value.
         By default None, if not provided, default pattern matching any sequence
         of characters is used.
-
-    Implements SelectableCSS interface for CSS selector generation.
-
-    Example
-    -------
-    >>> selector = AttributeSelector(name="class", value="widget")
-    ... selector.selector
-    [class=widget]
-
-    >>> selector = AttributeSelector(name="class", value="widget", re=True)
-    ... selector.selector
-    [class*=widget]
-
-    >>> selector = AttributeSelector("class")
-    ... selector.selector
-    [class]
-
-    It is a simplified version and it will not be equivalent in results
-    in case of using regex patterns, which are not supported in CSS,
-    it defaults to *= containment operator.
-
-    Example
-    -------
-    >>> selector = AttributeSelector(name="class", value=re.compile("^main[0-9]"))
-    ... selector.selector
-    [class*='^main[0-9]']
     """
 
     name: str
@@ -91,25 +65,6 @@ class AttributeSelector(SingleSoupSelector, SelectableCSS):
             return str(self.value)
         # value is already a compiled regex pattern
         return self.value
-
-    @property
-    def selector(self) -> str:
-        # undefined value - bs Tag matches all elements with attribute if css is
-        # provided without a value in ex. format '[href]'
-        if self.value is None:
-            return f"[{self.name}]"
-
-        value = self._pattern
-        re = False
-
-        if isinstance(self._pattern, Pattern):
-            # extract regex pattern string from compiled regex
-            value = self._pattern.pattern
-            # always reduce to containment operator for regex patterns
-            re = True
-
-        operator = "*=" if re else "="
-        return f"[{self.name}{operator}'{value}']"
 
     @property
     def _find_params(self) -> dict[str, Any]:
@@ -167,37 +122,9 @@ class IdSelector(_SpecificAttributeSelector):
     -------
     >>> <div id="main">Hello World</div> ✔️
     >>> <div id="content">Hello World</div> ❌
-
-    Implements SelectableCSS interface for CSS selector generation,
-    provides simplified, more css native selector for id attribute,
-    when value is provided, and no pattern is used.
-
-    Example
-    -------
-    >>> selector = IdSelector("main")
-    ... selector.selector
-    #main
-
-    It is a simplified version and it will not be equivalent in results
-    in case of using regex patterns, which are not supported in CSS,
-    it defaults to *= containment operator.
-
-    Example
-    -------
-    >>> selector = IdSelector(re.compile("^main[0-9]"))
-    ... selector.selector
-    [id*='^main[0-9]']
     """
 
     _NAME = "id"
-
-    @property
-    def selector(self) -> str:
-        # returns '#' css syntax if selecting string value
-        if isinstance(self._pattern, str):
-            return f"#{self._pattern}"
-
-        return super().selector
 
 
 class ClassSelector(_SpecificAttributeSelector):
@@ -216,34 +143,6 @@ class ClassSelector(_SpecificAttributeSelector):
     -------
     >>> <div class="main">Hello World</div> ✔️
     >>> <div class="content">Hello World</div> ❌
-
-    Implements SelectableCSS interface for CSS selector generation,
-    provides simplified, more css native selector for class attribute,
-    when value is provided, and no pattern is used.
-
-    Example
-    -------
-    >>> selector = ClassSelector("main")
-    ... selector.selector
-    .main
-
-    It is a simplified version and it will not be equivalent in results
-    in case of using regex patterns, which are not supported in CSS,
-    it defaults to *= containment operator.
-
-    Example
-    -------
-    >>> selector = ClassSelector(re.compile("^main[0-9]"))
-    ... selector.selector
-    [class*='^main[0-9]']
     """
 
     _NAME = "class"
-
-    @property
-    def selector(self) -> str:
-        # returns '.' css syntax if selecting string value
-        if isinstance(self._pattern, str):
-            return f".{self._pattern}"
-
-        return super().selector
