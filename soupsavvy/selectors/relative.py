@@ -48,8 +48,7 @@ class RelativeSelector(SoupSelector):
         selector : SoupSelector
             Selector that is used to find tags relative to the anchor tag.
         """
-        self._check_selector_type(selector)
-        self.selector = selector
+        self.selector = self._check_selector_type(selector)
 
     def __eq__(self, other: object) -> bool:
         # check for RelativeSelector type for type checking sake
