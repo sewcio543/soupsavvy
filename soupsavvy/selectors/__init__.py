@@ -3,6 +3,7 @@ from .combinators import (
     ChildCombinator,
     DescendantCombinator,
     NextSiblingCombinator,
+    OrSelector,
     SelectorList,
     SubsequentSiblingCombinator,
 )
@@ -28,6 +29,7 @@ __all__ = [
     "ChildCombinator",
     "NextSiblingCombinator",
     "SubsequentSiblingCombinator",
+    "OrSelector",
     "HasSelector",
     "Anchor",
     "IdSelector",

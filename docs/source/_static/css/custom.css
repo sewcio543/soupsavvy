@@ -45,3 +45,8 @@
 img[src*="https://img.shields.io/badge/docs"] {
     display: none;
 }
+
+/* Hide the SoupSavvy logo from README, it's already included at the top */
+h1:has(img[alt="SoupSavvy"]) {
+    display: none;
+}
