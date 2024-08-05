@@ -479,7 +479,7 @@ class HasSelector(CompositeSoupSelector):
     ) -> None:
         """
         Initializes AndTagSelector object with provided positional arguments as tags.
-        At least two SoupSelector objects are required to create HasSelector.
+        At least one selector is required to create HasSelector.
 
         Parameters
         ----------

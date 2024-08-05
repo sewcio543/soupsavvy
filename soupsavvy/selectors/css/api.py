@@ -40,8 +40,8 @@ def is_(
 
     Example
     -------
-    >>> is_(ElementTag("h1"), ElementTag("h2"))
-    >>> where(ElementTag("h1"), ElementTag("h2"))
+    >>> is_(TagSelector("h1"), TagSelector("h2"))
+    >>> where(TagSelector("h1"), TagSelector("h2"))
 
     This is an equivalent of CSS comma selector (selector list) or :is() selector.
     Function is also aliased by 'where' function that imitate css :where pseudo-class.
