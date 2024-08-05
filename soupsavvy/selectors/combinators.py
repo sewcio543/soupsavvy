@@ -14,6 +14,7 @@ NextSiblingCombinator - equivalent of CSS adjacent sibling combinator (+)
 SubsequentSiblingCombinator - equivalent of CSS general sibling combinator (*)
 DescentCombinator - equivalent of CSS descendant combinator (" ")
 SelectorList - equivalent of CSS selector list (,) or :is() pseudo-class
+OrSelector - alias for SelectorList
 
 Notes
 -----
@@ -427,3 +428,7 @@ class SelectorList(CompositeSoupSelector):
         # keep order of tags and limit
         results = TagResultSet(list(TagIterator(tag, recursive=recursive))) & results
         return results.fetch(limit)
+
+
+# alias for SelectorList
+OrSelector = SelectorList
