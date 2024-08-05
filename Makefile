@@ -27,3 +27,5 @@ typecheck:
 docu:
 	bash docs/sphinx_run.sh
 	git clean -fd docs/source/*.rst
+run_demos:
+	python -m pytest --nbmake -v demos/
