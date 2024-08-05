@@ -71,7 +71,7 @@ class BaseCombinator(CompositeSoupSelector):
 
         Example
         -------
-        >>> ChildCombinator(ElementTag("div"), ElementTag("a"), ElementTag("span"))
+        >>> ChildCombinator(TagSelector("div"), TagSelector("a"), TagSelector("span"))
 
         Raises
         ------
@@ -136,7 +136,7 @@ class ChildCombinator(BaseCombinator):
 
     Example
     -------
-    >>> ChildCombinator(ElementTag("div"), ElementTag("a"))
+    >>> ChildCombinator(TagSelector("div"), TagSelector("a"))
 
     matches all 'a' elements that are direct children of 'div' elements.
 
@@ -152,7 +152,7 @@ class ChildCombinator(BaseCombinator):
 
     Example
     -------
-    >>> ElementTag("div") > ElementTag("a")
+    >>> TagSelector("div") > TagSelector("a")
 
     Which is equivalent to the first example.
 
@@ -168,10 +168,10 @@ class ChildCombinator(BaseCombinator):
     Example
     -------
     >>> ChildCombinator(
-    ...     ElementTag("div", attributes=[AttributeTag("class", "widget")]),
-    ...     ElementTag("a")
+    ...     TagSelector("div", attributes=[AttributeSelector("class", "widget")]),
+    ...     TagSelector("a")
     ... )
-    >>> ElementTag("div", attributes=[AttributeTag("class", "widget")]) > ElementTag("a")
+    >>> TagSelector("div", attributes=[AttributeSelector("class", "widget")]) > TagSelector("a")
 
     Notes
     -----
@@ -190,7 +190,7 @@ class NextSiblingCombinator(BaseCombinator):
 
     Example
     -------
-    >>> NextSiblingCombinator(ElementTag("div"), ElementTag("a"))
+    >>> NextSiblingCombinator(TagSelector("div"), TagSelector("a"))
 
     matches all 'a' elements that immediately follow 'div' elements,
     it means that both elements are children of the same parent element.
@@ -212,8 +212,8 @@ class NextSiblingCombinator(BaseCombinator):
 
     Example
     -------
-    >>> NextSiblingCombinator(ElementTag("div"), ElementTag("a"))
-    >>> ElementTag("div") + ElementTag("a")
+    >>> NextSiblingCombinator(TagSelector("div"), TagSelector("a"))
+    >>> TagSelector("div") + TagSelector("a")
 
     Notes
     -----
@@ -237,7 +237,7 @@ class SubsequentSiblingCombinator(BaseCombinator):
 
     Example
     -------
-    >>> SubsequentSiblingCombinator(ElementTag("div"), ElementTag("a"))
+    >>> SubsequentSiblingCombinator(TagSelector("div"), TagSelector("a"))
 
     matches all 'a' elements that follow 'div' elements.
 
@@ -260,8 +260,8 @@ class SubsequentSiblingCombinator(BaseCombinator):
 
     Example
     -------
-    >>> ElementTag("div") * ElementTag("a")
-    >>> SubsequentSiblingCombinator(ElementTag("div"), ElementTag("a"))
+    >>> TagSelector("div") * TagSelector("a")
+    >>> SubsequentSiblingCombinator(TagSelector("div"), TagSelector("a"))
 
     Notes
     -----
@@ -289,8 +289,8 @@ class DescendantCombinator(BaseCombinator):
     Example
     -------
     >>> DescentCombinator(
-    >>>     ElementTag("div", [AttributeTag(name="class", value="menu")]),
-    >>>     ElementTag("a", [AttributeTag(name="href", value="google", re=True)])
+    >>>     TagSelector("div", [AttributeSelector(name="class", value="menu")]),
+    >>>     TagSelector("a", [AttributeSelector(name="href", value="google", re=True)])
     >>> )
 
     matches all descendants of 'div' element with 'menu' class attribute
@@ -316,8 +316,8 @@ class DescendantCombinator(BaseCombinator):
 
     Example
     -------
-    >>> ElementTag("div") >> ElementTag("a")
-    >>> DescentCombinator(ElementTag("div"), ElementTag("a"))
+    >>> TagSelector("div") >> TagSelector("a")
+    >>> DescentCombinator(TagSelector("div"), TagSelector("a"))
 
     Notes
     -----
@@ -345,8 +345,8 @@ class SelectorList(CompositeSoupSelector):
     Example
     -------
     >>> SelectorList(
-    >>>     ElementTag("a"),
-    >>>     ElementTag("div", [AttributeTag(name="class", value="widget")])
+    >>>     TagSelector("a"),
+    >>>     TagSelector("div", [AttributeSelector(name="class", value="widget")])
     >>> )
 
     matches all elements that have "a" tag name OR 'class' attribute "widget".
@@ -368,15 +368,15 @@ class SelectorList(CompositeSoupSelector):
 
     Example
     -------
-    >>> SoupUnionTag(ElementTag("h1"), ElementTag("h2"))
-    >>> ElementTag("h1") | ElementTag("h2")
+    >>> SoupUnionTag(TagSelector("h1"), TagSelector("h2"))
+    >>> TagSelector("h1") | TagSelector("h2")
 
     Object can be created as well by using bitwise OR operator '|'
     on two SoupSelector objects.
 
     Example
     -------
-    >>> ElementTag(tag="a") | ElementTag("div", [AttributeTag(name="class", value="widget")])
+    >>> TagSelector(tag="a") | TagSelector("div", [AttributeSelector(name="class", value="widget")])
 
     Which is equivalent to the first example.
 
