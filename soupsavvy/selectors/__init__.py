@@ -1,24 +1,21 @@
-from .selectors import (
-    Anchor,
-    AndSelector,
-    AnyTagSelector,
-    AttributeSelector,
+from .attributes import AttributeSelector, ClassSelector, IdSelector
+from .combinators import (
     ChildCombinator,
-    ClassSelector,
     DescendantCombinator,
-    HasSelector,
-    IdSelector,
     NextSiblingCombinator,
-    NotSelector,
     OrSelector,
-    PatternSelector,
     SelectorList,
     SubsequentSiblingCombinator,
+)
+from .components import (
+    AndSelector,
+    AnyTagSelector,
+    HasSelector,
+    NotSelector,
+    PatternSelector,
     TagSelector,
 )
-
-__version__ = "0.2.0-dev0"
-__author__ = "sewcio543"
+from .relative import Anchor
 
 __all__ = [
     "AnyTagSelector",
@@ -32,9 +29,9 @@ __all__ = [
     "ChildCombinator",
     "NextSiblingCombinator",
     "SubsequentSiblingCombinator",
+    "OrSelector",
     "HasSelector",
     "Anchor",
-    "OrSelector",
-    "ClassSelector",
     "IdSelector",
+    "ClassSelector",
 ]
