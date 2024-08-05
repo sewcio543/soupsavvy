@@ -251,15 +251,15 @@ def test_exception_is_raised_when_navigable_string_is_a_result():
         tag.find(bs, strict=True)
 
 
-class TestMultipleSoupSelector:
+class TestCompositeSoupSelector:
     """
-    Class for testing MultipleSoupSelector interface.
+    Class for testing CompositeSoupSelector interface.
     It's a base class for testing multiple selectors that are combined
     with different operators.
     """
 
-    class MockMultipleSoupSelector(CompositeSoupSelector):
-        """Mock class for testing MultipleSoupSelector interface."""
+    class MockCompositeSoupSelector(CompositeSoupSelector):
+        """Mock class for testing CompositeSoupSelector interface."""
 
         def __init__(self, *selectors):
             super().__init__(list(selectors))
@@ -267,10 +267,10 @@ class TestMultipleSoupSelector:
         def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
             return []
 
-    class MockMultipleSoupSelectorNotEqual(MockMultipleSoupSelector):
+    class MockCompositeSoupSelectorNotEqual(MockCompositeSoupSelector):
         """
-        Mock class for testing equality of MultipleSoupSelector,
-        if right operand is instance of MultipleSoupSelector and have the same
+        Mock class for testing equality of CompositeSoupSelector,
+        if right operand is instance of CompositeSoupSelector and have the same
         type as left operand, they are equal.
         """
 
@@ -279,18 +279,18 @@ class TestMultipleSoupSelector:
         argvalues=[
             # with two equal steps
             (
-                MockMultipleSoupSelector(MockLinkSelector(), MockDivSelector()),
-                MockMultipleSoupSelector(MockLinkSelector(), MockDivSelector()),
+                MockCompositeSoupSelector(MockLinkSelector(), MockDivSelector()),
+                MockCompositeSoupSelector(MockLinkSelector(), MockDivSelector()),
             ),
             # without any steps
             (
-                MockMultipleSoupSelector(),
-                MockMultipleSoupSelector(),
+                MockCompositeSoupSelector(),
+                MockCompositeSoupSelector(),
             ),
             # with one equal step
             (
-                MockMultipleSoupSelector(MockDivSelector()),
-                MockMultipleSoupSelector(MockDivSelector()),
+                MockCompositeSoupSelector(MockDivSelector()),
+                MockCompositeSoupSelector(MockDivSelector()),
             ),
         ],
     )
@@ -305,28 +305,28 @@ class TestMultipleSoupSelector:
         argvalues=[
             # with equal steps but in different order
             (
-                MockMultipleSoupSelector(MockLinkSelector(), MockDivSelector()),
-                MockMultipleSoupSelector(MockDivSelector(), MockLinkSelector()),
+                MockCompositeSoupSelector(MockLinkSelector(), MockDivSelector()),
+                MockCompositeSoupSelector(MockDivSelector(), MockLinkSelector()),
             ),
             # without one equal step and one step different
             (
-                MockMultipleSoupSelector(MockDivSelector(), MockLinkSelector()),
-                MockMultipleSoupSelector(MockDivSelector(), MockDivSelector()),
+                MockCompositeSoupSelector(MockDivSelector(), MockLinkSelector()),
+                MockCompositeSoupSelector(MockDivSelector(), MockDivSelector()),
             ),
             # with one different step
             (
-                MockMultipleSoupSelector(MockDivSelector()),
-                MockMultipleSoupSelector(MockLinkSelector()),
+                MockCompositeSoupSelector(MockDivSelector()),
+                MockCompositeSoupSelector(MockLinkSelector()),
             ),
-            # not instance of MultipleSoupSelector
+            # not instance of CompositeSoupSelector
             (
-                MockMultipleSoupSelector(MockDivSelector()),
+                MockCompositeSoupSelector(MockDivSelector()),
                 MockLinkSelector(),
             ),
             # not the same type as left operand
             (
-                MockMultipleSoupSelector(MockDivSelector()),
-                MockMultipleSoupSelectorNotEqual(MockDivSelector()),
+                MockCompositeSoupSelector(MockDivSelector()),
+                MockCompositeSoupSelectorNotEqual(MockDivSelector()),
             ),
         ],
     )

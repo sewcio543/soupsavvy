@@ -4,9 +4,9 @@
 :caption: 'Package components'
 :maxdepth: 1
 
-soupsavvy.tags
 soupsavvy.utils
 soupsavvy.testing
+soupsavvy.selectors
 ```
 
 ```{toctree}
@@ -14,6 +14,7 @@ soupsavvy.testing
 :maxdepth: 1
 
 demos/about
+demos/selectors
 ```
 
 ## Information about the package
