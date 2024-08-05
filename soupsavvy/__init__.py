@@ -1,4 +1,4 @@
-from .tags import (
+from .selectors import (
     Anchor,
     AndSelector,
     AnyTagSelector,
@@ -14,7 +14,7 @@ from .tags import (
     TagSelector,
 )
 
-__version__ = "0.1.9-dev5"
+__version__ = "0.2.0-dev0"
 __author__ = "sewcio543"
 
 __all__ = [

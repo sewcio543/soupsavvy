@@ -11,7 +11,7 @@ main_dir_name = "soupsavvy"
 soupsavvy_dir = Path(main_dir_name)
 
 # The docs main index file to be updated
-index_file = Path("docs", "source", "index.rst")
+index_file = Path("docs", "source", "index.md")
 
 
 def main():
@@ -43,7 +43,7 @@ def main():
 
         # Add the new folders to the toctree
         for folder in new_folders:
-            contents.insert(i + 1, f"   {folder}\n")
+            contents.insert(i + 1, f"{folder}\n")
 
     if deleted_folders:
         print(f"Deleted sub-packages detected: {deleted_folders}")

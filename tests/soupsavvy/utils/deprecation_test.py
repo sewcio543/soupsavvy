@@ -252,12 +252,12 @@ class TestDeprecatedFunction:
         assert wrapped.__annotations__ == func.__annotations__
         assert func.__doc__ == wrapped.__doc__
         assert func.__name__ == wrapped.__name__
-        # retun of the call is the same
+        # return of the call is the same
         with warnings.catch_warnings(record=True):
             assert wrapped(1, 2) == func(1, 2)
 
-    def test_works_for_methods_as_well(self):
-        """Tests if the decorator works for methods as well as for functions."""
+    def test_works_for_class_methods(self):
+        """Tests if the decorator works for class methods."""
 
         message = "DEPRECATED"
 
@@ -271,6 +271,29 @@ class TestDeprecatedFunction:
         with warnings.catch_warnings(record=True) as w:
             test_instance = TestClass()
             result = test_instance.func(1, 2)
+
+        assert len(w) == 1
+        assert str(w[0].message) == message
+        assert issubclass(w[0].category, CustomWarning)
+        # check result of method call
+        assert result == 3
+
+    def test_works_for_class_properties(self):
+        """Tests if the decorator works for class properties."""
+
+        message = "DEPRECATED"
+
+        class TestClass:
+
+            @property
+            @deprecated_function(message, warning=CustomWarning)
+            def prop(self) -> int:
+                """Docstring"""
+                return 3
+
+        with warnings.catch_warnings(record=True) as w:
+            test_instance = TestClass()
+            result = test_instance.prop
 
         assert len(w) == 1
         assert str(w[0].message) == message

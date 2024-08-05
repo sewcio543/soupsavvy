@@ -1,4 +1,9 @@
 changelog:
+  exclude:
+    labels:
+      - prod-version
+      - dev-version
+
   categories:
     - title: Breaking Changes 💥
       labels:
