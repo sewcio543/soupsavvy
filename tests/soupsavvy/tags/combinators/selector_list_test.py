@@ -2,225 +2,185 @@
 
 import pytest
 
+from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
 from soupsavvy.tags.combinators import SelectorList
-from soupsavvy.tags.components import AttributeSelector, TagSelector
-from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
-from tests.soupsavvy.tags.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.tags.conftest import (
+    MockClassMenuSelector,
+    MockDivSelector,
+    MockLinkSelector,
+    find_body_element,
+    strip,
+    to_bs,
+)
 
 
-@pytest.fixture(scope="session")
-def mock_soup_union() -> SelectorList:
-    """
-    Fixture that mocks SelectorList with three Tags:
-    * first matching all 'a' elements with 'class' attribute equal to 'widget'
-    * second matching all 'div' elements with 'class' attribute equal to 'menu'
-    * third matching all elements with 'awesomeness' attribute which value contains a digit.
-
-    Returns
-    -------
-    SelectorList
-        Mocked SelectorList used for testing purposes.
-    """
-    tag_1 = TagSelector("a", attributes=[AttributeSelector("class", value="widget")])
-    tag_2 = TagSelector("div", attributes=[AttributeSelector("class", value="menu")])
-    tag_3 = AttributeSelector(name="awesomeness", value=r"\d", re=True)
-    union = SelectorList(tag_1, tag_2, tag_3)
-    return union
-
-
-@pytest.mark.soup
+@pytest.mark.selector
 @pytest.mark.combinator
 class TestSelectorList:
     """Class for SelectorList unit test suite."""
 
-    def test_init_raises_exception_if_at_least_one_argument_is_not_soup_selector(
-        self,
-    ):
+    def test_raises_exception_when_invalid_input(self):
         """
-        Tests if init raises a NotSoupSelectorException exception if at least one
-        of the positional parameters is not an instance of SoupSelector.
+        Tests if init raises NotSoupSelectorException when invalid input is provided.
         """
-        tag_1 = TagSelector(
-            "a", attributes=[AttributeSelector("class", value="widget")]
-        )
+        with pytest.raises(NotSoupSelectorException):
+            SelectorList(MockDivSelector(), "p")  # type: ignore
 
         with pytest.raises(NotSoupSelectorException):
-            SelectorList(tag_1, "string")  # type: ignore
+            SelectorList("a", MockDivSelector())  # type: ignore
 
-    def test_soup_union_is_instantiated_with_correct_tags_attribute(self):
+    def test_find_returns_first_tag_matching_selector(self):
+        """Tests if find method returns the first tag that matches selector."""
+        text = """
+            <p>Hello</p>
+            <span><p>Hello</p></span>
+            <a>1</a>
+            <div class="widget"><span>2</span></div>
+            <span>
+                <a class="widget">3</a>
+                <span class="widget"><div>4</div></span>
+            </span>
         """
-        Tests if tags attribute of SelectorList is assigned properly is a list
-        containing all Tags provided in init.
-        """
-        tag_1 = TagSelector(
-            "a", attributes=[AttributeSelector("class", value="widget")]
-        )
-        tag_2 = TagSelector(
-            "div", attributes=[AttributeSelector("class", value="menu")]
-        )
+        bs = find_body_element(to_bs(text))
 
-        union = SelectorList(tag_1, tag_2)
+        selector = SelectorList(MockDivSelector(), MockLinkSelector())
+        result = selector.find(bs)
+        assert strip(str(result)) == strip("""<a>1</a>""")
 
-        assert isinstance(union.selectors, list)
-        assert union.selectors == [tag_1, tag_2]
-
-    def test_soup_union_is_instantiated_with_more_than_two_arguments(self):
+    def test_find_raises_exception_when_no_tags_match_in_strict_mode(self):
         """
-        Tests if tags attribute of SelectorList is assigned properly is a list
-        containing all Tags provided in init. Init can take any number of positional
-        arguments above 2 that are SoupSelector.
-        In this case testing arguments of mixed types: ElementTag and AttributeTag.
+        Tests if find method raises TagNotFoundException when no tag is found
+        that matches selector in strict mode.
         """
-        tag_1 = TagSelector(
-            "a", attributes=[AttributeSelector("class", value="widget")]
-        )
-        tag_2 = TagSelector(
-            "div", attributes=[AttributeSelector("class", value="menu")]
-        )
-        tag_3 = AttributeSelector(name="class", value="dropdown")
-
-        union = SelectorList(tag_1, tag_2, tag_3)
-
-        assert isinstance(union.selectors, list)
-        assert union.selectors == [tag_1, tag_2, tag_3]
-
-    @pytest.mark.parametrize(
-        argnames="markup",
-        argvalues=[
-            """<a class="widget"></a>""",
-            """<div class="menu"></div>""",
-            """<i awesomeness="3"></i>""",
-        ],
-        ids=["a", "div", "attribute"],
-    )
-    def test_soup_finds_element_of_any_matching_tag(
-        self, markup: str, mock_soup_union: SelectorList
-    ):
+        text = """
+            <p>Hello</p>
+            <span><p>Hello</p></span>
+            <span>
+                <h1>Header</h1>
+                <span class="widget"></span>
+            </span>
         """
-        Tests if find returns Tag for elements matching any of SelectorList tags.
-        """
-        bs = to_bs(markup)
-        result = mock_soup_union.find(bs)
-        assert str(result) == strip(markup)
-
-    def test_find_returns_none_if_no_element_matches_the_tags(
-        self, mock_soup_union: SelectorList
-    ):
-        """Tests if find method returns None if no element matches provided tags."""
-        markup = """
-            <a class="menu"></a>
-            <div class="widget"></div>
-            <i awesomeness="widget"></i>
-        """
-        bs = to_bs(markup)
-        assert mock_soup_union.find(bs) is None
-
-    def test_find_raises_exception_if_no_element_matches_the_tags_in_strict_mode(
-        self, mock_soup_union: SelectorList
-    ):
-        """
-        Tests if find method raises TagNotFoundException if no element
-        matches provided tags in strict mode.
-        """
-        markup = """
-            <a class="menu"></a>
-            <div class="widget"></div>
-            <i class="widget"></i>
-            <b awesomeness="widget"></b>
-        """
-        bs = to_bs(markup)
+        bs = to_bs(text)
+        selector = SelectorList(MockDivSelector(), MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
-            mock_soup_union.find(bs, strict=True)
+            selector.find(bs, strict=True)
 
-    def test_finds_all_returns_a_list_of_all_matching_elements(
-        self, mock_soup_union: SelectorList
-    ):
+    def test_find_returns_none_if_no_tags_match_in_not_strict_mode(self):
         """
-        Tests find_all returns a list of all elements that match any of provided tags.
+        Tests if find method returns None when no tag is found that
+        matches selector in not strict mode.
         """
-        markup = """
-            <a class="widget"></a>
-            <div class="widget"></div>
-            <div class="menu"></div>
-            <a class="menu"></a>
-            <i awesomeness="italics 5"></i>
-            <b awesomeness="bold"></b>
+        text = """
+            <p>Hello</p>
+            <span><p>Hello</p></span>
+            <span>
+                <h1>Header</h1>
+                <span class="widget"></span>
+            </span>
         """
-        bs = to_bs(markup)
-        result = mock_soup_union.find_all(bs)
-        assert isinstance(result, list)
-        expected = [
-            strip("""<a class="widget"></a>"""),
-            strip("""<div class="menu"></div>"""),
-            strip("""<i awesomeness="italics 5"></i>"""),
+        bs = to_bs(text)
+        selector = SelectorList(MockDivSelector(), MockLinkSelector())
+        result = selector.find(bs)
+        assert result is None
+
+    def test_finds_all_tags_matching_selectors(self):
+        """Tests if find_all method returns all tags that match selector."""
+        text = """
+            <p>Hello</p>
+            <span><p>Hello</p></span>
+            <a>1</a>
+            <div class="widget"><a>23</a></div>
+            <span>
+                <a class="widget">4</a>
+                <span class="widget"><div>5</div></span>
+            </span>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = SelectorList(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a>1</a>"""),
+            strip("""<div class="widget"><a>23</a></div>"""),
+            strip("""<a>23</a>"""),
+            strip("""<a class="widget">4</a>"""),
+            strip("""<div>5</div>"""),
         ]
-        assert list(map(str, result)) == expected
 
-    def test_finds_all_returns_empty_list_if_no_element_matches(
-        self, mock_soup_union: SelectorList
-    ):
+    def test_find_all_returns_empty_list_if_no_tag_matches(self):
         """
-        Tests find_all returns an empty list if no element matches any of provided tags.
+        Tests if find_all method returns an empty list when no tag is found
+        that matches selector.
         """
-        markup = """
-            <a class="menu"></a>
-            <div class="widget"></div>
-            <b awesomeness="bold"></b>
+        text = """
+            <p>Hello</p>
+            <span><p>Hello</p></span>
+            <span>
+                <h1>Header</h1>
+                <span class="widget"></span>
+            </span>
         """
-        bs = to_bs(markup)
-        result = mock_soup_union.find_all(bs)
+        bs = to_bs(text)
+        selector = SelectorList(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs)
         assert result == []
 
-    def test_union_consisting_of_unions_covers_all_tags(self):
+    def test_find_returns_match_with_multiple_selectors(self):
         """
-        Tests if SelectorList constructed from SelectorLists matches all elements
-        that match any of Unions.
+        Tests if find method returns the first tag that matches selector
+        if there are multiple selectors are provided.
         """
-        markup = """
-            <a></a>
-            <span></span>
-            <div></div>
-            <b></b>
-            <img></img>
-            <i></i>
+        text = """
+            <p>Hello</p>
+            <span><p>Hello</p></span>
+            <a>1</a>
+            <span>
+                <a class="widget">2</a>
+                <span class="widget"><div>3</div></span>
+            </span>
+            <span id="menu">
+                <h2>Menu</h2>
+            </span>
+            <p class="menu123">4</p>
+            <p class="menu">4</p>
+            <span>Hello</span>
+            <div class="menu">5</div>
         """
-        bs = to_bs(markup)
-        union = SelectorList(
-            SelectorList(TagSelector("a"), TagSelector("div")),
-            SelectorList(TagSelector("b"), TagSelector("i")),
+        bs = to_bs(text)
+        selector = SelectorList(
+            MockDivSelector(),
+            MockLinkSelector(),
+            MockClassMenuSelector(),
         )
-        result = union.find_all(bs)
-        expected = [
-            strip("<a></a>"),
-            strip("<div></div>"),
-            strip("<b></b>"),
-            strip("<i></i>"),
+        result = selector.find_all(bs)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a>1</a>"""),
+            strip("""<a class="widget">2</a>"""),
+            strip("""<div>3</div>"""),
+            strip("""<p class="menu">4</p>"""),
+            strip("""<div class="menu">5</div>"""),
         ]
-        assert list(map(str, result)) == expected
 
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.
-        In this case first 'a' and 'p' elements mach, but they are not direct children
-        of body element, so they are not returned.
         """
         text = """
-            <div>
-                <a href="github">Hello 1</a>
-                <p>Hello 2</p>
-            </div>
-            <a href="github">Hello 3</a>
-            <p>Hello 4</p>
+            <p>Hello</p>
+            <span>
+                <a class="widget">3</a>
+                <span class="widget"><div>4</div></span>
+            </span>
+            <a>1</a>
+            <span><p>Hello</p></span>
+            <div class="widget"><span>2</span></div>
         """
         bs = find_body_element(to_bs(text))
-        tag = SelectorList(
-            TagSelector(tag="a"),
-            TagSelector(tag="p"),
-        )
-        result = tag.find(bs, recursive=False)
-
-        assert str(result) == strip("""<a href="github">Hello 3</a>""")
+        selector = SelectorList(MockDivSelector(), MockLinkSelector())
+        result = selector.find(bs, recursive=False)
+        assert strip(str(result)) == strip("""<a>1</a>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
         """
@@ -228,17 +188,16 @@ class TestSelectorList:
         and recursive is False.
         """
         text = """
-            <div>
-                <a href="github">Hello 1</a>
-                <p>Hello 2</p>
-            </div>
+            <p>Hello</p>
+            <span>
+                <a class="widget">Not child</a>
+                <span class="widget"><div>Not child</div></span>
+            </span>
+            <span><p>Hello</p></span>
         """
         bs = find_body_element(to_bs(text))
-        tag = SelectorList(
-            TagSelector(tag="a"),
-            TagSelector(tag="p"),
-        )
-        result = tag.find(bs, recursive=False)
+        selector = SelectorList(MockDivSelector(), MockLinkSelector())
+        result = selector.find(bs, recursive=False)
         assert result is None
 
     def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
@@ -247,19 +206,18 @@ class TestSelectorList:
         matches the selector, when recursive is False and strict is True.
         """
         text = """
-            <div>
-                <a href="github">Hello 1</a>
-                <p>Hello 2</p>
-            </div>
+            <p>Hello</p>
+            <span>
+                <a class="widget">Not child</a>
+                <span class="widget"><div>Not child</div></span>
+            </span>
+            <span><p>Hello</p></span>
         """
         bs = find_body_element(to_bs(text))
-        tag = SelectorList(
-            TagSelector(tag="a"),
-            TagSelector(tag="p"),
-        )
+        selector = SelectorList(MockDivSelector(), MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
-            tag.find(bs, strict=True, recursive=False)
+            selector.find(bs, strict=True, recursive=False)
 
     def test_find_all_returns_all_matching_children_when_recursive_false(self):
         """
@@ -267,26 +225,23 @@ class TestSelectorList:
         It returns only matching children of the body element.
         """
         text = """
-            <p>Empty</p>
-            <div>
-                <a href="github">Hello 1</a>
-                <p>Hello 2</p>
-            </div>
-            <a href="github">Hello 3</a>
-            <p>Hello 4</p>
-            <span></span>
+            <p>Hello</p>
+            <span><p>Hello</p></span>
+            <a>1</a>
+            <span>
+                <a class="widget">Not child</a>
+                <span class="widget"><div>Not child</div></span>
+            </span>
+            <p class="menu"></p>
+            <div class="widget"><a>2</a></div>
         """
         bs = find_body_element(to_bs(text))
-        tag = SelectorList(
-            TagSelector(tag="a"),
-            TagSelector(tag="p"),
-        )
-        results = tag.find_all(bs, recursive=False)
+        selector = SelectorList(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs, recursive=False)
 
-        assert list(map(str, results)) == [
-            strip("""<a href="github">Hello 3</a>"""),
-            strip("""<p>Empty</p>"""),
-            strip("""<p>Hello 4</p>"""),
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a>1</a>"""),
+            strip("""<div class="widget"><a>2</a></div>"""),
         ]
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
@@ -297,47 +252,43 @@ class TestSelectorList:
         and recursive is False.
         """
         text = """
-            <div>
-                <a href="github">Hello 1</a>
-                <p>Hello 2</p>
-            </div>
+            <p>Hello</p>
+            <span>
+                <a class="widget">Not child</a>
+                <span class="widget"><div>Not child</div></span>
+            </span>
+            <span><p>Hello</p></span>
         """
         bs = find_body_element(to_bs(text))
-        tag = SelectorList(
-            TagSelector(tag="a"),
-            TagSelector(tag="p"),
-        )
-
-        results = tag.find_all(bs, recursive=False)
-        assert results == []
+        selector = SelectorList(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs, recursive=False)
+        assert result == []
 
     def test_find_all_returns_only_x_elements_when_limit_is_set(self):
         """
         Tests if find_all returns only x elements when limit is set.
-        In this case only 3 first in order elements are returned.
-        Union does not return found elements in the order they appear in
-        the document, but in the order they are found, so first all 'a' elements
-        are returned, then 'p' elements.
+        In this case only 2 first in order elements are returned.
         """
         text = """
-            <p>Empty</p>
+            <p>Hello</p>
+            <span><p>Hello</p></span>
+            <a>1</a>
             <span>
-                <a href="github">Hello 1</a>
+                <a class="widget">2</a>
+                <span class="widget"><div>3</div></span>
             </span>
-            <p>Hello 2</p>
-            <a>Hello 3</a>
+            <div>4</div>
+            <span id="menu">
+                <h2>Menu</h2>
+            </span>
         """
         bs = find_body_element(to_bs(text))
-        tag = SelectorList(
-            TagSelector(tag="a"),
-            TagSelector(tag="p"),
-        )
-        results = tag.find_all(bs, limit=3)
+        selector = SelectorList(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs, limit=2)
 
-        assert list(map(str, results)) == [
-            strip("""<a href="github">Hello 1</a>"""),
-            strip("""<a>Hello 3</a>"""),
-            strip("""<p>Empty</p>"""),
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a>1</a>"""),
+            strip("""<a class="widget">2</a>"""),
         ]
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
@@ -349,43 +300,24 @@ class TestSelectorList:
         the selector are returned.
         """
         text = """
-            <p>Empty</p>
+            <p>Hello</p>
+            <span><p>Hello</p></span>
+            <a>1</a>
             <span>
-                <a href="github">Hello 1</a>
+                <a class="widget">Not child</a>
+                <span class="widget"><div>Not child</div></span>
             </span>
-            <p>Hello 2</p>
-            <a>Hello 3</a>
+            <div>2</div>
+            <span id="menu">
+                <h2>Menu</h2>
+            </span>
+            <a class="widget">3</a>
         """
         bs = find_body_element(to_bs(text))
-        tag = SelectorList(
-            TagSelector(tag="a"),
-            TagSelector(tag="p"),
-        )
-        results = tag.find_all(bs, recursive=False, limit=2)
+        selector = SelectorList(MockDivSelector(), MockLinkSelector())
+        result = selector.find_all(bs, recursive=False, limit=2)
 
-        assert list(map(str, results)) == [
-            strip("""<a>Hello 3</a>"""),
-            strip("""<p>Empty</p>"""),
-        ]
-
-    def test_find_all_does_not_duplicate_if_tag_matches_multiple_selectors(
-        self,
-    ):
-        """
-        Tests if find_all does not duplicate elements if they match multiple selectors.
-        """
-        text = """
-            <a href="github">Hello 1</a>
-            <a class="widget">Hello 2</a>
-        """
-        bs = find_body_element(to_bs(text))
-        tag = SelectorList(
-            TagSelector(tag="a"),
-            AttributeSelector("class", "widget"),
-        )
-        results = tag.find_all(bs)
-
-        assert list(map(str, results)) == [
-            strip("""<a href="github">Hello 1</a>"""),
-            strip("""<a class="widget">Hello 2</a>"""),
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a>1</a>"""),
+            strip("""<div>2</div>"""),
         ]

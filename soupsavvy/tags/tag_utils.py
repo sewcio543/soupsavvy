@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from itertools import chain
 from typing import Iterable, Iterator, Optional
 
 from bs4 import Tag
@@ -20,10 +21,13 @@ class TagIterator:
     recursive : bool, optional
         If True, iterates over all descendants, otherwise only over direct children.
         Default is True, similar to bs4 implementation.
+    include_self : bool, optional
+        If True, includes the tag itself in iteration, default is False.
     """
 
     tag: Tag
     recursive: bool = True
+    include_self: bool = False
 
     def _get_iterator(self) -> Iterator:
         """
@@ -34,7 +38,8 @@ class TagIterator:
 
     def __iter__(self) -> TagIterator:
         # Resetting iterator to the beginning.
-        self._iter = self._get_iterator()
+        iter_ = self._get_iterator()
+        self._iter = chain([self.tag], iter_) if self.include_self else iter_
         return self
 
     def __next__(self) -> Tag:
@@ -286,3 +291,7 @@ class TagResultSet:
     def __len__(self) -> int:
         """Returns the number of bs4.Tag instances in the collection."""
         return len(self._tags)
+
+    def __bool__(self) -> bool:
+        """Returns True if collection is not empty, otherwise False."""
+        return len(self) > 0

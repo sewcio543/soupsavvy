@@ -1,32 +1,52 @@
 name: Deployment [PyPI]
 
 on:
-  push:
-    branches:
-      - "main"
+  workflow_dispatch: {}
 
 jobs:
-  build:
-    name: Build distribution 📦
+  bump:
+    name: Bump version 🚀
     runs-on: ubuntu-latest
+    continue-on-error: false
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true # this fetches all tags
+          token: ${{ secrets.GH_TOKEN }} # token for pushing to protected branch
 
       - name: Set up Python and Upgrade pip
         uses: ./.github/actions/setup_python
         with:
           python-version: "3.11"
 
-        # 3.0.1-dev5 -> 3.0.1 with release
+      # 3.0.1-dev5 -> 3.0.1 with release
       - name: Update development version
         uses: ./.github/actions/bump_version
         with:
           type: "release"
-          commit: false
-          tag: false
-          push: false
+          commit: true
+          tag: true
+          push: true
+
+  build:
+    name: Build distribution 📦
+    needs: bump
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }} # checkout at latest commit from previous job
+          fetch-depth: 0
+
+      - name: Set up Python and Upgrade pip
+        uses: ./.github/actions/setup_python
+        with:
+          python-version: "3.11"
 
       - name: Build package
         uses: ./.github/actions/build_package
@@ -37,7 +57,8 @@ jobs:
           name: prod-package-dist
           path: dist/
 
-  publish_prod:
+  publish_pypi:
+    name: Publish distribution 📦 to PyPI
     runs-on: ubuntu-latest
     needs: build
 
@@ -62,7 +83,7 @@ jobs:
           python-version: "3.11"
 
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: prod-package-dist
           path: dist/
@@ -70,18 +91,10 @@ jobs:
       - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
 
-      - name: Update development version with commit and tag
-        uses: ./.github/actions/bump_version
-        with:
-          type: "release"
-          commit: true
-          tag: true
-          push: true
-
   github_release:
-    needs: publish_prod
+    name: Create GitHub Release 📦
+    needs: publish_pypi
     runs-on: ubuntu-latest
-    continue-on-error: true
 
     permissions:
       contents: write
@@ -93,15 +106,16 @@ jobs:
           fetch-depth: 0 # this fetches all history and tags
           fetch-tags: true # this fetches all tags
 
-      - name: Get interested tags
+      - name: Get recent tag
         run: |
           git pull --tags
           tag=$(git describe --abbrev=0)
           echo "Release tag: $tag"
           echo "tag=$tag" >> $GITHUB_ENV
 
-      - uses: ncipollo/release-action@v1
-        with:
-          generateReleaseNotes: true
-          tag: ${{ env.tag }}
-          name: ${{ env.tag }}
+      - name: Create Release
+        run: |
+          gh release create $TAG --title $TAG --generate-notes --verify-tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ env.tag }}

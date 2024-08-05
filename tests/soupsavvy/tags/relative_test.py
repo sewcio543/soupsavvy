@@ -2,7 +2,7 @@
 Module with unit tests for relative module, that contains relative combinators components.
 They have a define recursion behavior when finding tags in the soup, so this parameter
 should behave in the same way whether it is set to True or False, hence parametrization
-and asserting the same results for both cases.
+and asserting the same result for both cases.
 """
 
 from abc import ABC, abstractmethod
@@ -11,7 +11,7 @@ from typing import Type
 import pytest
 from bs4 import Tag
 
-from soupsavvy.tags.exceptions import NotSoupSelectorException, TagNotFoundException
+from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
 from soupsavvy.tags.relative import (
     Anchor,
     RelativeChild,
@@ -29,7 +29,7 @@ from tests.soupsavvy.tags.conftest import (
 )
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 @pytest.mark.combinator
 class BaseRelativeCombinatorTest(ABC):
     """
@@ -122,7 +122,7 @@ class BaseRelativeCombinatorTest(ABC):
         the anchor (tag passed as parameter to find method) element.
         """
         result = selector.find(self.match, recursive=recursive)
-        assert str(result) == strip("""<a>1</a>""")
+        assert strip(str(result)) == strip("""<a>1</a>""")
 
     @pytest.mark.parametrize(
         argnames="recursive",
@@ -168,7 +168,7 @@ class BaseRelativeCombinatorTest(ABC):
         relative to the anchor element.
         """
         result = selector.find_all(self.match, recursive=recursive)
-        assert list(map(str, result)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a>1</a>"""),
             strip("""<a>2</a>"""),
             strip("""<a>3</a>"""),
@@ -201,14 +201,14 @@ class BaseRelativeCombinatorTest(ABC):
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
         """
-        results = selector.find_all(self.match, limit=2, recursive=recursive)
-        assert list(map(str, results)) == [
+        result = selector.find_all(self.match, limit=2, recursive=recursive)
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a>1</a>"""),
             strip("""<a>2</a>"""),
         ]
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestRelativeChild(BaseRelativeCombinatorTest):
     """Class for RelativeChild unit test suite."""
 
@@ -353,7 +353,7 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
         in case of RelativeNextSibling it should return only one element (next sibling).
         """
         result = selector.find_all(self.match, recursive=recursive)
-        assert list(map(str, result)) == [strip("""<a>1</a>""")]
+        assert list(map(lambda x: strip(str(x)), result)) == [strip("""<a>1</a>""")]
 
     @pytest.mark.parametrize(
         argnames="recursive",
@@ -368,8 +368,8 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
         In this case only 2 first in order elements are returned,
         but in case of RelativeNextSibling it should return only one element (next sibling).
         """
-        results = selector.find_all(self.match, limit=2, recursive=recursive)
-        assert list(map(str, results)) == [strip("""<a>1</a>""")]
+        result = selector.find_all(self.match, limit=2, recursive=recursive)
+        assert list(map(lambda x: strip(str(x)), result)) == [strip("""<a>1</a>""")]
 
 
 class TestAnchor:

@@ -23,7 +23,7 @@ def mock_tag() -> Tag:
     return to_bs(text)
 
 
-@pytest.mark.soup
+@pytest.mark.selector
 class TestUniqueTag:
     """Class with unit tests for UniqueTag class."""
 
@@ -118,7 +118,7 @@ class TestTagIterator:
             strip("""<a class="menu"></a>"""),
             strip("""<span class="widget"></span>"""),
         ]
-        assert [str(tag) for tag in tag_iterator] == expected
+        assert [strip(str(tag)) for tag in tag_iterator] == expected
 
     def test_iterates_correctly_over_children_if_recursive_set_to_false(
         self, mock_tag: Tag
@@ -142,7 +142,7 @@ class TestTagIterator:
             ),
             strip("""<span class="widget"></span>"""),
         ]
-        assert [str(tag) for tag in tag_iterator] == expected
+        assert [strip(str(tag)) for tag in tag_iterator] == expected
 
     def test_iterator_resets_when_called_again(self, mock_tag: Tag):
         """
@@ -165,10 +165,10 @@ class TestTagIterator:
                 </div>
             """
         )
-        assert str(next(iter_)) == expected
+        assert strip(str(next(iter_))) == expected
 
         iter_ = iter(tag_iterator)
-        assert str(next(iter_)) == expected
+        assert strip(str(next(iter_))) == expected
 
     def test_iterates_over_no_elements_iterable(self, mock_tag: Tag):
         """
@@ -200,6 +200,95 @@ class TestTagIterator:
         tag_iterator = TagIterator(tag)  # type: ignore
         assert list(tag_iterator) == []
 
+    def test_includes_provided_tag_and_descendants_if_include_self_true(
+        self, mock_tag: Tag
+    ):
+        """
+        Tests that TagIterator iterates over descendants and includes the tag itself
+        at the beginning if include_self is set to True.
+        """
+        tag = find_body_element(mock_tag)
+        tag_iterator = TagIterator(tag, include_self=True)
+        expected = [
+            strip(
+                """
+                <body>
+                    <div>
+                        <a class="link"></a>
+                        <div class="link">
+                            <a class="menu"></a>
+                            <a class="menu"></a>
+                        </div>
+                    </div>
+                    <span class="widget"></span>
+                </body>
+                """
+            ),
+            strip(
+                """
+                <div>
+                    <a class="link"></a>
+                    <div class="link">
+                        <a class="menu"></a>
+                        <a class="menu"></a>
+                    </div>
+                </div>
+                """
+            ),
+            strip("""<a class="link"></a>"""),
+            strip(
+                """
+                <div class="link">
+                    <a class="menu"></a>
+                    <a class="menu"></a>
+                </div>
+                """
+            ),
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu"></a>"""),
+            strip("""<span class="widget"></span>"""),
+        ]
+        assert [strip(str(tag)) for tag in tag_iterator] == expected
+
+    def test_includes_provided_tag_and_children_if_include_self_true(
+        self, mock_tag: Tag
+    ):
+        """
+        Tests that TagIterator iterates over children and includes the tag itself
+        at the beginning if include_self is set to True and recursive is False.
+        """
+        tag = find_body_element(mock_tag)
+        tag_iterator = TagIterator(tag, recursive=False, include_self=True)
+        expected = [
+            strip(
+                """
+                <body>
+                    <div>
+                        <a class="link"></a>
+                        <div class="link">
+                            <a class="menu"></a>
+                            <a class="menu"></a>
+                        </div>
+                    </div>
+                    <span class="widget"></span>
+                </body>
+                """
+            ),
+            strip(
+                """
+                <div>
+                    <a class="link"></a>
+                    <div class="link">
+                        <a class="menu"></a>
+                        <a class="menu"></a>
+                    </div>
+                </div>
+                """
+            ),
+            strip("""<span class="widget"></span>"""),
+        ]
+        assert [strip(str(tag)) for tag in tag_iterator] == expected
+
 
 class TestTagResultSet:
     """Class with unit tests for TagResultSet class."""
@@ -220,8 +309,8 @@ class TestTagResultSet:
         When initialized with no arguments, result set is empty
         and fetch method returns an empty list.
         """
-        results = TagResultSet().fetch()
-        assert results == []
+        result = TagResultSet().fetch()
+        assert result == []
 
     def test_fetch_returns_all_tags_if_they_are_unique(self, mock_tags: list[Tag]):
         """
@@ -229,9 +318,9 @@ class TestTagResultSet:
         When all tags have unique id, there is no repetition and all tags are returned.
         """
         results_set = TagResultSet(mock_tags)
-        results = results_set.fetch()
+        result = results_set.fetch()
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu1"></a>"""),
@@ -241,9 +330,9 @@ class TestTagResultSet:
     def test_fetch_returns_n_tags_when_limit_is_set(self, mock_tags: list[Tag]):
         """Tests that fetch method returns n first unique tags when limit is set."""
         results_set = TagResultSet(mock_tags)
-        results = results_set.fetch(3)
+        result = results_set.fetch(3)
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu1"></a>"""),
@@ -256,9 +345,9 @@ class TestTagResultSet:
         and return only unique tags in order of appearance.
         """
         results_set = TagResultSet(mock_tags + mock_tags)
-        results = results_set.fetch()
+        result = results_set.fetch()
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu1"></a>"""),
@@ -281,9 +370,9 @@ class TestTagResultSet:
         right = TagResultSet(list(reversed(mock_tags[1:3])))
 
         new = base | right
-        results = new.fetch()
+        result = new.fetch()
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu1"></a>"""),
@@ -305,12 +394,12 @@ class TestTagResultSet:
         ]
 
         new = base | right
-        results = new.fetch()
-        assert list(map(str, results)) == expected
+        result = new.fetch()
+        assert list(map(lambda x: strip(str(x)), result)) == expected
 
         new = right | base
-        results = new.fetch()
-        assert list(map(str, results)) == expected
+        result = new.fetch()
+        assert list(map(lambda x: strip(str(x)), result)) == expected
 
     def test_updates_when_collections_are_the_same_return_base_collection(
         self, mock_tags: list[Tag]
@@ -326,7 +415,7 @@ class TestTagResultSet:
         right = TagResultSet(list(reversed(mock_tags)))
 
         new = base | right
-        results = new.fetch()
+        result = new.fetch()
 
         expected = [
             strip("""<a class="menu"></a>"""),
@@ -334,7 +423,7 @@ class TestTagResultSet:
             strip("""<a class="menu1"></a>"""),
             strip("""<a class="menu2"></a>"""),
         ]
-        assert list(map(str, results)) == expected
+        assert list(map(lambda x: strip(str(x)), result)) == expected
 
     def test_and_return_new_result_set_with_intersection_of_collections(
         self, mock_tags: list[Tag]
@@ -351,9 +440,9 @@ class TestTagResultSet:
         right = TagResultSet(list(reversed(mock_tags[1:])))
 
         new = base & right
-        results = new.fetch()
+        result = new.fetch()
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu1"></a>"""),
         ]
@@ -370,8 +459,8 @@ class TestTagResultSet:
         right = TagResultSet(mock_tags)
 
         new = base - right
-        results = new.fetch()
-        assert results == []
+        result = new.fetch()
+        assert result == []
 
     def test_and_return_new_result_set_with_difference_of_collections(
         self, mock_tags: list[Tag]
@@ -386,9 +475,9 @@ class TestTagResultSet:
         right = TagResultSet(list(reversed(mock_tags[:2])))
 
         new = base - right
-        results = new.fetch()
+        result = new.fetch()
 
-        assert list(map(str, results)) == [
+        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a class="menu1"></a>"""),
             strip("""<a class="menu2"></a>"""),
         ]
@@ -404,11 +493,17 @@ class TestTagResultSet:
         right = TagResultSet(mock_tags[2:])
 
         new = base & right
-        results = new.fetch()
-        assert results == []
+        result = new.fetch()
+        assert result == []
 
     def test_len_returns_number_of_tags_in_collection(self, mock_tags: list[Tag]):
         """Tests that len method returns number of tags in collection."""
         assert len(TagResultSet(mock_tags)) == 4
         assert len(TagResultSet(mock_tags[:2])) == 2
         assert len(TagResultSet()) == 0
+
+    def test_bool_returns_true_if_collection_not_empty(self, mock_tags: list[Tag]):
+        """Tests that bool method returns True if collection is not empty."""
+        assert bool(TagResultSet(mock_tags)) is True
+        assert bool(TagResultSet(mock_tags[:2])) is True
+        assert bool(TagResultSet()) is False
