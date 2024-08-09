@@ -19,6 +19,7 @@ NotSelector - negation of a selector (~)
 from __future__ import annotations
 
 import itertools
+from collections import Counter
 from dataclasses import dataclass, field
 from functools import reduce
 from typing import Any, Iterable, Optional, Pattern
@@ -33,7 +34,7 @@ from soupsavvy.selectors.base import (
     SelectableCSS,
     SoupSelector,
 )
-from soupsavvy.selectors.tag_utils import TagIterator, TagResultSet
+from soupsavvy.selectors.tag_utils import TagIterator, TagResultSet, UniqueTag
 
 
 @dataclass
@@ -569,11 +570,14 @@ class XORSelector(CompositeSoupSelector):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Tag]:
-        result = reduce(
-            TagResultSet.symmetric_difference,
-            (
-                TagResultSet(step.find_all(tag, recursive=recursive))
-                for step in self.selectors
-            ),
+        unique = (
+            UniqueTag(element)
+            for step in self.selectors
+            for element in step.find_all(tag, recursive=recursive)
         )
-        return result.fetch(limit)
+        results = TagResultSet(
+            [element.tag for element, count in Counter(unique).items() if count == 1]
+        )
+        # keep order of tags and limit
+        results = TagResultSet(list(TagIterator(tag, recursive=recursive))) & results
+        return results.fetch(limit)
