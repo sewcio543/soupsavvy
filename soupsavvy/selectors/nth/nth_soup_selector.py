@@ -78,6 +78,13 @@ class _BaseNthOfSelector(SoupSelector):
             self.selector == other.selector and self.nth_selector == other.nth_selector
         )
 
+    def __repr__(self):
+        cls = self.__class__.__name__
+        return f"{cls}(selector={self.selector}, nth={self.nth_selector})"
+
+    def __str__(self):
+        return repr(self)
+
 
 class NthOfSelector(_BaseNthOfSelector):
     """
@@ -209,3 +216,10 @@ class OnlyOfSelector(SoupSelector):
             return False
 
         return self.selector == other.selector
+
+    def __repr__(self):
+        cls = self.__class__.__name__
+        return f"{cls}(selector={self.selector})"
+
+    def __str__(self):
+        return repr(self)
