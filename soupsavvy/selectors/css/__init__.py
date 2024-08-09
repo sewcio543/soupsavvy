@@ -1,4 +1,3 @@
-from .api import and_, has, is_, not_, where
 from .selectors import (
     CSS,
     Empty,
@@ -27,9 +26,4 @@ __all__ = [
     "NthOfType",
     "OnlyChild",
     "OnlyOfType",
-    "and_",
-    "has",
-    "is_",
-    "not_",
-    "where",
 ]

@@ -14,6 +14,7 @@ from .components import (
     NotSelector,
     PatternSelector,
     TagSelector,
+    XORSelector,
 )
 from .relative import Anchor
 
@@ -34,4 +35,5 @@ __all__ = [
     "Anchor",
     "IdSelector",
     "ClassSelector",
+    "XORSelector",
 ]
