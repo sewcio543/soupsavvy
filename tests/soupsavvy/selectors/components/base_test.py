@@ -21,6 +21,7 @@ from soupsavvy.selectors.combinators import (
 )
 from soupsavvy.selectors.components import AndSelector, NotSelector
 from tests.soupsavvy.selectors.conftest import (
+    MockClassMenuSelector,
     MockDivSelector,
     MockLinkSelector,
     MockSelector,
@@ -258,8 +259,8 @@ class TestCompositeSoupSelector:
     with different operators.
     """
 
-    class MockCompositeSoupSelector(CompositeSoupSelector):
-        """Mock class for testing CompositeSoupSelector interface."""
+    class BaseCompositeSoupSelectorMock(CompositeSoupSelector):
+        """Base mock class for testing CompositeSoupSelector interface."""
 
         def __init__(self, *selectors):
             super().__init__(list(selectors))
@@ -267,7 +268,23 @@ class TestCompositeSoupSelector:
         def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
             return []
 
-    class MockCompositeSoupSelectorNotEqual(MockCompositeSoupSelector):
+    class MockUnordered(BaseCompositeSoupSelectorMock):
+        """
+        Mock class for testing CompositeSoupSelector interface for cases
+        when order of selectors is not relevant in context of results.
+        """
+
+        _ORDERED = False
+
+    class MockOrdered(BaseCompositeSoupSelectorMock):
+        """
+        Mock class for testing CompositeSoupSelector interface for cases
+        when order of selectors is relevant in context of results.
+        """
+
+        _ORDERED = True
+
+    class MockNotEqual(MockOrdered):
         """
         Mock class for testing equality of CompositeSoupSelector,
         if right operand is instance of CompositeSoupSelector and have the same
@@ -277,20 +294,64 @@ class TestCompositeSoupSelector:
     @pytest.mark.parametrize(
         argnames="selectors",
         argvalues=[
-            # with two equal steps
+            # ordered with two equal steps
             (
-                MockCompositeSoupSelector(MockLinkSelector(), MockDivSelector()),
-                MockCompositeSoupSelector(MockLinkSelector(), MockDivSelector()),
+                MockOrdered(MockLinkSelector(), MockDivSelector()),
+                MockOrdered(MockLinkSelector(), MockDivSelector()),
             ),
-            # without any steps
+            # ordered without any steps
             (
-                MockCompositeSoupSelector(),
-                MockCompositeSoupSelector(),
+                MockOrdered(),
+                MockOrdered(),
             ),
-            # with one equal step
+            # ordered with one equal step
             (
-                MockCompositeSoupSelector(MockDivSelector()),
-                MockCompositeSoupSelector(MockDivSelector()),
+                MockOrdered(MockDivSelector()),
+                MockOrdered(MockDivSelector()),
+            ),
+            # unordered with one equal step
+            (
+                MockUnordered(MockDivSelector()),
+                MockUnordered(MockDivSelector()),
+            ),
+            # unordered with two equal steps in different order
+            (
+                MockUnordered(MockDivSelector(), MockLinkSelector()),
+                MockUnordered(MockLinkSelector(), MockDivSelector()),
+            ),
+            # unordered with two equal steps in the same order
+            (
+                MockUnordered(MockDivSelector(), MockLinkSelector()),
+                MockUnordered(MockDivSelector(), MockLinkSelector()),
+            ),
+            # unordered with three equal steps in different order
+            (
+                MockUnordered(
+                    MockDivSelector(), MockClassMenuSelector(), MockLinkSelector()
+                ),
+                MockUnordered(
+                    MockLinkSelector(), MockDivSelector(), MockClassMenuSelector()
+                ),
+            ),
+            # unordered with more selectors that make intersection - left more
+            (
+                MockUnordered(
+                    MockDivSelector(),
+                    MockClassMenuSelector(),
+                    MockDivSelector(),
+                    MockClassMenuSelector(),
+                ),
+                MockUnordered(MockDivSelector(), MockClassMenuSelector()),
+            ),
+            # unordered with more selectors that make intersection - right more
+            (
+                MockUnordered(MockDivSelector(), MockClassMenuSelector()),
+                MockUnordered(
+                    MockDivSelector(),
+                    MockClassMenuSelector(),
+                    MockDivSelector(),
+                    MockClassMenuSelector(),
+                ),
             ),
         ],
     )
@@ -303,30 +364,54 @@ class TestCompositeSoupSelector:
     @pytest.mark.parametrize(
         argnames="selectors",
         argvalues=[
-            # with equal steps but in different order
+            # ordered with equal steps but in different order
             (
-                MockCompositeSoupSelector(MockLinkSelector(), MockDivSelector()),
-                MockCompositeSoupSelector(MockDivSelector(), MockLinkSelector()),
+                MockOrdered(MockLinkSelector(), MockDivSelector()),
+                MockOrdered(MockDivSelector(), MockLinkSelector()),
             ),
-            # without one equal step and one step different
+            # ordered with one equal step and one step different
             (
-                MockCompositeSoupSelector(MockDivSelector(), MockLinkSelector()),
-                MockCompositeSoupSelector(MockDivSelector(), MockDivSelector()),
+                MockOrdered(MockDivSelector(), MockLinkSelector()),
+                MockOrdered(MockDivSelector(), MockDivSelector()),
             ),
-            # with one different step
+            # ordered with different number of steps
             (
-                MockCompositeSoupSelector(MockDivSelector()),
-                MockCompositeSoupSelector(MockLinkSelector()),
+                MockOrdered(
+                    MockClassMenuSelector(), MockLinkSelector(), MockDivSelector()
+                ),
+                MockOrdered(MockClassMenuSelector(), MockLinkSelector()),
             ),
-            # not instance of CompositeSoupSelector
+            # ordered with one different step
             (
-                MockCompositeSoupSelector(MockDivSelector()),
+                MockOrdered(MockDivSelector()),
+                MockOrdered(MockLinkSelector()),
+            ),
+            # ordered not instance of CompositeSoupSelector
+            (
+                MockOrdered(MockDivSelector()),
                 MockLinkSelector(),
             ),
-            # not the same type as left operand
+            # ordered not the same type as left operand
             (
-                MockCompositeSoupSelector(MockDivSelector()),
-                MockCompositeSoupSelectorNotEqual(MockDivSelector()),
+                MockOrdered(MockDivSelector()),
+                MockNotEqual(MockDivSelector()),
+            ),
+            # unordered with one different step
+            (
+                MockUnordered(MockDivSelector()),
+                MockNotEqual(MockLinkSelector()),
+            ),
+            # ordered with different number of steps
+            (
+                MockUnordered(
+                    MockClassMenuSelector(), MockLinkSelector(), MockDivSelector()
+                ),
+                MockUnordered(MockClassMenuSelector(), MockLinkSelector()),
+            ),
+            # unordered with one equal step and one different step
+            (
+                MockUnordered(MockDivSelector(), MockLinkSelector()),
+                MockUnordered(MockDivSelector(), MockDivSelector()),
             ),
         ],
     )
