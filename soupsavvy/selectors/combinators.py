@@ -40,6 +40,9 @@ from soupsavvy.selectors.tag_utils import TagIterator, TagResultSet
 
 
 class BaseCombinator(CompositeSoupSelector):
+    # order of selectors is relevant in context of results
+    _ORDERED = True
+
     def __init__(
         self,
         selector1: SoupSelector,
