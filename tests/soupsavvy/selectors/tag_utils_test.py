@@ -507,3 +507,83 @@ class TestTagResultSet:
         assert bool(TagResultSet(mock_tags)) is True
         assert bool(TagResultSet(mock_tags[:2])) is True
         assert bool(TagResultSet()) is False
+
+    def test_symmetric_difference_with_result_from_both_sets(
+        self, mock_tags: list[Tag]
+    ):
+        """
+        Tests that symmetric_difference returns new result set
+        with symmetric difference of collections, in case when both collections
+        have tags that are not in the other collection.
+        Tags form base collection precede tags from right collection.
+        """
+        base = TagResultSet(mock_tags[:3])
+        right = TagResultSet(mock_tags[1:])
+
+        new = base.symmetric_difference(right)
+        result = new.fetch()
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu2"></a>"""),
+        ]
+
+    def test_symmetric_difference_returns_empty_list(self, mock_tags: list[Tag]):
+        """
+        Tests that symmetric_difference returns empty result set when intersection
+        of two collection is equal to their union.
+        """
+        base = TagResultSet(mock_tags[:2])
+        right = TagResultSet(mock_tags[:2])
+
+        new = base.symmetric_difference(right)
+        result = new.fetch()
+        assert result == []
+
+    def test_symmetric_difference_with_results_from_right(self, mock_tags: list[Tag]):
+        """
+        Tests that symmetric_difference returns new result set with extra tags
+        appear only in the right collection.
+        """
+        base = TagResultSet(mock_tags[:2])
+        right = TagResultSet(mock_tags[:3])
+
+        new = base.symmetric_difference(right)
+        result = new.fetch()
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="menu1"></a>"""),
+        ]
+
+    def test_symmetric_difference_with_results_from_base(self, mock_tags: list[Tag]):
+        """
+        Tests that symmetric_difference returns new result set with extra tags
+        appear only in the base collection.
+        """
+        base = TagResultSet(mock_tags[:3])
+        right = TagResultSet(mock_tags[1:3])
+
+        new = base.symmetric_difference(right)
+        result = new.fetch()
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="menu"></a>"""),
+        ]
+
+    def test_symmetric_difference_with_no_intersection(self, mock_tags: list[Tag]):
+        """
+        Tests that symmetric_difference returns new result set with all tags
+        when there is no intersection between collections
+        """
+        base = TagResultSet(mock_tags[:2])
+        right = TagResultSet(mock_tags[2:])
+
+        new = base.symmetric_difference(right)
+        result = new.fetch()
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu"></a>"""),
+            strip("""<a class="menu1"></a>"""),
+            strip("""<a class="menu2"></a>"""),
+        ]
