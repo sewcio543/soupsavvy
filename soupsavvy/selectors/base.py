@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from collections import Counter
 from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, overload
 
 from bs4 import NavigableString, Tag
@@ -643,6 +644,9 @@ class CompositeSoupSelector(SoupSelector):
         List of SoupSelector objects passed to CompositeSoupSelector.
     """
 
+    # if the order of selectors is relevant - by default False
+    _ORDERED = False
+
     def __init__(self, selectors: Iterable[SoupSelector]) -> None:
         """
         Initializes CompositeSoupSelector object with provided tags.
@@ -671,7 +675,18 @@ class CompositeSoupSelector(SoupSelector):
             # which is not desired behavior, as it returns False
             return False
 
-        return self.selectors == other.selectors
+        if self.__class__._ORDERED:
+            return self.selectors == other.selectors
+
+        # if order is irrelevant, check if all selectors are covered by other
+        # and vice versa - selector lists can be of different size as well
+        return all(
+            any(self_selector == other_selector for other_selector in other.selectors)
+            for self_selector in self.selectors
+        ) and all(
+            any(other_selector == self_selector for self_selector in self.selectors)
+            for other_selector in other.selectors
+        )
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__}({', '.join(map(str, self.selectors))})"

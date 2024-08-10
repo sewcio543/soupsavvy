@@ -19,6 +19,7 @@ NotSelector - negation of a selector (~)
 from __future__ import annotations
 
 import itertools
+from collections import Counter
 from dataclasses import dataclass, field
 from functools import reduce
 from typing import Any, Iterable, Optional, Pattern
@@ -33,7 +34,7 @@ from soupsavvy.selectors.base import (
     SelectableCSS,
     SoupSelector,
 )
-from soupsavvy.selectors.tag_utils import TagIterator, TagResultSet
+from soupsavvy.selectors.tag_utils import TagIterator, TagResultSet, UniqueTag
 
 
 @dataclass
@@ -257,26 +258,26 @@ class NotSelector(CompositeSoupSelector):
 
     def __init__(
         self,
-        tag: SoupSelector,
+        selector: SoupSelector,
         /,
-        *tags: SoupSelector,
+        *selectors: SoupSelector,
     ) -> None:
         """
-        Initializes NotSelectors object with provided positional arguments as tags.
-        At least one SoupSelector object is required to create NotSelector.
+        Initializes NotSelectors object with provided positional arguments as selectors.
 
         Parameters
         ----------
-        tags: SoupSelector
+        selectors: SoupSelector
             SoupSelector objects to negate match accepted as positional arguments.
+            At least one SoupSelector object is required to create NotSelector.
 
         Raises
         ------
         NotSoupSelectorException
             If any of provided parameters is not an instance of SoupSelector.
         """
-        self._multiple = bool(tags)
-        super().__init__([tag, *tags])
+        self._multiple = bool(selectors)
+        super().__init__([selector, *selectors])
 
     def find_all(
         self,
@@ -356,26 +357,27 @@ class AndSelector(CompositeSoupSelector):
 
     def __init__(
         self,
-        tag1: SoupSelector,
-        tag2: SoupSelector,
+        selector1: SoupSelector,
+        selector2: SoupSelector,
         /,
-        *tags: SoupSelector,
+        *selectors: SoupSelector,
     ) -> None:
         """
-        Initializes AndTagSelector object with provided positional arguments as tags.
-        At least two SoupSelector objects are required to create AndSelector.
+        Initializes AndTagSelector object with provided
+        positional arguments as selectors.
 
         Parameters
         ----------
-        tags: SoupSelector
+        selectors: SoupSelector
             SoupSelector objects to match accepted as positional arguments.
+            At least two SoupSelector objects are required to create AndSelector.
 
         Raises
         ------
         NotSoupSelectorException
             If any of provided parameters is not an instance of SoupSelector.
         """
-        super().__init__([tag1, tag2, *tags])
+        super().__init__([selector1, selector2, *selectors])
 
     def find_all(
         self,
@@ -478,12 +480,12 @@ class HasSelector(CompositeSoupSelector):
         *selectors: SoupSelector,
     ) -> None:
         """
-        Initializes AndTagSelector object with provided positional arguments as tags.
-        At least one selector is required to create HasSelector.
+        Initializes AndTagSelector object with provided
+        positional arguments as selectors.
 
         Parameters
         ----------
-        tags: SoupSelector
+        selectors: SoupSelector
             SoupSelector objects to match accepted as positional arguments.
             At least one selector is required to create HasSelector.
 
@@ -513,3 +515,69 @@ class HasSelector(CompositeSoupSelector):
                     break
 
         return matching
+
+
+class XORSelector(CompositeSoupSelector):
+    """
+    Class representing an exclusive OR of multiple soup selectors.
+    Element is selected if it matches exactly one of the provided selectors.
+
+    Example
+    -------
+    >>> XORSelector(TagSelector(tag="div"), AttributeSelector(class="widget"))
+
+    Matches all elements that have either "div" tag name or 'class' attribute "widget".
+    Elements with "div" tag name and 'class' attribute "widget" do not match selector.
+
+    This is a shortcut for defining XOR operation between two selectors like this:
+
+    Example
+    -------
+    >>> selector1 = TagSelector("div")
+    ... selector2 = AttributeSelector("class", value="widget")
+    ... xor = (selector1 & (~selector2)) | ((~selector1) & selector2)
+
+    Object can be initialized with more then two selectors as well, in which case
+    exactly one selector must match for element to be included in the result.
+    """
+
+    def __init__(
+        self,
+        selector1: SoupSelector,
+        selector2: SoupSelector,
+        /,
+        *selectors: SoupSelector,
+    ) -> None:
+        """
+        Initializes XORSelector object with provided positional arguments as selectors.
+
+        Parameters
+        ----------
+        selectors: SoupSelector
+            SoupSelector objects to match accepted as positional arguments.
+            At least two selector are required to create XORSelector.
+
+        Raises
+        ------
+        NotSoupSelectorException
+            If any of provided parameters is not an instance of SoupSelector.
+        """
+        super().__init__([selector1, selector2, *selectors])
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        unique = (
+            UniqueTag(element)
+            for step in self.selectors
+            for element in step.find_all(tag, recursive=recursive)
+        )
+        results = TagResultSet(
+            [element.tag for element, count in Counter(unique).items() if count == 1]
+        )
+        # keep order of tags and limit
+        results = TagResultSet(list(TagIterator(tag, recursive=recursive))) & results
+        return results.fetch(limit)

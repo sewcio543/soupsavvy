@@ -1,14 +1,17 @@
 """
 Module for css selectors API and not only.
-Imitate css some pseudo-classes behavior done on soupsavvy selectors.
+Imitate css some pseudo-classes behavior done on soupsavvy selectors,
+and provides other shortcut functions for creating composite selectors.
 
 Contains:
 
 * is_: function to create SelectorList from list of selectors
 * where: alias for is_, no difference in behavior in scraping context
+* or_: alias for is_, no difference in behavior in scraping context
 * not_: function to create NotSelector from list of selectors
 * and_: function to create AndSelector from list of selectors
 * has: function to create HasSelector from list of selectors
+* xor: function to create XORSelector from list of selectors
 
 There is not similar functionality in css for AndSelector expect for selector concatenation,
 and_ is more to have and alternative way to create AndSelector for soupsavvy selectors.
@@ -19,7 +22,12 @@ used for convenience and readability in some cases.
 
 from soupsavvy.selectors.base import SoupSelector
 from soupsavvy.selectors.combinators import SelectorList
-from soupsavvy.selectors.components import AndSelector, HasSelector, NotSelector
+from soupsavvy.selectors.components import (
+    AndSelector,
+    HasSelector,
+    NotSelector,
+    XORSelector,
+)
 
 
 def is_(
@@ -37,6 +45,11 @@ def is_(
     selectors: SoupSelector
         SoupSelector objects to match accepted as positional arguments.
         At least two objects are required per SelectorList class requirements.
+
+    Returns
+    -------
+    SelectorList
+        SelectorList object that represents union of provided selectors.
 
     Example
     -------
@@ -64,6 +77,7 @@ def is_(
 
 
 where = is_
+or_ = is_
 
 
 def not_(selector: SoupSelector, /, *selectors: SoupSelector) -> NotSelector:
@@ -75,6 +89,11 @@ def not_(selector: SoupSelector, /, *selectors: SoupSelector) -> NotSelector:
     ----------
     selectors: SoupSelector
         SoupSelector objects to negate match accepted as positional arguments.
+
+    Returns
+    -------
+    NotSelector
+        NotSelector object that represents negation of provided selectors.
 
     Example
     -------
@@ -111,6 +130,11 @@ def and_(
         SoupSelector objects to match accepted as positional arguments.
         At least two objects are required per AndSelector class requirements.
 
+    Returns
+    -------
+    AndSelector
+        AndSelector object that represents intersection of provided selectors.
+
     Example
     -------
     >>> and_(TagSelector(tag="div"), AttributeSelector(name="class", value="widget"))
@@ -140,6 +164,11 @@ def has(
         SoupSelector objects to match accepted as positional arguments.
         At least two objects are required per AndSelector class requirements.
 
+    Returns
+    -------
+    HasSelector
+        HasSelector object that represents :has() pseudo-class behavior.
+
     Example
     -------
     >>> has_(TagSelector(tag="div"), TagSelector(tag="div"))
@@ -163,3 +192,31 @@ def has(
     https://developer.mozilla.org/en-US/docs/Web/CSS/:has
     """
     return HasSelector(selector, *selectors)
+
+
+def xor(
+    selector1: SoupSelector,
+    selector2: SoupSelector,
+    /,
+    *selectors: SoupSelector,
+) -> XORSelector:
+    """
+    Returns an symmetric difference of multiple soup selectors.
+    Element must match exactly one of them to be selected.
+
+    Parameters
+    ----------
+    selectors: SoupSelector
+        SoupSelector objects to match accepted as positional arguments.
+        At least two objects are required per XORSelector class requirements.
+
+    Returns
+    -------
+    XORSelector
+        XORSelector object that represents symmetric difference of provided selectors.
+
+    Example
+    -------
+    >>> xor(TagSelector(tag="div"), AttributeSelector(name="class", value="widget"))
+    """
+    return XORSelector(selector1, selector2, *selectors)

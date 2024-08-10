@@ -288,6 +288,35 @@ class TagResultSet:
         ordered = self._sort(difference)
         return TagResultSet(ordered)
 
+    def symmetric_difference(self, other: TagResultSet) -> TagResultSet:
+        """
+        Performs a symmetric difference operation on two TagResultSet instances
+        with current instance as a base,
+        preserving the order of tags from the base instance.
+
+        Parameters
+        ----------
+        other : TagResultSet
+            TagResultSet instance to perform symmetric difference with.
+
+        Example
+        -------
+        >>> base = TagResultSet([x, y, b])
+        >>> other = TagResultSet([c, y, x])
+        >>> base.symmetric_difference(other)
+        TagResultSet([b, c])
+
+        Returns
+        -------
+        TagResultSet
+            New TagResultSet instance with results of symmetric difference operation.
+        """
+        base = self._to_set(base=True)
+        right = other._to_set(base=False)
+        symmetric_diff = base.symmetric_difference(right)
+        ordered = self._sort(symmetric_diff)
+        return TagResultSet(ordered)
+
     def __len__(self) -> int:
         """Returns the number of bs4.Tag instances in the collection."""
         return len(self._tags)
