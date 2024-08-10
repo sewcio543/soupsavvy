@@ -134,12 +134,10 @@ class PatternSelector(SoupSelector):
     >>> <div>Hello World<span></span></div> ❌
     """
 
-    pattern: str | Pattern[str]
+    pattern: ns.PatternType
 
     def __post_init__(self) -> None:
         """Sets up compiled regex pattern used for SoupStrainer in find methods."""
-        from typing import Union
-
         self._pattern = (
             str(self.pattern) if not isinstance(self.pattern, Pattern) else self.pattern
         )
