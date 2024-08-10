@@ -3,7 +3,7 @@
 import pytest
 
 from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
-from soupsavvy.selectors.components import XORSelector
+from soupsavvy.selectors.logical import XORSelector
 from tests.soupsavvy.selectors.conftest import (
     MockClassMenuSelector,
     MockClassWidgetSelector,

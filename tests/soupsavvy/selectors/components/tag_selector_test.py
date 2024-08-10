@@ -7,7 +7,7 @@ import pytest
 import soupsavvy.selectors.namespace as ns
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.attributes import AttributeSelector, ClassSelector, IdSelector
-from soupsavvy.selectors.components import AnyTagSelector, TagSelector
+from soupsavvy.selectors.general import AnyTagSelector, TagSelector
 from tests.soupsavvy.selectors.conftest import (
     MockLinkSelector,
     find_body_element,

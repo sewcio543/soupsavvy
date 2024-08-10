@@ -19,7 +19,7 @@ from soupsavvy.selectors.combinators import (
     SelectorList,
     SubsequentSiblingCombinator,
 )
-from soupsavvy.selectors.components import AndSelector, NotSelector
+from soupsavvy.selectors.logical import AndSelector, NotSelector
 from tests.soupsavvy.selectors.conftest import (
     MockClassMenuSelector,
     MockDivSelector,

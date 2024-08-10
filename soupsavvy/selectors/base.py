@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from collections import Counter
 from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, overload
 
 from bs4 import NavigableString, Tag
@@ -20,7 +19,7 @@ if TYPE_CHECKING:
         SelectorList,
         SubsequentSiblingCombinator,
     )
-    from soupsavvy.selectors.components import AndSelector, NotSelector
+    from soupsavvy.selectors.logical import AndSelector, NotSelector
 
 
 class SoupSelector(ABC):
@@ -295,7 +294,7 @@ class SoupSelector(ABC):
         NotSoupSelectorException
             If provided object is not of SoupSelector type.
         """
-        from soupsavvy.selectors.components import NotSelector
+        from soupsavvy.selectors.logical import NotSelector
 
         return NotSelector(self)
 
@@ -322,7 +321,7 @@ class SoupSelector(ABC):
         NotSoupSelectorException
             If provided object is not of SoupSelector type.
         """
-        from soupsavvy.selectors.components import AndSelector
+        from soupsavvy.selectors.logical import AndSelector
 
         message = (
             f"Bitwise AND not supported for types {type(self)} and {type(x)}, "

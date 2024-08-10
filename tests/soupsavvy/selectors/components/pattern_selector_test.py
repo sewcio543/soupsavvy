@@ -5,7 +5,7 @@ import re
 import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
-from soupsavvy.selectors.components import PatternSelector
+from soupsavvy.selectors.general import PatternSelector
 from tests.soupsavvy.selectors.conftest import (
     MockLinkSelector,
     find_body_element,

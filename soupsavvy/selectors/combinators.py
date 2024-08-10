@@ -431,7 +431,3 @@ class SelectorList(CompositeSoupSelector):
         # keep order of tags and limit
         results = TagResultSet(list(TagIterator(tag, recursive=recursive))) & results
         return results.fetch(limit)
-
-
-# alias for SelectorList
-OrSelector = SelectorList
