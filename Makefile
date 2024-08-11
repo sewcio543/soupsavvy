@@ -14,6 +14,7 @@ lint:
 	python -m flake8 --config tox.ini
 format:
 	black . --line-length 88 --diff --check
+	black demos/
 test:
 	python -m pytest
 coverage:
