@@ -10,13 +10,11 @@ build:
   tools:
     python: "3.11"
   commands:
+    - pip install -r docs/requirements.txt
+    - pip install .
     - bash docs/sphinx_run.sh
+    - mkdir -p $READTHEDOCS_OUTPUT/html/
+    - mv docs/build/html/* $READTHEDOCS_OUTPUT/html
 
 sphinx:
   configuration: docs/source/conf.py
-
-python:
-  install:
-    - requirements: docs/requirements.txt
-    - method: pip
-      path: .
