@@ -1,12 +1,17 @@
-"""Testing module for AnyTagSelector class."""
+"""Testing module for UniversalSelector class."""
 
 import pytest
 from bs4 import Tag
 
 from soupsavvy.exceptions import TagNotFoundException
-from soupsavvy.selectors.general import AnyTagSelector, TagSelector
+from soupsavvy.selectors.general import UniversalSelector
 from soupsavvy.selectors.namespace import CSS_SELECTOR_WILDCARD
-from tests.soupsavvy.selectors.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.selectors.conftest import (
+    MockDivSelector,
+    find_body_element,
+    strip,
+    to_bs,
+)
 
 
 def find_tag(bs: Tag, name: str = "body") -> Tag:
@@ -24,18 +29,20 @@ def find_tag(bs: Tag, name: str = "body") -> Tag:
 
 
 @pytest.mark.selector
-class TestAnyTagSelector:
-    """Class for AnyTagSelector unit test suite."""
+class TestUniversalSelector:
+    """Class for UniversalSelector unit test suite."""
 
     @pytest.fixture(scope="class")
-    def selector(self) -> AnyTagSelector:
+    def selector(self) -> UniversalSelector:
         """
-        Fixture for AnyTagSelector instance. Since there are no parameters
-        for AnyTagSelector, it does not make sense to create it in each test.
+        Fixture for UniversalSelector instance. Since there are no parameters
+        for UniversalSelector, it does not make sense to create it in each test.
         """
-        return AnyTagSelector()
+        return UniversalSelector()
 
-    def test_find_returns_first_tag_matching_selector(self, selector: AnyTagSelector):
+    def test_find_returns_first_tag_matching_selector(
+        self, selector: UniversalSelector
+    ):
         """Tests if find method returns the first tag that matches selector."""
         text = """
             <a class="widget">1</a>
@@ -47,7 +54,7 @@ class TestAnyTagSelector:
         assert strip(str(result)) == strip("""<a class="widget">1</a>""")
 
     def test_find_raises_exception_when_no_tags_match_in_strict_mode(
-        self, selector: AnyTagSelector
+        self, selector: UniversalSelector
     ):
         """
         Tests if find method raises TagNotFoundException when no tag is found
@@ -63,7 +70,7 @@ class TestAnyTagSelector:
             selector.find(bs, strict=True)
 
     def test_find_returns_none_if_no_tags_match_in_not_strict_mode(
-        self, selector: AnyTagSelector
+        self, selector: UniversalSelector
     ):
         """
         Tests if find method returns None when no tag is found that
@@ -77,7 +84,7 @@ class TestAnyTagSelector:
         result = selector.find(bs)
         assert result is None
 
-    def test_finds_all_tags_matching_selectors(self, selector: AnyTagSelector):
+    def test_finds_all_tags_matching_selectors(self, selector: UniversalSelector):
         """Tests if find_all method returns all tags that match selector."""
         text = """
             <a class="widget">1</a>
@@ -95,7 +102,7 @@ class TestAnyTagSelector:
         ]
 
     def test_find_all_returns_empty_list_if_no_tag_matches(
-        self, selector: AnyTagSelector
+        self, selector: UniversalSelector
     ):
         """
         Tests if find_all method returns an empty list when no tag is found
@@ -109,11 +116,11 @@ class TestAnyTagSelector:
         assert selector.find_all(bs) == []
 
     def test_find_returns_first_matching_child_if_recursive_false(
-        self, selector: AnyTagSelector
+        self, selector: UniversalSelector
     ):
         """
         Tests if find returns first matching child element if recursive is False.
-        For AnyTagSelector it doesn't matter if recursive is True or False, it always
+        For UniversalSelector it doesn't matter if recursive is True or False, it always
         returns first element.
         """
         text = """
@@ -126,7 +133,7 @@ class TestAnyTagSelector:
         assert strip(str(result)) == strip("""<a class="widget">1</a>""")
 
     def test_find_returns_none_if_recursive_false_and_no_matching_child(
-        self, selector: AnyTagSelector
+        self, selector: UniversalSelector
     ):
         """
         Tests if find returns None if no child element matches the selector
@@ -141,7 +148,7 @@ class TestAnyTagSelector:
         assert result is None
 
     def test_find_raises_exception_with_recursive_false_and_strict_mode(
-        self, selector: AnyTagSelector
+        self, selector: UniversalSelector
     ):
         """
         Tests if find raises TagNotFoundException if no child element
@@ -157,7 +164,7 @@ class TestAnyTagSelector:
             selector.find(bs, strict=True, recursive=False)
 
     def test_find_all_returns_all_matching_children_when_recursive_false(
-        self, selector: AnyTagSelector
+        self, selector: UniversalSelector
     ):
         """
         Tests if find_all returns all matching children if recursive is False.
@@ -178,7 +185,7 @@ class TestAnyTagSelector:
         ]
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
-        self, selector: AnyTagSelector
+        self, selector: UniversalSelector
     ):
         """
         Tests if find_all returns an empty list if no child element matches the selector
@@ -193,7 +200,7 @@ class TestAnyTagSelector:
         assert result == []
 
     def test_find_all_returns_only_x_elements_when_limit_is_set(
-        self, selector: AnyTagSelector
+        self, selector: UniversalSelector
     ):
         """
         Tests if find_all returns only x elements when limit is set.
@@ -213,7 +220,7 @@ class TestAnyTagSelector:
         ]
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
-        self, selector: AnyTagSelector
+        self, selector: UniversalSelector
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -234,29 +241,28 @@ class TestAnyTagSelector:
         ]
 
     @pytest.mark.css
-    def test_selector_is_a_css_selector_wildcard(self, selector: AnyTagSelector):
+    def test_selector_is_a_css_selector_wildcard(self, selector: UniversalSelector):
         """Test if selector attribute is a css selector wildcard."""
         assert selector.css == CSS_SELECTOR_WILDCARD
 
     @pytest.mark.parametrize(
         argnames="selectors",
         argvalues=[
-            # Two AnyTagSelectors
-            (AnyTagSelector(), AnyTagSelector()),
-            # AnyTagSelector and empty TagSelector
-            (AnyTagSelector(), TagSelector()),
+            # Two UniversalSelectors
+            (UniversalSelector(), UniversalSelector())
         ],
     )
-    def test_two_selectors_are_equal(
-        self, selectors: tuple[AnyTagSelector, AnyTagSelector]
-    ):
+    def test_two_selectors_are_equal(self, selectors: tuple):
         """Tests if two selectors are equal."""
         assert (selectors[0] == selectors[1]) is True
 
-    def test_two_selectors_are_not_equal(self):
-        """
-        Tests if two selectors are not equal. In case of AnyTagSelector,
-        any other selector that is not AnyTagSelector or empty TagSelector
-        is not equal to it.
-        """
-        assert AnyTagSelector() != TagSelector("div")
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # Two UniversalSelectors
+            (UniversalSelector(), MockDivSelector())
+        ],
+    )
+    def test_two_selectors_are_not_equal(self, selectors: tuple):
+        """Tests if two selectors are not equal."""
+        assert (selectors[0] == selectors[1]) is False

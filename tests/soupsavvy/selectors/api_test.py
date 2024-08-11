@@ -8,8 +8,8 @@ import pytest
 
 from soupsavvy import api
 from soupsavvy.selectors.combinators import SelectorList
-from soupsavvy.selectors.general import HasSelector
 from soupsavvy.selectors.logical import AndSelector, NotSelector, XORSelector
+from soupsavvy.selectors.relative import HasSelector
 from tests.soupsavvy.selectors.conftest import MockSelector
 
 

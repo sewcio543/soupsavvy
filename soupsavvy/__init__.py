@@ -14,7 +14,8 @@ from .selectors import (
     PatternSelector,
     SelectorList,
     SubsequentSiblingCombinator,
-    TagSelector,
+    TypeSelector,
+    UniversalSelector,
     XORSelector,
 )
 
@@ -22,9 +23,9 @@ __version__ = "0.2.0-dev0"
 __author__ = "sewcio543"
 
 __all__ = [
-    "AnyTagSelector",
+    "UniversalSelector",
     "AttributeSelector",
-    "TagSelector",
+    "TypeSelector",
     "PatternSelector",
     "SelectorList",
     "DescendantCombinator",
@@ -39,4 +40,5 @@ __all__ = [
     "ClassSelector",
     "IdSelector",
     "XORSelector",
+    "AnyTagSelector",
 ]

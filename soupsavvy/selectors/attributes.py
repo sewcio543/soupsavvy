@@ -13,18 +13,21 @@ ClassSelector - Selects element based on 'class' attribute value.
 
 import re
 from dataclasses import dataclass
-from typing import Any, Optional, Pattern
+from typing import Optional, Pattern
+
+from bs4 import Tag
 
 import soupsavvy.selectors.namespace as ns
-from soupsavvy.selectors.base import KeywordSoupSelector
+from soupsavvy.selectors.base import SoupSelector
 from soupsavvy.selectors.namespace import PatternType
 
 
 @dataclass
-class AttributeSelector(KeywordSoupSelector):
+class AttributeSelector(SoupSelector):
     """
     Class representing attribute of the HTML element.
-    If used directly, provides elements based only on a single attribute value.
+    `soupsavvy` counterpart of css attribute selectors, where any substring value
+    syntax is handled by regex pattern matching.
 
     Example
     -------
@@ -46,6 +49,11 @@ class AttributeSelector(KeywordSoupSelector):
         which results in using re.search to match the attribute value.
         By default None, if not provided, default pattern matching any sequence
         of characters is used.
+
+    Notes
+    -----
+    For more information about attribute selectors see:
+    https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors
     """
 
     name: str
@@ -66,11 +74,14 @@ class AttributeSelector(KeywordSoupSelector):
         # value is already a compiled regex pattern
         return self.value
 
-    @property
-    def _find_params(self) -> dict[str, Any]:
-        # passing filters in attrs parameter as dict instead of kwargs
-        # to avoid overriding other find method parameters like ex. 'name'
-        return {ns.ATTRS: {self.name: self._pattern}}
+    def find_all(
+        self,
+        tag: ns.Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        params = {ns.ATTRS: {self.name: self._pattern}}
+        return tag.find_all(**params, recursive=recursive, limit=limit)
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, AttributeSelector):
@@ -122,6 +133,11 @@ class IdSelector(_SpecificAttributeSelector):
     -------
     >>> <div id="main">Hello World</div> ✔️
     >>> <div id="content">Hello World</div> ❌
+
+    Notes
+    -----
+    For more information about id attribute see:
+    https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors
     """
 
     _NAME = "id"
@@ -143,6 +159,11 @@ class ClassSelector(_SpecificAttributeSelector):
     -------
     >>> <div class="main">Hello World</div> ✔️
     >>> <div class="content">Hello World</div> ❌
+
+    Notes
+    -----
+    For more information about class attribute see:
+    https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors
     """
 
     _NAME = "class"

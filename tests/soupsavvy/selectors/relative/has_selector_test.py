@@ -3,8 +3,8 @@
 import pytest
 
 from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
-from soupsavvy.selectors.general import HasSelector
 from soupsavvy.selectors.relative import (
+    HasSelector,
     RelativeChild,
     RelativeDescendant,
     RelativeNextSibling,

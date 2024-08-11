@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, overload
 from bs4 import NavigableString, Tag
 
 import soupsavvy.exceptions as exc
-from soupsavvy.selectors.namespace import FindResult
+import soupsavvy.selectors.namespace as ns
 from soupsavvy.utils.deprecation import deprecated_function
 
 if TYPE_CHECKING:
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
         SelectorList,
         SubsequentSiblingCombinator,
     )
-    from soupsavvy.selectors.logical import AndSelector, NotSelector
+    from soupsavvy.selectors.logical import AndSelector
 
 
 class SoupSelector(ABC):
@@ -156,7 +156,7 @@ class SoupSelector(ABC):
             "and does not implement this method."
         )
 
-    def _find(self, tag: Tag, recursive: bool = True) -> FindResult:
+    def _find(self, tag: Tag, recursive: bool = True) -> ns.FindResult:
         """
         Returns an object that is a result of markup search.
 
@@ -219,8 +219,8 @@ class SoupSelector(ABC):
 
         Example
         -------
-        >>> selector1 = TagSelector("div")
-        >>> selector2 = TagSelector("div")
+        >>> selector1 = TypeSelector("div")
+        >>> selector2 = TypeSelector("div")
         >>> selector1 == selector2
         True
         >>> selector1.find(tag) == selector2.find(tag)
@@ -351,13 +351,13 @@ class SoupSelector(ABC):
 
         Example
         -------
-        >>> TagSelector("div") > TagSelector("a")
+        >>> TypeSelector("div") > TypeSelector("a")
 
         Which results in
 
         Example
         -------
-        >>> ChildCombinator(TagSelector("div"), TagSelector("a"))
+        >>> ChildCombinator(TypeSelector("div"), TypeSelector("a"))
 
         Parameters
         ----------
@@ -408,13 +408,13 @@ class SoupSelector(ABC):
 
         Example
         -------
-        >>> TagSelector("div") + TagSelector("a")
+        >>> TypeSelector("div") + TypeSelector("a")
 
         Which results in
 
         Example
         -------
-        >>> NextSiblingCombinator(TagSelector("div"), TagSelector("a"))
+        >>> NextSiblingCombinator(TypeSelector("div"), TypeSelector("a"))
 
         Parameters
         ----------
@@ -464,13 +464,13 @@ class SoupSelector(ABC):
 
         Example
         -------
-        >>> TagSelector("div") * TagSelector("a")
+        >>> TypeSelector("div") * TypeSelector("a")
 
         Which results in
 
         Example
         -------
-        >>> SubsequentSiblingCombinator(TagSelector("div"), TagSelector("a"))
+        >>> SubsequentSiblingCombinator(TypeSelector("div"), TypeSelector("a"))
 
         Parameters
         ----------
@@ -519,13 +519,13 @@ class SoupSelector(ABC):
 
         Example
         -------
-        >>> TagSelector("div") >> TagSelector("a")
+        >>> TypeSelector("div") >> TypeSelector("a")
 
         Which results in
 
         Example
         -------
-        >>> DescendantCombinator(TagSelector("div"), TagSelector("a"))
+        >>> DescendantCombinator(TypeSelector("div"), TypeSelector("a"))
 
         Parameters
         ----------
@@ -563,41 +563,6 @@ class SoupSelector(ABC):
             return DescendantCombinator(*args)
 
         return DescendantCombinator(self, x)
-
-
-class KeywordSoupSelector(SoupSelector):
-    """
-    Extension of SoupSelector interface that defines keyword search arguments
-    to be passed to Tag.find and Tag.find_all methods. Implemented by selectors
-    that do not required specific operations, but delegate search to BeautifulSoup
-    with specified parameters.
-
-    Notes
-    -----
-    To implement KeywordSoupSelector interface, child class must implement:
-    * '_find_params' property that returns dict representing Tag.find
-    and find_all parameters that are passed as keyword arguments into these methods.
-    """
-
-    def find_all(
-        self,
-        tag: Tag,
-        recursive: bool = True,
-        limit: Optional[int] = None,
-    ) -> list[Tag]:
-        return tag.find_all(**self._find_params, recursive=recursive, limit=limit)
-
-    @property
-    @abstractmethod
-    def _find_params(self) -> dict[str, Any]:
-        """
-        Returns keyword arguments for Tag.find and Tag.find_all in form of dictionary,
-        Arguments are specific for searched Tag.
-        """
-        raise NotImplementedError(
-            f"{self.__class__.__name__} is an interface, "
-            "and does not implement this property."
-        )
 
 
 class SelectableCSS(ABC):

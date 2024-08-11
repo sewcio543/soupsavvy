@@ -22,8 +22,8 @@ used for convenience and readability in some cases.
 
 from soupsavvy.selectors.base import SoupSelector
 from soupsavvy.selectors.combinators import SelectorList
-from soupsavvy.selectors.general import HasSelector
 from soupsavvy.selectors.logical import AndSelector, NotSelector, XORSelector
+from soupsavvy.selectors.relative import HasSelector
 
 
 def is_(
@@ -49,8 +49,8 @@ def is_(
 
     Example
     -------
-    >>> is_(TagSelector("h1"), TagSelector("h2"))
-    >>> where(TagSelector("h1"), TagSelector("h2"))
+    >>> is_(TypeSelector("h1"), TypeSelector("h2"))
+    >>> where(TypeSelector("h1"), TypeSelector("h2"))
 
     This is an equivalent of CSS comma selector (selector list) or :is() selector.
     Function is also aliased by 'where' function that imitate css :where pseudo-class.
@@ -93,7 +93,7 @@ def not_(selector: SoupSelector, /, *selectors: SoupSelector) -> NotSelector:
 
     Example
     -------
-    >>> not_(TagSelector(tag="div"), TagSelector(tag="a"))
+    >>> not_(TypeSelector("div"), TypeSelector("a"))
 
     This is an equivalent of CSS :not() negation pseudo-class,
     that represents elements that do not match a list of selectors
@@ -133,7 +133,7 @@ def and_(
 
     Example
     -------
-    >>> and_(TagSelector(tag="div"), AttributeSelector(name="class", value="widget"))
+    >>> and_(TypeSelector("div"), AttributeSelector(name="class", value="widget"))
 
     This is an equivalent of CSS selectors concatenation.
 
@@ -167,7 +167,7 @@ def has(
 
     Example
     -------
-    >>> has_(TagSelector(tag="div"), TagSelector(tag="div"))
+    >>> has_(TypeSelector("div"), TypeSelector("div"))
 
     This is an equivalent of CSS :has() pseudo-class:
 
@@ -213,6 +213,6 @@ def xor(
 
     Example
     -------
-    >>> xor(TagSelector(tag="div"), AttributeSelector(name="class", value="widget"))
+    >>> xor(TypeSelector("div"), AttributeSelector(name="class", value="widget"))
     """
     return XORSelector(selector1, selector2, *selectors)
