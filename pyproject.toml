@@ -6,15 +6,15 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "soupsavvy"
 readme = "README.md"
-description = "Python package for advanced web scraping"
+description = "Powerful and flexible search engine for BeautifulSoup"
 authors = [{name = "sewcio543"}]
 license = {file = "LICENSE"}
 requires-python = ">=3.9"
 
-keywords = ["web-scraping", "html", "soup", "bs4", "markup"]
+keywords = ["web-scraping", "html", "soup", "bs4", "markup", "beautifulsoup"]
 
 classifiers = [
-  "Development Status :: 1 - Planning",
+  "Development Status :: 3 - Alpha",
 
   "Intended Audience :: Developers",
 
@@ -34,13 +34,13 @@ dynamic = ["version", "dependencies", "optional-dependencies"]
 [tool.setuptools.dynamic]
 version = {attr = "soupsavvy.__version__"}
 dependencies = {file = ["requirements.txt"]}
-optional-dependencies = {dev = { file = ["requirements_dev.txt"] }}
 
 [tool.setuptools]
 packages = ["soupsavvy"]
 
 [project.urls]
-source = "https://github.com/sewcio543/soupsavvy"
+Repository = "https://github.com/sewcio543/soupsavvy"
+Homepage  = "https://sewcio543.github.io/soupsavvy/"
 
 [tool.black]
 line-length = 88

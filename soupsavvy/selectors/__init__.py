@@ -1,26 +1,14 @@
-from .selectors import (
-    Anchor,
-    AndSelector,
-    AnyTagSelector,
-    AttributeSelector,
+from .attributes import AttributeSelector, ClassSelector, IdSelector
+from .combinators import (
     ChildCombinator,
-    ClassSelector,
     DescendantCombinator,
-    HasSelector,
-    IdSelector,
     NextSiblingCombinator,
-    NotSelector,
-    OrSelector,
-    PatternSelector,
     SelectorList,
     SubsequentSiblingCombinator,
-    TypeSelector,
-    UniversalSelector,
-    XORSelector,
 )
-
-__version__ = "0.2.0-dev0"
-__author__ = "sewcio543"
+from .general import AnyTagSelector, PatternSelector, TypeSelector, UniversalSelector
+from .logical import AndSelector, NotSelector, OrSelector, XORSelector
+from .relative import Anchor, HasSelector
 
 __all__ = [
     "UniversalSelector",
@@ -34,11 +22,11 @@ __all__ = [
     "ChildCombinator",
     "NextSiblingCombinator",
     "SubsequentSiblingCombinator",
+    "OrSelector",
     "HasSelector",
     "Anchor",
-    "OrSelector",
-    "ClassSelector",
     "IdSelector",
+    "ClassSelector",
     "XORSelector",
     "AnyTagSelector",
 ]
