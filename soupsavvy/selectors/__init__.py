@@ -3,19 +3,11 @@ from .combinators import (
     ChildCombinator,
     DescendantCombinator,
     NextSiblingCombinator,
-    OrSelector,
     SelectorList,
     SubsequentSiblingCombinator,
 )
-from .components import (
-    AndSelector,
-    AnyTagSelector,
-    HasSelector,
-    NotSelector,
-    PatternSelector,
-    TagSelector,
-    XORSelector,
-)
+from .general import AnyTagSelector, HasSelector, PatternSelector, TagSelector
+from .logical import AndSelector, NotSelector, OrSelector, XORSelector
 from .relative import Anchor
 
 __all__ = [

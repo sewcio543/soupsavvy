@@ -22,12 +22,8 @@ used for convenience and readability in some cases.
 
 from soupsavvy.selectors.base import SoupSelector
 from soupsavvy.selectors.combinators import SelectorList
-from soupsavvy.selectors.components import (
-    AndSelector,
-    HasSelector,
-    NotSelector,
-    XORSelector,
-)
+from soupsavvy.selectors.general import HasSelector
+from soupsavvy.selectors.logical import AndSelector, NotSelector, XORSelector
 
 
 def is_(
@@ -53,8 +49,8 @@ def is_(
 
     Example
     -------
-    >>> is_(ElementTag("h1"), ElementTag("h2"))
-    >>> where(ElementTag("h1"), ElementTag("h2"))
+    >>> is_(TagSelector("h1"), TagSelector("h2"))
+    >>> where(TagSelector("h1"), TagSelector("h2"))
 
     This is an equivalent of CSS comma selector (selector list) or :is() selector.
     Function is also aliased by 'where' function that imitate css :where pseudo-class.

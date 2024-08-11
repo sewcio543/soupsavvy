@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from collections import Counter
 from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, overload
 
 from bs4 import NavigableString, Tag
@@ -20,7 +19,7 @@ if TYPE_CHECKING:
         SelectorList,
         SubsequentSiblingCombinator,
     )
-    from soupsavvy.selectors.components import AndSelector, NotSelector
+    from soupsavvy.selectors.logical import AndSelector, NotSelector
 
 
 class SoupSelector(ABC):
@@ -220,8 +219,8 @@ class SoupSelector(ABC):
 
         Example
         -------
-        >>> selector1 = ElementTag("div")
-        >>> selector2 = ElementTag("div")
+        >>> selector1 = TagSelector("div")
+        >>> selector2 = TagSelector("div")
         >>> selector1 == selector2
         True
         >>> selector1.find(tag) == selector2.find(tag)
@@ -273,47 +272,47 @@ class SoupSelector(ABC):
     def __invert__(self) -> SoupSelector:
         """
         Overrides __invert__ method called also by tilde operator '~'.
-        Syntactical Sugar for bitwise NOT operator, that creates a NotElementTag
+        Syntactical Sugar for bitwise NOT operator, that creates a NotSelector
         matching everything that is not matched by the SoupSelector.
 
         Parameters
         ----------
         x : SoupSelector
-            SoupSelector object to be negated into new NotElementTag.
+            SoupSelector object to be negated into new NotSelector.
 
         Returns
         -------
-        NotElementTag
+        NotSelector
             Negation of SoupSelector that can be used to get all elements
             that do not match the SoupSelector.
         SoupSelector
             Any SoupSelector object in case of directly inverting
-            NotElementTag to get original SoupSelector.
+            NotSelector to get original SoupSelector.
 
         Raises
         ------
         NotSoupSelectorException
             If provided object is not of SoupSelector type.
         """
-        from soupsavvy.selectors.components import NotSelector
+        from soupsavvy.selectors.logical import NotSelector
 
         return NotSelector(self)
 
     def __and__(self, x: SoupSelector) -> AndSelector:
         """
         Overrides __and__ method called also by ampersand operator '&'.
-        Syntactical Sugar for bitwise AND operator, that creates an AndElementTag
+        Syntactical Sugar for bitwise AND operator, that creates an AndSelector
         matching everything that is matched by both SoupSelector.
 
         Parameters
         ----------
         x : SoupSelector
-            SoupSelector object to be combined into new AndElementTag
+            SoupSelector object to be combined into new AndSelector
             with current SoupSelector.
 
         Returns
         -------
-        AndElementTag
+        AndSelector
             Intersection of two SoupSelector that can be used to get all elements
             that match both SoupSelector.
 
@@ -322,7 +321,7 @@ class SoupSelector(ABC):
         NotSoupSelectorException
             If provided object is not of SoupSelector type.
         """
-        from soupsavvy.selectors.components import AndSelector
+        from soupsavvy.selectors.logical import AndSelector
 
         message = (
             f"Bitwise AND not supported for types {type(self)} and {type(x)}, "
@@ -352,13 +351,13 @@ class SoupSelector(ABC):
 
         Example
         -------
-        >>> ElementTag("div") > ElementTag("a")
+        >>> TagSelector("div") > TagSelector("a")
 
         Which results in
 
         Example
         -------
-        >>> ChildCombinator(ElementTag("div"), ElementTag("a"))
+        >>> ChildCombinator(TagSelector("div"), TagSelector("a"))
 
         Parameters
         ----------
@@ -409,13 +408,13 @@ class SoupSelector(ABC):
 
         Example
         -------
-        >>> ElementTag("div") + ElementTag("a")
+        >>> TagSelector("div") + TagSelector("a")
 
         Which results in
 
         Example
         -------
-        >>> NextSiblingCombinator(ElementTag("div"), ElementTag("a"))
+        >>> NextSiblingCombinator(TagSelector("div"), TagSelector("a"))
 
         Parameters
         ----------
@@ -465,13 +464,13 @@ class SoupSelector(ABC):
 
         Example
         -------
-        >>> ElementTag("div") * ElementTag("a")
+        >>> TagSelector("div") * TagSelector("a")
 
         Which results in
 
         Example
         -------
-        >>> SubsequentSiblingCombinator(ElementTag("div"), ElementTag("a"))
+        >>> SubsequentSiblingCombinator(TagSelector("div"), TagSelector("a"))
 
         Parameters
         ----------
@@ -508,7 +507,7 @@ class SoupSelector(ABC):
     def __rshift__(self, x: SoupSelector) -> DescendantCombinator:
         """
         Overrides __rshift__ method called also by right shift operator '>>'.
-        Syntactical Sugar for right shift operator, that creates a StepsElementTag
+        Syntactical Sugar for right shift operator, that creates a DescendantCombinator
         which is equivalent to descendant combinator in css, typically represented
         by a single space character.
 
@@ -520,24 +519,24 @@ class SoupSelector(ABC):
 
         Example
         -------
-        >>> ElementTag("div") >> ElementTag("a")
+        >>> TagSelector("div") >> TagSelector("a")
 
         Which results in
 
         Example
         -------
-        >>> StepsElementTag(ElementTag("div"), ElementTag("a"))
+        >>> DescendantCombinator(TagSelector("div"), TagSelector("a"))
 
         Parameters
         ----------
         x : SoupSelector
-            SoupSelector object to be combined into new StepsElementTag as descendant
-            of current SoupSelector.
+            SoupSelector object to be combined into new DescendantCombinator
+            as descendant of current SoupSelector.
 
         Returns
         -------
-        StepsElementTag
-            StepsElementTag object that can be used to get all matching elements
+        DescendantCombinator
+            DescendantCombinator object that can be used to get all matching elements
             that are descendants of the current SoupSelector.
 
         Raises

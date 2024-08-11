@@ -4,7 +4,7 @@ import pytest
 from bs4 import Tag
 
 from soupsavvy.exceptions import TagNotFoundException
-from soupsavvy.selectors.components import AnyTagSelector, TagSelector
+from soupsavvy.selectors.general import AnyTagSelector, TagSelector
 from soupsavvy.selectors.namespace import CSS_SELECTOR_WILDCARD
 from tests.soupsavvy.selectors.conftest import find_body_element, strip, to_bs
 
