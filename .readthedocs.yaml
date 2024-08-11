@@ -10,6 +10,8 @@ build:
   tools:
     python: "3.11"
   commands:
+    - pip install -r docs/requirements.txt
+    - pip install .
     - bash docs/sphinx_run.sh
 
 sphinx:
