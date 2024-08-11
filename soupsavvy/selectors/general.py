@@ -3,87 +3,85 @@ Module for general purpose selectors.
 
 Classes
 -------
-TagSelector - combines type and attribute selectors
+TypeSelector - combines type and attribute selectors
 PatternSelector - matches elements based on text content and selector
-AnyTagSelector - universal selector (*)
-HasSelector - matches elements that based on reference elements
+UniversalSelector - universal selector (*)
 """
 
 import itertools
-from dataclasses import dataclass, field
-from functools import reduce
-from typing import Any, Iterable, Optional, Pattern
+from dataclasses import dataclass
+from typing import Optional, Pattern
 
 from bs4 import SoupStrainer, Tag
 
 import soupsavvy.selectors.namespace as ns
-from soupsavvy.selectors.attributes import AttributeSelector
-from soupsavvy.selectors.base import (
-    CompositeSoupSelector,
-    KeywordSoupSelector,
-    SelectableCSS,
-    SoupSelector,
-)
+from soupsavvy.selectors.base import SelectableCSS, SoupSelector
 from soupsavvy.selectors.tag_utils import TagIterator
+from soupsavvy.utils.deprecation import deprecated_class
 
 
 @dataclass
-class TagSelector(KeywordSoupSelector):
+class TypeSelector(SoupSelector, SelectableCSS):
     """
-    Class representing HTML element.
-    Provides elements based on element tag and all defined attributes.
+    Component for finding elements based on tag name.
+    `soupsavvy` counterpart of css type selector.
 
     Example
     -------
-    >>> TagSelector(
-    >>>     tag="div",
-    >>>     attributes=[
-    >>>         AttributeSelector(name="class", value="widget"),
-    >>>         AttributeSelector(name="role", value="button")
-    >>>     ]
-    >>> )
+    >>> TypeSelector("div")
 
-    matches all elements that have "div" tag name, 'class' attribute "widget"
-    and 'role' attribute "button".
+    matches all elements that have "div" tag name.
 
     Example
     -------
-    >>> <div class="widget" role="button">Hello World</div> ✔️
-    >>> <div class="menu" role="button">Hello World</div> ❌
+    >>> <div class="widget">Hello World</div> ✔️
+    >>> <a href="/shop">Hello World</a> ❌
+
+    It's soupsavvy counterpart of passing name to bs4 find methods.
+
+    Example
+    -------
+    >>> soup.find_all("div")
+
+    Returns the same result as:
+
+    Example
+    -------
+    >>> TypeSelector("div").find_all(soup)
 
     Parameters
     ----------
-    name : str, optional
-        HTML tag name ex. "a", "div". By default None, all tag names will be matched.
-
-    attributes : Iterable[AttributeSelector], optional
-        Iterable of AttributeSelector objects that specify element attributes.
-        By default empty list, no attribute will be checked.
+    name : str
+        HTML tag name ex. "a", "div".
 
     Notes
     -----
-    Initializing object without passing any parameters is equal to selector for all elements,
-    which is equivalent to using AnyTagSelector object.
+    For more information about type selectors see:
+    https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors
     """
 
-    tag: Optional[str] = None
-    attributes: Iterable[AttributeSelector] = field(default_factory=list)
+    name: str
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        params = {ns.NAME: self.name}
+        return tag.find_all(**params, recursive=recursive, limit=limit)
 
     @property
-    def _find_params(self) -> dict[str, Any]:
-        params = [attr._find_params[ns.ATTRS] for attr in self.attributes]
-        # reduce raises error when given an empty iterable
-        attrs = dict(reduce(lambda x, y: {**x, **y}, params)) if params else {}
-        return {ns.NAME: self.tag} | {ns.ATTRS: attrs}
+    def css(self) -> str:
+        # css selector for tag name is just the tag name ex. "div"
+        return self.name
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, AnyTagSelector):
-            return other == self
-        if not isinstance(other, TagSelector):
+        if not isinstance(other, TypeSelector):
             return False
 
-        # TagSelector produces the same results only if attributes are in the same order
-        return self.tag == other.tag and self.attributes == other.attributes
+        # TypeSelectors produce the same results if names of the tag are the same
+        return self.name == other.name
 
 
 @dataclass
@@ -158,17 +156,17 @@ class PatternSelector(SoupSelector):
 
 
 @dataclass
-class AnyTagSelector(KeywordSoupSelector, SelectableCSS):
+class UniversalSelector(SoupSelector, SelectableCSS):
     """
-    Class representing a wildcard tag that matches any tag in the markup.
-    Matches always the first tag in the markup.
+    Class representing a wildcard tag that matches ny and all types of elements
+    in html page.
 
-    AnyTagSelector implements SelectableCSS interface with wildcard css selector "*",
-    aka. universal selector, that matches all elements in the markup.
+    UniversalSelector implements SelectableCSS interface with wildcard css selector "*",
+    aka. universal selector, that matches all elements in html page.
 
     Example
     -------
-    >>> any_element = AnyTagSelector()
+    >>> any_element = UniversalSelector()
     >>> any_element.selector
     "*"
 
@@ -178,9 +176,13 @@ class AnyTagSelector(KeywordSoupSelector, SelectableCSS):
     https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors
     """
 
-    @property
-    def _find_params(self) -> dict[str, Any]:
-        return {}
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        return tag.find_all(recursive=recursive, limit=limit)
 
     @property
     def css(self) -> str:
@@ -188,131 +190,12 @@ class AnyTagSelector(KeywordSoupSelector, SelectableCSS):
         return ns.CSS_SELECTOR_WILDCARD
 
     def __eq__(self, other: object) -> bool:
-        # TagSelector produces the same results only if it does not have
-        # any parameters specified
-        if isinstance(other, TagSelector):
-            return other.tag is None and not other.attributes
-
-        return isinstance(other, AnyTagSelector)
+        # UniversalSelector is always the same
+        return isinstance(other, UniversalSelector)
 
 
-class HasSelector(CompositeSoupSelector):
-    """
-    Class representing elements selected with respect to matching reference elements.
-    Element is selected if any of the provided selectors matched reference element.
-
-    Example
-    -------
-    >>> HasSelector(TagSelector(tag="div"))
-
-    matches all elements that have any descendant with "div" tag name.
-    It uses default combinator of relative selector, which is descendant.
-
-    Example
-    -------
-    >>> <span><div>Hello World</div></span> ✔️
-    >>> <span><a>Hello World</a></span> ❌
-
-    Other relative selectors can be used with Anchor element.
-
-    Example
-    -------
-    >>> from soupsavvy.tags.relative import Anchor
-    >>> HasSelector(Anchor > TagSelector("div"))
-    >>> HasSelector(Anchor + TagSelector("div"))
-
-    or by using RelativeSelector components directly:
-
-    Example
-    -------
-    >>> from soupsavvy.tags.relative import RelativeChild, RelativeNextSibling
-    >>> HasSelector(RelativeChild(TagSelector("div")))
-    >>> HasSelector(RelativeNextSibling(TagSelector("div"))
-
-    Example
-    -------
-    >>> <span><div>Hello World</div></span> ✔️
-    >>> <span><a><div>Hello World</div></a></span> ❌
-
-    In this case, HasSelector is anchored against any element, and matches only elements
-    that have "div" tag name as a child.
-
-    Object can be initialized with multiple selectors as well, in which case
-    at least one selector must match for element to be included in the result.
-
-    This is an equivalent of CSS :has() pseudo-class,
-    that represents elements if any of the relative selectors that are passed as an argument
-    match at least one element when anchored against this element.
-
-    Example
-    -------
-    >>> :has(div, a) { color: red; }
-    >>> :has(+ div, > a) { color: red; }
-
-    These examples translated to soupsavvy would be:
-
-    Example
-    -------
-    >>> from soupsavvy.tags.relative import Anchor
-    >>> HasSelector(TagSelector("div"), TagSelector("a"))
-    >>> HasSelector(Anchor + TagSelector("div"), Anchor > TagSelector("a"))
-
-    Notes
-    -----
-    Passing RelativeDescendant selector into HasSelector is equivalent to using
-    its selector directly, as descendant combinator is default option.
-
-    Example
-    -------
-    >>> HasSelector(RelativeDescendant(TagSelector("div")))
-    >>> HasSelector(Anchor > TagSelector("div"))
-    >>> HasSelector(TagSelector("div"))
-
-    Three of the above examples are equivalent.
-
-    For more information on :has() pseudo-class see:
-    https://developer.mozilla.org/en-US/docs/Web/CSS/:has
-    """
-
-    def __init__(
-        self,
-        selector: SoupSelector,
-        /,
-        *selectors: SoupSelector,
-    ) -> None:
-        """
-        Initializes AndTagSelector object with provided
-        positional arguments as selectors.
-
-        Parameters
-        ----------
-        selectors: SoupSelector
-            SoupSelector objects to match accepted as positional arguments.
-            At least one selector is required to create HasSelector.
-
-        Raises
-        ------
-        NotSoupSelectorException
-            If any of provided parameters is not an instance of SoupSelector.
-        """
-        super().__init__([selector, *selectors])
-
-    def find_all(
-        self,
-        tag: Tag,
-        recursive: bool = True,
-        limit: Optional[int] = None,
-    ) -> list[Tag]:
-
-        elements = TagIterator(tag, recursive=recursive)
-        matching: list[Tag] = []
-
-        for element in elements:
-            # we only care if anything matching was found
-            if any(step.find(element) for step in self.selectors):
-                matching.append(element)
-
-                if len(matching) == limit:
-                    break
-
-        return matching
+@deprecated_class(
+    f"AnyTagSelector is deprecated, use {UniversalSelector.__name__} class instead."
+)
+class AnyTagSelector(UniversalSelector):
+    """Alias for UniversalSelector class. Deprecated component."""

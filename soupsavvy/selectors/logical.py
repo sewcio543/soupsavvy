@@ -31,7 +31,7 @@ class NotSelector(CompositeSoupSelector):
 
     Example
     -------
-    >>> NotSelector(TagSelector(tag="div"))
+    >>> NotSelector(TypeSelector("div"))
 
     matches all elements that do not have "div" tag name.
 
@@ -48,7 +48,7 @@ class NotSelector(CompositeSoupSelector):
 
     Example
     -------
-    >>> ~TagSelector(tag="div")
+    >>> ~TypeSelector("div")
 
     Which is equivalent to the first example.
 
@@ -64,8 +64,8 @@ class NotSelector(CompositeSoupSelector):
 
     Example
     -------
-    >>> NotSelector(TagSelector("strong"), AttributeSelector("class", "important"))
-    >>> ~(TagSelector("strong") | AttributeSelector("class", "important"))
+    >>> NotSelector(TypeSelector("strong"), AttributeSelector("class", "important"))
+    >>> ~(TypeSelector("strong") | AttributeSelector("class", "important"))
 
     Notes
     -----
@@ -130,11 +130,12 @@ class AndSelector(CompositeSoupSelector):
     """
     Class representing an intersection of multiple soup selectors.
     Provides elements matching all of the listed selectors.
+    This is `soupsavvy` counterpart of CSS compound selector.
 
     Example
     -------
-    >>> AndTagSelector(
-    ...    TagSelector(tag="div"),
+    >>> AndSelector(
+    ...    TypeSelector("div"),
     ...    AttributeSelector(name="class", value="widget")
     ... )
 
@@ -154,7 +155,7 @@ class AndSelector(CompositeSoupSelector):
 
     Example
     -------
-    >>> TagSelector(tag="div") & AttributeSelector(name="class", value="widget")
+    >>> TypeSelector("div") & AttributeSelector(name="class", value="widget")
 
     Which is equivalent to the first example.
 
@@ -168,8 +169,12 @@ class AndSelector(CompositeSoupSelector):
 
     Example
     -------
-    >>> TagSelector("div") & AttributeSelector("class", "class1") & AttributeSelector("id", "id1")
-    >>> TagSelector("div", attributes=[AttributeSelector("class", "class1"), AttributeSelector("id", "id1")])
+    >>> TypeSelector("div") & ClassSelector("class1") & IdSelector("id1")
+
+    Notes
+    -----
+    For more information on compound selectors see:
+    https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors/Selector_structure#compound_selector
     """
 
     def __init__(
@@ -180,7 +185,7 @@ class AndSelector(CompositeSoupSelector):
         *selectors: SoupSelector,
     ) -> None:
         """
-        Initializes AndTagSelector object with provided
+        Initializes AndSelector object with provided
         positional arguments as selectors.
 
         Parameters
@@ -219,7 +224,7 @@ class XORSelector(CompositeSoupSelector):
 
     Example
     -------
-    >>> XORSelector(TagSelector(tag="div"), AttributeSelector(class="widget"))
+    >>> XORSelector(TypeSelector("div"), AttributeSelector(class="widget"))
 
     Matches all elements that have either "div" tag name or 'class' attribute "widget".
     Elements with "div" tag name and 'class' attribute "widget" do not match selector.
@@ -228,7 +233,7 @@ class XORSelector(CompositeSoupSelector):
 
     Example
     -------
-    >>> selector1 = TagSelector("div")
+    >>> selector1 = TypeSelector("div")
     ... selector2 = AttributeSelector("class", value="widget")
     ... xor = (selector1 & (~selector2)) | ((~selector1) & selector2)
 

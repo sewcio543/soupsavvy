@@ -6,14 +6,14 @@ from .combinators import (
     SelectorList,
     SubsequentSiblingCombinator,
 )
-from .general import AnyTagSelector, HasSelector, PatternSelector, TagSelector
+from .general import AnyTagSelector, PatternSelector, TypeSelector, UniversalSelector
 from .logical import AndSelector, NotSelector, OrSelector, XORSelector
-from .relative import Anchor
+from .relative import Anchor, HasSelector
 
 __all__ = [
-    "AnyTagSelector",
+    "UniversalSelector",
     "AttributeSelector",
-    "TagSelector",
+    "TypeSelector",
     "PatternSelector",
     "SelectorList",
     "DescendantCombinator",
@@ -28,4 +28,5 @@ __all__ = [
     "IdSelector",
     "ClassSelector",
     "XORSelector",
+    "AnyTagSelector",
 ]
