@@ -609,7 +609,7 @@ class CompositeSoupSelector(SoupSelector):
     """
 
     # if the order of selectors is relevant - by default False
-    _ORDERED = False
+    COMMUTATIVE = False
 
     def __init__(self, selectors: Iterable[SoupSelector]) -> None:
         """
@@ -639,7 +639,7 @@ class CompositeSoupSelector(SoupSelector):
             # which is not desired behavior, as it returns False
             return False
 
-        if self.__class__._ORDERED:
+        if self.__class__.COMMUTATIVE:
             return self.selectors == other.selectors
 
         # if order is irrelevant, check if all selectors are covered by other

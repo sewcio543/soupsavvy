@@ -33,4 +33,4 @@ jobs:
 
       - name: Format with black
         run: |
-          python -m black . --line-length 88 --diff --check
+          python -m black . --diff --check

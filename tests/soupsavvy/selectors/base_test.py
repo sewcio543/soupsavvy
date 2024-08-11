@@ -274,7 +274,7 @@ class TestCompositeSoupSelector:
         when order of selectors is not relevant in context of results.
         """
 
-        _ORDERED = False
+        COMMUTATIVE = False
 
     class MockOrdered(BaseCompositeSoupSelectorMock):
         """
@@ -282,7 +282,7 @@ class TestCompositeSoupSelector:
         when order of selectors is relevant in context of results.
         """
 
-        _ORDERED = True
+        COMMUTATIVE = True
 
     class MockNotEqual(MockOrdered):
         """
