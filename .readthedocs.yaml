@@ -13,6 +13,7 @@ build:
     - pip install -r docs/requirements.txt
     - pip install .
     - bash docs/sphinx_run.sh
+    - mv -r docs/build/html $READTHEDOCS_OUTPUT/html/
 
 sphinx:
   configuration: docs/source/conf.py
