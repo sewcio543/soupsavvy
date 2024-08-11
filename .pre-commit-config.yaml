@@ -33,6 +33,7 @@ repos:
       - id: black
         args: [--config, pyproject.toml]
         language_version: python3
+        types: [python, jupyter]
 
   - repo: https://github.com/PyCQA/flake8
     rev: 7.1.0
@@ -40,12 +41,3 @@ repos:
       - id: flake8
         args: [--config, tox.ini]
         language_version: python3
-
-  - repo: local
-    hooks:
-      - id: black-format-demos
-        name: format demos
-        entry: black demos/
-        language: system
-        types: [jupyter]
-        pass_filenames: false
