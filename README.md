@@ -3,7 +3,7 @@
 
 ## Powerful and flexible engine for BeautifulSoup
 
-[![PyPI](https://img.shields.io/pypi/v/soupsavvy?color=orange)](https://pypi.org/project/soupsavvy/) [![Python Versions](https://img.shields.io/pypi/pyversions/soupsavvy)](https://www.python.org/) [![Codecov](https://codecov.io/gh/sewcio543/soupsavvy/graph/badge.svg?token=RZ51VS3QLB)](https://codecov.io/gh/sewcio543/soupsavvy) [![Docs link](https://img.shields.io/badge/docs-read-blue)](https://sewcio543.github.io/soupsavvy/)
+[![PyPI](https://img.shields.io/pypi/v/soupsavvy?color=orange)](https://pypi.org/project/soupsavvy/) [![Python Versions](https://img.shields.io/pypi/pyversions/soupsavvy)](https://www.python.org/) [![Codecov](https://codecov.io/gh/sewcio543/soupsavvy/graph/badge.svg?token=RZ51VS3QLB)](https://codecov.io/gh/sewcio543/soupsavvy) [![Docs link](https://img.shields.io/badge/docs-read-blue)](https://soupsavvy.readthedocs.io/en/latest/)
 
 ## Table of Contents
 
@@ -34,15 +34,15 @@ pip install soupsavvy
 
 ## Documentation
 
-Full documentation can be found at **[documentation](https://sewcio543.github.io/soupsavvy/)**.
+Full documentation can be found at **[documentation](https://soupsavvy.readthedocs.io/en/latest/)**.
 
 ## Demos
 
-For more information about the package, its concepts and usage, read `Demos` section of the **[documentation](https://sewcio543.github.io/soupsavvy)**. It's step by step guide to the most important features of the package.
+For more information about the package, its concepts and usage, read `Demos` section of the **[documentation](https://soupsavvy.readthedocs.io/en/latest/)**. It's step by step guide to the most important features of the package.
 
 ## Contributing
 
-If you'd like to contribute to soupsavvy, feel free to check out the [GitHub repository](https://github.com/sewcio543/soupsavvy) and submit pull requests into one of development branches. Any feedback, bug reports, or feature requests are welcome!
+If you'd like to contribute to soupsavvy, feel free to check out the [GitHub repository](https://github.com/sewcio543/soupsavvy) and submit pull requests into one of development branches. Any feedback, bug reports, or feature requests are welcome! In case of any doubts, follow [Contribution Guidelines](https://github.com/sewcio543/soupsavvy/blob/main/CONTRIBUTING.md)
 
 ## License
 
@@ -51,7 +51,7 @@ If you'd like to contribute to soupsavvy, feel free to check out the [GitHub rep
 
 ## Acknowledgements
 
-`soupsavvy` is built upon the foundation of excellent BeautifulSoup. We extend our gratitude to the developers and contributors of this projects for their invaluable contributions to the Python community and making our life a lot easier!
+`soupsavvy` is built upon the foundation of excellent `BeautifulSoup`. We extend our gratitude to the developers of this projects for their invaluable contributions to the Python community and making our life a lot easier!
 
 -----------------
 
