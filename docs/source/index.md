@@ -2,12 +2,11 @@
 ========
 
 ```{toctree}
-:caption: 'Package components'
+:caption: 'Components'
 :maxdepth: 1
 
-soupsavvy.utils
-soupsavvy.testing
 soupsavvy.selectors
+soupsavvy.testing
 ```
 
 ```{toctree}

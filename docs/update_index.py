@@ -9,7 +9,8 @@ from pathlib import Path
 main_dir_name = "soupsavvy"
 # The package directory to search for new sub-packages
 soupsavvy_dir = Path(main_dir_name)
-
+# sub-packages to ignore and exclude from docs
+IGNORE = ["utils"]
 # The docs main index file to be updated
 index_file = Path("docs", "source", "index.md")
 
@@ -24,7 +25,7 @@ def main():
     current_folders = {
         f"{main_dir_name}.{f.name}"
         for f in soupsavvy_dir.iterdir()
-        if f.is_dir() and Path(f, "__init__.py").exists()
+        if all([f.is_dir(), Path(f, "__init__.py").exists(), f.name not in IGNORE])
     }
 
     # check for changes
