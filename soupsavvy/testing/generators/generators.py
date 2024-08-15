@@ -117,7 +117,6 @@ class AttributeGenerator(BaseGenerator):
         value : TemplateType, optional
             The value of the attribute. Defaults to None.
         """
-
         self._check_name(name)
         self.name = name
         self.value = _get_template_type(
@@ -276,11 +275,14 @@ class TagGenerator(BaseGenerator):
             The text content of the tag.
             Defaults to None, which generates empty string.
         """
+        if isinstance(attrs, str):
+            raise TypeError("'attrs' must be an iterable of attributes, not a string")
+
         self._void = name in namespace.VOID_TAGS
 
         if self._void and children:
             raise exc.VoidTagWithChildrenException(
-                f"{name} is a void tag and cannot have children"
+                f"'{name}' is a void tag and cannot have children"
             )
 
         self._check_name(name)
@@ -291,6 +293,7 @@ class TagGenerator(BaseGenerator):
             param="text",
             default=DEFAULT_TEXT_TEMPLATE,
         )
+
         self.attributes = self._process_attributes(attrs)
         self.children = [
             child if isinstance(child, TagGenerator) else TagGenerator(child)
@@ -356,7 +359,7 @@ class TagGenerator(BaseGenerator):
                 except AttributeGeneratorInitExceptions as e:
                     raise exc.AttributeParsingError(
                         f"Attribute {attr} could not be parsed into AttributeGenerator "
-                        "due to following error."
+                        "due to following error:"
                     ) from e
 
             attr_name = attr.name

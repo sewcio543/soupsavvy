@@ -100,6 +100,14 @@ class TestAttributeGenerator:
 class TestTagGenerator:
     """Component with unit tests for the TagGenerator class."""
 
+    def test_raises_error_if_attrs_parameter_is_string(self):
+        """
+        Test that the generator raises TypeError upon initialization
+        if the attrs parameter is a string.
+        """
+        with pytest.raises(TypeError):
+            TagGenerator(name="div", attrs="class")
+
     def test_generates_empty_tag_if_only_name_specified(self):
         """
         Test that the generator returns string with empty tag
