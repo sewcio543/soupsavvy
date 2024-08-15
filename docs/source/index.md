@@ -17,6 +17,8 @@ soupsavvy.selectors
 demos/about
 demos/selectors
 demos/combining
+demos/css
+demos/testing
 ```
 
 ```{include} ../../README.md
