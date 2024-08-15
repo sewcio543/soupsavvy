@@ -564,24 +564,6 @@ class SoupSelector(ABC):
 
         return DescendantCombinator(self, x)
 
-    def __sub__(self, x: SoupSelector) -> AndSelector:
-        """ """
-        from soupsavvy.selectors.logical import AndSelector, NotSelector
-
-        message = (
-            f"SUB operator not supported for types {type(self)} and {type(x)}, "
-            f"expected an instance of {SoupSelector.__name__}."
-        )
-        self._check_selector_type(x, message=message)
-        negation = NotSelector(x)
-
-        if isinstance(self, AndSelector):
-            args = [*self.selectors, negation]
-            # return new AndSelector with updated steps
-            return AndSelector(*args)
-
-        return AndSelector(self, negation)
-
 
 class SelectableCSS(ABC):
     """
