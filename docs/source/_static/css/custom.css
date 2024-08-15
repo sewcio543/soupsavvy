@@ -1,52 +1,59 @@
 /* Make headers in functions and methods smaller */
 .rst-content .method h2,
 .rst-content .function h2 {
-    font-size: 1.17em;
+  font-size: 1.17em;
 }
 
 /* Make TOC headers smaller */
-.rst-content .toctree-wrapper>p.caption {
-    font-size: 100%;
+.rst-content .toctree-wrapper > p.caption {
+  font-size: 100%;
 }
 
 /* Hide error messages - they doen't seem valuable, they are mostly random warnings */
 .rst-content .cell_output .output.stderr {
-    display: none;
+  display: none;
 }
 
 /* Hide the first cell, it's just a configuration not worth showing in the docs */
-.rst-content h1+.cell.docutils.container {
-    display: none;
+.rst-content h1 + .cell.docutils.container {
+  display: none;
 }
 
 /* Make dataframe output scrollable (they are too wide to fit) and smaller */
 .rst-content .cell_output .output.text_html {
-    overflow-x: auto;
-    font-size: 80%;
+  overflow-x: auto;
+  font-size: 80%;
 }
 
 /* Make bottom margin of class attributes smaller,
    they are not documented anyway and it looks weird
    if they have large gaps between them */
 .rst-content .class dl.attribute {
-    margin-bottom: 6px;
+  margin-bottom: 6px;
 }
 
 /* Make a:visited the same color as a:link, it looks messy otherwise */
 .rst-content a:visited {
-    color: #2980b9;
+  color: #2980b9;
 }
 
 /* Remove the red border, these are not always errors */
 .highlight .err {
-    border: none;
+  border: none;
 }
 
-img[src*="https://img.shields.io/badge/docs"] {
-    display: none;
+img[src*="https://img.shields.io/badge/docs"]
+{
+  display: none;
 }
 
 /* Hide the SoupSavvy logo from README, it's already included at the top */
 h1:has(img[alt="SoupSavvy"]) {
-    display: none;
+  display: none;
+}
+
+/* Hide 'View page source' link to rst.txt or md.txt files */
+a[href$="rst.txt"],
+a[href$="md.txt"] {
+  display: none;
 }
