@@ -12,13 +12,9 @@ from tests.soupsavvy.selectors.conftest import find_body_element, strip, to_bs
 class TestOnlyOfType:
     """Class with unit tests for OnlyOfType tag selector."""
 
-    def test_selector_is_correct_without_tag(self):
-        """Tests if selector property returns correct value without specifying tag."""
+    def test_css_selector_is_correct(self):
+        """Tests if selector property returns correct value."""
         assert OnlyOfType().css == ":only-of-type"
-
-    def test_selector_is_correct_with_tag(self):
-        """Tests if selector property returns correct value when specifying tag."""
-        assert OnlyOfType("div").css == "div:only-of-type"
 
     def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
         """Tests if find_all method returns all tags for selector without tag name."""
@@ -40,26 +36,6 @@ class TestOnlyOfType:
             strip("""<span><p>2</p><p></p></span>"""),
             strip("""<a>3</a>"""),
             strip("""<p>4</p>"""),
-        ]
-
-    def test_find_all_returns_all_tags_for_selector_with_tag_name(self):
-        """Tests if find_all method returns all tags for selector with tag name."""
-        text = """
-            <div></div>
-            <p><a>1</a><a></a></p>
-            <div><p>Hello</p><p></p></div>
-            <span><p></p><p></p></span>
-            <div>
-                <span><a></a><p>2</p></span>
-                <span></span>
-            </div>
-        """
-        bs = find_body_element(to_bs(text))
-        selector = OnlyOfType("p")
-        result = selector.find_all(bs)
-        assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("""<p><a>1</a><a></a></p>"""),
-            strip("""<p>2</p>"""),
         ]
 
     def test_find_returns_first_tag_matching_selector(self):

@@ -6,6 +6,20 @@ Contains implementation of basic CSS pseudo-classes like
 
 They can be used in combination with other SoupSelector objects
 to create more complex tag selection conditions.
+
+This module contains the following classes:
+* OnlyChild
+* Empty
+* FirstChild
+* LastChild
+* NthChild
+* NthLastChild
+* FirstOfType
+* LastOfType
+* NthOfType
+* NthLastOfType
+* OnlyOfType
+* CSS - wrapper for simple search with CSS selectors
 """
 
 from itertools import islice
@@ -32,7 +46,11 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
     and can be easily used in combination with other SoupSelector objects.
     """
 
-    def __init__(self, selector: str) -> None:
+    _SELECTOR: str
+
+    def __init__(self) -> None:
+        selector = self.__class__._SELECTOR.format(*self._formats)
+
         try:
             self._compiled = sv.compile(selector)
         except sv.SelectorSyntaxError:
@@ -41,6 +59,13 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
                 f"is not valid: {selector}"
             )
         self._selector = selector
+
+    @property
+    def _formats(self) -> list[str]:
+        """
+        List of arguments to be used to format css selector string of the selector.
+        """
+        return []
 
     @property
     def css(self) -> str:
@@ -66,11 +91,6 @@ class OnlyChild(CSSSoupSelector):
     Class to select tags that are the only child of their parent.
     It uses the CSS selector `:only-child`.
 
-    Parameters
-    ----------
-    tag : str, optional
-        Tag to be selected. If None, any tag is selected.
-
     Example
     --------
     >>> <div class="widget"> ❌
@@ -83,38 +103,22 @@ class OnlyChild(CSSSoupSelector):
 
     Tag is only selected if it is the only child of its parent.
 
-    In case of passing tag parameter, selector is `{tag}:only-child`.
-    Otherwise, selector is `:only-child`, which is equal to passing "*",
-    css wildcard selector as an argument.
-
     Example
     --------
     >>> OnlyChild().selector
     :only-child
-    >>> OnlyChild("li").selector
-    li:only-child
-
-    If tag is specified, two conditions must be met:
-    - Tag is the only child of its parent
-    - Tag has the specified tag name
 
     For more information on the :only-child selector, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:only-child
     """
 
-    def __init__(self, tag: Optional[str] = None) -> None:
-        super().__init__(f"{tag or ''}:only-child")
+    _SELECTOR = ":only-child"
 
 
 class Empty(CSSSoupSelector):
     """
     Class to select tags that are empty, i.e., have no children.
     It uses the CSS selector `:empty`.
-
-    Parameters
-    ----------
-    tag : str, optional
-        Tag to be selected. If None, any tag is selected.
 
     Example
     --------
@@ -124,20 +128,10 @@ class Empty(CSSSoupSelector):
 
     Tag is only selected if it is empty.
 
-    In case of passing tag parameter, selector is `{tag}:empty`.
-    Otherwise, selector is `:empty`, which is equal to passing "*",
-    css wildcard selector as an argument.
-
     Example
     --------
     >>> Empty().selector
     :empty
-    >>> Empty("ol").selector
-    ol:empty
-
-    If tag is specified, two conditions must be met:
-    - Tag is empty
-    - Tag has the specified tag name
 
     Notes
     --------
@@ -147,7 +141,7 @@ class Empty(CSSSoupSelector):
     Example
     --------
     >>> <div class="widget">Hello World</div> ❌
-    >>> <div class="widget"> </div> ❌
+    ... <div class="widget"> </div> ❌
 
     These tags are not empty and do not match the selector.
 
@@ -155,19 +149,13 @@ class Empty(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:empty
     """
 
-    def __init__(self, tag: Optional[str] = None) -> None:
-        super().__init__(f"{tag or ''}:empty")
+    _SELECTOR = ":empty"
 
 
 class FirstChild(CSSSoupSelector):
     """
     Class to select tags that are the first child of their parent.
     It uses the CSS selector `:first-child`.
-
-    Parameters
-    ----------
-    tag : str, optional
-        Tag to be selected. If None, any tag is selected.
 
     Example
     --------
@@ -181,20 +169,10 @@ class FirstChild(CSSSoupSelector):
 
     Tag is only selected if it is the first child of its parent.
 
-    In case of passing tag parameter, selector is `{tag}:first-child`.
-    Otherwise, selector is `:first-child`, which is equal to passing "*",
-    css wildcard selector as an argument.
-
     Example
     --------
     >>> FirstChild().selector
     :first-child
-    >>> FirstChild("li").selector
-    li:first-child
-
-    If tag is specified, two conditions must be met:
-    - Tag is the first child of its parent
-    - Tag has the specified tag name
 
     Notes
     --------
@@ -204,19 +182,13 @@ class FirstChild(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:first-child
     """
 
-    def __init__(self, tag: Optional[str] = None) -> None:
-        super().__init__(f"{tag or ''}:first-child")
+    _SELECTOR = ":first-child"
 
 
 class LastChild(CSSSoupSelector):
     """
     Class to select tags that are the last child of their parent.
     It uses the CSS selector `:last-child`.
-
-    Parameters
-    ----------
-    tag : str, optional
-        Tag to be selected. If None, any tag is selected.
 
     Example
     --------
@@ -231,20 +203,10 @@ class LastChild(CSSSoupSelector):
     Tag is only selected if it is the last child of its parent.
     Element that is the first and only child is matched as well.
 
-    In case of passing tag parameter, selector is `{tag}:last-child`.
-    Otherwise, selector is `:last-child`, which is equal to passing "*",
-    css wildcard selector as an argument.
-
     Example
     --------
     >>> LastChild().selector
     :last-child
-    >>> LastChild("div").selector
-    div:last-child
-
-    If tag is specified, two conditions must be met:
-    - Tag is the last child of its parent
-    - Tag has the specified tag name
 
     Notes
     --------
@@ -254,11 +216,22 @@ class LastChild(CSSSoupSelector):
     https://developer.mozilla.org/en-US/docs/Web/CSS/:last-child
     """
 
-    def __init__(self, tag: Optional[str] = None) -> None:
-        super().__init__(f"{tag or ''}:last-child")
+    _SELECTOR = ":last-child"
 
 
-class NthChild(CSSSoupSelector):
+class _NthBaseSelector(CSSSoupSelector):
+    """Base class for selectors based on nth formula."""
+
+    def __init__(self, nth: str) -> None:
+        self._nth = nth
+        super().__init__()
+
+    @property
+    def _formats(self) -> list[str]:
+        return [self._nth]
+
+
+class NthChild(_NthBaseSelector):
     """
     Class to select tags that are the nth child of their parent.
     It uses the CSS selector `:nth-child(n)`.
@@ -267,37 +240,24 @@ class NthChild(CSSSoupSelector):
     ----------
     nth : str, positional
         Number of the child to be selected. Can be a number or a formula.
-    tag : str, optional
-        Tag to be selected. If None, any tag is selected.
-
-    In case of passing tag parameter, selector is `{tag}:nth-child(n)`.
-    Otherwise, selector is `:nth-child(n)`, which is equal to passing "*",
-    css wildcard selector as an argument.
 
     Example
     --------
     >>> NthChild("2").selector
     :nth-child(2)
-    >>> NthChild("2", "li").selector
-    li:nth-child(2)
     >>> NthChild("2n+1").selector
     :nth-child(2n+1)
-    >>> NthChild("odd", "div").selector
-    div:nth-child(odd)
-
-    If tag is specified, two conditions must be met:
-    - Tag is the nth child of its parent
-    - Tag has the specified tag name
+    >>> NthChild("odd").selector
+    :nth-child(odd)
 
     For more information on the formula, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-child
     """
 
-    def __init__(self, nth: str, /, tag: Optional[str] = None) -> None:
-        super().__init__(f"{tag or ''}:nth-child({nth})")
+    _SELECTOR = ":nth-child({})"
 
 
-class NthLastChild(CSSSoupSelector):
+class NthLastChild(_NthBaseSelector):
     """
     Class to select tags that are the nth last child of their parent.
     It uses the CSS selector `:nth-last-child(n)`.
@@ -306,45 +266,27 @@ class NthLastChild(CSSSoupSelector):
     ----------
     nth : str, positional
         Number of the child to be selected. Can be a number or a formula.
-    tag : str, optional
-        Tag to be selected. If None, any tag is selected.
-
-    In case of passing tag parameter, selector is `{tag}:nth-last-child(n)`.
-    Otherwise, selector is `:nth-last-child(n)`, which is equal to passing "*",
-    css wildcard selector as an argument.
 
     Example
     --------
     >>> NthLastChild("2").selector
     :nth-last-child(2)
-    >>> NthLastChild("2", "li").selector
-    li:nth-last-child(2)
     >>> NthLastChild("2n+1").selector
     :nth-last-child(2n+1)
-    >>> NthLastChild("odd", "div").selector
-    div:nth-last-child(odd)
-
-    If tag is specified, two conditions must be met:
-    - Tag is the nth last child of its parent
-    - Tag has the specified tag name
+    >>> NthLastChild("odd").selector
+    :nth-last-child(odd)
 
     For more information on the formula, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-child
     """
 
-    def __init__(self, nth: str, /, tag: Optional[str] = None) -> None:
-        super().__init__(f"{tag or ''}:nth-last-child({nth})")
+    _SELECTOR = ":nth-last-child({})"
 
 
 class FirstOfType(CSSSoupSelector):
     """
     Class to select tags that are the first of their type in their parent.
     It uses the CSS selector `:first-of-type`.
-
-    Parameters
-    ----------
-    tag : str, optional
-        Tag to be selected. If None, any tag is selected.
 
     Example
     --------
@@ -359,43 +301,27 @@ class FirstOfType(CSSSoupSelector):
 
     Tag is only selected if it is the first of its type in its parent.
 
-    In case of passing tag parameter, selector is `{tag}:first-of-type`.
-    Otherwise, selector is `:first-of-type`, which is equal to passing "*",
-    css wildcard selector as an argument.
-
     Example
     --------
     >>> FirstOfType().selector
     :first-of-type
-    >>> FirstOfType("div").selector
-    div:first-of-type
-
-    If tag is specified, two conditions must be met:
-    - Tag is the first of its type in its parent
-    - Tag has the specified tag name
 
     Notes
     --------
-    If tag is not specified, the first tag of any type is selected, which in
+    For this selector the first tag of any type is selected, which in
     case of finding single tag is equivalent to FirstChild() results.
 
     For more information on the formula, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:first-of-type
     """
 
-    def __init__(self, tag: Optional[str] = None) -> None:
-        super().__init__(f"{tag or ''}:first-of-type")
+    _SELECTOR = ":first-of-type"
 
 
 class LastOfType(CSSSoupSelector):
     """
     Class to select tags that are the last of their type in their parent.
     It uses the CSS selector `:last-of-type`.
-
-    Parameters
-    ----------
-    tag : str, optional
-        Tag to be selected. If None, any tag is selected.
 
     Example
     --------
@@ -411,35 +337,24 @@ class LastOfType(CSSSoupSelector):
     Tag is only selected if it is the last of its type in its parent.
     Element that is the first and only child is matched as well.
 
-    In case of passing tag parameter, selector is `{tag}:last-of-type`.
-    Otherwise, selector is `:last-of-type`, which is equal to passing "*",
-    css wildcard selector as an argument.
-
     Example
     --------
     >>> LastOfType().selector
     :last-of-type
-    >>> LastOfType("div").selector
-    div:last-of-type
-
-    If tag is specified, two conditions must be met:
-    - Tag is the last of its type in its parent
-    - Tag has the specified tag name
 
     Notes
     --------
-    If tag is not specified, the first tag of any type is selected, which in
+    For this selector the last tag of any type is selected, which in
     case of finding single tag is the equivalent to LastChild() results.
 
     For more information on the formula, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:last-of-type
     """
 
-    def __init__(self, tag: Optional[str] = None) -> None:
-        super().__init__(f"{tag or ''}:last-of-type")
+    _SELECTOR = ":last-of-type"
 
 
-class NthOfType(CSSSoupSelector):
+class NthOfType(_NthBaseSelector):
     """
     Class to select tags that are the nth of their type in their parent.
     It uses the CSS selector `:nth-of-type(n)`.
@@ -448,37 +363,24 @@ class NthOfType(CSSSoupSelector):
     ----------
     nth : str, positional
         Number of the tag to be selected. Can be a number or a formula.
-    tag : str, optional
-        Tag to be selected. If None, any tag is selected.
-
-    In case of passing tag parameter, selector is `{tag}:nth-of-type(n)`.
-    Otherwise, selector is `:nth-of-type(n)`, which is equal to passing "*",
-    css wildcard selector as an argument.
 
     Example
     --------
     >>> NthOfType("2").selector
     :nth-of-type(2)
-    >>> NthOfType("2", "li").selector
-    li:nth-of-type(2)
     >>> NthOfType("2n+1").selector
     :nth-of-type(2n+1)
-    >>> NthOfType("even", "div").selector
-    div:nth-of-type(even)
-
-    If tag is specified, two conditions must be met:
-    - Tag is the nth of its type in its parent
-    - Tag has the specified tag name
+    >>> NthOfType("even").selector
+    :nth-of-type(even)
 
     For more information on the formula, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-of-type
     """
 
-    def __init__(self, nth: str, /, tag: Optional[str] = None) -> None:
-        super().__init__(f"{tag or ''}:nth-of-type({nth})")
+    _SELECTOR = ":nth-of-type({})"
 
 
-class NthLastOfType(CSSSoupSelector):
+class NthLastOfType(_NthBaseSelector):
     """
     Class to select tags that are the nth last of their type in their parent.
     It uses the CSS selector `:nth-last-of-type(n)`.
@@ -487,45 +389,27 @@ class NthLastOfType(CSSSoupSelector):
     ----------
     nth : str, positional
         Number of the tag to be selected. Can be a number or a formula.
-    tag : str, optional
-        Tag to be selected. If None, any tag is selected.
-
-    In case of passing tag parameter, selector is `{tag}:nth-last-of-type(n)`.
-    Otherwise, selector is `:nth-last-of-type(n)`, which is equal to passing "*",
-    css wildcard selector as an argument.
 
     Example
     --------
     >>> NthLastOfType("2").selector
     :nth-last-of-type(2)
-    >>> NthLastOfType("2", "li").selector
-    li:nth-last-of-type(2)
     >>> NthLastOfType("2n+1").selector
     :nth-last-of-type(2n+1)
-    >>> NthLastOfType("even", "div").selector
-    div:nth-last-of-type(even)
-
-    If tag is specified, two conditions must be met:
-    - Tag is the nth last of its type in its parent
-    - Tag has the specified tag name
+    >>> NthLastOfType("even").selector
+    :nth-last-of-type(even)
 
     For more information on the formula, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-of-type
     """
 
-    def __init__(self, nth: str, /, tag: Optional[str] = None) -> None:
-        super().__init__(f"{tag or ''}:nth-last-of-type({nth})")
+    _SELECTOR = ":nth-last-of-type({})"
 
 
 class OnlyOfType(CSSSoupSelector):
     """
     Class to select tags that are the only of their type in their parent.
     It uses the CSS selector `:only-of-type`.
-
-    Parameters
-    ----------
-    tag : str, optional
-        Tag to be selected. If None, any tag is selected.
 
     Example
     --------
@@ -541,27 +425,16 @@ class OnlyOfType(CSSSoupSelector):
 
     Tag is only selected if it is the only tag of its type in its parent.
 
-    In case of passing tag parameter, selector is `{tag}:only-of-type`.
-    Otherwise, selector is `:only-of-type`, which is equal to passing "*",
-    css wildcard selector as an argument.
-
     Example
     --------
     >>> OnlyOfType().selector
     :only-of-type
-    >>> OnlyOfType("div").selector
-    div:only-of-type
-
-    If tag is specified, two conditions must be met:
-    - Tag is the only tag of its type in its parent
-    - Tag has the specified tag name
 
     For more information on the :only-of-type selector, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:only-of-type
     """
 
-    def __init__(self, tag: Optional[str] = None) -> None:
-        super().__init__(f"{tag or ''}:only-of-type")
+    _SELECTOR = ":only-of-type"
 
 
 class CSS(CSSSoupSelector):
@@ -594,5 +467,12 @@ class CSS(CSSSoupSelector):
     ... <div class="menu"></div> ✔️
     """
 
+    _SELECTOR = "{}"
+
     def __init__(self, css: str) -> None:
-        super().__init__(css)
+        self._css = css
+        super().__init__()
+
+    @property
+    def _formats(self) -> list[str]:
+        return [self._css]
