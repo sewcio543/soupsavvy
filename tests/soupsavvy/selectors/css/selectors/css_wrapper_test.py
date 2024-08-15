@@ -55,7 +55,7 @@ class TestCSS:
             </span>
             <div class="widget"><p>3</p></div>
         """
-        bs = to_bs(text)
+        bs = find_body_element(to_bs(text))
         selector = CSS("div.widget")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div class="widget">1</div>""")
@@ -74,7 +74,7 @@ class TestCSS:
             </span>
             <span class="widget"></span>
         """
-        bs = to_bs(text)
+        bs = find_body_element(to_bs(text))
         selector = CSS("div.widget")
         result = selector.find(bs)
         assert result is None
@@ -93,7 +93,7 @@ class TestCSS:
             </span>
             <span class="widget"></span>
         """
-        bs = to_bs(text)
+        bs = find_body_element(to_bs(text))
         selector = CSS("div.widget")
 
         with pytest.raises(TagNotFoundException):
@@ -112,7 +112,7 @@ class TestCSS:
             </span>
             <div class="widget"><p>3</p></div>
         """
-        bs = to_bs(text)
+        bs = find_body_element(to_bs(text))
         selector = CSS("div.widget")
 
         result = selector.find_all(bs)
@@ -133,7 +133,7 @@ class TestCSS:
             </span>
             <span class="widget"></span>
         """
-        bs = to_bs(text)
+        bs = find_body_element(to_bs(text))
         selector = CSS("div.widget")
         result = selector.find_all(bs)
         assert result == []

@@ -12,13 +12,9 @@ from tests.soupsavvy.selectors.conftest import find_body_element, strip, to_bs
 class TestFirstOfType:
     """Class with unit tests for FirstOfType tag selector."""
 
-    def test_selector_is_correct_without_tag(self):
-        """Tests if selector property returns correct value without specifying tag."""
+    def test_css_selector_is_correct(self):
+        """Tests if selector property returns correct value."""
         assert FirstOfType().css == ":first-of-type"
-
-    def test_selector_is_correct_with_tag(self):
-        """Tests if selector property returns correct value when specifying tag."""
-        assert FirstOfType("div").css == "div:first-of-type"
 
     def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
         """Tests if find_all method returns all tags for selector without tag name."""
@@ -46,167 +42,37 @@ class TestFirstOfType:
             strip("""<a>56</a>"""),
         ]
 
-    def test_find_all_returns_all_tags_for_selector_with_tag_name(self):
-        """Tests if find_all method returns all tags for selector with tag name."""
-        text = """
-            <div>Hello</div>
-            <div></div>
-            <a class="widget">1</a>
-            <div>
-                <p>text</p>
-                <a><span>2</span></a>
-                <div>
-                    <span>Hello</span>
-                    <a class="widget">3</a>
-                    <a>Hello</a>
-                </div>
-                <p class="FirstOfType"></p>
-                <a>Hello</a>
-            </div>
-            <a href="widget"></a>
-        """
-        bs = find_body_element(to_bs(text))
-        selector = FirstOfType("a")
-        result = selector.find_all(bs)
-        assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("""<a class="widget">1</a>"""),
-            strip("""<a><span>2</span></a>"""),
-            strip("""<a class="widget">3</a>"""),
-        ]
-
     def test_find_returns_first_tag_matching_selector(self):
         """Tests if find method returns first tag matching selector."""
         text = """
-            <div></div>
+            <div>1</div>
             <div>Hello</div>
-            <a class="widget">1</a>
-            <span><a>2</a><a></a></span>
-            <span>Hello</span>
+            <a class="widget">2</a>
+            <span>3</span>
+            <span><a>4</a><a></a></span>
             <a>Hello</a>
-            <div><a><p>3</p></a></div>
         """
-        bs = to_bs(text)
-        selector = FirstOfType("a")
+        bs = find_body_element(to_bs(text))
+        selector = FirstOfType()
         result = selector.find(bs)
-        assert strip(str(result)) == strip("""<a class="widget">1</a>""")
-
-    def test_find_returns_none_if_no_match_and_strict_false(self):
-        """
-        Tests if find returns None if no element matches the selector
-        and strict is False.
-        """
-        text = """
-            <div></div>
-            <div>Hello</div>
-            <span><p>Not child</p></span>
-            <span>Hello</span>
-        """
-        bs = to_bs(text)
-        selector = FirstOfType("a")
-        result = selector.find(bs)
-        assert result is None
-
-    def test_find_raises_exception_if_no_match_and_strict_true(self):
-        """
-        Tests if find raises TagNotFoundException if no element matches the selector
-        and strict is True.
-        """
-        text = """
-            <div></div>
-            <div>Hello</div>
-            <span><p>Not child</p></span>
-            <span>Hello</span>
-        """
-        bs = to_bs(text)
-        selector = FirstOfType("a")
-
-        with pytest.raises(TagNotFoundException):
-            selector.find(bs, strict=True)
-
-    def test_find_all_returns_empty_list_when_no_match(self):
-        """Tests if find returns an empty list if no element matches the selector."""
-        text = """
-            <div></div>
-            <div>Hello</div>
-            <span><p>Not child</p></span>
-            <span>Hello</span>
-        """
-        bs = to_bs(text)
-        selector = FirstOfType("a")
-        result = selector.find_all(bs)
-        assert result == []
+        assert strip(str(result)) == strip("""<div>1</div>""")
 
     def test_find_returns_first_matching_child_if_recursive_false(self):
         """
         Tests if find returns first matching child element if recursive is False.
         """
         text = """
-            <div></div>
-            <div>Hello</div>
+            <span>1</span>
             <span><a>Not child</a><a></a></span>
-            <a class="widget">1</a>
-            <span>Hello</span>
-            <a>Hello</a>
-            <div><p></p></div>
+            <div>2</div>
+            <div>Hello</div>
+            <a>3</a>
+            <a class="widget"><p>Not child</p></a>
         """
         bs = find_body_element(to_bs(text))
-        selector = FirstOfType("a")
+        selector = FirstOfType()
         result = selector.find(bs, recursive=False)
-        assert strip(str(result)) == strip("""<a class="widget">1</a>""")
-
-    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
-        """
-        Tests if find returns None if no child element matches the selector
-        and recursive is False.
-        """
-        text = """
-            <div></div>
-            <div>Hello</div>
-            <span><a>Not child</a><a></a></span>
-            <span>Hello</span>
-            <div><p></p></div>
-        """
-        bs = find_body_element(to_bs(text))
-        selector = FirstOfType("a")
-        result = selector.find(bs, recursive=False)
-        assert result is None
-
-    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
-        """
-        Tests if find raises TagNotFoundException if no child element
-        matches the selector, when recursive is False and strict is True.
-        """
-        text = """
-            <div></div>
-            <div>Hello</div>
-            <span><a>Not child</a><a></a></span>
-            <span>Hello</span>
-            <div><p></p></div>
-        """
-        bs = find_body_element(to_bs(text))
-        selector = FirstOfType("a")
-
-        with pytest.raises(TagNotFoundException):
-            selector.find(bs, strict=True, recursive=False)
-
-    def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
-        self,
-    ):
-        """
-        Tests if find_all returns an empty list if no child element matches the selector
-        and recursive is False.
-        """
-        text = """
-            <div></div>
-            <div>Hello</div>
-            <span><a>Not child</a><a></a></span>
-            <span>Hello</span>
-            <div><p></p></div>
-        """
-        bs = find_body_element(to_bs(text))
-        selector = FirstOfType("a")
-        result = selector.find_all(bs, recursive=False)
-        assert result == []
+        assert strip(str(result)) == strip("""<span>1</span>""")
 
     def test_find_all_returns_all_matching_children_when_recursive_false(self):
         """

@@ -12,13 +12,9 @@ from tests.soupsavvy.selectors.conftest import find_body_element, strip, to_bs
 class TestEmpty:
     """Class with unit tests for Empty tag selector."""
 
-    def test_selector_is_correct_without_tag(self):
-        """Tests if selector property returns correct value without specifying tag."""
+    def test_css_selector_is_correct(self):
+        """Tests if css property returns correct value."""
         assert Empty().css == ":empty"
-
-    def test_selector_is_correct_with_tag(self):
-        """Tests if selector property returns correct value when specifying tag."""
-        assert Empty("div").css == "div:empty"
 
     def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
         """Tests if find_all method returns all tags for selector without tag name."""
@@ -43,27 +39,6 @@ class TestEmpty:
             strip("""<a class="widget"></a>"""),
             strip("""<img src="picture.jpg"/>"""),
             strip("""<br/>"""),
-        ]
-
-    def test_find_all_returns_all_tags_for_selector_with_tag_name(self):
-        """Tests if find_all method returns all tags for selector with tag name."""
-        text = """
-            <div>Hello</div>
-            <div></div>
-            <div>
-                <p>text 1</p>
-                <p class="empty"></p>
-            </div>
-            <div class="widget"></div>
-            <span><a>Hello</a></span>
-            <br/>
-        """
-        bs = find_body_element(to_bs(text))
-        selector = Empty("div")
-        result = selector.find_all(bs)
-        assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("""<div></div>"""),
-            strip("""<div class="widget"></div>"""),
         ]
 
     def test_find_returns_first_tag_matching_selector(self):
