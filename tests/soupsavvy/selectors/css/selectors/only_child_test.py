@@ -12,13 +12,9 @@ from tests.soupsavvy.selectors.conftest import find_body_element, strip, to_bs
 class TestOnlyChild:
     """Class with unit tests for OnlyChild tag selector."""
 
-    def test_selector_is_correct_without_tag(self):
-        """Tests if selector property returns correct value without specifying tag."""
+    def test_css_selector_is_correct(self):
+        """Tests if selector property returns correct value."""
         assert OnlyChild().css == ":only-child"
-
-    def test_selector_is_correct_with_tag(self):
-        """Tests if selector property returns correct value when specifying tag."""
-        assert OnlyChild("div").css == "div:only-child"
 
     def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
         """Tests if find_all method returns all tags for selector without tag name."""
@@ -37,26 +33,6 @@ class TestOnlyChild:
         result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<p>1</p>"""),
-            strip("""<a><p>3</p><p></p></a>"""),
-            strip("""<a>3</a>"""),
-        ]
-
-    def test_find_all_returns_all_tags_for_selector_with_tag_name(self):
-        """Tests if find_all method returns all tags for selector with tag name."""
-        text = """
-            <div></div>
-            <div><p>1</p></div>
-            <div><p>Hello</p><a></a></div>
-            <span><a><p>3</p><p></p></a></span>
-            <div>
-                <span><a>3</a></span>
-                <span></span>
-            </div>
-        """
-        bs = find_body_element(to_bs(text))
-        selector = OnlyChild("a")
-        result = selector.find_all(bs)
-        assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a><p>3</p><p></p></a>"""),
             strip("""<a>3</a>"""),
         ]

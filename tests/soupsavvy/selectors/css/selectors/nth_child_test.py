@@ -12,15 +12,9 @@ from tests.soupsavvy.selectors.conftest import find_body_element, strip, to_bs
 class TestNthChild:
     """Class with unit tests for NthChild tag selector."""
 
-    def test_selector_is_correct_without_tag(self):
-        """
-        Tests if selector property returns correct value without specifying tag.
-        """
+    def test_css_selector_is_correct(self):
+        """Tests if selector property returns correct value."""
         assert NthChild("2n").css == ":nth-child(2n)"
-
-    def test_selector_is_correct_with_tag(self):
-        """Tests if selector property returns correct value when specifying tag."""
-        assert NthChild("2n", tag="div").css == "div:nth-child(2n)"
 
     def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
         """Tests if find_all method returns all tags for selector without tag name."""
@@ -44,30 +38,6 @@ class TestNthChild:
             strip("""<span><a>3</a><p>4</p></span>"""),
             strip("""<p>4</p>"""),
             strip("""<div>5</div>"""),
-        ]
-
-    def test_find_all_returns_all_tags_for_selector_with_tag_name(self):
-        """Tests if find_all method returns all tags for selector with tag name."""
-        text = """
-            <div></div>
-            <a class="widget">Not p</a>
-            <div>
-                <p>Hello</p>
-                <p class="widget">1</p>
-                <a>Hello</a>
-                <span><a></a><p>2</p></span>
-            </div>
-            <div>Not p</div>
-            <span>Hello</span>
-            <p><span>3</span><a></a></p>
-        """
-        bs = find_body_element(to_bs(text))
-        selector = NthChild("2n", tag="p")
-        result = selector.find_all(bs)
-        assert list(map(lambda x: strip(str(x)), result)) == [
-            strip("""<p class="widget">1</p>"""),
-            strip("""<p>2</p>"""),
-            strip("""<p><span>3</span><a></a></p>"""),
         ]
 
     def test_find_returns_first_tag_matching_selector(self):
@@ -280,47 +250,6 @@ class TestNthChild:
         """
         with pytest.raises(InvalidCSSSelector):
             NthChild("2x+1")
-
-    @pytest.mark.parametrize(
-        argnames="nth, expected",
-        argvalues=[
-            ("2n", [2, 4, 6]),
-            ("2n+1", [1, 3, 5]),
-            # ignores whitespaces
-            ("   2n +  1", [1, 3, 5]),
-            ("-n+3", [1, 2, 3]),
-            ("even", [2, 4, 6]),
-            ("odd", [1, 3, 5]),
-            ("3", [3]),
-            ("-3n", []),
-            ("-3n+10", [1, 4]),
-        ],
-    )
-    def test_returns_elements_based_on_nth_selector_and_tag(
-        self, nth: str, expected: list[int]
-    ):
-        """
-        Tests if find_all returns all elements with specified tag name
-        matching various nth selectors.
-        """
-        text = """
-            <div class="widget">1</div>
-            <div class="widget">2</div>
-            <div class="widget">3</div>
-            <div class="widget">4</div>
-            <div class="widget">5</div>
-            <div class="widget">6</div>
-            <a>Hello</a>
-            <span>Hello</span>
-            <p></p>
-        """
-        bs = find_body_element(to_bs(text))
-        selector = NthChild(nth, tag="div")
-        results = selector.find_all(bs)
-
-        assert list(map(lambda x: strip(str(x)), results)) == [
-            f"""<div class="widget">{i}</div>""" for i in expected
-        ]
 
     @pytest.mark.parametrize(
         argnames="nth, expected",
