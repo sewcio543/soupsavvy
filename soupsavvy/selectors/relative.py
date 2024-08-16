@@ -2,7 +2,7 @@
 Module that contains relative selectors and utility components.
 """
 
-from typing import Optional
+from typing import Callable, Concatenate, Optional, ParamSpec, Protocol
 
 from bs4 import Tag
 
@@ -74,11 +74,14 @@ class BaseRelativeSibling(RelativeSelector):
     Base class with implementation for relative sibling selectors,
     searches for next sibling(s) of the anchor tag.
     Child class needs to define '_limit' class attribute to specify
-    how many next siblings to search for.
+    how many next siblings to search for and '_func' class attribute
+    to specify which method to use for finding siblings.
     """
 
     # limit of next siblings to check
-    _limit: Optional[int] = None
+    _limit: Optional[int]
+    # function to use for finding siblings
+    _func: Callable[..., list]
 
     def find_all(
         self,
@@ -86,15 +89,40 @@ class BaseRelativeSibling(RelativeSelector):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Tag]:
-        search = tag.parent or tag
-        # find al sibling tags that match the selector
+        search = tag.find_parents()[0]
+        # find all sibling tags that match the selector
         matching = TagResultSet(
             self.selector.find_all(search, recursive=False),
         )
-        # find n next sibling tags
-        next_ = TagResultSet(tag.find_next_siblings(limit=self._limit))  # type: ignore
+        siblings = TagResultSet(self.__class__._func(tag, limit=self._limit))
         # find intersection between two sets
-        matches = matching & next_
+        matches = matching & siblings
+        return matches.fetch(limit)
+
+
+class BaseAncestorSelector(RelativeSelector):
+    """
+    Base class with implementation for ancestor selectors,
+    searches for ancestor(s) of the anchor tag.
+    Child class needs to define '_limit' class attribute to specify
+    how many ancestors to search for.
+    """
+
+    _limit: Optional[int]
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        limit = limit or self._limit
+        # get max number of ancestors that can possibly be returned
+        ancestors = tag.find_parents(limit=self._limit)
+        search = ancestors[-1].parent or ancestors[-1]
+        # search within parent of last ancestor
+        matching = TagResultSet(self.selector.find_all(search))
+        matches = TagResultSet(ancestors) & matching
         return matches.fetch(limit)
 
 
@@ -242,6 +270,7 @@ class RelativeNextSibling(BaseRelativeSibling):
     """
 
     _limit = 1
+    _func = Tag.find_next_siblings
 
 
 class RelativeSubsequentSibling(BaseRelativeSibling):
@@ -284,6 +313,25 @@ class RelativeSubsequentSibling(BaseRelativeSibling):
     and returns RelativeSubsequentSibling selector.
     """
 
+    _limit = None
+    _func = Tag.find_next_siblings
+
+
+class RelativePreviousSibling(BaseRelativeSibling):
+    _limit = 1
+    _func = Tag.find_previous_siblings
+
+
+class RelativePrecedingSibling(BaseRelativeSibling):
+    _limit = None
+    _func = Tag.find_previous_siblings
+
+
+class ParentSelector(BaseAncestorSelector):
+    _limit = 1
+
+
+class AncestorSelector(BaseAncestorSelector):
     _limit = None
 
 
@@ -356,11 +404,17 @@ class _Anchor:
     https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors/Selector_structure#relative_selector
     """
 
-    def __gt__(self, x) -> RelativeSelector:
+    def __gt__(self, x) -> RelativeChild:
         return RelativeChild(x)
 
-    def __rshift__(self, x) -> RelativeSelector:
+    def __rshift__(self, x) -> RelativeDescendant:
         return RelativeDescendant(x)
+
+    def __lt__(self, x) -> ParentSelector:
+        return ParentSelector(x)
+
+    def __lshift__(self, x) -> AncestorSelector:
+        return AncestorSelector(x)
 
     def __add__(self, x) -> RelativeSelector:
         return RelativeNextSibling(x)
@@ -394,7 +448,7 @@ class HasSelector(CompositeSoupSelector):
 
     Example
     -------
-    >>> from soupsavvy.tags.relative import Anchor
+    >>> from soupsavvy.selectors.relative import Anchor
     >>> HasSelector(Anchor > TypeSelector("div"))
     >>> HasSelector(Anchor + TypeSelector("div"))
 
@@ -402,7 +456,7 @@ class HasSelector(CompositeSoupSelector):
 
     Example
     -------
-    >>> from soupsavvy.tags.relative import RelativeChild, RelativeNextSibling
+    >>> from soupsavvy.selectors.relative import RelativeChild, RelativeNextSibling
     >>> HasSelector(RelativeChild(TypeSelector("div")))
     >>> HasSelector(RelativeNextSibling(TypeSelector("div"))
 
@@ -430,7 +484,7 @@ class HasSelector(CompositeSoupSelector):
 
     Example
     -------
-    >>> from soupsavvy.tags.relative import Anchor
+    >>> from soupsavvy.selectors.relative import Anchor
     >>> HasSelector(TypeSelector("div"), TypeSelector("a"))
     >>> HasSelector(Anchor + TypeSelector("div"), Anchor > TypeSelector("a"))
 
