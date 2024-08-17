@@ -8,7 +8,7 @@ from typing import Optional
 
 from bs4 import Tag
 
-from soupsavvy.selectors.base import SoupSelector
+from soupsavvy.selectors.base import SoupSelector, check_selector
 from soupsavvy.selectors.nth.nth_utils import parse_nth
 from soupsavvy.selectors.tag_utils import TagIterator, TagResultSet
 
@@ -38,7 +38,7 @@ class _BaseNthOfSelector(SoupSelector):
         NotSoupSelectorException
             If selector is not an instance of SoupSelector.
         """
-        self.selector = self._check_selector_type(selector)
+        self.selector = check_selector(selector)
         self.nth_selector = parse_nth(nth)
 
     def find_all(
@@ -190,7 +190,7 @@ class OnlyOfSelector(SoupSelector):
         NotSoupSelectorException
             If selector is not an instance of SoupSelector.
         """
-        self.selector = self._check_selector_type(selector)
+        self.selector = check_selector(selector)
 
     def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
         tag_iterator = (

@@ -15,6 +15,8 @@ SubsequentSiblingCombinator - equivalent of CSS general sibling combinator (*)
 DescentCombinator - equivalent of CSS descendant combinator (" ")
 SelectorList - equivalent of CSS selector list (,) or :is() pseudo-class
 OrSelector - alias for SelectorList
+ParentCombinator - matches parent of preceding selector
+AncestorCombinator - matches ancestor of preceding selector
 
 Notes
 -----
@@ -30,9 +32,11 @@ from bs4 import Tag
 
 from soupsavvy.selectors.base import CompositeSoupSelector, SoupSelector
 from soupsavvy.selectors.relative import (
+    RelativeAncestor,
     RelativeChild,
     RelativeDescendant,
     RelativeNextSibling,
+    RelativeParent,
     RelativeSelector,
     RelativeSubsequentSibling,
 )
@@ -41,7 +45,7 @@ from soupsavvy.selectors.tag_utils import TagIterator, TagResultSet
 
 class BaseCombinator(CompositeSoupSelector):
     # order of selectors is relevant in context of results
-    COMMUTATIVE = True
+    COMMUTATIVE = False
 
     def __init__(
         self,
@@ -102,6 +106,51 @@ class BaseCombinator(CompositeSoupSelector):
             "and does not implement '_selector' property."
         )
 
+    def _find_first_step(
+        self, step: SoupSelector, tag: Tag, recursive: bool
+    ) -> TagResultSet:
+        """
+        Returns results of the first step in the combinator selector,
+        given Tag object that is being searched and recursive behavior
+        passed to find method by user.
+
+        Parameters
+        ----------
+        tag: Tag
+            Tag object that's being searched by first step in the combinator.
+        recursive: bool
+            Recursive behavior passed to find method by user.
+
+        Returns
+        -------
+        TagResultSet
+            Results of the first step in the combinator selector.
+        """
+        return TagResultSet(step.find_all(tag, recursive=recursive))
+
+    def _order_results(
+        self, results: TagResultSet, tag: Tag, recursive: bool
+    ) -> TagResultSet:
+        """
+        Orders results of find_all method of the combinator selector, given
+        initial Tag object that was passed to find_all method and recursive behavior.
+
+        Parameters
+        ----------
+        results: TagResultSet
+            Results of the combinator selector.
+        tag: Tag
+            Initial Tag object that was passed to find_all method.
+        recursive: bool
+            Recursive behavior passed to find method by user.
+
+        Returns
+        -------
+        TagResultSet
+            Ordered results of the combinator selector.
+        """
+        return TagResultSet(list(TagIterator(tag, recursive=True))) & results
+
     def find_all(
         self,
         tag: Tag,
@@ -112,8 +161,9 @@ class BaseCombinator(CompositeSoupSelector):
 
         for i, step in enumerate(self.selectors):
             if i == 0:
-                # only first step follows recursive rule
-                results |= TagResultSet(step.find_all(tag, recursive=recursive))
+                results |= self._find_first_step(
+                    step=step, tag=tag, recursive=recursive
+                )
                 continue
 
             if not results:
@@ -128,9 +178,32 @@ class BaseCombinator(CompositeSoupSelector):
                 )
             )
 
-        # keep order of tags and limit
-        results = TagResultSet(list(TagIterator(tag, recursive=True))) & results
+        results = self._order_results(results=results, tag=tag, recursive=recursive)
         return results.fetch(limit)
+
+
+class BaseAncestorCombinator(BaseCombinator):
+    """
+    Base class for ancestor combinators, that are specific type of combinators,
+    unlike other combinators, they move up the tree of elements, rather than down
+    after finding first step.
+
+    * Elements that match first step can be found
+    anywhere in the tree, regardless of `recursive` parameter.
+    * Final results should contain only children if `recursive` is False.
+    """
+
+    def _find_first_step(
+        self, step: SoupSelector, tag: Tag, recursive: bool
+    ) -> TagResultSet:
+        # always look for all descendants in first step
+        return TagResultSet(step.find_all(tag, recursive=True))
+
+    def _order_results(
+        self, results: TagResultSet, tag: Tag, recursive: bool
+    ) -> TagResultSet:
+        # respect recursive parameter while ordering results
+        return TagResultSet(list(TagIterator(tag, recursive=recursive))) & results
 
 
 class ChildCombinator(BaseCombinator):
@@ -297,19 +370,19 @@ class DescendantCombinator(BaseCombinator):
     Example
     -------
     >>> DescentCombinator(
-    >>>     TypeSelector("div", [AttributeSelector(name="class", value="menu")]),
-    >>>     TypeSelector("a", [AttributeSelector(name="href", value="google", re=True)])
+    >>>     TypeSelector("div"),
+    >>>     AttributeSelector(name="href", value="google.com")
     >>> )
 
-    matches all descendants of 'div' element with 'menu' class attribute
-    that are 'a' elements with href attribute containing 'google'.
+    matches all descendants of 'div' element
+    that have href attribute equal to 'google.com'.
 
     Example
     -------
-    >>> <div class="menu"><a href="google.com"></a></div> ✔️
-    >>> <div class="menu"><div><a href="google.com"></a></div></div> ✔️
-    >>> <div class="menu"><a href="duckduckgo.com"></a></div> ❌
-    >>> <div class="widget"><a href="google.com"></a></div> ❌
+    >>> <div><a href="google.com"></a></div> ✔️
+    >>> <div><div><a href="google.com"></a></div></div> ✔️
+    >>> <div><a href="duckduckgo.com"></a></div> ❌
+    >>> <span><a href="google.com"></a></span> ❌
     >>> <a href="google.com"></a> ❌
     >>> <div class="widget"></div> ❌
 
@@ -336,6 +409,134 @@ class DescendantCombinator(BaseCombinator):
     @property
     def _selector(self) -> Type[RelativeSelector]:
         return RelativeDescendant
+
+
+class ParentCombinator(BaseAncestorCombinator):
+    """
+    Parent combinator separates two selectors and matches all instances
+    of the second element that are parents of the first element.
+
+    Two `SoupSelector` objects are required to create ParentCombinator,
+    but more can be provided as positional arguments, which binds them
+    in a sequence of steps to match.
+
+    Example
+    -------
+    >>> ParentCombinator(
+    ...     TypeSelector("a"),
+    ...     AttributeSelector("class", "menu"),
+    ...     TypeSelector("div"),
+    ... )
+
+    The given selector would first look for 'a' elements, then find elements with
+    'menu' class that are parents of 'a' elements, and finally find 'div' elements
+    that are parents of 'menu' elements.
+
+    Example
+    -------
+    >>> <div><span class="menu"><a href="/shop"></a></span></div> ✔️
+    >>> <div><span class="menu"><div><a href="/shop"></a></div></span></div> ❌
+    >>> <div><a href="/shop"></a><span class="menu"></span></div> ❌
+    >>> <div><a href="/shop"></a></span></div> ❌
+
+    It is equivalent to using `HasSelector` with child combinator and narrowing
+    down results to `div` types with `TypeSelector`.
+
+    Example
+    -------
+    >>> HasSelector(
+    ...     Anchor > AttributeSelector("class", "menu") > TypeSelector("a")
+    ... ) & TypeSelector("div")
+
+    Although this combinator does not have its counterpart in CSS, it can be
+    represented as:
+
+    Example
+    -------
+    >>> div:has(> .menu > a)
+
+    Object can be created as well by using lt operator '<'
+    on two SoupSelector objects.
+
+    Example
+    -------
+    >>> div:has(> a) { color: red; }
+
+    Which translated to soupsavvy would be:
+
+    Example
+    -------
+    >>> TypeSelector("a") < TypeSelector("div")
+    >>> ParentCombinator(TypeSelector("a"), TypeSelector("div"))
+    """
+
+    @property
+    def _selector(self) -> Type[RelativeSelector]:
+        return RelativeParent
+
+
+class AncestorCombinator(BaseAncestorCombinator):
+    """
+    Ancestor combinator separates two selectors and matches all instances
+    of the second element that are ancestors of the first element.
+
+    Two `SoupSelector` objects are required to create AncestorCombinator,
+    but more can be provided as positional arguments, which binds them
+    in a sequence of steps to match.
+
+    Example
+    -------
+    >>> AncestorCombinator(
+    ...     TypeSelector("a"),
+    ...     AttributeSelector("class", "menu"),
+    ...     TypeSelector("div"),
+    ... )
+
+    The given selector would first look for 'a' elements, then find elements with
+    'menu' class that are ancestors of 'a' elements, and finally find 'div' elements
+    that are ancestors of 'menu' elements.
+
+    Example
+    -------
+    >>> <div><span class="menu"><a href="/shop"></a></span></div> ✔️
+    >>> <div><span class="menu"><div><a href="/shop"></a></div></span></div> ✔️
+    >>> <div><a href="/shop"></a><span class="menu"></span></div> ❌
+    >>> <div><a href="/shop"></a></span></div> ❌
+
+    It is equivalent to using `HasSelector` with (default) descendant combinator
+    and narrowing down results to `div` types with `TypeSelector`.
+
+    Example
+    -------
+    >>> HasSelector(
+    ...     AttributeSelector("class", "menu") > TypeSelector("a")
+    ... ) & TypeSelector("div")
+
+    Although this combinator does not have its counterpart in CSS, it can be
+    represented as has selector, where descendant combinator is implied:
+
+    Example
+    -------
+    >>> div:has(.menu a)
+
+    Object can be created as well by using left shift operator '<<'
+    on two SoupSelector objects.
+
+    Example
+    -------
+    >>> div:has(a) { color: red; }
+
+    Which translated to soupsavvy would be:
+
+    Example
+    -------
+    >>> TypeSelector("a") << TypeSelector("div")
+    >>> AncestorCombinator(TypeSelector("a"), TypeSelector("div"))
+    """
+
+    @property
+    def _selector(self) -> Type[RelativeSelector]:
+        return RelativeAncestor
 
 
 class SelectorList(CompositeSoupSelector):
