@@ -21,7 +21,7 @@ from .selectors import (
     XORSelector,
 )
 
-__version__ = "0.2.1"
+__version__ = "0.2.2-dev0"
 __author__ = "sewcio543"
 
 __all__ = [
