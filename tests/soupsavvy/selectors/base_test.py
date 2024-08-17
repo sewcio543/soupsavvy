@@ -11,11 +11,13 @@ import pytest
 from bs4 import Tag
 
 from soupsavvy.exceptions import NavigableStringException, NotSoupSelectorException
-from soupsavvy.selectors.base import CompositeSoupSelector
+from soupsavvy.selectors.base import CompositeSoupSelector, check_selector
 from soupsavvy.selectors.combinators import (
+    AncestorCombinator,
     ChildCombinator,
     DescendantCombinator,
     NextSiblingCombinator,
+    ParentCombinator,
     SelectorList,
     SubsequentSiblingCombinator,
 )
@@ -166,6 +168,34 @@ class TestRSHIFTOperator(BaseOperatorTest):
     OPERATOR = operator.rshift
 
 
+class TestLSHIFTOperator(BaseOperatorTest):
+    """
+    Class for testing LSHIFT operator for SoupSelector interface.
+    __lshift__ operator applied correctly creates AncestorCombinator instance.
+
+    Example
+    -------
+    >>> MockSelector() << MockSelector()
+    """
+
+    TYPE = AncestorCombinator
+    OPERATOR = operator.lshift
+
+
+class TestLTOperator(BaseOperatorTest):
+    """
+    Class for testing LT operator for SoupSelector interface.
+    __lt__ operator applied correctly creates ParentCombinator instance.
+
+    Example
+    -------
+    >>> MockSelector() < MockSelector()
+    """
+
+    TYPE = ParentCombinator
+    OPERATOR = operator.lt
+
+
 @pytest.mark.selector
 class TestNOTOperator:
     """
@@ -274,7 +304,7 @@ class TestCompositeSoupSelector:
         when order of selectors is not relevant in context of results.
         """
 
-        COMMUTATIVE = False
+        COMMUTATIVE = True
 
     class MockOrdered(BaseCompositeSoupSelectorMock):
         """
@@ -282,7 +312,7 @@ class TestCompositeSoupSelector:
         when order of selectors is relevant in context of results.
         """
 
-        COMMUTATIVE = True
+        COMMUTATIVE = False
 
     class MockNotEqual(MockOrdered):
         """
@@ -420,3 +450,37 @@ class TestCompositeSoupSelector:
     ):
         """Tests if two multiple soup selectors are not equal."""
         assert (selectors[0] == selectors[1]) is False
+
+
+class TestCheckSelector:
+    """
+    Class for testing check_selector function.
+    Function is used to ensure that object is instance of SoupSelector.
+    """
+
+    def test_passes_check_and_returns_the_same_object(self):
+        """
+        Tests if check_selector returns the same object
+        if it is instance of SoupSelector.
+        """
+        selector = MockSelector()
+        result = check_selector(selector)
+        assert result is selector
+
+    def test_raises_exception_when_not_selector(self):
+        """
+        Tests if check_selector raises NotSoupSelectorException if object is not
+        instance of SoupSelector.
+        """
+        with pytest.raises(NotSoupSelectorException):
+            check_selector("selector")
+
+    def test_raises_exception_with_custom_message_when_specified(self):
+        """
+        Tests if check_selector raises NotSoupSelectorException with custom message
+        if object is not instance of SoupSelector and message is specified.
+        """
+        message = "Custom message"
+
+        with pytest.raises(NotSoupSelectorException, match=message):
+            check_selector("selector", message=message)

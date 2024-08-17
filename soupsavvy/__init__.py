@@ -1,4 +1,5 @@
 from .selectors import (
+    AncestorCombinator,
     Anchor,
     AndSelector,
     AnyTagSelector,
@@ -11,6 +12,7 @@ from .selectors import (
     NextSiblingCombinator,
     NotSelector,
     OrSelector,
+    ParentCombinator,
     PatternSelector,
     SelectorList,
     SubsequentSiblingCombinator,
@@ -19,7 +21,7 @@ from .selectors import (
     XORSelector,
 )
 
-__version__ = "0.2.0"
+__version__ = "0.2.1-dev0"
 __author__ = "sewcio543"
 
 __all__ = [
@@ -34,6 +36,8 @@ __all__ = [
     "ChildCombinator",
     "NextSiblingCombinator",
     "SubsequentSiblingCombinator",
+    "AncestorCombinator",
+    "ParentCombinator",
     "HasSelector",
     "Anchor",
     "OrSelector",

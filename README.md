@@ -3,7 +3,7 @@
 
 ## Powerful and flexible engine for BeautifulSoup
 
-[![PyPI](https://img.shields.io/pypi/v/soupsavvy?color=orange)](https://pypi.org/project/soupsavvy/) [![Python Versions](https://img.shields.io/pypi/pyversions/soupsavvy)](https://www.python.org/) [![Codecov](https://codecov.io/gh/sewcio543/soupsavvy/graph/badge.svg?token=RZ51VS3QLB)](https://codecov.io/gh/sewcio543/soupsavvy) [![Docs link](https://img.shields.io/badge/docs-read-blue)](https://soupsavvy.readthedocs.io/en/latest/)
+[![PyPI](https://img.shields.io/pypi/v/soupsavvy?color=orange)](https://pypi.org/project/soupsavvy/) [![Python Versions](https://img.shields.io/pypi/pyversions/soupsavvy)](https://www.python.org/) [![Codecov](https://codecov.io/gh/sewcio543/soupsavvy/graph/badge.svg?token=RZ51VS3QLB)](https://codecov.io/gh/sewcio543/soupsavvy) [![Docs link](https://img.shields.io/badge/docs-read-blue)](https://soupsavvy.readthedocs.io)
 
 ## Table of Contents
 
@@ -34,11 +34,11 @@ pip install soupsavvy
 
 ## Documentation
 
-Full documentation can be found at **[documentation](https://soupsavvy.readthedocs.io/en/latest/)**.
+Full documentation can be found at **[documentation](https://soupsavvy.readthedocs.io)**.
 
 ## Demos
 
-For more information about the package, its concepts and usage, read `Demos` section of the **[documentation](https://soupsavvy.readthedocs.io/en/latest/)**. It's step by step guide to the most important features of the package.
+For more information about the package, its concepts and usage, read `Demos` section of the **[documentation](https://soupsavvy.readthedocs.io)**. It's step by step guide to the most important features of the package.
 
 ## Contributing
 

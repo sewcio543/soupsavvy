@@ -13,13 +13,42 @@ from soupsavvy.utils.deprecation import deprecated_function
 
 if TYPE_CHECKING:
     from soupsavvy.selectors.combinators import (
+        AncestorCombinator,
         ChildCombinator,
         DescendantCombinator,
         NextSiblingCombinator,
+        ParentCombinator,
         SelectorList,
         SubsequentSiblingCombinator,
     )
     from soupsavvy.selectors.logical import AndSelector
+
+
+def check_selector(x: Any, message: Optional[str] = None) -> SoupSelector:
+    """
+    Checks if provided object is a valid `soupsavvy` selector.
+    Checks for instance of SoupSelector and raises an exception if not.
+    Returns provided object if fulfills the condition for convenience.
+
+    Parameters
+    ----------
+    x : Any
+        Any object to be validated as correct selector.
+    message : str, optional
+        Custom message to be displayed in case of raising an exception.
+        By default None, which results in default message.
+
+    Raises
+    ------
+    NotSoupSelectorException
+        If provided object is not an instance of SoupSelector.
+    """
+    message = message or f"Object {x} is not an instance of {SoupSelector.__name__}."
+
+    if not isinstance(x, SoupSelector):
+        raise exc.NotSoupSelectorException(message)
+
+    return x
 
 
 class SoupSelector(ABC):
@@ -177,35 +206,6 @@ class SoupSelector(ABC):
         elements = self.find_all(tag, recursive=recursive, limit=1)
         return elements[0] if elements else None
 
-    def _check_selector_type(
-        self, x: Any, message: Optional[str] = None
-    ) -> SoupSelector:
-        """
-        Checks if provided object is an instance of SoupSelector.
-        Returns provided object if fulfills the condition for convenience.
-
-        Parameters
-        ----------
-        x : Any
-            Any object to be checked if it is an instance of SoupSelector.
-        message : str, optional
-            Custom message to be displayed in case of raising an exception.
-            By default None, which results in default message.
-
-        Raises
-        ------
-        NotSoupSelectorException
-            If provided object is not an instance of SoupSelector.
-        """
-        message = (
-            message or f"Object {x} is not an instance of {SoupSelector.__name__}."
-        )
-
-        if not isinstance(x, SoupSelector):
-            raise exc.NotSoupSelectorException(message)
-
-        return x
-
     @abstractmethod
     def __eq__(self, other: object) -> bool:
         """
@@ -235,17 +235,17 @@ class SoupSelector(ABC):
     def __or__(self, x: SoupSelector) -> SelectorList:
         """
         Overrides __or__ method called also by pipe operator '|'.
-        Syntactical Sugar for logical disjunction, that creates a SoupSelector
-        matching at least one of the elements.
+        Syntactical Sugar for logical disjunction, that creates SelectorList,
+        which matches at least one of the elements.
 
         Parameters
         ----------
         x : SoupSelector
-            SoupSelector object to be combined into new SoupUnionTag.
+            SoupSelector object to be combined into new SelectorList with current one.
 
         Returns
         -------
-        SoupUnionTag
+        SelectorList
             Union of two SoupSelector that can be used to get all elements
             that match at least one of the elements in the Union.
 
@@ -260,7 +260,7 @@ class SoupSelector(ABC):
             f"Bitwise OR not supported for types {type(self)} and {type(x)}, "
             f"expected an instance of {SoupSelector.__name__}."
         )
-        self._check_selector_type(x, message=message)
+        check_selector(x, message=message)
 
         if isinstance(self, SelectorList):
             args = [*self.selectors, x]
@@ -327,7 +327,7 @@ class SoupSelector(ABC):
             f"Bitwise AND not supported for types {type(self)} and {type(x)}, "
             f"expected an instance of {SoupSelector.__name__}."
         )
-        self._check_selector_type(x, message=message)
+        check_selector(x, message=message)
 
         if isinstance(self, AndSelector):
             args = [*self.selectors, x]
@@ -338,8 +338,8 @@ class SoupSelector(ABC):
 
     def __gt__(self, x: SoupSelector) -> ChildCombinator:
         """
-        Overrides __gt__ method called also by greater than operator '>'.
-        Syntactical Sugar for greater than operator, that creates a ChildCombinator
+        Overrides __gt__ method called also by greater-than operator '>'.
+        Syntactical Sugar for greater-than operator, that creates a ChildCombinator
         which is equivalent to child combinator in css.
 
         Example
@@ -362,14 +362,14 @@ class SoupSelector(ABC):
         Parameters
         ----------
         x : SoupSelector
-            SoupSelector object to be combined into new ChildCombinator as child
-            of current SoupSelector.
+            SoupSelector object to be combined into new ChildCombinator
+            as selector for children of elements matched by current SoupSelector.
 
         Returns
         -------
         ChildCombinator
             ChildCombinator object that can be used to get all matching elements
-            that are direct children of the current SoupSelector.
+            that are direct children of the elements matched by current SoupSelector.
 
         Raises
         ------
@@ -382,7 +382,7 @@ class SoupSelector(ABC):
             f"GT operator not supported for types {type(self)} and {type(x)}, "
             f"expected an instance of {SoupSelector.__name__}."
         )
-        self._check_selector_type(x, message=message)
+        check_selector(x, message=message)
 
         if isinstance(self, ChildCombinator):
             args = [*self.selectors, x]
@@ -390,6 +390,55 @@ class SoupSelector(ABC):
             return ChildCombinator(*args)
 
         return ChildCombinator(self, x)
+
+    def __lt__(self, x: SoupSelector) -> ParentCombinator:
+        """
+        Overrides __lt__ method called also by less-than operator '<'.
+        Syntactical Sugar for less-than operator, that creates a ParentCombinator.
+
+        Example
+        -------
+        >>> TypeSelector("a") < TypeSelector("div")
+
+        Which results in
+
+        Example
+        -------
+        >>> ParentCombinator(TypeSelector("a"), TypeSelector("div"))
+
+        Matches all 'div' elements that are parents of 'a' elements.
+
+        Parameters
+        ----------
+        x : SoupSelector
+            SoupSelector object to be combined into new ParentCombinator
+            as selector for parent of elements matched by current SoupSelector.
+
+        Returns
+        -------
+        ParentCombinator
+            ParentCombinator object that can be used to get all matching elements
+            that are parents of the elements matched by current SoupSelector.
+
+        Raises
+        ------
+        NotSoupSelectorException
+            If provided object is not of SoupSelector type.
+        """
+        from soupsavvy.selectors.combinators import ParentCombinator
+
+        message = (
+            f"LT operator not supported for types {type(self)} and {type(x)}, "
+            f"expected an instance of {SoupSelector.__name__}."
+        )
+        check_selector(x, message=message)
+
+        if isinstance(self, ParentCombinator):
+            args = [*self.selectors, x]
+            # return new ParentCombinator with updated steps
+            return ParentCombinator(*args)
+
+        return ParentCombinator(self, x)
 
     def __add__(self, x: SoupSelector) -> NextSiblingCombinator:
         """
@@ -419,8 +468,8 @@ class SoupSelector(ABC):
         Parameters
         ----------
         x : SoupSelector
-            SoupSelector object to be combined into new NextSiblingCombinator as next
-            sibling of current SoupSelector.
+            SoupSelector object to be combined into new NextSiblingCombinator
+            as selector for next sibling of current SoupSelector.
 
         Returns
         -------
@@ -439,7 +488,7 @@ class SoupSelector(ABC):
             f"ADD operator not supported for types {type(self)} and {type(x)}, "
             f"expected an instance of {SoupSelector.__name__}."
         )
-        self._check_selector_type(x, message=message)
+        check_selector(x, message=message)
 
         if isinstance(self, NextSiblingCombinator):
             args = [*self.selectors, x]
@@ -476,7 +525,7 @@ class SoupSelector(ABC):
         ----------
         x : SoupSelector
             SoupSelector object to be combined into new SubsequentSiblingCombinator
-            as following sibling of current SoupSelector.
+            as selector for following sibling of current SoupSelector.
 
         Returns
         -------
@@ -495,7 +544,7 @@ class SoupSelector(ABC):
             f"MUL operator not supported for types {type(self)} and {type(x)}, "
             f"expected an instance of {SoupSelector.__name__}."
         )
-        self._check_selector_type(x, message=message)
+        check_selector(x, message=message)
 
         if isinstance(self, SubsequentSiblingCombinator):
             args = [*self.selectors, x]
@@ -531,7 +580,7 @@ class SoupSelector(ABC):
         ----------
         x : SoupSelector
             SoupSelector object to be combined into new DescendantCombinator
-            as descendant of current SoupSelector.
+            as selector for descendant of current SoupSelector.
 
         Returns
         -------
@@ -555,7 +604,7 @@ class SoupSelector(ABC):
             f"RIGHT SHIFT operator not supported for types {type(self)} and {type(x)}, "
             f"expected an instance of {SoupSelector.__name__}."
         )
-        self._check_selector_type(x, message=message)
+        check_selector(x, message=message)
 
         if isinstance(self, DescendantCombinator):
             args = [*self.selectors, x]
@@ -563,6 +612,55 @@ class SoupSelector(ABC):
             return DescendantCombinator(*args)
 
         return DescendantCombinator(self, x)
+
+    def __lshift__(self, x: SoupSelector) -> AncestorCombinator:
+        """
+        Overrides __lshift__ method called also by left shift operator '<<'.
+        Syntactical Sugar for left-shift operator, that creates an AncestorCombinator.
+
+        Example
+        -------
+        >>> TypeSelector("a") << TypeSelector("div")
+
+        Which results in
+
+        Example
+        -------
+        >>> AncestorCombinator(TypeSelector("a"), TypeSelector("div"))
+
+        Matches all 'div' elements that are ancestors of 'a' elements.
+
+        Parameters
+        ----------
+        x : SoupSelector
+            SoupSelector object to be combined into new AncestorCombinator
+            as ancestor selector of current SoupSelector.
+
+        Returns
+        -------
+        AncestorCombinator
+            AncestorCombinator object that can be used to get all matching elements
+            that are ancestors of the elements matched by current SoupSelector.
+
+        Raises
+        ------
+        NotSoupSelectorException
+            If provided object is not of SoupSelector type.
+        """
+        from soupsavvy.selectors.combinators import AncestorCombinator
+
+        message = (
+            f"LEFT SHIFT operator not supported for types {type(self)} and {type(x)}, "
+            f"expected an instance of {SoupSelector.__name__}."
+        )
+        check_selector(x, message=message)
+
+        if isinstance(self, AncestorCombinator):
+            args = [*self.selectors, x]
+            # return new AncestorCombinator with updated steps
+            return AncestorCombinator(*args)
+
+        return AncestorCombinator(self, x)
 
 
 class SelectableCSS(ABC):
@@ -608,8 +706,8 @@ class CompositeSoupSelector(SoupSelector):
         List of SoupSelector objects passed to CompositeSoupSelector.
     """
 
-    # if the order of selectors is relevant - by default False
-    COMMUTATIVE = False
+    # if the order of selectors is not relevant - by default True
+    COMMUTATIVE = True
 
     def __init__(self, selectors: Iterable[SoupSelector]) -> None:
         """
@@ -627,7 +725,7 @@ class CompositeSoupSelector(SoupSelector):
         NotSoupSelectorException
             If any of provided parameters is not an instance of SoupSelector.
         """
-        self.selectors = [self._check_selector_type(selector) for selector in selectors]
+        self.selectors = [check_selector(selector) for selector in selectors]
 
     def __eq__(self, other: object) -> bool:
         # check for CompositeSoupSelector type for type checking sake
@@ -639,7 +737,7 @@ class CompositeSoupSelector(SoupSelector):
             # which is not desired behavior, as it returns False
             return False
 
-        if self.__class__.COMMUTATIVE:
+        if not self.__class__.COMMUTATIVE:
             return self.selectors == other.selectors
 
         # if order is irrelevant, check if all selectors are covered by other
