@@ -585,6 +585,26 @@ class TestRelativeParent:
         """
         return RelativeParent(MockDivSelector())
 
+    def test_raises_exception_when_invalid_input(self):
+        """
+        Tests if selector raises NotSoupSelectorException when invalid input is provided
+        on object initialization. It only accepts SoupSelector instances.
+        """
+        with pytest.raises(NotSoupSelectorException):
+            RelativeParent("p")  # type: ignore
+
+    def test_returns_none_or_empty_list_if_no_ancestors(self, selector: RelativeParent):
+        """
+        Tests if find method returns None if tag does not have any ancestors,
+        in such case, it must be the root element (html).
+        """
+        text = """
+            <html><body><div class="anchor"></div></body></html>
+        """
+        bs = to_bs(text)
+        assert selector.find(bs) is None
+        assert selector.find_all(bs) == []
+
     @pytest.mark.parametrize(
         argnames="recursive",
         argvalues=[True, False],
@@ -684,7 +704,7 @@ class TestRelativeParent:
 
 
 @pytest.mark.selector
-class TestAncestorSelector:
+class TestRelativeAncestor:
     """Class with test suite for RelativeAncestor selector."""
 
     @pytest.fixture
@@ -694,6 +714,28 @@ class TestAncestorSelector:
         which is used in test cases.
         """
         return RelativeAncestor(MockDivSelector())
+
+    def test_raises_exception_when_invalid_input(self):
+        """
+        Tests if selector raises NotSoupSelectorException when invalid input is provided
+        on object initialization. It only accepts SoupSelector instances.
+        """
+        with pytest.raises(NotSoupSelectorException):
+            RelativeAncestor("p")  # type: ignore
+
+    def test_returns_none_or_empty_list_if_no_ancestors(
+        self, selector: RelativeAncestor
+    ):
+        """
+        Tests if find method returns None if tag does not have any ancestors,
+        in such case, it must be the root element (html).
+        """
+        text = """
+            <html><body><div class="anchor"></div></body></html>
+        """
+        bs = to_bs(text)
+        assert selector.find(bs) is None
+        assert selector.find_all(bs) == []
 
     @pytest.mark.parametrize(
         argnames="recursive",

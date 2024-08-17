@@ -119,6 +119,11 @@ class BaseAncestorSelector(RelativeSelector):
         limit = limit or self._limit
         # get max number of ancestors that can possibly be returned
         ancestors = tag.find_parents(limit=self._limit)
+
+        if not ancestors:
+            # if no ancestors, make no sense to search
+            return []
+
         search = ancestors[-1].parent or ancestors[-1]
         # search within parent of last ancestor
         matching = TagResultSet(self.selector.find_all(search))
