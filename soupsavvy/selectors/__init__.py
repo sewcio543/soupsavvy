@@ -1,8 +1,10 @@
 from .attributes import AttributeSelector, ClassSelector, IdSelector
 from .combinators import (
+    AncestorCombinator,
     ChildCombinator,
     DescendantCombinator,
     NextSiblingCombinator,
+    ParentCombinator,
     SelectorList,
     SubsequentSiblingCombinator,
 )
@@ -17,6 +19,8 @@ __all__ = [
     "PatternSelector",
     "SelectorList",
     "DescendantCombinator",
+    "AncestorCombinator",
+    "ParentCombinator",
     "AndSelector",
     "NotSelector",
     "ChildCombinator",

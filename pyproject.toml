@@ -40,7 +40,7 @@ packages = ["soupsavvy"]
 
 [project.urls]
 Repository = "https://github.com/sewcio543/soupsavvy"
-Homepage  = "https://soupsavvy.readthedocs.io/en/stable/"
+Homepage  = "https://soupsavvy.readthedocs.io"
 
 [tool.black]
 line-length = 88
