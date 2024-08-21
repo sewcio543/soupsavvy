@@ -3,20 +3,33 @@ changelog:
     labels:
       - prod-version
       - dev-version
+      - refactoring
+      - testing
 
   categories:
     - title: Breaking Changes 💥
       labels:
         - breaking
+
     - title: New Features 🎉
       labels:
         - feature
+
+    - title: Fixes 🛠️
+      labels:
+        - bug
+        - bugfix
+
+    - title: Documentation 📚
+      labels:
+        - documentation
+        - demo
+
     - title: Improvements 🚀
       labels:
         - enhancement
-        - documentation
         - CI/CD
-        - bugfix
+
     - title: Other Changes
       labels:
         - "*"

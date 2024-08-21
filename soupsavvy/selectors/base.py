@@ -3,15 +3,18 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, overload
+from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, Union, overload
 
 from bs4 import NavigableString, Tag
 
 import soupsavvy.exceptions as exc
 import soupsavvy.selectors.namespace as ns
+from soupsavvy.interfaces import Comparable, TagSearcher
+from soupsavvy.operations.base import BaseOperation
 from soupsavvy.utils.deprecation import deprecated_function
 
 if TYPE_CHECKING:
+    from soupsavvy.operations.pipeline import SelectionPipeline
     from soupsavvy.selectors.combinators import (
         AncestorCombinator,
         ChildCombinator,
@@ -51,7 +54,7 @@ def check_selector(x: Any, message: Optional[str] = None) -> SoupSelector:
     return x
 
 
-class SoupSelector(ABC):
+class SoupSelector(TagSearcher, Comparable):
     """
     Interface for classes that define tags and provide functionality
     to find them in BeautifulSoup Tags.
@@ -86,6 +89,14 @@ class SoupSelector(ABC):
         self,
         tag: Tag,
         strict: Literal[False] = ...,
+        recursive: bool = ...,
+    ) -> Optional[Tag]: ...
+
+    @overload
+    def find(
+        self,
+        tag: Tag,
+        strict: bool = ...,
         recursive: bool = ...,
     ) -> Optional[Tag]: ...
 
@@ -232,7 +243,15 @@ class SoupSelector(ABC):
             "and does not implement this method."
         )
 
-    def __or__(self, x: SoupSelector) -> SelectorList:
+    @overload
+    def __or__(self, x: SoupSelector) -> SelectorList: ...
+
+    @overload
+    def __or__(self, x: BaseOperation) -> SelectionPipeline: ...
+
+    def __or__(
+        self, x: Union[SoupSelector, BaseOperation]
+    ) -> Union[SelectorList, SelectionPipeline]:
         """
         Overrides __or__ method called also by pipe operator '|'.
         Syntactical Sugar for logical disjunction, that creates SelectorList,
@@ -254,11 +273,15 @@ class SoupSelector(ABC):
         NotSoupSelectorException
             If provided object is not of SoupSelector type.
         """
+        from soupsavvy.operations.pipeline import SelectionPipeline
         from soupsavvy.selectors.combinators import SelectorList
+
+        if isinstance(x, BaseOperation):
+            return SelectionPipeline(selector=self, operation=x)
 
         message = (
             f"Bitwise OR not supported for types {type(self)} and {type(x)}, "
-            f"expected an instance of {SoupSelector.__name__}."
+            f"expected an instance of {SoupSelector.__name__} or {BaseOperation.__name__}."
         )
         check_selector(x, message=message)
 
