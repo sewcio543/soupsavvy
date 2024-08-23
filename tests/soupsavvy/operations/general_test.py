@@ -5,9 +5,14 @@ from typing import Any, Callable
 
 import pytest
 
-from soupsavvy.exceptions import FailedOperationExecution, InvalidOperationFunction
-from soupsavvy.operations.general import Attribute, Operation, Text
-from tests.soupsavvy.selectors.conftest import strip, to_bs
+from soupsavvy.exceptions import (
+    FailedOperationExecution,
+    InvalidOperationFunction,
+    NotOperationException,
+)
+from soupsavvy.operations.general import Operation, OperationPipeline, Text
+from tests.soupsavvy.operations.conftest import MockIntOperation, MockTextOperation
+from tests.soupsavvy.selectors.conftest import MockLinkSelector, to_bs
 
 
 @dataclass
@@ -41,7 +46,10 @@ class MockInvalidCallable:
     """
     Mock class for testing invalid operation functions.
     Both instance and `hello` class method are invalid operation functions.
+    Type itself is invalid as well, since its init method has invalid signature.
     """
+
+    def __init__(self) -> None: ...
 
     def __call__(self, arg1, arg2): ...
 
@@ -67,7 +75,10 @@ class MockValidCallable:
     Mock class for testing valid operation functions.
     All: instance, `hello` class method and `hi` instance method
     are valid operation functions.
+    Initializer has valid signature and type itself can be used as operation.
     """
+
+    def __init__(self, arg1, arg2=2): ...
 
     def __call__(self, arg1): ...
 
@@ -91,6 +102,7 @@ class TestOperation:
             multiple_mandatory_positional,
             MockInvalidCallable(),
             MockInvalidCallable.hello,
+            MockInvalidCallable,
         ],
         ids=[
             "not_callable",
@@ -100,6 +112,7 @@ class TestOperation:
             "multiple_mandatory_positional",
             "callable_instance",
             "class_method",
+            "class_type",
         ],
     )
     def test_raises_error_on_init_if_invalid_operation_function(self, param):
@@ -121,9 +134,10 @@ class TestOperation:
             one_default,
             one_mandatory_positional,
             default_keywords,
-            MockValidCallable(),
+            MockValidCallable(1),
             MockValidCallable.hello,
-            MockValidCallable().hi,
+            MockValidCallable(2).hi,
+            MockValidCallable,
         ],
         ids=[
             "only_one_arg",
@@ -134,6 +148,7 @@ class TestOperation:
             "callable_instance",
             "class_method",
             "instance_method",
+            "class_type",
         ],
     )
     def test_assign_function_if_valid(self, param):
@@ -180,7 +195,7 @@ class TestOperation:
         argvalues=[
             (Operation(str.upper), Operation(str.lower)),
             (Operation(lambda x: x), Operation(lambda x: x)),
-            (Operation(lambda x: x), Text()),
+            (Operation(lambda x: x), MockIntOperation()),
         ],
     )
     def test_eq_returns_false_if_different_operation(self, operations: tuple):
@@ -320,7 +335,7 @@ class TestText:
             (Text(separator="."), Text(separator="---")),
             (Text(strip=True, separator="."), Text(strip=True, separator="-")),
             (Text(strip=True, separator="."), Text(strip=False, separator=".")),
-            (Text(), Attribute("href")),
+            (Text(), MockIntOperation()),
         ],
     )
     def test_eq_returns_false_if_different_operation(self, operations: tuple):
@@ -329,128 +344,86 @@ class TestText:
         assert (operation1 == operation2) is False
 
 
-class TestAttribute:
-    """Class with unit test suite for Attribute operation."""
+class MockText(str):
+    @property
+    def text(self):
+        return self
 
-    def test_raises_error_when_input_not_bs4_tag(self):
-        """Tests if execute method raises FailedOperationExecution if input is not bs4 tag."""
-        text = """
-            <div href="github">Hello world</div>
+
+class TestOperationPipeline:
+    """Class with unit test suite for OperationPipeline class."""
+
+    def test_raises_error_on_init_if_not_base_operation(self):
         """
-        operation = Attribute("href")
+        Tests if OperationPipeline init raises NotOperationException
+        if not used with instance of BaseOperation.
+        """
+        with pytest.raises(NotOperationException):
+            OperationPipeline(MockTextOperation(), "selector")  # type: ignore
+
+    def test_executes_operations_and_return_correct_value(self):
+        """
+        Tests if execute method executes all operations in sequence
+        and returns correct value.
+        """
+        text = MockText("10")
+        operation = OperationPipeline(MockTextOperation(), MockIntOperation())
+        result = operation.execute(text)
+        assert result == 10
+
+    def test_raises_error_if_any_operation_fails(self):
+        """
+        Tests if execute method raises FailedOperationExecution
+        if any operation fails to execute.
+        """
+        text = MockText("abc")
+        operation = OperationPipeline(MockTextOperation(), MockIntOperation())
 
         with pytest.raises(FailedOperationExecution):
             operation.execute(text)
 
-    def test_returns_empty_string_if_empty_attribute(self):
+    def test_or_operator_on_pipeline_creates_new_extended_pipeline(self):
         """
-        Tests if execute method returns empty string if given attribute is empty
-        in BeautifulSoup Tag.
+        Tests if `|` operator creates new OperationPipeline with extended operations.
         """
-        text = """
-            <div href="">Hello world</div>
-        """
-        bs = to_bs(text).div
-        operation = Attribute("href")
-        result = operation.execute(bs)
-        assert result == ""
+        operation = OperationPipeline(MockTextOperation(), MockIntOperation())
+        result = operation | MockTextOperation()
 
-    def test_returns_attribute_of_tag_as_string(self):
-        """
-        Tests if execute method returns attribute of a BeautifulSoup Tag as string,
-        for any attribute type, except class if exists.
-        """
-        text = """
-            <div id="123" href="github">Hello world</div>
-        """
-        bs = to_bs(text).div
-        operation = Attribute("href")
-        result = operation.execute(bs)
-        assert result == "github"
+        assert result is not operation
+        assert isinstance(result, OperationPipeline)
+        assert result.operations == [
+            MockTextOperation(),
+            MockIntOperation(),
+            MockTextOperation(),
+        ]
 
-    def test_returns_none_if_no_attribute(self):
+    def test_or_operator_raises_error_if_no_operator(self):
         """
-        Tests if execute method returns None if given attribute does not exist
-        in BeautifulSoup Tag.
+        Tests if `|` operator raises NotOperationException
+        if provided object is not BaseOperation.
         """
-        text = """
-            <div id="123" class="github">Hello world</div>
-        """
-        bs = to_bs(text).div
-        operation = Attribute("href")
-        result = operation.execute(bs)
-        assert result is None
+        operation = OperationPipeline(MockTextOperation(), MockIntOperation())
 
-    def test_returns_specified_default_if_no_attribute(self):
-        """
-        Tests if execute method returns specified default value if given attribute
-        does not exist in BeautifulSoup Tag.
-        """
-        text = """
-            <div id="123" class="github">Hello world</div>
-        """
-        bs = to_bs(text).div
-        operation = Attribute("href", default="reddit")
-        result = operation.execute(bs)
-        assert result == "reddit"
-
-    def test_returns_list_with_single_element_for_class_attribute(self):
-        """
-        Tests if execute method returns list with single element for class attribute
-        if found in BeautifulSoup Tag.
-        """
-        text = """
-            <div id="123" class="github">Hello world</div>
-        """
-        bs = to_bs(text).div
-        operation = Attribute("class")
-        result = operation.execute(bs)
-        assert result == ["github"]
-
-    def test_returns_list_with_multiple_element_for_class_attribute(self):
-        """
-        Tests if execute method returns list with multiple element for class attribute
-        if found in BeautifulSoup Tag.
-        """
-        text = """
-            <div id="123" class="github reddit tv_series">Hello world</div>
-        """
-        bs = to_bs(text).div
-        operation = Attribute("class")
-        result = operation.execute(bs)
-        assert result == ["github", "reddit", "tv_series"]
-
-    def test_returns_none_if_no_class_attribute(self):
-        """
-        Tests if execute method returns None if class attribute does not exist
-        in BeautifulSoup Tag.
-        """
-        text = """
-            <div id="123">Hello world</div>
-        """
-        bs = to_bs(text).div
-        operation = Attribute("class")
-        result = operation.execute(bs)
-        assert result is None
-
-    def test_returns_string_if_no_class_attribute_separated_by_spaces(self):
-        """
-        Tests if execute method returns string for any attribute that is not class
-        if found in BeautifulSoup Tag and has value separated by spaces.
-        """
-        text = """
-            <div id="123" name="github reddit tv_series">Hello world</div>
-        """
-        bs = to_bs(text).div
-        operation = Attribute("name")
-        result = operation.execute(bs)
-        assert result == "github reddit tv_series"
+        with pytest.raises(NotOperationException):
+            operation | MockLinkSelector()
 
     @pytest.mark.parametrize(
         argnames="operations",
         argvalues=[
-            (Attribute("href"), Attribute("href")),
-            (Attribute("href", default="github"), Attribute("href", default="github")),
+            # with two same operations
+            (
+                OperationPipeline(MockTextOperation(), MockIntOperation()),
+                OperationPipeline(MockTextOperation(), MockIntOperation()),
+            ),
+            # with three same operations
+            (
+                OperationPipeline(
+                    MockTextOperation(), MockIntOperation(), MockTextOperation()
+                ),
+                OperationPipeline(
+                    MockTextOperation(), MockIntOperation(), MockTextOperation()
+                ),
+            ),
         ],
     )
     def test_eq_returns_true_if_same_operation(self, operations: tuple):
@@ -461,10 +434,28 @@ class TestAttribute:
     @pytest.mark.parametrize(
         argnames="operations",
         argvalues=[
-            (Attribute("href"), Attribute("class")),
-            (Attribute("href", default="github"), Attribute("href", default="reddit")),
-            (Attribute("href", default="github"), Attribute("class", default="github")),
-            (Attribute("href"), Text()),
+            # with different order
+            (
+                OperationPipeline(MockTextOperation(), MockIntOperation()),
+                OperationPipeline(MockIntOperation(), MockTextOperation()),
+            ),
+            # with on extra operation
+            (
+                OperationPipeline(MockTextOperation(), MockIntOperation()),
+                OperationPipeline(
+                    MockTextOperation(), MockIntOperation(), MockTextOperation()
+                ),
+            ),
+            # different operation type
+            (
+                OperationPipeline(MockTextOperation(), MockIntOperation()),
+                MockIntOperation(),
+            ),
+            # not operation
+            (
+                OperationPipeline(MockTextOperation(), MockIntOperation()),
+                MockLinkSelector(),
+            ),
         ],
     )
     def test_eq_returns_false_if_different_operation(self, operations: tuple):

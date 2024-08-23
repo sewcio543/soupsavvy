@@ -1,3 +1,5 @@
+"""Module for base classes and interfaces for operations."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Optional
@@ -37,8 +39,49 @@ def check_operator(x: Any, message: Optional[str] = None) -> BaseOperation:
 
 
 class BaseOperation(Executable, Comparable):
+    """
+    Base class for all `soupsavvy` operations.
+    Operations are used to process the selection results from the soup,
+    extract and transform the data.
+
+    Operations can be chained together using the pipe operator '|'.
+
+    Example
+    -------
+    >>> from soupsavvy.operations.general import Operation
+    ... operation = Operation(str.lower) | Operation(str.strip)
+    ... operation.execute("  TEXT  ")
+    'text'
+
+    Operations can be combined with selectors to extract and transform
+    target information.
+
+    Example
+    -------
+    >>> from soupsavvy import TypeSelector
+    ... from soupsavvy.operations import Operation, Text
+    ... selector = TypeSelector("div") | Text() | Operation(int)
+    ... selector.find(soup)
+    42
+
+    BaseOperation inherits from `Comparable` interface, `__eq__` method needs to be
+    implemented in derived classes.
+    """
+
     def execute(self, arg: Any) -> Any:
-        """Execute the operation on the given argument."""
+        """
+        Execute the operation on the given argument and return the result.
+
+        Parameters
+        ----------
+        arg : Any
+            Argument to be processed by the operation.
+
+        Returns
+        -------
+        Any
+            Result of the operation.
+        """
         try:
             return self._execute(arg)
         except Exception as e:
@@ -47,10 +90,34 @@ class BaseOperation(Executable, Comparable):
             ) from e
 
     def _execute(self, arg: Any) -> Any:
-        raise NotImplementedError
+        """Internal method for executing the operation."""
+
+        raise NotImplementedError(
+            f"{self.__class__.__name__} is an interface, "
+            "and does not implement this method."
+        )
 
     def __or__(self, x: Any) -> OperationPipeline:
-        """Allows chaining multiple operations using the `|` operator."""
+        """
+        Overrides __or__ method called also by pipe operator '|'.
+        Syntactical Sugar for logical disjunction, that creates OperationPipeline,
+        which chains two operations together.
+
+        Parameters
+        ----------
+        x : BaseOperation
+            BaseOperation object to be combined into new OperationPipeline.
+
+        Returns
+        -------
+        OperationPipeline
+            New `OperationPipeline` with extended operations.
+
+        Raises
+        ------
+        NotOperationException
+            If provided object is not of type BaseOperation.
+        """
         from soupsavvy.operations.general import OperationPipeline
 
         message = (
