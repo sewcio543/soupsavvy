@@ -2,13 +2,14 @@
 
 import pytest
 
-from soupsavvy.exceptions import TagNotFoundException
-from soupsavvy.operations.pipeline import SelectionPipeline
-from tests.soupsavvy.operations.conftest import MockTextOperation, ToIntOperation
+from soupsavvy.exceptions import NotOperationException, TagNotFoundException
+from soupsavvy.operations.general import OperationPipeline
+from soupsavvy.operations.selection_pipeline import SelectionPipeline
+from tests.soupsavvy.operations.conftest import MockIntOperation, MockTextOperation
 from tests.soupsavvy.selectors.conftest import (
+    MockDivSelector,
     MockLinkSelector,
     find_body_element,
-    strip,
     to_bs,
 )
 
@@ -207,34 +208,63 @@ class TestTypeSelector:
         result = selector.find_all(bs, recursive=False, limit=2)
         assert result == ["1", "2"]
 
-    # @pytest.mark.parametrize(
-    #     argnames="selectors",
-    #     argvalues=[
-    #         # tag names must be equal
-    #         (TypeSelector("a"), TypeSelector("a")),
-    #     ],
-    # )
-    # def test_two_tag_selectors_are_equal(self, selectors: tuple):
-    #     """Tests if selector is equal to TypeSelector."""
-    #     assert (selectors[0] == selectors[1]) is True
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # both selectors and operations are the same
+            (
+                SelectionPipeline(MockLinkSelector(), MockTextOperation()),
+                SelectionPipeline(MockLinkSelector(), MockTextOperation()),
+            ),
+        ],
+    )
+    def test_two_selectors_are_equal(self, selectors: tuple):
+        """Tests if two instances of SelectionPipeline are equal."""
+        assert (selectors[0] == selectors[1]) is True
 
-    # @pytest.mark.parametrize(
-    #     argnames="selectors",
-    #     argvalues=[
-    #         # tags are different
-    #         (TypeSelector("a"), TypeSelector("div")),
-    #         # not TypeSelector instance
-    #         (TypeSelector("a"), MockLinkSelector()),
-    #     ],
-    # )
-    # def test_two_tag_selectors_are_not_equal(self, selectors: tuple):
-    #     """Tests if selector is equal to TypeSelector."""
-    #     assert (selectors[0] == selectors[1]) is False
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # different operations
+            (
+                SelectionPipeline(MockLinkSelector(), MockTextOperation()),
+                SelectionPipeline(MockLinkSelector(), MockIntOperation()),
+            ),
+            # different selectors
+            (
+                SelectionPipeline(MockDivSelector(), MockTextOperation()),
+                SelectionPipeline(MockLinkSelector(), MockTextOperation()),
+            ),
+            # not SelectionPipeline
+            (
+                SelectionPipeline(MockDivSelector(), MockTextOperation()),
+                MockDivSelector(),
+            ),
+        ],
+    )
+    def test_two_selectors_are_not_equal(self, selectors: tuple):
+        """Tests if two instances of SelectionPipeline are not equal."""
+        assert (selectors[0] == selectors[1]) is False
 
-    # @pytest.mark.parametrize(
-    #     argnames="name",
-    #     argvalues=["div", "p", "some_other_random"],
-    # )
-    # def test_returns_correct_css_selector(self, name: str):
-    #     """Tests if css property always returns name of the tag as css selector."""
-    #     assert TypeSelector(name).css == name
+    def test_or_operator_pipes_operations(self):
+        """
+        Tests if | operator add next operation to the selection pipeline.
+        Selector is not changed, but operation is piped.
+        """
+        selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
+        next_operation = MockIntOperation()
+        result = selector | next_operation
+
+        assert isinstance(result, SelectionPipeline)
+        assert result.selector == selector.selector
+        assert result.operation == OperationPipeline(selector.operation, next_operation)
+
+    def test_or_operator_raises_error_if_not_operation(self):
+        """
+        Tests if | operator raises NotOperationException if not used with BaseOperation.
+        """
+        selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
+        next_operation = MockLinkSelector()
+
+        with pytest.raises(NotOperationException):
+            selector | next_operation

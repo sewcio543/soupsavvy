@@ -5,7 +5,7 @@ from typing import Any, Optional
 from bs4 import Tag
 
 from soupsavvy.interfaces import Comparable, TagSearcher
-from soupsavvy.operations.base import BaseOperation
+from soupsavvy.operations.base import BaseOperation, check_operator
 from soupsavvy.selectors.base import SoupSelector
 
 
@@ -38,11 +38,7 @@ class SelectionPipeline(TagSearcher, Comparable):
         ]
 
     def __or__(self, x: Any) -> SelectionPipeline:
-        if not isinstance(x, BaseOperation):
-            raise TypeError(
-                f"Unsupported operand type(s) for |: 'SelectionPipeline' and '{type(x)}'"
-            )
-
+        x = check_operator(x)
         operation = self.operation | x
         return SelectionPipeline(selector=self.selector, operation=operation)
 

@@ -14,7 +14,7 @@ from soupsavvy.operations.base import BaseOperation
 from soupsavvy.utils.deprecation import deprecated_function
 
 if TYPE_CHECKING:
-    from soupsavvy.operations.pipeline import SelectionPipeline
+    from soupsavvy.operations.selection_pipeline import SelectionPipeline
     from soupsavvy.selectors.combinators import (
         AncestorCombinator,
         ChildCombinator,
@@ -273,7 +273,7 @@ class SoupSelector(TagSearcher, Comparable):
         NotSoupSelectorException
             If provided object is not of SoupSelector type.
         """
-        from soupsavvy.operations.pipeline import SelectionPipeline
+        from soupsavvy.operations.selection_pipeline import SelectionPipeline
         from soupsavvy.selectors.combinators import SelectorList
 
         if isinstance(x, BaseOperation):

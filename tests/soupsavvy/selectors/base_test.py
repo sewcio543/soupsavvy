@@ -11,8 +11,7 @@ import pytest
 from bs4 import Tag
 
 from soupsavvy.exceptions import NavigableStringException, NotSoupSelectorException
-from soupsavvy.operations.base import BaseOperation
-from soupsavvy.operations.pipeline import SelectionPipeline
+from soupsavvy.operations.selection_pipeline import SelectionPipeline
 from soupsavvy.selectors.base import CompositeSoupSelector, check_selector
 from soupsavvy.selectors.combinators import (
     AncestorCombinator,
@@ -24,6 +23,7 @@ from soupsavvy.selectors.combinators import (
     SubsequentSiblingCombinator,
 )
 from soupsavvy.selectors.logical import AndSelector, NotSelector
+from tests.soupsavvy.operations.conftest import MockTextOperation
 from tests.soupsavvy.selectors.conftest import (
     MockClassMenuSelector,
     MockDivSelector,
@@ -469,7 +469,12 @@ class TestCheckSelector:
         result = check_selector(selector)
         assert result is selector
 
-    def test_raises_exception_when_not_selector(self):
+    @pytest.mark.parametrize(
+        argnames="param",
+        argvalues=["selector", str.lower, MockTextOperation()],
+        ids=["str", "function", "operation"],
+    )
+    def test_raises_exception_when_not_selector(self, param):
         """
         Tests if check_selector raises NotSoupSelectorException if object is not
         instance of SoupSelector.
@@ -488,20 +493,13 @@ class TestCheckSelector:
             check_selector("selector", message=message)
 
 
-class MockOperation(BaseOperation):
-    """Mock class representing operation for testing purposes."""
-
-    def execute(self, arg: Any) -> Any:
-        return arg
-
-
 def test_or_return_selection_pipeline_if_operation_passed():
     """
     Tests if using or operator with on SoupSelector and BaseOperation
     returns SelectionPipeline instance with correct selector and operation.
     """
     selector = MockSelector()
-    operation = MockOperation()
+    operation = MockTextOperation()
 
     result = operator.or_(selector, operation)
 

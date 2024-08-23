@@ -271,7 +271,7 @@ class TestTypeSelector:
         ],
     )
     def test_two_tag_selectors_are_not_equal(self, selectors: tuple):
-        """Tests if selector is equal to TypeSelector."""
+        """Tests if selector is not equal to TypeSelector."""
         assert (selectors[0] == selectors[1]) is False
 
     @pytest.mark.parametrize(
