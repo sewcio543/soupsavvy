@@ -373,7 +373,7 @@ class Default(FieldWrapper):
         super().__init__(selector)
         self.default = default
 
-    def find(self, tag: Tag, strict, recursive: bool = True):
+    def find(self, tag: Tag, strict: bool = False, recursive: bool = True):
         """
         Finds an element, returning a default value if None was returned
         by wrapped selector. Any exception raised during the search is propagated.
