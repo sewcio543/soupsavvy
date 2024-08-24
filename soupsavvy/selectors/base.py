@@ -96,17 +96,17 @@ class SoupSelector(TagSearcher, Comparable):
     def find(
         self,
         tag: Tag,
-        strict: bool = ...,
+        strict: Literal[True] = ...,
         recursive: bool = ...,
-    ) -> Optional[Tag]: ...
+    ) -> Tag: ...
 
     @overload
     def find(
         self,
         tag: Tag,
-        strict: Literal[True] = ...,
+        strict: bool = ...,
         recursive: bool = ...,
-    ) -> Tag: ...
+    ) -> Optional[Tag]: ...
 
     def find(
         self,

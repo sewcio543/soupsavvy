@@ -15,7 +15,7 @@ from typing import Any, Callable
 
 from bs4 import Tag
 
-from soupsavvy.operations.base import BaseOperation, check_operator
+from soupsavvy.operations.base import BaseOperation, check_operation
 
 
 class OperationPipeline(BaseOperation):
@@ -55,7 +55,7 @@ class OperationPipeline(BaseOperation):
             If any of the input operations is not a valid operation.
         """
         self.operations = [
-            check_operator(operation)
+            check_operation(operation)
             for operation in (operation1, operation2, *operations)
         ]
 
@@ -87,7 +87,7 @@ class OperationPipeline(BaseOperation):
         NotOperationException
             If provided object is not of type BaseOperation.
         """
-        x = check_operator(x)
+        x = check_operation(x)
         return OperationPipeline(*self.operations, x)
 
     def __eq__(self, x: Any) -> bool:
