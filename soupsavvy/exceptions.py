@@ -164,13 +164,6 @@ class FailedOperationExecution(SoupsavvyException):
     """
 
 
-class InvalidOperationFunction(SoupsavvyException):
-    """
-    Exception raised by Operation init when invalid function was passed to it.
-    Invalid function is the one that does not have exactly one mandatory argument.
-    """
-
-
 class NotOperationException(OperationException, TypeError):
     """
     Exception to be raised when function excepted BaseOperation as input

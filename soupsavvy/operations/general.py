@@ -11,12 +11,10 @@ desired information. They can be used in combination with selectors.
 
 from __future__ import annotations
 
-import inspect
 from typing import Any, Callable
 
 from bs4 import Tag
 
-import soupsavvy.exceptions as exc
 from soupsavvy.operations.base import BaseOperation, check_operator
 
 
@@ -120,84 +118,9 @@ class Operation(BaseOperation):
         Parameters
         ----------
         func : Callable
-            Any callable object that takes not more than one mandatory argument
-            and at least one argument in total.
-
-        Raises
-        ------
-        InvalidOperationFunction
-            If the input is not a valid operation callable
+            Any callable object that can be called with one positional argument.
         """
-        self.operation = self._check_callable(func)
-
-    def _check_callable(self, obj: Any) -> Callable:
-        """
-        Check if the input is a valid callable that can be used as an operation.
-        Input must be callable that takes not more than one mandatory argument
-        and at least one argument in total.
-        Type is allowed as well, in such case __init__ method is checked.
-
-        Parameters
-        ----------
-        obj : Any
-            Input passed to Operation initialization.
-
-        Returns
-        -------
-        Callable
-            The input callable if it is a valid operation.
-
-        Raises
-        ------
-        InvalidOperationFunction
-            If the input is not valid operation callable.
-        """
-        if not isinstance(obj, Callable):
-            raise exc.InvalidOperationFunction(
-                f"Expected Callable as input, got {type(obj)}"
-            )
-
-        # if type is passed, check __init__ method
-        check = obj.__init__ if isinstance(obj, type) else obj
-
-        signature = inspect.signature(check)
-        params = signature.parameters.values()
-
-        if not params:
-            raise exc.InvalidOperationFunction(
-                "Expected callable with at least one parameter, got none."
-            )
-
-        mandatory_keyword_only = [
-            p
-            for p in params
-            if p.default == inspect.Parameter.empty
-            and p.kind == inspect.Parameter.KEYWORD_ONLY
-        ]
-
-        if mandatory_keyword_only:
-            raise exc.InvalidOperationFunction(
-                f"Callable with keyword-only without default is not valid."
-            )
-
-        mandatory_params = [
-            p
-            for p in params
-            if p.default == inspect.Parameter.empty
-            and p.kind
-            in {
-                inspect.Parameter.POSITIONAL_OR_KEYWORD,
-                inspect.Parameter.POSITIONAL_ONLY,
-            }
-        ]
-
-        if len(mandatory_params) > 1:
-            # it can be 0 with signature def foo(arg1=1)
-            raise exc.InvalidOperationFunction(
-                f"Expected callable with one mandatory argument, got {len(mandatory_params)}"
-            )
-
-        return obj
+        self.operation = func
 
     def _execute(self, arg: Any) -> Any:
         """Executes the custom operation."""

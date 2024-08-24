@@ -5,11 +5,7 @@ from typing import Any, Callable
 
 import pytest
 
-from soupsavvy.exceptions import (
-    FailedOperationExecution,
-    InvalidOperationFunction,
-    NotOperationException,
-)
+from soupsavvy.exceptions import FailedOperationExecution, NotOperationException
 from soupsavvy.operations.general import Operation, OperationPipeline, Text
 from tests.soupsavvy.operations.conftest import MockIntOperation, MockTextOperation
 from tests.soupsavvy.selectors.conftest import MockLinkSelector, to_bs
@@ -35,132 +31,8 @@ def mock_operation_func(arg: Any):
     return arg == "+"
 
 
-# invalid operations
-def mandatory_keyword_param(*, arg1=1, arg2): ...
-
-
-def multiple_mandatory_positional(arg, /, arg2, arg3=1): ...
-
-
-class MockInvalidCallable:
-    """
-    Mock class for testing invalid operation functions.
-    Both instance and `hello` class method are invalid operation functions.
-    Type itself is invalid as well, since its init method has invalid signature.
-    """
-
-    def __init__(self) -> None: ...
-
-    def __call__(self, arg1, arg2): ...
-
-    def hello(self, arg1):
-        """Valid if called by instance, invalid if called by class."""
-
-
-# valid operations
-def one_mandatory(arg1, arg2=1): ...
-
-
-def one_default(arg1=1): ...
-
-
-def one_mandatory_positional(arg1, /, arg2=1): ...
-
-
-def default_keywords(arg1, *, arg2=1, arg3=10): ...
-
-
-class MockValidCallable:
-    """
-    Mock class for testing valid operation functions.
-    All: instance, `hello` class method and `hi` instance method
-    are valid operation functions.
-    Initializer has valid signature and type itself can be used as operation.
-    """
-
-    def __init__(self, arg1, arg2=2): ...
-
-    def __call__(self, arg1): ...
-
-    def hello(self, arg2=3):
-        """Valid if called by instance, invalid if called by class."""
-
-    def hi(self, arg1, arg2=2):
-        """Valid if called by instance, invalid if called by class."""
-
-
 class TestOperation:
     """Class with unit test suite for Operation class."""
-
-    @pytest.mark.parametrize(
-        argnames="param",
-        argvalues=[
-            "func",
-            lambda x, y: x + y,
-            lambda: 10,
-            mandatory_keyword_param,
-            multiple_mandatory_positional,
-            MockInvalidCallable(),
-            MockInvalidCallable.hello,
-            MockInvalidCallable,
-        ],
-        ids=[
-            "not_callable",
-            "multiple_mandatory_args",
-            "no_args",
-            "mandatory_keyword_params",
-            "multiple_mandatory_positional",
-            "callable_instance",
-            "class_method",
-            "class_type",
-        ],
-    )
-    def test_raises_error_on_init_if_invalid_operation_function(self, param):
-        """
-        Tests if Operation init raises InvalidOperationFunction
-        if invalid operation function. Invalid operation can have:
-        * no arguments
-        * multiple mandatory arguments
-        * mandatory keyword-only arguments
-        """
-        with pytest.raises(InvalidOperationFunction):
-            Operation(param)
-
-    @pytest.mark.parametrize(
-        argnames="param",
-        argvalues=[
-            lambda x: x,
-            one_mandatory,
-            one_default,
-            one_mandatory_positional,
-            default_keywords,
-            MockValidCallable(1),
-            MockValidCallable.hello,
-            MockValidCallable(2).hi,
-            MockValidCallable,
-        ],
-        ids=[
-            "only_one_arg",
-            "one_mandatory",
-            "one_default",
-            "one_mandatory_positional",
-            "default_keywords",
-            "callable_instance",
-            "class_method",
-            "instance_method",
-            "class_type",
-        ],
-    )
-    def test_assign_function_if_valid(self, param):
-        """
-        Tests if Operation init assigns provided function as operation and initializes
-        without errors if valid operation function. Valid operation have:
-        * at most one mandatory argument
-        * at least one argument
-        * no keyword-only arguments without default
-        """
-        operation = Operation(param)
-        assert operation.operation is param
 
     @pytest.mark.parametrize(
         argnames="setup",
@@ -178,8 +50,23 @@ class TestOperation:
         assert result == setup.expected
 
     def test_raises_error_if_operation_fails_to_execute(self):
-        """Tests if execute method raises FailedOperationExecution if operation fails."""
+        """
+        Tests if execute method raises FailedOperationExecution if operation fails.
+        """
         operation = Operation(mock_operation_func)
+
+        with pytest.raises(FailedOperationExecution):
+            operation.execute(None)
+
+    def test_raises_error_if_invalid_operation(self):
+        """
+        Tests if execute method raises FailedOperationExecution if callable
+        defined as operation cannot be called with one positional argument.
+        """
+
+        def mandatory_keyword_param(arg1, arg2): ...
+
+        operation = Operation(mandatory_keyword_param)
 
         with pytest.raises(FailedOperationExecution):
             operation.execute(None)
