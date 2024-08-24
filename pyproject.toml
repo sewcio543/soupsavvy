@@ -49,4 +49,4 @@ line-length = 88
 profile = "black"
 
 [tool.mypy]
-disable_error_code = "overload-overlap"
+disable_error_code = "overload-overlap, misc"

@@ -5,6 +5,9 @@ class SoupsavvyException(Exception):
     """Custom Base Exception for `soupsavvy` specific Exceptions."""
 
 
+#! SELECTORS
+
+
 class SoupSelectorException(SoupsavvyException):
     """Custom Base Exception for SoupSelector specific Exceptions."""
 
@@ -53,6 +56,9 @@ class InvalidCSSSelector(SoupsavvyException):
     >>> NthChild("2x + 1")
     InvalidCSSSelector
     """
+
+
+#! GENERATORS
 
 
 class HTMLGeneratorException(SoupsavvyException):
@@ -141,4 +147,25 @@ class AttributeParsingError(HTMLGeneratorException):
     ------
     >>> TagGenerator(name="div", attrs=[("class", ["hello", "soupsavvy"]]) # invalid value template
     AttributeParsingError
+    """
+
+
+#! OPERATIONS
+
+
+class OperationException(SoupsavvyException):
+    """Base exception for the BaseOperation related errors"""
+
+
+class FailedOperationExecution(SoupsavvyException):
+    """
+    Exception raised by BaseOperation when operation execution failed and raised
+    any exception.
+    """
+
+
+class NotOperationException(OperationException, TypeError):
+    """
+    Exception to be raised when function excepted BaseOperation as input
+    and got argument of the different, invalid type.
     """
