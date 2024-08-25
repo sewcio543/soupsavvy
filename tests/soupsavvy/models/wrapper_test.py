@@ -38,13 +38,13 @@ DEFAULT = "default"
 class MockFieldWrapper(FieldWrapper):
     """Mock class for testing FieldWrapper interface."""
 
-    def find(self, tag: Tag, **kwargs) -> Any: ...
+    def find(self, tag: Tag, strict: bool = False, recursive: bool = True): ...
 
 
 class MockFieldWrapper2(FieldWrapper):
     """Mock class for testing FieldWrapper interface."""
 
-    def find(self, tag: Tag, **kwargs) -> Any: ...
+    def find(self, tag: Tag, strict: bool = False, recursive: bool = True): ...
 
 
 class TestFieldWrapper:
