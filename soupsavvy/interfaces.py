@@ -40,7 +40,7 @@ class Comparable(ABC):
 
 
 # possible exceptions raised when TagSearcher fails
-TagSearcherExceptions = (exc.FailedOperationExecution, exc.NotOperationException)
+TagSearcherExceptions = (exc.FailedOperationExecution, exc.TagNotFoundException)
 
 
 class TagSearcher(ABC):

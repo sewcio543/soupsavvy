@@ -17,7 +17,7 @@ from typing import Any, Optional
 from bs4 import Tag
 
 import soupsavvy.exceptions as exc
-from soupsavvy.interfaces import Comparable, TagSearcher
+from soupsavvy.interfaces import Comparable, TagSearcher, TagSearcherExceptions
 from soupsavvy.operations.base import BaseOperation, check_operation
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 
@@ -36,8 +36,13 @@ class OperationWrapper(BaseOperation):
         ----------
         operation : BaseOperation
             The operation to be wrapped.
+
+        Raises
+        ------
+        NotOperationException
+            If provided object is not an instance of BaseOperation.
         """
-        self.operation = operation
+        self.operation = check_operation(operation)
 
     def __eq__(self, x: Any) -> bool:
         """
@@ -139,6 +144,11 @@ class FieldWrapper(TagSearcher, Comparable):
         ----------
         selector : TagSearcher
             The TagSearcher instance to be wrapped.
+
+        Raises
+        ------
+        NotTagSearcherException
+            If provided object is not an instance of TagSearcher.
         """
 
         if not isinstance(selector, TagSearcher):
@@ -342,7 +352,7 @@ class Nullable(FieldWrapper):
         """
         try:
             return self.selector.find(tag=tag, strict=strict, recursive=recursive)
-        except exc.TagNotFoundException:
+        except TagSearcherExceptions:
             return None
 
 
