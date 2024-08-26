@@ -53,7 +53,7 @@ class ModelMeta(type(ABC)):
 
     Raises
     ------
-    MissingModelScopeException
+    ScopeNotDefinedException
         If `__scope__` is not defined in the model.
     """
 
@@ -76,7 +76,7 @@ class ModelMeta(type(ABC)):
         scope = getattr(cls, _SCOPE)
 
         if scope is None:
-            raise exc.MissingModelScopeException(
+            raise exc.ScopeNotDefinedException(
                 f"Missing '{_SCOPE}' class attribute in '{name}'."
             )
 
@@ -85,6 +85,11 @@ class ModelMeta(type(ABC)):
             f"needs to be '{SoupSelector.__name__}' instance, got '{type(scope)}'."
         )
         check_selector(scope, message=message)
+
+        if not cls._get_fields():
+            raise exc.FieldsNotDefinedException(
+                f"Model '{cls.__name__}' has no fields defined. At least one required."
+            )
 
     @property
     def scope(cls) -> SoupSelector:
@@ -111,6 +116,9 @@ class ModelMeta(type(ABC)):
         dict[str, TagSearcher]
             A dictionary mapping field names to their respective TagSearcher instances.
         """
+        return cls._get_fields()
+
+    def _get_fields(cls) -> dict[str, TagSearcher]:
         classes = (
             [
                 base
@@ -243,7 +251,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
 
         Raises
         ------
-        ModelNotFoundException
+        ModelScopeNotFoundException
             If the model's scope is not found and strict is True.
         """
         bound = cls.scope.find(tag=tag, strict=False, recursive=recursive)
@@ -252,7 +260,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
             return cls._find(tag=bound, strict=strict)
 
         if strict:
-            raise exc.ModelNotFoundException(
+            raise exc.ModelScopeNotFoundException(
                 f"Scope for the model '{cls.__name__}' was not found "
                 f"from '{cls.scope}' in tag."
             )
@@ -278,7 +286,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
 
         Raises
         ------
-        ModelNotFoundException
+        ModelScopeNotFoundException
             If a required field cannot be found.
         """
         params = {}
@@ -286,10 +294,12 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         for key, selector in cls.fields.items():
             try:
                 result = selector.find(
-                    tag=tag, strict=strict, recursive=_DEFAULT_RECURSIVE
+                    tag=tag,
+                    strict=strict,
+                    recursive=_DEFAULT_RECURSIVE,
                 )
             except TagSearcherExceptions as e:
-                raise exc.ModelNotFoundException(
+                raise exc.FieldExtractionException(
                     f"Extracting field '{key}' failed in model '{cls.__name__}'."
                 ) from e
 

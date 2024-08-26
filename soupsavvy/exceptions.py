@@ -185,14 +185,21 @@ class BaseModelException(SoupsavvyException):
     """Base exception related to models package and BaseModel class."""
 
 
-class ModelNotFoundException(BaseModelException):
+class ModelScopeNotFoundException(BaseModelException):
     """
-    Exception raised by BaseModel when model was not found in provided tag
+    Exception raised by BaseModel when model scope was not found in provided tag
     and strict parameter was set to True.
     """
 
 
-class MissingModelScopeException(BaseModelException):
+class FieldExtractionException(BaseModelException):
+    """
+    Exception raised by BaseModel when field extraction failed and related exception
+    was raised by any selector step.
+    """
+
+
+class ScopeNotDefinedException(BaseModelException):
     """
     Exception raised by BaseModel when scope was not found in defined model class.
     __scope__ class attribute is mandatory in BaseModel derived classes.
@@ -203,6 +210,13 @@ class RequiredConstraintException(BaseModelException):
     """
     Exception raised by Required field wrapper when required field was not found
     in provided tag.
+    """
+
+
+class FieldsNotDefinedException(BaseModelException):
+    """
+    Exception raised by BaseModel when fields were not found in defined model class.
+    At least one field should be defined in class to be a valid model.
     """
 
 
