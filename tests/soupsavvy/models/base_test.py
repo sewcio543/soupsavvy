@@ -35,6 +35,13 @@ class MockModel(BaseModel):
     price = PRICE_SELECTOR
 
 
+class MockNotEqualModel(BaseModel):
+    __scope__ = SCOPE
+
+    title = TITLE_SELECTOR
+    price = PRICE_SELECTOR
+
+
 class TestBaseModel:
     def test_isssssnit(self):
         assert MockModel.__scope__ == MockDivSelector()
@@ -59,7 +66,7 @@ class TestBaseModel:
         with pytest.raises(NotSoupSelectorException):
 
             class MockModel(BaseModel):
-                __scope__ = MockTextOperation()
+                __scope__ = MockTextOperation()  # type: ignore
 
                 title = TITLE_SELECTOR
 
@@ -81,7 +88,7 @@ class TestBaseModel:
     def test_isssn2isst3(self):
         class ChildModel(MockModel):
             def __post_init__(self) -> None:
-                self.title = self.title + "!"
+                self.title = self.title + "!"  # type: ignore
 
         model = ChildModel(title="Title", price=10)
 
@@ -341,12 +348,29 @@ class TestBaseModel:
             <span>
                 <a>Title</a>
                 <p class="widget">10</p>
-            </div>
+            </span>
         """
         bs = to_bs(text)
         selector = MockModel
         result = selector.find_all(bs)
         assert result == []
+
+    def test_in11iswsst(self):
+        text = """
+            <div>
+                <a>Title</a>
+                <p class="widget">10</p>
+            </div>
+            <div>
+                <a>Title2</a>
+                <p class="widget">abc</p>
+            </div>
+        """
+        bs = to_bs(text)
+        selector = MockModel
+
+        with pytest.raises(FieldExtractionException, match="price"):
+            selector.find_all(bs)
 
     @pytest.mark.parametrize(
         "models",
@@ -363,6 +387,11 @@ class TestBaseModel:
             (MockModel(title="Title", price=10), MockModel(title="Title2", price=20)),
             (MockModel(title="Title", price=10), MockModel(title="Title2", price=10)),
             (MockModel(title="Title", price=10), MockModel(title="Title", price=20)),
+            (MockModel(title="Title", price=10), MockLinkSelector()),
+            (
+                MockModel(title="Title", price=10),
+                MockNotEqualModel(title="Title", price=10),
+            ),
         ],
     )
     def test_isssn2iasst33(self, models):

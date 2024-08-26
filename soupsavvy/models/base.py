@@ -58,20 +58,10 @@ class ModelMeta(type(ABC)):
     """
 
     def __init__(cls, name, bases, class_dict):
-
         super().__init__(name, bases, class_dict)
 
         if name == "BaseModel":
             return
-
-        for field in _SPECIAL_FIELDS:
-            if hasattr(cls, field):
-                continue
-
-            for base in cls.__mro__:
-                if issubclass(base, BaseModel) and hasattr(base, field):
-                    setattr(cls, field, getattr(base, field))
-                    break
 
         scope = getattr(cls, _SCOPE)
 
@@ -164,8 +154,8 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         If any required fields are missing during initialization.
     """
 
-    __scope__ = None
-    __inherit_fields__ = True
+    __scope__: SoupSelector = None  # type: ignore
+    __inherit_fields__: bool = True
 
     def __init__(self, **kwargs) -> None:
         """
