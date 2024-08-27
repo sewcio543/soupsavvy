@@ -17,7 +17,7 @@ from typing import Any, Optional
 from bs4 import Tag
 
 import soupsavvy.exceptions as exc
-from soupsavvy.interfaces import Comparable, TagSearcher, TagSearcherExceptions
+from soupsavvy.interfaces import Comparable, TagSearcher
 from soupsavvy.operations.base import BaseOperation, check_operation
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 
@@ -313,47 +313,6 @@ class Required(FieldWrapper):
             raise exc.RequiredConstraintException("Required element was not found")
 
         return result
-
-
-class Nullable(FieldWrapper):
-    """
-    Field wrapper for allowing matched element to be None,
-    irrespective of `strict` setting. Used to allow optional fields.
-
-    Example
-    -------
-    >>> from soupsavvy.models import Nullable
-    ... from soupsavvy import TypeSelector
-    ... selector = Nullable(TypeSelector("div"))
-    ... selector.find(tag, strict=True)
-    None
-    """
-
-    def find(self, tag: Tag, strict: bool = False, recursive: bool = True) -> Any:
-        """
-        Finds an element, allowing for a null result if not found,
-        irrespective of the `strict` setting. When `strict` is set to True
-        and selector does not find any matches, it catches the exception
-        and returns None instead.
-
-        Parameters
-        ----------
-        tag : Tag
-            Any BeautifulSoup tag to search within.
-        strict : bool, optional
-            Ignored, as this method always returns None if no matches are found.
-        recursive : bool, optional
-            Whether to search recursively, by default True.
-
-        Returns
-        -------
-        Any
-            The found element or None if not found.
-        """
-        try:
-            return self.selector.find(tag=tag, strict=strict, recursive=recursive)
-        except TagSearcherExceptions:
-            return None
 
 
 class Default(FieldWrapper):

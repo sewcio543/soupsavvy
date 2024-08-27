@@ -19,6 +19,7 @@ from tests.soupsavvy.selectors.conftest import (
 
 
 @pytest.mark.selector
+@pytest.mark.operation
 class TestSelectionPipeline:
     """Class for SelectionPipeline unit test suite."""
 
@@ -75,7 +76,9 @@ class TestSelectionPipeline:
             <h1 class="widget">1</h1>
         """
         bs = to_bs(text)
-        selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
+        selector = SelectionPipeline(
+            MockLinkSelector(), MockTextOperation(skip_none=True)
+        )
         result = selector.find(bs)
         assert result is None
 
@@ -148,7 +151,9 @@ class TestSelectionPipeline:
             <h1 class="widget">1</h1>
         """
         bs = find_body_element(to_bs(text))
-        selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
+        selector = SelectionPipeline(
+            MockLinkSelector(), MockTextOperation(skip_none=True)
+        )
         result = selector.find(bs, recursive=False)
         assert result is None
 

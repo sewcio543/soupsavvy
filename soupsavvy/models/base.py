@@ -247,7 +247,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         bound = cls.scope.find(tag=tag, strict=False, recursive=recursive)
 
         if bound is not None:
-            return cls._find(tag=bound, strict=strict)
+            return cls._find(bound)
 
         if strict:
             raise exc.ModelScopeNotFoundException(
@@ -258,7 +258,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         return None
 
     @classmethod
-    def _find(cls, tag: Tag, strict: bool = False) -> Self:
+    def _find(cls, tag: Tag) -> Self:
         """
         Internal method to find and initialize a model instance from a given tag.
 
@@ -266,8 +266,6 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         ----------
         tag : Tag
             The tag within which to search for model fields.
-        strict : bool, optional
-            Whether to raise an exception if any fields are not found. Default is False.
 
         Returns
         -------
@@ -285,9 +283,13 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
             try:
                 result = selector.find(
                     tag=tag,
-                    strict=strict,
+                    strict=False,
                     recursive=_DEFAULT_RECURSIVE,
                 )
+            except exc.RequiredConstraintException as e:
+                raise exc.FieldExtractionException(
+                    f"Field '{key}' is required and was not found in model '{cls.__name__}'."
+                ) from e
             except TagSearcherExceptions as e:
                 raise exc.FieldExtractionException(
                     f"Extracting field '{key}' failed in model '{cls.__name__}'."
@@ -322,7 +324,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
             A list of model instances found within the tag.
         """
         elements = cls.scope.find_all(tag=tag, recursive=recursive, limit=limit)
-        return [cls._find(element, strict=False) for element in elements]
+        return [cls._find(element) for element in elements]
 
     def __str__(self) -> str:
         params = ", ".join(

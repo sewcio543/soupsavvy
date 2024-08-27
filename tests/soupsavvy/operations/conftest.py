@@ -20,11 +20,22 @@ class BaseMockOperation(BaseOperation):
 class MockTextOperation(BaseMockOperation):
     """Mock operation that returns text of the tag, using .text attribute."""
 
+    def __init__(self, skip_none: bool = False) -> None:
+        """
+        Initializes MockTextOperation with optional skip_none parameter.
+
+        Parameters
+        ----------
+        skip_none : bool, optional
+            If True, skips None values and returns None when executing, by default False.
+        """
+        self.skip_none = skip_none
+
     def _execute(self, arg: Optional[Tag]) -> Optional[str]:
-        if arg is None:
+        if arg is None and self.skip_none:
             return None
 
-        return arg.text
+        return arg.text  # type: ignore
 
 
 class MockIntOperation(BaseMockOperation):
@@ -32,3 +43,10 @@ class MockIntOperation(BaseMockOperation):
 
     def _execute(self, arg: str) -> int:
         return int(arg)
+
+
+class MockPlus10Operation(BaseMockOperation):
+    """Mock operation that adds 10 to the argument."""
+
+    def _execute(self, arg: int) -> int:
+        return arg + 10

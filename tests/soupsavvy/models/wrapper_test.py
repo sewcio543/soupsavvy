@@ -16,7 +16,6 @@ from soupsavvy.models.wrappers import (
     All,
     Default,
     FieldWrapper,
-    Nullable,
     OperationWrapper,
     Required,
     SkipNone,
@@ -47,6 +46,7 @@ class MockFieldWrapper2(FieldWrapper):
     def find(self, tag: Tag, strict: bool = False, recursive: bool = True): ...
 
 
+@pytest.mark.selector
 class TestFieldWrapper:
     """Class for testing FieldWrapper interface."""
 
@@ -104,6 +104,7 @@ class TestFieldWrapper:
         assert result.operation == operation
 
 
+@pytest.mark.selector
 class BaseFieldWrapperTest:
     wrapper: Type[FieldWrapper]
     params: dict = {}
@@ -558,83 +559,6 @@ class TestDefault(BaseFieldWrapperTest):
             selector.find(bs, strict=True, recursive=False)
 
 
-class TestNullable(BaseFieldWrapperTest):
-    """Unit test suite for Nullable wrapper."""
-
-    wrapper = Nullable
-
-    def test_find_first_element_matched_by_selector(self):
-        """Tests if find method returns first element matched by selector."""
-        text = """
-            <div href="github"></div>
-            <span>
-                <h1>Hello</h1>
-            </span>
-            <a>1</a>
-            <h1><a>2</a></h1>
-            <a><p>3</p></a>
-        """
-        bs = to_bs(text)
-        selector = Nullable(MockLinkSelector())
-        result = selector.find(bs)
-        assert strip(str(result)) == strip("""<a>1</a>""")
-
-    @pytest.mark.parametrize(argnames="strict", argvalues=[True, False])
-    def test_find_returns_none_if_no_match(self, strict: bool):
-        """
-        Tests if find method returns None if no element matches the selector.
-        This behavior is the same for both strict and non-strict mode.
-        """
-        text = """
-            <div href="github"></div>
-            <span class="widget"></span>
-            <div><p>Hello</p></div>
-        """
-        bs = to_bs(text)
-        selector = Nullable(MockLinkSelector())
-        result = selector.find(bs, strict=strict)
-        assert result is None
-
-    def test_find_returns_first_matching_element_with_recursive_false(self):
-        """
-        Tests if find method returns first matching element if recursive is False.
-        """
-        text = """
-            <h1><a>Not child</a></h1>
-            <span>
-                <h1>Hello</h1>
-                <a>Not child</a>
-            </span>
-            <a>1</a>
-            <div href="github"></div>
-            <a>2</a>
-        """
-        bs = find_body_element(to_bs(text))
-        selector = Nullable(MockLinkSelector())
-        result = selector.find(bs, recursive=False)
-        assert strip(str(result)) == strip("""<a>1</a>""")
-
-    @pytest.mark.parametrize(argnames="strict", argvalues=[True, False])
-    def test_find_returns_none_if_no_matches_with_recursive_false(self, strict: bool):
-        """
-        Tests if find method returns None if no element matches the selector
-        and recursive is False. This behavior is the same for both strict and
-        non-strict mode.
-        """
-        text = """
-            <div href="github"></div>
-            <h1><a>Not child</a></h1>
-            <span>
-                <h1>Hello</h1>
-                <a>Not child</a>
-            </span>
-        """
-        bs = find_body_element(to_bs(text))
-        selector = Nullable(MockLinkSelector())
-        result = selector.find(bs, strict=strict, recursive=False)
-        assert result is None
-
-
 class MockOperationWrapper(OperationWrapper):
     """Mock class for testing OperationWrapper interface."""
 
@@ -647,6 +571,7 @@ class MockOperationWrapper2(OperationWrapper):
     def _execute(self, arg): ...
 
 
+@pytest.mark.operation
 class TestOperationWrapper:
     """Unit test suite for OperationWrapper interface."""
 
@@ -694,6 +619,7 @@ class TestOperationWrapper:
         assert (operations[0] == operations[1]) is False
 
 
+@pytest.mark.operation
 class TestSuppress:
     """Unit test suite for Suppress operation wrapper."""
 
@@ -713,6 +639,7 @@ class TestSuppress:
         assert result == 12
 
 
+@pytest.mark.operation
 class TestSkipNone:
     """Unit test suite for SkipNone operation wrapper."""
 

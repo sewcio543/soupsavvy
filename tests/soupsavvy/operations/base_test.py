@@ -9,6 +9,7 @@ from tests.soupsavvy.operations.conftest import MockIntOperation, MockTextOperat
 from tests.soupsavvy.selectors.conftest import MockLinkSelector
 
 
+@pytest.mark.operation
 class TestBaseOperation:
     """Unit test suite for BaseOperation class."""
 
@@ -38,6 +39,7 @@ class TestBaseOperation:
         assert result.operations == [operation1, operation2]
 
 
+@pytest.mark.operation
 class TestCheckOperation:
     """
     Class for testing check_operation function.

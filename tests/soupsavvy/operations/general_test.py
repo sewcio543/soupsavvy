@@ -31,6 +31,7 @@ def mock_operation_func(arg: Any):
     return arg == "+"
 
 
+@pytest.mark.operation
 class TestOperation:
     """Class with unit test suite for Operation class."""
 
@@ -91,6 +92,7 @@ class TestOperation:
         assert (operation1 == operation2) is False
 
 
+@pytest.mark.operation
 class TestText:
     """Class with unit test suite for Text operation."""
 
@@ -232,11 +234,14 @@ class TestText:
 
 
 class MockText(str):
+    """Mock class that imitates bs4 Tag with text attribute."""
+
     @property
     def text(self):
         return self
 
 
+@pytest.mark.operation
 class TestOperationPipeline:
     """Class with unit test suite for OperationPipeline class."""
 
