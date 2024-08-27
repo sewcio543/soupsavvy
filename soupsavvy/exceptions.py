@@ -185,6 +185,13 @@ class BaseModelException(SoupsavvyException):
     """Base exception related to models package and BaseModel class."""
 
 
+class UnknownModelFieldException(BaseModelException):
+    """
+    Exception raised by BaseModel when model passing unknown field name
+    to model constructor.
+    """
+
+
 class ModelScopeNotFoundException(BaseModelException):
     """
     Exception raised by BaseModel when model scope was not found in provided tag

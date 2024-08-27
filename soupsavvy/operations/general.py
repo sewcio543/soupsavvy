@@ -11,10 +11,11 @@ desired information. They can be used in combination with selectors.
 
 from __future__ import annotations
 
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 
 from bs4 import Tag
 
+from soupsavvy.interfaces import TagSearcher
 from soupsavvy.operations.base import BaseOperation, check_operation
 
 
@@ -134,7 +135,7 @@ class Operation(BaseOperation):
         return self.operation is x.operation
 
 
-class Text(BaseOperation):
+class Text(BaseOperation, TagSearcher):
     """
     Operation to extract text from a BeautifulSoup Tag.
     Wrapper of most common operation used in web scraping.
@@ -148,6 +149,16 @@ class Text(BaseOperation):
 
     Wrapper for BeautifulSoup `get_text` method, that exposes all its options,
     and imitates its default behavior.
+
+    Implements `TagSearcher` interface for convenience. It has find methods
+    that can be used to extract text from a tag.
+
+    Example
+    -------
+    >>> from soupsavvy.operations import Text
+    ... operation = Text()
+    ... operation.find(tag)
+    "Text"
     """
 
     def __init__(self, separator: str = "", strip: bool = False) -> None:
@@ -164,6 +175,56 @@ class Text(BaseOperation):
         """
         self.separator = separator
         self.strip = strip
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> str:
+        """
+        Extracts text from provided element. Always returns a single string.
+
+        Parameters
+        ----------
+        tag : Tag
+            Any BeautifulSoup Tag object to extract text from.
+        recursive : bool, optional
+            Ignored, for consistency with interface.
+        limit : int, optional
+            Ignored, for consistency with interface, always returns a single string.
+
+        Returns
+        -------
+        str
+            Extracted text from the tag.
+        """
+        return self.execute(tag)
+
+    def find(
+        self,
+        tag: Tag,
+        strict: bool = False,
+        recursive: bool = True,
+    ) -> Any:
+        """
+        Extracts text from provided element. Always returns a single string.
+
+        Parameters
+        ----------
+        tag : Tag
+            Any BeautifulSoup Tag object to extract text from.
+        strict : bool, optional
+            Ignored, for consistency with interface.
+        recursive : int, optional
+            Ignored, for consistency with interface.
+
+        Returns
+        -------
+        str
+            Extracted text from the tag.
+        """
+        return self.execute(tag)
 
     def _execute(self, arg: Tag) -> str:
         """Extracts text from a BeautifulSoup Tag."""

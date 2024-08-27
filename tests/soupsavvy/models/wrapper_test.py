@@ -1,6 +1,6 @@
 """Module with unit tests for wrappers in soupsavvy.models module."""
 
-from typing import Any, Type
+from typing import Type
 
 import pytest
 from bs4 import Tag

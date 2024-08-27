@@ -12,15 +12,17 @@ from soupsavvy.exceptions import (
     ModelScopeNotFoundException,
     NotSoupSelectorException,
     ScopeNotDefinedException,
+    UnknownModelFieldException,
 )
 from soupsavvy.models.base import BaseModel
-from soupsavvy.models.wrappers import Default, Required, SkipNone, Suppress
+from soupsavvy.models.wrappers import All, Default, Required, SkipNone, Suppress
 from tests.soupsavvy.operations.conftest import (
     MockIntOperation,
     MockPlus10Operation,
     MockTextOperation,
 )
 from tests.soupsavvy.selectors.conftest import (
+    MockClassMenuSelector,
     MockClassWidgetSelector,
     MockDivSelector,
     MockLinkSelector,
@@ -112,6 +114,15 @@ class TestBaseModel:
 
         with pytest.raises(MissingFieldsException):
             MockModel(title="Title")
+
+    def test_raises_error_on_init_if_unknown_field(self):
+        """
+        Tests if UnknownModelFieldException is raised when unknown field is passed
+        to model constructor. Only fields defined in model class are allowed.
+        """
+
+        with pytest.raises(UnknownModelFieldException):
+            MockModel(title="Title", price=10, name="Name")
 
     def test_raises_error_when_scope_is_not_soup_selector(self):
         """
@@ -958,3 +969,85 @@ class TestBaseModelIntegration:
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=10)
+
+    def test_all_returns_multiple_elements_in_list_for_field(self):
+        """Tests if All returns multiple elements in list for field."""
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = TITLE_SELECTOR
+            price = All(PRICE_SELECTOR)
+
+        text = """
+            <div>
+                <a>Title</a>
+                <p class="widget">10</p>
+                <p class="widget">20</p>
+                <a>Title2</a>
+                <p>Hello</p>
+                <p class="widget">30</p>
+            </div>
+        """
+        bs = to_bs(text)
+        selector = MockModel
+        result = selector.find(bs)
+        assert result == MockModel(title="Title", price=[10, 20, 30])
+
+    def test_all_returns_empty_list_if_nothing_found_for_field(self):
+        """
+        Tests if All returns empty list if nothing found for field
+        without raising any exception, as it wraps find_all method.
+        """
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = TITLE_SELECTOR
+            price = All(PRICE_SELECTOR)
+
+        text = """
+            <div>
+                <a>Title</a>
+                <a>Title2</a>
+                <p>Hello</p>
+            </div>
+        """
+        bs = to_bs(text)
+        selector = MockModel
+        result = selector.find(bs)
+        assert result == MockModel(title="Title", price=[])
+
+    def test_field_can_be_another_model_class(self):
+        """
+        Tests if field can be another model class, that inherits from BaseModel.
+        It is allowed, as model is TagSearcher and can be used as field.
+        """
+
+        class MockInfoModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = TITLE_SELECTOR
+            author = MockClassMenuSelector() | MockTextOperation()
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            info = MockInfoModel
+            price = PRICE_SELECTOR
+
+        text = """
+            <div>
+                <div>
+                    <a>Title</a>
+                    <p class="menu">Author</p>
+                </div>
+                <p class="widget">10</p>
+            </div>
+        """
+        bs = to_bs(text)
+        selector = MockModel
+        result = selector.find(bs)
+        assert result == MockModel(
+            info=MockInfoModel(title="Title", author="Author"), price=10
+        )

@@ -18,6 +18,8 @@ from soupsavvy.selectors.base import SoupSelector, check_selector
 
 # default recursive value for finding fields of model within the scope
 _DEFAULT_RECURSIVE = True
+# default strict value for finding fields of model within the scope
+_DEFAULT_STRICT = False
 
 _SCOPE = "__scope__"
 _INHERIT_FIELDS = "__inherit_fields__"
@@ -28,36 +30,34 @@ _SPECIAL_FIELDS = {_SCOPE, _INHERIT_FIELDS}
 class ModelMeta(type(ABC)):
     """
     Metaclass for all models derived from `BaseModel`. This metaclass ensures that
-    certain attributes and methods are defined and properly configured in each model class.
+    certain attributes and methods are defined
+    and properly configured in each model class.
 
-    It handles validation and inheritance of specific attributes that control the behavior
-    of the models, such as `__scope__` and `__inherit_fields__`.
-
-    Parameters
-    ----------
-    name : str
-        The name of the class being created.
-    bases : tuple
-        The base classes from which the new class inherits.
-    class_dict : dict
-        The dictionary containing the class attributes.
+    It handles validation of provided attributes and controls inheritance of fields.
+    Meta inherits from `type(ABC)` to avoid metaclass conflicts.
 
     Attributes
     ----------
     scope : SoupSelector
-        Returns the `__scope__` attribute, which defines the scope within which the model
-        is to be found.
-    fields : dict of {str: TagSearcher}
-        Aggregates and returns the TagSearcher fields from the current model class and
-        its base classes, depending on the `__inherit_fields__` setting.
-
-    Raises
-    ------
-    ScopeNotDefinedException
-        If `__scope__` is not defined in the model.
+        Returns the `__scope__` attribute, which defines the scope
+        within which the model is to be found.
+    fields : dict[str, TagSearcher]
+        Fields that defines the model and search operations.
     """
 
     def __init__(cls, name, bases, class_dict):
+        """
+        Initializes the model class and validates its attributes.
+        For each user-defined model, which is a subclass of `BaseModel`,
+        checks if scope and fields are properly defined.
+
+        Raises
+        ------
+        ScopeNotDefinedException
+            If the scope attribute is missing in the model class.
+        FieldsNotDefinedException
+            If no fields are defined in the model class.
+        """
         super().__init__(name, bases, class_dict)
 
         if name == "BaseModel":
@@ -90,16 +90,17 @@ class ModelMeta(type(ABC)):
         Returns
         -------
         SoupSelector
-            The scope selector used to identify the model within the HTML content.
+            The scope selector used to identify the element in which
+            the model is searched.
         """
         return getattr(cls, _SCOPE)
 
     @property
     def fields(cls) -> dict[str, TagSearcher]:
         """
-        Aggregates and returns the TagSearcher fields
-        from the current model and its base classes.
-        The fields are aggregated based on the `__inherit_fields__` setting.
+        Returns the fields of the model class with their
+        respective TagSearcher instances. The fields are aggregated based on
+        the `__inherit_fields__` setting.
 
         Returns
         -------
@@ -109,6 +110,10 @@ class ModelMeta(type(ABC)):
         return cls._get_fields()
 
     def _get_fields(cls) -> dict[str, TagSearcher]:
+        """
+        Returns the fields of the model class with their
+        respective TagSearcher instances based on the `__inherit_fields__` setting.
+        """
         classes = (
             [
                 base
@@ -125,7 +130,13 @@ class ModelMeta(type(ABC)):
                 {
                     key: value
                     for key, value in c.__dict__.items()
-                    if isinstance(value, TagSearcher) and key not in _SPECIAL_FIELDS
+                    if (
+                        # accepted field must be TagSearcher
+                        isinstance(value, TagSearcher)
+                        # or BaseModel subclass
+                        or (isinstance(value, type) and issubclass(value, BaseModel))
+                    )
+                    and key not in _SPECIAL_FIELDS
                 }
                 for c in classes
             ],
@@ -133,26 +144,7 @@ class ModelMeta(type(ABC)):
 
 
 class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
-    """
-    Base class for all models, providing common functionality for HTML tag searching and
-    comparison. All models should inherit from this class.
-
-    This class provides the fundamental operations required for finding and initializing
-    model instances within HTML tags.
-
-    Attributes
-    ----------
-    __scope__ : SoupSelector
-        Defines the scope within which the model is searched. Must be defined in derived classes.
-    __inherit_fields__ : bool
-        Controls whether fields from base classes are inherited by the derived model class.
-        Defaults to True.
-
-    Raises
-    ------
-    MissingFieldsException
-        If any required fields are missing during initialization.
-    """
+    """Base class for all user-defined models in `soupsavvy`."""
 
     __scope__: SoupSelector = None  # type: ignore
     __inherit_fields__: bool = True
@@ -160,25 +152,39 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
     def __init__(self, **kwargs) -> None:
         """
         Initializes a model instance with provided field values.
+        Model should not be initialized directly, but through the `find` methods.
 
         Parameters
         ----------
-        **kwargs : dict
-            A dictionary of field names and their corresponding values.
+        kwargs : Any
+            Field values to initialize the model with provided
+            as keyword arguments.
 
         Raises
         ------
         MissingFieldsException
             If any required fields are missing from the provided kwargs.
+        UnknownModelFieldException
+            If any unknown fields are provided in the kwargs.
         """
+
         for field in self.__class__.fields.keys():
-            if field not in kwargs:
+
+            try:
+                value = kwargs.pop(field)
+            except KeyError:
                 raise exc.MissingFieldsException(
                     f"Cannot initialize model '{self.__class__.__name__}' "
                     f"without '{field}' field."
                 )
 
-            setattr(self, field, kwargs[field])
+            setattr(self, field, value)
+
+        if kwargs:
+            raise exc.UnknownModelFieldException(
+                f"Model '{self.__class__.__name__}' has no fields defined "
+                f"for: {kwargs.keys()}"
+            )
 
         self.__post_init__()
 
@@ -224,25 +230,31 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
     ) -> Optional[Self]:
         """
         Searches for and returns an instance of the model within the provided tag.
+        By default, perform recursive, non-strict search for model fields
+        within the scope element.
 
         Parameters
         ----------
         tag : Tag
-            The HTML tag within which to search for the model.
+            Any BeautifulSoup Tag object within which to search for the model.
         strict : bool, optional
-            Whether to raise an exception if the model is not found. Default is False.
+            Whether to raise an exception if the scope element
+            for the model is not found. Default is False, None is returned.
         recursive : bool, optional
-            Whether the search for the model scope should be recursive. Default is True.
+            Whether the search for the model scope element should be recursive.
+            Default is True.
 
         Returns
         -------
-        Optional[Self]
+        Self | None
             An instance of the model if found, otherwise None.
 
         Raises
         ------
         ModelScopeNotFoundException
             If the model's scope is not found and strict is True.
+        FieldExtractionException
+            If any model field failed to be extracted.
         """
         bound = cls.scope.find(tag=tag, strict=False, recursive=recursive)
 
@@ -261,11 +273,12 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
     def _find(cls, tag: Tag) -> Self:
         """
         Internal method to find and initialize a model instance from a given tag.
+        By default, perform recursive, non-strict search for model fields.
 
         Parameters
         ----------
         tag : Tag
-            The tag within which to search for model fields.
+            The tag within which to search for model fields (scope element).
 
         Returns
         -------
@@ -274,8 +287,8 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
 
         Raises
         ------
-        ModelScopeNotFoundException
-            If a required field cannot be found.
+        FieldExtractionException
+            If any model field failed to be extracted.
         """
         params = {}
 
@@ -283,7 +296,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
             try:
                 result = selector.find(
                     tag=tag,
-                    strict=False,
+                    strict=_DEFAULT_STRICT,
                     recursive=_DEFAULT_RECURSIVE,
                 )
             except exc.RequiredConstraintException as e:
@@ -308,19 +321,23 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
     ) -> list[Self]:
         """
         Searches for and returns all instances of the model within the provided tag.
+        By default, perform recursive, non-strict search for model fields
+        just like in `find` method.
 
         Parameters
         ----------
         tag : Tag
-            The HTML tag within which to search for model instances.
+            Any BeautifulSoup Tag object within which to search for the model.
         recursive : bool, optional
-            Whether the search should be recursive. Default is True.
+            Whether the search for the model scope element should be recursive.
+            Default is True.
         limit : int, optional
-            The maximum number of model instances to return. Default is None.
+            Maximum number of model instances to return. Default is None, which
+            returns all instances found.
 
         Returns
         -------
-        list of Self
+        list[Self]
             A list of model instances found within the tag.
         """
         elements = cls.scope.find_all(tag=tag, recursive=recursive, limit=limit)
@@ -336,6 +353,10 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         return str(self)
 
     def __eq__(self, x: Any) -> bool:
+        """
+        Checks if provided object is equal to the model instance.
+        They need to be of the same class and have the same field values.
+        """
         if not isinstance(x, self.__class__):
             return False
 
