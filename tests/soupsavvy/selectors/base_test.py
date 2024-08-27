@@ -284,6 +284,7 @@ def test_exception_is_raised_when_navigable_string_is_a_result():
         tag.find(bs, strict=True)
 
 
+@pytest.mark.selector
 class TestCompositeSoupSelector:
     """
     Class for testing CompositeSoupSelector interface.
@@ -454,6 +455,7 @@ class TestCompositeSoupSelector:
         assert (selectors[0] == selectors[1]) is False
 
 
+@pytest.mark.selector
 class TestCheckSelector:
     """
     Class for testing check_selector function.
@@ -493,6 +495,7 @@ class TestCheckSelector:
             check_selector("selector", message=message)
 
 
+@pytest.mark.selector
 def test_or_return_selection_pipeline_if_operation_passed():
     """
     Tests if using or operator with on SoupSelector and BaseOperation

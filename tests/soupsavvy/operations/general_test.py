@@ -31,6 +31,7 @@ def mock_operation_func(arg: Any):
     return arg == "+"
 
 
+@pytest.mark.operation
 class TestOperation:
     """Class with unit test suite for Operation class."""
 
@@ -91,6 +92,7 @@ class TestOperation:
         assert (operation1 == operation2) is False
 
 
+@pytest.mark.operation
 class TestText:
     """Class with unit test suite for Text operation."""
 
@@ -201,6 +203,47 @@ class TestText:
         result = operation.execute(bs)
         assert result == "Hello world"
 
+    def test_returns_text_with_find_method(self):
+        """
+        Tests if find method returns text of a BeautifulSoup Tag, it calls
+        execute method. This is for done for convenience and compatibility with
+        TagSearcher interface.
+        """
+        text = """
+            <div href="github">Hello world</div>
+        """
+        bs = to_bs(text).div
+        operation = Text()
+        result = operation.find(bs)  # type: ignore
+        assert result == "Hello world"
+
+    def test_returns_list_with_single_element_with_find_all_method(self):
+        """
+        Tests if find_all method returns text of a BeautifulSoup Tag wrapped
+        in single element list. This is for done for compatibility with
+        TagSearcher interface.
+        """
+        text = """
+            <div href="github">Hello world</div>
+        """
+        bs = to_bs(text).div
+        operation = Text()
+        result = operation.find_all(bs)  # type: ignore
+        assert result == ["Hello world"]
+
+    def test_raises_error_when_find_methods_get_not_tag(self):
+        """
+        Tests if find and find_all methods raise FailedOperationExecution
+        if input is not bs4 tag.
+        """
+        operation = Text()
+
+        with pytest.raises(FailedOperationExecution):
+            operation.find("string")  # type: ignore
+
+        with pytest.raises(FailedOperationExecution):
+            operation.find_all("string")  # type: ignore
+
     @pytest.mark.parametrize(
         argnames="operations",
         argvalues=[
@@ -232,11 +275,14 @@ class TestText:
 
 
 class MockText(str):
+    """Mock class that imitates bs4 Tag with text attribute."""
+
     @property
     def text(self):
         return self
 
 
+@pytest.mark.operation
 class TestOperationPipeline:
     """Class with unit test suite for OperationPipeline class."""
 

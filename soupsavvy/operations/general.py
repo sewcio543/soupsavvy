@@ -11,11 +11,12 @@ desired information. They can be used in combination with selectors.
 
 from __future__ import annotations
 
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 
 from bs4 import Tag
 
-from soupsavvy.operations.base import BaseOperation, check_operator
+from soupsavvy.interfaces import TagSearcher
+from soupsavvy.operations.base import BaseOperation, check_operation
 
 
 class OperationPipeline(BaseOperation):
@@ -55,7 +56,7 @@ class OperationPipeline(BaseOperation):
             If any of the input operations is not a valid operation.
         """
         self.operations = [
-            check_operator(operation)
+            check_operation(operation)
             for operation in (operation1, operation2, *operations)
         ]
 
@@ -87,7 +88,7 @@ class OperationPipeline(BaseOperation):
         NotOperationException
             If provided object is not of type BaseOperation.
         """
-        x = check_operator(x)
+        x = check_operation(x)
         return OperationPipeline(*self.operations, x)
 
     def __eq__(self, x: Any) -> bool:
@@ -134,7 +135,7 @@ class Operation(BaseOperation):
         return self.operation is x.operation
 
 
-class Text(BaseOperation):
+class Text(BaseOperation, TagSearcher):
     """
     Operation to extract text from a BeautifulSoup Tag.
     Wrapper of most common operation used in web scraping.
@@ -148,6 +149,16 @@ class Text(BaseOperation):
 
     Wrapper for BeautifulSoup `get_text` method, that exposes all its options,
     and imitates its default behavior.
+
+    Implements `TagSearcher` interface for convenience. It has find methods
+    that can be used to extract text from a tag.
+
+    Example
+    -------
+    >>> from soupsavvy.operations import Text
+    ... operation = Text()
+    ... operation.find(tag)
+    "Text"
     """
 
     def __init__(self, separator: str = "", strip: bool = False) -> None:
@@ -164,6 +175,57 @@ class Text(BaseOperation):
         """
         self.separator = separator
         self.strip = strip
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[str]:
+        """
+        Extracts text from provided element. Always returns a single
+        element list with the extracted text.
+
+        Parameters
+        ----------
+        tag : Tag
+            Any BeautifulSoup Tag object to extract text from.
+        recursive : bool, optional
+            Ignored, for consistency with interface.
+        limit : int, optional
+            Ignored, for consistency with interface, always returns a single string.
+
+        Returns
+        -------
+        list[str]
+            Extracted text from the tag, wrapped in a single element list.
+        """
+        return [self.execute(tag)]
+
+    def find(
+        self,
+        tag: Tag,
+        strict: bool = False,
+        recursive: bool = True,
+    ) -> Any:
+        """
+        Extracts text from provided element. Always returns a single string.
+
+        Parameters
+        ----------
+        tag : Tag
+            Any BeautifulSoup Tag object to extract text from.
+        strict : bool, optional
+            Ignored, for consistency with interface.
+        recursive : int, optional
+            Ignored, for consistency with interface.
+
+        Returns
+        -------
+        str
+            Extracted text from the tag.
+        """
+        return self.execute(tag)
 
     def _execute(self, arg: Tag) -> str:
         """Extracts text from a BeautifulSoup Tag."""

@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from soupsavvy.operations.general import OperationPipeline
 
 
-def check_operator(x: Any, message: Optional[str] = None) -> BaseOperation:
+def check_operation(x: Any, message: Optional[str] = None) -> BaseOperation:
     """
     Checks if provided object is a valid `soupsavvy` operation.
     Checks for instance of BaseOperation and raises an exception if not.
@@ -124,5 +124,5 @@ class BaseOperation(Executable, Comparable):
             f"Bitwise OR not supported for types {type(self)} and {type(x)}, "
             f"expected an instance of {BaseOperation.__name__}."
         )
-        other = check_operator(x, message=message)
+        other = check_operation(x, message=message)
         return OperationPipeline(self, other)

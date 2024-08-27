@@ -3,12 +3,13 @@
 import pytest
 
 from soupsavvy.exceptions import NotOperationException
-from soupsavvy.operations.base import check_operator
+from soupsavvy.operations.base import check_operation
 from soupsavvy.operations.general import OperationPipeline
 from tests.soupsavvy.operations.conftest import MockIntOperation, MockTextOperation
 from tests.soupsavvy.selectors.conftest import MockLinkSelector
 
 
+@pytest.mark.operation
 class TestBaseOperation:
     """Unit test suite for BaseOperation class."""
 
@@ -38,9 +39,10 @@ class TestBaseOperation:
         assert result.operations == [operation1, operation2]
 
 
-class TestCheckOperator:
+@pytest.mark.operation
+class TestCheckOperation:
     """
-    Class for testing check_operator function.
+    Class for testing check_operation function.
     Ensures that provided object is a valid `soupsavvy` operation.
     """
 
@@ -50,7 +52,7 @@ class TestCheckOperator:
         if it is instance of BaseOperation.
         """
         operation = MockTextOperation()
-        result = check_operator(operation)
+        result = check_operation(operation)
         assert result is operation
 
     @pytest.mark.parametrize(
@@ -64,7 +66,7 @@ class TestCheckOperator:
         if object is not instance of BaseOperation.
         """
         with pytest.raises(NotOperationException):
-            check_operator("selector")
+            check_operation("selector")
 
     def test_raises_exception_with_custom_message_when_specified(self):
         """
@@ -74,4 +76,4 @@ class TestCheckOperator:
         message = "Custom message"
 
         with pytest.raises(NotOperationException, match=message):
-            check_operator("operation", message=message)
+            check_operation("operation", message=message)

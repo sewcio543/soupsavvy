@@ -13,6 +13,8 @@ from typing import Any, Optional
 
 from bs4 import Tag
 
+import soupsavvy.exceptions as exc
+
 
 class Executable(ABC):
     """
@@ -35,6 +37,10 @@ class Comparable(ABC):
     @abstractmethod
     def __eq__(self, x: Any) -> bool:
         pass
+
+
+# possible exceptions raised when TagSearcher fails
+TagSearcherExceptions = (exc.FailedOperationExecution, exc.TagNotFoundException)
 
 
 class TagSearcher(ABC):

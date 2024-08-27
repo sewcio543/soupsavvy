@@ -7,6 +7,8 @@ from soupsavvy.selectors.css.selectors import CSSSoupSelector
 from tests.soupsavvy.selectors.conftest import MockSelector
 
 
+@pytest.mark.selector
+@pytest.mark.css
 class TestCSSSoupSelectorEquality:
     """
     Class for testing CSSSoupSelector base class __eq__ method.

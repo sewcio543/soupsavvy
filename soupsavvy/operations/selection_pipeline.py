@@ -10,15 +10,15 @@ from typing import Any, Optional
 
 from bs4 import Tag
 
+import soupsavvy.exceptions as exc
 from soupsavvy.interfaces import Comparable, TagSearcher
-from soupsavvy.operations.base import BaseOperation, check_operator
-from soupsavvy.selectors.base import SoupSelector
+from soupsavvy.operations.base import BaseOperation, check_operation
 
 
 class SelectionPipeline(TagSearcher, Comparable):
     """
-    Class for chaining selector and operation together.
-    Uses selector to find html elements and operation to process the data.
+    Class for chaining searcher and operation together.
+    Uses searcher to find information in tag and operation to process the data.
 
     Example
     -------
@@ -32,17 +32,22 @@ class SelectionPipeline(TagSearcher, Comparable):
     on selector and operation.
     """
 
-    def __init__(self, selector: SoupSelector, operation: BaseOperation) -> None:
+    def __init__(self, selector: TagSearcher, operation: BaseOperation) -> None:
         """
         Initializes SelectionPipeline with selector and operation.
 
         Parameters
         ----------
-        selector : SoupSelector
-            Selector used for finding target html elements.
+        selector : TagSearcher
+            Selector used for finding target information in the tag.
         operation : BaseOperation
             Operation used for processing the data.
         """
+        if not isinstance(selector, TagSearcher):
+            raise exc.NotTagSearcherException(
+                f"Expected {TagSearcher.__name__}, got {type(selector)}"
+            )
+
         self.selector = selector
         self.operation = operation
 
@@ -134,7 +139,7 @@ class SelectionPipeline(TagSearcher, Comparable):
         NotOperationException
             If provided object is not of type BaseOperation.
         """
-        x = check_operator(x)
+        x = check_operation(x)
         operation = self.operation | x
         return SelectionPipeline(selector=self.selector, operation=operation)
 

@@ -1,8 +1,12 @@
-"""Testing module for TypeSelector class."""
+"""Testing module for SelectionPipeline class."""
 
 import pytest
 
-from soupsavvy.exceptions import NotOperationException, TagNotFoundException
+from soupsavvy.exceptions import (
+    NotOperationException,
+    NotTagSearcherException,
+    TagNotFoundException,
+)
 from soupsavvy.operations.general import OperationPipeline
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 from tests.soupsavvy.operations.conftest import MockIntOperation, MockTextOperation
@@ -15,8 +19,20 @@ from tests.soupsavvy.selectors.conftest import (
 
 
 @pytest.mark.selector
-class TestTypeSelector:
-    """Class for TypeSelector unit test suite."""
+@pytest.mark.operation
+class TestSelectionPipeline:
+    """Class for SelectionPipeline unit test suite."""
+
+    def test_raises_error_when_invalid_selector(self):
+        """
+        Tests if raises NotTagSearcherException on init
+        when invalid selector is passed.
+        """
+        with pytest.raises(NotTagSearcherException):
+            SelectionPipeline(
+                MockTextOperation(),  # type: ignore
+                MockIntOperation(),
+            )
 
     def test_find_returns_first_tag_matching_selector(self):
         """Tests if find method returns first tag matching selector."""
@@ -31,6 +47,25 @@ class TestTypeSelector:
         result = selector.find(bs)
         assert result == "1"
 
+    def test_selector_can_be_any_tag_searcher(self):
+        """
+        Tests if selector passed to SelectionPipeline can be any TagSearcher,
+        not necessarily a selector. In this case, SelectionPipeline.
+        """
+        text = """
+            <div href="github"></div>
+            <h1 class="widget">1</h1>
+            <a>1</a>
+            <a>2</a>
+        """
+        bs = to_bs(text)
+        selector = SelectionPipeline(
+            SelectionPipeline(MockLinkSelector(), MockTextOperation()),
+            MockIntOperation(),
+        )
+        result = selector.find(bs)
+        assert result == 1
+
     def test_find_returns_none_if_no_match_and_strict_false(self):
         """
         Tests if find returns None if no element matches the selector
@@ -41,7 +76,9 @@ class TestTypeSelector:
             <h1 class="widget">1</h1>
         """
         bs = to_bs(text)
-        selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
+        selector = SelectionPipeline(
+            MockLinkSelector(), MockTextOperation(skip_none=True)
+        )
         result = selector.find(bs)
         assert result is None
 
@@ -114,7 +151,9 @@ class TestTypeSelector:
             <h1 class="widget">1</h1>
         """
         bs = find_body_element(to_bs(text))
-        selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
+        selector = SelectionPipeline(
+            MockLinkSelector(), MockTextOperation(skip_none=True)
+        )
         result = selector.find(bs, recursive=False)
         assert result is None
 
