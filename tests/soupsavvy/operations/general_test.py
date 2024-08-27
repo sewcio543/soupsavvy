@@ -217,10 +217,10 @@ class TestText:
         result = operation.find(bs)  # type: ignore
         assert result == "Hello world"
 
-    def test_returns_text_with_find_all_method(self):
+    def test_returns_list_with_single_element_with_find_all_method(self):
         """
-        Tests if find_all method returns text of a BeautifulSoup Tag, it calls
-        execute method. This is for done for convenience and compatibility with
+        Tests if find_all method returns text of a BeautifulSoup Tag wrapped
+        in single element list. This is for done for compatibility with
         TagSearcher interface.
         """
         text = """
@@ -229,7 +229,7 @@ class TestText:
         bs = to_bs(text).div
         operation = Text()
         result = operation.find_all(bs)  # type: ignore
-        assert result == "Hello world"
+        assert result == ["Hello world"]
 
     def test_raises_error_when_find_methods_get_not_tag(self):
         """

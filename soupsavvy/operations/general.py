@@ -181,9 +181,10 @@ class Text(BaseOperation, TagSearcher):
         tag: Tag,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> str:
+    ) -> list[str]:
         """
-        Extracts text from provided element. Always returns a single string.
+        Extracts text from provided element. Always returns a single
+        element list with the extracted text.
 
         Parameters
         ----------
@@ -196,10 +197,10 @@ class Text(BaseOperation, TagSearcher):
 
         Returns
         -------
-        str
-            Extracted text from the tag.
+        list[str]
+            Extracted text from the tag, wrapped in a single element list.
         """
-        return self.execute(tag)
+        return [self.execute(tag)]
 
     def find(
         self,
