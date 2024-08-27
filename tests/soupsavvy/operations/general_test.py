@@ -6,7 +6,7 @@ from typing import Any, Callable
 import pytest
 
 from soupsavvy.exceptions import FailedOperationExecution, NotOperationException
-from soupsavvy.operations.general import Operation, OperationPipeline, Text
+from soupsavvy.operations.general import Href, Operation, OperationPipeline, Text
 from tests.soupsavvy.operations.conftest import MockIntOperation, MockTextOperation
 from tests.soupsavvy.selectors.conftest import MockLinkSelector, to_bs
 
@@ -97,7 +97,10 @@ class TestText:
     """Class with unit test suite for Text operation."""
 
     def test_raises_error_when_input_not_bs4_tag(self):
-        """Tests if execute method raises FailedOperationExecution if input is not bs4 tag."""
+        """
+        Tests if execute method raises FailedOperationExecution
+        if input is not bs4 tag.
+        """
         text = """
             <div href="github">Hello world</div>
         """
@@ -108,7 +111,8 @@ class TestText:
 
     def test_returns_empty_string_if_no_text_node(self):
         """
-        Tests if execute method returns empty string if no text node in BeautifulSoup Tag.
+        Tests if execute method returns empty string
+        if no text node in BeautifulSoup Tag.
         """
         text = """
             <div href="github"></div>
@@ -120,8 +124,8 @@ class TestText:
 
     def test_returns_text_of_tag(self):
         """
-        Tests if execute method returns text of a BeautifulSoup Tag when single text node.
-        By default text is not stripped.
+        Tests if execute method returns text of a BeautifulSoup Tag
+        when single text node. By default text is not stripped.
         """
         text = """
             <div href="github"> Hello world\n</div>
@@ -266,6 +270,111 @@ class TestText:
             (Text(strip=True, separator="."), Text(strip=True, separator="-")),
             (Text(strip=True, separator="."), Text(strip=False, separator=".")),
             (Text(), MockIntOperation()),
+        ],
+    )
+    def test_eq_returns_false_if_different_operation(self, operations: tuple):
+        """Tests if __eq__ method returns False if objects are not equal."""
+        operation1, operation2 = operations
+        assert (operation1 == operation2) is False
+
+
+@pytest.mark.operation
+class TestHref:
+    """Class with unit test suite for Href operation."""
+
+    def test_raises_error_when_input_not_bs4_tag(self):
+        """
+        Tests if execute method raises FailedOperationExecution
+        if input is not bs4 tag.
+        """
+        text = """
+            <div href="github">Hello world</div>
+        """
+        operation = Href()
+
+        with pytest.raises(FailedOperationExecution):
+            operation.execute(text)
+
+    def test_returns_none_if_no_href_in_element(self):
+        """
+        Tests if execute method returns None if no href attribute in BeautifulSoup Tag.
+        """
+        text = """
+            <div class="github"></div>
+        """
+        bs = to_bs(text).div
+        operation = Href()
+        result = operation.execute(bs)
+        assert result is None
+
+    def test_returns_href_of_tag(self):
+        """
+        Tests if execute method returns href attribute of a BeautifulSoup Tag
+        if present in the element.
+        """
+        text = """
+            <div href="github" class="menu">Hello world/div>
+        """
+        bs = to_bs(text).div
+        operation = Href()
+        result = operation.execute(bs)
+        assert result == "github"
+
+    def test_returns_href_with_find_method(self):
+        """
+        Tests if find method returns href attribute of a BeautifulSoup Tag, it calls
+        execute method. This is for done for convenience and compatibility with
+        TagSearcher interface.
+        """
+        text = """
+            <div href="github">Hello world</div>
+        """
+        bs = to_bs(text).div
+        operation = Href()
+        result = operation.find(bs)  # type: ignore
+        assert result == "github"
+
+    def test_returns_list_with_single_element_with_find_all_method(self):
+        """
+        Tests if find_all method returns text of a BeautifulSoup Tag wrapped
+        in single element list. This is for done for compatibility with
+        TagSearcher interface.
+        """
+        text = """
+            <div href="github">Hello world</div>
+        """
+        bs = to_bs(text).div
+        operation = Href()
+        result = operation.find_all(bs)  # type: ignore
+        assert result == ["github"]
+
+    def test_raises_error_when_find_methods_get_not_tag(self):
+        """
+        Tests if find and find_all methods raise FailedOperationExecution
+        if input is not bs4 tag.
+        """
+        operation = Href()
+
+        with pytest.raises(FailedOperationExecution):
+            operation.find("string")  # type: ignore
+
+        with pytest.raises(FailedOperationExecution):
+            operation.find_all("string")  # type: ignore
+
+    @pytest.mark.parametrize(
+        argnames="operations",
+        argvalues=[(Href(), Href())],
+    )
+    def test_eq_returns_true_if_same_operation(self, operations: tuple):
+        """Tests if __eq__ method returns True if objects are equal."""
+        operation1, operation2 = operations
+        assert (operation1 == operation2) is True
+
+    @pytest.mark.parametrize(
+        argnames="operations",
+        argvalues=[
+            (Href(), MockIntOperation()),
+            (Href(), MockLinkSelector()),
         ],
     )
     def test_eq_returns_false_if_different_operation(self, operations: tuple):

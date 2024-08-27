@@ -135,7 +135,59 @@ class Operation(BaseOperation):
         return self.operation is x.operation
 
 
-class Text(BaseOperation, TagSearcher):
+class OperationSearcherMixin(BaseOperation, TagSearcher):
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Any]:
+        """
+        Extracts information from provided element.
+
+        Parameters
+        ----------
+        tag : Tag
+            Any BeautifulSoup Tag object to extract text from.
+        recursive : bool, optional
+            Ignored, for consistency with interface.
+        limit : int, optional
+            Ignored, for consistency with interface.
+
+        Returns
+        -------
+        list[Any]
+            Extracted information from the tag.
+        """
+        return [self.execute(tag)]
+
+    def find(
+        self,
+        tag: Tag,
+        strict: bool = False,
+        recursive: bool = True,
+    ) -> Any:
+        """
+        Extracts information from provided element.
+
+        Parameters
+        ----------
+        tag : Tag
+            Any BeautifulSoup Tag object to extract text from.
+        strict : bool, optional
+            Ignored, for consistency with interface.
+        recursive : int, optional
+            Ignored, for consistency with interface.
+
+        Returns
+        -------
+        Any
+            Extracted information from the tag.
+        """
+        return self.execute(tag)
+
+
+class Text(OperationSearcherMixin):
     """
     Operation to extract text from a BeautifulSoup Tag.
     Wrapper of most common operation used in web scraping.
@@ -151,7 +203,7 @@ class Text(BaseOperation, TagSearcher):
     and imitates its default behavior.
 
     Implements `TagSearcher` interface for convenience. It has find methods
-    that can be used to extract text from a tag.
+    that can be used to extract text from provided tag.
 
     Example
     -------
@@ -176,57 +228,6 @@ class Text(BaseOperation, TagSearcher):
         self.separator = separator
         self.strip = strip
 
-    def find_all(
-        self,
-        tag: Tag,
-        recursive: bool = True,
-        limit: Optional[int] = None,
-    ) -> list[str]:
-        """
-        Extracts text from provided element. Always returns a single
-        element list with the extracted text.
-
-        Parameters
-        ----------
-        tag : Tag
-            Any BeautifulSoup Tag object to extract text from.
-        recursive : bool, optional
-            Ignored, for consistency with interface.
-        limit : int, optional
-            Ignored, for consistency with interface, always returns a single string.
-
-        Returns
-        -------
-        list[str]
-            Extracted text from the tag, wrapped in a single element list.
-        """
-        return [self.execute(tag)]
-
-    def find(
-        self,
-        tag: Tag,
-        strict: bool = False,
-        recursive: bool = True,
-    ) -> Any:
-        """
-        Extracts text from provided element. Always returns a single string.
-
-        Parameters
-        ----------
-        tag : Tag
-            Any BeautifulSoup Tag object to extract text from.
-        strict : bool, optional
-            Ignored, for consistency with interface.
-        recursive : int, optional
-            Ignored, for consistency with interface.
-
-        Returns
-        -------
-        str
-            Extracted text from the tag.
-        """
-        return self.execute(tag)
-
     def _execute(self, arg: Tag) -> str:
         """Extracts text from a BeautifulSoup Tag."""
         return arg.get_text(separator=self.separator, strip=self.strip)
@@ -237,3 +238,39 @@ class Text(BaseOperation, TagSearcher):
             return False
 
         return self.separator == x.separator and self.strip == x.strip
+
+
+class Href(OperationSearcherMixin):
+    """
+    Operation to extract href attribute from a BeautifulSoup Tag.
+    Wrapper of one of the common operation used in web scraping.
+    If href attribute is not present, returns None.
+
+    Example
+    -------
+    >>> from soupsavvy.operations import Href
+    ... operation = Href()
+    ... operation.execute(tag)
+    "www.example.com"
+
+    Implements `TagSearcher` interface for convenience. It has find methods
+    that can be used to extract href from provided tag.
+
+    Example
+    -------
+    >>> from soupsavvy.operations import Href
+    ... operation = Href()
+    ... operation.find(tag)
+    "www.example.com"
+    """
+
+    def _execute(self, arg: Tag) -> Optional[str]:
+        """
+        Extracts href attribute from a BeautifulSoup Tag.
+        If attribute is not present, returns None.
+        """
+        return arg.get_attribute_list("href")[0]
+
+    def __eq__(self, x: Any) -> bool:
+        # equal only if both are instances of Href
+        return isinstance(x, Href)
