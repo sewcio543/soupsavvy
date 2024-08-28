@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selectors &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1bac72b6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Composite Selectors" href="combining.html" />
+    <link rel="prev" title="Soupsavvy" href="about.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.selectors.html">selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.operations.html">operations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about.html">Soupsavvy</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Selectors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#attributeselector">AttributeSelector</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#finding-by-attribute-name">Finding by attribute name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#finding-by-exact-value">Finding by exact value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#finding-by-regex">Finding by regex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-functionalities">Other functionalities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#using-strict-mode">Using <code class="docutils literal notranslate"><span class="pre">strict</span></code> mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#finding-all-elements">Finding all elements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-limit-option">Using <code class="docutils literal notranslate"><span class="pre">limit</span></code> option</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-recursive-option">Using <code class="docutils literal notranslate"><span class="pre">recursive</span></code> option</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#specific-attribute-selectors">Specific attribute selectors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#typeselector">TypeSelector</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#finding-by-tag-name">Finding by tag name</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#universalselector">UniversalSelector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#patternselector">PatternSelector</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#finding-by-plain-text">Finding by plain text</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Finding by regex</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="combining.html">Composite Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="css.html">CSS Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Selectors</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/demos/selectors.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="selectors">
+<h1>Selectors<a class="headerlink" href="#selectors" title="Link to this heading"></a></h1>
+<p>In this tutorial, we’ll explore the functionality of various simple <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> selectors, showcasing how they can be used to perform searches in <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> objects.</p>
+<section id="attributeselector">
+<h2>AttributeSelector<a class="headerlink" href="#attributeselector" title="Link to this heading"></a></h2>
+<p>Attribute selectors allow you to select elements based on element attribute value. For more information about this selector refer to <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors">Mozilla</a>.</p>
+<section id="finding-by-attribute-name">
+<h3>Finding by attribute name<a class="headerlink" href="#finding-by-attribute-name" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">AttributeSelector</span></code> can be used to find HTML elements with a specific attribute name. If an element contains the given attribute, it matches the selector, regardless of the attribute’s value.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">AttributeSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;p id=&quot;12ghj8&quot;&gt;Book&lt;/p&gt;&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span>
+<span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="finding-by-exact-value">
+<h3>Finding by exact value<a class="headerlink" href="#finding-by-exact-value" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">AttributeSelector</span></code> can be used to match the exact value of a given attribute. By passing a <code class="docutils literal notranslate"><span class="pre">string</span></code> as the <code class="docutils literal notranslate"><span class="pre">value</span></code> parameter, the selector will only match elements whose attribute matches this exact value.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">AttributeSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;span class=&quot;title&quot;&gt;Animal Farm&lt;/span&gt;&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="finding-by-regex">
+<h3>Finding by regex<a class="headerlink" href="#finding-by-regex" title="Link to this heading"></a></h3>
+<p>For more flexible searches, <code class="docutils literal notranslate"><span class="pre">AttributeSelector</span></code> can also match elements based on a regular expression pattern. By passing a compiled regex pattern, you can perform partial matches, complex text patterns, or other advanced text queries on attribute value.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">AttributeSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;a href=&quot;https://www.fictiondb.com/title/animal-farm~george-orwell~161188.htm&quot;&gt;fictiondb&lt;/a&gt;</span>
+<span class="sd">        &lt;a href=&quot;https://search.worldcat.org/title/1056176764&quot;&gt;worldcat&lt;/a&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;href&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;worldcat\.org/.*/\d</span><span class="si">{10}</span><span class="s2">&quot;</span><span class="p">))</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;a href=&quot;https://search.worldcat.org/title/1056176764&quot;&gt;worldcat&lt;/a&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="other-functionalities">
+<h3>Other functionalities<a class="headerlink" href="#other-functionalities" title="Link to this heading"></a></h3>
+<p>Let’s explore some common functionalities available with the <code class="docutils literal notranslate"><span class="pre">AttributeSelector</span></code> and other selectors in <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code>. These functionalities behave consistently across all selector types, so the following examples apply universally.</p>
+<section id="using-strict-mode">
+<h4>Using <code class="docutils literal notranslate"><span class="pre">strict</span></code> mode<a class="headerlink" href="#using-strict-mode" title="Link to this heading"></a></h4>
+<p>When no match is found, the behavior of the <code class="docutils literal notranslate"><span class="pre">AttributeSelector.find</span></code> method depends on the <code class="docutils literal notranslate"><span class="pre">strict</span></code> parameter. If <code class="docutils literal notranslate"><span class="pre">strict</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, it raises a <code class="docutils literal notranslate"><span class="pre">TagNotFoundException</span></code>. If <code class="docutils literal notranslate"><span class="pre">strict</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code> (the default), it returns <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">AttributeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.exceptions</span> <span class="kn">import</span> <span class="n">TagNotFoundException</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;span class=&quot;title&quot;&gt;Animal Farm&lt;/span&gt;&lt;p class=&quot;how_much&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NOT STRICT: </span><span class="si">{</span><span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">TagNotFoundException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;STRICT: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NOT STRICT: None
+STRICT: Tag was not found in markup.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="finding-all-elements">
+<h4>Finding all elements<a class="headerlink" href="#finding-all-elements" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">find_all</span></code> method can be used to return all matching elements, similar to the <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> <code class="docutils literal notranslate"><span class="pre">Tag.find_all</span></code> method. The elements in the result list are always unique and maintain the same order as they appear in the document.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">AttributeSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;span class=&quot;title&quot;&gt;Animal Farm&lt;/span&gt;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $30&lt;/p&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;,
+ &lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;,
+ &lt;p class=&quot;price&quot;&gt;Price: $30&lt;/p&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="using-limit-option">
+<h4>Using <code class="docutils literal notranslate"><span class="pre">limit</span></code> option<a class="headerlink" href="#using-limit-option" title="Link to this heading"></a></h4>
+<p>When using the <code class="docutils literal notranslate"><span class="pre">find_all</span></code> method, the <code class="docutils literal notranslate"><span class="pre">limit</span></code> parameter can be used to restrict the number of elements returned. If <code class="docutils literal notranslate"><span class="pre">limit</span></code> is set to <code class="docutils literal notranslate"><span class="pre">None</span></code> (the default), all matching elements are returned. This functionality is derived from the <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> <code class="docutils literal notranslate"><span class="pre">Tag.find_all</span></code> method.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">AttributeSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;span class=&quot;title&quot;&gt;Animal Farm&lt;/span&gt;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $30&lt;/p&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;, &lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="using-recursive-option">
+<h4>Using <code class="docutils literal notranslate"><span class="pre">recursive</span></code> option<a class="headerlink" href="#using-recursive-option" title="Link to this heading"></a></h4>
+<p>Both <code class="docutils literal notranslate"><span class="pre">find</span></code> and <code class="docutils literal notranslate"><span class="pre">find_all</span></code> methods have a <code class="docutils literal notranslate"><span class="pre">recursive</span></code> parameter. If <code class="docutils literal notranslate"><span class="pre">recursive</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code> (the default), the search includes the entire document. If <code class="docutils literal notranslate"><span class="pre">recursive</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, the search is limited to the direct children of the element. This behavior is consistent with how the <code class="docutils literal notranslate"><span class="pre">recursive</span></code> parameter works in <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">AttributeSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;span class=&quot;title&quot;&gt;Animal Farm&lt;/span&gt;</span>
+<span class="sd">        &lt;div&gt;</span>
+<span class="sd">            &lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;</span>
+<span class="sd">            &lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;</span>
+<span class="sd">        &lt;/div&gt;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $30&lt;/p&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $30&lt;/p&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="specific-attribute-selectors">
+<h3>Specific attribute selectors<a class="headerlink" href="#specific-attribute-selectors" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> offers convenience classes for selecting elements based on specific attributes, such as <code class="docutils literal notranslate"><span class="pre">id</span></code> and <code class="docutils literal notranslate"><span class="pre">class</span></code>. These classes, simplify the selection process by pre-defining commonly used attribute names.</p>
+<p><strong>Convenience Selectors:</strong></p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">IdSelector</span></code></strong>: Selector for matching elements by their <code class="docutils literal notranslate"><span class="pre">id</span></code> attribute value.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">ClassSelector</span></code></strong>: Selector for matching elements by their <code class="docutils literal notranslate"><span class="pre">class</span></code> attribute value.</p></li>
+</ul>
+<p>Both are subclasses of <code class="docutils literal notranslate"><span class="pre">AttributeSelector</span></code>. By pre-assigning attribute names, they offer a more intuitive interface and reduce the amount of boilerplate code needed for common attribute-based searches.</p>
+<p>For more information about this selector refer to Mozilla for <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors">Class</a> and <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors">ID</a> selectors.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;span class=&quot;title&quot;&gt;Animal Farm&lt;/span&gt;&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">IdSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;p id=&quot;12ghj8&quot;&gt;Book&lt;/p&gt;&lt;p id=&quot;13cji0&quot; class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">IdSelector</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^13.*0$&quot;</span><span class="p">))</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot; id=&quot;13cji0&quot;&gt;Price: $20&lt;/p&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>These are subclasses of <code class="docutils literal notranslate"><span class="pre">AttributeSelector</span></code> and provide a more user-friendly interface, as they skip <code class="docutils literal notranslate"><span class="pre">name</span></code> parameter which is pre-assigned to the component specific value.</p>
+</section>
+</section>
+<section id="typeselector">
+<h2>TypeSelector<a class="headerlink" href="#typeselector" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">TypeSelector</span></code> is used to select elements based on their tag name. Selects all elements of the given type within a document. For more information about this selector refer to <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors">Mozilla</a>.</p>
+<section id="finding-by-tag-name">
+<h3>Finding by tag name<a class="headerlink" href="#finding-by-tag-name" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">TypeSelector</span></code> can be used to find elements based solely on their tag name. For example, selecting all <code class="docutils literal notranslate"><span class="pre">&lt;p&gt;</span></code> elements in a document. This basic usage allows you to target elements without specifying any additional attributes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">TypeSelector</span></code> can be combined with <code class="docutils literal notranslate"><span class="pre">AttributeSelector</span></code> as well as with any other, to make composite selector and perform more complex searches. More about this in <code class="docutils literal notranslate"><span class="pre">Combining</span></code> tutorial.</p>
+</section>
+</section>
+<section id="universalselector">
+<h2>UniversalSelector<a class="headerlink" href="#universalselector" title="Link to this heading"></a></h2>
+<p>This selector is a wildcard selector that matches any tag. It can be used to select any element in the document. It is equivalent to using <code class="docutils literal notranslate"><span class="pre">*</span></code> in CSS selectors. For more information about this selector refer to <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors">Mozilla</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">UniversalSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p class=&quot;title&quot; lang=&quot;es&quot;&gt;Rebelión en la granja&lt;/p&gt;</span>
+<span class="sd">        &lt;p class=&quot;description&quot; lang=&quot;en&quot;&gt;Some animals are more equal than others&lt;/p&gt;</span>
+<span class="sd">        &lt;span class=&quot;title&quot; lang=&quot;en&quot;&gt;Animal Farm&lt;/span&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">any_selector</span> <span class="o">=</span> <span class="n">UniversalSelector</span><span class="p">()</span>
+<span class="n">any_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;title&quot; lang=&quot;es&quot;&gt;Rebelión en la granja&lt;/p&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>When using <code class="docutils literal notranslate"><span class="pre">find_all</span></code> method, it returns all elements in the document. This can be restricted to only direct children of the element by setting <code class="docutils literal notranslate"><span class="pre">recursive</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">UniversalSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p class=&quot;title&quot; lang=&quot;es&quot;&gt;Rebelión en la granja&lt;/p&gt;</span>
+<span class="sd">        &lt;p class=&quot;description&quot; lang=&quot;en&quot;&gt;Some animals are more equal than others&lt;/p&gt;</span>
+<span class="sd">        &lt;span class=&quot;title&quot; lang=&quot;en&quot;&gt;Animal Farm&lt;/span&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">any_selector</span> <span class="o">=</span> <span class="n">UniversalSelector</span><span class="p">()</span>
+<span class="n">any_selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p class=&quot;title&quot; lang=&quot;es&quot;&gt;Rebelión en la granja&lt;/p&gt;,
+ &lt;p class=&quot;description&quot; lang=&quot;en&quot;&gt;Some animals are more equal than others&lt;/p&gt;,
+ &lt;span class=&quot;title&quot; lang=&quot;en&quot;&gt;Animal Farm&lt;/span&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="patternselector">
+<h2>PatternSelector<a class="headerlink" href="#patternselector" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">PatternSelector</span></code> is designed to select elements based on their text content. Unlike the standard <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> implementation, which returns <code class="docutils literal notranslate"><span class="pre">NavigableString</span></code> when querying by text content, <code class="docutils literal notranslate"><span class="pre">PatternSelector</span></code> provides a more consistent and practical approach.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>, searching for elements by text content always returns <code class="docutils literal notranslate"><span class="pre">NavigableString</span></code> when element was found, which can be cumbersome and inconsistent, especially when further searching or processing is needed. <code class="docutils literal notranslate"><span class="pre">NavigableString</span></code> does not support additional searches or operations, making it less useful for many applications.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p class=&quot;title&quot; lang=&quot;es&quot;&gt;Rebelión en la granja&lt;/p&gt;</span>
+<span class="sd">        &lt;p class=&quot;description&quot; lang=&quot;en&quot;&gt;Some animals are more equal than others&lt;/p&gt;</span>
+<span class="sd">        &lt;span class=&quot;title&quot; lang=&quot;en&quot;&gt;Animal Farm&lt;/span&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;animal&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Result is of type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Result is of type &lt;class &#39;bs4.element.NavigableString&#39;&gt; : Some animals are more equal than others
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">PatternSelector</span></code> addresses this limitation by returning a <code class="docutils literal notranslate"><span class="pre">Tag</span></code> object instead of <code class="docutils literal notranslate"><span class="pre">NavigableString</span></code>. This behavior aligns with other selectors and allows for more effective manipulation and querying of the text-containing elements.</p>
+<section id="finding-by-plain-text">
+<h3>Finding by plain text<a class="headerlink" href="#finding-by-plain-text" title="Link to this heading"></a></h3>
+<p>When searching by plain text, <code class="docutils literal notranslate"><span class="pre">PatternSelector</span></code> matches elements whose text content exactly matches the provided string.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">PatternSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p class=&quot;title&quot; lang=&quot;es&quot;&gt;Rebelión en la granja&lt;/p&gt;</span>
+<span class="sd">        &lt;p class=&quot;description&quot; lang=&quot;en&quot;&gt;Some animals are more equal than others&lt;/p&gt;</span>
+<span class="sd">        &lt;span class=&quot;title&quot; lang=&quot;en&quot;&gt;Animal Farm&lt;/span&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">animal_selector</span> <span class="o">=</span> <span class="n">PatternSelector</span><span class="p">(</span><span class="s2">&quot;Animal Farm&quot;</span><span class="p">)</span>
+<span class="n">animal_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;title&quot; lang=&quot;en&quot;&gt;Animal Farm&lt;/span&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id1">
+<h3>Finding by regex<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>For more flexible searches, <code class="docutils literal notranslate"><span class="pre">PatternSelector</span></code> can also match elements based on a regular expression pattern. By passing a compiled regex pattern, you can perform partial matches, complex text patterns, or other advanced text queries</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">PatternSelector</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p class=&quot;title&quot; lang=&quot;es&quot;&gt;Rebelión en la granja&lt;/p&gt;</span>
+<span class="sd">        &lt;p class=&quot;description&quot; lang=&quot;en&quot;&gt;Some animals are more equal than others&lt;/p&gt;</span>
+<span class="sd">        &lt;span class=&quot;title&quot; lang=&quot;en&quot;&gt;Animal Farm&lt;/span&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">animal_selector</span> <span class="o">=</span> <span class="n">PatternSelector</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;animal&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">))</span>
+<span class="n">animal_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;description&quot; lang=&quot;en&quot;&gt;Some animals are more equal than others&lt;/p&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading"></a></h2>
+<p>These fundamental selectors form the core of <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> and provide the building blocks for more complex queries. In the next tutorials, we’ll explore advanced options and composite selectors that build upon these basics to enable even more powerful and flexible searching capabilities.</p>
+<p><strong>Enjoy <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> and leave us feedback!</strong><br />
+<strong>Happy scraping!</strong></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="about.html" class="btn btn-neutral float-left" title="Soupsavvy" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="combining.html" class="btn btn-neutral float-right" title="Composite Selectors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, sewcio543.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

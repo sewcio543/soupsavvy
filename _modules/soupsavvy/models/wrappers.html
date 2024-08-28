@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>soupsavvy.models.wrappers &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1bac72b6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.selectors.html">selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operations.html">operations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/combining.html">Composite Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/css.html">CSS Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/testing.html">Testing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">soupsavvy.models.wrappers</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for soupsavvy.models.wrappers</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module with wrappers for operations and selectors used mostly in models.</span>
+<span class="sd">Wrappers are used to control behavior and define how fields of the models are defined.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">- SkipNone : OperationWrapper</span>
+<span class="sd">- Suppress : OperationWrapper</span>
+<span class="sd">- All : FieldWrapper</span>
+<span class="sd">- Required : FieldWrapper</span>
+<span class="sd">- Default : FieldWrapper</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">Tag</span>
+
+<span class="kn">import</span> <span class="nn">soupsavvy.exceptions</span> <span class="k">as</span> <span class="nn">exc</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">Comparable</span><span class="p">,</span> <span class="n">TagSearcher</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations.base</span> <span class="kn">import</span> <span class="n">BaseOperation</span><span class="p">,</span> <span class="n">check_operation</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations.selection_pipeline</span> <span class="kn">import</span> <span class="n">SelectionPipeline</span>
+
+
+<div class="viewcode-block" id="OperationWrapper">
+<a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.OperationWrapper">[docs]</a>
+<span class="k">class</span> <span class="nc">OperationWrapper</span><span class="p">(</span><span class="n">BaseOperation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A wrapper class for operations that extends the base operation functionality.</span>
+<span class="sd">    Acts as a higher order operation, which controls behavior of the wrapped operation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="OperationWrapper.__init__">
+<a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.OperationWrapper.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">:</span> <span class="n">BaseOperation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize Higher Order Operation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        operation : BaseOperation</span>
+<span class="sd">            The operation to be wrapped.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotOperationException</span>
+<span class="sd">            If provided object is not an instance of BaseOperation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="n">check_operation</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if two OperationWrapper instances are equal.</span>
+<span class="sd">        They need to be of the same class and wrap the same operation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : Any</span>
+<span class="sd">            The object to compare with.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if the instances are equal, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">operation</span> <span class="o">==</span> <span class="n">x</span><span class="o">.</span><span class="n">operation</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">operation</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="SkipNone">
+<a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.SkipNone">[docs]</a>
+<span class="k">class</span> <span class="nc">SkipNone</span><span class="p">(</span><span class="n">OperationWrapper</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A wrapper that skips the operation if the input is None.</span>
+<span class="sd">    Used to prevent exceptions where it&#39;s safe and expected to skip the operation.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from soupsavvy.operations import Text</span>
+<span class="sd">    ... from soupsavvy.models import SkipNone</span>
+<span class="sd">    ... operation = SkipNone(Text())</span>
+<span class="sd">    ... operation.execute(None)</span>
+<span class="sd">    None</span>
+
+<span class="sd">    When element was not found, which can be expected, skips operation</span>
+<span class="sd">    and returns None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Suppress">
+<a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.Suppress">[docs]</a>
+<span class="k">class</span> <span class="nc">Suppress</span><span class="p">(</span><span class="n">OperationWrapper</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A wrapper that executes the operation</span>
+<span class="sd">    and suppresses FailedOperationExecution exception, returning None instead.</span>
+<span class="sd">    Used to catch exceptions where it&#39;s expected this might happen.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from soupsavvy.operations import Operation</span>
+<span class="sd">    ... from soupsavvy.models import Suppress</span>
+<span class="sd">    ... operation = Suppress(Operation(int))</span>
+<span class="sd">    ... operation.execute(&quot;&quot;)</span>
+<span class="sd">    None</span>
+
+<span class="sd">    This can be used with `Default` operation to provide a default value</span>
+<span class="sd">    when the operation fails.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from soupsavvy.operations import Operation</span>
+<span class="sd">    ... from soupsavvy.models import Suppress</span>
+<span class="sd">    ... operation = Default(Suppress(Operation(int)), 0)</span>
+<span class="sd">    ... operation.execute(&quot;&quot;)</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Operations in example can be used to try to convert string to integer</span>
+<span class="sd">    from text of tag, that can potentially be empty. In such case, if it&#39;s not required,</span>
+<span class="sd">    default can be set to None or known value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">exc</span><span class="o">.</span><span class="n">FailedOperationExecution</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="FieldWrapper">
+<a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.FieldWrapper">[docs]</a>
+<span class="k">class</span> <span class="nc">FieldWrapper</span><span class="p">(</span><span class="n">TagSearcher</span><span class="p">,</span> <span class="n">Comparable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A wrapper for TagSearcher objects, that acts as a higher order searcher,</span>
+<span class="sd">    which controls behavior of the wrapped searcher.</span>
+<span class="sd">    Used as field to defined model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="FieldWrapper.__init__">
+<a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.FieldWrapper.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">TagSearcher</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize FieldWrapper.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        selector : TagSearcher</span>
+<span class="sd">            The TagSearcher instance to be wrapped.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotTagSearcherException</span>
+<span class="sd">            If provided object is not an instance of TagSearcher.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="n">TagSearcher</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">NotTagSearcherException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">TagSearcher</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">selector</span></div>
+
+
+<div class="viewcode-block" id="FieldWrapper.find_all">
+<a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.FieldWrapper.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find all matching tags using the wrapped selector.</span>
+<span class="sd">        Used for compatibility with TagSearcher interface,</span>
+<span class="sd">        delegates to wrapped selector.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tag : Tag</span>
+<span class="sd">            Any BeautifulSoup tag to search within.</span>
+<span class="sd">        recursive : bool, optional</span>
+<span class="sd">            Whether to search recursively, by default True.</span>
+<span class="sd">        limit : int, optional</span>
+<span class="sd">            Limit the number of results, by default None.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[Any]</span>
+<span class="sd">            A list of found results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if two FieldWrapper instances are equal.</span>
+<span class="sd">        They need to be of the same class and wrap the same selector.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : Any</span>
+<span class="sd">            The object to compare with.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if the instances are equal, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">==</span> <span class="n">x</span><span class="o">.</span><span class="n">selector</span>
+
+    <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SelectionPipeline</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overrides __or__ method called also by pipe operator &#39;|&#39;.</span>
+<span class="sd">        Combines the current FieldWrapper with an operation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : BaseOperation</span>
+<span class="sd">            The operation to be combined with the FieldWrapper.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        SelectionPipeline</span>
+<span class="sd">            New SelectionPipeline object created from combining selector and operation.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotOperationException</span>
+<span class="sd">            If provided object is not of BaseOperation type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">check_operation</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">SelectionPipeline</span><span class="p">(</span><span class="n">selector</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="All">
+<a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.All">[docs]</a>
+<span class="k">class</span> <span class="nc">All</span><span class="p">(</span><span class="n">FieldWrapper</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Field wrapper for selecting multiple elements matching the selector.</span>
+<span class="sd">    Forces find method to fall back to find_all method and return all matches.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from soupsavvy.models import All</span>
+<span class="sd">    ... from soupsavvy import TypeSelector</span>
+<span class="sd">    ... selector = All(TypeSelector(&quot;div&quot;))</span>
+<span class="sd">    ... selector.find(tag)</span>
+<span class="sd">    [element1, element2, element3]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="All.find">
+<a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.All.find">[docs]</a>
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find all matching tags using the wrapped selector,</span>
+<span class="sd">        enforcing the use of find_all method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tag : Tag</span>
+<span class="sd">            Any BeautifulSoup tag to search within.</span>
+<span class="sd">        strict : bool, optional</span>
+<span class="sd">            Ignored, as this method always falls back to find_all.</span>
+<span class="sd">        recursive : bool, optional</span>
+<span class="sd">            Whether to search recursively, by default True.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[Any]</span>
+<span class="sd">            A list of matching results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Required">
+<a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.Required">[docs]</a>
+<span class="k">class</span> <span class="nc">Required</span><span class="p">(</span><span class="n">FieldWrapper</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Field wrapper for enforcing matched element not to be None.</span>
+<span class="sd">    Raises an exception if searcher does not find any matches.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from soupsavvy.models import Required</span>
+<span class="sd">    ... from soupsavvy import TypeSelector</span>
+<span class="sd">    ... selector = Required(TypeSelector(&quot;div&quot;))</span>
+<span class="sd">    ... selector.find(tag)</span>
+<span class="sd">    RequiredConstraintException</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Required.find">
+<a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.Required.find">[docs]</a>
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds a required element using the wrapped selector,</span>
+<span class="sd">        enforcing matched element not to be None.</span>
+<span class="sd">        If any exception is raised during the search, it&#39;s propagated to the caller.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tag : Tag</span>
+<span class="sd">            Any BeautifulSoup tag to search within.</span>
+<span class="sd">        strict : bool, optional</span>
+<span class="sd">            If True, raises an exception if no matches are found, by default False.</span>
+<span class="sd">        recursive : bool, optional</span>
+<span class="sd">            Whether to search recursively, by default True.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Any</span>
+<span class="sd">            The found element.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        RequiredConstraintException</span>
+<span class="sd">            If selector returns None, indicating that required element was not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="n">strict</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">RequiredConstraintException</span><span class="p">(</span><span class="s2">&quot;Required element was not found&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Default">
+<a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.Default">[docs]</a>
+<span class="k">class</span> <span class="nc">Default</span><span class="p">(</span><span class="n">FieldWrapper</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Field wrapper for returning a default value if no match is found.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from soupsavvy.models import Default</span>
+<span class="sd">    ... from soupsavvy import TypeSelector</span>
+<span class="sd">    ... selector = Default(TypeSelector(&quot;div&quot;), default=&quot;1234&quot;)</span>
+<span class="sd">    ... selector.find(tag)</span>
+<span class="sd">    &quot;1234&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Default.__init__">
+<a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.Default.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">TagSearcher</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes Default FieldWrapper.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        selector : TagSearcher</span>
+<span class="sd">            The TagSearcher instance to be wrapped.</span>
+<span class="sd">        default : Any</span>
+<span class="sd">            The default value to return if no match is found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="n">default</span></div>
+
+
+<div class="viewcode-block" id="Default.find">
+<a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.Default.find">[docs]</a>
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds an element, returning a default value if None was returned</span>
+<span class="sd">        by wrapped selector. Any exception raised during the search is propagated.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tag : Tag</span>
+<span class="sd">            Any BeautifulSoup tag to search within.</span>
+<span class="sd">        strict : bool, optional</span>
+<span class="sd">            If True, raises an exception if no matches are found, by default False.</span>
+<span class="sd">        recursive : bool, optional</span>
+<span class="sd">            Whether to search recursively, by default True.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Any</span>
+<span class="sd">            The found element or the default value if not found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="n">strict</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">result</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="si">}</span><span class="s2">, default=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, sewcio543.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

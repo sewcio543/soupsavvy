@@ -1,0 +1,7 @@
+operations.selection\_pipeline
+===============================================
+
+.. automodule:: soupsavvy.operations.selection_pipeline
+   :members:
+   :undoc-members:
+   :show-inheritance:

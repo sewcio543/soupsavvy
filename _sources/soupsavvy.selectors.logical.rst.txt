@@ -1,0 +1,7 @@
+selectors.logical
+==================================
+
+.. automodule:: soupsavvy.selectors.logical
+   :members:
+   :undoc-members:
+   :show-inheritance:

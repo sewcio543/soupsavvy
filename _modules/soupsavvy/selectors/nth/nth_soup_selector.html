@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>soupsavvy.selectors.nth.nth_soup_selector &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1bac72b6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.selectors.html">selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.operations.html">operations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/combining.html">Composite Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/css.html">CSS Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/testing.html">Testing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">soupsavvy.selectors.nth.nth_soup_selector</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for soupsavvy.selectors.nth.nth_soup_selector</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module with nth-of-type selector implementations for SoupSelectors.</span>
+<span class="sd">Searches for nth-of-type element in similar fashion to CSS nth-of-type selector,</span>
+<span class="sd">but &#39;type&#39; is any SoupSelector instance.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">Tag</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span><span class="p">,</span> <span class="n">check_selector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.nth.nth_utils</span> <span class="kn">import</span> <span class="n">parse_nth</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.tag_utils</span> <span class="kn">import</span> <span class="n">TagIterator</span><span class="p">,</span> <span class="n">TagResultSet</span>
+
+
+<span class="k">class</span> <span class="nc">_BaseNthOfSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for nth-of-selector and nth-last-of-selector</span>
+<span class="sd">    that implements general logic for finding matching elements.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># slice for modification of list of elements matching selector</span>
+    <span class="n">_slice</span><span class="p">:</span> <span class="nb">slice</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span> <span class="n">nth</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes NthOfSelector instance</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        selector : SoupSelector</span>
+<span class="sd">            Any SoupSelector instance to match tags.</span>
+<span class="sd">        nth : str</span>
+<span class="sd">            CSS nth selector string. Accepts all valid css nth selectors.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotSoupSelectorException</span>
+<span class="sd">            If selector is not an instance of SoupSelector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">check_selector</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nth_selector</span> <span class="o">=</span> <span class="n">parse_nth</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+        <span class="c1"># if recursive is False, check only children of tag itself</span>
+        <span class="n">tag_iterator</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">TagIterator</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">,</span> <span class="n">include_self</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">recursive</span>
+            <span class="k">else</span> <span class="nb">iter</span><span class="p">([</span><span class="n">tag</span><span class="p">])</span>
+        <span class="p">)</span>
+
+        <span class="n">matches</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">tag_</span> <span class="ow">in</span> <span class="n">tag_iterator</span><span class="p">:</span>
+            <span class="n">matching</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="n">tag_</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">_slice</span><span class="p">]</span>
+            <span class="n">matches</span> <span class="o">+=</span> <span class="p">[</span>
+                <span class="n">matching</span><span class="p">[</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nth_selector</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">matching</span><span class="p">))</span>
+            <span class="p">]</span>
+
+        <span class="c1"># keep order of tags and limit</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">TagResultSet</span><span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">TagIterator</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">))</span>
+        <span class="p">)</span> <span class="o">&amp;</span> <span class="n">TagResultSet</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">results</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">selector</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">nth_selector</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">nth_selector</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2">(selector=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="si">}</span><span class="s2">, nth=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nth_selector</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="NthOfSelector">
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.NthOfSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">NthOfSelector</span><span class="p">(</span><span class="n">_BaseNthOfSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Component that matches nth-of-type elements in the soup, with use of standard</span>
+<span class="sd">    css nth selectors. Element is of type if it matches provided SoupSelector instance.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; selector = NthOfSelector(AttributeSelector(&quot;class&quot;, &quot;item&quot;), &quot;2n+1&quot;)</span>
+
+<span class="sd">    matches all odd elements with class &quot;item&quot;.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;1&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div id=&quot;item&quot;&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;2&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;3&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;4&lt;/div&gt; ❌</span>
+
+<span class="sd">    For more information about standard :nth-of-type selector, visit:</span>
+<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-of-type</span>
+
+<span class="sd">    and check out soupsavvy implementation of :nth-of-type selector:</span>
+<span class="sd">    `soupsavvy.tags.css.tag_selectors.NthOfType`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># keep initial order of matching elements</span>
+    <span class="n">_slice</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="NthLastOfSelector">
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.NthLastOfSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">NthLastOfSelector</span><span class="p">(</span><span class="n">_BaseNthOfSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Component that matches nth-last-of-type elements in the soup, with use of standard</span>
+<span class="sd">    css nth selectors. Element is of type if it matches provided SoupSelector instance.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; selector = NthLastOfSelector(AttributeSelector(&quot;class&quot;, &quot;item&quot;), &quot;2n+1&quot;)</span>
+
+<span class="sd">    matches all odd elements with class &quot;item&quot; starting from the last element.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;1&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div id=&quot;item&quot;&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;2&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;3&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;4&lt;/div&gt; ✔️</span>
+
+<span class="sd">    For more information about standard :nth-of-type selector, visit:</span>
+<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-of-type</span>
+
+<span class="sd">    and check out soupsavvy implementation of :nth-of-type selector:</span>
+<span class="sd">    `soupsavvy.tags.css.tag_selectors.NthLastOfType`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># reverse order of matching elements</span>
+    <span class="n">_slice</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="OnlyOfSelector">
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.OnlyOfSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">OnlyOfSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Component that matches only-of-type elements in the soup. Element is of type</span>
+<span class="sd">    if it matches provided SoupSelector instance.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; selector = NthLastOnlyOfSelectorOfSelector(AttributeSelector(&quot;class&quot;, &quot;item&quot;))</span>
+
+<span class="sd">    matches all elements with class &quot;item&quot; that are the only child of their parent</span>
+<span class="sd">    that matches the selector.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;div class=&quot;item&quot;&gt;&lt;/div&gt;&lt;a class=&quot;item&quot;&gt;&lt;/a&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;div class=&quot;item&quot;&gt;&lt;/div&gt;&lt;a class=&quot;widget&quot;&gt;&lt;/a&gt;&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;div class=&quot;item&quot;&gt;&lt;/div&gt;&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;div class=&quot;widget&quot;&gt;&lt;/div&gt;&lt;/div&gt; ❌</span>
+
+<span class="sd">    For all positive examples above, `&lt;div class=&quot;item&quot;&gt;` is matched.</span>
+
+<span class="sd">    For more information about standard :only-of-type selector, visit:</span>
+<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:only-of-type</span>
+
+<span class="sd">    and check out soupsavvy implementation of :only-of-type selector:</span>
+<span class="sd">    `soupsavvy.tags.css.tag_selectors.OnlyOfType`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="OnlyOfSelector.__init__">
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.OnlyOfSelector.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes OnlyOfSelector instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        selector : SoupSelector</span>
+<span class="sd">            Any SoupSelector instance to match tags.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotSoupSelectorException</span>
+<span class="sd">            If selector is not an instance of SoupSelector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">check_selector</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="OnlyOfSelector.find_all">
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.OnlyOfSelector.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+        <span class="n">tag_iterator</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">TagIterator</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">,</span> <span class="n">include_self</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">recursive</span>
+            <span class="k">else</span> <span class="nb">iter</span><span class="p">([</span><span class="n">tag</span><span class="p">])</span>
+        <span class="p">)</span>
+
+        <span class="n">matching</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="n">tag_</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">tag_</span> <span class="ow">in</span> <span class="n">tag_iterator</span>
+        <span class="p">]</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="p">[</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">elements</span> <span class="ow">in</span> <span class="n">matching</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># keep order of tags and limit</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">TagResultSet</span><span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">TagIterator</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">))</span>
+        <span class="p">)</span> <span class="o">&amp;</span> <span class="n">TagResultSet</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">results</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">OnlyOfSelector</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">selector</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2">(selector=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, sewcio543.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -7,6 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1bac72b6" />
 
   
   <!--[if lt IE 9]>
@@ -42,15 +43,20 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.tags.html">tags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.selectors.html">selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.operations.html">operations</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Demos:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/combining.html">Composite Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/css.html">CSS Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/testing.html">Testing</a></li>
 </ul>
 
         </div>
@@ -148,7 +154,7 @@
 
 
 <div class="viewcode-block" id="AttributeGenerator">
-<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.AttributeGenerator">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.AttributeGenerator">[docs]</a>
 <span class="k">class</span> <span class="nc">AttributeGenerator</span><span class="p">(</span><span class="n">BaseGenerator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class for generating HTML attribute strings.</span>
@@ -189,7 +195,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AttributeGenerator.__init__">
-<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.AttributeGenerator.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.AttributeGenerator.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">TemplateType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the AttributeGenerator.</span>
@@ -201,7 +207,6 @@
 <span class="sd">        value : TemplateType, optional</span>
 <span class="sd">            The value of the attribute. Defaults to None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">_get_template_type</span><span class="p">(</span>
@@ -237,7 +242,7 @@
             <span class="p">)</span>
 
 <div class="viewcode-block" id="AttributeGenerator.generate">
-<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.AttributeGenerator.generate">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.AttributeGenerator.generate">[docs]</a>
     <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates the HTML attribute string.</span>
@@ -254,7 +259,7 @@
 
 
 <div class="viewcode-block" id="TagGenerator">
-<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.TagGenerator">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.TagGenerator">[docs]</a>
 <span class="k">class</span> <span class="nc">TagGenerator</span><span class="p">(</span><span class="n">BaseGenerator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class for generating HTML tag strings.</span>
@@ -346,7 +351,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TagGenerator.__init__">
-<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.TagGenerator.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.TagGenerator.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -369,11 +374,14 @@
 <span class="sd">            The text content of the tag.</span>
 <span class="sd">            Defaults to None, which generates empty string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&#39;attrs&#39; must be an iterable of attributes, not a string&quot;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_void</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">namespace</span><span class="o">.</span><span class="n">VOID_TAGS</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_void</span> <span class="ow">and</span> <span class="n">children</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">VoidTagWithChildrenException</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> is a void tag and cannot have children&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; is a void tag and cannot have children&quot;</span>
             <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -384,6 +392,7 @@
             <span class="n">param</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
             <span class="n">default</span><span class="o">=</span><span class="n">DEFAULT_TEXT_TEMPLATE</span><span class="p">,</span>
         <span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_attributes</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">child</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">TagGenerator</span><span class="p">)</span> <span class="k">else</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
@@ -450,7 +459,7 @@
                 <span class="k">except</span> <span class="n">AttributeGeneratorInitExceptions</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">AttributeParsingError</span><span class="p">(</span>
                         <span class="sa">f</span><span class="s2">&quot;Attribute </span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2"> could not be parsed into AttributeGenerator &quot;</span>
-                        <span class="s2">&quot;due to following error.&quot;</span>
+                        <span class="s2">&quot;due to following error:&quot;</span>
                     <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
             <span class="n">attr_name</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">name</span>
@@ -465,7 +474,7 @@
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">attr_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
 <div class="viewcode-block" id="TagGenerator.generate">
-<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.TagGenerator.generate">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.testing.generators.generators.html#soupsavvy.testing.TagGenerator.generate">[docs]</a>
     <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates the HTML tag string.</span>
@@ -499,9 +508,6 @@
     <p>&#169; Copyright 2024, sewcio543.</p>
   </div>
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
    
 
 </footer>

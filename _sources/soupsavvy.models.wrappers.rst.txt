@@ -1,0 +1,7 @@
+models.wrappers
+================================
+
+.. automodule:: soupsavvy.models.wrappers
+   :members:
+   :undoc-members:
+   :show-inheritance:

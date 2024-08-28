@@ -8,6 +8,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1bac72b6" />
 
   
   <!--[if lt IE 9]>
@@ -22,7 +23,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="testing.generators.generators" href="../soupsavvy.testing.generators.generators.html" /> 
+    <link rel="next" title="Selectors" href="selectors.html" />
+    <link rel="prev" title="operations.selection_pipeline" href="../soupsavvy.operations.selection_pipeline.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,13 +46,14 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.tags.html">tags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.selectors.html">selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.operations.html">operations</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Demos:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Soupsavvy</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#motivation">Motivation</a></li>
@@ -85,9 +88,13 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="combining.html">Composite Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="css.html">CSS Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
 </ul>
 
         </div>
@@ -238,14 +245,14 @@ While BeautifulSoup excels in excellent at parsing HTML documents, it falls shor
 <h4>Docs<a class="headerlink" href="#docs" title="Link to this heading"></a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.tags.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.selectors.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
 
 <span class="n">help</span><span class="p">(</span><span class="n">SoupSelector</span><span class="o">.</span><span class="n">find</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function find in module soupsavvy.tags.base:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function find in module soupsavvy.selectors.base:
 
 find(self, tag: &#39;Tag&#39;, strict: &#39;bool&#39; = False, recursive: &#39;bool&#39; = True) -&gt; &#39;Optional[Tag]&#39;
     Finds a first matching element in provided BeautifulSoup Tag.
@@ -287,7 +294,7 @@ find(self, tag: &#39;Tag&#39;, strict: &#39;bool&#39; = False, recursive: &#39;b
 </section>
 <section id="overview">
 <h4>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h4>
-<p>The <code class="docutils literal notranslate"><span class="pre">find</span></code> method is one of the two primary search methods in <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> selectors, alongside <code class="docutils literal notranslate"><span class="pre">find_all</span></code>. Much like the <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> <code class="docutils literal notranslate"><span class="pre">Tag.find</span></code> method, <code class="docutils literal notranslate"><span class="pre">find</span></code> returns the first element that matches the selector. In addition to the <code class="docutils literal notranslate"><span class="pre">recursive</span></code> option from <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>, it introduces a <code class="docutils literal notranslate"><span class="pre">strict</span></code> parameter.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">find</span></code> method is one of the two primary search methods in <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> selectors, alongside <code class="docutils literal notranslate"><span class="pre">find_all</span></code>. Much like the <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> <code class="docutils literal notranslate"><span class="pre">Tag.find</span></code> method, <code class="docutils literal notranslate"><span class="pre">find</span></code> returns the first element in document that matches the selector. In addition to the <code class="docutils literal notranslate"><span class="pre">recursive</span></code> option from <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>, it introduces a <code class="docutils literal notranslate"><span class="pre">strict</span></code> parameter.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">strict</span></code> parameter addresses a common issue: often, not finding an element is not expected and can break the application. Continuously checking if returned objects are <code class="docutils literal notranslate"><span class="pre">None</span></code> creates a lot of boilerplate code. By setting the <code class="docutils literal notranslate"><span class="pre">strict</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the <code class="docutils literal notranslate"><span class="pre">find</span></code> method will raise a <code class="docutils literal notranslate"><span class="pre">TagNotFoundException</span></code> if no element is found, ensuring that the application does not proceed in such cases. By default, <code class="docutils literal notranslate"><span class="pre">strict</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
 <p>A particular challenge with <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> arises when only a string is provided as a parameter to the <code class="docutils literal notranslate"><span class="pre">find</span></code> method, which if anything was matched returns <code class="docutils literal notranslate"><span class="pre">NavigableString</span></code> object. This makes searches based solely on text difficult. <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> tackles this problem with the <code class="docutils literal notranslate"><span class="pre">PatternSelector</span></code>, though it won’t be covered in this article.</p>
 <p>Furthermore, <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> raises <code class="docutils literal notranslate"><span class="pre">NavigableStringException</span></code> if any selector’s <code class="docutils literal notranslate"><span class="pre">find</span></code> method returns a <code class="docutils literal notranslate"><span class="pre">NavigableString</span></code> object, preventing unintended behavior.</p>
@@ -299,12 +306,13 @@ find(self, tag: &#39;Tag&#39;, strict: &#39;bool&#39; = False, recursive: &#39;b
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
 <span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -317,16 +325,17 @@ find(self, tag: &#39;Tag&#39;, strict: &#39;bool&#39; = False, recursive: &#39;b
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span><span class="p">,</span> <span class="n">Tag</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
 
-<span class="n">soup</span><span class="p">:</span> <span class="n">Tag</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;div&gt;&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;&lt;/div&gt;&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
-<span class="p">)</span><span class="o">.</span><span class="n">body</span>  <span class="c1"># type: ignore</span>
+    <span class="c1"># html.parser does not add html and body element</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
 <span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -341,12 +350,14 @@ find(self, tag: &#39;Tag&#39;, strict: &#39;bool&#39; = False, recursive: &#39;b
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.exceptions</span> <span class="kn">import</span> <span class="n">TagNotFoundException</span>
 
-<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;&lt;a class=&quot;price&quot;&gt;Price: $10&lt;/a&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;&lt;a class=&quot;price&quot;&gt;Price: $10&lt;/a&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
 
-<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">))</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -356,7 +367,8 @@ find(self, tag: &#39;Tag&#39;, strict: &#39;bool&#39; = False, recursive: &#39;b
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Tag was not found in markup.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>None
+Tag was not found in markup.
 </pre></div>
 </div>
 </div>
@@ -369,14 +381,14 @@ find(self, tag: &#39;Tag&#39;, strict: &#39;bool&#39; = False, recursive: &#39;b
 <h4>Docs<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.tags.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.selectors.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
 
 <span class="n">help</span><span class="p">(</span><span class="n">SoupSelector</span><span class="o">.</span><span class="n">find_all</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function find_all in module soupsavvy.tags.base:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function find_all in module soupsavvy.selectors.base:
 
 find_all(self, tag: &#39;Tag&#39;, recursive: &#39;bool&#39; = True, limit: &#39;Optional[int]&#39; = None) -&gt; &#39;list[Tag]&#39;
     Finds all matching elements in provided BeautifulSoup Tag.
@@ -405,7 +417,7 @@ find_all(self, tag: &#39;Tag&#39;, recursive: &#39;bool&#39; = True, limit: &#39
 </section>
 <section id="id2">
 <h4>Overview<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
-<p>The <code class="docutils literal notranslate"><span class="pre">find_all</span></code> method, similar to <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>’s <code class="docutils literal notranslate"><span class="pre">Tag.find_all</span></code> method, returns all elements that match the selector. It consistently returns a list, so there is no need for a <code class="docutils literal notranslate"><span class="pre">strict</span></code> parameter. If no elements match the selector, it simply returns an empty list. The <code class="docutils literal notranslate"><span class="pre">find_all</span></code> method also supports the <code class="docutils literal notranslate"><span class="pre">limit</span></code> and <code class="docutils literal notranslate"><span class="pre">recursive</span></code> parameters, familiar from <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>, allowing for controlled and flexible searches.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">find_all</span></code> method, similar to <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>’s <code class="docutils literal notranslate"><span class="pre">Tag.find_all</span></code> method, returns all elements that match the selector in order they appear in the document. It consistently returns a list, so there is no need for a <code class="docutils literal notranslate"><span class="pre">strict</span></code> parameter. If no elements match the selector, it simply returns an empty list. The <code class="docutils literal notranslate"><span class="pre">find_all</span></code> method also supports the <code class="docutils literal notranslate"><span class="pre">limit</span></code> and <code class="docutils literal notranslate"><span class="pre">recursive</span></code> parameters, familiar from <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>, allowing for controlled and flexible searches.</p>
 </section>
 <section id="id3">
 <h4>Examples<a class="headerlink" href="#id3" title="Link to this heading"></a></h4>
@@ -413,12 +425,13 @@ find_all(self, tag: &#39;Tag&#39;, recursive: &#39;bool&#39; = True, limit: &#39
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
 <span class="n">price_selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -433,14 +446,15 @@ find_all(self, tag: &#39;Tag&#39;, recursive: &#39;bool&#39; = True, limit: &#39
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span><span class="p">,</span> <span class="n">Tag</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
 
-<span class="n">soup</span><span class="p">:</span> <span class="n">Tag</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;div&gt;&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;&lt;/div&gt;&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
-<span class="p">)</span><span class="o">.</span><span class="n">body</span>  <span class="c1"># type: ignore</span>
+    <span class="c1"># html.parser does not add html and body element</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
 <span class="n">price_selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -455,11 +469,11 @@ find_all(self, tag: &#39;Tag&#39;, recursive: &#39;bool&#39; = True, limit: &#39
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
 
-<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;&lt;a class=&quot;price&quot;&gt;Price: $10&lt;/a&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;&lt;a class=&quot;price&quot;&gt;Price: $10&lt;/a&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
 
-<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
 <span class="n">price_selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -474,7 +488,7 @@ find_all(self, tag: &#39;Tag&#39;, recursive: &#39;bool&#39; = True, limit: &#39
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -482,9 +496,9 @@ find_all(self, tag: &#39;Tag&#39;, recursive: &#39;bool&#39; = True, limit: &#39
 <span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;</span>
 <span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $30&lt;/p&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
 <span class="n">price_selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -503,14 +517,14 @@ find_all(self, tag: &#39;Tag&#39;, recursive: &#39;bool&#39; = True, limit: &#39
 <h4>Docs<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.tags.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.selectors.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
 
 <span class="n">help</span><span class="p">(</span><span class="n">SoupSelector</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function __eq__ in module soupsavvy.tags.base:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function __eq__ in module soupsavvy.selectors.base:
 
 __eq__(self, other: &#39;object&#39;) -&gt; &#39;bool&#39;
     Check self and other object for equality.
@@ -523,8 +537,8 @@ __eq__(self, other: &#39;object&#39;) -&gt; &#39;bool&#39;
     
     Example
     -------
-    &gt;&gt;&gt; selector1 = ElementTag(&quot;div&quot;)
-    &gt;&gt;&gt; selector2 = ElementTag(&quot;div&quot;)
+    &gt;&gt;&gt; selector1 = TypeSelector(&quot;div&quot;)
+    &gt;&gt;&gt; selector2 = TypeSelector(&quot;div&quot;)
     &gt;&gt;&gt; selector1 == selector2
     True
     &gt;&gt;&gt; selector1.find(tag) == selector2.find(tag)
@@ -542,19 +556,16 @@ __eq__(self, other: &#39;object&#39;) -&gt; &#39;bool&#39;
 <h4>Examples<a class="headerlink" href="#id6" title="Link to this heading"></a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span><span class="p">,</span> <span class="n">AnyTagSelector</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">TagSelector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">TagSelector</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">)</span><span class="w"> </span><span class="si">= }</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">TagSelector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">TagSelector</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="w"> </span><span class="si">= }</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="c1"># selectors of different types can be equal as well</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">TagSelector</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">AnyTagSelector</span><span class="p">()</span><span class="w"> </span><span class="si">= }</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">TypeSelector</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">)</span><span class="w"> </span><span class="si">= }</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">TypeSelector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span><span class="w"> </span><span class="si">= }</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TagSelector(&#39;p&#39;) == TagSelector(&#39;div&#39;) = False
-TagSelector(&#39;p&#39;) == TagSelector(&#39;a&#39;) = False
-TagSelector() == AnyTagSelector() = True
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TypeSelector(&#39;p&#39;) == TypeSelector(&#39;div&#39;) = False
+TypeSelector(&#39;p&#39;) == TypeSelector(&#39;p&#39;) = True
 </pre></div>
 </div>
 </div>
@@ -571,20 +582,22 @@ TagSelector() == AnyTagSelector() = True
 <h4>Examples<a class="headerlink" href="#id8" title="Link to this heading"></a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">AndSelector</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">AndSelector</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;</span>
 <span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># combine selector using Higher Order Selector initializer</span>
-<span class="n">price_selector</span> <span class="o">=</span> <span class="n">AndSelector</span><span class="p">(</span><span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">),</span> <span class="n">PatternSelector</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;20&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">AndSelector</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">),</span> <span class="n">PatternSelector</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\$20$&quot;</span><span class="p">)))</span>
 <span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -599,18 +612,18 @@ TagSelector() == AnyTagSelector() = True
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TagSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">AndSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">PatternSelector</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;</span>
 <span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># combine selectors with the &amp; operator</span>
-<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TagSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">PatternSelector</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;20&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">price_selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">PatternSelector</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\$20$&quot;</span><span class="p">))</span>
 <span class="n">price_selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -624,8 +637,8 @@ TagSelector() == AnyTagSelector() = True
 </section>
 </section>
 </section>
-<section id="summary">
-<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading"></a></h2>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> is crafted to be a powerful and intuitive search engine for <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>. By leveraging the concept of selectors, it encapsulates search logic in a structured and reusable manner, addressing the limitations of <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> and offering seamless integration with it.</p>
 <p><strong>Enjoy <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> and leave us feedback!</strong><br />
 <strong>Happy scraping!</strong></p>
@@ -636,7 +649,8 @@ TagSelector() == AnyTagSelector() = True
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../soupsavvy.testing.generators.generators.html" class="btn btn-neutral float-left" title="testing.generators.generators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../soupsavvy.operations.selection_pipeline.html" class="btn btn-neutral float-left" title="operations.selection_pipeline" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="selectors.html" class="btn btn-neutral float-right" title="Selectors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
@@ -645,9 +659,6 @@ TagSelector() == AnyTagSelector() = True
     <p>&#169; Copyright 2024, sewcio543.</p>
   </div>
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
    
 
 </footer>

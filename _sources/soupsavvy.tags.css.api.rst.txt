@@ -1,7 +1,0 @@
-tags.css.api
-=============================
-
-.. automodule:: soupsavvy.tags.css.api
-   :members:
-   :undoc-members:
-   :show-inheritance:

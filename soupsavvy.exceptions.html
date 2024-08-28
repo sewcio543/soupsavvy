@@ -8,6 +8,7 @@
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=1bac72b6" />
 
   
   <!--[if lt IE 9]>
@@ -43,15 +44,20 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.tags.html">tags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.selectors.html">selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Demos:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/testing.html">Testing</a></li>
 </ul>
 
         </div>
@@ -113,6 +119,13 @@ are not already AttributeGenerator objects.</p>
 </dd></dl>
 
 <dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.exceptions.BaseModelException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseModelException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#BaseModelException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.BaseModelException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.SoupsavvyException" title="soupsavvy.exceptions.SoupsavvyException"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupsavvyException</span></code></a></p>
+<p>Base exception related to models package and BaseModel class.</p>
+</dd></dl>
+
+<dl class="py exception">
 <dt class="sig sig-object py" id="soupsavvy.exceptions.EmptyNameException">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EmptyNameException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#EmptyNameException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.EmptyNameException" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.HTMLGeneratorException" title="soupsavvy.exceptions.HTMLGeneratorException"><code class="xref py py-class docutils literal notranslate"><span class="pre">HTMLGeneratorException</span></code></a></p>
@@ -133,6 +146,30 @@ Exception raised by AttributeGenerator when input name of the attribute is empty
 </pre></div>
 </div>
 </section>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.exceptions.FailedOperationExecution">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FailedOperationExecution</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#FailedOperationExecution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.FailedOperationExecution" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.SoupsavvyException" title="soupsavvy.exceptions.SoupsavvyException"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupsavvyException</span></code></a></p>
+<p>Exception raised by BaseOperation when operation execution failed and raised
+any exception.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.exceptions.FieldExtractionException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FieldExtractionException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#FieldExtractionException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.FieldExtractionException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.BaseModelException" title="soupsavvy.exceptions.BaseModelException"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModelException</span></code></a></p>
+<p>Exception raised by BaseModel when field extraction failed and related exception
+was raised by any selector step.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.exceptions.FieldsNotDefinedException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FieldsNotDefinedException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#FieldsNotDefinedException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.FieldsNotDefinedException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.BaseModelException" title="soupsavvy.exceptions.BaseModelException"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModelException</span></code></a></p>
+<p>Exception raised by BaseModel when fields were not found in defined model class.
+At least one field should be defined in class to be a valid model.</p>
 </dd></dl>
 
 <dl class="py exception">
@@ -181,6 +218,22 @@ Allowed types are str, BaseTemplate and None. Passing other types is not accepta
 </dd></dl>
 
 <dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.exceptions.MissingFieldsException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MissingFieldsException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#MissingFieldsException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.MissingFieldsException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.BaseModelException" title="soupsavvy.exceptions.BaseModelException"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModelException</span></code></a></p>
+<p>Exception raised by BaseModel when parameters passed into the constructor
+do not contain all required fields defined in the model class.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.exceptions.ModelScopeNotFoundException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ModelScopeNotFoundException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#ModelScopeNotFoundException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.ModelScopeNotFoundException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.BaseModelException" title="soupsavvy.exceptions.BaseModelException"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModelException</span></code></a></p>
+<p>Exception raised by BaseModel when model scope was not found in provided tag
+and strict parameter was set to True.</p>
+</dd></dl>
+
+<dl class="py exception">
 <dt class="sig sig-object py" id="soupsavvy.exceptions.NavigableStringException">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NavigableStringException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#NavigableStringException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.NavigableStringException" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.SoupSelectorException" title="soupsavvy.exceptions.SoupSelectorException"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupSelectorException</span></code></a></p>
@@ -202,10 +255,26 @@ find method, thus this exception is raised.</p>
 </dd></dl>
 
 <dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.exceptions.NotOperationException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NotOperationException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#NotOperationException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.NotOperationException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.OperationException" title="soupsavvy.exceptions.OperationException"><code class="xref py py-class docutils literal notranslate"><span class="pre">OperationException</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">TypeError</span></code></p>
+<p>Exception to be raised when function excepted BaseOperation as input
+and got argument of the different, invalid type.</p>
+</dd></dl>
+
+<dl class="py exception">
 <dt class="sig sig-object py" id="soupsavvy.exceptions.NotSoupSelectorException">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NotSoupSelectorException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#NotSoupSelectorException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.NotSoupSelectorException" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.SoupSelectorException" title="soupsavvy.exceptions.SoupSelectorException"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupSelectorException</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">TypeError</span></code></p>
 <p>Exception to be raised when function excepted SoupSelector as input
+and got argument of the different, invalid type.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.exceptions.NotTagSearcherException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NotTagSearcherException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#NotTagSearcherException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.NotTagSearcherException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.SoupsavvyException" title="soupsavvy.exceptions.SoupsavvyException"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupsavvyException</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">TypeError</span></code></p>
+<p>Exception to be raised when function excepted TagSearcher as input
 and got argument of the different, invalid type.</p>
 </dd></dl>
 
@@ -222,6 +291,29 @@ HTML tags cannot have multiple attributes with the same name.</p>
 </pre></div>
 </div>
 </section>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.exceptions.OperationException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OperationException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#OperationException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.OperationException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.SoupsavvyException" title="soupsavvy.exceptions.SoupsavvyException"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupsavvyException</span></code></a></p>
+<p>Base exception for the BaseOperation related errors</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.exceptions.RequiredConstraintException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RequiredConstraintException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#RequiredConstraintException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.RequiredConstraintException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.BaseModelException" title="soupsavvy.exceptions.BaseModelException"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModelException</span></code></a></p>
+<p>Exception raised by Required field wrapper when required field was not found
+in provided tag.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.exceptions.ScopeNotDefinedException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ScopeNotDefinedException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#ScopeNotDefinedException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.ScopeNotDefinedException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.BaseModelException" title="soupsavvy.exceptions.BaseModelException"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModelException</span></code></a></p>
+<p>Exception raised by BaseModel when scope was not found in defined model class.
+__scope__ class attribute is mandatory in BaseModel derived classes.</p>
 </dd></dl>
 
 <dl class="py exception">
@@ -245,6 +337,14 @@ HTML tags cannot have multiple attributes with the same name.</p>
 <p>Exception to be raised when SoupSelector element was not found in the markup.
 Raised by SoupSelector find method when strict parameter is set to True
 and target element was not found in provided bs4.Tag object.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.exceptions.UnknownModelFieldException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">UnknownModelFieldException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#UnknownModelFieldException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.UnknownModelFieldException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.BaseModelException" title="soupsavvy.exceptions.BaseModelException"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModelException</span></code></a></p>
+<p>Exception raised by BaseModel when model passing unknown field name
+to model constructor.</p>
 </dd></dl>
 
 <dl class="py exception">
@@ -275,9 +375,6 @@ like &lt;img&gt; or &lt;br&gt; and children are specified, which is not an allow
     <p>&#169; Copyright 2024, sewcio543.</p>
   </div>
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
    
 
 </footer>

@@ -7,7 +7,9 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   soupsavvy.tags
+   soupsavvy.models
+   soupsavvy.operations
+   soupsavvy.selectors
    soupsavvy.testing
    soupsavvy.utils
 
@@ -17,7 +19,9 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   soupsavvy.api
    soupsavvy.exceptions
+   soupsavvy.interfaces
 
 Module contents
 ---------------

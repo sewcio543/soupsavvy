@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSS Selectors &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1bac72b6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Testing" href="testing.html" />
+    <link rel="prev" title="Composite Selectors" href="combining.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.selectors.html">selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.operations.html">operations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="combining.html">Composite Selectors</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CSS Selectors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#child-selectors">Child Selectors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#firstchild">FirstChild</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lastchild">LastChild</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nthchild">NthChild</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nthlastchild">NthLastChild</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#onlychild">OnlyChild</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#type-selectors">Type selectors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#firstoftype">FirstOfType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lastoftype">LastOfType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nthoftype">NthOfType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nthlastoftype">NthLastOfType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#onlyoftype">OnlyOfType</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#other-selectors">Other selectors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#empty">Empty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#css">CSS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#combining-selectors">Combining selectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recursivity">Recursivity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">CSS Selectors</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/demos/css.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="css-selectors">
+<h1>CSS Selectors<a class="headerlink" href="#css-selectors" title="Link to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">soupsavvy.selectors.css</span></code> is a subpackage that provides a range of selectors based on css. These are wrappers, that use <a class="reference external" href="https://github.com/facelessuser/soupsieve"><code class="docutils literal notranslate"><span class="pre">soupsieve</span></code></a> library under the hood, which is a <em>modern CSS selector implementation for BeautifulSoup</em>. This module includes a variety of selectors that can be combined with other <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> selectors, using pure css or most commonly used css pseudo-classes.</p>
+<section id="child-selectors">
+<h2>Child Selectors<a class="headerlink" href="#child-selectors" title="Link to this heading"></a></h2>
+<p>Child selectors are designed to select elements based on their position relative to their siblings within a parent element. While the <code class="docutils literal notranslate"><span class="pre">nth-child</span></code> selector can theoretically handle any position-based selection, <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> offers convenient wrappers for a few commonly used CSS pseudo-classes.</p>
+<section id="firstchild">
+<h3>FirstChild<a class="headerlink" href="#firstchild" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">FirstChild</span></code> selector selects every element that is the first child of its parent. This selector is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:first-child</span></code> pseudo-class.</p>
+<p><strong>CSS Example:</strong></p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">first-child</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">FirstChild</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p&gt;First&lt;/p&gt;</span>
+<span class="sd">        &lt;div&gt;</span>
+<span class="sd">            &lt;span&gt;First&lt;/span&gt;</span>
+<span class="sd">            &lt;span&gt;</span>
+<span class="sd">                &lt;a&gt;First&lt;/a&gt;</span>
+<span class="sd">            &lt;/span&gt;</span>
+<span class="sd">        &lt;/div&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="n">FirstChild</span><span class="p">()</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p&gt;First&lt;/p&gt;, &lt;span&gt;First&lt;/span&gt;, &lt;a&gt;First&lt;/a&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="lastchild">
+<h3>LastChild<a class="headerlink" href="#lastchild" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">LastChild</span></code> selector selects every element that is the last child of its parent. This is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:last-child</span></code> pseudo-class.</p>
+<p><strong>CSS Example:</strong></p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">last-child</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">LastChild</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p&gt;&lt;/p&gt;</span>
+<span class="sd">        &lt;div&gt;&lt;/div&gt;</span>
+<span class="sd">        &lt;div&gt;</span>
+<span class="sd">            &lt;span&gt;</span>
+<span class="sd">                &lt;a&gt;Last&lt;/a&gt;</span>
+<span class="sd">            &lt;/span&gt;</span>
+<span class="sd">            &lt;span&gt;Last&lt;/span&gt;</span>
+<span class="sd">        &lt;/div&gt;</span>
+<span class="sd">        &lt;div&gt;Last&lt;/div&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="n">LastChild</span><span class="p">()</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;a&gt;Last&lt;/a&gt;, &lt;span&gt;Last&lt;/span&gt;, &lt;div&gt;Last&lt;/div&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="nthchild">
+<h3>NthChild<a class="headerlink" href="#nthchild" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">NthChild</span></code> selector allows you to select elements based on their position among their siblings using a CSS-style <code class="docutils literal notranslate"><span class="pre">nth-child</span></code> expression.</p>
+<p><strong>CSS Example:</strong></p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">nth-child</span><span class="o">(</span><span class="nt">3</span><span class="o">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">NthChild</span></code> and all other nth selectors fully supports all valid CSS <code class="docutils literal notranslate"><span class="pre">nth</span></code> parameter values, enabling you to select elements based on their position among siblings using the same syntax as in CSS.</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">nth-child</span><span class="o">(</span><span class="nt">2n</span><span class="o">)</span>
+<span class="p">:</span><span class="nd">nth-child</span><span class="o">(</span><span class="nt">odd</span><span class="o">)</span>
+<span class="p">:</span><span class="nd">nth-child</span><span class="o">(</span><span class="nt">even</span><span class="o">)</span>
+<span class="p">:</span><span class="nd">nth-child</span><span class="o">(</span><span class="nt">-n</span><span class="o">+</span><span class="nt">2</span><span class="o">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">NthChild</span><span class="p">(</span><span class="s1">&#39;2n&#39;</span><span class="p">)</span>
+<span class="n">NthChild</span><span class="p">(</span><span class="s1">&#39;odd&#39;</span><span class="p">)</span>
+<span class="n">NthChild</span><span class="p">(</span><span class="s1">&#39;even&#39;</span><span class="p">)</span>
+<span class="n">NthChild</span><span class="p">(</span><span class="s1">&#39;-n+2&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">NthChild</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p&gt;1&lt;/p&gt;</span>
+<span class="sd">        &lt;p&gt;2&lt;/p&gt;</span>
+<span class="sd">        &lt;p&gt;3&lt;/p&gt;</span>
+<span class="sd">        &lt;p&gt;4&lt;/p&gt;</span>
+<span class="sd">        &lt;p&gt;5&lt;/p&gt;</span>
+<span class="sd">        &lt;p&gt;6&lt;/p&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="n">NthChild</span><span class="p">(</span><span class="s2">&quot;2n&quot;</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p&gt;2&lt;/p&gt;, &lt;p&gt;4&lt;/p&gt;, &lt;p&gt;6&lt;/p&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="nthlastchild">
+<h3>NthLastChild<a class="headerlink" href="#nthlastchild" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">NthLastChild</span></code> selector allows you to select elements based on their position among their siblings, counting from the last child of the parent element. This is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:nth-last-child</span></code> pseudo-class.</p>
+<p><strong>CSS Example:</strong></p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">nth-last-child</span><span class="o">(</span><span class="nt">3</span><span class="o">)</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">NthLastChild</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p&gt;1&lt;/p&gt;</span>
+<span class="sd">        &lt;p&gt;2&lt;/p&gt;</span>
+<span class="sd">        &lt;p&gt;3&lt;/p&gt;</span>
+<span class="sd">        &lt;p&gt;4&lt;/p&gt;</span>
+<span class="sd">        &lt;p&gt;5&lt;/p&gt;</span>
+<span class="sd">        &lt;p&gt;6&lt;/p&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="n">NthLastChild</span><span class="p">(</span><span class="s2">&quot;odd&quot;</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p&gt;2&lt;/p&gt;, &lt;p&gt;4&lt;/p&gt;, &lt;p&gt;6&lt;/p&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="onlychild">
+<h3>OnlyChild<a class="headerlink" href="#onlychild" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">OnlyChild</span></code> selector matches elements that are the only child of their parent. This mirrors the functionality of the CSS <code class="docutils literal notranslate"><span class="pre">:only-child</span></code> pseudo-class.</p>
+<p><strong>CSS Example:</strong></p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">only-child</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">OnlyChild</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p&gt;Text&lt;/p&gt;</span>
+<span class="sd">        &lt;div&gt;</span>
+<span class="sd">            &lt;span&gt;&lt;/span&gt;</span>
+<span class="sd">            &lt;span&gt;Text&lt;/span&gt;</span>
+<span class="sd">        &lt;/div&gt;</span>
+<span class="sd">        &lt;div&gt;&lt;p&gt;Only child&lt;/p&gt;&lt;/div&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="n">OnlyChild</span><span class="p">()</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p&gt;Only child&lt;/p&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="type-selectors">
+<h2>Type selectors<a class="headerlink" href="#type-selectors" title="Link to this heading"></a></h2>
+<p>Type selectors are used to select elements based on their position relative to siblings of the same type.</p>
+<section id="firstoftype">
+<h3>FirstOfType<a class="headerlink" href="#firstoftype" title="Link to this heading"></a></h3>
+<p>Selects every element that is the first child of its parent of a particular type. This selector is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:first-of-type</span></code> pseudo-class.</p>
+<p><strong>CSS Example:</strong></p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">first-of-type</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">FirstOfType</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p&gt;First p&lt;/p&gt;</span>
+<span class="sd">        &lt;div&gt;First div&lt;/div&gt;</span>
+<span class="sd">        &lt;div&gt;</span>
+<span class="sd">            &lt;span&gt;First span&lt;/span&gt;</span>
+<span class="sd">            &lt;span&gt;</span>
+<span class="sd">                &lt;a&gt;First a&lt;/a&gt;</span>
+<span class="sd">            &lt;/span&gt;</span>
+<span class="sd">        &lt;/div&gt;</span>
+<span class="sd">        &lt;p&gt;&lt;/p&gt;</span>
+<span class="sd">        &lt;div&gt;&lt;/div&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="n">FirstOfType</span><span class="p">()</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p&gt;First p&lt;/p&gt;, &lt;div&gt;First div&lt;/div&gt;, &lt;span&gt;First span&lt;/span&gt;, &lt;a&gt;First a&lt;/a&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="lastoftype">
+<h3>LastOfType<a class="headerlink" href="#lastoftype" title="Link to this heading"></a></h3>
+<p>Selects every element that is the last child of its parent of a particular type. This selector is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:last-of-type</span></code> pseudo-class.</p>
+<p><strong>CSS Example:</strong></p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">last-of-type</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">LastOfType</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p&gt;Last p&lt;/p&gt;</span>
+<span class="sd">        &lt;div&gt;</span>
+<span class="sd">            &lt;span&gt;</span>
+<span class="sd">                &lt;a&gt;Last a&lt;/a&gt;</span>
+<span class="sd">            &lt;/span&gt;</span>
+<span class="sd">            &lt;span&gt;Last span&lt;/span&gt;</span>
+<span class="sd">        &lt;/div&gt;</span>
+<span class="sd">        &lt;div&gt;Last div&lt;/div&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="n">LastOfType</span><span class="p">()</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p&gt;Last p&lt;/p&gt;, &lt;a&gt;Last a&lt;/a&gt;, &lt;span&gt;Last span&lt;/span&gt;, &lt;div&gt;Last div&lt;/div&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="nthoftype">
+<h3>NthOfType<a class="headerlink" href="#nthoftype" title="Link to this heading"></a></h3>
+<p>Selects every element that is the nth child of its parent of a particular type. This selector is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:nth-of-type</span></code> pseudo-class.</p>
+<p><strong>CSS Example:</strong></p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">nth-of-type</span><span class="o">(</span><span class="nt">n</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Similar to nth child counterparts, every variant of valid CSS <code class="docutils literal notranslate"><span class="pre">nth</span></code> parameter values are supported.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">NthOfType</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p&gt;1&lt;/p&gt;</span>
+<span class="sd">        &lt;span&gt;1&lt;/span&gt;</span>
+<span class="sd">        &lt;p&gt;2&lt;/p&gt;</span>
+<span class="sd">        &lt;span&gt;2&lt;/span&gt;</span>
+<span class="sd">        &lt;p&gt;3&lt;/p&gt;</span>
+<span class="sd">        &lt;span&gt;3&lt;/span&gt;</span>
+<span class="sd">        &lt;p&gt;4&lt;/p&gt;</span>
+<span class="sd">        &lt;span&gt;4&lt;/span&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="n">NthOfType</span><span class="p">(</span><span class="s2">&quot;2n+2&quot;</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p&gt;2&lt;/p&gt;, &lt;span&gt;2&lt;/span&gt;, &lt;p&gt;4&lt;/p&gt;, &lt;span&gt;4&lt;/span&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="nthlastoftype">
+<h3>NthLastOfType<a class="headerlink" href="#nthlastoftype" title="Link to this heading"></a></h3>
+<p>Selects every element that is the nth child of its parent of a particular type, counting from the last child.
+This selector is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:nth-last-of-type</span></code> pseudo-class.</p>
+<p><strong>CSS Example:</strong></p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">nth-last-of-type</span><span class="o">(</span><span class="nt">n</span><span class="o">)</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">NthLastOfType</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p&gt;1&lt;/p&gt;</span>
+<span class="sd">        &lt;span&gt;1&lt;/span&gt;</span>
+<span class="sd">        &lt;p&gt;2&lt;/p&gt;</span>
+<span class="sd">        &lt;span&gt;2&lt;/span&gt;</span>
+<span class="sd">        &lt;p&gt;3&lt;/p&gt;</span>
+<span class="sd">        &lt;span&gt;3&lt;/span&gt;</span>
+<span class="sd">        &lt;p&gt;4&lt;/p&gt;</span>
+<span class="sd">        &lt;span&gt;4&lt;/span&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="n">NthLastOfType</span><span class="p">(</span><span class="s2">&quot;-n+2&quot;</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p&gt;3&lt;/p&gt;, &lt;span&gt;3&lt;/span&gt;, &lt;p&gt;4&lt;/p&gt;, &lt;span&gt;4&lt;/span&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="onlyoftype">
+<h3>OnlyOfType<a class="headerlink" href="#onlyoftype" title="Link to this heading"></a></h3>
+<p>Selects every element that is the only child of its parent of a particular type. This selector is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:only-of-type</span></code> pseudo-class.</p>
+<p><strong>CSS Example:</strong></p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">only-of-type</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">OnlyOfType</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;div&gt;</span>
+<span class="sd">            &lt;span&gt;First span&lt;/span&gt;</span>
+<span class="sd">            &lt;span&gt;Second span&lt;/span&gt;</span>
+<span class="sd">        &lt;/div&gt;</span>
+<span class="sd">        &lt;p&gt;Only p&lt;/p&gt;</span>
+<span class="sd">        &lt;div&gt;</span>
+<span class="sd">            &lt;span&gt;Only span&lt;/span&gt;</span>
+<span class="sd">            &lt;a&gt;Only a&lt;/a&gt;</span>
+<span class="sd">        &lt;/div&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="n">OnlyOfType</span><span class="p">()</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p&gt;Only p&lt;/p&gt;, &lt;span&gt;Only span&lt;/span&gt;, &lt;a&gt;Only a&lt;/a&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="other-selectors">
+<h2>Other selectors<a class="headerlink" href="#other-selectors" title="Link to this heading"></a></h2>
+<section id="empty">
+<h3>Empty<a class="headerlink" href="#empty" title="Link to this heading"></a></h3>
+<p>Selects every element that has no children and no text content. This selector is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:empty</span></code> pseudo-class.</p>
+<p><strong>CSS Example:</strong></p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">empty</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">Empty</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p&gt;Text&lt;/p&gt;</span>
+<span class="sd">        &lt;div&gt;</span>
+<span class="sd">            &lt;span&gt;</span>
+<span class="sd">                &lt;a&gt;Text&lt;/a&gt;</span>
+<span class="sd">            &lt;/span&gt;</span>
+<span class="sd">            &lt;span&gt;&lt;/span&gt;</span>
+<span class="sd">        &lt;/div&gt;</span>
+<span class="sd">        &lt;div&gt;&lt;a&gt;Text&lt;/a&gt;&lt;/div&gt;</span>
+<span class="sd">        &lt;p&gt;&lt;/p&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="n">Empty</span><span class="p">()</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;span&gt;&lt;/span&gt;, &lt;p&gt;&lt;/p&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="css">
+<h3>CSS<a class="headerlink" href="#css" title="Link to this heading"></a></h3>
+<p>Wrapper for any CSS selector, uses <code class="docutils literal notranslate"><span class="pre">soupsieve</span></code> under the hood, so support is limited to its version.
+Convenience class for search based on CSS selector, results of the search are equivalent to <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> <code class="docutils literal notranslate"><span class="pre">select</span></code> method.</p>
+<p><strong>Using BeautifulSoup:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;div &gt; p&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Using soupsieve:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">soupsieve</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s1">&#39;div &gt; p&#39;</span><span class="p">,</span> <span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Using soupsavvy:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">CSS</span><span class="p">(</span><span class="s1">&#39;div &gt; p&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">CSS</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;div class=&quot;foo&quot;&gt;Not span&lt;/div&gt;</span>
+<span class="sd">        &lt;span class=&quot;foo&quot;&gt;Not first&lt;/span&gt;</span>
+<span class="sd">        &lt;div&gt;&lt;span class=&quot;goo&quot;&gt;Not .foo&lt;/span&gt;&lt;/div&gt;</span>
+<span class="sd">        &lt;div&gt;&lt;span class=&quot;foo&quot;&gt;Found&lt;/span&gt;&lt;/div&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="n">CSS</span><span class="p">(</span><span class="s2">&quot;span.foo:first-child&quot;</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;foo&quot;&gt;Found&lt;/span&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="combining-selectors">
+<h2>Combining selectors<a class="headerlink" href="#combining-selectors" title="Link to this heading"></a></h2>
+<p>CSS based selectors can be combined with other <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> selectors to create composite selectors. For example, to select all elements, that are not empty and are children of a div element, the following selector can be used:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">Empty</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p&gt;Text&lt;/p&gt;</span>
+<span class="sd">        &lt;div&gt;</span>
+<span class="sd">            &lt;span&gt;&lt;a&gt;&lt;/a&gt;&lt;/span&gt;</span>
+<span class="sd">            &lt;span&gt;Text&lt;/span&gt;</span>
+<span class="sd">            &lt;span&gt;&lt;/span&gt;</span>
+<span class="sd">            &lt;p&gt;&lt;/p&gt;</span>
+<span class="sd">        &lt;/div&gt;</span>
+<span class="sd">        &lt;p&gt;&lt;/p&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="p">(</span><span class="o">~</span><span class="n">Empty</span><span class="p">())</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;span&gt;&lt;a&gt;&lt;/a&gt;&lt;/span&gt;, &lt;span&gt;Text&lt;/span&gt;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>For finding all elements that have one child and are last child of their parent following selector can be used:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">Anchor</span><span class="p">,</span> <span class="n">HasSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">LastChild</span><span class="p">,</span> <span class="n">OnlyChild</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p&gt;Text&lt;/p&gt;</span>
+<span class="sd">        &lt;div&gt;</span>
+<span class="sd">            &lt;span&gt;&lt;/span&gt;</span>
+<span class="sd">            &lt;span&gt;Text&lt;/span&gt;</span>
+<span class="sd">        &lt;/div&gt;</span>
+<span class="sd">        &lt;div&gt;&lt;span&gt;Only Child&lt;/span&gt;&lt;/div&gt;</span>
+<span class="sd">        &lt;div&gt;&lt;span&gt;Only Child - Last&lt;/span&gt;&lt;/div&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">only_child</span> <span class="o">=</span> <span class="n">Anchor</span> <span class="o">&gt;</span> <span class="n">OnlyChild</span><span class="p">()</span>
+<span class="n">selector</span> <span class="o">=</span> <span class="n">HasSelector</span><span class="p">(</span><span class="n">only_child</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">LastChild</span><span class="p">()</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div&gt;&lt;span&gt;Only Child - Last&lt;/span&gt;&lt;/div&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="recursivity">
+<h2>Recursivity<a class="headerlink" href="#recursivity" title="Link to this heading"></a></h2>
+<p>On the contrary to <code class="docutils literal notranslate"><span class="pre">find</span></code> methods, <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> <code class="docutils literal notranslate"><span class="pre">select</span></code> does not provide option to search only for direct children of the element (<code class="docutils literal notranslate"><span class="pre">recursive=False</span></code>). This is justified, as CSS selectors have an implied anchor of universal selector (<code class="docutils literal notranslate"><span class="pre">*</span></code>), which selects all elements. <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> consistently allows to search in <strong>not recursive</strong> mode by setting <code class="docutils literal notranslate"><span class="pre">recursive=False</span></code> in the <code class="docutils literal notranslate"><span class="pre">find</span></code> methods. In such case, only direct children of the element that match the selector are returned.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">CSS</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;span class=&quot;foo&quot;&gt;&lt;/span&gt;</span>
+<span class="sd">        &lt;div class=&quot;goo&quot;&gt;</span>
+<span class="sd">            &lt;div class=&quot;foo&quot;&gt;Descendant&lt;/div&gt;</span>
+<span class="sd">        &lt;/div&gt;</span>
+<span class="sd">        &lt;div class=&quot;foo&quot;&gt;Child&lt;/div&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="n">CSS</span><span class="p">(</span><span class="s2">&quot;div.foo&quot;</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div class=&quot;foo&quot;&gt;Child&lt;/div&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> provides a convenient way to select elements using css selectors. It provides wrappers for commonly used pseudo-classes that share the same implementation as other selectors and can be easily combined.</p>
+<p><strong>Enjoy <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> and leave us feedback!</strong><br />
+<strong>Happy scraping!</strong></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="combining.html" class="btn btn-neutral float-left" title="Composite Selectors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="testing.html" class="btn btn-neutral float-right" title="Testing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, sewcio543.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

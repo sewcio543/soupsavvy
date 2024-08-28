@@ -1,7 +1,0 @@
-tags.base
-==========================
-
-.. automodule:: soupsavvy.tags.base
-   :members:
-   :undoc-members:
-   :show-inheritance:

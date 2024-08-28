@@ -1,0 +1,19 @@
+models
+========================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.models.base
+   soupsavvy.models.wrappers
+
+Module contents
+---------------
+
+.. automodule:: soupsavvy.models
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,19 @@
+selectors.nth
+===============================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.selectors.nth.nth_soup_selector
+   soupsavvy.selectors.nth.nth_utils
+
+Module contents
+---------------
+
+.. automodule:: soupsavvy.selectors.nth
+   :members:
+   :undoc-members:
+   :show-inheritance:

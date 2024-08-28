@@ -1,7 +1,0 @@
-tags.css.nth.nth\_soup\_selector
-=================================================
-
-.. automodule:: soupsavvy.tags.css.nth.nth_soup_selector
-   :members:
-   :undoc-members:
-   :show-inheritance:

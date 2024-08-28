@@ -1,0 +1,7 @@
+selectors.combinators
+======================================
+
+.. automodule:: soupsavvy.selectors.combinators
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+selectors.relative
+===================================
+
+.. automodule:: soupsavvy.selectors.relative
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,7 +1,0 @@
-tags.attributes
-================================
-
-.. automodule:: soupsavvy.tags.attributes
-   :members:
-   :undoc-members:
-   :show-inheritance:

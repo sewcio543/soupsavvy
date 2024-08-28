@@ -1,0 +1,34 @@
+selectors
+===========================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.selectors.css
+   soupsavvy.selectors.nth
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.selectors.attributes
+   soupsavvy.selectors.base
+   soupsavvy.selectors.combinators
+   soupsavvy.selectors.general
+   soupsavvy.selectors.logical
+   soupsavvy.selectors.namespace
+   soupsavvy.selectors.relative
+   soupsavvy.selectors.tag_utils
+
+Module contents
+---------------
+
+.. automodule:: soupsavvy.selectors
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,20 @@
+operations
+============================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.operations.base
+   soupsavvy.operations.general
+   soupsavvy.operations.selection_pipeline
+
+Module contents
+---------------
+
+.. automodule:: soupsavvy.operations
+   :members:
+   :undoc-members:
+   :show-inheritance:

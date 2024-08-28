@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>soupsavvy.selectors.general &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1bac72b6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.selectors.html">selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operations.html">operations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/combining.html">Composite Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/css.html">CSS Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/testing.html">Testing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">soupsavvy.selectors.general</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for soupsavvy.selectors.general</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module for general purpose selectors.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">TypeSelector - combines type and attribute selectors</span>
+<span class="sd">PatternSelector - matches elements based on text content and selector</span>
+<span class="sd">UniversalSelector - universal selector (*)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Pattern</span>
+
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">SoupStrainer</span><span class="p">,</span> <span class="n">Tag</span>
+
+<span class="kn">import</span> <span class="nn">soupsavvy.selectors.namespace</span> <span class="k">as</span> <span class="nn">ns</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.base</span> <span class="kn">import</span> <span class="n">SelectableCSS</span><span class="p">,</span> <span class="n">SoupSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.tag_utils</span> <span class="kn">import</span> <span class="n">TagIterator</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.utils.deprecation</span> <span class="kn">import</span> <span class="n">deprecated_class</span>
+
+
+<div class="viewcode-block" id="TypeSelector">
+<a class="viewcode-back" href="../../../soupsavvy.selectors.general.html#soupsavvy.TypeSelector">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">TypeSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">,</span> <span class="n">SelectableCSS</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Component for finding elements based on tag name.</span>
+<span class="sd">    `soupsavvy` counterpart of css type selector.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; TypeSelector(&quot;div&quot;)</span>
+
+<span class="sd">    matches all elements that have &quot;div&quot; tag name.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;Hello World&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;a href=&quot;/shop&quot;&gt;Hello World&lt;/a&gt; ❌</span>
+
+<span class="sd">    It&#39;s soupsavvy counterpart of passing name to bs4 find methods.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; soup.find_all(&quot;div&quot;)</span>
+
+<span class="sd">    Returns the same result as:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; TypeSelector(&quot;div&quot;).find_all(soup)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        HTML tag name ex. &quot;a&quot;, &quot;div&quot;.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    For more information about type selectors see:</span>
+<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<div class="viewcode-block" id="TypeSelector.find_all">
+<a class="viewcode-back" href="../../../soupsavvy.selectors.general.html#soupsavvy.TypeSelector.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="n">ns</span><span class="o">.</span><span class="n">NAME</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">tag</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">css</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># css selector for tag name is just the tag name ex. &quot;div&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># TypeSelectors produce the same results if names of the tag are the same</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span></div>
+
+
+
+<div class="viewcode-block" id="PatternSelector">
+<a class="viewcode-back" href="../../../soupsavvy.selectors.general.html#soupsavvy.PatternSelector">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">PatternSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class representing HTML element with specific string pattern for text.</span>
+<span class="sd">    Provides elements matching with text matching the pattern.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; PatternSelector(pattern=&quot;Hello World&quot;)</span>
+
+<span class="sd">    matches all element with exact text content &quot;Hello World&quot;.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello World&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello Python&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello World 3&lt;/div&gt; ❌</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pattern: str | Pattern</span>
+<span class="sd">        A pattern to match text of the element. Can be a string for exact match</span>
+<span class="sd">        or Pattern for any more complex regular expressions.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Selector uses re.search function to match text content</span>
+<span class="sd">    if compiled regex is passed as pattern.</span>
+<span class="sd">    Providing &#39;re.compile(r&quot;[0-9]&quot;)&#39; as pattern will much any element with a digit in text.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; import re</span>
+<span class="sd">    &gt;&gt;&gt; PatternSelector(pattern=re.compile(r&quot;[0-9]&quot;))</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello World 123&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello World&lt;/div&gt; ❌</span>
+
+<span class="sd">    Due to bs4 implementation, element does not match the pattern if it has any children.</span>
+<span class="sd">    Only leaf nodes can be returned by PatternSelector find methods.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello World&lt;span&gt;&lt;/span&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">pattern</span><span class="p">:</span> <span class="n">ns</span><span class="o">.</span><span class="n">PatternType</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets up compiled regex pattern used for SoupStrainer in find methods.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="PatternSelector.find_all">
+<a class="viewcode-back" href="../../../soupsavvy.selectors.general.html#soupsavvy.PatternSelector.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+        <span class="n">iterator</span> <span class="o">=</span> <span class="n">TagIterator</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
+        <span class="n">strainer</span> <span class="o">=</span> <span class="n">SoupStrainer</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">filter_</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="n">strainer</span><span class="o">.</span><span class="n">search_tag</span><span class="p">,</span> <span class="n">iterator</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">islice</span><span class="p">(</span><span class="n">filter_</span><span class="p">,</span> <span class="n">limit</span><span class="p">))</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_pattern</span></div>
+
+
+
+<div class="viewcode-block" id="UniversalSelector">
+<a class="viewcode-back" href="../../../soupsavvy.selectors.general.html#soupsavvy.UniversalSelector">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">UniversalSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">,</span> <span class="n">SelectableCSS</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class representing a wildcard tag that matches ny and all types of elements</span>
+<span class="sd">    in html page.</span>
+
+<span class="sd">    UniversalSelector implements SelectableCSS interface with wildcard css selector &quot;*&quot;,</span>
+<span class="sd">    aka. universal selector, that matches all elements in html page.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; any_element = UniversalSelector()</span>
+<span class="sd">    &gt;&gt;&gt; any_element.selector</span>
+<span class="sd">    &quot;*&quot;</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    For more information on universal selector see:</span>
+<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="UniversalSelector.find_all">
+<a class="viewcode-back" href="../../../soupsavvy.selectors.general.html#soupsavvy.UniversalSelector.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">tag</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">css</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns wildcard css selector matching all elements in the markup.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ns</span><span class="o">.</span><span class="n">CSS_SELECTOR_WILDCARD</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="c1"># UniversalSelector is always the same</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">UniversalSelector</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="AnyTagSelector">
+<a class="viewcode-back" href="../../../soupsavvy.selectors.general.html#soupsavvy.AnyTagSelector">[docs]</a>
+<span class="nd">@deprecated_class</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;AnyTagSelector is deprecated, use </span><span class="si">{</span><span class="n">UniversalSelector</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> class instead.&quot;</span>
+<span class="p">)</span>
+<span class="k">class</span> <span class="nc">AnyTagSelector</span><span class="p">(</span><span class="n">UniversalSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Alias for UniversalSelector class. Deprecated component.&quot;&quot;&quot;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, sewcio543.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -7,6 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/custom.css?v=1bac72b6" />
 
   
   <!--[if lt IE 9]>
@@ -42,15 +43,20 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../soupsavvy.tags.html">tags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../soupsavvy.utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../soupsavvy.selectors.html">selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../soupsavvy.models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../soupsavvy.operations.html">operations</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Demos:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../demos/selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../demos/combining.html">Composite Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../demos/css.html">CSS Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../demos/testing.html">Testing</a></li>
 </ul>
 
         </div>
@@ -90,7 +96,7 @@
 
 
 <div class="viewcode-block" id="EmptyTemplate">
-<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.EmptyTemplate">[docs]</a>
+<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.EmptyTemplate">[docs]</a>
 <span class="k">class</span> <span class="nc">EmptyTemplate</span><span class="p">(</span><span class="n">BaseTemplate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Template for generating an empty string.</span>
@@ -104,7 +110,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="EmptyTemplate.generate">
-<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.EmptyTemplate.generate">[docs]</a>
+<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.EmptyTemplate.generate">[docs]</a>
     <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates an empty string.</span>
@@ -120,7 +126,7 @@
 
 
 <div class="viewcode-block" id="ConstantTemplate">
-<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.ConstantTemplate">[docs]</a>
+<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.ConstantTemplate">[docs]</a>
 <span class="k">class</span> <span class="nc">ConstantTemplate</span><span class="p">(</span><span class="n">BaseTemplate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Template for generating a constant string.</span>
@@ -134,7 +140,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ConstantTemplate.__init__">
-<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.ConstantTemplate.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.ConstantTemplate.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the ConstantTemplate.</span>
@@ -148,7 +154,7 @@
 
 
 <div class="viewcode-block" id="ConstantTemplate.generate">
-<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.ConstantTemplate.generate">[docs]</a>
+<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.ConstantTemplate.generate">[docs]</a>
     <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates the constant string.</span>
@@ -164,7 +170,7 @@
 
 
 <div class="viewcode-block" id="ChoiceTemplate">
-<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.ChoiceTemplate">[docs]</a>
+<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.ChoiceTemplate">[docs]</a>
 <span class="k">class</span> <span class="nc">ChoiceTemplate</span><span class="p">(</span><span class="n">BaseTemplate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Template for randomly selecting from a list of choices.</span>
@@ -177,7 +183,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ChoiceTemplate.__init__">
-<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.ChoiceTemplate.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.ChoiceTemplate.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choices</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the ChoiceTemplate.</span>
@@ -194,7 +200,7 @@
 
 
 <div class="viewcode-block" id="ChoiceTemplate.generate">
-<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.ChoiceTemplate.generate">[docs]</a>
+<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.ChoiceTemplate.generate">[docs]</a>
     <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates a random choice from the list of choices.</span>
@@ -211,7 +217,7 @@
 
 
 <div class="viewcode-block" id="RandomTemplate">
-<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.RandomTemplate">[docs]</a>
+<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.RandomTemplate">[docs]</a>
 <span class="k">class</span> <span class="nc">RandomTemplate</span><span class="p">(</span><span class="n">BaseTemplate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Template for generating a random string.</span>
@@ -226,7 +232,7 @@
     <span class="n">_SCOPE</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">ascii_letters</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span>
 
 <div class="viewcode-block" id="RandomTemplate.__init__">
-<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.RandomTemplate.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.RandomTemplate.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the RandomTemplate.</span>
@@ -266,7 +272,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;length must be greater than 0, got &#39;</span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RandomTemplate.generate">
-<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.RandomTemplate.generate">[docs]</a>
+<a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.RandomTemplate.generate">[docs]</a>
     <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates a random string from ASCII letters and digits.</span>
@@ -308,9 +314,6 @@
     <p>&#169; Copyright 2024, sewcio543.</p>
   </div>
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
    
 
 </footer>

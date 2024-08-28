@@ -1,7 +1,0 @@
-tags.css.tag\_selectors
-========================================
-
-.. automodule:: soupsavvy.tags.css.tag_selectors
-   :members:
-   :undoc-members:
-   :show-inheritance:

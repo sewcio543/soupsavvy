@@ -1,0 +1,18 @@
+selectors.css
+===============================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.selectors.css.selectors
+
+Module contents
+---------------
+
+.. automodule:: soupsavvy.selectors.css
+   :members:
+   :undoc-members:
+   :show-inheritance:

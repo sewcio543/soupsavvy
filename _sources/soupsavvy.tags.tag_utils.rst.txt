@@ -1,7 +1,0 @@
-tags.tag\_utils
-================================
-
-.. automodule:: soupsavvy.tags.tag_utils
-   :members:
-   :undoc-members:
-   :show-inheritance:

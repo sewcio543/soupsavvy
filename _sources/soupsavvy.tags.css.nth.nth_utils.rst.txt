@@ -1,7 +1,0 @@
-tags.css.nth.nth\_utils
-========================================
-
-.. automodule:: soupsavvy.tags.css.nth.nth_utils
-   :members:
-   :undoc-members:
-   :show-inheritance:

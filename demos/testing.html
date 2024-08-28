@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testing &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1bac72b6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="CSS Selectors" href="css.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.selectors.html">selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.operations.html">operations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="combining.html">Composite Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="css.html">CSS Selectors</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Testing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#generators">Generators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#attribute-generator">Attribute Generator</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#empty-attribute">Empty Attribute</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#constant-value">Constant value</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#templates">Templates</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#choicetemplate">ChoiceTemplate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#randomtemplate">RandomTemplate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#user-defined-templates">User-defined Templates</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#taggenerator">TagGenerator</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#name">Name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#attributes">Attributes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#children">Children</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#self-closing-tags">Self-closing Tags</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#text">Text</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Testing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/demos/testing.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="testing">
+<h1>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> provides utilities for testing your selectors. By leveraging the features of the <code class="docutils literal notranslate"><span class="pre">soupsavvy.testing</span></code> subpackage, you can validate your selectors, check them against various edge cases, and ensure they work as expected.</p>
+<section id="generators">
+<h2>Generators<a class="headerlink" href="#generators" title="Link to this heading"></a></h2>
+<p>The subpackage includes HTML code generators designed specifically for testing purposes. These generators help you create controlled HTML structures to simulate various scenarios, ensuring your selectors perform as expected.</p>
+<section id="attribute-generator">
+<h3>Attribute Generator<a class="headerlink" href="#attribute-generator" title="Link to this heading"></a></h3>
+<p>Attribute generator is used to generate string representation of html attributes. While not so useful on its own, it becomes valuable when combined with the <code class="docutils literal notranslate"><span class="pre">TagGenerator</span></code>, offering extensive customization options.</p>
+<section id="empty-attribute">
+<h4>Empty Attribute<a class="headerlink" href="#empty-attribute" title="Link to this heading"></a></h4>
+<p>If only the first parameter (the attribute name) is passed to the <code class="docutils literal notranslate"><span class="pre">AttributeGenerator</span></code>, it generates an attribute with an empty value.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.testing</span> <span class="kn">import</span> <span class="n">AttributeGenerator</span>
+
+<span class="n">generator</span> <span class="o">=</span> <span class="n">AttributeGenerator</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;class=&quot;&quot;&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="constant-value">
+<h4>Constant value<a class="headerlink" href="#constant-value" title="Link to this heading"></a></h4>
+<p>By passing the <code class="docutils literal notranslate"><span class="pre">value</span></code> parameter, you can set a specific value for the attribute.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.testing</span> <span class="kn">import</span> <span class="n">AttributeGenerator</span>
+
+<span class="n">generator</span> <span class="o">=</span> <span class="n">AttributeGenerator</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;book&quot;</span><span class="p">)</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;class=&quot;book&quot;&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="templates">
+<h3>Templates<a class="headerlink" href="#templates" title="Link to this heading"></a></h3>
+<p>Templates add another layer of customization by generating strings based on predefined logic, useful for creating dynamic and varied content in your test HTML.</p>
+<section id="choicetemplate">
+<h4>ChoiceTemplate<a class="headerlink" href="#choicetemplate" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">ChoiceTemplate</span></code> allows you to generate a string by randomly selecting from a provided list of strings. For reproducibility, the <code class="docutils literal notranslate"><span class="pre">seed</span></code> parameter can be set to ensure the same output is generated across multiple runs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.testing</span> <span class="kn">import</span> <span class="n">AttributeGenerator</span><span class="p">,</span> <span class="n">ChoiceTemplate</span>
+
+<span class="n">template</span> <span class="o">=</span> <span class="n">ChoiceTemplate</span><span class="p">([</span><span class="s2">&quot;book&quot;</span><span class="p">,</span> <span class="s2">&quot;article&quot;</span><span class="p">,</span> <span class="s2">&quot;blog&quot;</span><span class="p">],</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">generator</span> <span class="o">=</span> <span class="n">AttributeGenerator</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">template</span><span class="p">)</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;class=&quot;blog&quot;&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="randomtemplate">
+<h4>RandomTemplate<a class="headerlink" href="#randomtemplate" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">RandomTemplate</span></code> generates a string from randomly selected characters. The <code class="docutils literal notranslate"><span class="pre">length</span></code> parameter defines the string length (default is 4). Like <code class="docutils literal notranslate"><span class="pre">ChoiceTemplate</span></code>, the <code class="docutils literal notranslate"><span class="pre">seed</span></code> parameter ensures consistent output if needed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.testing</span> <span class="kn">import</span> <span class="n">AttributeGenerator</span><span class="p">,</span> <span class="n">RandomTemplate</span>
+
+<span class="n">template</span> <span class="o">=</span> <span class="n">RandomTemplate</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">generator</span> <span class="o">=</span> <span class="n">AttributeGenerator</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">template</span><span class="p">)</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;class=&quot;NbrnT&quot;&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="user-defined-templates">
+<h4>User-defined Templates<a class="headerlink" href="#user-defined-templates" title="Link to this heading"></a></h4>
+<p>For advanced customization, you can create your own templates by subclassing <code class="docutils literal notranslate"><span class="pre">soupsavvy.testing.BaseTemplate</span></code> and implementing the <code class="docutils literal notranslate"><span class="pre">generate</span></code> method to return a string based on your specific logic.</p>
+<p>Here’s how you can define a custom template:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.testing</span> <span class="kn">import</span> <span class="n">BaseTemplate</span><span class="p">,</span> <span class="n">TagGenerator</span>
+
+
+<span class="k">class</span> <span class="nc">CustomTemplate</span><span class="p">(</span><span class="n">BaseTemplate</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="p">):</span> <span class="o">...</span>
+
+    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># connects to external service</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;Hello from somewhere!&quot;</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="n">template</span> <span class="o">=</span> <span class="n">CustomTemplate</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">generator</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">template</span><span class="p">)</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;&lt;span&gt;Hello from somewhere!&lt;/span&gt;&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="taggenerator">
+<h3>TagGenerator<a class="headerlink" href="#taggenerator" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">TagGenerator</span></code> is the primary tool for generating single HTML tags with customizable attributes, text, and child elements.</p>
+<section id="name">
+<h4>Name<a class="headerlink" href="#name" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">name</span></code> parameter is required and specifies the tag name, such as <code class="docutils literal notranslate"><span class="pre">div</span></code>, <code class="docutils literal notranslate"><span class="pre">span</span></code>, or <code class="docutils literal notranslate"><span class="pre">p</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.testing</span> <span class="kn">import</span> <span class="n">TagGenerator</span>
+
+<span class="n">generator</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;&lt;div&gt;&lt;/div&gt;&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="attributes">
+<h4>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">attrs</span></code> parameter allows you to define the attributes of the tag. It accepts an iterable containing:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: Just the attribute name, resulting in an empty value.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tuple</span></code>: A pair where the first element is the attribute name and the second is the value.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AttributeGenerator</span></code>: An object that dynamically generates attribute values.</p></li>
+</ul>
+<p>All attributes are converted to <code class="docutils literal notranslate"><span class="pre">AttributeGenerator</span></code> objects, enabling the use of templates for dynamic generation. Duplicate attributes will raise an error.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.testing</span> <span class="kn">import</span> <span class="n">AttributeGenerator</span><span class="p">,</span> <span class="n">RandomTemplate</span><span class="p">,</span> <span class="n">TagGenerator</span>
+
+<span class="n">attrs</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;href&quot;</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;link&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;data-id&quot;</span><span class="p">,</span> <span class="n">RandomTemplate</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)),</span>
+    <span class="n">AttributeGenerator</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;buy&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">generator</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">)</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;&lt;a href=&quot;&quot; class=&quot;link&quot; data-id=&quot;Nbrn&quot; title=&quot;buy&quot;&gt;&lt;/a&gt;&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Attributes of the tag must be unique, so trying to define <code class="docutils literal notranslate"><span class="pre">TagGenerator</span></code> with duplicate attributes will raise an error.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">soupsavvy.exceptions</span> <span class="k">as</span> <span class="nn">exc</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.testing</span> <span class="kn">import</span> <span class="n">TagGenerator</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;href&quot;</span><span class="p">,</span> <span class="s2">&quot;href&quot;</span><span class="p">])</span>
+<span class="k">except</span> <span class="n">exc</span><span class="o">.</span><span class="n">SoupsavvyException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;soupsavvy.exceptions.NotUniqueAttributesException&#39;&gt;
+Input attribute href is not unique.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="children">
+<h4>Children<a class="headerlink" href="#children" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">children</span></code> parameter lets you specify the tag’s children, which must be <code class="docutils literal notranslate"><span class="pre">TagGenerator</span></code> objects. If no children are specified, the tag is created without any.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.testing</span> <span class="kn">import</span> <span class="n">TagGenerator</span>
+
+<span class="n">child_generator</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)</span>
+<span class="n">generator</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span>
+    <span class="s2">&quot;div&quot;</span><span class="p">,</span>
+    <span class="n">attrs</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">],</span>
+    <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">child_generator</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;&lt;div class=&quot;&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;/div&gt;&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="self-closing-tags">
+<h4>Self-closing Tags<a class="headerlink" href="#self-closing-tags" title="Link to this heading"></a></h4>
+<p>Self-closing tags like <code class="docutils literal notranslate"><span class="pre">br</span></code> are automatically handled. Defining a self-closing tag with children will raise an error.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.testing</span> <span class="kn">import</span> <span class="n">TagGenerator</span>
+
+<span class="n">generator</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;br&quot;</span><span class="p">)</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;&lt;br/&gt;&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.testing</span> <span class="kn">import</span> <span class="n">TagGenerator</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;hr&quot;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)])</span>
+<span class="k">except</span> <span class="n">exc</span><span class="o">.</span><span class="n">SoupsavvyException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;soupsavvy.exceptions.VoidTagWithChildrenException&#39;&gt;
+&#39;hr&#39; is a void tag and cannot have children
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="text">
+<h4>Text<a class="headerlink" href="#text" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">text</span></code> parameter allows you to add text content to the tag. This can be a static string or dynamically generated using templates.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.testing</span> <span class="kn">import</span> <span class="n">TagGenerator</span>
+
+<span class="n">generator</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Hello, World!&quot;</span><span class="p">)</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;&lt;span&gt;Hello, World!&lt;/span&gt;&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.testing</span> <span class="kn">import</span> <span class="n">ChoiceTemplate</span><span class="p">,</span> <span class="n">TagGenerator</span>
+
+<span class="n">template</span> <span class="o">=</span> <span class="n">ChoiceTemplate</span><span class="p">([</span><span class="s2">&quot;Hello, World!&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, blog!&quot;</span><span class="p">],</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">generator</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">template</span><span class="p">)</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;&lt;span&gt;Hello, World!&lt;/span&gt;&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="usage">
+<h3>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h3>
+<p>Let’s see how to use these generators in practice. In this example, we’ll test a selector targeting <code class="docutils literal notranslate"><span class="pre">span</span></code> elements with text content starting with “Hello” that are children of <code class="docutils literal notranslate"><span class="pre">div</span></code> elements with <code class="docutils literal notranslate"><span class="pre">class</span></code> attribute of <code class="docutils literal notranslate"><span class="pre">book</span></code> and <code class="docutils literal notranslate"><span class="pre">role</span></code> attribute of <code class="docutils literal notranslate"><span class="pre">section</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">AttributeSelector</span><span class="p">,</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.testing</span> <span class="kn">import</span> <span class="n">AttributeGenerator</span><span class="p">,</span> <span class="n">ChoiceTemplate</span><span class="p">,</span> <span class="n">TagGenerator</span>
+
+<span class="c1"># 1: define the generator</span>
+<span class="n">template</span> <span class="o">=</span> <span class="n">ChoiceTemplate</span><span class="p">([</span><span class="s2">&quot;Hello, World!&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello, blog!&quot;</span><span class="p">],</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">child_generator</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">template</span><span class="p">)</span>
+<span class="n">generator</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span>
+    <span class="s2">&quot;div&quot;</span><span class="p">,</span>
+    <span class="n">attrs</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">AttributeGenerator</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;book&quot;</span><span class="p">),</span>
+        <span class="n">AttributeGenerator</span><span class="p">(</span><span class="s2">&quot;role&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;section&quot;</span><span class="p">),</span>
+    <span class="p">],</span>
+    <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">child_generator</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="c1"># 2: define the selector</span>
+<span class="n">selector</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+    <span class="o">&amp;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span>
+    <span class="o">&amp;</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;role&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;section&quot;</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">PatternSelector</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^Hello&quot;</span><span class="p">)))</span>
+
+<span class="c1"># 3: generate the soup</span>
+<span class="n">text</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+
+<span class="c1"># 4: test selector on generated soup</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;span&gt;Hello, World!&lt;/span&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>In this example, we dynamically generate the HTML content using <code class="docutils literal notranslate"><span class="pre">TagGenerator</span></code> and then checked if the selector correctly identifies the intended elements.</p>
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading"></a></h2>
+<p>By using these generators, you can easily create HTML code to test whether your <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> selector is correctly defined. This approach enables you to validate complex selectors in a dynamic and controlled environment.</p>
+<p><strong>Enjoy <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> and leave us feedback!</strong><br />
+<strong>Happy scraping!</strong></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="css.html" class="btn btn-neutral float-left" title="CSS Selectors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, sewcio543.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

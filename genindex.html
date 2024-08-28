@@ -7,6 +7,7 @@
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=1bac72b6" />
 
   
   <!--[if lt IE 9]>
@@ -42,15 +43,20 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.tags.html">tags</a></li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.utils.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.selectors.html">selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Demos:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/testing.html">Testing</a></li>
 </ul>
 
         </div>
@@ -101,79 +107,80 @@
  | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
+ | <a href="#X"><strong>X</strong></a>
  
 </div>
 <h2 id="_">_</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.html#soupsavvy.AndSelector.__init__">__init__() (AndSelector method)</a>, <a href="soupsavvy.tags.components.html#soupsavvy.tags.components.AndSelector.__init__">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.AndSelector.__init__">[2]</a>
+      <li><a href="soupsavvy.html#soupsavvy.AndSelector.__init__">__init__() (AndSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.AndSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.AndSelector.__init__">[2]</a>
 
       <ul>
-        <li><a href="soupsavvy.html#soupsavvy.AnyTagSelector.__init__">(AnyTagSelector method)</a>, <a href="soupsavvy.tags.components.html#soupsavvy.tags.components.AnyTagSelector.__init__">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.AnyTagSelector.__init__">[2]</a>
+        <li><a href="soupsavvy.html#soupsavvy.AnyTagSelector.__init__">(AnyTagSelector method)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.AnyTagSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.AnyTagSelector.__init__">[2]</a>
 </li>
-        <li><a href="soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.generators.AttributeGenerator.__init__">(AttributeGenerator method)</a>, <a href="soupsavvy.testing.generators.html#soupsavvy.testing.generators.AttributeGenerator.__init__">[1]</a>
+        <li><a href="soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.generators.AttributeGenerator.__init__">(AttributeGenerator method)</a>, <a href="soupsavvy.testing.generators.html#soupsavvy.testing.generators.AttributeGenerator.__init__">[1]</a>, <a href="soupsavvy.testing.html#soupsavvy.testing.AttributeGenerator.__init__">[2]</a>
 </li>
-        <li><a href="soupsavvy.html#soupsavvy.AttributeSelector.__init__">(AttributeSelector method)</a>, <a href="soupsavvy.tags.attributes.html#soupsavvy.tags.attributes.AttributeSelector.__init__">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.AttributeSelector.__init__">[2]</a>
+        <li><a href="soupsavvy.html#soupsavvy.AttributeSelector.__init__">(AttributeSelector method)</a>, <a href="soupsavvy.selectors.attributes.html#soupsavvy.selectors.attributes.AttributeSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.AttributeSelector.__init__">[2]</a>
 </li>
-        <li><a href="soupsavvy.tags.combinators.html#soupsavvy.tags.combinators.BaseCombinator.__init__">(BaseCombinator method)</a>
+        <li><a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.BaseCombinator.__init__">(BaseCombinator method)</a>
 </li>
-        <li><a href="soupsavvy.tags.css.nth.nth_soup_selector.html#soupsavvy.tags.css.nth.nth_soup_selector.BaseNthOfSelector.__init__">(BaseNthOfSelector method)</a>
+        <li><a href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.__init__">(BaseModel method)</a>, <a href="soupsavvy.models.html#soupsavvy.models.BaseModel.__init__">[1]</a>
 </li>
-        <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.ChoiceTemplate.__init__">(ChoiceTemplate method)</a>, <a href="soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.templates.ChoiceTemplate.__init__">[1]</a>
+        <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.ChoiceTemplate.__init__">(ChoiceTemplate method)</a>, <a href="soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.templates.ChoiceTemplate.__init__">[1]</a>, <a href="soupsavvy.testing.html#soupsavvy.testing.ChoiceTemplate.__init__">[2]</a>
+</li>
+        <li><a href="soupsavvy.selectors.base.html#soupsavvy.selectors.base.CompositeSoupSelector.__init__">(CompositeSoupSelector method)</a>
 </li>
         <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.ConstantTemplate.__init__">(ConstantTemplate method)</a>, <a href="soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.templates.ConstantTemplate.__init__">[1]</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.CSS.__init__">(CSS method)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.CSS.__init__">[1]</a>
+        <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.CSS.__init__">(CSS method)</a>, <a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.CSS.__init__">[1]</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.Empty.__init__">(Empty method)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.Empty.__init__">[1]</a>
+        <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.CSSSoupSelector.__init__">(CSSSoupSelector method)</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.FirstChild.__init__">(FirstChild method)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.FirstChild.__init__">[1]</a>
+        <li><a href="soupsavvy.models.html#soupsavvy.models.Default.__init__">(Default method)</a>, <a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Default.__init__">[1]</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.FirstOfType.__init__">(FirstOfType method)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.FirstOfType.__init__">[1]</a>
+        <li><a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper.__init__">(FieldWrapper method)</a>
 </li>
-        <li><a href="soupsavvy.html#soupsavvy.HasSelector.__init__">(HasSelector method)</a>, <a href="soupsavvy.tags.components.html#soupsavvy.tags.components.HasSelector.__init__">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.HasSelector.__init__">[2]</a>
+        <li><a href="soupsavvy.html#soupsavvy.HasSelector.__init__">(HasSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.HasSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.HasSelector.__init__">[2]</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.LastChild.__init__">(LastChild method)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.LastChild.__init__">[1]</a>
+        <li><a href="soupsavvy.models.base.html#soupsavvy.models.base.ModelMeta.__init__">(ModelMeta method)</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.LastOfType.__init__">(LastOfType method)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.LastOfType.__init__">[1]</a>
+        <li><a href="soupsavvy.html#soupsavvy.NotSelector.__init__">(NotSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.NotSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.NotSelector.__init__">[2]</a>
 </li>
-        <li><a href="soupsavvy.tags.base.html#soupsavvy.tags.base.MultipleSoupSelector.__init__">(MultipleSoupSelector method)</a>
+        <li><a href="soupsavvy.selectors.nth.nth_utils.html#soupsavvy.selectors.nth.nth_utils.NthGenerator.__init__">(NthGenerator method)</a>
 </li>
-        <li><a href="soupsavvy.html#soupsavvy.NotSelector.__init__">(NotSelector method)</a>, <a href="soupsavvy.tags.components.html#soupsavvy.tags.components.NotSelector.__init__">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.NotSelector.__init__">[2]</a>
+        <li><a href="soupsavvy.selectors.nth.html#soupsavvy.selectors.nth.OnlyOfSelector.__init__">(OnlyOfSelector method)</a>, <a href="soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.nth_soup_selector.OnlyOfSelector.__init__">[1]</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthChild.__init__">(NthChild method)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthChild.__init__">[1]</a>
+        <li><a href="soupsavvy.operations.general.html#soupsavvy.operations.general.Operation.__init__">(Operation method)</a>, <a href="soupsavvy.operations.html#soupsavvy.operations.Operation.__init__">[1]</a>
 </li>
-        <li><a href="soupsavvy.tags.css.nth.nth_utils.html#soupsavvy.tags.css.nth.nth_utils.NthGenerator.__init__">(NthGenerator method)</a>
+        <li><a href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationPipeline.__init__">(OperationPipeline method)</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthLastChild.__init__">(NthLastChild method)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthLastChild.__init__">[1]</a>
+        <li><a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.OperationWrapper.__init__">(OperationWrapper method)</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthLastOfType.__init__">(NthLastOfType method)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthLastOfType.__init__">[1]</a>
+        <li><a href="soupsavvy.html#soupsavvy.PatternSelector.__init__">(PatternSelector method)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.PatternSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.PatternSelector.__init__">[2]</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthOfType.__init__">(NthOfType method)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthOfType.__init__">[1]</a>
+        <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.RandomTemplate.__init__">(RandomTemplate method)</a>, <a href="soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.templates.RandomTemplate.__init__">[1]</a>, <a href="soupsavvy.testing.html#soupsavvy.testing.RandomTemplate.__init__">[2]</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.OnlyChild.__init__">(OnlyChild method)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.OnlyChild.__init__">[1]</a>
+        <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeSelector.__init__">(RelativeSelector method)</a>
 </li>
-        <li><a href="soupsavvy.tags.css.nth.html#soupsavvy.tags.css.nth.OnlyOfSelector.__init__">(OnlyOfSelector method)</a>, <a href="soupsavvy.tags.css.nth.nth_soup_selector.html#soupsavvy.tags.css.nth.nth_soup_selector.OnlyOfSelector.__init__">[1]</a>
+        <li><a href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.__init__">(SelectionPipeline method)</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.OnlyOfType.__init__">(OnlyOfType method)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.OnlyOfType.__init__">[1]</a>
+        <li><a href="soupsavvy.html#soupsavvy.SelectorList.__init__">(SelectorList method)</a>, <a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.SelectorList.__init__">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.SelectorList.__init__">[2]</a>
 </li>
-        <li><a href="soupsavvy.html#soupsavvy.PatternSelector.__init__">(PatternSelector method)</a>, <a href="soupsavvy.tags.components.html#soupsavvy.tags.components.PatternSelector.__init__">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.PatternSelector.__init__">[2]</a>
+        <li><a href="soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.generators.TagGenerator.__init__">(TagGenerator method)</a>, <a href="soupsavvy.testing.generators.html#soupsavvy.testing.generators.TagGenerator.__init__">[1]</a>, <a href="soupsavvy.testing.html#soupsavvy.testing.TagGenerator.__init__">[2]</a>
 </li>
-        <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.RandomTemplate.__init__">(RandomTemplate method)</a>, <a href="soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.templates.RandomTemplate.__init__">[1]</a>
+        <li><a href="soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.TagIterator.__init__">(TagIterator method)</a>
 </li>
-        <li><a href="soupsavvy.tags.relative.html#soupsavvy.tags.relative.RelativeSelector.__init__">(RelativeSelector method)</a>
+        <li><a href="soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.TagResultSet.__init__">(TagResultSet method)</a>
 </li>
-        <li><a href="soupsavvy.html#soupsavvy.SelectorList.__init__">(SelectorList method)</a>, <a href="soupsavvy.tags.combinators.html#soupsavvy.tags.combinators.SelectorList.__init__">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.SelectorList.__init__">[2]</a>
+        <li><a href="soupsavvy.operations.general.html#soupsavvy.operations.general.Text.__init__">(Text method)</a>, <a href="soupsavvy.operations.html#soupsavvy.operations.Text.__init__">[1]</a>
 </li>
-        <li><a href="soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.generators.TagGenerator.__init__">(TagGenerator method)</a>, <a href="soupsavvy.testing.generators.html#soupsavvy.testing.generators.TagGenerator.__init__">[1]</a>
+        <li><a href="soupsavvy.html#soupsavvy.TypeSelector.__init__">(TypeSelector method)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.TypeSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.TypeSelector.__init__">[2]</a>
 </li>
-        <li><a href="soupsavvy.tags.tag_utils.html#soupsavvy.tags.tag_utils.TagIterator.__init__">(TagIterator method)</a>
+        <li><a href="soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.UniqueTag.__init__">(UniqueTag method)</a>
 </li>
-        <li><a href="soupsavvy.tags.tag_utils.html#soupsavvy.tags.tag_utils.TagResultSet.__init__">(TagResultSet method)</a>
+        <li><a href="soupsavvy.html#soupsavvy.UniversalSelector.__init__">(UniversalSelector method)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.UniversalSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.UniversalSelector.__init__">[2]</a>
 </li>
-        <li><a href="soupsavvy.html#soupsavvy.TagSelector.__init__">(TagSelector method)</a>, <a href="soupsavvy.tags.components.html#soupsavvy.tags.components.TagSelector.__init__">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.TagSelector.__init__">[2]</a>
-</li>
-        <li><a href="soupsavvy.tags.tag_utils.html#soupsavvy.tags.tag_utils.UniqueTag.__init__">(UniqueTag method)</a>
+        <li><a href="soupsavvy.html#soupsavvy.XORSelector.__init__">(XORSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.XORSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.XORSelector.__init__">[2]</a>
 </li>
       </ul></li>
   </ul></td>
@@ -182,46 +189,56 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.and_">and_() (in module soupsavvy.tags.css)</a>
+      <li><a href="soupsavvy.models.html#soupsavvy.models.All">All (class in soupsavvy.models)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.api.html#soupsavvy.tags.css.api.and_">(in module soupsavvy.tags.css.api)</a>
+        <li><a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.All">(class in soupsavvy.models.wrappers)</a>
 </li>
       </ul></li>
+      <li><a href="soupsavvy.html#soupsavvy.AncestorCombinator">AncestorCombinator (class in soupsavvy)</a>
+
+      <ul>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.AncestorCombinator">(class in soupsavvy.selectors)</a>
+</li>
+        <li><a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.AncestorCombinator">(class in soupsavvy.selectors.combinators)</a>
+</li>
+      </ul></li>
+      <li><a href="soupsavvy.api.html#soupsavvy.api.and_">and_() (in module soupsavvy.api)</a>
+</li>
       <li><a href="soupsavvy.html#soupsavvy.AndSelector">AndSelector (class in soupsavvy)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.html#soupsavvy.tags.AndSelector">(class in soupsavvy.tags)</a>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.AndSelector">(class in soupsavvy.selectors)</a>
 </li>
-        <li><a href="soupsavvy.tags.components.html#soupsavvy.tags.components.AndSelector">(class in soupsavvy.tags.components)</a>
-</li>
-      </ul></li>
-      <li><a href="soupsavvy.html#soupsavvy.AnyTagSelector">AnyTagSelector (class in soupsavvy)</a>
-
-      <ul>
-        <li><a href="soupsavvy.tags.html#soupsavvy.tags.AnyTagSelector">(class in soupsavvy.tags)</a>
-</li>
-        <li><a href="soupsavvy.tags.components.html#soupsavvy.tags.components.AnyTagSelector">(class in soupsavvy.tags.components)</a>
+        <li><a href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.AndSelector">(class in soupsavvy.selectors.logical)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.testing.generators.html#soupsavvy.testing.generators.AttributeGenerator">AttributeGenerator (class in soupsavvy.testing.generators)</a>
+      <li><a href="soupsavvy.html#soupsavvy.AnyTagSelector">AnyTagSelector (class in soupsavvy)</a>
 
       <ul>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.AnyTagSelector">(class in soupsavvy.selectors)</a>
+</li>
+        <li><a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.AnyTagSelector">(class in soupsavvy.selectors.general)</a>
+</li>
+      </ul></li>
+      <li><a href="soupsavvy.testing.html#soupsavvy.testing.AttributeGenerator">AttributeGenerator (class in soupsavvy.testing)</a>
+
+      <ul>
+        <li><a href="soupsavvy.testing.generators.html#soupsavvy.testing.generators.AttributeGenerator">(class in soupsavvy.testing.generators)</a>
+</li>
         <li><a href="soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.generators.AttributeGenerator">(class in soupsavvy.testing.generators.generators)</a>
 </li>
       </ul></li>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.AttributeParsingError">AttributeParsingError</a>
 </li>
-      <li><a href="soupsavvy.html#soupsavvy.TagSelector.attributes">attributes (TagSelector attribute)</a>, <a href="soupsavvy.tags.components.html#soupsavvy.tags.components.TagSelector.attributes">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.TagSelector.attributes">[2]</a>
-</li>
       <li><a href="soupsavvy.html#soupsavvy.AttributeSelector">AttributeSelector (class in soupsavvy)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.html#soupsavvy.tags.AttributeSelector">(class in soupsavvy.tags)</a>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.AttributeSelector">(class in soupsavvy.selectors)</a>
 </li>
-        <li><a href="soupsavvy.tags.attributes.html#soupsavvy.tags.attributes.AttributeSelector">(class in soupsavvy.tags.attributes)</a>
+        <li><a href="soupsavvy.selectors.attributes.html#soupsavvy.selectors.attributes.AttributeSelector">(class in soupsavvy.selectors.attributes)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -230,61 +247,103 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.combinators.html#soupsavvy.tags.combinators.BaseCombinator">BaseCombinator (class in soupsavvy.tags.combinators)</a>
+      <li><a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.BaseAncestorCombinator">BaseAncestorCombinator (class in soupsavvy.selectors.combinators)</a>
+</li>
+      <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.BaseAncestorSelector">BaseAncestorSelector (class in soupsavvy.selectors.relative)</a>
+</li>
+      <li><a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.BaseCombinator">BaseCombinator (class in soupsavvy.selectors.combinators)</a>
 </li>
       <li><a href="soupsavvy.testing.generators.base.html#soupsavvy.testing.generators.base.BaseGenerator">BaseGenerator (class in soupsavvy.testing.generators.base)</a>
 </li>
+      <li><a href="soupsavvy.models.html#soupsavvy.models.BaseModel">BaseModel (class in soupsavvy.models)</a>
+
+      <ul>
+        <li><a href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel">(class in soupsavvy.models.base)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.css.nth.nth_soup_selector.html#soupsavvy.tags.css.nth.nth_soup_selector.BaseNthOfSelector">BaseNthOfSelector (class in soupsavvy.tags.css.nth.nth_soup_selector)</a>
+      <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.BaseModelException">BaseModelException</a>
 </li>
-      <li><a href="soupsavvy.tags.relative.html#soupsavvy.tags.relative.BaseRelativeSibling">BaseRelativeSibling (class in soupsavvy.tags.relative)</a>
+      <li><a href="soupsavvy.operations.base.html#soupsavvy.operations.base.BaseOperation">BaseOperation (class in soupsavvy.operations.base)</a>
 </li>
-      <li><a href="soupsavvy.testing.generators.templates.base.html#soupsavvy.testing.generators.templates.base.BaseTemplate">BaseTemplate (class in soupsavvy.testing.generators.templates.base)</a>
+      <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.BaseRelativeSibling">BaseRelativeSibling (class in soupsavvy.selectors.relative)</a>
 </li>
+      <li><a href="soupsavvy.testing.html#soupsavvy.testing.BaseTemplate">BaseTemplate (class in soupsavvy.testing)</a>
+
+      <ul>
+        <li><a href="soupsavvy.testing.generators.templates.base.html#soupsavvy.testing.generators.templates.base.BaseTemplate">(class in soupsavvy.testing.generators.templates.base)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.operations.base.html#soupsavvy.operations.base.check_operation">check_operation() (in module soupsavvy.operations.base)</a>
+</li>
+      <li><a href="soupsavvy.selectors.base.html#soupsavvy.selectors.base.check_selector">check_selector() (in module soupsavvy.selectors.base)</a>
+</li>
       <li><a href="soupsavvy.html#soupsavvy.ChildCombinator">ChildCombinator (class in soupsavvy)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.html#soupsavvy.tags.ChildCombinator">(class in soupsavvy.tags)</a>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.ChildCombinator">(class in soupsavvy.selectors)</a>
 </li>
-        <li><a href="soupsavvy.tags.combinators.html#soupsavvy.tags.combinators.ChildCombinator">(class in soupsavvy.tags.combinators)</a>
+        <li><a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.ChildCombinator">(class in soupsavvy.selectors.combinators)</a>
 </li>
       </ul></li>
-      <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.ChoiceTemplate">ChoiceTemplate (class in soupsavvy.testing.generators.templates)</a>
+      <li><a href="soupsavvy.testing.html#soupsavvy.testing.ChoiceTemplate">ChoiceTemplate (class in soupsavvy.testing)</a>
 
       <ul>
+        <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.ChoiceTemplate">(class in soupsavvy.testing.generators.templates)</a>
+</li>
         <li><a href="soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.templates.ChoiceTemplate">(class in soupsavvy.testing.generators.templates.templates)</a>
 </li>
       </ul></li>
-      <li><a href="soupsavvy.tags.html#soupsavvy.tags.ClassSelector">ClassSelector (class in soupsavvy.tags)</a>
+      <li><a href="soupsavvy.html#soupsavvy.ClassSelector">ClassSelector (class in soupsavvy)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.attributes.html#soupsavvy.tags.attributes.ClassSelector">(class in soupsavvy.tags.attributes)</a>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.ClassSelector">(class in soupsavvy.selectors)</a>
+</li>
+        <li><a href="soupsavvy.selectors.attributes.html#soupsavvy.selectors.attributes.ClassSelector">(class in soupsavvy.selectors.attributes)</a>
+</li>
+      </ul></li>
+      <li><a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.BaseCombinator.COMMUTATIVE">COMMUTATIVE (BaseCombinator attribute)</a>
+
+      <ul>
+        <li><a href="soupsavvy.selectors.base.html#soupsavvy.selectors.base.CompositeSoupSelector.COMMUTATIVE">(CompositeSoupSelector attribute)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.Comparable">Comparable (class in soupsavvy.interfaces)</a>
+</li>
+      <li><a href="soupsavvy.selectors.base.html#soupsavvy.selectors.base.CompositeSoupSelector">CompositeSoupSelector (class in soupsavvy.selectors.base)</a>
+</li>
       <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.ConstantTemplate">ConstantTemplate (class in soupsavvy.testing.generators.templates)</a>
 
       <ul>
         <li><a href="soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.templates.ConstantTemplate">(class in soupsavvy.testing.generators.templates.templates)</a>
 </li>
       </ul></li>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.CSS">CSS (class in soupsavvy.tags.css)</a>
+      <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.CSS">CSS (class in soupsavvy.selectors.css)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.CSS">(class in soupsavvy.tags.css.tag_selectors)</a>
+        <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.CSS">(class in soupsavvy.selectors.css.selectors)</a>
 </li>
       </ul></li>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.CSS.css">css (CSS attribute)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.CSS.css">[1]</a>
+      <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.CSSSoupSelector.css">css (CSSSoupSelector property)</a>
+
+      <ul>
+        <li><a href="soupsavvy.selectors.base.html#soupsavvy.selectors.base.SelectableCSS.css">(SelectableCSS property)</a>
 </li>
-      <li><a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.CSSSoupSelector">CSSSoupSelector (class in soupsavvy.tags.css.tag_selectors)</a>
+        <li><a href="soupsavvy.html#soupsavvy.TypeSelector.css">(TypeSelector property)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.TypeSelector.css">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.TypeSelector.css">[2]</a>
+</li>
+        <li><a href="soupsavvy.html#soupsavvy.UniversalSelector.css">(UniversalSelector property)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.UniversalSelector.css">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.UniversalSelector.css">[2]</a>
+</li>
+      </ul></li>
+      <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.CSSSoupSelector">CSSSoupSelector (class in soupsavvy.selectors.css.selectors)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -292,20 +351,26 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.models.html#soupsavvy.models.Default">Default (class in soupsavvy.models)</a>
+
+      <ul>
+        <li><a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Default">(class in soupsavvy.models.wrappers)</a>
+</li>
+      </ul></li>
       <li><a href="soupsavvy.utils.deprecation.html#soupsavvy.utils.deprecation.deprecated">deprecated() (in module soupsavvy.utils.deprecation)</a>
 </li>
       <li><a href="soupsavvy.utils.deprecation.html#soupsavvy.utils.deprecation.deprecated_class">deprecated_class() (in module soupsavvy.utils.deprecation)</a>
 </li>
-      <li><a href="soupsavvy.utils.deprecation.html#soupsavvy.utils.deprecation.deprecated_function">deprecated_function() (in module soupsavvy.utils.deprecation)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.utils.deprecation.html#soupsavvy.utils.deprecation.deprecated_function">deprecated_function() (in module soupsavvy.utils.deprecation)</a>
+</li>
       <li><a href="soupsavvy.html#soupsavvy.DescendantCombinator">DescendantCombinator (class in soupsavvy)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.html#soupsavvy.tags.DescendantCombinator">(class in soupsavvy.tags)</a>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.DescendantCombinator">(class in soupsavvy.selectors)</a>
 </li>
-        <li><a href="soupsavvy.tags.combinators.html#soupsavvy.tags.combinators.DescendantCombinator">(class in soupsavvy.tags.combinators)</a>
+        <li><a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.DescendantCombinator">(class in soupsavvy.selectors.combinators)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -314,14 +379,12 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.Empty">Empty (class in soupsavvy.tags.css)</a>
+      <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.Empty">Empty (class in soupsavvy.selectors.css)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.Empty">(class in soupsavvy.tags.css.tag_selectors)</a>
+        <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.Empty">(class in soupsavvy.selectors.css.selectors)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.EmptyNameException">EmptyNameException</a>
 </li>
       <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.EmptyTemplate">EmptyTemplate (class in soupsavvy.testing.generators.templates)</a>
@@ -331,57 +394,109 @@
 </li>
       </ul></li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.Executable">Executable (class in soupsavvy.interfaces)</a>
+</li>
+      <li><a href="soupsavvy.operations.base.html#soupsavvy.operations.base.BaseOperation.execute">execute() (BaseOperation method)</a>
+
+      <ul>
+        <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.Executable.execute">(Executable method)</a>
+</li>
+      </ul></li>
+  </ul></td>
 </tr></table>
 
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.tag_utils.html#soupsavvy.tags.tag_utils.TagResultSet.fetch">fetch() (TagResultSet method)</a>
+      <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.FailedOperationExecution">FailedOperationExecution</a>
 </li>
-      <li><a href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector.find">find() (SoupSelector method)</a>
+      <li><a href="soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.TagResultSet.fetch">fetch() (TagResultSet method)</a>
 </li>
-      <li><a href="soupsavvy.html#soupsavvy.AndSelector.find_all">find_all() (AndSelector method)</a>, <a href="soupsavvy.tags.components.html#soupsavvy.tags.components.AndSelector.find_all">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.AndSelector.find_all">[2]</a>
+      <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.FieldExtractionException">FieldExtractionException</a>
+</li>
+      <li><a href="soupsavvy.models.base.html#soupsavvy.models.base.ModelMeta.fields">fields (ModelMeta property)</a>
+</li>
+      <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.FieldsNotDefinedException">FieldsNotDefinedException</a>
+</li>
+      <li><a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper">FieldWrapper (class in soupsavvy.models.wrappers)</a>
+</li>
+      <li><a href="soupsavvy.models.html#soupsavvy.models.All.find">find() (All method)</a>, <a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.All.find">[1]</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.combinators.html#soupsavvy.tags.combinators.BaseCombinator.find_all">(BaseCombinator method)</a>
+        <li><a href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.find">(BaseModel class method)</a>, <a href="soupsavvy.models.html#soupsavvy.models.BaseModel.find">[1]</a>
 </li>
-        <li><a href="soupsavvy.tags.css.nth.nth_soup_selector.html#soupsavvy.tags.css.nth.nth_soup_selector.BaseNthOfSelector.find_all">(BaseNthOfSelector method)</a>
+        <li><a href="soupsavvy.models.html#soupsavvy.models.Default.find">(Default method)</a>, <a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Default.find">[1]</a>
 </li>
-        <li><a href="soupsavvy.tags.relative.html#soupsavvy.tags.relative.BaseRelativeSibling.find_all">(BaseRelativeSibling method)</a>
+        <li><a href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationSearcherMixin.find">(OperationSearcherMixin method)</a>
 </li>
-        <li><a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.CSSSoupSelector.find_all">(CSSSoupSelector method)</a>
+        <li><a href="soupsavvy.models.html#soupsavvy.models.Required.find">(Required method)</a>, <a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Required.find">[1]</a>
 </li>
-        <li><a href="soupsavvy.html#soupsavvy.HasSelector.find_all">(HasSelector method)</a>, <a href="soupsavvy.tags.components.html#soupsavvy.tags.components.HasSelector.find_all">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.HasSelector.find_all">[2]</a>
+        <li><a href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.find">(SelectionPipeline method)</a>
 </li>
-        <li><a href="soupsavvy.html#soupsavvy.NotSelector.find_all">(NotSelector method)</a>, <a href="soupsavvy.tags.components.html#soupsavvy.tags.components.NotSelector.find_all">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.NotSelector.find_all">[2]</a>
+        <li><a href="soupsavvy.selectors.base.html#soupsavvy.selectors.base.SoupSelector.find">(SoupSelector method)</a>
 </li>
-        <li><a href="soupsavvy.tags.css.nth.html#soupsavvy.tags.css.nth.OnlyOfSelector.find_all">(OnlyOfSelector method)</a>, <a href="soupsavvy.tags.css.nth.nth_soup_selector.html#soupsavvy.tags.css.nth.nth_soup_selector.OnlyOfSelector.find_all">[1]</a>
+        <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher.find">(TagSearcher method)</a>
 </li>
-        <li><a href="soupsavvy.html#soupsavvy.PatternSelector.find_all">(PatternSelector method)</a>, <a href="soupsavvy.tags.components.html#soupsavvy.tags.components.PatternSelector.find_all">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.PatternSelector.find_all">[2]</a>
+      </ul></li>
+      <li><a href="soupsavvy.html#soupsavvy.AndSelector.find_all">find_all() (AndSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.AndSelector.find_all">[1]</a>, <a href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.AndSelector.find_all">[2]</a>
+
+      <ul>
+        <li><a href="soupsavvy.html#soupsavvy.AttributeSelector.find_all">(AttributeSelector method)</a>, <a href="soupsavvy.selectors.attributes.html#soupsavvy.selectors.attributes.AttributeSelector.find_all">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.AttributeSelector.find_all">[2]</a>
 </li>
-        <li><a href="soupsavvy.tags.relative.html#soupsavvy.tags.relative.RelativeChild.find_all">(RelativeChild method)</a>
+        <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.BaseAncestorSelector.find_all">(BaseAncestorSelector method)</a>
 </li>
-        <li><a href="soupsavvy.tags.relative.html#soupsavvy.tags.relative.RelativeDescendant.find_all">(RelativeDescendant method)</a>
+        <li><a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.BaseCombinator.find_all">(BaseCombinator method)</a>
 </li>
-        <li><a href="soupsavvy.html#soupsavvy.SelectorList.find_all">(SelectorList method)</a>, <a href="soupsavvy.tags.combinators.html#soupsavvy.tags.combinators.SelectorList.find_all">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.SelectorList.find_all">[2]</a>
+        <li><a href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.find_all">(BaseModel class method)</a>, <a href="soupsavvy.models.html#soupsavvy.models.BaseModel.find_all">[1]</a>
 </li>
-        <li><a href="soupsavvy.tags.base.html#soupsavvy.tags.base.SingleSoupSelector.find_all">(SingleSoupSelector method)</a>
+        <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.BaseRelativeSibling.find_all">(BaseRelativeSibling method)</a>
 </li>
-        <li><a href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector.find_all">(SoupSelector method)</a>
+        <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.CSSSoupSelector.find_all">(CSSSoupSelector method)</a>
+</li>
+        <li><a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper.find_all">(FieldWrapper method)</a>
+</li>
+        <li><a href="soupsavvy.html#soupsavvy.HasSelector.find_all">(HasSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.HasSelector.find_all">[1]</a>, <a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.HasSelector.find_all">[2]</a>
+</li>
+        <li><a href="soupsavvy.html#soupsavvy.NotSelector.find_all">(NotSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.NotSelector.find_all">[1]</a>, <a href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.NotSelector.find_all">[2]</a>
+</li>
+        <li><a href="soupsavvy.selectors.nth.html#soupsavvy.selectors.nth.OnlyOfSelector.find_all">(OnlyOfSelector method)</a>, <a href="soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.nth_soup_selector.OnlyOfSelector.find_all">[1]</a>
+</li>
+        <li><a href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationSearcherMixin.find_all">(OperationSearcherMixin method)</a>
+</li>
+        <li><a href="soupsavvy.html#soupsavvy.PatternSelector.find_all">(PatternSelector method)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.PatternSelector.find_all">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.PatternSelector.find_all">[2]</a>
+</li>
+        <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeChild.find_all">(RelativeChild method)</a>
+</li>
+        <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeDescendant.find_all">(RelativeDescendant method)</a>
+</li>
+        <li><a href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.find_all">(SelectionPipeline method)</a>
+</li>
+        <li><a href="soupsavvy.html#soupsavvy.SelectorList.find_all">(SelectorList method)</a>, <a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.SelectorList.find_all">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.SelectorList.find_all">[2]</a>
+</li>
+        <li><a href="soupsavvy.selectors.base.html#soupsavvy.selectors.base.SoupSelector.find_all">(SoupSelector method)</a>
+</li>
+        <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher.find_all">(TagSearcher method)</a>
+</li>
+        <li><a href="soupsavvy.html#soupsavvy.TypeSelector.find_all">(TypeSelector method)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.TypeSelector.find_all">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.TypeSelector.find_all">[2]</a>
+</li>
+        <li><a href="soupsavvy.html#soupsavvy.UniversalSelector.find_all">(UniversalSelector method)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.UniversalSelector.find_all">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.UniversalSelector.find_all">[2]</a>
+</li>
+        <li><a href="soupsavvy.html#soupsavvy.XORSelector.find_all">(XORSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.XORSelector.find_all">[1]</a>, <a href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.XORSelector.find_all">[2]</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.FirstChild">FirstChild (class in soupsavvy.tags.css)</a>
+      <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.FirstChild">FirstChild (class in soupsavvy.selectors.css)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.FirstChild">(class in soupsavvy.tags.css.tag_selectors)</a>
+        <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.FirstChild">(class in soupsavvy.selectors.css.selectors)</a>
 </li>
       </ul></li>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.FirstOfType">FirstOfType (class in soupsavvy.tags.css)</a>
+      <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.FirstOfType">FirstOfType (class in soupsavvy.selectors.css)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.FirstOfType">(class in soupsavvy.tags.css.tag_selectors)</a>
+        <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.FirstOfType">(class in soupsavvy.selectors.css.selectors)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -390,24 +505,24 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.generators.AttributeGenerator.generate">generate() (AttributeGenerator method)</a>, <a href="soupsavvy.testing.generators.html#soupsavvy.testing.generators.AttributeGenerator.generate">[1]</a>
+      <li><a href="soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.generators.AttributeGenerator.generate">generate() (AttributeGenerator method)</a>, <a href="soupsavvy.testing.generators.html#soupsavvy.testing.generators.AttributeGenerator.generate">[1]</a>, <a href="soupsavvy.testing.html#soupsavvy.testing.AttributeGenerator.generate">[2]</a>
 
       <ul>
         <li><a href="soupsavvy.testing.generators.base.html#soupsavvy.testing.generators.base.BaseGenerator.generate">(BaseGenerator method)</a>
 </li>
-        <li><a href="soupsavvy.testing.generators.templates.base.html#soupsavvy.testing.generators.templates.base.BaseTemplate.generate">(BaseTemplate method)</a>
+        <li><a href="soupsavvy.testing.generators.templates.base.html#soupsavvy.testing.generators.templates.base.BaseTemplate.generate">(BaseTemplate method)</a>, <a href="soupsavvy.testing.html#soupsavvy.testing.BaseTemplate.generate">[1]</a>
 </li>
-        <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.ChoiceTemplate.generate">(ChoiceTemplate method)</a>, <a href="soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.templates.ChoiceTemplate.generate">[1]</a>
+        <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.ChoiceTemplate.generate">(ChoiceTemplate method)</a>, <a href="soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.templates.ChoiceTemplate.generate">[1]</a>, <a href="soupsavvy.testing.html#soupsavvy.testing.ChoiceTemplate.generate">[2]</a>
 </li>
         <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.ConstantTemplate.generate">(ConstantTemplate method)</a>, <a href="soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.templates.ConstantTemplate.generate">[1]</a>
 </li>
         <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.EmptyTemplate.generate">(EmptyTemplate method)</a>, <a href="soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.templates.EmptyTemplate.generate">[1]</a>
 </li>
-        <li><a href="soupsavvy.tags.css.nth.nth_utils.html#soupsavvy.tags.css.nth.nth_utils.NthGenerator.generate">(NthGenerator method)</a>
+        <li><a href="soupsavvy.selectors.nth.nth_utils.html#soupsavvy.selectors.nth.nth_utils.NthGenerator.generate">(NthGenerator method)</a>
 </li>
-        <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.RandomTemplate.generate">(RandomTemplate method)</a>, <a href="soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.templates.RandomTemplate.generate">[1]</a>
+        <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.RandomTemplate.generate">(RandomTemplate method)</a>, <a href="soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.templates.RandomTemplate.generate">[1]</a>, <a href="soupsavvy.testing.html#soupsavvy.testing.RandomTemplate.generate">[2]</a>
 </li>
-        <li><a href="soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.generators.TagGenerator.generate">(TagGenerator method)</a>, <a href="soupsavvy.testing.generators.html#soupsavvy.testing.generators.TagGenerator.generate">[1]</a>
+        <li><a href="soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.generators.TagGenerator.generate">(TagGenerator method)</a>, <a href="soupsavvy.testing.generators.html#soupsavvy.testing.generators.TagGenerator.generate">[1]</a>, <a href="soupsavvy.testing.html#soupsavvy.testing.TagGenerator.generate">[2]</a>
 </li>
       </ul></li>
   </ul></td>
@@ -416,22 +531,20 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.has">has() (in module soupsavvy.tags.css)</a>
-
-      <ul>
-        <li><a href="soupsavvy.tags.css.api.html#soupsavvy.tags.css.api.has">(in module soupsavvy.tags.css.api)</a>
+      <li><a href="soupsavvy.api.html#soupsavvy.api.has">has() (in module soupsavvy.api)</a>
 </li>
-      </ul></li>
       <li><a href="soupsavvy.html#soupsavvy.HasSelector">HasSelector (class in soupsavvy)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.html#soupsavvy.tags.HasSelector">(class in soupsavvy.tags)</a>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.HasSelector">(class in soupsavvy.selectors)</a>
 </li>
-        <li><a href="soupsavvy.tags.components.html#soupsavvy.tags.components.HasSelector">(class in soupsavvy.tags.components)</a>
+        <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.HasSelector">(class in soupsavvy.selectors.relative)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.operations.general.html#soupsavvy.operations.general.Href">Href (class in soupsavvy.operations.general)</a>
+</li>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.HTMLGeneratorException">HTMLGeneratorException</a>
 </li>
   </ul></td>
@@ -440,44 +553,42 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.html#soupsavvy.tags.IdSelector">IdSelector (class in soupsavvy.tags)</a>
+      <li><a href="soupsavvy.html#soupsavvy.IdSelector">IdSelector (class in soupsavvy)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.attributes.html#soupsavvy.tags.attributes.IdSelector">(class in soupsavvy.tags.attributes)</a>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.IdSelector">(class in soupsavvy.selectors)</a>
+</li>
+        <li><a href="soupsavvy.selectors.attributes.html#soupsavvy.selectors.attributes.IdSelector">(class in soupsavvy.selectors.attributes)</a>
 </li>
       </ul></li>
-      <li><a href="soupsavvy.tags.tag_utils.html#soupsavvy.tags.tag_utils.TagIterator.include_self">include_self (TagIterator attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.TagIterator.include_self">include_self (TagIterator attribute)</a>
+</li>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.InvalidCSSSelector">InvalidCSSSelector</a>
 </li>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.InvalidTemplateException">InvalidTemplateException</a>
 </li>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.is_">is_() (in module soupsavvy.tags.css)</a>
-
-      <ul>
-        <li><a href="soupsavvy.tags.css.api.html#soupsavvy.tags.css.api.is_">(in module soupsavvy.tags.css.api)</a>
+      <li><a href="soupsavvy.api.html#soupsavvy.api.is_">is_() (in module soupsavvy.api)</a>
 </li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.LastChild">LastChild (class in soupsavvy.tags.css)</a>
+      <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.LastChild">LastChild (class in soupsavvy.selectors.css)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.LastChild">(class in soupsavvy.tags.css.tag_selectors)</a>
+        <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.LastChild">(class in soupsavvy.selectors.css.selectors)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.LastOfType">LastOfType (class in soupsavvy.tags.css)</a>
+      <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.LastOfType">LastOfType (class in soupsavvy.selectors.css)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.LastOfType">(class in soupsavvy.tags.css.tag_selectors)</a>
+        <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.LastOfType">(class in soupsavvy.selectors.css.selectors)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -486,39 +597,63 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.MissingFieldsException">MissingFieldsException</a>
+</li>
+      <li><a href="soupsavvy.models.base.html#soupsavvy.models.base.ModelMeta">ModelMeta (class in soupsavvy.models.base)</a>
+</li>
+      <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.ModelScopeNotFoundException">ModelScopeNotFoundException</a>
+</li>
       <li>
     module
 
       <ul>
         <li><a href="soupsavvy.html#module-soupsavvy">soupsavvy</a>
 </li>
+        <li><a href="soupsavvy.api.html#module-soupsavvy.api">soupsavvy.api</a>
+</li>
         <li><a href="soupsavvy.exceptions.html#module-soupsavvy.exceptions">soupsavvy.exceptions</a>
 </li>
-        <li><a href="soupsavvy.tags.html#module-soupsavvy.tags">soupsavvy.tags</a>
+        <li><a href="soupsavvy.interfaces.html#module-soupsavvy.interfaces">soupsavvy.interfaces</a>
 </li>
-        <li><a href="soupsavvy.tags.attributes.html#module-soupsavvy.tags.attributes">soupsavvy.tags.attributes</a>
+        <li><a href="soupsavvy.models.html#module-soupsavvy.models">soupsavvy.models</a>
 </li>
-        <li><a href="soupsavvy.tags.base.html#module-soupsavvy.tags.base">soupsavvy.tags.base</a>
+        <li><a href="soupsavvy.models.base.html#module-soupsavvy.models.base">soupsavvy.models.base</a>
 </li>
-        <li><a href="soupsavvy.tags.combinators.html#module-soupsavvy.tags.combinators">soupsavvy.tags.combinators</a>
+        <li><a href="soupsavvy.models.wrappers.html#module-soupsavvy.models.wrappers">soupsavvy.models.wrappers</a>
 </li>
-        <li><a href="soupsavvy.tags.components.html#module-soupsavvy.tags.components">soupsavvy.tags.components</a>
+        <li><a href="soupsavvy.operations.html#module-soupsavvy.operations">soupsavvy.operations</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#module-soupsavvy.tags.css">soupsavvy.tags.css</a>
+        <li><a href="soupsavvy.operations.base.html#module-soupsavvy.operations.base">soupsavvy.operations.base</a>
 </li>
-        <li><a href="soupsavvy.tags.css.api.html#module-soupsavvy.tags.css.api">soupsavvy.tags.css.api</a>
+        <li><a href="soupsavvy.operations.general.html#module-soupsavvy.operations.general">soupsavvy.operations.general</a>
 </li>
-        <li><a href="soupsavvy.tags.css.nth.html#module-soupsavvy.tags.css.nth">soupsavvy.tags.css.nth</a>
+        <li><a href="soupsavvy.operations.selection_pipeline.html#module-soupsavvy.operations.selection_pipeline">soupsavvy.operations.selection_pipeline</a>
 </li>
-        <li><a href="soupsavvy.tags.css.nth.nth_soup_selector.html#module-soupsavvy.tags.css.nth.nth_soup_selector">soupsavvy.tags.css.nth.nth_soup_selector</a>
+        <li><a href="soupsavvy.selectors.html#module-soupsavvy.selectors">soupsavvy.selectors</a>
 </li>
-        <li><a href="soupsavvy.tags.css.nth.nth_utils.html#module-soupsavvy.tags.css.nth.nth_utils">soupsavvy.tags.css.nth.nth_utils</a>
+        <li><a href="soupsavvy.selectors.attributes.html#module-soupsavvy.selectors.attributes">soupsavvy.selectors.attributes</a>
 </li>
-        <li><a href="soupsavvy.tags.css.tag_selectors.html#module-soupsavvy.tags.css.tag_selectors">soupsavvy.tags.css.tag_selectors</a>
+        <li><a href="soupsavvy.selectors.base.html#module-soupsavvy.selectors.base">soupsavvy.selectors.base</a>
 </li>
-        <li><a href="soupsavvy.tags.relative.html#module-soupsavvy.tags.relative">soupsavvy.tags.relative</a>
+        <li><a href="soupsavvy.selectors.combinators.html#module-soupsavvy.selectors.combinators">soupsavvy.selectors.combinators</a>
 </li>
-        <li><a href="soupsavvy.tags.tag_utils.html#module-soupsavvy.tags.tag_utils">soupsavvy.tags.tag_utils</a>
+        <li><a href="soupsavvy.selectors.css.html#module-soupsavvy.selectors.css">soupsavvy.selectors.css</a>
+</li>
+        <li><a href="soupsavvy.selectors.css.selectors.html#module-soupsavvy.selectors.css.selectors">soupsavvy.selectors.css.selectors</a>
+</li>
+        <li><a href="soupsavvy.selectors.general.html#module-soupsavvy.selectors.general">soupsavvy.selectors.general</a>
+</li>
+        <li><a href="soupsavvy.selectors.logical.html#module-soupsavvy.selectors.logical">soupsavvy.selectors.logical</a>
+</li>
+        <li><a href="soupsavvy.selectors.nth.html#module-soupsavvy.selectors.nth">soupsavvy.selectors.nth</a>
+</li>
+        <li><a href="soupsavvy.selectors.nth.nth_soup_selector.html#module-soupsavvy.selectors.nth.nth_soup_selector">soupsavvy.selectors.nth.nth_soup_selector</a>
+</li>
+        <li><a href="soupsavvy.selectors.nth.nth_utils.html#module-soupsavvy.selectors.nth.nth_utils">soupsavvy.selectors.nth.nth_utils</a>
+</li>
+        <li><a href="soupsavvy.selectors.relative.html#module-soupsavvy.selectors.relative">soupsavvy.selectors.relative</a>
+</li>
+        <li><a href="soupsavvy.selectors.tag_utils.html#module-soupsavvy.selectors.tag_utils">soupsavvy.selectors.tag_utils</a>
 </li>
         <li><a href="soupsavvy.testing.html#module-soupsavvy.testing">soupsavvy.testing</a>
 </li>
@@ -544,93 +679,83 @@
 </li>
       </ul></li>
   </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.base.html#soupsavvy.tags.base.MultipleSoupSelector">MultipleSoupSelector (class in soupsavvy.tags.base)</a>
-</li>
-  </ul></td>
 </tr></table>
 
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthChild.n">n (NthChild attribute)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthChild.n">[1]</a>
+      <li><a href="soupsavvy.html#soupsavvy.AttributeSelector.name">name (AttributeSelector attribute)</a>, <a href="soupsavvy.selectors.attributes.html#soupsavvy.selectors.attributes.AttributeSelector.name">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.AttributeSelector.name">[2]</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthLastChild.n">(NthLastChild attribute)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthLastChild.n">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthLastOfType.n">(NthLastOfType attribute)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthLastOfType.n">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthOfType.n">(NthOfType attribute)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthOfType.n">[1]</a>
+        <li><a href="soupsavvy.html#soupsavvy.TypeSelector.name">(TypeSelector attribute)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.TypeSelector.name">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.TypeSelector.name">[2]</a>
 </li>
       </ul></li>
-      <li><a href="soupsavvy.html#soupsavvy.AttributeSelector.name">name (AttributeSelector attribute)</a>, <a href="soupsavvy.tags.attributes.html#soupsavvy.tags.attributes.AttributeSelector.name">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.AttributeSelector.name">[2]</a>
-</li>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.NavigableStringException">NavigableStringException</a>
 </li>
       <li><a href="soupsavvy.html#soupsavvy.NextSiblingCombinator">NextSiblingCombinator (class in soupsavvy)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.html#soupsavvy.tags.NextSiblingCombinator">(class in soupsavvy.tags)</a>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.NextSiblingCombinator">(class in soupsavvy.selectors)</a>
 </li>
-        <li><a href="soupsavvy.tags.combinators.html#soupsavvy.tags.combinators.NextSiblingCombinator">(class in soupsavvy.tags.combinators)</a>
-</li>
-      </ul></li>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.not_">not_() (in module soupsavvy.tags.css)</a>
-
-      <ul>
-        <li><a href="soupsavvy.tags.css.api.html#soupsavvy.tags.css.api.not_">(in module soupsavvy.tags.css.api)</a>
+        <li><a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.NextSiblingCombinator">(class in soupsavvy.selectors.combinators)</a>
 </li>
       </ul></li>
+      <li><a href="soupsavvy.api.html#soupsavvy.api.not_">not_() (in module soupsavvy.api)</a>
+</li>
+      <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.NotOperationException">NotOperationException</a>
+</li>
       <li><a href="soupsavvy.html#soupsavvy.NotSelector">NotSelector (class in soupsavvy)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.html#soupsavvy.tags.NotSelector">(class in soupsavvy.tags)</a>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.NotSelector">(class in soupsavvy.selectors)</a>
 </li>
-        <li><a href="soupsavvy.tags.components.html#soupsavvy.tags.components.NotSelector">(class in soupsavvy.tags.components)</a>
+        <li><a href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.NotSelector">(class in soupsavvy.selectors.logical)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.NotSoupSelectorException">NotSoupSelectorException</a>
 </li>
+      <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.NotTagSearcherException">NotTagSearcherException</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.NotUniqueAttributesException">NotUniqueAttributesException</a>
 </li>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthChild">NthChild (class in soupsavvy.tags.css)</a>
+      <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.NthChild">NthChild (class in soupsavvy.selectors.css)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthChild">(class in soupsavvy.tags.css.tag_selectors)</a>
+        <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.NthChild">(class in soupsavvy.selectors.css.selectors)</a>
 </li>
       </ul></li>
-      <li><a href="soupsavvy.tags.css.nth.nth_utils.html#soupsavvy.tags.css.nth.nth_utils.NthGenerator">NthGenerator (class in soupsavvy.tags.css.nth.nth_utils)</a>
+      <li><a href="soupsavvy.selectors.nth.nth_utils.html#soupsavvy.selectors.nth.nth_utils.NthGenerator">NthGenerator (class in soupsavvy.selectors.nth.nth_utils)</a>
 </li>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthLastChild">NthLastChild (class in soupsavvy.tags.css)</a>
+      <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.NthLastChild">NthLastChild (class in soupsavvy.selectors.css)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthLastChild">(class in soupsavvy.tags.css.tag_selectors)</a>
-</li>
-      </ul></li>
-      <li><a href="soupsavvy.tags.css.nth.html#soupsavvy.tags.css.nth.NthLastOfSelector">NthLastOfSelector (class in soupsavvy.tags.css.nth)</a>
-
-      <ul>
-        <li><a href="soupsavvy.tags.css.nth.nth_soup_selector.html#soupsavvy.tags.css.nth.nth_soup_selector.NthLastOfSelector">(class in soupsavvy.tags.css.nth.nth_soup_selector)</a>
+        <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.NthLastChild">(class in soupsavvy.selectors.css.selectors)</a>
 </li>
       </ul></li>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthLastOfType">NthLastOfType (class in soupsavvy.tags.css)</a>
+      <li><a href="soupsavvy.selectors.nth.html#soupsavvy.selectors.nth.NthLastOfSelector">NthLastOfSelector (class in soupsavvy.selectors.nth)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthLastOfType">(class in soupsavvy.tags.css.tag_selectors)</a>
+        <li><a href="soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.nth_soup_selector.NthLastOfSelector">(class in soupsavvy.selectors.nth.nth_soup_selector)</a>
 </li>
       </ul></li>
-      <li><a href="soupsavvy.tags.css.nth.html#soupsavvy.tags.css.nth.NthOfSelector">NthOfSelector (class in soupsavvy.tags.css.nth)</a>
+      <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.NthLastOfType">NthLastOfType (class in soupsavvy.selectors.css)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.nth.nth_soup_selector.html#soupsavvy.tags.css.nth.nth_soup_selector.NthOfSelector">(class in soupsavvy.tags.css.nth.nth_soup_selector)</a>
+        <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.NthLastOfType">(class in soupsavvy.selectors.css.selectors)</a>
 </li>
       </ul></li>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthOfType">NthOfType (class in soupsavvy.tags.css)</a>
+      <li><a href="soupsavvy.selectors.nth.html#soupsavvy.selectors.nth.NthOfSelector">NthOfSelector (class in soupsavvy.selectors.nth)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthOfType">(class in soupsavvy.tags.css.tag_selectors)</a>
+        <li><a href="soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.nth_soup_selector.NthOfSelector">(class in soupsavvy.selectors.nth.nth_soup_selector)</a>
+</li>
+      </ul></li>
+      <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.NthOfType">NthOfType (class in soupsavvy.selectors.css)</a>
+
+      <ul>
+        <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.NthOfType">(class in soupsavvy.selectors.css.selectors)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -639,26 +764,48 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.css.nth.nth_utils.html#soupsavvy.tags.css.nth.nth_utils.NthGenerator.offset">offset (NthGenerator attribute)</a>
+      <li><a href="soupsavvy.selectors.nth.nth_utils.html#soupsavvy.selectors.nth.nth_utils.NthGenerator.offset">offset (NthGenerator attribute)</a>
 </li>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.OnlyChild">OnlyChild (class in soupsavvy.tags.css)</a>
+      <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.OnlyChild">OnlyChild (class in soupsavvy.selectors.css)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.OnlyChild">(class in soupsavvy.tags.css.tag_selectors)</a>
+        <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.OnlyChild">(class in soupsavvy.selectors.css.selectors)</a>
+</li>
+      </ul></li>
+      <li><a href="soupsavvy.selectors.nth.html#soupsavvy.selectors.nth.OnlyOfSelector">OnlyOfSelector (class in soupsavvy.selectors.nth)</a>
+
+      <ul>
+        <li><a href="soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.nth_soup_selector.OnlyOfSelector">(class in soupsavvy.selectors.nth.nth_soup_selector)</a>
+</li>
+      </ul></li>
+      <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.OnlyOfType">OnlyOfType (class in soupsavvy.selectors.css)</a>
+
+      <ul>
+        <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.OnlyOfType">(class in soupsavvy.selectors.css.selectors)</a>
+</li>
+      </ul></li>
+      <li><a href="soupsavvy.operations.html#soupsavvy.operations.Operation">Operation (class in soupsavvy.operations)</a>
+
+      <ul>
+        <li><a href="soupsavvy.operations.general.html#soupsavvy.operations.general.Operation">(class in soupsavvy.operations.general)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.css.nth.html#soupsavvy.tags.css.nth.OnlyOfSelector">OnlyOfSelector (class in soupsavvy.tags.css.nth)</a>
-
-      <ul>
-        <li><a href="soupsavvy.tags.css.nth.nth_soup_selector.html#soupsavvy.tags.css.nth.nth_soup_selector.OnlyOfSelector">(class in soupsavvy.tags.css.nth.nth_soup_selector)</a>
+      <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.OperationException">OperationException</a>
 </li>
-      </ul></li>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.OnlyOfType">OnlyOfType (class in soupsavvy.tags.css)</a>
+      <li><a href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationPipeline">OperationPipeline (class in soupsavvy.operations.general)</a>
+</li>
+      <li><a href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationSearcherMixin">OperationSearcherMixin (class in soupsavvy.operations.general)</a>
+</li>
+      <li><a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.OperationWrapper">OperationWrapper (class in soupsavvy.models.wrappers)</a>
+</li>
+      <li><a href="soupsavvy.api.html#soupsavvy.api.or_">or_() (in module soupsavvy.api)</a>
+</li>
+      <li><a href="soupsavvy.html#soupsavvy.OrSelector">OrSelector (in module soupsavvy)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.OnlyOfType">(class in soupsavvy.tags.css.tag_selectors)</a>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.OrSelector">(in module soupsavvy.selectors)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -667,18 +814,26 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.css.nth.nth_utils.html#soupsavvy.tags.css.nth.nth_utils.parse_nth">parse_nth() (in module soupsavvy.tags.css.nth.nth_utils)</a>
+      <li><a href="soupsavvy.html#soupsavvy.ParentCombinator">ParentCombinator (class in soupsavvy)</a>
+
+      <ul>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.ParentCombinator">(class in soupsavvy.selectors)</a>
 </li>
-      <li><a href="soupsavvy.html#soupsavvy.PatternSelector.pattern">pattern (PatternSelector attribute)</a>, <a href="soupsavvy.tags.components.html#soupsavvy.tags.components.PatternSelector.pattern">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.PatternSelector.pattern">[2]</a>
+        <li><a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.ParentCombinator">(class in soupsavvy.selectors.combinators)</a>
+</li>
+      </ul></li>
+      <li><a href="soupsavvy.selectors.nth.nth_utils.html#soupsavvy.selectors.nth.nth_utils.parse_nth">parse_nth() (in module soupsavvy.selectors.nth.nth_utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.html#soupsavvy.PatternSelector.pattern">pattern (PatternSelector attribute)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.PatternSelector.pattern">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.PatternSelector.pattern">[2]</a>
+</li>
       <li><a href="soupsavvy.html#soupsavvy.PatternSelector">PatternSelector (class in soupsavvy)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.html#soupsavvy.tags.PatternSelector">(class in soupsavvy.tags)</a>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.PatternSelector">(class in soupsavvy.selectors)</a>
 </li>
-        <li><a href="soupsavvy.tags.components.html#soupsavvy.tags.components.PatternSelector">(class in soupsavvy.tags.components)</a>
+        <li><a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.PatternSelector">(class in soupsavvy.selectors.general)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -687,31 +842,39 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.RandomTemplate">RandomTemplate (class in soupsavvy.testing.generators.templates)</a>
+      <li><a href="soupsavvy.testing.html#soupsavvy.testing.RandomTemplate">RandomTemplate (class in soupsavvy.testing)</a>
 
       <ul>
+        <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.RandomTemplate">(class in soupsavvy.testing.generators.templates)</a>
+</li>
         <li><a href="soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.templates.RandomTemplate">(class in soupsavvy.testing.generators.templates.templates)</a>
 </li>
       </ul></li>
-      <li><a href="soupsavvy.html#soupsavvy.AttributeSelector.re">re (AttributeSelector attribute)</a>, <a href="soupsavvy.tags.attributes.html#soupsavvy.tags.attributes.AttributeSelector.re">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.AttributeSelector.re">[2]</a>
-
-      <ul>
-        <li><a href="soupsavvy.html#soupsavvy.PatternSelector.re">(PatternSelector attribute)</a>, <a href="soupsavvy.tags.components.html#soupsavvy.tags.components.PatternSelector.re">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.PatternSelector.re">[2]</a>
+      <li><a href="soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.TagIterator.recursive">recursive (TagIterator attribute)</a>
 </li>
-      </ul></li>
-      <li><a href="soupsavvy.tags.tag_utils.html#soupsavvy.tags.tag_utils.TagIterator.recursive">recursive (TagIterator attribute)</a>
+      <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeAncestor">RelativeAncestor (class in soupsavvy.selectors.relative)</a>
+</li>
+      <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeChild">RelativeChild (class in soupsavvy.selectors.relative)</a>
+</li>
+      <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeDescendant">RelativeDescendant (class in soupsavvy.selectors.relative)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.relative.html#soupsavvy.tags.relative.RelativeChild">RelativeChild (class in soupsavvy.tags.relative)</a>
+      <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeNextSibling">RelativeNextSibling (class in soupsavvy.selectors.relative)</a>
 </li>
-      <li><a href="soupsavvy.tags.relative.html#soupsavvy.tags.relative.RelativeDescendant">RelativeDescendant (class in soupsavvy.tags.relative)</a>
+      <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeParent">RelativeParent (class in soupsavvy.selectors.relative)</a>
 </li>
-      <li><a href="soupsavvy.tags.relative.html#soupsavvy.tags.relative.RelativeNextSibling">RelativeNextSibling (class in soupsavvy.tags.relative)</a>
+      <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeSelector">RelativeSelector (class in soupsavvy.selectors.relative)</a>
 </li>
-      <li><a href="soupsavvy.tags.relative.html#soupsavvy.tags.relative.RelativeSelector">RelativeSelector (class in soupsavvy.tags.relative)</a>
+      <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeSubsequentSibling">RelativeSubsequentSibling (class in soupsavvy.selectors.relative)</a>
 </li>
-      <li><a href="soupsavvy.tags.relative.html#soupsavvy.tags.relative.RelativeSubsequentSibling">RelativeSubsequentSibling (class in soupsavvy.tags.relative)</a>
+      <li><a href="soupsavvy.models.html#soupsavvy.models.Required">Required (class in soupsavvy.models)</a>
+
+      <ul>
+        <li><a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Required">(class in soupsavvy.models.wrappers)</a>
+</li>
+      </ul></li>
+      <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.RequiredConstraintException">RequiredConstraintException</a>
 </li>
   </ul></td>
 </tr></table>
@@ -719,61 +882,42 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.base.html#soupsavvy.tags.base.SelectableCSS">SelectableCSS (class in soupsavvy.tags.base)</a>
+      <li><a href="soupsavvy.models.base.html#soupsavvy.models.base.ModelMeta.scope">scope (ModelMeta property)</a>
 </li>
-      <li><a href="soupsavvy.html#soupsavvy.AnyTagSelector.selector">selector (AnyTagSelector property)</a>, <a href="soupsavvy.tags.components.html#soupsavvy.tags.components.AnyTagSelector.selector">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.AnyTagSelector.selector">[2]</a>
-
-      <ul>
-        <li><a href="soupsavvy.html#soupsavvy.AttributeSelector.selector">(AttributeSelector property)</a>, <a href="soupsavvy.tags.attributes.html#soupsavvy.tags.attributes.AttributeSelector.selector">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.AttributeSelector.selector">[2]</a>
+      <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.ScopeNotDefinedException">ScopeNotDefinedException</a>
 </li>
-        <li><a href="soupsavvy.tags.attributes.html#soupsavvy.tags.attributes.ClassSelector.selector">(ClassSelector property)</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.ClassSelector.selector">[1]</a>
+      <li><a href="soupsavvy.selectors.base.html#soupsavvy.selectors.base.SelectableCSS">SelectableCSS (class in soupsavvy.selectors.base)</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.CSS.selector">(CSS property)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.CSS.selector">[1]</a>
+      <li><a href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline">SelectionPipeline (class in soupsavvy.operations.selection_pipeline)</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.Empty.selector">(Empty property)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.Empty.selector">[1]</a>
+      <li><a href="soupsavvy.selectors.base.html#soupsavvy.selectors.base.SelectableCSS.selector">selector (SelectableCSS property)</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.FirstChild.selector">(FirstChild property)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.FirstChild.selector">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.FirstOfType.selector">(FirstOfType property)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.FirstOfType.selector">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.attributes.html#soupsavvy.tags.attributes.IdSelector.selector">(IdSelector property)</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.IdSelector.selector">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.LastChild.selector">(LastChild property)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.LastChild.selector">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.LastOfType.selector">(LastOfType property)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.LastOfType.selector">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthChild.selector">(NthChild property)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthChild.selector">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthLastChild.selector">(NthLastChild property)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthLastChild.selector">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthLastOfType.selector">(NthLastOfType property)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthLastOfType.selector">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthOfType.selector">(NthOfType property)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthOfType.selector">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.OnlyChild.selector">(OnlyChild property)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.OnlyChild.selector">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.OnlyOfType.selector">(OnlyOfType property)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.OnlyOfType.selector">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.base.html#soupsavvy.tags.base.SelectableCSS.selector">(SelectableCSS property)</a>
-</li>
-        <li><a href="soupsavvy.html#soupsavvy.TagSelector.selector">(TagSelector property)</a>, <a href="soupsavvy.tags.components.html#soupsavvy.tags.components.TagSelector.selector">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.TagSelector.selector">[2]</a>
-</li>
-      </ul></li>
       <li><a href="soupsavvy.html#soupsavvy.SelectorList">SelectorList (class in soupsavvy)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.html#soupsavvy.tags.SelectorList">(class in soupsavvy.tags)</a>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.SelectorList">(class in soupsavvy.selectors)</a>
 </li>
-        <li><a href="soupsavvy.tags.combinators.html#soupsavvy.tags.combinators.SelectorList">(class in soupsavvy.tags.combinators)</a>
+        <li><a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.SelectorList">(class in soupsavvy.selectors.combinators)</a>
 </li>
       </ul></li>
-      <li><a href="soupsavvy.tags.base.html#soupsavvy.tags.base.SingleSoupSelector">SingleSoupSelector (class in soupsavvy.tags.base)</a>
+      <li><a href="soupsavvy.models.html#soupsavvy.models.SkipNone">SkipNone (class in soupsavvy.models)</a>
+
+      <ul>
+        <li><a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.SkipNone">(class in soupsavvy.models.wrappers)</a>
 </li>
+      </ul></li>
       <li>
     soupsavvy
 
       <ul>
         <li><a href="soupsavvy.html#module-soupsavvy">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.api
+
+      <ul>
+        <li><a href="soupsavvy.api.html#module-soupsavvy.api">module</a>
 </li>
       </ul></li>
       <li>
@@ -784,96 +928,152 @@
 </li>
       </ul></li>
       <li>
-    soupsavvy.tags
+    soupsavvy.interfaces
 
       <ul>
-        <li><a href="soupsavvy.tags.html#module-soupsavvy.tags">module</a>
+        <li><a href="soupsavvy.interfaces.html#module-soupsavvy.interfaces">module</a>
 </li>
       </ul></li>
       <li>
-    soupsavvy.tags.attributes
+    soupsavvy.models
 
       <ul>
-        <li><a href="soupsavvy.tags.attributes.html#module-soupsavvy.tags.attributes">module</a>
+        <li><a href="soupsavvy.models.html#module-soupsavvy.models">module</a>
 </li>
       </ul></li>
       <li>
-    soupsavvy.tags.base
+    soupsavvy.models.base
 
       <ul>
-        <li><a href="soupsavvy.tags.base.html#module-soupsavvy.tags.base">module</a>
+        <li><a href="soupsavvy.models.base.html#module-soupsavvy.models.base">module</a>
 </li>
       </ul></li>
       <li>
-    soupsavvy.tags.combinators
+    soupsavvy.models.wrappers
 
       <ul>
-        <li><a href="soupsavvy.tags.combinators.html#module-soupsavvy.tags.combinators">module</a>
+        <li><a href="soupsavvy.models.wrappers.html#module-soupsavvy.models.wrappers">module</a>
 </li>
       </ul></li>
       <li>
-    soupsavvy.tags.components
+    soupsavvy.operations
 
       <ul>
-        <li><a href="soupsavvy.tags.components.html#module-soupsavvy.tags.components">module</a>
+        <li><a href="soupsavvy.operations.html#module-soupsavvy.operations">module</a>
 </li>
       </ul></li>
       <li>
-    soupsavvy.tags.css
+    soupsavvy.operations.base
 
       <ul>
-        <li><a href="soupsavvy.tags.css.html#module-soupsavvy.tags.css">module</a>
+        <li><a href="soupsavvy.operations.base.html#module-soupsavvy.operations.base">module</a>
 </li>
       </ul></li>
       <li>
-    soupsavvy.tags.css.api
+    soupsavvy.operations.general
 
       <ul>
-        <li><a href="soupsavvy.tags.css.api.html#module-soupsavvy.tags.css.api">module</a>
+        <li><a href="soupsavvy.operations.general.html#module-soupsavvy.operations.general">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.operations.selection_pipeline
+
+      <ul>
+        <li><a href="soupsavvy.operations.selection_pipeline.html#module-soupsavvy.operations.selection_pipeline">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.selectors
+
+      <ul>
+        <li><a href="soupsavvy.selectors.html#module-soupsavvy.selectors">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.selectors.attributes
+
+      <ul>
+        <li><a href="soupsavvy.selectors.attributes.html#module-soupsavvy.selectors.attributes">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.selectors.base
+
+      <ul>
+        <li><a href="soupsavvy.selectors.base.html#module-soupsavvy.selectors.base">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.selectors.combinators
+
+      <ul>
+        <li><a href="soupsavvy.selectors.combinators.html#module-soupsavvy.selectors.combinators">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.selectors.css
+
+      <ul>
+        <li><a href="soupsavvy.selectors.css.html#module-soupsavvy.selectors.css">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.selectors.css.selectors
+
+      <ul>
+        <li><a href="soupsavvy.selectors.css.selectors.html#module-soupsavvy.selectors.css.selectors">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.selectors.general
+
+      <ul>
+        <li><a href="soupsavvy.selectors.general.html#module-soupsavvy.selectors.general">module</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
-    soupsavvy.tags.css.nth
+    soupsavvy.selectors.logical
 
       <ul>
-        <li><a href="soupsavvy.tags.css.nth.html#module-soupsavvy.tags.css.nth">module</a>
+        <li><a href="soupsavvy.selectors.logical.html#module-soupsavvy.selectors.logical">module</a>
 </li>
       </ul></li>
       <li>
-    soupsavvy.tags.css.nth.nth_soup_selector
+    soupsavvy.selectors.nth
 
       <ul>
-        <li><a href="soupsavvy.tags.css.nth.nth_soup_selector.html#module-soupsavvy.tags.css.nth.nth_soup_selector">module</a>
+        <li><a href="soupsavvy.selectors.nth.html#module-soupsavvy.selectors.nth">module</a>
 </li>
       </ul></li>
       <li>
-    soupsavvy.tags.css.nth.nth_utils
+    soupsavvy.selectors.nth.nth_soup_selector
 
       <ul>
-        <li><a href="soupsavvy.tags.css.nth.nth_utils.html#module-soupsavvy.tags.css.nth.nth_utils">module</a>
+        <li><a href="soupsavvy.selectors.nth.nth_soup_selector.html#module-soupsavvy.selectors.nth.nth_soup_selector">module</a>
 </li>
       </ul></li>
       <li>
-    soupsavvy.tags.css.tag_selectors
+    soupsavvy.selectors.nth.nth_utils
 
       <ul>
-        <li><a href="soupsavvy.tags.css.tag_selectors.html#module-soupsavvy.tags.css.tag_selectors">module</a>
+        <li><a href="soupsavvy.selectors.nth.nth_utils.html#module-soupsavvy.selectors.nth.nth_utils">module</a>
 </li>
       </ul></li>
       <li>
-    soupsavvy.tags.relative
+    soupsavvy.selectors.relative
 
       <ul>
-        <li><a href="soupsavvy.tags.relative.html#module-soupsavvy.tags.relative">module</a>
+        <li><a href="soupsavvy.selectors.relative.html#module-soupsavvy.selectors.relative">module</a>
 </li>
       </ul></li>
       <li>
-    soupsavvy.tags.tag_utils
+    soupsavvy.selectors.tag_utils
 
       <ul>
-        <li><a href="soupsavvy.tags.tag_utils.html#module-soupsavvy.tags.tag_utils">module</a>
+        <li><a href="soupsavvy.selectors.tag_utils.html#module-soupsavvy.selectors.tag_utils">module</a>
 </li>
       </ul></li>
       <li>
@@ -955,74 +1155,66 @@
       </ul></li>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.SoupsavvyException">SoupsavvyException</a>
 </li>
-      <li><a href="soupsavvy.tags.base.html#soupsavvy.tags.base.SoupSelector">SoupSelector (class in soupsavvy.tags.base)</a>
+      <li><a href="soupsavvy.selectors.base.html#soupsavvy.selectors.base.SoupSelector">SoupSelector (class in soupsavvy.selectors.base)</a>
 </li>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.SoupSelectorException">SoupSelectorException</a>
 </li>
-      <li><a href="soupsavvy.tags.css.nth.nth_utils.html#soupsavvy.tags.css.nth.nth_utils.NthGenerator.step">step (NthGenerator attribute)</a>
+      <li><a href="soupsavvy.selectors.nth.nth_utils.html#soupsavvy.selectors.nth.nth_utils.NthGenerator.step">step (NthGenerator attribute)</a>
 </li>
       <li><a href="soupsavvy.html#soupsavvy.SubsequentSiblingCombinator">SubsequentSiblingCombinator (class in soupsavvy)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.html#soupsavvy.tags.SubsequentSiblingCombinator">(class in soupsavvy.tags)</a>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.SubsequentSiblingCombinator">(class in soupsavvy.selectors)</a>
 </li>
-        <li><a href="soupsavvy.tags.combinators.html#soupsavvy.tags.combinators.SubsequentSiblingCombinator">(class in soupsavvy.tags.combinators)</a>
+        <li><a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.SubsequentSiblingCombinator">(class in soupsavvy.selectors.combinators)</a>
 </li>
       </ul></li>
+      <li><a href="soupsavvy.models.html#soupsavvy.models.Suppress">Suppress (class in soupsavvy.models)</a>
+
+      <ul>
+        <li><a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Suppress">(class in soupsavvy.models.wrappers)</a>
+</li>
+      </ul></li>
+      <li><a href="soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.TagResultSet.symmetric_difference">symmetric_difference() (TagResultSet method)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.Empty.tag">tag (Empty attribute)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.Empty.tag">[1]</a>
+      <li><a href="soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.TagIterator.tag">tag (TagIterator attribute)</a>
+</li>
+      <li><a href="soupsavvy.testing.html#soupsavvy.testing.TagGenerator">TagGenerator (class in soupsavvy.testing)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.FirstChild.tag">(FirstChild attribute)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.FirstChild.tag">[1]</a>
+        <li><a href="soupsavvy.testing.generators.html#soupsavvy.testing.generators.TagGenerator">(class in soupsavvy.testing.generators)</a>
 </li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.FirstOfType.tag">(FirstOfType attribute)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.FirstOfType.tag">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.LastChild.tag">(LastChild attribute)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.LastChild.tag">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.LastOfType.tag">(LastOfType attribute)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.LastOfType.tag">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthChild.tag">(NthChild attribute)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthChild.tag">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthLastChild.tag">(NthLastChild attribute)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthLastChild.tag">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthLastOfType.tag">(NthLastOfType attribute)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthLastOfType.tag">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.NthOfType.tag">(NthOfType attribute)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.NthOfType.tag">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.OnlyChild.tag">(OnlyChild attribute)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.OnlyChild.tag">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.OnlyOfType.tag">(OnlyOfType attribute)</a>, <a href="soupsavvy.tags.css.tag_selectors.html#soupsavvy.tags.css.tag_selectors.OnlyOfType.tag">[1]</a>
-</li>
-        <li><a href="soupsavvy.tags.tag_utils.html#soupsavvy.tags.tag_utils.TagIterator.tag">(TagIterator attribute)</a>
-</li>
-        <li><a href="soupsavvy.html#soupsavvy.TagSelector.tag">(TagSelector attribute)</a>, <a href="soupsavvy.tags.components.html#soupsavvy.tags.components.TagSelector.tag">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.TagSelector.tag">[2]</a>
-</li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.testing.generators.html#soupsavvy.testing.generators.TagGenerator">TagGenerator (class in soupsavvy.testing.generators)</a>
-
-      <ul>
         <li><a href="soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.generators.TagGenerator">(class in soupsavvy.testing.generators.generators)</a>
 </li>
       </ul></li>
-      <li><a href="soupsavvy.tags.tag_utils.html#soupsavvy.tags.tag_utils.TagIterator">TagIterator (class in soupsavvy.tags.tag_utils)</a>
+      <li><a href="soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.TagIterator">TagIterator (class in soupsavvy.selectors.tag_utils)</a>
 </li>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.TagNotFoundException">TagNotFoundException</a>
 </li>
-      <li><a href="soupsavvy.tags.tag_utils.html#soupsavvy.tags.tag_utils.TagResultSet">TagResultSet (class in soupsavvy.tags.tag_utils)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.TagResultSet">TagResultSet (class in soupsavvy.selectors.tag_utils)</a>
 </li>
-      <li><a href="soupsavvy.html#soupsavvy.TagSelector">TagSelector (class in soupsavvy)</a>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher">TagSearcher (class in soupsavvy.interfaces)</a>
+</li>
+      <li><a href="soupsavvy.operations.html#soupsavvy.operations.Text">Text (class in soupsavvy.operations)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.html#soupsavvy.tags.TagSelector">(class in soupsavvy.tags)</a>
+        <li><a href="soupsavvy.operations.general.html#soupsavvy.operations.general.Text">(class in soupsavvy.operations.general)</a>
 </li>
-        <li><a href="soupsavvy.tags.components.html#soupsavvy.tags.components.TagSelector">(class in soupsavvy.tags.components)</a>
+      </ul></li>
+      <li><a href="soupsavvy.html#soupsavvy.TypeSelector">TypeSelector (class in soupsavvy)</a>
+
+      <ul>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.TypeSelector">(class in soupsavvy.selectors)</a>
+</li>
+        <li><a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.TypeSelector">(class in soupsavvy.selectors.general)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1031,7 +1223,19 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.tag_utils.html#soupsavvy.tags.tag_utils.UniqueTag">UniqueTag (class in soupsavvy.tags.tag_utils)</a>
+      <li><a href="soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.UniqueTag">UniqueTag (class in soupsavvy.selectors.tag_utils)</a>
+</li>
+      <li><a href="soupsavvy.html#soupsavvy.UniversalSelector">UniversalSelector (class in soupsavvy)</a>
+
+      <ul>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.UniversalSelector">(class in soupsavvy.selectors)</a>
+</li>
+        <li><a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.UniversalSelector">(class in soupsavvy.selectors.general)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.UnknownModelFieldException">UnknownModelFieldException</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1039,7 +1243,7 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.html#soupsavvy.AttributeSelector.value">value (AttributeSelector attribute)</a>, <a href="soupsavvy.tags.attributes.html#soupsavvy.tags.attributes.AttributeSelector.value">[1]</a>, <a href="soupsavvy.tags.html#soupsavvy.tags.AttributeSelector.value">[2]</a>
+      <li><a href="soupsavvy.html#soupsavvy.AttributeSelector.value">value (AttributeSelector attribute)</a>, <a href="soupsavvy.selectors.attributes.html#soupsavvy.selectors.attributes.AttributeSelector.value">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.AttributeSelector.value">[2]</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -1051,10 +1255,22 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.tags.css.html#soupsavvy.tags.css.where">where() (in module soupsavvy.tags.css)</a>
+      <li><a href="soupsavvy.api.html#soupsavvy.api.where">where() (in module soupsavvy.api)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="X">X</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.api.html#soupsavvy.api.xor">xor() (in module soupsavvy.api)</a>
+</li>
+      <li><a href="soupsavvy.html#soupsavvy.XORSelector">XORSelector (class in soupsavvy)</a>
 
       <ul>
-        <li><a href="soupsavvy.tags.css.api.html#soupsavvy.tags.css.api.where">(in module soupsavvy.tags.css.api)</a>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.XORSelector">(class in soupsavvy.selectors)</a>
+</li>
+        <li><a href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.XORSelector">(class in soupsavvy.selectors.logical)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1072,9 +1288,6 @@
     <p>&#169; Copyright 2024, sewcio543.</p>
   </div>
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
    
 
 </footer>
