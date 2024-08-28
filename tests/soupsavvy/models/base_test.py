@@ -191,6 +191,15 @@ class TestBaseModel:
         assert model.title == "Title!"
         assert model.price == 10
 
+    def test_model_has_correct_string_representation(self):
+        """
+        Tests if every model has correct string representation. It should contain
+        class name and all fields with their values. If value is string,
+        it should be enclosed in quotes. Repr should be the same as str.
+        """
+        model = MockModel(title="Title", price=10)
+        assert str(model) == "MockModel(title='Title', price=10)" == repr(model)
+
     def test_find_returns_first_found_model_instance(self):
         """Tests if find method returns model instance within first found scope."""
         text = """

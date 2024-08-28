@@ -344,10 +344,16 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         return [cls._find(element) for element in elements]
 
     def __str__(self) -> str:
-        params = ", ".join(
-            f"{name}={getattr(self, name)}" for name in self.__class__.fields.keys()
-        )
-        return f"{self.__class__.__name__}({params})"
+        params = []
+
+        for name in self.__class__.fields.keys():
+            value = getattr(self, name)
+            string = (
+                f"{name}='{value}'" if isinstance(value, str) else f"{name}={value}"
+            )
+            params.append(string)
+
+        return f"{self.__class__.__name__}({', '.join(params)})"
 
     def __repr__(self) -> str:
         return str(self)
