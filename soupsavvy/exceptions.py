@@ -5,6 +5,16 @@ class SoupsavvyException(Exception):
     """Custom Base Exception for `soupsavvy` specific Exceptions."""
 
 
+class NotTagSearcherException(SoupsavvyException, TypeError):
+    """
+    Exception to be raised when function excepted TagSearcher as input
+    and got argument of the different, invalid type.
+    """
+
+
+#! SELECTORS
+
+
 class SoupSelectorException(SoupsavvyException):
     """Custom Base Exception for SoupSelector specific Exceptions."""
 
@@ -53,6 +63,9 @@ class InvalidCSSSelector(SoupsavvyException):
     >>> NthChild("2x + 1")
     InvalidCSSSelector
     """
+
+
+#! GENERATORS
 
 
 class HTMLGeneratorException(SoupsavvyException):
@@ -141,4 +154,81 @@ class AttributeParsingError(HTMLGeneratorException):
     ------
     >>> TagGenerator(name="div", attrs=[("class", ["hello", "soupsavvy"]]) # invalid value template
     AttributeParsingError
+    """
+
+
+#! OPERATIONS
+
+
+class OperationException(SoupsavvyException):
+    """Base exception for the BaseOperation related errors"""
+
+
+class FailedOperationExecution(SoupsavvyException):
+    """
+    Exception raised by BaseOperation when operation execution failed and raised
+    any exception.
+    """
+
+
+class NotOperationException(OperationException, TypeError):
+    """
+    Exception to be raised when function excepted BaseOperation as input
+    and got argument of the different, invalid type.
+    """
+
+
+#! MODELS
+
+
+class BaseModelException(SoupsavvyException):
+    """Base exception related to models package and BaseModel class."""
+
+
+class UnknownModelFieldException(BaseModelException):
+    """
+    Exception raised by BaseModel when model passing unknown field name
+    to model constructor.
+    """
+
+
+class ModelScopeNotFoundException(BaseModelException):
+    """
+    Exception raised by BaseModel when model scope was not found in provided tag
+    and strict parameter was set to True.
+    """
+
+
+class FieldExtractionException(BaseModelException):
+    """
+    Exception raised by BaseModel when field extraction failed and related exception
+    was raised by any selector step.
+    """
+
+
+class ScopeNotDefinedException(BaseModelException):
+    """
+    Exception raised by BaseModel when scope was not found in defined model class.
+    __scope__ class attribute is mandatory in BaseModel derived classes.
+    """
+
+
+class RequiredConstraintException(BaseModelException):
+    """
+    Exception raised by Required field wrapper when required field was not found
+    in provided tag.
+    """
+
+
+class FieldsNotDefinedException(BaseModelException):
+    """
+    Exception raised by BaseModel when fields were not found in defined model class.
+    At least one field should be defined in class to be a valid model.
+    """
+
+
+class MissingFieldsException(BaseModelException):
+    """
+    Exception raised by BaseModel when parameters passed into the constructor
+    do not contain all required fields defined in the model class.
     """

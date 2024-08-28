@@ -2,11 +2,13 @@
 
 from logging import Logger
 
+import pytest
 from pytest import LogCaptureFixture
 
 from soupsavvy.utils.logging import LOGGER, NAME
 
 
+@pytest.mark.logging
 class TestLogging:
     """Unit Tests suite for the package logging utilities."""
 
