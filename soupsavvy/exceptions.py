@@ -192,7 +192,7 @@ class UnknownModelFieldException(BaseModelException):
     """
 
 
-class ModelScopeNotFoundException(BaseModelException):
+class ModelNotFoundException(BaseModelException):
     """
     Exception raised by BaseModel when model scope was not found in provided tag
     and strict parameter was set to True.
