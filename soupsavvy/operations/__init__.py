@@ -1,3 +1,3 @@
-from .general import Href, Operation, Text
+from .general import Href, Operation, Parent, Text
 
-__all__ = ["Operation", "Text", "Href"]
+__all__ = ["Operation", "Text", "Href", "Parent"]
