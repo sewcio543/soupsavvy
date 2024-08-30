@@ -5,6 +5,7 @@ Module for general purpose operations.
 * OperationPipeline - Chain multiple operations together.
 * Text - Extract text from a BeautifulSoup Tag - most common operation.
 * Href - Extract href attribute from a BeautifulSoup Tag.
+* Parent - Extract parent of a BeautifulSoup Tag.
 
 These components are design to be used for processing html tags and extracting
 desired information. They can be used in combination with selectors.
@@ -18,6 +19,7 @@ from bs4 import Tag
 
 from soupsavvy.interfaces import TagSearcher
 from soupsavvy.operations.base import BaseOperation, check_operation
+from soupsavvy.selectors.base import SoupSelector
 
 
 class OperationPipeline(BaseOperation):
@@ -275,3 +277,42 @@ class Href(OperationSearcherMixin):
     def __eq__(self, x: Any) -> bool:
         # equal only if both are instances of Href
         return isinstance(x, Href)
+
+
+class Parent(BaseOperation, SoupSelector):
+    """
+    Operation to extract parent of a BeautifulSoup Tag.
+
+    Example
+    -------
+    >>> from soupsavvy.operations import Parent
+    ... operation = Parent()
+    ... operation.execute(tag)
+    "<div>...</div>"
+
+    Implements `SoupSelector` interface for convenience and can be used
+    to extract parent of a provided tag without any conditions.
+
+    Example
+    -------
+    >>> from soupsavvy.operations import Parent
+    ... operation = Parent()
+    ... operation.find(tag)
+    "<div>...</div>"
+    """
+
+    def _execute(self, arg: Tag) -> Optional[Tag]:
+        """Extracts parent of a BeautifulSoup Tag."""
+        return arg.parent
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        return [self.execute(tag)]
+
+    def __eq__(self, x: Any) -> bool:
+        # equal only if both are instances of Parent
+        return isinstance(x, Parent)

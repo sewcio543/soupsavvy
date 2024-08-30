@@ -10,10 +10,10 @@ from bs4 import NavigableString, Tag
 import soupsavvy.exceptions as exc
 import soupsavvy.selectors.namespace as ns
 from soupsavvy.interfaces import Comparable, TagSearcher
-from soupsavvy.operations.base import BaseOperation
 from soupsavvy.utils.deprecation import deprecated_function
 
 if TYPE_CHECKING:
+    from soupsavvy.operations.base import BaseOperation
     from soupsavvy.operations.selection_pipeline import SelectionPipeline
     from soupsavvy.selectors.combinators import (
         AncestorCombinator,
@@ -273,6 +273,7 @@ class SoupSelector(TagSearcher, Comparable):
         NotSoupSelectorException
             If provided object is not of SoupSelector type.
         """
+        from soupsavvy.operations.base import BaseOperation
         from soupsavvy.operations.selection_pipeline import SelectionPipeline
         from soupsavvy.selectors.combinators import SelectorList
 
