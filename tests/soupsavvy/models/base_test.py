@@ -3,7 +3,10 @@ Module with unit tests for BaseModel component,
 which is parent class of all user-defined models.
 """
 
+import pydantic
 import pytest
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import DeclarativeBase
 
 from soupsavvy.exceptions import (
     FieldExtractionException,
@@ -68,6 +71,40 @@ class MockAllowEmptyTitle(BaseModel):
 
     title = MockLinkSelector() | MockTextOperation(skip_none=True)
     price = PRICE_SELECTOR
+
+
+class MockMigrationModel:
+    """Mock class for testing migration to any custom model."""
+
+    def __init__(self, title: str, price: int, **kwargs) -> None:
+        self.title = title
+        self.price = price
+
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+        if "error" in kwargs:
+            raise ValueError("Forbidden key in kwargs")
+
+
+class MockPydanticBook(pydantic.BaseModel):
+    """Mock model for testing migration to Pydantic model."""
+
+    title: str
+    price: int
+
+
+class Base(DeclarativeBase): ...
+
+
+class MockSABook(Base):
+    """Mock model for testing migration to SQLAlchemy model."""
+
+    __tablename__ = "book"
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String, nullable=True)
+    price = Column(Integer, nullable=True)
 
 
 @pytest.mark.model
@@ -179,7 +216,8 @@ class TestBaseModel:
         """
         Tests if custom __post_init__ method modifies attributes of model instance.
         This is inspired from python dataclasses, where __post_init__ method is executed
-        after initialization of instance.
+        after initialization of instance. Tests if attributes property
+        contains modified values.
         """
 
         class ChildModel(MockModel):
@@ -190,6 +228,18 @@ class TestBaseModel:
 
         assert model.title == "Title!"
         assert model.price == 10
+        assert model.attributes == {"title": "Title!", "price": 10}
+
+    def test_attributes_returns_modified_field_values(self):
+        """
+        Tests if attributes property returns modified field values of model instance.
+        If any field value was changed at any time,
+        it should be reflected in attributes.
+        """
+        model = MockModel(title="Title", price=10)
+
+        model.title = "Title!"  # type: ignore
+        assert model.attributes == {"title": "Title!", "price": 10}
 
     def test_model_has_correct_string_representation(self):
         """
@@ -225,6 +275,7 @@ class TestBaseModel:
         assert result == MockModel(title="Title", price=10)
         assert result.title == "Title"
         assert result.price == 10
+        assert result.attributes == {"title": "Title", "price": 10}
 
     def test_find_returns_none_if_no_scope_found_and_strict_false(self):
         """
@@ -1060,3 +1111,70 @@ class TestBaseModelIntegration:
         assert result == MockModel(
             info=MockInfoModel(title="Title", author="Author"), price=10
         )
+
+    def test_model_migration_to_other_class(self):
+        """
+        Tests if model can be migrated to other class, migrate calls constructor
+        of provided class with all fields as keyword arguments and if successful,
+        returns instance of provided class.
+        """
+        model = MockModel(title="Title", price=10)
+        migrated = model.migrate(MockMigrationModel)
+
+        assert isinstance(migrated, MockMigrationModel)
+        assert migrated.title == "Title"
+        assert migrated.price == 10
+
+    def test_migrate_passes_keyword_arguments_to_model_init(self):
+        """
+        Tests if migrate method passes keyword arguments to model init method
+        additionally to fields of model instance. It allows to pass additional
+        data to model, that is not present in original model.
+        """
+        model = MockModel(title="Title", price=10)
+        migrated = model.migrate(MockMigrationModel, hello="World", number=42)
+
+        assert isinstance(migrated, MockMigrationModel)
+
+        assert migrated.title == "Title"
+        assert migrated.price == 10
+        assert getattr(migrated, "hello", None) == "World"
+        assert getattr(migrated, "number", None) == 42
+
+    def test_migrate_propagates_errors_from_model_init(self):
+        """
+        Tests if migrate method propagates errors from model init method.
+        In this case, MockMigrationModel raises ValueError.
+        """
+        model = MockModel(title="Title", price=10)
+
+        with pytest.raises(ValueError):
+            model.migrate(MockMigrationModel, hello="World", error="Error")
+
+    @pytest.mark.integration
+    def test_migration_to_pydantic_model(self):
+        """
+        Tests if model can be migrated to Pydantic model. If validation passes,
+        Pydantic model is returned.
+        """
+        model = MockModel(title="Title", price=10)
+        migrated = model.migrate(MockPydanticBook)
+        assert isinstance(migrated, MockPydanticBook)
+
+    @pytest.mark.integration
+    def test_migration_to_pydantic_model_raises_error(self):
+        """
+        Tests if migration to Pydantic model raises error if validation fails.
+        In this case, title is integer, but Pydantic model expects string.
+        """
+        model = MockModel(title=123, price=10)
+
+        with pytest.raises(pydantic.ValidationError):
+            model.migrate(MockPydanticBook)
+
+    @pytest.mark.integration
+    def test_model_migration_to_sqlalchemy_model(self):
+        """Tests migration of model to SQLAlchemy model."""
+        model = MockModel(title="Title", price=10)
+        migrated = model.migrate(MockSABook)
+        assert isinstance(migrated, MockSABook)

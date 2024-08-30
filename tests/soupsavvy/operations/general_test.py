@@ -6,9 +6,15 @@ from typing import Any, Callable
 import pytest
 
 from soupsavvy.exceptions import FailedOperationExecution, NotOperationException
-from soupsavvy.operations.general import Href, Operation, OperationPipeline, Text
+from soupsavvy.operations.general import (
+    Href,
+    Operation,
+    OperationPipeline,
+    Parent,
+    Text,
+)
 from tests.soupsavvy.operations.conftest import MockIntOperation, MockTextOperation
-from tests.soupsavvy.selectors.conftest import MockLinkSelector, to_bs
+from tests.soupsavvy.selectors.conftest import MockLinkSelector, strip, to_bs
 
 
 @dataclass
@@ -375,6 +381,128 @@ class TestHref:
         argvalues=[
             (Href(), MockIntOperation()),
             (Href(), MockLinkSelector()),
+        ],
+    )
+    def test_eq_returns_false_if_different_operation(self, operations: tuple):
+        """Tests if __eq__ method returns False if objects are not equal."""
+        operation1, operation2 = operations
+        assert (operation1 == operation2) is False
+
+
+@pytest.mark.operation
+class TestParent:
+    """Class with unit test suite for Parent operation."""
+
+    def test_raises_error_when_input_not_bs4_tag(self):
+        """
+        Tests if execute method raises FailedOperationExecution
+        if input is not bs4 tag.
+        """
+        text = """
+            <div>
+                <div href="github"><a>Hello</a></div>
+            </div>
+            <span>Hello</span>
+        """
+        operation = Parent()
+
+        with pytest.raises(FailedOperationExecution):
+            operation.execute(text)
+
+    def test_returns_none_if_no_href_in_element(self):
+        """
+        Tests if execute method returns None if no parent provided element
+        does not have parent. It must be `html` tag.
+        """
+        text = """
+            <div>
+                <div href="github"><a>Hello</a></div>
+            </div>
+            <span>Hello</span>
+        """
+        bs = to_bs(text)
+        operation = Parent()
+        result = operation.execute(bs)
+        assert result is None
+
+    def test_returns_parent_of_tag(self):
+        """
+        Tests if execute method returns parent of provided BeautifulSoup Tag.
+        """
+        text = """
+            <div>
+                <div href="github"><a>Hello</a></div>
+            </div>
+            <span>Hello</span>
+        """
+        bs = to_bs(text).a
+        operation = Parent()
+        result = operation.execute(bs)
+        assert strip(str(result)) == strip('<div href="github"><a>Hello</a></div>')
+
+    def test_returns_parent_with_find_method(self):
+        """
+        Tests if find method returns parent of a BeautifulSoup Tag, it calls
+        execute method. This is for done for convenience and compatibility with
+        TagSearcher interface.
+        """
+        text = """
+            <div>
+                <div href="github"><a>Hello</a></div>
+            </div>
+            <span>Hello</span>
+        """
+        bs = to_bs(text).a
+        operation = Parent()
+        result = operation.find(bs)  # type: ignore
+        assert strip(str(result)) == strip('<div href="github"><a>Hello</a></div>')
+
+    def test_returns_list_with_single_element_with_find_all_method(self):
+        """
+        Tests if find_all method returns parent of a BeautifulSoup Tag wrapped
+        in single element list. This is for done for compatibility with
+        TagSearcher interface.
+        """
+        text = """
+            <div>
+                <div href="github"><a>Hello</a></div>
+            </div>
+            <span>Hello</span>
+        """
+        bs = to_bs(text).a
+        operation = Parent()
+        result = operation.find_all(bs)  # type: ignore
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip('<div href="github"><a>Hello</a></div>')
+        ]
+
+    def test_raises_error_when_find_methods_get_not_tag(self):
+        """
+        Tests if find and find_all methods raise FailedOperationExecution
+        if input is not bs4 tag.
+        """
+        operation = Parent()
+
+        with pytest.raises(FailedOperationExecution):
+            operation.find("string")  # type: ignore
+
+        with pytest.raises(FailedOperationExecution):
+            operation.find_all("string")  # type: ignore
+
+    @pytest.mark.parametrize(
+        argnames="operations",
+        argvalues=[(Parent(), Parent())],
+    )
+    def test_eq_returns_true_if_same_operation(self, operations: tuple):
+        """Tests if __eq__ method returns True if objects are equal."""
+        operation1, operation2 = operations
+        assert (operation1 == operation2) is True
+
+    @pytest.mark.parametrize(
+        argnames="operations",
+        argvalues=[
+            (Parent(), MockIntOperation()),
+            (Parent(), MockLinkSelector()),
         ],
     )
     def test_eq_returns_false_if_different_operation(self, operations: tuple):

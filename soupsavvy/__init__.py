@@ -26,13 +26,14 @@ from .selectors import (
     ParentCombinator,
     PatternSelector,
     SelectorList,
+    SelfSelector,
     SubsequentSiblingCombinator,
     TypeSelector,
     UniversalSelector,
     XORSelector,
 )
 
-__version__ = "0.2.2"
+__version__ = "0.2.3-dev0"
 __author__ = "sewcio543"
 
 __all__ = [
@@ -44,6 +45,7 @@ __all__ = [
     "DescendantCombinator",
     "AndSelector",
     "NotSelector",
+    "SelfSelector",
     "ChildCombinator",
     "NextSiblingCombinator",
     "SubsequentSiblingCombinator",
