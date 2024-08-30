@@ -302,12 +302,12 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
             except exc.RequiredConstraintException as e:
                 raise exc.FieldExtractionException(
                     f"Field '{key}' is required and was not found in model '{cls.__name__}' "
-                    f"for element {tag}."
+                    f"for element:\n{tag}."
                 ) from e
             except TagSearcherExceptions as e:
                 raise exc.FieldExtractionException(
                     f"Extracting field '{key}' failed in model '{cls.__name__}' "
-                    f"for element {tag}."
+                    f"for element:\n{tag}."
                 ) from e
 
             params[key] = result
