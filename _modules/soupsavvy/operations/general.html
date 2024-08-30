@@ -92,6 +92,7 @@
 <span class="sd">* OperationPipeline - Chain multiple operations together.</span>
 <span class="sd">* Text - Extract text from a BeautifulSoup Tag - most common operation.</span>
 <span class="sd">* Href - Extract href attribute from a BeautifulSoup Tag.</span>
+<span class="sd">* Parent - Extract parent of a BeautifulSoup Tag.</span>
 
 <span class="sd">These components are design to be used for processing html tags and extracting</span>
 <span class="sd">desired information. They can be used in combination with selectors.</span>
@@ -105,6 +106,7 @@
 
 <span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">TagSearcher</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations.base</span> <span class="kn">import</span> <span class="n">BaseOperation</span><span class="p">,</span> <span class="n">check_operation</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
 
 
 <div class="viewcode-block" id="OperationPipeline">
@@ -391,6 +393,51 @@
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="c1"># equal only if both are instances of Href</span>
         <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Href</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Parent">
+<a class="viewcode-back" href="../../../soupsavvy.operations.general.html#soupsavvy.operations.Parent">[docs]</a>
+<span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">BaseOperation</span><span class="p">,</span> <span class="n">SoupSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Operation to extract parent of a BeautifulSoup Tag.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from soupsavvy.operations import Parent</span>
+<span class="sd">    ... operation = Parent()</span>
+<span class="sd">    ... operation.execute(tag)</span>
+<span class="sd">    &quot;&lt;div&gt;...&lt;/div&gt;&quot;</span>
+
+<span class="sd">    Implements `SoupSelector` interface for convenience and can be used</span>
+<span class="sd">    to extract parent of a provided tag without any conditions.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from soupsavvy.operations import Parent</span>
+<span class="sd">    ... operation = Parent()</span>
+<span class="sd">    ... operation.find(tag)</span>
+<span class="sd">    &quot;&lt;div&gt;...&lt;/div&gt;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts parent of a BeautifulSoup Tag.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">arg</span><span class="o">.</span><span class="n">parent</span>
+
+<div class="viewcode-block" id="Parent.find_all">
+<a class="viewcode-back" href="../../../soupsavvy.operations.general.html#soupsavvy.operations.Parent.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">tag</span><span class="p">)]</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="c1"># equal only if both are instances of Parent</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Parent</span><span class="p">)</span></div>
 
 </pre></div>
 

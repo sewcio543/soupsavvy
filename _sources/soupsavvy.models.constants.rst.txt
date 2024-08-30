@@ -1,0 +1,7 @@
+models.constants
+=================================
+
+.. automodule:: soupsavvy.models.constants
+   :members:
+   :undoc-members:
+   :show-inheritance:

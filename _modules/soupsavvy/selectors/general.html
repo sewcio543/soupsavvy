@@ -307,6 +307,39 @@
 <span class="k">class</span> <span class="nc">AnyTagSelector</span><span class="p">(</span><span class="n">UniversalSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Alias for UniversalSelector class. Deprecated component.&quot;&quot;&quot;</span></div>
 
+
+
+<div class="viewcode-block" id="SelfSelector">
+<a class="viewcode-back" href="../../../soupsavvy.selectors.general.html#soupsavvy.SelfSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">SelfSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class representing a selector that matches the element itself.</span>
+<span class="sd">    Convenience component that can be used for compatibility.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; SelfSelector()</span>
+
+<span class="sd">    always matches the tag that is passed to the find methods.</span>
+
+<span class="sd">    Can be used in user-defined model for scope if element itself is the scope.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SelfSelector.find_all">
+<a class="viewcode-back" href="../../../soupsavvy.selectors.general.html#soupsavvy.SelfSelector.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">tag</span><span class="p">]</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="c1"># needs to be the same type</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">SelfSelector</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>

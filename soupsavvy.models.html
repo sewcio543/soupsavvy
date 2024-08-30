@@ -52,6 +52,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">models</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html">models.base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.constants.html">models.constants</a></li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html">models.wrappers</a></li>
 </ul>
 </li>
@@ -62,8 +63,10 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#soupsavvy.models.BaseModel"><code class="docutils literal notranslate"><span class="pre">BaseModel</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.BaseModel.__init__"><code class="docutils literal notranslate"><span class="pre">BaseModel.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.BaseModel.attributes"><code class="docutils literal notranslate"><span class="pre">BaseModel.attributes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.BaseModel.find"><code class="docutils literal notranslate"><span class="pre">BaseModel.find()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.BaseModel.find_all"><code class="docutils literal notranslate"><span class="pre">BaseModel.find_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.BaseModel.migrate"><code class="docutils literal notranslate"><span class="pre">BaseModel.migrate()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#soupsavvy.models.Default"><code class="docutils literal notranslate"><span class="pre">Default</span></code></a><ul>
@@ -127,8 +130,10 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.base.html">models.base</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel"><code class="docutils literal notranslate"><span class="pre">BaseModel</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.__init__"><code class="docutils literal notranslate"><span class="pre">BaseModel.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.attributes"><code class="docutils literal notranslate"><span class="pre">BaseModel.attributes</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.find"><code class="docutils literal notranslate"><span class="pre">BaseModel.find()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.find_all"><code class="docutils literal notranslate"><span class="pre">BaseModel.find_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.migrate"><code class="docutils literal notranslate"><span class="pre">BaseModel.migrate()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.ModelMeta"><code class="docutils literal notranslate"><span class="pre">ModelMeta</span></code></a><ul>
@@ -139,6 +144,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.constants.html">models.constants</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.wrappers.html">models.wrappers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#classes">Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.All"><code class="docutils literal notranslate"><span class="pre">All</span></code></a><ul>
@@ -244,6 +250,20 @@ as keyword arguments.</p>
 </section>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.models.BaseModel.attributes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attributes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.models.BaseModel.attributes" title="Link to this definition"></a></dt>
+<dd><p>Returns a dictionary of model instance attributes representing
+model fields and their respective values.</p>
+<section id="id2">
+<h3>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>dict[str, Any]</dt><dd><p>A dictionary mapping model field names to their respective values.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.models.BaseModel.find">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="_modules/soupsavvy/models/base.html#BaseModel.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.BaseModel.find" title="Link to this definition"></a></dt>
@@ -254,8 +274,8 @@ as keyword arguments.</p>
 <dd><p>Searches for and returns an instance of the model within the provided tag.
 By default, perform recursive, non-strict search for model fields
 within the scope element.</p>
-<section id="id2">
-<h3>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<section id="id3">
+<h3>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object within which to search for the model.</p>
 </dd>
@@ -267,15 +287,15 @@ Default is True.</p>
 </dd>
 </dl>
 </section>
-<section id="id3">
-<h3>Returns<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<section id="id4">
+<h3>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>Self | None</dt><dd><p>An instance of the model if found, otherwise None.</p>
 </dd>
 </dl>
 </section>
-<section id="id4">
-<h3>Raises<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<section id="id5">
+<h3>Raises<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>ModelNotFoundException</dt><dd><p>If the model’s scope is not found and strict is True.</p>
 </dd>
@@ -291,8 +311,8 @@ Default is True.</p>
 <dd><p>Searches for and returns all instances of the model within the provided tag.
 By default, perform recursive, non-strict search for model fields
 just like in <cite>find</cite> method.</p>
-<section id="id5">
-<h3>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<section id="id6">
+<h3>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object within which to search for the model.</p>
 </dd>
@@ -304,10 +324,33 @@ returns all instances found.</p>
 </dd>
 </dl>
 </section>
-<section id="id6">
-<h3>Returns<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<section id="id7">
+<h3>Returns<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>list[Self]</dt><dd><p>A list of model instances found within the tag.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.models.BaseModel.migrate">
+<span class="sig-name descname"><span class="pre">migrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="reference internal" href="_modules/soupsavvy/models/base.html#BaseModel.migrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.BaseModel.migrate" title="Link to this definition"></a></dt>
+<dd><p>Migrates the model instance to another model class using its fields
+in target class initialization.</p>
+<section id="id8">
+<h3>Parameters<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>model<span class="classifier">Type[Model]</span></dt><dd><p>The target model class to migrate the instance to.</p>
+</dd>
+<dt>kwargs<span class="classifier">Any</span></dt><dd><p>Additional keyword arguments to pass to model initialization.</p>
+</dd>
+</dl>
+</section>
+<section id="id9">
+<h3>Returns<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Model</dt><dd><p>An instance of the target model class.</p>
 </dd>
 </dl>
 </section>
@@ -320,8 +363,8 @@ returns all instances found.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#Default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.Default" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper" title="soupsavvy.models.wrappers.FieldWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">FieldWrapper</span></code></a></p>
 <p>Field wrapper for returning a default value if no match is found.</p>
-<section id="id7">
-<h3>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<section id="id10">
+<h3>Example<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Default</span>
 <span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
 <span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">Default</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;1234&quot;</span><span class="p">)</span>
@@ -333,8 +376,8 @@ returns all instances found.</p>
 <dt class="sig sig-object py" id="soupsavvy.models.Default.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#Default.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.Default.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes Default FieldWrapper.</p>
-<section id="id8">
-<h4>Parameters<a class="headerlink" href="#id8" title="Link to this heading"></a></h4>
+<section id="id11">
+<h4>Parameters<a class="headerlink" href="#id11" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>selector<span class="classifier">TagSearcher</span></dt><dd><p>The TagSearcher instance to be wrapped.</p>
 </dd>
@@ -349,8 +392,8 @@ returns all instances found.</p>
 <span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#Default.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.Default.find" title="Link to this definition"></a></dt>
 <dd><p>Finds an element, returning a default value if None was returned
 by wrapped selector. Any exception raised during the search is propagated.</p>
-<section id="id9">
-<h4>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h4>
+<section id="id12">
+<h4>Parameters<a class="headerlink" href="#id12" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup tag to search within.</p>
 </dd>
@@ -360,8 +403,8 @@ by wrapped selector. Any exception raised during the search is propagated.</p>
 </dd>
 </dl>
 </section>
-<section id="id10">
-<h4>Returns<a class="headerlink" href="#id10" title="Link to this heading"></a></h4>
+<section id="id13">
+<h4>Returns<a class="headerlink" href="#id13" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>Any</dt><dd><p>The found element or the default value if not found.</p>
 </dd>
@@ -378,8 +421,8 @@ by wrapped selector. Any exception raised during the search is propagated.</p>
 <dd><p>Bases: <a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper" title="soupsavvy.models.wrappers.FieldWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">FieldWrapper</span></code></a></p>
 <p>Field wrapper for enforcing matched element not to be None.
 Raises an exception if searcher does not find any matches.</p>
-<section id="id11">
-<h3>Example<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<section id="id14">
+<h3>Example<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Required</span>
 <span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
 <span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">Required</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
@@ -393,8 +436,8 @@ Raises an exception if searcher does not find any matches.</p>
 <dd><p>Finds a required element using the wrapped selector,
 enforcing matched element not to be None.
 If any exception is raised during the search, it’s propagated to the caller.</p>
-<section id="id12">
-<h4>Parameters<a class="headerlink" href="#id12" title="Link to this heading"></a></h4>
+<section id="id15">
+<h4>Parameters<a class="headerlink" href="#id15" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup tag to search within.</p>
 </dd>
@@ -404,15 +447,15 @@ If any exception is raised during the search, it’s propagated to the caller.</
 </dd>
 </dl>
 </section>
-<section id="id13">
-<h4>Returns<a class="headerlink" href="#id13" title="Link to this heading"></a></h4>
+<section id="id16">
+<h4>Returns<a class="headerlink" href="#id16" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>Any</dt><dd><p>The found element.</p>
 </dd>
 </dl>
 </section>
-<section id="id14">
-<h4>Raises<a class="headerlink" href="#id14" title="Link to this heading"></a></h4>
+<section id="id17">
+<h4>Raises<a class="headerlink" href="#id17" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>RequiredConstraintException</dt><dd><p>If selector returns None, indicating that required element was not found.</p>
 </dd>
@@ -429,8 +472,8 @@ If any exception is raised during the search, it’s propagated to the caller.</
 <dd><p>Bases: <a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.OperationWrapper" title="soupsavvy.models.wrappers.OperationWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">OperationWrapper</span></code></a></p>
 <p>A wrapper that skips the operation if the input is None.
 Used to prevent exceptions where it’s safe and expected to skip the operation.</p>
-<section id="id15">
-<h3>Example<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<section id="id18">
+<h3>Example<a class="headerlink" href="#id18" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
 <span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">SkipNone</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">SkipNone</span><span class="p">(</span><span class="n">Text</span><span class="p">())</span>
@@ -450,8 +493,8 @@ and returns None.</p>
 <p>A wrapper that executes the operation
 and suppresses FailedOperationExecution exception, returning None instead.
 Used to catch exceptions where it’s expected this might happen.</p>
-<section id="id16">
-<h3>Example<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
+<section id="id19">
+<h3>Example<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
 <span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Suppress</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
@@ -462,8 +505,8 @@ Used to catch exceptions where it’s expected this might happen.</p>
 <p>This can be used with <cite>Default</cite> operation to provide a default value
 when the operation fails.</p>
 </section>
-<section id="id17">
-<h3>Example<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+<section id="id20">
+<h3>Example<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
 <span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Suppress</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Default</span><span class="p">(</span><span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">)),</span> <span class="mi">0</span><span class="p">)</span>

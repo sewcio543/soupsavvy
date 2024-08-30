@@ -39,20 +39,9 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 2,
+   "execution_count": null,
    "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "'100'"
-      ]
-     },
-     "execution_count": 2,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
+   "outputs": [],
    "source": [
     "from soupsavvy.operations import Operation\n",
     "\n",
@@ -69,20 +58,9 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 3,
+   "execution_count": null,
    "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "200"
-      ]
-     },
-     "execution_count": 3,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
+   "outputs": [],
    "source": [
     "from soupsavvy.operations import Operation\n",
     "\n",
@@ -108,20 +86,9 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 7,
+   "execution_count": null,
    "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "'Animal Farm'"
-      ]
-     },
-     "execution_count": 7,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
+   "outputs": [],
    "source": [
     "from bs4 import BeautifulSoup\n",
     "\n",
@@ -147,20 +114,9 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 20,
+   "execution_count": null,
    "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "'Animal Farm'"
-      ]
-     },
-     "execution_count": 20,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
+   "outputs": [],
    "source": [
     "from bs4 import BeautifulSoup\n",
     "\n",
@@ -176,20 +132,9 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 19,
+   "execution_count": null,
    "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "'Animal Farm -- George Orwell'"
-      ]
-     },
-     "execution_count": 19,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
+   "outputs": [],
    "source": [
     "from bs4 import BeautifulSoup\n",
     "\n",
@@ -215,20 +160,9 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 18,
+   "execution_count": null,
    "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "'Animal Farm -- George Orwell'"
-      ]
-     },
-     "execution_count": 18,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
+   "outputs": [],
    "source": [
     "from bs4 import BeautifulSoup\n",
     "\n",
@@ -261,27 +195,16 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 25,
+   "execution_count": null,
    "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "'www.book.com'"
-      ]
-     },
-     "execution_count": 25,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
+   "outputs": [],
    "source": [
     "from bs4 import BeautifulSoup\n",
     "\n",
     "from soupsavvy.operations import Href\n",
     "\n",
     "text = \"\"\"\n",
-    "    <a href=\"www.book.com\">Animal Farm</p>\n",
+    "    <a href=\"www.book.com\">Animal Farm</a>\n",
     "\"\"\"\n",
     "soup = BeautifulSoup(text, features=\"lxml\")\n",
     "operation = Href()\n",
@@ -290,31 +213,70 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 26,
+   "execution_count": null,
    "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "'www.book.com'"
-      ]
-     },
-     "execution_count": 26,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
+   "outputs": [],
    "source": [
     "from bs4 import BeautifulSoup\n",
     "\n",
     "from soupsavvy.operations import Href\n",
     "\n",
     "text = \"\"\"\n",
-    "    <a href=\"www.book.com\">Animal Farm</p>\n",
+    "    <a href=\"www.book.com\">Animal Farm</a>\n",
     "\"\"\"\n",
     "soup = BeautifulSoup(text, features=\"lxml\")\n",
     "searcher = Href()\n",
     "searcher.find(soup.a)  # type: ignore"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Parent"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "`Parent` is an operation that extracts the parent element of the current element. It can be used to navigate to a higher level in the HTML structure. It does not accepts any parameters. Unlike `Href` or `Text`, it is soup selector, as it returns a BeautifulSoup `Tag` object."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from bs4 import BeautifulSoup\n",
+    "\n",
+    "from soupsavvy.operations import Parent\n",
+    "\n",
+    "text = \"\"\"\n",
+    "    <div><a href=\"www.book.com\">Animal Farm</a></div>\n",
+    "\"\"\"\n",
+    "soup = BeautifulSoup(text, features=\"lxml\")\n",
+    "operation = Parent()\n",
+    "operation.execute(soup.a)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from bs4 import BeautifulSoup\n",
+    "\n",
+    "from soupsavvy.operations import Parent\n",
+    "\n",
+    "text = \"\"\"\n",
+    "    <div><a href=\"www.book.com\">Animal Farm</a></div>\n",
+    "\"\"\"\n",
+    "soup = BeautifulSoup(text, features=\"lxml\")\n",
+    "operation = Parent()\n",
+    "operation.find(soup.a)  # type: ignore"
    ]
   },
   {
@@ -412,20 +374,9 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 28,
+   "execution_count": null,
    "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "Book(title='Animal Farm', price=100)"
-      ]
-     },
-     "execution_count": 28,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
+   "outputs": [],
    "source": [
     "from bs4 import BeautifulSoup\n",
     "\n",
@@ -1197,6 +1148,62 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
+    "If a sub-model shares the same scope as its parent model, you can use the `SelfSelector` to utilize the provided tag as the scope without searching for it. For example, in the `Author` model, the scope is inherited directly from the parent model. Alternatively, the scope of a sub-model can be defined outside of the base model's scope, parent element can be used as scope with `Parent` selector, or any specific ancestor that match selector with `Anchor << selector`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from bs4 import BeautifulSoup\n",
+    "\n",
+    "from soupsavvy import ClassSelector, SelfSelector, TypeSelector\n",
+    "from soupsavvy.models import BaseModel\n",
+    "from soupsavvy.operations import Href, Parent, Text\n",
+    "\n",
+    "\n",
+    "class Author(BaseModel):\n",
+    "    __scope__ = SelfSelector()\n",
+    "\n",
+    "    name = ClassSelector(\"author\") | Text()\n",
+    "\n",
+    "\n",
+    "class eBook(BaseModel):\n",
+    "    __scope__ = Parent()\n",
+    "\n",
+    "    link = ClassSelector(\"ebook\") | Href()\n",
+    "\n",
+    "\n",
+    "class Book(BaseModel):\n",
+    "\n",
+    "    __scope__ = TypeSelector(\"div\") & ClassSelector(\"book\")\n",
+    "\n",
+    "    author = Author\n",
+    "    ebook = eBook\n",
+    "    title = ClassSelector(\"title\") | Text()\n",
+    "\n",
+    "\n",
+    "text = \"\"\"\n",
+    "    <div>\n",
+    "        <a class=\"ebook\" href=\"www.ebook.com\"></a>\n",
+    "        <div class=\"book\" href=\"www.book.com\">\n",
+    "            <p class=\"title\">Animal Farm</p>\n",
+    "            <p class=\"author\">George Orwell</p>\n",
+    "            <p>Great author</p>\n",
+    "            <p>1903-06-25</p>\n",
+    "        </div>\n",
+    "    </div>\n",
+    "\"\"\"\n",
+    "soup = BeautifulSoup(text, features=\"lxml\")\n",
+    "Book.find(soup)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
     "### Finding all"
    ]
   },
@@ -1542,6 +1549,174 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
+    "### Migration"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "You can migrate an instance of a model to another model using `migrate` method. This method takes another class as an argument and initializes it with the field values from the current model instance. It's particularly useful for migrating data to `pydantic` model for validation or to an `SQLAlchemy` model for database operations. The fields in both models must match for migration to work seamlessly. Additionally, you can pass extra parameters as keyword arguments, which will be forwarded to the target model's constructor."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### Pydantic"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from bs4 import BeautifulSoup\n",
+    "import pydantic\n",
+    "from soupsavvy import ClassSelector, TypeSelector\n",
+    "from soupsavvy.models import BaseModel\n",
+    "from soupsavvy.operations import Operation, Text\n",
+    "\n",
+    "\n",
+    "class PydanticBook(pydantic.BaseModel):\n",
+    "    title: str\n",
+    "    price: int\n",
+    "\n",
+    "\n",
+    "class Book(BaseModel):\n",
+    "\n",
+    "    __scope__ = TypeSelector(\"div\") & ClassSelector(\"book\")\n",
+    "\n",
+    "    title = ClassSelector(\"title\") | Text()\n",
+    "    price = ClassSelector(\"price\") | Text() | Operation(int)\n",
+    "\n",
+    "\n",
+    "text = \"\"\"\n",
+    "    <div class=\"book\" href=\"www.book.com\">\n",
+    "        <p class=\"title\">Animal Farm</p>\n",
+    "        <p class=\"price\">100</p>\n",
+    "        <p>George Orwell</p>\n",
+    "    </div>\n",
+    "\"\"\"\n",
+    "soup = BeautifulSoup(text, features=\"lxml\")\n",
+    "book = Book.find(soup)\n",
+    "\n",
+    "book.migrate(PydanticBook)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Migration to `pydantic` model raises `ValidationError` if validation fails. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from bs4 import BeautifulSoup\n",
+    "import pydantic\n",
+    "from soupsavvy import ClassSelector, TypeSelector\n",
+    "from soupsavvy.models import BaseModel\n",
+    "from soupsavvy.operations import Operation, Text\n",
+    "\n",
+    "\n",
+    "class PydanticBook(pydantic.BaseModel):\n",
+    "    title: str\n",
+    "    price: str\n",
+    "\n",
+    "\n",
+    "class Book(BaseModel):\n",
+    "\n",
+    "    __scope__ = TypeSelector(\"div\") & ClassSelector(\"book\")\n",
+    "\n",
+    "    title = ClassSelector(\"title\") | Text()\n",
+    "    price = ClassSelector(\"price\") | Text() | Operation(int)\n",
+    "\n",
+    "\n",
+    "text = \"\"\"\n",
+    "    <div class=\"book\" href=\"www.book.com\">\n",
+    "        <p class=\"title\">Animal Farm</p>\n",
+    "        <p class=\"price\">100</p>\n",
+    "        <p>George Orwell</p>\n",
+    "    </div>\n",
+    "\"\"\"\n",
+    "soup = BeautifulSoup(text, features=\"lxml\")\n",
+    "book = Book.find(soup)\n",
+    "\n",
+    "try:\n",
+    "    book.migrate(PydanticBook)\n",
+    "except pydantic.ValidationError as e:\n",
+    "    print(e)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### SQLAlchemy"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sqlalchemy import Column, Integer, String\n",
+    "from sqlalchemy.orm import DeclarativeBase\n",
+    "from bs4 import BeautifulSoup\n",
+    "import pydantic\n",
+    "from soupsavvy import ClassSelector, TypeSelector\n",
+    "from soupsavvy.models import BaseModel\n",
+    "from soupsavvy.operations import Operation, Text\n",
+    "\n",
+    "\n",
+    "class Base(DeclarativeBase): ...\n",
+    "\n",
+    "\n",
+    "class SABook(Base):\n",
+    "    \"\"\"Mock model for testing migration to SQLAlchemy model.\"\"\"\n",
+    "\n",
+    "    __tablename__ = \"book\"\n",
+    "\n",
+    "    id = Column(Integer, primary_key=True)\n",
+    "    title = Column(String, nullable=True)\n",
+    "    price = Column(Integer, nullable=True)\n",
+    "\n",
+    "    def __repr__(self):\n",
+    "        return f\"<SABook(title={self.title}, price={self.price})>\"\n",
+    "\n",
+    "\n",
+    "class Book(BaseModel):\n",
+    "\n",
+    "    __scope__ = TypeSelector(\"div\") & ClassSelector(\"book\")\n",
+    "\n",
+    "    title = ClassSelector(\"title\") | Text()\n",
+    "    price = ClassSelector(\"price\") | Text() | Operation(int)\n",
+    "\n",
+    "\n",
+    "text = \"\"\"\n",
+    "    <div class=\"book\" href=\"www.book.com\">\n",
+    "        <p class=\"title\">Animal Farm</p>\n",
+    "        <p class=\"price\">100</p>\n",
+    "        <p>George Orwell</p>\n",
+    "    </div>\n",
+    "\"\"\"\n",
+    "soup = BeautifulSoup(text, features=\"lxml\")\n",
+    "book = Book.find(soup)\n",
+    "\n",
+    "book.migrate(SABook)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
     "## Conclusion"
    ]
   },
@@ -1578,7 +1753,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.11.9"
+   "version": "3.11.8"
   }
  },
  "nbformat": 4,

@@ -23,7 +23,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="models.wrappers" href="soupsavvy.models.wrappers.html" />
+    <link rel="next" title="models.constants" href="soupsavvy.models.constants.html" />
     <link rel="prev" title="models" href="soupsavvy.models.html" /> 
 </head>
 
@@ -56,6 +56,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.base.ModelMeta"><code class="docutils literal notranslate"><span class="pre">ModelMeta</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.constants.html">models.constants</a></li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html">models.wrappers</a></li>
 </ul>
 </li>
@@ -133,6 +134,20 @@ as keyword arguments.</p>
 </section>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.models.base.BaseModel.attributes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attributes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.models.base.BaseModel.attributes" title="Link to this definition"></a></dt>
+<dd><p>Returns a dictionary of model instance attributes representing
+model fields and their respective values.</p>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>dict[str, Any]</dt><dd><p>A dictionary mapping model field names to their respective values.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.models.base.BaseModel.find">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="_modules/soupsavvy/models/base.html#BaseModel.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.base.BaseModel.find" title="Link to this definition"></a></dt>
@@ -156,15 +171,15 @@ Default is True.</p>
 </dd>
 </dl>
 </section>
-<section id="returns">
-<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<section id="id2">
+<h2>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>Self | None</dt><dd><p>An instance of the model if found, otherwise None.</p>
 </dd>
 </dl>
 </section>
-<section id="id2">
-<h2>Raises<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<section id="id3">
+<h2>Raises<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>ModelNotFoundException</dt><dd><p>If the model’s scope is not found and strict is True.</p>
 </dd>
@@ -180,8 +195,8 @@ Default is True.</p>
 <dd><p>Searches for and returns all instances of the model within the provided tag.
 By default, perform recursive, non-strict search for model fields
 just like in <cite>find</cite> method.</p>
-<section id="id3">
-<h2>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="id4">
+<h2>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object within which to search for the model.</p>
 </dd>
@@ -193,10 +208,33 @@ returns all instances found.</p>
 </dd>
 </dl>
 </section>
-<section id="id4">
-<h2>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<section id="id5">
+<h2>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>list[Self]</dt><dd><p>A list of model instances found within the tag.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.models.base.BaseModel.migrate">
+<span class="sig-name descname"><span class="pre">migrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="reference internal" href="_modules/soupsavvy/models/base.html#BaseModel.migrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.base.BaseModel.migrate" title="Link to this definition"></a></dt>
+<dd><p>Migrates the model instance to another model class using its fields
+in target class initialization.</p>
+<section id="id6">
+<h2>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>model<span class="classifier">Type[Model]</span></dt><dd><p>The target model class to migrate the instance to.</p>
+</dd>
+<dt>kwargs<span class="classifier">Any</span></dt><dd><p>Additional keyword arguments to pass to model initialization.</p>
+</dd>
+</dl>
+</section>
+<section id="id7">
+<h2>Returns<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>Model</dt><dd><p>An instance of the target model class.</p>
 </dd>
 </dl>
 </section>
@@ -228,8 +266,8 @@ within which the model is to be found.</p>
 <dd><p>Initializes the model class and validates its attributes.
 For each user-defined model, which is a subclass of <cite>BaseModel</cite>,
 checks if scope and fields are properly defined.</p>
-<section id="id5">
-<h3>Raises<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<section id="id8">
+<h3>Raises<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>ScopeNotDefinedException</dt><dd><p>If the scope attribute is missing in the model class.</p>
 </dd>
@@ -245,8 +283,8 @@ checks if scope and fields are properly defined.</p>
 <dd><p>Returns the fields of the model class with their
 respective TagSearcher instances. The fields are aggregated based on
 the <cite>__inherit_fields__</cite> setting.</p>
-<section id="id6">
-<h3>Returns<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<section id="id9">
+<h3>Returns<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>dict[str, TagSearcher]</dt><dd><p>A dictionary mapping field names to their respective TagSearcher instances.</p>
 </dd>
@@ -259,8 +297,8 @@ the <cite>__inherit_fields__</cite> setting.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scope</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="soupsavvy.selectors.base.html#soupsavvy.selectors.base.SoupSelector" title="soupsavvy.selectors.base.SoupSelector"><span class="pre">SoupSelector</span></a></em><a class="headerlink" href="#soupsavvy.models.base.ModelMeta.scope" title="Link to this definition"></a></dt>
 <dd><p>Returns the <cite>__scope__</cite> attribute,
 which defines the scope selector for the model.</p>
-<section id="id7">
-<h3>Returns<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<section id="id10">
+<h3>Returns<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>SoupSelector</dt><dd><p>The scope selector used to identify the element in which
 the model is searched.</p>
@@ -279,7 +317,7 @@ the model is searched.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="soupsavvy.models.html" class="btn btn-neutral float-left" title="models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="soupsavvy.models.wrappers.html" class="btn btn-neutral float-right" title="models.wrappers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="soupsavvy.models.constants.html" class="btn btn-neutral float-right" title="models.constants" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

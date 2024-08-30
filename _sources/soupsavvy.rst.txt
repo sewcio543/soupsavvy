@@ -20,6 +20,7 @@ Submodules
    :maxdepth: 4
 
    soupsavvy.api
+   soupsavvy.base
    soupsavvy.exceptions
    soupsavvy.interfaces
 

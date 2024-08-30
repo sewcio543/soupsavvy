@@ -8,6 +8,7 @@ Submodules
    :maxdepth: 4
 
    soupsavvy.models.base
+   soupsavvy.models.constants
    soupsavvy.models.wrappers
 
 Module contents
