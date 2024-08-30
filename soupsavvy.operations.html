@@ -49,7 +49,6 @@
               <p class="caption" role="heading"><span class="caption-text">Components</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.selectors.html">selectors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.html">models</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">operations</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
@@ -59,6 +58,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-soupsavvy.operations">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.operations.Href"><code class="docutils literal notranslate"><span class="pre">Href</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#soupsavvy.operations.Operation"><code class="docutils literal notranslate"><span class="pre">Operation</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.Operation.__init__"><code class="docutils literal notranslate"><span class="pre">Operation.__init__()</span></code></a></li>
 </ul>
@@ -71,6 +71,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -79,6 +80,7 @@
 <li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/models.html">Models</a></li>
 </ul>
 
         </div>
@@ -155,13 +157,42 @@
 <section id="module-soupsavvy.operations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-soupsavvy.operations" title="Link to this heading"></a></h2>
 <dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.operations.Href">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Href</span></span><a class="reference internal" href="_modules/soupsavvy/operations/general.html#Href"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.Href" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationSearcherMixin" title="soupsavvy.operations.general.OperationSearcherMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">OperationSearcherMixin</span></code></a></p>
+<p>Operation to extract href attribute from a BeautifulSoup Tag.
+Wrapper of one of the common operation used in web scraping.
+If href attribute is not present, returns None.</p>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Href</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Href</span><span class="p">()</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+<span class="go">&quot;www.example.com&quot;</span>
+</pre></div>
+</div>
+<p>Implements <cite>TagSearcher</cite> interface for convenience. It has find methods
+that can be used to extract href from provided tag.</p>
+</section>
+<section id="id1">
+<h3>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Href</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Href</span><span class="p">()</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+<span class="go">&quot;www.example.com&quot;</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.operations.Operation">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/operations/general.html#Operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.Operation" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.BaseOperation" title="soupsavvy.operations.base.BaseOperation"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseOperation</span></code></a></p>
 <p>Custom operation that wraps any function
 to be used with other <cite>soupsavvy</cite> components.</p>
-<section id="example">
-<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<section id="id2">
+<h3>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Operation</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;TEXT&quot;</span><span class="p">)</span>
@@ -190,8 +221,8 @@ to be used with other <cite>soupsavvy</cite> components.</p>
 <dd><p>Bases: <a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationSearcherMixin" title="soupsavvy.operations.general.OperationSearcherMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">OperationSearcherMixin</span></code></a></p>
 <p>Operation to extract text from a BeautifulSoup Tag.
 Wrapper of most common operation used in web scraping.</p>
-<section id="id1">
-<h3>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<section id="id3">
+<h3>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Text</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
@@ -203,8 +234,8 @@ and imitates its default behavior.</p>
 <p>Implements <cite>TagSearcher</cite> interface for convenience. It has find methods
 that can be used to extract text from provided tag.</p>
 </section>
-<section id="id2">
-<h3>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<section id="id4">
+<h3>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Text</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
@@ -215,8 +246,8 @@ that can be used to extract text from provided tag.</p>
 <dt class="sig sig-object py" id="soupsavvy.operations.Text.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/general.html#Text.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.Text.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes Text operation with optional separator and strip option.</p>
-<section id="id3">
-<h4>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h4>
+<section id="id5">
+<h4>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>separator<span class="classifier">str, optional</span></dt><dd><p>Separator used to join strings from multiple text nodes, by default “”.</p>
 </dd>

@@ -47,9 +47,9 @@
               <p class="caption" role="heading"><span class="caption-text">Components</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.selectors.html">selectors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -58,6 +58,7 @@
 <li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/models.html">Models</a></li>
 </ul>
 
         </div>
@@ -226,8 +227,8 @@ do not contain all required fields defined in the model class.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt class="sig sig-object py" id="soupsavvy.exceptions.ModelScopeNotFoundException">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ModelScopeNotFoundException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#ModelScopeNotFoundException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.ModelScopeNotFoundException" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="soupsavvy.exceptions.ModelNotFoundException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ModelNotFoundException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#ModelNotFoundException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.ModelNotFoundException" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.BaseModelException" title="soupsavvy.exceptions.BaseModelException"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModelException</span></code></a></p>
 <p>Exception raised by BaseModel when model scope was not found in provided tag
 and strict parameter was set to True.</p>

@@ -6,9 +6,9 @@
 :maxdepth: 1
 
 soupsavvy.selectors
-soupsavvy.testing
 soupsavvy.models
 soupsavvy.operations
+soupsavvy.testing
 ```
 
 ```{toctree}
@@ -20,6 +20,7 @@ demos/selectors
 demos/combining
 demos/css
 demos/testing
+demos/models
 ```
 
 ```{include} ../../README.md
