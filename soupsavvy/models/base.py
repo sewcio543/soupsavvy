@@ -7,24 +7,17 @@ from __future__ import annotations
 
 from abc import ABC
 from functools import reduce
-from typing import Any, Literal, Optional, overload
+from typing import Any, Literal, Optional, Type, TypeVar, overload
 
 from bs4 import Tag
 from typing_extensions import Self
 
 import soupsavvy.exceptions as exc
+import soupsavvy.models.constants as c
 from soupsavvy.interfaces import Comparable, TagSearcher, TagSearcherExceptions
 from soupsavvy.selectors.base import SoupSelector, check_selector
 
-# default recursive value for finding fields of model within the scope
-_DEFAULT_RECURSIVE = True
-# default strict value for finding fields of model within the scope
-_DEFAULT_STRICT = False
-
-_SCOPE = "__scope__"
-_INHERIT_FIELDS = "__inherit_fields__"
-
-_SPECIAL_FIELDS = {_SCOPE, _INHERIT_FIELDS}
+T = TypeVar("T")
 
 
 class ModelMeta(type(ABC)):
@@ -60,18 +53,18 @@ class ModelMeta(type(ABC)):
         """
         super().__init__(name, bases, class_dict)
 
-        if name == "BaseModel":
+        if name in c.BASE_MODELS:
             return
 
-        scope = getattr(cls, _SCOPE)
+        scope = getattr(cls, c.SCOPE)
 
         if scope is None:
             raise exc.ScopeNotDefinedException(
-                f"Missing '{_SCOPE}' class attribute in '{name}'."
+                f"Missing '{c.SCOPE}' class attribute in '{name}'."
             )
 
         message = (
-            f"'{_SCOPE}' attribute of the model class '{cls.__name__}' "
+            f"'{c.SCOPE}' attribute of the model class '{cls.__name__}' "
             f"needs to be '{SoupSelector.__name__}' instance, got '{type(scope)}'."
         )
         check_selector(scope, message=message)
@@ -93,7 +86,7 @@ class ModelMeta(type(ABC)):
             The scope selector used to identify the element in which
             the model is searched.
         """
-        return getattr(cls, _SCOPE)
+        return getattr(cls, c.SCOPE)
 
     @property
     def fields(cls) -> dict[str, TagSearcher]:
@@ -120,7 +113,7 @@ class ModelMeta(type(ABC)):
                 for base in reversed(cls.__mro__)
                 if issubclass(base, BaseModel) and base is not BaseModel
             ]
-            if getattr(cls, _INHERIT_FIELDS)
+            if getattr(cls, c.INHERIT_FIELDS)
             else [cls]
         )
 
@@ -129,16 +122,16 @@ class ModelMeta(type(ABC)):
             [
                 {
                     key: value
-                    for key, value in c.__dict__.items()
+                    for key, value in class_.__dict__.items()
                     if (
                         # accepted field must be TagSearcher
                         isinstance(value, TagSearcher)
                         # or BaseModel subclass
                         or (isinstance(value, type) and issubclass(value, BaseModel))
                     )
-                    and key not in _SPECIAL_FIELDS
+                    and key not in c.SPECIAL_FIELDS
                 }
-                for c in classes
+                for class_ in classes
             ],
         )
 
@@ -167,8 +160,9 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         UnknownModelFieldException
             If any unknown fields are provided in the kwargs.
         """
+        fields = self.__class__.fields.keys()
 
-        for field in self.__class__.fields.keys():
+        for field in fields:
 
             try:
                 value = kwargs.pop(field)
@@ -193,6 +187,19 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         Post-initialization hook. Can be overridden by subclasses to perform additional
         initialization steps after the base initialization.
         """
+
+    @property
+    def attributes(self) -> dict[str, Any]:
+        """
+        Returns a dictionary of model instance attributes representing
+        model fields and their respective values.
+
+        Returns
+        -------
+        dict[str, Any]
+            A dictionary mapping model field names to their respective values.
+        """
+        return {field: getattr(self, field) for field in self.__class__.fields.keys()}
 
     @overload
     @classmethod
@@ -296,8 +303,8 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
             try:
                 result = selector.find(
                     tag=tag,
-                    strict=_DEFAULT_STRICT,
-                    recursive=_DEFAULT_RECURSIVE,
+                    strict=c.DEFAULT_STRICT,
+                    recursive=c.DEFAULT_RECURSIVE,
                 )
             except exc.RequiredConstraintException as e:
                 raise exc.FieldExtractionException(
@@ -344,6 +351,25 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         """
         elements = cls.scope.find_all(tag=tag, recursive=recursive, limit=limit)
         return [cls._find(element) for element in elements]
+
+    def migrate(self, model: Type[T], **kwargs) -> T:
+        """
+        Migrates the model instance to another model class using its fields
+        in target class initialization.
+
+        Parameters
+        ----------
+        model : Type[Model]
+            The target model class to migrate the instance to.
+        kwargs : Any
+            Additional keyword arguments to pass to model initialization.
+
+        Returns
+        -------
+        Model
+            An instance of the target model class.
+        """
+        return model(**self.attributes, **kwargs)
 
     def __str__(self) -> str:
         params = [
