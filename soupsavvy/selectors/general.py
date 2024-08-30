@@ -199,3 +199,30 @@ class UniversalSelector(SoupSelector, SelectableCSS):
 )
 class AnyTagSelector(UniversalSelector):
     """Alias for UniversalSelector class. Deprecated component."""
+
+
+class SelfSelector(SoupSelector):
+    """
+    Class representing a selector that matches the element itself.
+    Convenience component that can be used for compatibility.
+
+    Example
+    -------
+    >>> SelfSelector()
+
+    always matches the tag that is passed to the find methods.
+
+    Can be used in user-defined model for scope if element itself is the scope.
+    """
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        return [tag]
+
+    def __eq__(self, other: object) -> bool:
+        # needs to be the same type
+        return isinstance(other, SelfSelector)
