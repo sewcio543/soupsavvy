@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from abc import ABC
 from functools import reduce
-from typing import Any, Literal, Optional, overload
+from typing import Any, Literal, Optional, Type, TypeVar, overload
 
 from bs4 import Tag
 from typing_extensions import Self
@@ -16,6 +16,8 @@ import soupsavvy.exceptions as exc
 import soupsavvy.models.constants as c
 from soupsavvy.interfaces import Comparable, TagSearcher, TagSearcherExceptions
 from soupsavvy.selectors.base import SoupSelector, check_selector
+
+T = TypeVar("T")
 
 
 class ModelMeta(type(ABC)):
@@ -158,8 +160,9 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         UnknownModelFieldException
             If any unknown fields are provided in the kwargs.
         """
+        fields = self.__class__.fields.keys()
 
-        for field in self.__class__.fields.keys():
+        for field in fields:
 
             try:
                 value = kwargs.pop(field)
@@ -184,6 +187,19 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         Post-initialization hook. Can be overridden by subclasses to perform additional
         initialization steps after the base initialization.
         """
+
+    @property
+    def attributes(self) -> dict[str, Any]:
+        """
+        Returns a dictionary of model instance attributes representing
+        model fields and their respective values.
+
+        Returns
+        -------
+        dict[str, Any]
+            A dictionary mapping model field names to their respective values.
+        """
+        return {field: getattr(self, field) for field in self.__class__.fields.keys()}
 
     @overload
     @classmethod
@@ -335,6 +351,25 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         """
         elements = cls.scope.find_all(tag=tag, recursive=recursive, limit=limit)
         return [cls._find(element) for element in elements]
+
+    def migrate(self, model: Type[T], **kwargs) -> T:
+        """
+        Migrates the model instance to another model class using its fields
+        in target class initialization.
+
+        Parameters
+        ----------
+        model : Type[Model]
+            The target model class to migrate the instance to.
+        kwargs : Any
+            Additional keyword arguments to pass to model initialization.
+
+        Returns
+        -------
+        Model
+            An instance of the target model class.
+        """
+        return model(**self.attributes, **kwargs)
 
     def __str__(self) -> str:
         params = [
