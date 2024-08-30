@@ -251,7 +251,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
 
         Raises
         ------
-        ModelScopeNotFoundException
+        ModelNotFoundException
             If the model's scope is not found and strict is True.
         FieldExtractionException
             If any model field failed to be extracted.
@@ -262,7 +262,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
             return cls._find(bound)
 
         if strict:
-            raise exc.ModelScopeNotFoundException(
+            raise exc.ModelNotFoundException(
                 f"Scope for the model '{cls.__name__}' was not found "
                 f"from '{cls.scope}' in tag."
             )
@@ -301,11 +301,13 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
                 )
             except exc.RequiredConstraintException as e:
                 raise exc.FieldExtractionException(
-                    f"Field '{key}' is required and was not found in model '{cls.__name__}'."
+                    f"Field '{key}' is required and was not found in model '{cls.__name__}' "
+                    f"for element:\n{tag}."
                 ) from e
             except TagSearcherExceptions as e:
                 raise exc.FieldExtractionException(
-                    f"Extracting field '{key}' failed in model '{cls.__name__}'."
+                    f"Extracting field '{key}' failed in model '{cls.__name__}' "
+                    f"for element:\n{tag}."
                 ) from e
 
             params[key] = result
@@ -344,10 +346,11 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         return [cls._find(element) for element in elements]
 
     def __str__(self) -> str:
-        params = ", ".join(
-            f"{name}={getattr(self, name)}" for name in self.__class__.fields.keys()
-        )
-        return f"{self.__class__.__name__}({params})"
+        params = [
+            f"{name}={repr(getattr(self, name))}"
+            for name in self.__class__.fields.keys()
+        ]
+        return f"{self.__class__.__name__}({', '.join(params)})"
 
     def __repr__(self) -> str:
         return str(self)
