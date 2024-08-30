@@ -4,6 +4,7 @@ Module for general purpose operations.
 * Operation - Custom operation with any function.
 * OperationPipeline - Chain multiple operations together.
 * Text - Extract text from a BeautifulSoup Tag - most common operation.
+* Href - Extract href attribute from a BeautifulSoup Tag.
 
 These components are design to be used for processing html tags and extracting
 desired information. They can be used in combination with selectors.

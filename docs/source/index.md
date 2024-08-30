@@ -6,6 +6,8 @@
 :maxdepth: 1
 
 soupsavvy.selectors
+soupsavvy.models
+soupsavvy.operations
 soupsavvy.testing
 ```
 
@@ -18,6 +20,7 @@ demos/selectors
 demos/combining
 demos/css
 demos/testing
+demos/models
 ```
 
 ```{include} ../../README.md

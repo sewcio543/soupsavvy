@@ -9,7 +9,7 @@ from soupsavvy.exceptions import (
     FieldExtractionException,
     FieldsNotDefinedException,
     MissingFieldsException,
-    ModelScopeNotFoundException,
+    ModelNotFoundException,
     NotSoupSelectorException,
     ScopeNotDefinedException,
     UnknownModelFieldException,
@@ -191,6 +191,15 @@ class TestBaseModel:
         assert model.title == "Title!"
         assert model.price == 10
 
+    def test_model_has_correct_string_representation(self):
+        """
+        Tests if every model has correct string representation. It should contain
+        class name and all fields with their repr values.
+        """
+        model = MockModel(title="Title", price=10)
+        expected = f"MockModel(title={repr(model.title)}, price={repr(model.price)})"
+        assert str(model) == expected == repr(model)
+
     def test_find_returns_first_found_model_instance(self):
         """Tests if find method returns model instance within first found scope."""
         text = """
@@ -237,7 +246,7 @@ class TestBaseModel:
 
     def test_find_raises_error_when_no_scope_found_and_strict_true(self):
         """
-        Tests if ModelScopeNotFoundException is raised when no scope is found
+        Tests if ModelNotFoundException is raised when no scope is found
         in provided bs object and strict is set to True. Strict option works similar way
         as in selectors, when no match was found, exception is raised.
         """
@@ -252,7 +261,7 @@ class TestBaseModel:
         bs = to_bs(text)
         selector = MockModel
 
-        with pytest.raises(ModelScopeNotFoundException):
+        with pytest.raises(ModelNotFoundException):
             selector.find(bs, strict=True)
 
     def test_find_returns_none_if_no_scope_found_with_recursive_false_and_strict_false(
@@ -281,7 +290,7 @@ class TestBaseModel:
         self,
     ):
         """
-        Tests if ModelScopeNotFoundException is raised when no scope is found
+        Tests if ModelNotFoundException is raised when no scope is found
         in provided bs object, recursive is set to False and strict is set to True.
         """
         text = """
@@ -297,7 +306,7 @@ class TestBaseModel:
         bs = find_body_element(to_bs(text))
         selector = MockModel
 
-        with pytest.raises(ModelScopeNotFoundException):
+        with pytest.raises(ModelNotFoundException):
             selector.find(bs, strict=True, recursive=False)
 
     def test_find_returns_first_matched_instance_with_recursive_false(self):
