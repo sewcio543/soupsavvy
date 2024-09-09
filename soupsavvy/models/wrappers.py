@@ -11,7 +11,7 @@ Classes
 - Default : FieldWrapper
 """
 
-from typing import Any, Optional
+from typing import Any, Optional, Type, Union
 
 from bs4 import Tag
 
@@ -19,6 +19,9 @@ import soupsavvy.exceptions as exc
 from soupsavvy.interfaces import Comparable, TagSearcher
 from soupsavvy.operations.base import BaseOperation, check_operation
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
+
+# allowed exception types to suppress
+ExceptionCategory = Union[Type[Exception], tuple[Type[Exception], ...]]
 
 
 class OperationWrapper(BaseOperation):
@@ -93,9 +96,9 @@ class SkipNone(OperationWrapper):
 
 class Suppress(OperationWrapper):
     """
-    A wrapper that executes the operation
-    and suppresses FailedOperationExecution exception, returning None instead.
-    Used to catch exceptions where it's expected this might happen.
+    A wrapper that executes the operation and suppresses exceptions raised,
+    returning None instead. Used to catch exceptions where it's expected
+    this might happen.
 
     Example
     -------
@@ -119,12 +122,62 @@ class Suppress(OperationWrapper):
     Operations in example can be used to try to convert string to integer
     from text of tag, that can potentially be empty. In such case, if it's not required,
     default can be set to None or known value.
+
+    Suppress also accepts category of exceptions to suppress, by default it suppresses
+    all exceptions that inherit from Exception.
+
+    Example
+    -------
+    >>> from soupsavvy.operations import Operation
+    ... from soupsavvy.models import Suppress
+    ... operation = Suppress(Operation(int), category=ValueError)
+    ... operation.execute("not an integer")
+    None
+
+    Category can be a tuple of exceptions as well, `issubclass` is used to check
+    if the cause of exception is subclass of provided category.
+
+    Example
+    -------
+    >>> from soupsavvy.operations import Operation
+    ... from soupsavvy.models import Suppress
+    ... operation = Suppress(Operation(int), category=(AttributeError, ValueError))
+    ... operation.execute("not an integer")
+    FailedOperationExecution
     """
+
+    def __init__(
+        self,
+        operation: BaseOperation,
+        category: ExceptionCategory = Exception,
+    ) -> None:
+        """
+        Initialize Suppress OperationWrapper.
+
+        Parameters
+        ----------
+        operation : BaseOperation
+            The operation to be wrapped.
+        category : Type[Exception] | tuple[Type[Exception], ...], optional
+            The exception type(s) to suppress. By default, suppresses all exceptions
+            that inherit from Exception.
+
+        Raises
+        ------
+        NotOperationException
+            If provided object is not an instance of BaseOperation.
+        """
+        super().__init__(operation)
+        self._category = category
 
     def _execute(self, arg: Any) -> Any:
         try:
             return self.operation.execute(arg)
-        except exc.FailedOperationExecution:
+        except exc.FailedOperationExecution as e:
+            cause = e.__cause__.__class__
+
+            if not issubclass(cause, self._category):
+                raise
             return None
 
 
@@ -155,7 +208,19 @@ class FieldWrapper(TagSearcher, Comparable):
                 f"Expected {TagSearcher.__name__}, got {type(selector)}."
             )
 
-        self.selector = selector
+        self._selector = selector
+
+    @property
+    def selector(self) -> TagSearcher:
+        """
+        Return searcher, that is wrapped by this FieldWrapper.
+
+        Returns
+        -------
+        TagSearcher
+            TagSearcher instance wrapped by this FieldWrapper.
+        """
+        return self._selector
 
     def find_all(
         self,

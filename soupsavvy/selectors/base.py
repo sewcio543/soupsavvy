@@ -3,14 +3,15 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, Union, overload
+from collections.abc import Iterable
+from typing import TYPE_CHECKING, Any, Literal, Optional, Union, overload
 
 from bs4 import NavigableString, Tag
+from typing_extensions import deprecated
 
 import soupsavvy.exceptions as exc
 import soupsavvy.selectors.namespace as ns
 from soupsavvy.interfaces import Comparable, TagSearcher
-from soupsavvy.utils.deprecation import deprecated_function
 
 if TYPE_CHECKING:
     from soupsavvy.operations.base import BaseOperation
@@ -707,9 +708,7 @@ class SelectableCSS(ABC):
         )
 
     @property
-    @deprecated_function(
-        message="'selector' property is deprecated, use 'css' instead."
-    )
+    @deprecated("'selector' property is deprecated, use 'css' instead.")
     def selector(self) -> str:
         """Returns string representing element css selector."""
         return self.css
@@ -749,7 +748,19 @@ class CompositeSoupSelector(SoupSelector):
         NotSoupSelectorException
             If any of provided parameters is not an instance of SoupSelector.
         """
-        self.selectors = [check_selector(selector) for selector in selectors]
+        self._selectors = [check_selector(selector) for selector in selectors]
+
+    @property
+    def selectors(self) -> list[SoupSelector]:
+        """
+        Returns a list of selectors that composite selector consists of.
+
+        Returns
+        -------
+        list[SoupSelector]
+            List of SoupSelector objects.
+        """
+        return self._selectors
 
     def __eq__(self, other: object) -> bool:
         # check for CompositeSoupSelector type for type checking sake

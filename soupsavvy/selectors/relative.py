@@ -2,7 +2,8 @@
 Module that contains relative selectors and utility components.
 """
 
-from typing import Callable, Optional
+from collections.abc import Callable
+from typing import Optional
 
 from bs4 import Tag
 
@@ -48,7 +49,20 @@ class RelativeSelector(SoupSelector):
         selector : SoupSelector
             Selector that is used to find tags relative to the anchor tag.
         """
-        self.selector = check_selector(selector)
+        self._selector = check_selector(selector)
+
+    @property
+    def selector(self) -> SoupSelector:
+        """
+        Returns selector used to find elements relative to the anchor element
+        in this relative selector.
+
+        Returns
+        -------
+        SoupSelector
+            Selector used in this relative selector.
+        """
+        return self._selector
 
     def __eq__(self, other: object) -> bool:
         # check for RelativeSelector type for type checking sake

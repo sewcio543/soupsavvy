@@ -1,7 +1,8 @@
 """Testing module for general operations."""
 
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable
+from typing import Any
 
 import pytest
 
@@ -213,47 +214,6 @@ class TestText:
         result = operation.execute(bs)
         assert result == "Hello world"
 
-    def test_returns_text_with_find_method(self):
-        """
-        Tests if find method returns text of a BeautifulSoup Tag, it calls
-        execute method. This is for done for convenience and compatibility with
-        TagSearcher interface.
-        """
-        text = """
-            <div href="github">Hello world</div>
-        """
-        bs = to_bs(text).div
-        operation = Text()
-        result = operation.find(bs)  # type: ignore
-        assert result == "Hello world"
-
-    def test_returns_list_with_single_element_with_find_all_method(self):
-        """
-        Tests if find_all method returns text of a BeautifulSoup Tag wrapped
-        in single element list. This is for done for compatibility with
-        TagSearcher interface.
-        """
-        text = """
-            <div href="github">Hello world</div>
-        """
-        bs = to_bs(text).div
-        operation = Text()
-        result = operation.find_all(bs)  # type: ignore
-        assert result == ["Hello world"]
-
-    def test_raises_error_when_find_methods_get_not_tag(self):
-        """
-        Tests if find and find_all methods raise FailedOperationExecution
-        if input is not bs4 tag.
-        """
-        operation = Text()
-
-        with pytest.raises(FailedOperationExecution):
-            operation.find("string")  # type: ignore
-
-        with pytest.raises(FailedOperationExecution):
-            operation.find_all("string")  # type: ignore
-
     @pytest.mark.parametrize(
         argnames="operations",
         argvalues=[
@@ -325,47 +285,6 @@ class TestHref:
         operation = Href()
         result = operation.execute(bs)
         assert result == "github"
-
-    def test_returns_href_with_find_method(self):
-        """
-        Tests if find method returns href attribute of a BeautifulSoup Tag, it calls
-        execute method. This is for done for convenience and compatibility with
-        TagSearcher interface.
-        """
-        text = """
-            <div href="github">Hello world</div>
-        """
-        bs = to_bs(text).div
-        operation = Href()
-        result = operation.find(bs)  # type: ignore
-        assert result == "github"
-
-    def test_returns_list_with_single_element_with_find_all_method(self):
-        """
-        Tests if find_all method returns text of a BeautifulSoup Tag wrapped
-        in single element list. This is for done for compatibility with
-        TagSearcher interface.
-        """
-        text = """
-            <div href="github">Hello world</div>
-        """
-        bs = to_bs(text).div
-        operation = Href()
-        result = operation.find_all(bs)  # type: ignore
-        assert result == ["github"]
-
-    def test_raises_error_when_find_methods_get_not_tag(self):
-        """
-        Tests if find and find_all methods raise FailedOperationExecution
-        if input is not bs4 tag.
-        """
-        operation = Href()
-
-        with pytest.raises(FailedOperationExecution):
-            operation.find("string")  # type: ignore
-
-        with pytest.raises(FailedOperationExecution):
-            operation.find_all("string")  # type: ignore
 
     @pytest.mark.parametrize(
         argnames="operations",

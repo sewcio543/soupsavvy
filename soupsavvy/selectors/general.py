@@ -13,11 +13,11 @@ from dataclasses import dataclass
 from typing import Optional, Pattern
 
 from bs4 import SoupStrainer, Tag
+from typing_extensions import deprecated
 
 import soupsavvy.selectors.namespace as ns
 from soupsavvy.selectors.base import SelectableCSS, SoupSelector
 from soupsavvy.selectors.tag_utils import TagIterator
-from soupsavvy.utils.deprecation import deprecated_class
 
 
 @dataclass
@@ -194,9 +194,7 @@ class UniversalSelector(SoupSelector, SelectableCSS):
         return isinstance(other, UniversalSelector)
 
 
-@deprecated_class(
-    f"AnyTagSelector is deprecated, use {UniversalSelector.__name__} class instead."
-)
+@deprecated(f"AnyTagSelector is deprecated, use 'UniversalSelector' class instead.")
 class AnyTagSelector(UniversalSelector):
     """Alias for UniversalSelector class. Deprecated component."""
 

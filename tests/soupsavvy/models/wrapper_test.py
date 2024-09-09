@@ -22,7 +22,11 @@ from soupsavvy.models.wrappers import (
     Suppress,
 )
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
-from tests.soupsavvy.operations.conftest import MockIntOperation, MockTextOperation
+from tests.soupsavvy.operations.conftest import (
+    BaseMockOperation,
+    MockIntOperation,
+    MockTextOperation,
+)
 from tests.soupsavvy.selectors.conftest import (
     MockDivSelector,
     MockLinkSelector,
@@ -581,7 +585,7 @@ class TestOperationWrapper:
         It expects instance of BaseOperation.
         """
         with pytest.raises(NotOperationException):
-            OperationWrapper(MockLinkSelector())  # type: ignore
+            MockOperationWrapper2(MockLinkSelector())  # type: ignore
 
     @pytest.mark.parametrize(
         argnames="operations",
@@ -629,6 +633,62 @@ class TestSuppress:
         and raised FailedOperationException.
         """
         wrapper = Suppress(MockIntOperation())
+        result = wrapper.execute("text")
+        assert result is None
+
+    def test_execute_raises_error_if_nto_caused_by_category_exception(self):
+        """
+        Tests if execute method raises FailedOperationExecution if operation failed
+        and raised exception not caused by category exception.
+        """
+        wrapper = Suppress(MockIntOperation(), category=AttributeError)
+
+        with pytest.raises(FailedOperationExecution):
+            wrapper.execute("text")
+
+    def test_execute_raises_error_if_not_caused_by_category_tuple(self):
+        """
+        Tests if execute method raises FailedOperationExecution if operation failed
+        and raised exception not caused by any category of exceptions
+        specified in the tuple.
+        """
+        wrapper = Suppress(MockIntOperation(), category=(AttributeError, TypeError))
+
+        with pytest.raises(FailedOperationExecution):
+            wrapper.execute("text")
+
+    def test_execute_returns_none_if_operation_failed_with_exception_category(self):
+        """
+        Tests if execute method returns None if operation failed and raised
+        exception specified in the category.
+        """
+        wrapper = Suppress(MockIntOperation(), category=ValueError)
+        result = wrapper.execute("text")
+        assert result is None
+
+    def test_execute_returns_none_if_subclass_of_exception_category_was_cause(self):
+        """
+        Tests if execute method returns None if operation failed and raised
+        any subclass of the exception specified in the category.
+        """
+
+        class MockError(ValueError): ...
+
+        class MockFailsOperation(BaseMockOperation):
+
+            def _execute(self, arg: str) -> int:
+                raise MockError
+
+        wrapper = Suppress(MockFailsOperation(), category=ValueError)
+        result = wrapper.execute("text")
+        assert result is None
+
+    def test_execute_returns_none_if_operation_failed_with_category_tuple(self):
+        """
+        Tests if execute method returns None if operation failed and raised
+        any category of exceptions specified in the tuple.
+        """
+        wrapper = Suppress(MockIntOperation(), category=(AttributeError, ValueError))
         result = wrapper.execute("text")
         assert result is None
 
