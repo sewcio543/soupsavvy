@@ -6,11 +6,11 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, Union, overload
 
 from bs4 import NavigableString, Tag
+from typing_extensions import deprecated
 
 import soupsavvy.exceptions as exc
 import soupsavvy.selectors.namespace as ns
 from soupsavvy.interfaces import Comparable, TagSearcher
-from soupsavvy.utils.deprecation import deprecated_function
 
 if TYPE_CHECKING:
     from soupsavvy.operations.base import BaseOperation
@@ -707,9 +707,7 @@ class SelectableCSS(ABC):
         )
 
     @property
-    @deprecated_function(
-        message="'selector' property is deprecated, use 'css' instead."
-    )
+    @deprecated("'selector' property is deprecated, use 'css' instead.")
     def selector(self) -> str:
         """Returns string representing element css selector."""
         return self.css
