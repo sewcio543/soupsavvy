@@ -5,7 +5,8 @@ selectors. There are syntactical sugar methods for creating complex selectors.
 """
 
 import operator
-from typing import Any, Callable, Type
+from collections.abc import Callable
+from typing import Any, Type
 
 import pytest
 from bs4 import Tag

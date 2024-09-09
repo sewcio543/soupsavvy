@@ -1,6 +1,6 @@
 """Module for testing the NthGenerator class."""
 
-from typing import Generator
+from collections.abc import Generator
 
 import pytest
 

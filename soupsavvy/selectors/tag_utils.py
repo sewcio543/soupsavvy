@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from itertools import chain
-from typing import Iterable, Iterator, Optional
+from typing import Optional
 
 from bs4 import Tag
 
