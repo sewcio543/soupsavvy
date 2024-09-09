@@ -48,8 +48,33 @@ class SelectionPipeline(TagSearcher, Comparable):
                 f"Expected {TagSearcher.__name__}, got {type(selector)}"
             )
 
-        self.selector = selector
-        self.operation = operation
+        self._selector = selector
+        self._operation = operation
+
+    @property
+    def selector(self) -> TagSearcher:
+        """
+        Returns TagSearcher object of this pipeline used for finding target
+        information in the tag.
+
+        Returns
+        -------
+        TagSearcher
+            TagSearcher object used in this pipeline.
+        """
+        return self._selector
+
+    @property
+    def operation(self) -> BaseOperation:
+        """
+        Returns BaseOperation object of this pipeline used for processing the data.
+
+        Returns
+        -------
+        BaseOperation
+            BaseOperation object used in this pipeline.
+        """
+        return self._operation
 
     def find(
         self,

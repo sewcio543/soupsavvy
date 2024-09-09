@@ -748,7 +748,19 @@ class CompositeSoupSelector(SoupSelector):
         NotSoupSelectorException
             If any of provided parameters is not an instance of SoupSelector.
         """
-        self.selectors = [check_selector(selector) for selector in selectors]
+        self._selectors = [check_selector(selector) for selector in selectors]
+
+    @property
+    def selectors(self) -> list[SoupSelector]:
+        """
+        Returns a list of selectors that composite selector consists of.
+
+        Returns
+        -------
+        list[SoupSelector]
+            List of SoupSelector objects.
+        """
+        return self._selectors
 
     def __eq__(self, other: object) -> bool:
         # check for CompositeSoupSelector type for type checking sake

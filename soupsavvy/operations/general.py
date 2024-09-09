@@ -18,12 +18,15 @@ from typing import Any, Optional
 
 from bs4 import Tag
 
-from soupsavvy.interfaces import TagSearcher
-from soupsavvy.operations.base import BaseOperation, check_operation
+from soupsavvy.operations.base import (
+    BaseOperation,
+    OperationSearcherMixin,
+    check_operation,
+)
 from soupsavvy.selectors.base import SoupSelector
 
 
-class OperationPipeline(BaseOperation):
+class OperationPipeline(OperationSearcherMixin):
     """
     Pipeline for chaining multiple operations together.
     Applies each operation in sequence, passing the result to the next.
@@ -103,7 +106,7 @@ class OperationPipeline(BaseOperation):
         return self.operations == x.operations
 
 
-class Operation(BaseOperation):
+class Operation(OperationSearcherMixin):
     """
     Custom operation that wraps any function
     to be used with other `soupsavvy` components.
@@ -137,58 +140,6 @@ class Operation(BaseOperation):
             return False
 
         return self.operation is x.operation
-
-
-class OperationSearcherMixin(BaseOperation, TagSearcher):
-    def find_all(
-        self,
-        tag: Tag,
-        recursive: bool = True,
-        limit: Optional[int] = None,
-    ) -> list[Any]:
-        """
-        Extracts information from provided element.
-
-        Parameters
-        ----------
-        tag : Tag
-            Any BeautifulSoup Tag object to extract text from.
-        recursive : bool, optional
-            Ignored, for consistency with interface.
-        limit : int, optional
-            Ignored, for consistency with interface.
-
-        Returns
-        -------
-        list[Any]
-            Extracted information from the tag.
-        """
-        return [self.execute(tag)]
-
-    def find(
-        self,
-        tag: Tag,
-        strict: bool = False,
-        recursive: bool = True,
-    ) -> Any:
-        """
-        Extracts information from provided element.
-
-        Parameters
-        ----------
-        tag : Tag
-            Any BeautifulSoup Tag object to extract text from.
-        strict : bool, optional
-            Ignored, for consistency with interface.
-        recursive : int, optional
-            Ignored, for consistency with interface.
-
-        Returns
-        -------
-        Any
-            Extracted information from the tag.
-        """
-        return self.execute(tag)
 
 
 class Text(OperationSearcherMixin):
