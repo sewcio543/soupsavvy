@@ -18,12 +18,15 @@ from typing import Any, Optional
 
 from bs4 import Tag
 
-from soupsavvy.interfaces import TagSearcher
-from soupsavvy.operations.base import BaseOperation, check_operation
+from soupsavvy.operations.base import (
+    BaseOperation,
+    OperationSearcherMixin,
+    check_operation,
+)
 from soupsavvy.selectors.base import SoupSelector
 
 
-class OperationPipeline(BaseOperation):
+class OperationPipeline(OperationSearcherMixin):
     """
     Pipeline for chaining multiple operations together.
     Applies each operation in sequence, passing the result to the next.
@@ -37,6 +40,11 @@ class OperationPipeline(BaseOperation):
 
     Most common way of creating a pipeline is using the `|` operator
     on two operations.
+
+    `OperationPipeline` is operation-searcher mixin, which means it can be used
+    to find information in bs4 Tag directly with find methods.
+    This way, it can be used as field in model or `execute` method can be replaced
+    with `find` method, which would produce the same result.
     """
 
     def __init__(
@@ -103,7 +111,7 @@ class OperationPipeline(BaseOperation):
         return self.operations == x.operations
 
 
-class Operation(BaseOperation):
+class Operation(OperationSearcherMixin):
     """
     Custom operation that wraps any function
     to be used with other `soupsavvy` components.
@@ -114,6 +122,11 @@ class Operation(BaseOperation):
     ... operation = Operation(str.lower)
     ... operation.execute("TEXT")
     "text"
+
+    `Operation` is operation-searcher mixin, which means it can be used
+    to find information in bs4 Tag directly with find methods.
+    This way, it can be used as field in model or `execute` method can be replaced
+    with `find` method, which would produce the same result.
     """
 
     def __init__(self, func: Callable) -> None:
@@ -137,58 +150,6 @@ class Operation(BaseOperation):
             return False
 
         return self.operation is x.operation
-
-
-class OperationSearcherMixin(BaseOperation, TagSearcher):
-    def find_all(
-        self,
-        tag: Tag,
-        recursive: bool = True,
-        limit: Optional[int] = None,
-    ) -> list[Any]:
-        """
-        Extracts information from provided element.
-
-        Parameters
-        ----------
-        tag : Tag
-            Any BeautifulSoup Tag object to extract text from.
-        recursive : bool, optional
-            Ignored, for consistency with interface.
-        limit : int, optional
-            Ignored, for consistency with interface.
-
-        Returns
-        -------
-        list[Any]
-            Extracted information from the tag.
-        """
-        return [self.execute(tag)]
-
-    def find(
-        self,
-        tag: Tag,
-        strict: bool = False,
-        recursive: bool = True,
-    ) -> Any:
-        """
-        Extracts information from provided element.
-
-        Parameters
-        ----------
-        tag : Tag
-            Any BeautifulSoup Tag object to extract text from.
-        strict : bool, optional
-            Ignored, for consistency with interface.
-        recursive : int, optional
-            Ignored, for consistency with interface.
-
-        Returns
-        -------
-        Any
-            Extracted information from the tag.
-        """
-        return self.execute(tag)
 
 
 class Text(OperationSearcherMixin):
@@ -299,7 +260,19 @@ class Parent(BaseOperation, SoupSelector):
     >>> from soupsavvy.operations import Parent
     ... operation = Parent()
     ... operation.find(tag)
-    "<div>...</div>"
+    "<div>--tag--</div>"
+
+    `Parent` has `BaseOperation` higher in MRO than `SoupSelector`, so, using pipe
+    operator `|` on `Parent` object will result in `OperationPipeline` instance.
+
+    Example
+    -------
+    >>> from soupsavvy.operations import Parent
+    ... operation = Parent() | Parent()
+    ... operation.execute(tag)
+    "<div><div>--tag--</div></div>"
+
+    If element does not have parent, returns None.
     """
 
     def _execute(self, arg: Tag) -> Optional[Tag]:

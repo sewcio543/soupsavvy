@@ -19,6 +19,7 @@ from soupsavvy.exceptions import (
 )
 from soupsavvy.models.base import BaseModel
 from soupsavvy.models.wrappers import All, Default, Required, SkipNone, Suppress
+from soupsavvy.operations import Href, Operation, Text
 from tests.soupsavvy.operations.conftest import (
     MockIntOperation,
     MockPlus10Operation,
@@ -1178,3 +1179,37 @@ class TestBaseModelIntegration:
         model = MockModel(title="Title", price=10)
         migrated = model.migrate(MockSABook)
         assert isinstance(migrated, MockSABook)
+
+    @pytest.mark.integration
+    def test_works_with_soupsavvy_operations_as_fields(self):
+        """
+        Tests if model works with soupsavvy operations as fields.
+        Operations are operation-searcher mixins and can be used as fields
+        to perform operation directly on scope element.
+        """
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = TITLE_SELECTOR
+            link = Href()
+            id_ = Operation(lambda x: x.get("id"))
+            name = Operation(lambda x: x.get("name")) | Operation(lambda x: x.upper())
+            text = Text(strip=True, separator="--")
+
+        text = """
+            <div id="book1", href="www.book.com" name="Joe">
+                <a>Title</a>
+                <p>Hello</p>
+            </div>
+        """
+        bs = to_bs(text)
+        selector = MockModel
+        result = selector.find(bs)
+        assert result == MockModel(
+            title="Title",
+            link="www.book.com",
+            id_="book1",
+            name="JOE",
+            text="Title--Hello",
+        )

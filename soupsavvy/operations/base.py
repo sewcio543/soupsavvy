@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+from abc import abstractmethod
 from typing import TYPE_CHECKING, Any, Optional
 
+from bs4 import Tag
+
 import soupsavvy.exceptions as exc
-from soupsavvy.interfaces import Comparable, Executable
+from soupsavvy.interfaces import Comparable, Executable, TagSearcher
 
 if TYPE_CHECKING:
     from soupsavvy.operations.general import OperationPipeline
@@ -89,6 +92,7 @@ class BaseOperation(Executable, Comparable):
                 f"Failed to execute operation: {e}"
             ) from e
 
+    @abstractmethod
     def _execute(self, arg: Any) -> Any:
         """Internal method for executing the operation."""
 
@@ -126,3 +130,61 @@ class BaseOperation(Executable, Comparable):
         )
         other = check_operation(x, message=message)
         return OperationPipeline(self, other)
+
+
+class OperationSearcherMixin(BaseOperation, TagSearcher):
+    """
+    Mixin of `BaseOperation` and `TagSearcher` interfaces.
+    Allows operations to be used as field searchers in model
+    to perform operation directly on scope element.
+    """
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Any]:
+        """
+        Extracts information from provided element.
+
+        Parameters
+        ----------
+        tag : Tag
+            Any BeautifulSoup Tag object to extract text from.
+        recursive : bool, optional
+            Ignored, for consistency with interface.
+        limit : int, optional
+            Ignored, for consistency with interface.
+
+        Returns
+        -------
+        list[Any]
+            Extracted information from the tag.
+        """
+        return [self.execute(tag)]
+
+    def find(
+        self,
+        tag: Tag,
+        strict: bool = False,
+        recursive: bool = True,
+    ) -> Any:
+        """
+        Extracts information from provided element.
+
+        Parameters
+        ----------
+        tag : Tag
+            Any BeautifulSoup Tag object to extract text from.
+        strict : bool, optional
+            Ignored, for consistency with interface.
+        recursive : int, optional
+            Ignored, for consistency with interface.
+
+        Returns
+        -------
+        Any
+            Extracted information from the tag.
+        """
+        return self.execute(tag)

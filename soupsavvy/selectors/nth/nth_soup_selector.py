@@ -38,8 +38,20 @@ class _BaseNthOfSelector(SoupSelector):
         NotSoupSelectorException
             If selector is not an instance of SoupSelector.
         """
-        self.selector = check_selector(selector)
+        self._selector = check_selector(selector)
         self.nth_selector = parse_nth(nth)
+
+    @property
+    def selector(self) -> SoupSelector:
+        """
+        Returns selector instance used for matching elements in this nth selector.
+
+        Returns
+        -------
+        SoupSelector
+            Selector used in this nth selector.
+        """
+        return self._selector
 
     def find_all(
         self,
