@@ -260,7 +260,19 @@ class Parent(BaseOperation, SoupSelector):
     >>> from soupsavvy.operations import Parent
     ... operation = Parent()
     ... operation.find(tag)
-    "<div>...</div>"
+    "<div>--tag--</div>"
+
+    `Parent` has `BaseOperation` higher in MRO than `SoupSelector`, so, using pipe
+    operator `|` on `Parent` object will result in `OperationPipeline` instance.
+
+    Example
+    -------
+    >>> from soupsavvy.operations import Parent
+    ... operation = Parent() | Parent()
+    ... operation.execute(tag)
+    "<div><div>--tag--</div></div>"
+
+    If element does not have parent, returns None.
     """
 
     def _execute(self, arg: Tag) -> Optional[Tag]:

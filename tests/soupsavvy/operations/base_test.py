@@ -95,7 +95,8 @@ class MockNameOperation(OperationSearcherMixin):
 
         return arg.name
 
-    def __eq__(self, x: Any) -> bool: ...
+    def __eq__(self, x: Any) -> bool:
+        return isinstance(x, MockNameOperation)
 
 
 div: Tag = to_bs("""<div></div>""").div  # type: ignore
