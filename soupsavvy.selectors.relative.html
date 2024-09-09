@@ -664,6 +664,20 @@ is anchored to the element:</p>
 </section>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.selectors.relative.RelativeSelector.selector">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selector</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="soupsavvy.selectors.base.html#soupsavvy.selectors.base.SoupSelector" title="soupsavvy.selectors.base.SoupSelector"><span class="pre">SoupSelector</span></a></em><a class="headerlink" href="#soupsavvy.selectors.relative.RelativeSelector.selector" title="Link to this definition"></a></dt>
+<dd><p>Returns selector used to find elements relative to the anchor element
+in this relative selector.</p>
+<section id="id44">
+<h3>Returns<a class="headerlink" href="#id44" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>SoupSelector</dt><dd><p>Selector used in this relative selector.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
 </section>
 </dd></dl>
 
@@ -674,15 +688,15 @@ is anchored to the element:</p>
 <p>RelativeSubsequentSibling selector is used to find tags matching selector that are
 subsequent siblings of the tag that is being searched.</p>
 <p>For RelativeSubsequentSibling selector, with TypeSelector targeting ‘p’ tag,</p>
-<section id="id44">
-<h2>Example<a class="headerlink" href="#id44" title="Link to this heading"></a></h2>
+<section id="id45">
+<h2>Example<a class="headerlink" href="#id45" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">RelativeSubsequentSibling</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>when ‘div’ element is passed into find methods:</p>
 </section>
-<section id="id45">
-<h2>Example<a class="headerlink" href="#id45" title="Link to this heading"></a></h2>
+<section id="id46">
+<h2>Example<a class="headerlink" href="#id46" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;&lt;/div&gt;&lt;p&gt;&lt;/p&gt; ✔️
 &gt;&gt;&gt; &lt;div&gt;&lt;/div&gt;&lt;a&gt;&lt;/a&gt;&lt;p&gt;&lt;/p&gt; ✔️
 &gt;&gt;&gt; &lt;p&gt;&lt;/p&gt;&lt;div&gt;&lt;/div&gt; ❌
@@ -694,15 +708,15 @@ and matches the selector.</p>
 <p>RelativeSubsequentSibling selector is equivalent
 to using ~ combinator in css selectors.</p>
 </section>
-<section id="id46">
-<h2>Example<a class="headerlink" href="#id46" title="Link to this heading"></a></h2>
+<section id="id47">
+<h2>Example<a class="headerlink" href="#id47" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span> <span class="o">~</span> <span class="n">p</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
 </pre></div>
 </div>
 <p>It can be created with Anchor instance as well with use of ‘*’ operator:</p>
 </section>
-<section id="id47">
-<h2>Example<a class="headerlink" href="#id47" title="Link to this heading"></a></h2>
+<section id="id48">
+<h2>Example<a class="headerlink" href="#id48" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Anchor</span> <span class="o">*</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
 </pre></div>
 </div>

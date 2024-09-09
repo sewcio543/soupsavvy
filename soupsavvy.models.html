@@ -79,7 +79,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#soupsavvy.models.SkipNone"><code class="docutils literal notranslate"><span class="pre">SkipNone</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.models.Suppress"><code class="docutils literal notranslate"><span class="pre">Suppress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.models.Suppress"><code class="docutils literal notranslate"><span class="pre">Suppress</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Suppress.__init__"><code class="docutils literal notranslate"><span class="pre">Suppress.__init__()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -159,6 +162,7 @@
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper"><code class="docutils literal notranslate"><span class="pre">FieldWrapper</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper.__init__"><code class="docutils literal notranslate"><span class="pre">FieldWrapper.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper.find_all"><code class="docutils literal notranslate"><span class="pre">FieldWrapper.find_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper.selector"><code class="docutils literal notranslate"><span class="pre">FieldWrapper.selector</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.OperationWrapper"><code class="docutils literal notranslate"><span class="pre">OperationWrapper</span></code></a><ul>
@@ -170,7 +174,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.SkipNone"><code class="docutils literal notranslate"><span class="pre">SkipNone</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Suppress"><code class="docutils literal notranslate"><span class="pre">Suppress</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Suppress"><code class="docutils literal notranslate"><span class="pre">Suppress</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Suppress.__init__"><code class="docutils literal notranslate"><span class="pre">Suppress.__init__()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -488,11 +495,11 @@ and returns None.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.models.Suppress">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Suppress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.BaseOperation" title="soupsavvy.operations.base.BaseOperation"><span class="pre">BaseOperation</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#Suppress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.Suppress" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Suppress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">operation:</span> <span class="pre">~soupsavvy.operations.base.BaseOperation,</span> <span class="pre">category:</span> <span class="pre">~typing.Type[Exception]</span> <span class="pre">|</span> <span class="pre">tuple[~typing.Type[Exception],</span> <span class="pre">...]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'Exception'&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#Suppress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.Suppress" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.OperationWrapper" title="soupsavvy.models.wrappers.OperationWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">OperationWrapper</span></code></a></p>
-<p>A wrapper that executes the operation
-and suppresses FailedOperationExecution exception, returning None instead.
-Used to catch exceptions where it’s expected this might happen.</p>
+<p>A wrapper that executes the operation and suppresses exceptions raised,
+returning None instead. Used to catch exceptions where it’s expected
+this might happen.</p>
 <section id="id19">
 <h3>Example<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
@@ -517,6 +524,53 @@ when the operation fails.</p>
 <p>Operations in example can be used to try to convert string to integer
 from text of tag, that can potentially be empty. In such case, if it’s not required,
 default can be set to None or known value.</p>
+<p>Suppress also accepts category of exceptions to suppress, by default it suppresses
+all exceptions that inherit from Exception.</p>
+</section>
+<section id="id21">
+<h3>Example<a class="headerlink" href="#id21" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
+<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Suppress</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">category</span><span class="o">=</span><span class="ne">ValueError</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;not an integer&quot;</span><span class="p">)</span>
+<span class="go">None</span>
+</pre></div>
+</div>
+<p>Category can be a tuple of exceptions as well, <cite>issubclass</cite> is used to check
+if the cause of exception is subclass of provided category.</p>
+</section>
+<section id="id22">
+<h3>Example<a class="headerlink" href="#id22" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
+<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Suppress</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">category</span><span class="o">=</span><span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">))</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;not an integer&quot;</span><span class="p">)</span>
+<span class="go">FailedOperationExecution</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.models.Suppress.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">operation:</span> <span class="pre">~soupsavvy.operations.base.BaseOperation,</span> <span class="pre">category:</span> <span class="pre">~typing.Type[Exception]</span> <span class="pre">|</span> <span class="pre">tuple[~typing.Type[Exception],</span> <span class="pre">...]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'Exception'&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#Suppress.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.Suppress.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initialize Suppress OperationWrapper.</p>
+<section id="id23">
+<h4>Parameters<a class="headerlink" href="#id23" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>operation<span class="classifier">BaseOperation</span></dt><dd><p>The operation to be wrapped.</p>
+</dd>
+<dt>category<span class="classifier">Type[Exception] | tuple[Type[Exception], …], optional</span></dt><dd><p>The exception type(s) to suppress. By default, suppresses all exceptions
+that inherit from Exception.</p>
+</dd>
+</dl>
+</section>
+<section id="id24">
+<h4>Raises<a class="headerlink" href="#id24" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>NotOperationException</dt><dd><p>If provided object is not an instance of BaseOperation.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
 </section>
 </dd></dl>
 

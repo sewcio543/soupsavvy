@@ -100,11 +100,11 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Pattern</span>
 
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">SoupStrainer</span><span class="p">,</span> <span class="n">Tag</span>
+<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">deprecated</span>
 
 <span class="kn">import</span> <span class="nn">soupsavvy.selectors.namespace</span> <span class="k">as</span> <span class="nn">ns</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.selectors.base</span> <span class="kn">import</span> <span class="n">SelectableCSS</span><span class="p">,</span> <span class="n">SoupSelector</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.selectors.tag_utils</span> <span class="kn">import</span> <span class="n">TagIterator</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.utils.deprecation</span> <span class="kn">import</span> <span class="n">deprecated_class</span>
 
 
 <div class="viewcode-block" id="TypeSelector">
@@ -301,9 +301,7 @@
 
 <div class="viewcode-block" id="AnyTagSelector">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.general.html#soupsavvy.AnyTagSelector">[docs]</a>
-<span class="nd">@deprecated_class</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;AnyTagSelector is deprecated, use </span><span class="si">{</span><span class="n">UniversalSelector</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> class instead.&quot;</span>
-<span class="p">)</span>
+<span class="nd">@deprecated</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AnyTagSelector is deprecated, use &#39;UniversalSelector&#39; class instead.&quot;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">AnyTagSelector</span><span class="p">(</span><span class="n">UniversalSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Alias for UniversalSelector class. Deprecated component.&quot;&quot;&quot;</span></div>
 

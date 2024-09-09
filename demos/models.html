@@ -72,6 +72,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#model">Model</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#definition">Definition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#finding-model">Finding model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#operations-as-fields">Operations as fields</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#wrappers">Wrappers</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#skipnone">SkipNone</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#suppress">Suppress</a></li>
@@ -141,6 +142,29 @@
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;100&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>All <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> operations are mixins of searcher and operation, it can be used both as operation (<code class="docutils literal notranslate"><span class="pre">execute</span></code> method) and as a searcher (<code class="docutils literal notranslate"><span class="pre">find</span></code>, <code class="docutils literal notranslate"><span class="pre">find_all</span></code> methods), which calls the <code class="docutils literal notranslate"><span class="pre">execute</span></code> method internally. They can be used as fields of model to extract data directly from scope element.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;p class=&quot;title&quot; id=&quot;book1&quot;&gt;Animal Farm&lt;/p&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">)</span>
+
+<span class="n">operation</span> <span class="o">=</span> <span class="n">Operation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span>
+<span class="n">operation</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;book1&#39;
 </pre></div>
 </div>
 </div>
@@ -240,35 +264,10 @@
 </div>
 </div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">Text</span></code> is a mixin of searcher and operation, it can be used both as operation (<code class="docutils literal notranslate"><span class="pre">execute</span></code> method) and as a searcher (<code class="docutils literal notranslate"><span class="pre">find</span></code>, <code class="docutils literal notranslate"><span class="pre">find_all</span></code> methods).</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
-
-<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
-
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    &lt;div&gt;</span>
-<span class="s2">        &lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;</span>
-<span class="s2">        &lt;p&gt;George Orwell&lt;/p&gt;</span>
-<span class="s2">    &lt;/div&gt;</span>
-<span class="s2">&quot;&quot;&quot;</span>
-<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">searcher</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="n">separator</span><span class="o">=</span><span class="s2">&quot; -- &quot;</span><span class="p">,</span> <span class="n">strip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">searcher</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">div</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;Animal Farm -- George Orwell&#39;
-</pre></div>
-</div>
-</div>
-</div>
 </section>
 <section id="href">
 <h3>Href<a class="headerlink" href="#href" title="Link to this heading"></a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">Href</span></code> is a built-in operation that extracts value of <code class="docutils literal notranslate"><span class="pre">href</span></code> attribute from an element. Similarly to <code class="docutils literal notranslate"><span class="pre">Text</span></code>, it can be used both as a searcher and as an operation. It does not accepts any parameters. If <code class="docutils literal notranslate"><span class="pre">href</span></code> attribute is not found in the element, it returns <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Href</span></code> is a built-in operation that extracts value of <code class="docutils literal notranslate"><span class="pre">href</span></code> attribute from an element. It does not accepts any parameters. If <code class="docutils literal notranslate"><span class="pre">href</span></code> attribute is not found in the element, it returns <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
@@ -281,27 +280,6 @@
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
 <span class="n">operation</span> <span class="o">=</span> <span class="n">Href</span><span class="p">()</span>
 <span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;www.book.com&#39;
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
-
-<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Href</span>
-
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    &lt;a href=&quot;www.book.com&quot;&gt;Animal Farm&lt;/a&gt;</span>
-<span class="s2">&quot;&quot;&quot;</span>
-<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">searcher</span> <span class="o">=</span> <span class="n">Href</span><span class="p">()</span>
-<span class="n">searcher</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 </pre></div>
 </div>
 </div>
@@ -336,6 +314,7 @@
 </div>
 </div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">Parent</span></code> operations can be chained together resulting in <code class="docutils literal notranslate"><span class="pre">OperationPipeline</span></code> object, as operation is higher in inheritance hierarchy than selector. Instance in example below will return the parent of the parent of the element when performing operation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
@@ -343,16 +322,16 @@
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Parent</span>
 
 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    &lt;div&gt;&lt;a href=&quot;www.book.com&quot;&gt;Animal Farm&lt;/a&gt;&lt;/div&gt;</span>
+<span class="s2">    &lt;div&gt;&lt;div&gt;&lt;a href=&quot;www.book.com&quot;&gt;Animal Farm&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">operation</span> <span class="o">=</span> <span class="n">Parent</span><span class="p">()</span>
-<span class="n">operation</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+<span class="n">operation</span> <span class="o">=</span> <span class="n">Parent</span><span class="p">()</span> <span class="o">|</span> <span class="n">Parent</span><span class="p">()</span>
+<span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div&gt;&lt;a href=&quot;www.book.com&quot;&gt;Animal Farm&lt;/a&gt;&lt;/div&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div&gt;&lt;div&gt;&lt;a href=&quot;www.book.com&quot;&gt;Animal Farm&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;
 </pre></div>
 </div>
 </div>
@@ -408,7 +387,7 @@
 <li><p>Selector, e.g.: <code class="docutils literal notranslate"><span class="pre">ClassSelector(&quot;book&quot;)</span></code></p></li>
 <li><p>Selector-Operation pipeline, e.g.: <code class="docutils literal notranslate"><span class="pre">ClassSelector(&quot;price&quot;)</span> <span class="pre">|</span> <span class="pre">Text()</span> <span class="pre">|</span> <span class="pre">Operation(int)</span></code></p></li>
 <li><p>Another model class that inherits from <code class="docutils literal notranslate"><span class="pre">BaseModel</span></code>, e.g.: <code class="docutils literal notranslate"><span class="pre">Author</span></code></p></li>
-<li><p>Mixin that functions as both a selector and an operation, e.g.: <code class="docutils literal notranslate"><span class="pre">Text()</span></code> or <code class="docutils literal notranslate"><span class="pre">Href()</span></code></p></li>
+<li><p>Mixin that functions as both a selector and an operation, e.g.: <code class="docutils literal notranslate"><span class="pre">Text()</span></code>, <code class="docutils literal notranslate"><span class="pre">Href()</span></code> or <code class="docutils literal notranslate"><span class="pre">Operation(lambda</span> <span class="pre">x:</span> <span class="pre">x.get(&quot;id&quot;))</span></code></p></li>
 </ul>
 </section>
 <section id="finding-model">
@@ -573,6 +552,45 @@
 </div>
 </div>
 </section>
+<section id="operations-as-fields">
+<h3>Operations as fields<a class="headerlink" href="#operations-as-fields" title="Link to this heading"></a></h3>
+<p>As mentioned earlier, operations can be used as fields in the model. They are used to extract and transform data from the scope element. In the example below, <code class="docutils literal notranslate"><span class="pre">Operation</span></code> is used to extract <code class="docutils literal notranslate"><span class="pre">id</span></code> attribute from the element and <code class="docutils literal notranslate"><span class="pre">Href</span></code> is used to extract <code class="docutils literal notranslate"><span class="pre">href</span></code> attribute.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Href</span>
+
+
+<span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Operation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span>
+    <span class="n">link</span> <span class="o">=</span> <span class="n">Href</span><span class="p">()</span>
+
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;div id=&quot;book1&quot; href=&quot;www.book.com&quot;&gt;</span>
+<span class="s2">        &lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;</span>
+<span class="s2">        &lt;p class=&quot;price&quot;&gt;100&lt;/p&gt;</span>
+<span class="s2">        &lt;p&gt;George Orwell&lt;/p&gt;</span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Book(id=&#39;book1&#39;, link=&#39;www.book.com&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 <section id="wrappers">
 <h3>Wrappers<a class="headerlink" href="#wrappers" title="Link to this heading"></a></h3>
 <p>Wrappers are higher-order components that modify the behavior of operations or selectors. They provide enhanced control over the extraction process, allowing you to handle edge cases more gracefully and build more complex models. By wrapping operations or selectors, you can customize how data is extracted, transformed, or handled when certain conditions are met.</p>
@@ -684,6 +702,94 @@
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Book(title=&#39;Animal Farm&#39;, price=0)
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Suppress</span></code> by default suppresses operation when it raised any exception, which is subclass of <code class="docutils literal notranslate"><span class="pre">Exception</span></code>. It allows to specify category of exceptions to suppress by passing <code class="docutils literal notranslate"><span class="pre">category</span></code> parameter.</p>
+<p>It can be either:</p>
+<ul class="simple">
+<li><p><strong>single exception class</strong> ex. <code class="docutils literal notranslate"><span class="pre">category=ValueError</span></code></p></li>
+<li><p><strong>tuple of exception classes</strong> ex. <code class="docutils literal notranslate"><span class="pre">category=(ValueError,</span> <span class="pre">TypeError)</span></code></p></li>
+</ul>
+<p>to pass to <code class="docutils literal notranslate"><span class="pre">issubclass</span></code> function.<br />
+In example below, <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> is raised when converting empty non-integer string to integer and it’s suppressed by operation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Default</span><span class="p">,</span> <span class="n">Suppress</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
+
+
+<span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+    <span class="n">price</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span> <span class="o">|</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">category</span><span class="o">=</span><span class="ne">ValueError</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;div class=&quot;book&quot; href=&quot;www.book.com&quot;&gt;</span>
+<span class="s2">        &lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;</span>
+<span class="s2">        &lt;p class=&quot;price&quot;&gt;hundred&lt;/p&gt;</span>
+<span class="s2">        &lt;p&gt;George Orwell&lt;/p&gt;</span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Book(title=&#39;Animal Farm&#39;, price=None)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Any other then specified exception is not suppressed. In example below, only <code class="docutils literal notranslate"><span class="pre">TypeError</span></code> is handled by <code class="docutils literal notranslate"><span class="pre">Suppress</span></code> operation, while <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>, which is raised by wrapped operation is propagated, as it’s not <code class="docutils literal notranslate"><span class="pre">TypeError</span></code> or its subclass.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.exceptions</span> <span class="kn">import</span> <span class="n">FieldExtractionException</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Suppress</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
+
+
+<span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+    <span class="n">price</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span> <span class="o">|</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">category</span><span class="o">=</span><span class="ne">TypeError</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;div class=&quot;book&quot; href=&quot;www.book.com&quot;&gt;</span>
+<span class="s2">        &lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;</span>
+<span class="s2">        &lt;p class=&quot;price&quot;&gt;hundred&lt;/p&gt;</span>
+<span class="s2">        &lt;p&gt;George Orwell&lt;/p&gt;</span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">FieldExtractionException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">__cause__</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Failed to execute operation: Failed to execute operation: Failed to execute operation: invalid literal for int() with base 10: &#39;hundred&#39;
 </pre></div>
 </div>
 </div>
@@ -1528,7 +1634,7 @@ Is affordable: True
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">36</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">38</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
 <span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 <span class="ne">----&gt; </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">pydantic</span>
 <span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>

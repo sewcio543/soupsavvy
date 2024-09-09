@@ -100,18 +100,22 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">Tag</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">TagSearcher</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.operations.base</span> <span class="kn">import</span> <span class="n">BaseOperation</span><span class="p">,</span> <span class="n">check_operation</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations.base</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BaseOperation</span><span class="p">,</span>
+    <span class="n">OperationSearcherMixin</span><span class="p">,</span>
+    <span class="n">check_operation</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.selectors.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
 
 
 <div class="viewcode-block" id="OperationPipeline">
 <a class="viewcode-back" href="../../../soupsavvy.operations.general.html#soupsavvy.operations.OperationPipeline">[docs]</a>
-<span class="k">class</span> <span class="nc">OperationPipeline</span><span class="p">(</span><span class="n">BaseOperation</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">OperationPipeline</span><span class="p">(</span><span class="n">OperationSearcherMixin</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Pipeline for chaining multiple operations together.</span>
 <span class="sd">    Applies each operation in sequence, passing the result to the next.</span>
@@ -125,6 +129,11 @@
 
 <span class="sd">    Most common way of creating a pipeline is using the `|` operator</span>
 <span class="sd">    on two operations.</span>
+
+<span class="sd">    `OperationPipeline` is operation-searcher mixin, which means it can be used</span>
+<span class="sd">    to find information in bs4 Tag directly with find methods.</span>
+<span class="sd">    This way, it can be used as field in model or `execute` method can be replaced</span>
+<span class="sd">    with `find` method, which would produce the same result.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="OperationPipeline.__init__">
@@ -197,7 +206,7 @@
 
 <div class="viewcode-block" id="Operation">
 <a class="viewcode-back" href="../../../soupsavvy.operations.general.html#soupsavvy.operations.Operation">[docs]</a>
-<span class="k">class</span> <span class="nc">Operation</span><span class="p">(</span><span class="n">BaseOperation</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Operation</span><span class="p">(</span><span class="n">OperationSearcherMixin</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Custom operation that wraps any function</span>
 <span class="sd">    to be used with other `soupsavvy` components.</span>
@@ -208,6 +217,11 @@
 <span class="sd">    ... operation = Operation(str.lower)</span>
 <span class="sd">    ... operation.execute(&quot;TEXT&quot;)</span>
 <span class="sd">    &quot;text&quot;</span>
+
+<span class="sd">    `Operation` is operation-searcher mixin, which means it can be used</span>
+<span class="sd">    to find information in bs4 Tag directly with find methods.</span>
+<span class="sd">    This way, it can be used as field in model or `execute` method can be replaced</span>
+<span class="sd">    with `find` method, which would produce the same result.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Operation.__init__">
@@ -234,67 +248,6 @@
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">operation</span> <span class="ow">is</span> <span class="n">x</span><span class="o">.</span><span class="n">operation</span></div>
-
-
-
-<div class="viewcode-block" id="OperationSearcherMixin">
-<a class="viewcode-back" href="../../../soupsavvy.operations.general.html#soupsavvy.operations.OperationSearcherMixin">[docs]</a>
-<span class="k">class</span> <span class="nc">OperationSearcherMixin</span><span class="p">(</span><span class="n">BaseOperation</span><span class="p">,</span> <span class="n">TagSearcher</span><span class="p">):</span>
-<div class="viewcode-block" id="OperationSearcherMixin.find_all">
-<a class="viewcode-back" href="../../../soupsavvy.operations.general.html#soupsavvy.operations.OperationSearcherMixin.find_all">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
-        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Extracts information from provided element.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        tag : Tag</span>
-<span class="sd">            Any BeautifulSoup Tag object to extract text from.</span>
-<span class="sd">        recursive : bool, optional</span>
-<span class="sd">            Ignored, for consistency with interface.</span>
-<span class="sd">        limit : int, optional</span>
-<span class="sd">            Ignored, for consistency with interface.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        list[Any]</span>
-<span class="sd">            Extracted information from the tag.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">tag</span><span class="p">)]</span></div>
-
-
-<div class="viewcode-block" id="OperationSearcherMixin.find">
-<a class="viewcode-back" href="../../../soupsavvy.operations.general.html#soupsavvy.operations.OperationSearcherMixin.find">[docs]</a>
-    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
-        <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Extracts information from provided element.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        tag : Tag</span>
-<span class="sd">            Any BeautifulSoup Tag object to extract text from.</span>
-<span class="sd">        strict : bool, optional</span>
-<span class="sd">            Ignored, for consistency with interface.</span>
-<span class="sd">        recursive : int, optional</span>
-<span class="sd">            Ignored, for consistency with interface.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Any</span>
-<span class="sd">            Extracted information from the tag.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span></div>
-</div>
 
 
 
@@ -417,7 +370,19 @@
 <span class="sd">    &gt;&gt;&gt; from soupsavvy.operations import Parent</span>
 <span class="sd">    ... operation = Parent()</span>
 <span class="sd">    ... operation.find(tag)</span>
-<span class="sd">    &quot;&lt;div&gt;...&lt;/div&gt;&quot;</span>
+<span class="sd">    &quot;&lt;div&gt;--tag--&lt;/div&gt;&quot;</span>
+
+<span class="sd">    `Parent` has `BaseOperation` higher in MRO than `SoupSelector`, so, using pipe</span>
+<span class="sd">    operator `|` on `Parent` object will result in `OperationPipeline` instance.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from soupsavvy.operations import Parent</span>
+<span class="sd">    ... operation = Parent() | Parent()</span>
+<span class="sd">    ... operation.execute(tag)</span>
+<span class="sd">    &quot;&lt;div&gt;&lt;div&gt;--tag--&lt;/div&gt;&lt;/div&gt;&quot;</span>
+
+<span class="sd">    If element does not have parent, returns None.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>

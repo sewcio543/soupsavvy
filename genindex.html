@@ -117,8 +117,6 @@
       <li><a href="soupsavvy.html#soupsavvy.AndSelector.__init__">__init__() (AndSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.AndSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.AndSelector.__init__">[2]</a>
 
       <ul>
-        <li><a href="soupsavvy.html#soupsavvy.AnyTagSelector.__init__">(AnyTagSelector method)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.AnyTagSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.AnyTagSelector.__init__">[2]</a>
-</li>
         <li><a href="soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.generators.AttributeGenerator.__init__">(AttributeGenerator method)</a>, <a href="soupsavvy.testing.generators.html#soupsavvy.testing.generators.AttributeGenerator.__init__">[1]</a>, <a href="soupsavvy.testing.html#soupsavvy.testing.AttributeGenerator.__init__">[2]</a>
 </li>
         <li><a href="soupsavvy.html#soupsavvy.AttributeSelector.__init__">(AttributeSelector method)</a>, <a href="soupsavvy.selectors.attributes.html#soupsavvy.selectors.attributes.AttributeSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.AttributeSelector.__init__">[2]</a>
@@ -166,6 +164,8 @@
         <li><a href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.__init__">(SelectionPipeline method)</a>
 </li>
         <li><a href="soupsavvy.html#soupsavvy.SelectorList.__init__">(SelectorList method)</a>, <a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.SelectorList.__init__">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.SelectorList.__init__">[2]</a>
+</li>
+        <li><a href="soupsavvy.models.html#soupsavvy.models.Suppress.__init__">(Suppress method)</a>, <a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Suppress.__init__">[1]</a>
 </li>
         <li><a href="soupsavvy.testing.generators.generators.html#soupsavvy.testing.generators.generators.TagGenerator.__init__">(TagGenerator method)</a>, <a href="soupsavvy.testing.generators.html#soupsavvy.testing.generators.TagGenerator.__init__">[1]</a>, <a href="soupsavvy.testing.html#soupsavvy.testing.TagGenerator.__init__">[2]</a>
 </li>
@@ -360,14 +360,8 @@
         <li><a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Default">(class in soupsavvy.models.wrappers)</a>
 </li>
       </ul></li>
-      <li><a href="soupsavvy.utils.deprecation.html#soupsavvy.utils.deprecation.deprecated">deprecated() (in module soupsavvy.utils.deprecation)</a>
-</li>
-      <li><a href="soupsavvy.utils.deprecation.html#soupsavvy.utils.deprecation.deprecated_class">deprecated_class() (in module soupsavvy.utils.deprecation)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.utils.deprecation.html#soupsavvy.utils.deprecation.deprecated_function">deprecated_function() (in module soupsavvy.utils.deprecation)</a>
-</li>
       <li><a href="soupsavvy.html#soupsavvy.DescendantCombinator">DescendantCombinator (class in soupsavvy)</a>
 
       <ul>
@@ -431,7 +425,7 @@
 </li>
         <li><a href="soupsavvy.models.html#soupsavvy.models.Default.find">(Default method)</a>, <a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Default.find">[1]</a>
 </li>
-        <li><a href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationSearcherMixin.find">(OperationSearcherMixin method)</a>
+        <li><a href="soupsavvy.operations.base.html#soupsavvy.operations.base.OperationSearcherMixin.find">(OperationSearcherMixin method)</a>
 </li>
         <li><a href="soupsavvy.models.html#soupsavvy.models.Required.find">(Required method)</a>, <a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Required.find">[1]</a>
 </li>
@@ -465,7 +459,7 @@
 </li>
         <li><a href="soupsavvy.selectors.nth.html#soupsavvy.selectors.nth.OnlyOfSelector.find_all">(OnlyOfSelector method)</a>, <a href="soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.nth_soup_selector.OnlyOfSelector.find_all">[1]</a>
 </li>
-        <li><a href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationSearcherMixin.find_all">(OperationSearcherMixin method)</a>
+        <li><a href="soupsavvy.operations.base.html#soupsavvy.operations.base.OperationSearcherMixin.find_all">(OperationSearcherMixin method)</a>
 </li>
         <li><a href="soupsavvy.operations.general.html#soupsavvy.operations.general.Parent.find_all">(Parent method)</a>, <a href="soupsavvy.operations.html#soupsavvy.operations.Parent.find_all">[1]</a>
 </li>
@@ -690,8 +684,6 @@
 </li>
         <li><a href="soupsavvy.utils.html#module-soupsavvy.utils">soupsavvy.utils</a>
 </li>
-        <li><a href="soupsavvy.utils.deprecation.html#module-soupsavvy.utils.deprecation">soupsavvy.utils.deprecation</a>
-</li>
         <li><a href="soupsavvy.utils.logging.html#module-soupsavvy.utils.logging">soupsavvy.utils.logging</a>
 </li>
       </ul></li>
@@ -809,11 +801,13 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.operation">operation (SelectionPipeline property)</a>
+</li>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.OperationException">OperationException</a>
 </li>
       <li><a href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationPipeline">OperationPipeline (class in soupsavvy.operations.general)</a>
 </li>
-      <li><a href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationSearcherMixin">OperationSearcherMixin (class in soupsavvy.operations.general)</a>
+      <li><a href="soupsavvy.operations.base.html#soupsavvy.operations.base.OperationSearcherMixin">OperationSearcherMixin (class in soupsavvy.operations.base)</a>
 </li>
       <li><a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.OperationWrapper">OperationWrapper (class in soupsavvy.models.wrappers)</a>
 </li>
@@ -913,8 +907,16 @@
 </li>
       <li><a href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline">SelectionPipeline (class in soupsavvy.operations.selection_pipeline)</a>
 </li>
-      <li><a href="soupsavvy.selectors.base.html#soupsavvy.selectors.base.SelectableCSS.selector">selector (SelectableCSS property)</a>
+      <li><a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper.selector">selector (FieldWrapper property)</a>
+
+      <ul>
+        <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeSelector.selector">(RelativeSelector property)</a>
 </li>
+        <li><a href="soupsavvy.selectors.base.html#soupsavvy.selectors.base.SelectableCSS.selector">(SelectableCSS property)</a>
+</li>
+        <li><a href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.selector">(SelectionPipeline property)</a>
+</li>
+      </ul></li>
       <li><a href="soupsavvy.html#soupsavvy.SelectorList">SelectorList (class in soupsavvy)</a>
 
       <ul>
@@ -923,6 +925,8 @@
         <li><a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.SelectorList">(class in soupsavvy.selectors.combinators)</a>
 </li>
       </ul></li>
+      <li><a href="soupsavvy.selectors.base.html#soupsavvy.selectors.base.CompositeSoupSelector.selectors">selectors (CompositeSoupSelector property)</a>
+</li>
       <li><a href="soupsavvy.html#soupsavvy.SelfSelector">SelfSelector (class in soupsavvy)</a>
 
       <ul>
@@ -1049,6 +1053,8 @@
         <li><a href="soupsavvy.selectors.base.html#module-soupsavvy.selectors.base">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     soupsavvy.selectors.combinators
 
@@ -1063,8 +1069,6 @@
         <li><a href="soupsavvy.selectors.css.html#module-soupsavvy.selectors.css">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     soupsavvy.selectors.css.selectors
 
@@ -1182,13 +1186,6 @@
 
       <ul>
         <li><a href="soupsavvy.utils.html#module-soupsavvy.utils">module</a>
-</li>
-      </ul></li>
-      <li>
-    soupsavvy.utils.deprecation
-
-      <ul>
-        <li><a href="soupsavvy.utils.deprecation.html#module-soupsavvy.utils.deprecation">module</a>
 </li>
       </ul></li>
       <li>

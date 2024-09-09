@@ -122,6 +122,11 @@
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.BaseOperation.execute"><code class="docutils literal notranslate"><span class="pre">BaseOperation.execute()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.OperationSearcherMixin"><code class="docutils literal notranslate"><span class="pre">OperationSearcherMixin</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.OperationSearcherMixin.find"><code class="docutils literal notranslate"><span class="pre">OperationSearcherMixin.find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.OperationSearcherMixin.find_all"><code class="docutils literal notranslate"><span class="pre">OperationSearcherMixin.find_all()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.check_operation"><code class="docutils literal notranslate"><span class="pre">check_operation()</span></code></a></li>
 </ul>
 </li>
@@ -133,11 +138,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationPipeline"><code class="docutils literal notranslate"><span class="pre">OperationPipeline</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationPipeline.__init__"><code class="docutils literal notranslate"><span class="pre">OperationPipeline.__init__()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationSearcherMixin"><code class="docutils literal notranslate"><span class="pre">OperationSearcherMixin</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationSearcherMixin.find"><code class="docutils literal notranslate"><span class="pre">OperationSearcherMixin.find()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationSearcherMixin.find_all"><code class="docutils literal notranslate"><span class="pre">OperationSearcherMixin.find_all()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.Parent"><code class="docutils literal notranslate"><span class="pre">Parent</span></code></a><ul>
@@ -155,6 +155,8 @@
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.__init__"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.find"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.find()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.find_all"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.find_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.operation"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.operation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.selector"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.selector</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -167,7 +169,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.operations.Href">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Href</span></span><a class="reference internal" href="_modules/soupsavvy/operations/general.html#Href"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.Href" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationSearcherMixin" title="soupsavvy.operations.general.OperationSearcherMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">OperationSearcherMixin</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.OperationSearcherMixin" title="soupsavvy.operations.base.OperationSearcherMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">OperationSearcherMixin</span></code></a></p>
 <p>Operation to extract href attribute from a BeautifulSoup Tag.
 Wrapper of one of the common operation used in web scraping.
 If href attribute is not present, returns None.</p>
@@ -196,7 +198,7 @@ that can be used to extract href from provided tag.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.operations.Operation">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/operations/general.html#Operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.Operation" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.BaseOperation" title="soupsavvy.operations.base.BaseOperation"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseOperation</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.OperationSearcherMixin" title="soupsavvy.operations.base.OperationSearcherMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">OperationSearcherMixin</span></code></a></p>
 <p>Custom operation that wraps any function
 to be used with other <cite>soupsavvy</cite> components.</p>
 <section id="id2">
@@ -207,6 +209,10 @@ to be used with other <cite>soupsavvy</cite> components.</p>
 <span class="go">&quot;text&quot;</span>
 </pre></div>
 </div>
+<p><cite>Operation</cite> is operation-searcher mixin, which means it can be used
+to find information in bs4 Tag directly with find methods.
+This way, it can be used as field in model or <cite>execute</cite> method can be replaced
+with <cite>find</cite> method, which would produce the same result.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.operations.Operation.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/general.html#Operation.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.Operation.__init__" title="Link to this definition"></a></dt>
@@ -244,15 +250,27 @@ to extract parent of a provided tag without any conditions.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Parent</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Parent</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
-<span class="go">&quot;&lt;div&gt;...&lt;/div&gt;&quot;</span>
+<span class="go">&quot;&lt;div&gt;--tag--&lt;/div&gt;&quot;</span>
 </pre></div>
 </div>
+<p><cite>Parent</cite> has <cite>BaseOperation</cite> higher in MRO than <cite>SoupSelector</cite>, so, using pipe
+operator <cite>|</cite> on <cite>Parent</cite> object will result in <cite>OperationPipeline</cite> instance.</p>
+</section>
+<section id="id5">
+<h3>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Parent</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Parent</span><span class="p">()</span> <span class="o">|</span> <span class="n">Parent</span><span class="p">()</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+<span class="go">&quot;&lt;div&gt;&lt;div&gt;--tag--&lt;/div&gt;&lt;/div&gt;&quot;</span>
+</pre></div>
+</div>
+<p>If element does not have parent, returns None.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.operations.Parent.find_all">
 <span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/general.html#Parent.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.Parent.find_all" title="Link to this definition"></a></dt>
 <dd><p>Finds all matching elements in provided BeautifulSoup Tag.</p>
-<section id="id5">
-<h4>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h4>
+<section id="id6">
+<h4>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
 </dd>
@@ -281,11 +299,11 @@ If none found, the list is empty.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.operations.Text">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/operations/general.html#Text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.Text" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationSearcherMixin" title="soupsavvy.operations.general.OperationSearcherMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">OperationSearcherMixin</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.OperationSearcherMixin" title="soupsavvy.operations.base.OperationSearcherMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">OperationSearcherMixin</span></code></a></p>
 <p>Operation to extract text from a BeautifulSoup Tag.
 Wrapper of most common operation used in web scraping.</p>
-<section id="id6">
-<h3>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<section id="id7">
+<h3>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Text</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
@@ -297,8 +315,8 @@ and imitates its default behavior.</p>
 <p>Implements <cite>TagSearcher</cite> interface for convenience. It has find methods
 that can be used to extract text from provided tag.</p>
 </section>
-<section id="id7">
-<h3>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<section id="id8">
+<h3>Example<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Text</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
@@ -309,8 +327,8 @@ that can be used to extract text from provided tag.</p>
 <dt class="sig sig-object py" id="soupsavvy.operations.Text.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/general.html#Text.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.Text.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes Text operation with optional separator and strip option.</p>
-<section id="id8">
-<h4>Parameters<a class="headerlink" href="#id8" title="Link to this heading"></a></h4>
+<section id="id9">
+<h4>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h4>
 <dl class="simple">
 <dt>separator<span class="classifier">str, optional</span></dt><dd><p>Separator used to join strings from multiple text nodes, by default “”.</p>
 </dd>

@@ -135,7 +135,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.html#soupsavvy.models.SkipNone"><code class="docutils literal notranslate"><span class="pre">SkipNone</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.html#soupsavvy.models.Suppress"><code class="docutils literal notranslate"><span class="pre">Suppress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.html#soupsavvy.models.Suppress"><code class="docutils literal notranslate"><span class="pre">Suppress</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="soupsavvy.models.html#soupsavvy.models.Suppress.__init__"><code class="docutils literal notranslate"><span class="pre">Suppress.__init__()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -144,6 +147,7 @@
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.html#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.base.html">operations.base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.BaseOperation"><code class="docutils literal notranslate"><span class="pre">BaseOperation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.OperationSearcherMixin"><code class="docutils literal notranslate"><span class="pre">OperationSearcherMixin</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.check_operation"><code class="docutils literal notranslate"><span class="pre">check_operation()</span></code></a></li>
 </ul>
 </li>
@@ -151,7 +155,6 @@
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.Href"><code class="docutils literal notranslate"><span class="pre">Href</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.Operation"><code class="docutils literal notranslate"><span class="pre">Operation</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationPipeline"><code class="docutils literal notranslate"><span class="pre">OperationPipeline</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationSearcherMixin"><code class="docutils literal notranslate"><span class="pre">OperationSearcherMixin</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.Parent"><code class="docutils literal notranslate"><span class="pre">Parent</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.Text"><code class="docutils literal notranslate"><span class="pre">Text</span></code></a></li>
 </ul>
@@ -267,10 +270,7 @@
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.selectors.html#soupsavvy.selectors.AndSelector.find_all"><code class="docutils literal notranslate"><span class="pre">AndSelector.find_all()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.html#soupsavvy.selectors.AnyTagSelector"><code class="docutils literal notranslate"><span class="pre">AnyTagSelector</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="soupsavvy.selectors.html#soupsavvy.selectors.AnyTagSelector.__init__"><code class="docutils literal notranslate"><span class="pre">AnyTagSelector.__init__()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.html#soupsavvy.selectors.AnyTagSelector"><code class="docutils literal notranslate"><span class="pre">AnyTagSelector</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.html#soupsavvy.selectors.AttributeSelector"><code class="docutils literal notranslate"><span class="pre">AttributeSelector</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.selectors.html#soupsavvy.selectors.AttributeSelector.__init__"><code class="docutils literal notranslate"><span class="pre">AttributeSelector.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.selectors.html#soupsavvy.selectors.AttributeSelector.find_all"><code class="docutils literal notranslate"><span class="pre">AttributeSelector.find_all()</span></code></a></li>
@@ -374,12 +374,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.utils.html">utils</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.utils.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.utils.deprecation.html">utils.deprecation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="soupsavvy.utils.deprecation.html#soupsavvy.utils.deprecation.deprecated"><code class="docutils literal notranslate"><span class="pre">deprecated()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="soupsavvy.utils.deprecation.html#soupsavvy.utils.deprecation.deprecated_class"><code class="docutils literal notranslate"><span class="pre">deprecated_class()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="soupsavvy.utils.deprecation.html#soupsavvy.utils.deprecation.deprecated_function"><code class="docutils literal notranslate"><span class="pre">deprecated_function()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.utils.logging.html">utils.logging</a></li>
 </ul>
 </li>
@@ -633,14 +627,9 @@ If none found, the list is empty.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.AnyTagSelector">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnyTagSelector</span></span><a class="reference internal" href="_modules/soupsavvy/selectors/general.html#AnyTagSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.AnyTagSelector" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AnyTagSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/general.html#AnyTagSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.AnyTagSelector" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.UniversalSelector" title="soupsavvy.selectors.general.UniversalSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">UniversalSelector</span></code></a></p>
 <p>Alias for UniversalSelector class. Deprecated component.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.AnyTagSelector.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#soupsavvy.AnyTagSelector.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="py class">

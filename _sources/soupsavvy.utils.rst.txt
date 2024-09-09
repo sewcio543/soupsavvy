@@ -7,7 +7,6 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   soupsavvy.utils.deprecation
    soupsavvy.utils.logging
 
 Module contents

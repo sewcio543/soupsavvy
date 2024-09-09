@@ -125,8 +125,20 @@
 <span class="sd">        NotSoupSelectorException</span>
 <span class="sd">            If selector is not an instance of SoupSelector.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">check_selector</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_selector</span> <span class="o">=</span> <span class="n">check_selector</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nth_selector</span> <span class="o">=</span> <span class="n">parse_nth</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">selector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SoupSelector</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns selector instance used for matching elements in this nth selector.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        SoupSelector</span>
+<span class="sd">            Selector used in this nth selector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_selector</span>
 
     <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>

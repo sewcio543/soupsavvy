@@ -154,6 +154,19 @@ them to ‘selectors’ attribute.</p>
 </section>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.selectors.base.CompositeSoupSelector.selectors">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selectors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soupsavvy.selectors.base.SoupSelector" title="soupsavvy.selectors.base.SoupSelector"><span class="pre">SoupSelector</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.selectors.base.CompositeSoupSelector.selectors" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of selectors that composite selector consists of.</p>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>list[SoupSelector]</dt><dd><p>List of SoupSelector objects.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
 </section>
 </dd></dl>
 
@@ -236,20 +249,20 @@ By default True.</p>
 </dd>
 </dl>
 </section>
-<section id="returns">
-<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<section id="id4">
+<h3>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>Tag | None</dt><dd><p>BeautifulSoup Tag if it tag was found in the markup, else None.</p>
 </dd>
 </dl>
 </section>
-<section id="id4">
-<h3>Notes<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<section id="id5">
+<h3>Notes<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <p>If result is an instance of NavigableString,
 exception is raised to avoid any type of inconsistency downstream.</p>
 </section>
-<section id="id5">
-<h3>Raises<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<section id="id6">
+<h3>Raises<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>TagNotFoundException</dt><dd><p>If strict parameter is set to True and tag was not found in markup.</p>
 </dd>
@@ -263,8 +276,8 @@ exception is raised to avoid any type of inconsistency downstream.</p>
 <dt class="sig sig-object py" id="soupsavvy.selectors.base.SoupSelector.find_all">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/base.html#SoupSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.base.SoupSelector.find_all" title="Link to this definition"></a></dt>
 <dd><p>Finds all matching elements in provided BeautifulSoup Tag.</p>
-<section id="id6">
-<h3>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<section id="id7">
+<h3>Parameters<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
 </dd>
@@ -277,8 +290,8 @@ to return. If set to None, all elements are returned. By default None.</p>
 </dd>
 </dl>
 </section>
-<section id="id7">
-<h3>Returns<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<section id="id8">
+<h3>Returns<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>list[Tag]</dt><dd><p>A list of Tag objects matching tag specifications.
 If none found, the list is empty.</p>
@@ -296,8 +309,8 @@ If none found, the list is empty.</p>
 <dd><p>Checks if provided object is a valid <cite>soupsavvy</cite> selector.
 Checks for instance of SoupSelector and raises an exception if not.
 Returns provided object if fulfills the condition for convenience.</p>
-<section id="id8">
-<h2>Parameters<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<section id="id9">
+<h2>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>x<span class="classifier">Any</span></dt><dd><p>Any object to be validated as correct selector.</p>
 </dd>
@@ -306,8 +319,8 @@ By default None, which results in default message.</p>
 </dd>
 </dl>
 </section>
-<section id="id9">
-<h2>Raises<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<section id="id10">
+<h2>Raises<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>NotSoupSelectorException</dt><dd><p>If provided object is not an instance of SoupSelector.</p>
 </dd>
