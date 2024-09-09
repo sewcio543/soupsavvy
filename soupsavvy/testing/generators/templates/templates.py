@@ -4,7 +4,8 @@ Module with implementation of templates that enhance generator components.
 
 import random
 import string
-from typing import Iterable, Optional
+from collections.abc import Iterable
+from typing import Optional
 
 from soupsavvy.testing.generators.templates.base import BaseTemplate
 

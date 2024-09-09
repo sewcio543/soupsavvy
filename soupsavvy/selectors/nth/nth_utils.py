@@ -2,9 +2,9 @@
 
 import math
 import re
+from collections.abc import Callable, Generator
 from dataclasses import dataclass
 from itertools import count
-from typing import Callable, Generator
 
 # matches nth-selector that contains only step parameter - e.g. "2"
 OFFSET_PATTERN = re.compile(r"^\d+$")

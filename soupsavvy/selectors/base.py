@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional, Union, overload
+from collections.abc import Iterable
+from typing import TYPE_CHECKING, Any, Literal, Optional, Union, overload
 
 from bs4 import NavigableString, Tag
 from typing_extensions import deprecated
