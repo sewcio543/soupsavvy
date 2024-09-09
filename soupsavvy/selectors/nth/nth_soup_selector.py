@@ -8,9 +8,9 @@ from typing import Optional
 
 from bs4 import Tag
 
-from soupsavvy.selectors.base import SoupSelector, check_selector
+from soupsavvy.base import SoupSelector, check_selector
 from soupsavvy.selectors.nth.nth_utils import parse_nth
-from soupsavvy.selectors.tag_utils import TagIterator, TagResultSet
+from soupsavvy.utils.selector_utils import TagIterator, TagResultSet
 
 
 class _BaseNthOfSelector(SoupSelector):

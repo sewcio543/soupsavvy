@@ -25,7 +25,10 @@ class Executable(ABC):
     @abstractmethod
     def execute(self, arg: Any) -> Any:
         """Executes the operation on the given argument."""
-        pass
+        raise NotImplementedError(
+            f"{self.__class__.__name__} is an interface "
+            "and does not implement this method."
+        )
 
 
 class Comparable(ABC):
@@ -36,7 +39,10 @@ class Comparable(ABC):
 
     @abstractmethod
     def __eq__(self, x: Any) -> bool:
-        pass
+        raise NotImplementedError(
+            f"{self.__class__.__name__} is an interface "
+            "and does not implement this method."
+        )
 
 
 # possible exceptions raised when TagSearcher fails
@@ -74,6 +80,10 @@ class TagSearcher(ABC):
         Any
             Result of the search operation.
         """
+        raise NotImplementedError(
+            f"{self.__class__.__name__} is an interface "
+            "and does not implement this method."
+        )
 
     @abstractmethod
     def find_all(
@@ -102,3 +112,7 @@ class TagSearcher(ABC):
         list[Any]
             A list of results, if none found, the list is empty.
         """
+        raise NotImplementedError(
+            f"{self.__class__.__name__} is an interface "
+            "and does not implement this method."
+        )

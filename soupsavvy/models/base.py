@@ -14,8 +14,8 @@ from typing_extensions import Self
 
 import soupsavvy.exceptions as exc
 import soupsavvy.models.constants as c
+from soupsavvy.base import SoupSelector, check_selector
 from soupsavvy.interfaces import Comparable, TagSearcher, TagSearcherExceptions
-from soupsavvy.selectors.base import SoupSelector, check_selector
 
 T = TypeVar("T")
 

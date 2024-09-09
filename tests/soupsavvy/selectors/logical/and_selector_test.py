@@ -4,7 +4,7 @@ import pytest
 
 from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
 from soupsavvy.selectors.logical import AndSelector
-from tests.soupsavvy.selectors.conftest import (
+from tests.soupsavvy.conftest import (
     MockClassMenuSelector,
     MockClassWidgetSelector,
     MockDivSelector,

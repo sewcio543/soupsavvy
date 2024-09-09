@@ -18,12 +18,12 @@ from typing import Any, Optional
 
 from bs4 import Tag
 
-from soupsavvy.operations.base import (
+from soupsavvy.base import (
     BaseOperation,
     OperationSearcherMixin,
+    SoupSelector,
     check_operation,
 )
-from soupsavvy.selectors.base import SoupSelector
 
 
 class OperationPipeline(OperationSearcherMixin):

@@ -3,8 +3,8 @@
 import pytest
 from bs4 import Tag
 
-from soupsavvy.selectors.tag_utils import TagIterator, TagResultSet, UniqueTag
-from tests.soupsavvy.selectors.conftest import find_body_element, strip, to_bs
+from soupsavvy.utils.selector_utils import TagIterator, TagResultSet, UniqueTag
+from tests.soupsavvy.conftest import find_body_element, strip, to_bs
 
 
 @pytest.fixture(scope="module")

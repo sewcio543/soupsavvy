@@ -6,12 +6,7 @@ from bs4 import Tag
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.general import UniversalSelector
 from soupsavvy.selectors.namespace import CSS_SELECTOR_WILDCARD
-from tests.soupsavvy.selectors.conftest import (
-    MockDivSelector,
-    find_body_element,
-    strip,
-    to_bs,
-)
+from tests.soupsavvy.conftest import MockDivSelector, find_body_element, strip, to_bs
 
 
 def find_tag(bs: Tag, name: str = "body") -> Tag:

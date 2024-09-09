@@ -4,7 +4,7 @@ import pytest
 
 from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
 from soupsavvy.selectors.nth.nth_soup_selector import NthLastOfSelector
-from tests.soupsavvy.selectors.conftest import (
+from tests.soupsavvy.conftest import (
     MockClassMenuSelector,
     MockDivSelector,
     find_body_element,

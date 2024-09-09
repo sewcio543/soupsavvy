@@ -22,14 +22,12 @@ from soupsavvy.models.wrappers import (
     Suppress,
 )
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
-from tests.soupsavvy.operations.conftest import (
+from tests.soupsavvy.conftest import (
     BaseMockOperation,
-    MockIntOperation,
-    MockTextOperation,
-)
-from tests.soupsavvy.selectors.conftest import (
     MockDivSelector,
+    MockIntOperation,
     MockLinkSelector,
+    MockTextOperation,
     find_body_element,
     strip,
     to_bs,

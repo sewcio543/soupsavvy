@@ -22,7 +22,7 @@ from soupsavvy.selectors.relative import (
     RelativeSelector,
     RelativeSubsequentSibling,
 )
-from tests.soupsavvy.selectors.conftest import (
+from tests.soupsavvy.conftest import (
     MockDivSelector,
     MockLinkSelector,
     find_body_element,
