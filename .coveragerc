@@ -18,8 +18,7 @@ exclude_lines =
     def __str__
     pass
     \.\.\.
-    deprecated_function
-    deprecated_class
+    deprecated
 
 sort = cover
 show_missing = true
