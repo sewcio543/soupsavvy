@@ -40,6 +40,11 @@ class OperationPipeline(OperationSearcherMixin):
 
     Most common way of creating a pipeline is using the `|` operator
     on two operations.
+
+    `OperationPipeline` is operation-searcher mixin, which means it can be used
+    to find information in bs4 Tag directly with find methods.
+    This way, it can be used as field in model or `execute` method can be replaced
+    with `find` method, which would produce the same result.
     """
 
     def __init__(
@@ -117,6 +122,11 @@ class Operation(OperationSearcherMixin):
     ... operation = Operation(str.lower)
     ... operation.execute("TEXT")
     "text"
+
+    `Operation` is operation-searcher mixin, which means it can be used
+    to find information in bs4 Tag directly with find methods.
+    This way, it can be used as field in model or `execute` method can be replaced
+    with `find` method, which would produce the same result.
     """
 
     def __init__(self, func: Callable) -> None:

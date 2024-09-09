@@ -585,7 +585,7 @@ class TestOperationWrapper:
         It expects instance of BaseOperation.
         """
         with pytest.raises(NotOperationException):
-            OperationWrapper(MockLinkSelector())  # type: ignore
+            MockOperationWrapper2(MockLinkSelector())  # type: ignore
 
     @pytest.mark.parametrize(
         argnames="operations",
