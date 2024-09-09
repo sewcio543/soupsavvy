@@ -4,7 +4,7 @@ import pytest
 
 from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
 from soupsavvy.selectors.combinators import ChildCombinator
-from tests.soupsavvy.selectors.conftest import (
+from tests.soupsavvy.conftest import (
     MockDivSelector,
     MockLinkSelector,
     find_body_element,

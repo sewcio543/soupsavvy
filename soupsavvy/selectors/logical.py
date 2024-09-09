@@ -17,9 +17,9 @@ from typing import Optional
 
 from bs4 import Tag
 
-from soupsavvy.selectors.base import CompositeSoupSelector, SoupSelector
+from soupsavvy.base import CompositeSoupSelector, SoupSelector
 from soupsavvy.selectors.combinators import SelectorList
-from soupsavvy.selectors.tag_utils import TagIterator, TagResultSet, UniqueTag
+from soupsavvy.utils.selector_utils import TagIterator, TagResultSet, UniqueTag
 
 # alias for SelectorList
 OrSelector = SelectorList

@@ -14,8 +14,13 @@ from soupsavvy.operations.general import (
     Parent,
     Text,
 )
-from tests.soupsavvy.operations.conftest import MockIntOperation, MockTextOperation
-from tests.soupsavvy.selectors.conftest import MockLinkSelector, strip, to_bs
+from tests.soupsavvy.conftest import (
+    MockIntOperation,
+    MockLinkSelector,
+    MockTextOperation,
+    strip,
+    to_bs,
+)
 
 
 @dataclass

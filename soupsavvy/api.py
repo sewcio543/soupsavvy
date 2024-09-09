@@ -20,7 +20,7 @@ These utils do not brings extra functionality into the package, but they can be
 used for convenience and readability in some cases.
 """
 
-from soupsavvy.selectors.base import SoupSelector
+from soupsavvy.base import SoupSelector
 from soupsavvy.selectors.combinators import SelectorList
 from soupsavvy.selectors.logical import AndSelector, NotSelector, XORSelector
 from soupsavvy.selectors.relative import HasSelector

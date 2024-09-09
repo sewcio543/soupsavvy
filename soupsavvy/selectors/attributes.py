@@ -18,7 +18,7 @@ from typing import Optional, Pattern
 from bs4 import Tag
 
 import soupsavvy.selectors.namespace as ns
-from soupsavvy.selectors.base import SoupSelector
+from soupsavvy.base import SoupSelector
 from soupsavvy.selectors.namespace import PatternType
 
 

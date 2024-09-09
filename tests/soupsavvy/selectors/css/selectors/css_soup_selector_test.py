@@ -4,7 +4,7 @@ import pytest
 from bs4 import Tag
 
 from soupsavvy.selectors.css.selectors import CSSSoupSelector
-from tests.soupsavvy.selectors.conftest import MockSelector
+from tests.soupsavvy.conftest import MockSelector
 
 
 @pytest.mark.selector

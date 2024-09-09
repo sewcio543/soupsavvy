@@ -16,8 +16,8 @@ from typing import Any, Optional, Type, Union
 from bs4 import Tag
 
 import soupsavvy.exceptions as exc
+from soupsavvy.base import BaseOperation, check_operation
 from soupsavvy.interfaces import Comparable, TagSearcher
-from soupsavvy.operations.base import BaseOperation, check_operation
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 
 # allowed exception types to suppress

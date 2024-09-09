@@ -20,16 +20,14 @@ from soupsavvy.exceptions import (
 from soupsavvy.models.base import BaseModel
 from soupsavvy.models.wrappers import All, Default, Required, SkipNone, Suppress
 from soupsavvy.operations import Href, Operation, Text
-from tests.soupsavvy.operations.conftest import (
-    MockIntOperation,
-    MockPlus10Operation,
-    MockTextOperation,
-)
-from tests.soupsavvy.selectors.conftest import (
+from tests.soupsavvy.conftest import (
     MockClassMenuSelector,
     MockClassWidgetSelector,
     MockDivSelector,
+    MockIntOperation,
     MockLinkSelector,
+    MockPlus10Operation,
+    MockTextOperation,
     find_body_element,
     to_bs,
 )
