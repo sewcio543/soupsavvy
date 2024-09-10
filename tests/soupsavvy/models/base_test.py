@@ -17,9 +17,9 @@ from soupsavvy.exceptions import (
     ScopeNotDefinedException,
     UnknownModelFieldException,
 )
+from soupsavvy.models import All, Default, Required
 from soupsavvy.models.base import BaseModel
-from soupsavvy.models.wrappers import All, Default, Required, SkipNone, Suppress
-from soupsavvy.operations import Href, Operation, Text
+from soupsavvy.operations import Href, Operation, SkipNone, Suppress, Text
 from tests.soupsavvy.conftest import (
     MockClassMenuSelector,
     MockClassWidgetSelector,

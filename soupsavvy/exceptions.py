@@ -178,6 +178,16 @@ class NotOperationException(OperationException, TypeError):
     """
 
 
+class BreakOperationException(OperationException):
+    """
+    Exception raised by breaking operations such Break, to stop the execution
+    of the pipeline. Special exception that accepts result as first argument.
+    """
+
+    def __init__(self, result) -> None:
+        self.result = result
+
+
 #! MODELS
 
 
