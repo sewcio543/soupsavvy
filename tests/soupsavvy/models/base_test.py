@@ -19,7 +19,16 @@ from soupsavvy.exceptions import (
 )
 from soupsavvy.models import All, Default, Required
 from soupsavvy.models.base import BaseModel
-from soupsavvy.operations import Href, Operation, SkipNone, Suppress, Text
+from soupsavvy.operations import (
+    Break,
+    Continue,
+    Href,
+    IfElse,
+    Operation,
+    SkipNone,
+    Suppress,
+    Text,
+)
 from tests.soupsavvy.conftest import (
     MockClassMenuSelector,
     MockClassWidgetSelector,
@@ -770,6 +779,40 @@ class TestBaseModel:
             MockAllowEmptyTitle(title=None, price=20),
         ]
 
+    def test_field_can_be_another_model_class(self):
+        """
+        Tests if field can be another model class, that inherits from BaseModel.
+        It is allowed, as model is TagSearcher and can be used as field.
+        """
+
+        class MockInfoModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = TITLE_SELECTOR
+            author = MockClassMenuSelector() | MockTextOperation()
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            info = MockInfoModel
+            price = PRICE_SELECTOR
+
+        text = """
+            <div>
+                <div>
+                    <a>Title</a>
+                    <p class="menu">Author</p>
+                </div>
+                <p class="widget">10</p>
+            </div>
+        """
+        bs = to_bs(text)
+        selector = MockModel
+        result = selector.find(bs)
+        assert result == MockModel(
+            info=MockInfoModel(title="Title", author="Author"), price=10
+        )
+
     @pytest.mark.parametrize(
         "models",
         [
@@ -805,6 +848,45 @@ class TestBaseModel:
         to fields or they are of different type.
         """
         assert (models[0] == models[1]) is False
+
+    def test_model_migration_to_other_class(self):
+        """
+        Tests if model can be migrated to other class, migrate calls constructor
+        of provided class with all fields as keyword arguments and if successful,
+        returns instance of provided class.
+        """
+        model = MockModel(title="Title", price=10)
+        migrated = model.migrate(MockMigrationModel)
+
+        assert isinstance(migrated, MockMigrationModel)
+        assert migrated.title == "Title"
+        assert migrated.price == 10
+
+    def test_migrate_passes_keyword_arguments_to_model_init(self):
+        """
+        Tests if migrate method passes keyword arguments to model init method
+        additionally to fields of model instance. It allows to pass additional
+        data to model, that is not present in original model.
+        """
+        model = MockModel(title="Title", price=10)
+        migrated = model.migrate(MockMigrationModel, hello="World", number=42)
+
+        assert isinstance(migrated, MockMigrationModel)
+
+        assert migrated.title == "Title"
+        assert migrated.price == 10
+        assert getattr(migrated, "hello", None) == "World"
+        assert getattr(migrated, "number", None) == 42
+
+    def test_migrate_propagates_errors_from_model_init(self):
+        """
+        Tests if migrate method propagates errors from model init method.
+        In this case, MockMigrationModel raises ValueError.
+        """
+        model = MockModel(title="Title", price=10)
+
+        with pytest.raises(ValueError):
+            model.migrate(MockMigrationModel, hello="World", error="Error")
 
 
 @pytest.mark.integration
@@ -1077,80 +1159,121 @@ class TestBaseModelIntegration:
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=[])
 
-    def test_field_can_be_another_model_class(self):
+    def test_ifelse_operation_evaluates_condition_properly(self):
         """
-        Tests if field can be another model class, that inherits from BaseModel.
-        It is allowed, as model is TagSearcher and can be used as field.
+        Tests if IfElse operation evaluates condition properly and applies
+        correct operation to field. In this case, for title field, condition
+        is True, so first operation is applied, for price field, condition is False,
+        so second operation is applied.
         """
-
-        class MockInfoModel(BaseModel):
-            __scope__ = MockDivSelector()
-
-            title = TITLE_SELECTOR
-            author = MockClassMenuSelector() | MockTextOperation()
 
         class MockModel(BaseModel):
             __scope__ = MockDivSelector()
 
-            info = MockInfoModel
-            price = PRICE_SELECTOR
+            title = TITLE_SELECTOR | IfElse(
+                lambda x: x == "Title",
+                Operation(str.upper),
+                Operation(str.lower),
+            )
+            price = PRICE_SELECTOR | IfElse(
+                lambda x: x == 20,
+                Operation(lambda x: x + 10),
+                Operation(lambda x: x + 20),
+            )
 
         text = """
             <div>
-                <div>
-                    <a>Title</a>
-                    <p class="menu">Author</p>
-                </div>
+                <a>Title</a>
                 <p class="widget">10</p>
             </div>
         """
         bs = to_bs(text)
         selector = MockModel
         result = selector.find(bs)
-        assert result == MockModel(
-            info=MockInfoModel(title="Title", author="Author"), price=10
-        )
+        assert result == MockModel(title="TITLE", price=30)
 
-    def test_model_migration_to_other_class(self):
+    def test_ifelse_operation_conditionally_breaks_operation_pipeline(self):
         """
-        Tests if model can be migrated to other class, migrate calls constructor
-        of provided class with all fields as keyword arguments and if successful,
-        returns instance of provided class.
+        Tests if IfElse operation conditionally breaks operation pipeline
+        if Break operation is used and executed. In this case, only
+        in title field Break is executed, so next operation is not executed.
+        In price field, Break is not executed, so next operation is executed.
         """
-        model = MockModel(title="Title", price=10)
-        migrated = model.migrate(MockMigrationModel)
 
-        assert isinstance(migrated, MockMigrationModel)
-        assert migrated.title == "Title"
-        assert migrated.price == 10
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
 
-    def test_migrate_passes_keyword_arguments_to_model_init(self):
+            title = (
+                TITLE_SELECTOR
+                | IfElse(
+                    lambda x: x == "Title",
+                    Break(),
+                    Operation(str.lower),
+                )
+                | Operation(lambda x: x + "!")
+            )
+            price = (
+                PRICE_SELECTOR
+                | IfElse(
+                    lambda x: x == 0,
+                    Break(),
+                    Operation(lambda x: x + 20),
+                )
+                | Operation(lambda x: 100 / x)
+            )
+
+        text = """
+            <div>
+                <a>Title</a>
+                <p class="widget">10</p>
+            </div>
         """
-        Tests if migrate method passes keyword arguments to model init method
-        additionally to fields of model instance. It allows to pass additional
-        data to model, that is not present in original model.
+        bs = to_bs(text)
+        selector = MockModel
+        result = selector.find(bs)
+        assert result == MockModel(title="Title", price=0)
+
+    def test_ifelse_operation_conditionally_skip_operation(self):
         """
-        model = MockModel(title="Title", price=10)
-        migrated = model.migrate(MockMigrationModel, hello="World", number=42)
-
-        assert isinstance(migrated, MockMigrationModel)
-
-        assert migrated.title == "Title"
-        assert migrated.price == 10
-        assert getattr(migrated, "hello", None) == "World"
-        assert getattr(migrated, "number", None) == 42
-
-    def test_migrate_propagates_errors_from_model_init(self):
+        Tests if IfElse operation conditionally skips operation if Continue
+        operation is used. In this case, for title field, Continue is executed,
+        so next pipeline skips to next operation. For price field, Continue is not
+        executed, so else operation is executed, before next one in chain.
         """
-        Tests if migrate method propagates errors from model init method.
-        In this case, MockMigrationModel raises ValueError.
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = (
+                TITLE_SELECTOR
+                | IfElse(
+                    lambda x: x == "Title",
+                    Continue(),
+                    Operation(str.lower),
+                )
+                | Operation(lambda x: x + "!")
+            )
+            price = (
+                PRICE_SELECTOR
+                | IfElse(
+                    lambda x: x == 20,
+                    Continue(),
+                    Operation(lambda x: x + 10),
+                )
+                | Operation(lambda x: x * 2)
+            )
+
+        text = """
+            <div>
+                <a>Title</a>
+                <p class="widget">10</p>
+            </div>
         """
-        model = MockModel(title="Title", price=10)
+        bs = to_bs(text)
+        selector = MockModel
+        result = selector.find(bs)
+        assert result == MockModel(title="Title!", price=40)
 
-        with pytest.raises(ValueError):
-            model.migrate(MockMigrationModel, hello="World", error="Error")
-
-    @pytest.mark.integration
     def test_migration_to_pydantic_model(self):
         """
         Tests if model can be migrated to Pydantic model. If validation passes,
@@ -1160,7 +1283,6 @@ class TestBaseModelIntegration:
         migrated = model.migrate(MockPydanticBook)
         assert isinstance(migrated, MockPydanticBook)
 
-    @pytest.mark.integration
     def test_migration_to_pydantic_model_raises_error(self):
         """
         Tests if migration to Pydantic model raises error if validation fails.
@@ -1171,14 +1293,12 @@ class TestBaseModelIntegration:
         with pytest.raises(pydantic.ValidationError):
             model.migrate(MockPydanticBook)
 
-    @pytest.mark.integration
     def test_model_migration_to_sqlalchemy_model(self):
         """Tests migration of model to SQLAlchemy model."""
         model = MockModel(title="Title", price=10)
         migrated = model.migrate(MockSABook)
         assert isinstance(migrated, MockSABook)
 
-    @pytest.mark.integration
     def test_works_with_soupsavvy_operations_as_fields(self):
         """
         Tests if model works with soupsavvy operations as fields.

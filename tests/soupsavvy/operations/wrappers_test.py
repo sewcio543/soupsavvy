@@ -1,4 +1,4 @@
-"""Module with unit tests for wrappers in soupsavvy.models module."""
+"""Module with unit tests for wrapper operations."""
 
 import pytest
 

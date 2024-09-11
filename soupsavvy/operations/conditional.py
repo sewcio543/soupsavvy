@@ -7,7 +7,7 @@ Module for conditional operations to control flow in the pipeline.
 """
 
 from collections.abc import Callable
-from typing import Any
+from typing import Any, Optional
 
 import soupsavvy.exceptions as exc
 from soupsavvy.base import BaseOperation, OperationSearcherMixin, check_operation
@@ -100,38 +100,23 @@ class Break(OperationSearcherMixin):
     >>> from soupsavvy.operations import Break, IfElse, Operation
     ... operation = IfElse(
     ...     lambda x: x == 0,
-    ...     Break(Operation(lambda x: None)),
-    ...     Operation(lambda x: x / 100),
-    ... ) | Operation(lambda x: x - 1)
+    ...     Break(),
+    ...     Operation(lambda x: 100 / x),
+    ... ) | Operation(lambda x: x + 1)
     ... operation.execute(0)
-    None
-    ... operation.execute(100)
     0
+    ... operation.execute(100)
+    2
 
     If `Break` operation is executed, the pipeline will stop and return the result,
     so next operation is not executed.
     """
 
-    def __init__(self, operation: BaseOperation) -> None:
-        """
-        Initializes Break operation with operation to execute.
-
-        Parameters
-        ----------
-        operation : BaseOperation
-            Operation to execute.
-        """
-        self._operation = check_operation(operation)
-
     def _execute(self, arg: Any) -> Any:
-        result = self._operation.execute(arg)
-        raise exc.BreakOperationException(result)
+        raise exc.BreakOperationException(arg)
 
     def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, Break):
-            return False
-
-        return self._operation == other._operation
+        return isinstance(other, Break)
 
 
 class Continue(OperationSearcherMixin):

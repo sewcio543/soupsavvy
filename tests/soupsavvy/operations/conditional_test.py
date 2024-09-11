@@ -1,21 +1,11 @@
-"""Testing module for general operations."""
-
-from collections.abc import Callable
-from dataclasses import dataclass
-from typing import Any
+"""Testing module for conditional operations."""
 
 import pytest
 
-from soupsavvy.exceptions import (
-    BreakOperationException,
-    FailedOperationExecution,
-    NotOperationException,
-)
+from soupsavvy.exceptions import BreakOperationException, FailedOperationExecution
 from soupsavvy.operations.conditional import Break, Continue, IfElse
 from tests.soupsavvy.conftest import (
-    MockBreakOperation,
     MockIntOperation,
-    MockLinkSelector,
     MockPlus10Operation,
     MockTextOperation,
 )
@@ -30,7 +20,12 @@ def mock_condition(arg):
 
 
 class TestIfElse:
-    def test_execute(self):
+    """Class with unit test suite for IfElse operation."""
+
+    def test_executes_proper_operation_based_on_condition(self):
+        """
+        Testes if execute method calls the proper operation based on the condition.
+        """
         operation = IfElse(
             lambda x: isinstance(x, str),
             MockIntOperation(),
@@ -40,7 +35,11 @@ class TestIfElse:
         assert operation.execute("10") == 10
         assert operation.execute(10) == 20
 
-    def test_execute_fails(self):
+    def test_execute_raises_error_when_operation_fails(self):
+        """
+        Tests if execute method raises FailedOperationExecution when
+        chosen operation fails to execute.
+        """
         operation = IfElse(
             lambda x: isinstance(x, str),
             MockIntOperation(),
@@ -132,27 +131,22 @@ class TestIfElse:
 
 
 class TestBreak:
-    def test_execute(self):
-        operation = Break(MockIntOperation())
+    """Class with unit test suite for Break operation."""
+
+    def test_raises_error_and_passes_value_to_exception(self):
+        """
+        Tests if Break operation raises BreakOperationException
+        if executed and passes current result to the exception.
+        """
+        operation = Break()
 
         with pytest.raises(BreakOperationException) as info:
             operation.execute("10")
-            assert info.value.result == 10
-
-    def test_execute_fails(self):
-        operation = Break(MockIntOperation())
-
-        with pytest.raises(FailedOperationExecution):
-            operation.execute("abc")
+            assert info.value.result == "10"
 
     @pytest.mark.parametrize(
         argnames="operations",
-        argvalues=[
-            (
-                Break(MockIntOperation()),
-                Break(MockIntOperation()),
-            )
-        ],
+        argvalues=[(Break(), Break())],
     )
     def test_eq_returns_true_if_same_operation(self, operations: tuple):
         """Tests if __eq__ method returns True if objects are equal."""
@@ -161,16 +155,7 @@ class TestBreak:
 
     @pytest.mark.parametrize(
         argnames="operations",
-        argvalues=[
-            (
-                Break(MockIntOperation()),
-                Break(MockTextOperation()),
-            ),
-            (
-                Break(MockIntOperation()),
-                MockIntOperation(),
-            ),
-        ],
+        argvalues=[(Break(), MockIntOperation())],
     )
     def test_eq_returns_false_if_different_operation(self, operations: tuple):
         """Tests if __eq__ method returns False if objects are not equal."""
@@ -179,7 +164,8 @@ class TestBreak:
 
 
 class TestContinue:
-    def test_execute(self):
+    def test_execute_returns_value_back(self):
+        """Tests if execute method returns the same value back."""
         operation = Continue()
         result = operation.execute("10")
         assert result == "10"
@@ -195,9 +181,7 @@ class TestContinue:
 
     @pytest.mark.parametrize(
         argnames="operations",
-        argvalues=[
-            (Continue(), MockIntOperation()),
-        ],
+        argvalues=[(Continue(), MockIntOperation())],
     )
     def test_eq_returns_false_if_different_operation(self, operations: tuple):
         """Tests if __eq__ method returns False if objects are not equal."""
