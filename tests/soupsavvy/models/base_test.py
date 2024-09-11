@@ -18,7 +18,7 @@ from soupsavvy.exceptions import (
     UnknownModelFieldException,
 )
 from soupsavvy.models import All, Default, Required
-from soupsavvy.models.base import BaseModel
+from soupsavvy.models.base import BaseModel, post
 from soupsavvy.operations import (
     Break,
     Continue,
@@ -237,6 +237,137 @@ class TestBaseModel:
         assert model.title == "Title!"
         assert model.price == 10
         assert model.attributes == {"title": "Title!", "price": 10}
+
+    def test_custom_post_process_methods_are_applied(self):
+        """
+        Tests if custom post-process methods are applied to fields of model instance
+        in initialization. It allows to modify field values after extraction.
+        Every method, that is decorated with post, with valid field name
+        is considered post-process method.
+        """
+
+        class ChildModel(MockModel):
+
+            @post("title")
+            def process_title(self, value: str) -> str:
+                return value + "!"
+
+            @post("price")
+            def process_price(self, value: int) -> int:
+                return value + 10
+
+        model = ChildModel(title="Title", price=10)
+
+        assert model.title == "Title!"
+        assert model.price == 20
+        assert model.attributes == {"title": "Title!", "price": 20}
+
+    def test_custom_post_process_methods_are_applied_before_post_init(self):
+        """
+        Tests if custom post-process methods are applied to fields of model instance
+        before custom __post_init__ method.
+        """
+
+        class ChildModel(MockModel):
+
+            @post("title")
+            def process_title(self, value: str) -> str:
+                return value + "!"
+
+            @post("price")
+            def process_price(self, value: int) -> int:
+                return value + 10
+
+            def __post_init__(self) -> None:
+                self.price = self.price + len(self.title)  # type: ignore
+
+        model = ChildModel(title="Title", price=10)
+
+        assert model.title == "Title!"
+        assert model.price == 26
+
+    def test_processors_of_the_same_field_are_overwritten(self):
+        """
+        Tests if processors of the same field are overwritten by the last one.
+        Only last defined processor is applied to the field.
+        """
+
+        class ChildModel(MockModel):
+
+            @post("title")
+            def process_title(self, value: str) -> str:
+                return value + "!"
+
+            @post("title")
+            def process_title2(self, value: str) -> str:
+                return value + "!?"
+
+        model = ChildModel(title="Title", price=10)
+
+        assert model.title == "Title!?"
+        assert model.price == 10
+
+    def test_method_decorated_with_post_with_invalid_field_name_is_ignored(self):
+        """
+        Tests if method decorated with post with argument, that is not a field name
+        is ignored and not applied to the model instance. The same way,
+        any method not decorated with post is ignored.
+        """
+
+        class ChildModel(MockModel):
+
+            @post("random")
+            def process_title(self, value: str) -> str:
+                return value + "!"
+
+            def process_price(self, value: int) -> int:
+                return value + 10
+
+        model = ChildModel(title="Title", price=10)
+
+        assert model.title == "Title"
+        assert model.price == 10
+
+    def test_custom_post_process_methods_are_inherited_and_overridden(self):
+        """
+        Tests if custom post-process methods are inherited from base class
+        and can be overridden in child class.
+        """
+
+        class ChildModel(MockModel):
+
+            @post("title")
+            def process_title(self, value: str) -> str:
+                return value + "!"
+
+            @post("price")
+            def process_price(self, value: int) -> int:
+                return value + 10
+
+        class GrandChildModel(ChildModel):
+
+            @post("title")
+            def process_title(self, value: str) -> str:
+                return value + "!!"
+
+        model = GrandChildModel(title="Title", price=10)
+
+        assert model.title == "Title!!"
+        assert model.price == 20
+
+    def test_errors_in_post_process_methods_are_propagated(self):
+        """
+        Tests if any error raised in post-process method is propagated and not handled.
+        """
+
+        class ChildModel(MockModel):
+
+            @post("title")
+            def process_title(self, value: str) -> str:
+                raise ValueError("Error")
+
+        with pytest.raises(ValueError):
+            ChildModel(title="Title", price=10)
 
     def test_attributes_returns_modified_field_values(self):
         """

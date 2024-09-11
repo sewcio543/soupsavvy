@@ -6,6 +6,7 @@ Module with base model class used as a parent for all user defined
 from __future__ import annotations
 
 from abc import ABC
+from collections.abc import Callable
 from functools import reduce
 from typing import Any, Literal, Optional, Type, TypeVar, overload
 
@@ -18,6 +19,33 @@ from soupsavvy.base import SoupSelector, check_selector
 from soupsavvy.interfaces import Comparable, TagSearcher, TagSearcherExceptions
 
 T = TypeVar("T")
+
+
+def post(field: str) -> Callable[[Callable], Callable]:
+    """
+    Decorator to mark a method as a post-processor for a model field.
+    The method will be called after the field is extracted from the tag
+    in model instance initialization.
+
+    Example
+    -------
+    class MyModel(BaseModel):
+        ...
+        field = ...
+
+        @post("field")
+        def post_process_field(self, value):
+            return value.strip()
+
+    Methods of custom model class, that are decorated with `@post` decorator,
+    must accept only one argument, which is the value of the field to be processed.
+    """
+
+    def decorator(func):
+        setattr(func, c.POST_ATTR, field)
+        return func
+
+    return decorator
 
 
 class ModelMeta(type(ABC)):
@@ -53,6 +81,13 @@ class ModelMeta(type(ABC)):
         """
         super().__init__(name, bases, class_dict)
 
+        setattr(cls, c.POST_PROCESSORS, {})
+        post_processors = getattr(cls, c.POST_PROCESSORS)
+
+        # Inherit post-processors from base classes
+        for base in bases:
+            post_processors.update(getattr(base, c.POST_PROCESSORS, {}))
+
         if name in c.BASE_MODELS:
             return
 
@@ -69,10 +104,24 @@ class ModelMeta(type(ABC)):
         )
         check_selector(scope, message=message)
 
-        if not cls._get_fields():
+        fields = cls._get_fields()
+
+        if not fields:
             raise exc.FieldsNotDefinedException(
                 f"Model '{cls.__name__}' has no fields defined. At least one required."
             )
+
+        # register post processors
+        for name in dir(cls):
+            obj = getattr(cls, name)
+
+            if not callable(obj) or name.startswith("__"):
+                continue
+
+            field = getattr(obj, c.POST_ATTR, None)
+
+            if field in fields:
+                post_processors[field] = obj
 
     @property
     def scope(cls) -> SoupSelector:
@@ -142,6 +191,8 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
     __scope__: SoupSelector = None  # type: ignore
     __inherit_fields__: bool = True
 
+    __post_processors__: dict[str, Callable] = {}
+
     def __init__(self, **kwargs) -> None:
         """
         Initializes a model instance with provided field values.
@@ -171,6 +222,11 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
                     f"Cannot initialize model '{self.__class__.__name__}' "
                     f"without '{field}' field."
                 )
+
+            func = getattr(self, c.POST_PROCESSORS).get(field)
+
+            if func is not None:
+                value = func(self, value)
 
             setattr(self, field, value)
 
