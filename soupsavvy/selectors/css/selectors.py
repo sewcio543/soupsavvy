@@ -29,8 +29,8 @@ import soupsieve as sv
 from bs4 import Tag
 
 import soupsavvy.exceptions as exc
-from soupsavvy.selectors.base import SelectableCSS, SoupSelector
-from soupsavvy.selectors.tag_utils import TagIterator
+from soupsavvy.base import SelectableCSS, SoupSelector
+from soupsavvy.utils.selector_utils import TagIterator
 
 
 class CSSSoupSelector(SoupSelector, SelectableCSS):

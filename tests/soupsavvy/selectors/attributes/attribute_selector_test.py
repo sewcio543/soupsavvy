@@ -6,12 +6,7 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.attributes import AttributeSelector, ClassSelector
-from tests.soupsavvy.selectors.conftest import (
-    MockDivSelector,
-    find_body_element,
-    strip,
-    to_bs,
-)
+from tests.soupsavvy.conftest import MockDivSelector, find_body_element, strip, to_bs
 
 
 @pytest.mark.selector

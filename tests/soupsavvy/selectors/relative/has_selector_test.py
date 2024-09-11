@@ -10,7 +10,7 @@ from soupsavvy.selectors.relative import (
     RelativeNextSibling,
     RelativeSubsequentSibling,
 )
-from tests.soupsavvy.selectors.conftest import (
+from tests.soupsavvy.conftest import (
     MockDivSelector,
     MockLinkSelector,
     find_body_element,

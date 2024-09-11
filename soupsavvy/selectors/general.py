@@ -16,8 +16,8 @@ from bs4 import SoupStrainer, Tag
 from typing_extensions import deprecated
 
 import soupsavvy.selectors.namespace as ns
-from soupsavvy.selectors.base import SelectableCSS, SoupSelector
-from soupsavvy.selectors.tag_utils import TagIterator
+from soupsavvy.base import SelectableCSS, SoupSelector
+from soupsavvy.utils.selector_utils import TagIterator
 
 
 @dataclass

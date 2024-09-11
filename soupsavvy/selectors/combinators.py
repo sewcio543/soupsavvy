@@ -30,7 +30,7 @@ from typing import Optional, Type
 
 from bs4 import Tag
 
-from soupsavvy.selectors.base import CompositeSoupSelector, SoupSelector
+from soupsavvy.base import CompositeSoupSelector, SoupSelector
 from soupsavvy.selectors.relative import (
     RelativeAncestor,
     RelativeChild,
@@ -40,7 +40,7 @@ from soupsavvy.selectors.relative import (
     RelativeSelector,
     RelativeSubsequentSibling,
 )
-from soupsavvy.selectors.tag_utils import TagIterator, TagResultSet
+from soupsavvy.utils.selector_utils import TagIterator, TagResultSet
 
 
 class BaseCombinator(CompositeSoupSelector):

@@ -6,7 +6,7 @@ import pytest
 
 from soupsavvy.exceptions import InvalidCSSSelector, TagNotFoundException
 from soupsavvy.selectors.css.selectors import NthLastOfType
-from tests.soupsavvy.selectors.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import find_body_element, strip, to_bs
 
 
 @pytest.mark.css

@@ -6,7 +6,7 @@ import pytest
 from bs4 import Tag
 
 from soupsavvy.selectors.general import SelfSelector
-from tests.soupsavvy.selectors.conftest import MockLinkSelector, strip, to_bs
+from tests.soupsavvy.conftest import MockLinkSelector, strip, to_bs
 
 SELECTOR = SelfSelector()
 TEXT = """

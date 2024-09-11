@@ -17,19 +17,26 @@ from soupsavvy.exceptions import (
     ScopeNotDefinedException,
     UnknownModelFieldException,
 )
-from soupsavvy.models.base import BaseModel
-from soupsavvy.models.wrappers import All, Default, Required, SkipNone, Suppress
-from soupsavvy.operations import Href, Operation, Text
-from tests.soupsavvy.operations.conftest import (
-    MockIntOperation,
-    MockPlus10Operation,
-    MockTextOperation,
+from soupsavvy.models import All, Default, Required
+from soupsavvy.models.base import BaseModel, post
+from soupsavvy.operations import (
+    Break,
+    Continue,
+    Href,
+    IfElse,
+    Operation,
+    SkipNone,
+    Suppress,
+    Text,
 )
-from tests.soupsavvy.selectors.conftest import (
+from tests.soupsavvy.conftest import (
     MockClassMenuSelector,
     MockClassWidgetSelector,
     MockDivSelector,
+    MockIntOperation,
     MockLinkSelector,
+    MockPlus10Operation,
+    MockTextOperation,
     find_body_element,
     to_bs,
 )
@@ -230,6 +237,137 @@ class TestBaseModel:
         assert model.title == "Title!"
         assert model.price == 10
         assert model.attributes == {"title": "Title!", "price": 10}
+
+    def test_custom_post_process_methods_are_applied(self):
+        """
+        Tests if custom post-process methods are applied to fields of model instance
+        in initialization. It allows to modify field values after extraction.
+        Every method, that is decorated with post, with valid field name
+        is considered post-process method.
+        """
+
+        class ChildModel(MockModel):
+
+            @post("title")
+            def process_title(self, value: str) -> str:
+                return value + "!"
+
+            @post("price")
+            def process_price(self, value: int) -> int:
+                return value + 10
+
+        model = ChildModel(title="Title", price=10)
+
+        assert model.title == "Title!"
+        assert model.price == 20
+        assert model.attributes == {"title": "Title!", "price": 20}
+
+    def test_custom_post_process_methods_are_applied_before_post_init(self):
+        """
+        Tests if custom post-process methods are applied to fields of model instance
+        before custom __post_init__ method.
+        """
+
+        class ChildModel(MockModel):
+
+            @post("title")
+            def process_title(self, value: str) -> str:
+                return value + "!"
+
+            @post("price")
+            def process_price(self, value: int) -> int:
+                return value + 10
+
+            def __post_init__(self) -> None:
+                self.price = self.price + len(self.title)  # type: ignore
+
+        model = ChildModel(title="Title", price=10)
+
+        assert model.title == "Title!"
+        assert model.price == 26
+
+    def test_processors_of_the_same_field_are_overwritten(self):
+        """
+        Tests if processors of the same field are overwritten by the last one.
+        Only last defined processor is applied to the field.
+        """
+
+        class ChildModel(MockModel):
+
+            @post("title")
+            def process_title(self, value: str) -> str:
+                return value + "!"
+
+            @post("title")
+            def process_title2(self, value: str) -> str:
+                return value + "!?"
+
+        model = ChildModel(title="Title", price=10)
+
+        assert model.title == "Title!?"
+        assert model.price == 10
+
+    def test_method_decorated_with_post_with_invalid_field_name_is_ignored(self):
+        """
+        Tests if method decorated with post with argument, that is not a field name
+        is ignored and not applied to the model instance. The same way,
+        any method not decorated with post is ignored.
+        """
+
+        class ChildModel(MockModel):
+
+            @post("random")
+            def process_title(self, value: str) -> str:
+                return value + "!"
+
+            def process_price(self, value: int) -> int:
+                return value + 10
+
+        model = ChildModel(title="Title", price=10)
+
+        assert model.title == "Title"
+        assert model.price == 10
+
+    def test_custom_post_process_methods_are_inherited_and_overridden(self):
+        """
+        Tests if custom post-process methods are inherited from base class
+        and can be overridden in child class.
+        """
+
+        class ChildModel(MockModel):
+
+            @post("title")
+            def process_title(self, value: str) -> str:
+                return value + "!"
+
+            @post("price")
+            def process_price(self, value: int) -> int:
+                return value + 10
+
+        class GrandChildModel(ChildModel):
+
+            @post("title")
+            def process_title(self, value: str) -> str:
+                return value + "!!"
+
+        model = GrandChildModel(title="Title", price=10)
+
+        assert model.title == "Title!!"
+        assert model.price == 20
+
+    def test_errors_in_post_process_methods_are_propagated(self):
+        """
+        Tests if any error raised in post-process method is propagated and not handled.
+        """
+
+        class ChildModel(MockModel):
+
+            @post("title")
+            def process_title(self, value: str) -> str:
+                raise ValueError("Error")
+
+        with pytest.raises(ValueError):
+            ChildModel(title="Title", price=10)
 
     def test_attributes_returns_modified_field_values(self):
         """
@@ -772,6 +910,40 @@ class TestBaseModel:
             MockAllowEmptyTitle(title=None, price=20),
         ]
 
+    def test_field_can_be_another_model_class(self):
+        """
+        Tests if field can be another model class, that inherits from BaseModel.
+        It is allowed, as model is TagSearcher and can be used as field.
+        """
+
+        class MockInfoModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = TITLE_SELECTOR
+            author = MockClassMenuSelector() | MockTextOperation()
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            info = MockInfoModel
+            price = PRICE_SELECTOR
+
+        text = """
+            <div>
+                <div>
+                    <a>Title</a>
+                    <p class="menu">Author</p>
+                </div>
+                <p class="widget">10</p>
+            </div>
+        """
+        bs = to_bs(text)
+        selector = MockModel
+        result = selector.find(bs)
+        assert result == MockModel(
+            info=MockInfoModel(title="Title", author="Author"), price=10
+        )
+
     @pytest.mark.parametrize(
         "models",
         [
@@ -807,6 +979,45 @@ class TestBaseModel:
         to fields or they are of different type.
         """
         assert (models[0] == models[1]) is False
+
+    def test_model_migration_to_other_class(self):
+        """
+        Tests if model can be migrated to other class, migrate calls constructor
+        of provided class with all fields as keyword arguments and if successful,
+        returns instance of provided class.
+        """
+        model = MockModel(title="Title", price=10)
+        migrated = model.migrate(MockMigrationModel)
+
+        assert isinstance(migrated, MockMigrationModel)
+        assert migrated.title == "Title"
+        assert migrated.price == 10
+
+    def test_migrate_passes_keyword_arguments_to_model_init(self):
+        """
+        Tests if migrate method passes keyword arguments to model init method
+        additionally to fields of model instance. It allows to pass additional
+        data to model, that is not present in original model.
+        """
+        model = MockModel(title="Title", price=10)
+        migrated = model.migrate(MockMigrationModel, hello="World", number=42)
+
+        assert isinstance(migrated, MockMigrationModel)
+
+        assert migrated.title == "Title"
+        assert migrated.price == 10
+        assert getattr(migrated, "hello", None) == "World"
+        assert getattr(migrated, "number", None) == 42
+
+    def test_migrate_propagates_errors_from_model_init(self):
+        """
+        Tests if migrate method propagates errors from model init method.
+        In this case, MockMigrationModel raises ValueError.
+        """
+        model = MockModel(title="Title", price=10)
+
+        with pytest.raises(ValueError):
+            model.migrate(MockMigrationModel, hello="World", error="Error")
 
 
 @pytest.mark.integration
@@ -1079,80 +1290,121 @@ class TestBaseModelIntegration:
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=[])
 
-    def test_field_can_be_another_model_class(self):
+    def test_ifelse_operation_evaluates_condition_properly(self):
         """
-        Tests if field can be another model class, that inherits from BaseModel.
-        It is allowed, as model is TagSearcher and can be used as field.
+        Tests if IfElse operation evaluates condition properly and applies
+        correct operation to field. In this case, for title field, condition
+        is True, so first operation is applied, for price field, condition is False,
+        so second operation is applied.
         """
-
-        class MockInfoModel(BaseModel):
-            __scope__ = MockDivSelector()
-
-            title = TITLE_SELECTOR
-            author = MockClassMenuSelector() | MockTextOperation()
 
         class MockModel(BaseModel):
             __scope__ = MockDivSelector()
 
-            info = MockInfoModel
-            price = PRICE_SELECTOR
+            title = TITLE_SELECTOR | IfElse(
+                lambda x: x == "Title",
+                Operation(str.upper),
+                Operation(str.lower),
+            )
+            price = PRICE_SELECTOR | IfElse(
+                lambda x: x == 20,
+                Operation(lambda x: x + 10),
+                Operation(lambda x: x + 20),
+            )
 
         text = """
             <div>
-                <div>
-                    <a>Title</a>
-                    <p class="menu">Author</p>
-                </div>
+                <a>Title</a>
                 <p class="widget">10</p>
             </div>
         """
         bs = to_bs(text)
         selector = MockModel
         result = selector.find(bs)
-        assert result == MockModel(
-            info=MockInfoModel(title="Title", author="Author"), price=10
-        )
+        assert result == MockModel(title="TITLE", price=30)
 
-    def test_model_migration_to_other_class(self):
+    def test_ifelse_operation_conditionally_breaks_operation_pipeline(self):
         """
-        Tests if model can be migrated to other class, migrate calls constructor
-        of provided class with all fields as keyword arguments and if successful,
-        returns instance of provided class.
+        Tests if IfElse operation conditionally breaks operation pipeline
+        if Break operation is used and executed. In this case, only
+        in title field Break is executed, so next operation is not executed.
+        In price field, Break is not executed, so next operation is executed.
         """
-        model = MockModel(title="Title", price=10)
-        migrated = model.migrate(MockMigrationModel)
 
-        assert isinstance(migrated, MockMigrationModel)
-        assert migrated.title == "Title"
-        assert migrated.price == 10
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
 
-    def test_migrate_passes_keyword_arguments_to_model_init(self):
+            title = (
+                TITLE_SELECTOR
+                | IfElse(
+                    lambda x: x == "Title",
+                    Break(),
+                    Operation(str.lower),
+                )
+                | Operation(lambda x: x + "!")
+            )
+            price = (
+                PRICE_SELECTOR
+                | IfElse(
+                    lambda x: x == 0,
+                    Break(),
+                    Operation(lambda x: x + 10),
+                )
+                | Operation(lambda x: 100 / x)
+            )
+
+        text = """
+            <div>
+                <a>Title</a>
+                <p class="widget">10</p>
+            </div>
         """
-        Tests if migrate method passes keyword arguments to model init method
-        additionally to fields of model instance. It allows to pass additional
-        data to model, that is not present in original model.
+        bs = to_bs(text)
+        selector = MockModel
+        result = selector.find(bs)
+        assert result == MockModel(title="Title", price=5)
+
+    def test_ifelse_operation_conditionally_skip_operation(self):
         """
-        model = MockModel(title="Title", price=10)
-        migrated = model.migrate(MockMigrationModel, hello="World", number=42)
-
-        assert isinstance(migrated, MockMigrationModel)
-
-        assert migrated.title == "Title"
-        assert migrated.price == 10
-        assert getattr(migrated, "hello", None) == "World"
-        assert getattr(migrated, "number", None) == 42
-
-    def test_migrate_propagates_errors_from_model_init(self):
+        Tests if IfElse operation conditionally skips operation if Continue
+        operation is used. In this case, for title field, Continue is executed,
+        so next pipeline skips to next operation. For price field, Continue is not
+        executed, so else operation is executed, before next one in chain.
         """
-        Tests if migrate method propagates errors from model init method.
-        In this case, MockMigrationModel raises ValueError.
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = (
+                TITLE_SELECTOR
+                | IfElse(
+                    lambda x: x == "Title",
+                    Continue(),
+                    Operation(str.lower),
+                )
+                | Operation(lambda x: x + "!")
+            )
+            price = (
+                PRICE_SELECTOR
+                | IfElse(
+                    lambda x: x == 20,
+                    Continue(),
+                    Operation(lambda x: x + 10),
+                )
+                | Operation(lambda x: x * 2)
+            )
+
+        text = """
+            <div>
+                <a>Title</a>
+                <p class="widget">10</p>
+            </div>
         """
-        model = MockModel(title="Title", price=10)
+        bs = to_bs(text)
+        selector = MockModel
+        result = selector.find(bs)
+        assert result == MockModel(title="Title!", price=40)
 
-        with pytest.raises(ValueError):
-            model.migrate(MockMigrationModel, hello="World", error="Error")
-
-    @pytest.mark.integration
     def test_migration_to_pydantic_model(self):
         """
         Tests if model can be migrated to Pydantic model. If validation passes,
@@ -1162,7 +1414,6 @@ class TestBaseModelIntegration:
         migrated = model.migrate(MockPydanticBook)
         assert isinstance(migrated, MockPydanticBook)
 
-    @pytest.mark.integration
     def test_migration_to_pydantic_model_raises_error(self):
         """
         Tests if migration to Pydantic model raises error if validation fails.
@@ -1173,14 +1424,12 @@ class TestBaseModelIntegration:
         with pytest.raises(pydantic.ValidationError):
             model.migrate(MockPydanticBook)
 
-    @pytest.mark.integration
     def test_model_migration_to_sqlalchemy_model(self):
         """Tests migration of model to SQLAlchemy model."""
         model = MockModel(title="Title", price=10)
         migrated = model.migrate(MockSABook)
         assert isinstance(migrated, MockSABook)
 
-    @pytest.mark.integration
     def test_works_with_soupsavvy_operations_as_fields(self):
         """
         Tests if model works with soupsavvy operations as fields.

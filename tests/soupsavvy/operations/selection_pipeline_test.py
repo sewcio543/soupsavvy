@@ -9,10 +9,11 @@ from soupsavvy.exceptions import (
 )
 from soupsavvy.operations.general import OperationPipeline
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
-from tests.soupsavvy.operations.conftest import MockIntOperation, MockTextOperation
-from tests.soupsavvy.selectors.conftest import (
+from tests.soupsavvy.conftest import (
     MockDivSelector,
+    MockIntOperation,
     MockLinkSelector,
+    MockTextOperation,
     find_body_element,
     to_bs,
 )

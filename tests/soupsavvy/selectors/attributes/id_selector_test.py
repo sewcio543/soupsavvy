@@ -6,7 +6,7 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.attributes import IdSelector
-from tests.soupsavvy.selectors.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import find_body_element, strip, to_bs
 
 #! in these tests there are examples where multiple elements have the same id
 #! this is not a valid html, but it is used for testing purposes
