@@ -279,7 +279,7 @@ class TestBaseModel:
                 return value + 10
 
             def __post_init__(self) -> None:
-                self.price = self.price + len(str(self.title))
+                self.price = self.price + len(self.title)  # type: ignore
 
         model = ChildModel(title="Title", price=10)
 
