@@ -21,7 +21,25 @@ from soupsavvy.interfaces import Comparable, TagSearcher, TagSearcherExceptions
 T = TypeVar("T")
 
 
-def post(field: str):
+def post(field: str) -> Callable[[Callable], Callable]:
+    """
+    Decorator to mark a method as a post-processor for a model field.
+    The method will be called after the field is extracted from the tag
+    in model instance initialization.
+
+    Example
+    -------
+    class MyModel(BaseModel):
+        ...
+        field = ...
+
+        @post("field")
+        def post_process_field(self, value):
+            return value.strip()
+
+    Methods of custom model class, that are decorated with `@post` decorator,
+    must accept only one argument, which is the value of the field to be processed.
+    """
 
     def decorator(func):
         setattr(func, c.POST_ATTR, field)
@@ -63,6 +81,13 @@ class ModelMeta(type(ABC)):
         """
         super().__init__(name, bases, class_dict)
 
+        setattr(cls, c.POST_PROCESSORS, {})
+        post_processors = getattr(cls, c.POST_PROCESSORS)
+
+        # Inherit post-processors from base classes
+        for base in bases:
+            post_processors.update(getattr(base, c.POST_PROCESSORS, {}))
+
         if name in c.BASE_MODELS:
             return
 
@@ -79,13 +104,14 @@ class ModelMeta(type(ABC)):
         )
         check_selector(scope, message=message)
 
-        if not cls._get_fields():
+        fields = cls._get_fields()
+
+        if not fields:
             raise exc.FieldsNotDefinedException(
                 f"Model '{cls.__name__}' has no fields defined. At least one required."
             )
 
-        post_processors = getattr(cls, c.POST_PROCESSORS)
-
+        # register post processors
         for name in dir(cls):
             obj = getattr(cls, name)
 
@@ -94,7 +120,7 @@ class ModelMeta(type(ABC)):
 
             field = getattr(obj, c.POST_ATTR, None)
 
-            if field is not None:
+            if field in fields:
                 post_processors[field] = obj
 
     @property
@@ -197,7 +223,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
                     f"without '{field}' field."
                 )
 
-            func = self.__post_processors__.get(field)
+            func = getattr(self, c.POST_PROCESSORS).get(field)
 
             if func is not None:
                 value = func(self, value)
