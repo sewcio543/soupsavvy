@@ -6,6 +6,7 @@ Module with base model class used as a parent for all user defined
 from __future__ import annotations
 
 from abc import ABC
+from collections.abc import Callable
 from functools import reduce
 from typing import Any, Literal, Optional, Type, TypeVar, overload
 
@@ -18,6 +19,15 @@ from soupsavvy.base import SoupSelector, check_selector
 from soupsavvy.interfaces import Comparable, TagSearcher, TagSearcherExceptions
 
 T = TypeVar("T")
+
+
+def post(field: str):
+
+    def decorator(func):
+        setattr(func, c.POST_ATTR, field)
+        return func
+
+    return decorator
 
 
 class ModelMeta(type(ABC)):
@@ -73,6 +83,19 @@ class ModelMeta(type(ABC)):
             raise exc.FieldsNotDefinedException(
                 f"Model '{cls.__name__}' has no fields defined. At least one required."
             )
+
+        post_processors = getattr(cls, c.POST_PROCESSORS)
+
+        for name in dir(cls):
+            obj = getattr(cls, name)
+
+            if not callable(obj) or name.startswith("__"):
+                continue
+
+            field = getattr(obj, c.POST_ATTR, None)
+
+            if field is not None:
+                post_processors[field] = obj
 
     @property
     def scope(cls) -> SoupSelector:
@@ -142,6 +165,8 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
     __scope__: SoupSelector = None  # type: ignore
     __inherit_fields__: bool = True
 
+    __post_processors__: dict[str, Callable] = {}
+
     def __init__(self, **kwargs) -> None:
         """
         Initializes a model instance with provided field values.
@@ -171,6 +196,11 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
                     f"Cannot initialize model '{self.__class__.__name__}' "
                     f"without '{field}' field."
                 )
+
+            func = self.__post_processors__.get(field)
+
+            if func is not None:
+                value = func(self, value)
 
             setattr(self, field, value)
 
