@@ -18,6 +18,7 @@ from soupsavvy.base import (
     check_selector,
 )
 from soupsavvy.exceptions import (
+    BreakOperationException,
     FailedOperationExecution,
     NavigableStringException,
     NotOperationException,
@@ -36,6 +37,7 @@ from soupsavvy.selectors.combinators import (
 )
 from soupsavvy.selectors.logical import AndSelector, NotSelector
 from tests.soupsavvy.conftest import (
+    MockBreakOperation,
     MockClassMenuSelector,
     MockDivSelector,
     MockIntOperation,
@@ -552,6 +554,28 @@ class TestBaseOperation:
 
         assert isinstance(result, OperationPipeline)
         assert result.operations == [operation1, operation2]
+
+    def test_break_exception_is_propagated_in_execute(self):
+        """
+        Tests if BreakOperationException is propagated in execute method.
+        If it was raised during _execute method, it should be propagated.
+        """
+        operation = MockBreakOperation(MockIntOperation())
+
+        with pytest.raises(BreakOperationException) as info:
+            operation.execute("10")
+            assert info.value.result == 10
+
+    def test_execute_raises_failed_operation_if_error_in_operation(self):
+        """
+        Tests if execute method raises FailedOperationExecution if operation failed
+        and raised any error during execution, that inherits from Exception
+        and is not BreakOperationException, which takes precedence.
+        """
+        operation = MockIntOperation()
+
+        with pytest.raises(FailedOperationExecution):
+            operation.execute("abc")
 
 
 @pytest.mark.operation

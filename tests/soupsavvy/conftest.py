@@ -8,6 +8,7 @@ from typing import Any, Optional
 from bs4 import BeautifulSoup, Tag
 
 from soupsavvy.base import BaseOperation, SoupSelector
+from soupsavvy.exceptions import BreakOperationException
 
 # default bs4 parser
 PARSER = "lxml"
@@ -136,3 +137,18 @@ class MockPlus10Operation(BaseMockOperation):
 
     def _execute(self, arg: int) -> int:
         return arg + 10
+
+
+class MockBreakOperation(BaseMockOperation):
+    """
+    Mock class for breaking operation, it raises BreakOperationException,
+    which is used to break the execution of the pipeline.
+    """
+
+    def __init__(self, operation: BaseOperation) -> None:
+        """Initializes MockBreakOperation with operation to execute"""
+        self.operation = operation
+
+    def _execute(self, arg: Any) -> Any:
+        result = self.operation.execute(arg)
+        raise BreakOperationException(result)

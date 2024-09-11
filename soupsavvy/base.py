@@ -868,6 +868,9 @@ class BaseOperation(Executable, Comparable):
         """
         try:
             return self._execute(arg)
+        except exc.BreakOperationException:
+            # break exception is propagated to the caller to handle
+            raise
         except Exception as e:
             raise exc.FailedOperationExecution(
                 f"Failed to execute operation: {e}"
