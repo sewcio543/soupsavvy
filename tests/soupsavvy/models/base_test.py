@@ -1217,7 +1217,7 @@ class TestBaseModelIntegration:
                 | IfElse(
                     lambda x: x == 0,
                     Break(),
-                    Operation(lambda x: x + 20),
+                    Operation(lambda x: x + 10),
                 )
                 | Operation(lambda x: 100 / x)
             )
@@ -1231,7 +1231,7 @@ class TestBaseModelIntegration:
         bs = to_bs(text)
         selector = MockModel
         result = selector.find(bs)
-        assert result == MockModel(title="Title", price=0)
+        assert result == MockModel(title="Title", price=5)
 
     def test_ifelse_operation_conditionally_skip_operation(self):
         """
