@@ -76,6 +76,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#wrappers">Wrappers</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#skipnone">SkipNone</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#suppress">Suppress</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ifelse">IfElse</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#break-and-continue">Break and Continue</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#required">Required</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#all">All</a></li>
 </ul>
@@ -602,8 +604,8 @@
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
 <span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">SkipNone</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">SkipNone</span><span class="p">,</span> <span class="n">Text</span>
 
 
 <span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -640,8 +642,8 @@
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
 <span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Suppress</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Suppress</span><span class="p">,</span> <span class="n">Text</span>
 
 
 <span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -676,8 +678,8 @@
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
 <span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Default</span><span class="p">,</span> <span class="n">Suppress</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Default</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Suppress</span><span class="p">,</span> <span class="n">Text</span>
 
 
 <span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -719,8 +721,8 @@ In example below, <code class="docutils literal notranslate"><span class="pre">V
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
 <span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Default</span><span class="p">,</span> <span class="n">Suppress</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Suppress</span><span class="p">,</span> <span class="n">Text</span>
 
 
 <span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -758,8 +760,8 @@ In example below, <code class="docutils literal notranslate"><span class="pre">V
 
 <span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.exceptions</span> <span class="kn">import</span> <span class="n">FieldExtractionException</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Suppress</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Suppress</span><span class="p">,</span> <span class="n">Text</span>
 
 
 <span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -795,6 +797,113 @@ In example below, <code class="docutils literal notranslate"><span class="pre">V
 </div>
 </div>
 </section>
+<section id="ifelse">
+<h4>IfElse<a class="headerlink" href="#ifelse" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">IfElse</span></code> operation allows conditional control over data transformations. It accepts three arguments:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">condition</span></code> (callable):</strong> A function that determines which operation to execute based on the provided condition.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">if_</span></code> (operation):</strong> The operation that is executed when the condition is met.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">else_</span></code> (operation):</strong> The operation executed when the condition is not met.</p></li>
+</ul>
+<p>This is particularly useful when you need to apply different operations based on the state of the HTML markup. For instance, you might have a field whose transformation logic changes depending on its value or structure.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Href</span><span class="p">,</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
+
+
+<span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
+        <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+        <span class="o">|</span> <span class="n">IfElse</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">Operation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span><span class="p">),</span> <span class="n">Operation</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">upper</span><span class="p">))</span>
+    <span class="p">)</span>
+    <span class="n">price</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">IfElse</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">Href</span><span class="p">(),</span> <span class="n">Text</span><span class="p">())</span>
+
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;div class=&quot;book&quot; href=&quot;www.book.com&quot;&gt;</span>
+<span class="s2">        &lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;</span>
+<span class="s2">        &lt;p class=&quot;price&quot;&gt;10&lt;/p&gt;</span>
+<span class="s2">        &lt;p&gt;George Orwell&lt;/p&gt;</span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Book(title=&#39;ANIMAL FARM&#39;, price=&#39;10&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="break-and-continue">
+<h4>Break and Continue<a class="headerlink" href="#break-and-continue" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">Break</span></code> and <code class="docutils literal notranslate"><span class="pre">Continue</span></code> are special operations that enhance <code class="docutils literal notranslate"><span class="pre">IfElse</span></code> by providing additional control flow capabilities. These operations allow you to:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Break</span></code>:</strong> Terminate the pipeline of operations if the condition is met.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">Continue</span></code>:</strong> Skip the current operation and proceed to the next one if the condition is met.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Break</span><span class="p">,</span> <span class="n">Continue</span><span class="p">,</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
+
+
+<span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
+        <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+        <span class="o">|</span> <span class="n">IfElse</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">Break</span><span class="p">(),</span>
+            <span class="n">Operation</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">upper</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="o">|</span> <span class="n">Operation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">price</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;divider&quot;</span><span class="p">)</span>
+        <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+        <span class="o">|</span> <span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="o">|</span> <span class="n">IfElse</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Continue</span><span class="p">(),</span> <span class="n">Operation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">x</span><span class="p">))</span>
+        <span class="o">|</span> <span class="n">Operation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;div class=&quot;book&quot; href=&quot;www.book.com&quot;&gt;</span>
+<span class="s2">        &lt;p class=&quot;title&quot;&gt;&lt;/p&gt;</span>
+<span class="s2">        &lt;p class=&quot;divider&quot;&gt;0&lt;/p&gt;</span>
+<span class="s2">        &lt;p&gt;George Orwell&lt;/p&gt;</span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Book(title=&#39;&#39;, price=&#39;0$&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 <section id="required">
 <h4>Required<a class="headerlink" href="#required" title="Link to this heading"></a></h4>
 <p>By default, all fields are nullable, meaning that if a field selector returns <code class="docutils literal notranslate"><span class="pre">None</span></code>, the corresponding field in the model instance is set to <code class="docutils literal notranslate"><span class="pre">None</span></code>. However, this behavior can be modified using the <code class="docutils literal notranslate"><span class="pre">Required</span></code> field wrapper, which raises a <code class="docutils literal notranslate"><span class="pre">FieldExtractionException</span></code> when a field selector returns <code class="docutils literal notranslate"><span class="pre">None</span></code>. This ensures that the specified field must be present in the model instance. Note that, similarly to <code class="docutils literal notranslate"><span class="pre">Default</span></code>, all errors must be explicitly handled, as the <code class="docutils literal notranslate"><span class="pre">Required</span></code> selector will propagate any exceptions that occur during extraction.</p>
@@ -804,8 +913,8 @@ In example below, <code class="docutils literal notranslate"><span class="pre">V
 
 <span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.exceptions</span> <span class="kn">import</span> <span class="n">FieldExtractionException</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Required</span><span class="p">,</span> <span class="n">SkipNone</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Required</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">SkipNone</span><span class="p">,</span> <span class="n">Text</span>
 
 
 <span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -1557,8 +1666,8 @@ Is affordable: True
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
 <span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">SkipNone</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">SkipNone</span><span class="p">,</span> <span class="n">Text</span>
 
 
 <span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -1634,7 +1743,7 @@ Is affordable: True
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">38</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">40</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
 <span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 <span class="ne">----&gt; </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">pydantic</span>
 <span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
@@ -1694,7 +1803,6 @@ Is affordable: True
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">DeclarativeBase</span>
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
-<span class="kn">import</span> <span class="nn">pydantic</span>
 <span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>

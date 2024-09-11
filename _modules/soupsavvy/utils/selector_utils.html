@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>soupsavvy.selectors.tag_utils &mdash; soupsavvy  documentation</title>
+  <title>soupsavvy.utils.selector_utils &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -75,7 +75,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">soupsavvy.selectors.tag_utils</li>
+      <li class="breadcrumb-item active">soupsavvy.utils.selector_utils</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -84,7 +84,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for soupsavvy.selectors.tag_utils</h1><div class="highlight"><pre>
+  <h1>Source code for soupsavvy.utils.selector_utils</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Module for utility functions for tag selectors.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
@@ -98,7 +98,7 @@
 
 
 <div class="viewcode-block" id="TagIterator">
-<a class="viewcode-back" href="../../../soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.TagIterator">[docs]</a>
+<a class="viewcode-back" href="../../../soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagIterator">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">TagIterator</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -148,7 +148,7 @@
 
 
 <div class="viewcode-block" id="UniqueTag">
-<a class="viewcode-back" href="../../../soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.UniqueTag">[docs]</a>
+<a class="viewcode-back" href="../../../soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.UniqueTag">[docs]</a>
 <span class="k">class</span> <span class="nc">UniqueTag</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wrapper class for bs4.Tag to make it hashable by id.</span>
@@ -164,7 +164,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="UniqueTag.__init__">
-<a class="viewcode-back" href="../../../soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.UniqueTag.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.UniqueTag.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes UniqueTag instance.</span>
@@ -198,7 +198,7 @@
 
 
 <div class="viewcode-block" id="TagResultSet">
-<a class="viewcode-back" href="../../../soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.TagResultSet">[docs]</a>
+<a class="viewcode-back" href="../../../soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagResultSet">[docs]</a>
 <span class="k">class</span> <span class="nc">TagResultSet</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    TagResultSet class is collection that stores and manages results of find_all</span>
@@ -216,7 +216,7 @@
     <span class="n">_IS_BASE</span> <span class="o">=</span> <span class="s2">&quot;_base&quot;</span>
 
 <div class="viewcode-block" id="TagResultSet.__init__">
-<a class="viewcode-back" href="../../../soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.TagResultSet.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagResultSet.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes TagResultSet instance.</span>
@@ -231,7 +231,7 @@
 
 
 <div class="viewcode-block" id="TagResultSet.fetch">
-<a class="viewcode-back" href="../../../soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.TagResultSet.fetch">[docs]</a>
+<a class="viewcode-back" href="../../../soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagResultSet.fetch">[docs]</a>
     <span class="k">def</span> <span class="nf">fetch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fetches n first unique bs4.Tag instances from collection.</span>
@@ -394,7 +394,7 @@
         <span class="k">return</span> <span class="n">TagResultSet</span><span class="p">(</span><span class="n">ordered</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TagResultSet.symmetric_difference">
-<a class="viewcode-back" href="../../../soupsavvy.selectors.tag_utils.html#soupsavvy.selectors.tag_utils.TagResultSet.symmetric_difference">[docs]</a>
+<a class="viewcode-back" href="../../../soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagResultSet.symmetric_difference">[docs]</a>
     <span class="k">def</span> <span class="nf">symmetric_difference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">TagResultSet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TagResultSet</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a symmetric difference operation on two TagResultSet instances</span>

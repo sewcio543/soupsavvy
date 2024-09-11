@@ -95,9 +95,9 @@
 
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">Tag</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy.selectors.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span><span class="p">,</span> <span class="n">check_selector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span><span class="p">,</span> <span class="n">check_selector</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.selectors.nth.nth_utils</span> <span class="kn">import</span> <span class="n">parse_nth</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.selectors.tag_utils</span> <span class="kn">import</span> <span class="n">TagIterator</span><span class="p">,</span> <span class="n">TagResultSet</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.utils.selector_utils</span> <span class="kn">import</span> <span class="n">TagIterator</span><span class="p">,</span> <span class="n">TagResultSet</span>
 
 
 <span class="k">class</span> <span class="nc">_BaseNthOfSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>

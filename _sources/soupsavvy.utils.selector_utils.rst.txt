@@ -1,0 +1,7 @@
+utils.selector\_utils
+======================================
+
+.. automodule:: soupsavvy.utils.selector_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

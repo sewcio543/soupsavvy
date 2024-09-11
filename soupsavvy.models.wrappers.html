@@ -58,10 +58,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.wrappers.All"><code class="docutils literal notranslate"><span class="pre">All</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.wrappers.Default"><code class="docutils literal notranslate"><span class="pre">Default</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.wrappers.FieldWrapper"><code class="docutils literal notranslate"><span class="pre">FieldWrapper</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.wrappers.OperationWrapper"><code class="docutils literal notranslate"><span class="pre">OperationWrapper</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.wrappers.Required"><code class="docutils literal notranslate"><span class="pre">Required</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.wrappers.SkipNone"><code class="docutils literal notranslate"><span class="pre">SkipNone</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.wrappers.Suppress"><code class="docutils literal notranslate"><span class="pre">Suppress</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -109,13 +106,11 @@
              
   <section id="module-soupsavvy.models.wrappers">
 <span id="models-wrappers"></span><h1>models.wrappers<a class="headerlink" href="#module-soupsavvy.models.wrappers" title="Link to this heading"></a></h1>
-<p>Module with wrappers for operations and selectors used mostly in models.
+<p>Module with wrappers for selectors used mostly in models.
 Wrappers are used to control behavior and define how fields of the models are defined.</p>
 <section id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>SkipNone : OperationWrapper</p></li>
-<li><p>Suppress : OperationWrapper</p></li>
 <li><p>All : FieldWrapper</p></li>
 <li><p>Required : FieldWrapper</p></li>
 <li><p>Default : FieldWrapper</p></li>
@@ -290,41 +285,13 @@ delegates to wrapped selector.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="soupsavvy.models.wrappers.OperationWrapper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OperationWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.BaseOperation" title="soupsavvy.operations.base.BaseOperation"><span class="pre">BaseOperation</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#OperationWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.wrappers.OperationWrapper" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.BaseOperation" title="soupsavvy.operations.base.BaseOperation"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseOperation</span></code></a></p>
-<p>A wrapper class for operations that extends the base operation functionality.
-Acts as a higher order operation, which controls behavior of the wrapped operation.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.models.wrappers.OperationWrapper.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.BaseOperation" title="soupsavvy.operations.base.BaseOperation"><span class="pre">BaseOperation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#OperationWrapper.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.wrappers.OperationWrapper.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize Higher Order Operation.</p>
-<section id="id9">
-<h2>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt>operation<span class="classifier">BaseOperation</span></dt><dd><p>The operation to be wrapped.</p>
-</dd>
-</dl>
-</section>
-<section id="id10">
-<h2>Raises<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt>NotOperationException</dt><dd><p>If provided object is not an instance of BaseOperation.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.models.wrappers.Required">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Required</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#Required"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.wrappers.Required" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.models.wrappers.FieldWrapper" title="soupsavvy.models.wrappers.FieldWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">FieldWrapper</span></code></a></p>
 <p>Field wrapper for enforcing matched element not to be None.
 Raises an exception if searcher does not find any matches.</p>
-<section id="id11">
-<h2>Example<a class="headerlink" href="#id11" title="Link to this heading"></a></h2>
+<section id="id9">
+<h2>Example<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Required</span>
 <span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
 <span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">Required</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
@@ -338,8 +305,8 @@ Raises an exception if searcher does not find any matches.</p>
 <dd><p>Finds a required element using the wrapped selector,
 enforcing matched element not to be None.
 If any exception is raised during the search, it’s propagated to the caller.</p>
-<section id="id12">
-<h3>Parameters<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<section id="id10">
+<h3>Parameters<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup tag to search within.</p>
 </dd>
@@ -349,118 +316,17 @@ If any exception is raised during the search, it’s propagated to the caller.</
 </dd>
 </dl>
 </section>
-<section id="id13">
-<h3>Returns<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<section id="id11">
+<h3>Returns<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>Any</dt><dd><p>The found element.</p>
 </dd>
 </dl>
 </section>
-<section id="id14">
-<h3>Raises<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
+<section id="id12">
+<h3>Raises<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>RequiredConstraintException</dt><dd><p>If selector returns None, indicating that required element was not found.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-</section>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="soupsavvy.models.wrappers.SkipNone">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SkipNone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.operations.base.html#soupsavvy.operations.base.BaseOperation" title="soupsavvy.operations.base.BaseOperation"><span class="pre">BaseOperation</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#SkipNone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.wrappers.SkipNone" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#soupsavvy.models.wrappers.OperationWrapper" title="soupsavvy.models.wrappers.OperationWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">OperationWrapper</span></code></a></p>
-<p>A wrapper that skips the operation if the input is None.
-Used to prevent exceptions where it’s safe and expected to skip the operation.</p>
-<section id="id15">
-<h2>Example<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
-<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">SkipNone</span>
-<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">SkipNone</span><span class="p">(</span><span class="n">Text</span><span class="p">())</span>
-<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-<span class="go">None</span>
-</pre></div>
-</div>
-<p>When element was not found, which can be expected, skips operation
-and returns None.</p>
-</section>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="soupsavvy.models.wrappers.Suppress">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Suppress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">operation:</span> <span class="pre">~soupsavvy.operations.base.BaseOperation,</span> <span class="pre">category:</span> <span class="pre">~typing.Type[Exception]</span> <span class="pre">|</span> <span class="pre">tuple[~typing.Type[Exception],</span> <span class="pre">...]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'Exception'&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#Suppress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.wrappers.Suppress" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#soupsavvy.models.wrappers.OperationWrapper" title="soupsavvy.models.wrappers.OperationWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">OperationWrapper</span></code></a></p>
-<p>A wrapper that executes the operation and suppresses exceptions raised,
-returning None instead. Used to catch exceptions where it’s expected
-this might happen.</p>
-<section id="id16">
-<h2>Example<a class="headerlink" href="#id16" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
-<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Suppress</span>
-<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
-<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-<span class="go">None</span>
-</pre></div>
-</div>
-<p>This can be used with <cite>Default</cite> operation to provide a default value
-when the operation fails.</p>
-</section>
-<section id="id17">
-<h2>Example<a class="headerlink" href="#id17" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
-<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Suppress</span>
-<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Default</span><span class="p">(</span><span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">)),</span> <span class="mi">0</span><span class="p">)</span>
-<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-<span class="go">None</span>
-</pre></div>
-</div>
-<p>Operations in example can be used to try to convert string to integer
-from text of tag, that can potentially be empty. In such case, if it’s not required,
-default can be set to None or known value.</p>
-<p>Suppress also accepts category of exceptions to suppress, by default it suppresses
-all exceptions that inherit from Exception.</p>
-</section>
-<section id="id18">
-<h2>Example<a class="headerlink" href="#id18" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
-<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Suppress</span>
-<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">category</span><span class="o">=</span><span class="ne">ValueError</span><span class="p">)</span>
-<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;not an integer&quot;</span><span class="p">)</span>
-<span class="go">None</span>
-</pre></div>
-</div>
-<p>Category can be a tuple of exceptions as well, <cite>issubclass</cite> is used to check
-if the cause of exception is subclass of provided category.</p>
-</section>
-<section id="id19">
-<h2>Example<a class="headerlink" href="#id19" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
-<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Suppress</span>
-<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">category</span><span class="o">=</span><span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">))</span>
-<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;not an integer&quot;</span><span class="p">)</span>
-<span class="go">FailedOperationExecution</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.models.wrappers.Suppress.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">operation:</span> <span class="pre">~soupsavvy.operations.base.BaseOperation,</span> <span class="pre">category:</span> <span class="pre">~typing.Type[Exception]</span> <span class="pre">|</span> <span class="pre">tuple[~typing.Type[Exception],</span> <span class="pre">...]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'Exception'&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#Suppress.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.wrappers.Suppress.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize Suppress OperationWrapper.</p>
-<section id="id20">
-<h3>Parameters<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>operation<span class="classifier">BaseOperation</span></dt><dd><p>The operation to be wrapped.</p>
-</dd>
-<dt>category<span class="classifier">Type[Exception] | tuple[Type[Exception], …], optional</span></dt><dd><p>The exception type(s) to suppress. By default, suppresses all exceptions
-that inherit from Exception.</p>
-</dd>
-</dl>
-</section>
-<section id="id21">
-<h3>Raises<a class="headerlink" href="#id21" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>NotOperationException</dt><dd><p>If provided object is not an instance of BaseOperation.</p>
 </dd>
 </dl>
 </section>

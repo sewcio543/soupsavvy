@@ -88,29 +88,17 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Module for general purpose operations.</span>
 
-<span class="sd">* Operation - Custom operation with any function.</span>
-<span class="sd">* OperationPipeline - Chain multiple operations together.</span>
-<span class="sd">* Text - Extract text from a BeautifulSoup Tag - most common operation.</span>
-<span class="sd">* Href - Extract href attribute from a BeautifulSoup Tag.</span>
-<span class="sd">* Parent - Extract parent of a BeautifulSoup Tag.</span>
-
-<span class="sd">These components are design to be used for processing html tags and extracting</span>
-<span class="sd">desired information. They can be used in combination with selectors.</span>
+<span class="sd">* Operation - Executes custom operation with any function.</span>
+<span class="sd">* OperationPipeline - Chains multiple operations together.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Callable</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
-<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">Tag</span>
-
-<span class="kn">from</span> <span class="nn">soupsavvy.operations.base</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">BaseOperation</span><span class="p">,</span>
-    <span class="n">OperationSearcherMixin</span><span class="p">,</span>
-    <span class="n">check_operation</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.selectors.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
+<span class="kn">import</span> <span class="nn">soupsavvy.exceptions</span> <span class="k">as</span> <span class="nn">exc</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">BaseOperation</span><span class="p">,</span> <span class="n">OperationSearcherMixin</span><span class="p">,</span> <span class="n">check_operation</span>
 
 
 <div class="viewcode-block" id="OperationPipeline">
@@ -167,9 +155,15 @@
     <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Executes each operation in sequence, passing the result to the next one.</span>
+<span class="sd">        If operation is breaking, returns the result immediately.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">operation</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">operations</span><span class="p">:</span>
-            <span class="n">arg</span> <span class="o">=</span> <span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">arg</span> <span class="o">=</span> <span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">exc</span><span class="o">.</span><span class="n">BreakOperationException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">e</span><span class="o">.</span><span class="n">result</span>
+
         <span class="k">return</span> <span class="n">arg</span>
 
     <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationPipeline</span><span class="p">:</span>
@@ -248,161 +242,6 @@
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">operation</span> <span class="ow">is</span> <span class="n">x</span><span class="o">.</span><span class="n">operation</span></div>
-
-
-
-<div class="viewcode-block" id="Text">
-<a class="viewcode-back" href="../../../soupsavvy.operations.general.html#soupsavvy.operations.Text">[docs]</a>
-<span class="k">class</span> <span class="nc">Text</span><span class="p">(</span><span class="n">OperationSearcherMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Operation to extract text from a BeautifulSoup Tag.</span>
-<span class="sd">    Wrapper of most common operation used in web scraping.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from soupsavvy.operations import Text</span>
-<span class="sd">    ... operation = Text()</span>
-<span class="sd">    ... operation.execute(tag)</span>
-<span class="sd">    &quot;Extracted text from the tag&quot;</span>
-
-<span class="sd">    Wrapper for BeautifulSoup `get_text` method, that exposes all its options,</span>
-<span class="sd">    and imitates its default behavior.</span>
-
-<span class="sd">    Implements `TagSearcher` interface for convenience. It has find methods</span>
-<span class="sd">    that can be used to extract text from provided tag.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from soupsavvy.operations import Text</span>
-<span class="sd">    ... operation = Text()</span>
-<span class="sd">    ... operation.find(tag)</span>
-<span class="sd">    &quot;Text&quot;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-<div class="viewcode-block" id="Text.__init__">
-<a class="viewcode-back" href="../../../soupsavvy.operations.general.html#soupsavvy.operations.Text.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">strip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes Text operation with optional separator and strip option.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        separator : str, optional</span>
-<span class="sd">            Separator used to join strings from multiple text nodes, by default &quot;&quot;.</span>
-<span class="sd">        strip : bool, optional</span>
-<span class="sd">            Flag to strip the text nodes from whitespaces and newline characters,</span>
-<span class="sd">            by default False.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">separator</span> <span class="o">=</span> <span class="n">separator</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">strip</span> <span class="o">=</span> <span class="n">strip</span></div>
-
-
-    <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts text from a BeautifulSoup Tag.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">arg</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span> <span class="n">strip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">strip</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="c1"># equal only if separator and strip are the same</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Text</span><span class="p">):</span>
-            <span class="k">return</span> <span class="kc">False</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">separator</span> <span class="o">==</span> <span class="n">x</span><span class="o">.</span><span class="n">separator</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">strip</span> <span class="o">==</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span></div>
-
-
-
-<div class="viewcode-block" id="Href">
-<a class="viewcode-back" href="../../../soupsavvy.operations.general.html#soupsavvy.operations.Href">[docs]</a>
-<span class="k">class</span> <span class="nc">Href</span><span class="p">(</span><span class="n">OperationSearcherMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Operation to extract href attribute from a BeautifulSoup Tag.</span>
-<span class="sd">    Wrapper of one of the common operation used in web scraping.</span>
-<span class="sd">    If href attribute is not present, returns None.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from soupsavvy.operations import Href</span>
-<span class="sd">    ... operation = Href()</span>
-<span class="sd">    ... operation.execute(tag)</span>
-<span class="sd">    &quot;www.example.com&quot;</span>
-
-<span class="sd">    Implements `TagSearcher` interface for convenience. It has find methods</span>
-<span class="sd">    that can be used to extract href from provided tag.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from soupsavvy.operations import Href</span>
-<span class="sd">    ... operation = Href()</span>
-<span class="sd">    ... operation.find(tag)</span>
-<span class="sd">    &quot;www.example.com&quot;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Extracts href attribute from a BeautifulSoup Tag.</span>
-<span class="sd">        If attribute is not present, returns None.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">arg</span><span class="o">.</span><span class="n">get_attribute_list</span><span class="p">(</span><span class="s2">&quot;href&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="c1"># equal only if both are instances of Href</span>
-        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Href</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="Parent">
-<a class="viewcode-back" href="../../../soupsavvy.operations.general.html#soupsavvy.operations.Parent">[docs]</a>
-<span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">BaseOperation</span><span class="p">,</span> <span class="n">SoupSelector</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Operation to extract parent of a BeautifulSoup Tag.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from soupsavvy.operations import Parent</span>
-<span class="sd">    ... operation = Parent()</span>
-<span class="sd">    ... operation.execute(tag)</span>
-<span class="sd">    &quot;&lt;div&gt;...&lt;/div&gt;&quot;</span>
-
-<span class="sd">    Implements `SoupSelector` interface for convenience and can be used</span>
-<span class="sd">    to extract parent of a provided tag without any conditions.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from soupsavvy.operations import Parent</span>
-<span class="sd">    ... operation = Parent()</span>
-<span class="sd">    ... operation.find(tag)</span>
-<span class="sd">    &quot;&lt;div&gt;--tag--&lt;/div&gt;&quot;</span>
-
-<span class="sd">    `Parent` has `BaseOperation` higher in MRO than `SoupSelector`, so, using pipe</span>
-<span class="sd">    operator `|` on `Parent` object will result in `OperationPipeline` instance.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from soupsavvy.operations import Parent</span>
-<span class="sd">    ... operation = Parent() | Parent()</span>
-<span class="sd">    ... operation.execute(tag)</span>
-<span class="sd">    &quot;&lt;div&gt;&lt;div&gt;--tag--&lt;/div&gt;&lt;/div&gt;&quot;</span>
-
-<span class="sd">    If element does not have parent, returns None.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts parent of a BeautifulSoup Tag.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">arg</span><span class="o">.</span><span class="n">parent</span>
-
-<div class="viewcode-block" id="Parent.find_all">
-<a class="viewcode-back" href="../../../soupsavvy.operations.general.html#soupsavvy.operations.Parent.find_all">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
-        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">tag</span><span class="p">)]</span></div>
-
-
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="c1"># equal only if both are instances of Parent</span>
-        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Parent</span><span class="p">)</span></div>
 
 </pre></div>
 

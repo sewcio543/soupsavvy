@@ -54,6 +54,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">models.base</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.base.BaseModel"><code class="docutils literal notranslate"><span class="pre">BaseModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.base.ModelMeta"><code class="docutils literal notranslate"><span class="pre">ModelMeta</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.base.post"><code class="docutils literal notranslate"><span class="pre">post()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.constants.html">models.constants</a></li>
@@ -294,7 +295,7 @@ the <cite>__inherit_fields__</cite> setting.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="soupsavvy.models.base.ModelMeta.scope">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scope</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="soupsavvy.selectors.base.html#soupsavvy.selectors.base.SoupSelector" title="soupsavvy.selectors.base.SoupSelector"><span class="pre">SoupSelector</span></a></em><a class="headerlink" href="#soupsavvy.models.base.ModelMeta.scope" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scope</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></em><a class="headerlink" href="#soupsavvy.models.base.ModelMeta.scope" title="Link to this definition"></a></dt>
 <dd><p>Returns the <cite>__scope__</cite> attribute,
 which defines the scope selector for the model.</p>
 <section id="id10">
@@ -307,6 +308,29 @@ the model is searched.</p>
 </section>
 </dd></dl>
 
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="soupsavvy.models.base.post">
+<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/models/base.html#post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.base.post" title="Link to this definition"></a></dt>
+<dd><p>Decorator to mark a method as a post-processor for a model field.
+The method will be called after the field is extracted from the tag
+in model instance initialization.</p>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<dl>
+<dt>class MyModel(BaseModel):</dt><dd><p>…
+field = …</p>
+<p>&#64;post(“field”)
+def post_process_field(self, value):</p>
+<blockquote>
+<div><p>return value.strip()</p>
+</div></blockquote>
+</dd>
+</dl>
+<p>Methods of custom model class, that are decorated with <cite>&#64;post</cite> decorator,
+must accept only one argument, which is the value of the field to be processed.</p>
 </section>
 </dd></dl>
 

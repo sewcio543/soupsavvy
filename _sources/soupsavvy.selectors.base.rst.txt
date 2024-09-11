@@ -1,7 +1,0 @@
-selectors.base
-===============================
-
-.. automodule:: soupsavvy.selectors.base
-   :members:
-   :undoc-members:
-   :show-inheritance:

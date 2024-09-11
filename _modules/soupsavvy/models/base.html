@@ -93,6 +93,7 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">overload</span>
 
@@ -101,10 +102,40 @@
 
 <span class="kn">import</span> <span class="nn">soupsavvy.exceptions</span> <span class="k">as</span> <span class="nn">exc</span>
 <span class="kn">import</span> <span class="nn">soupsavvy.models.constants</span> <span class="k">as</span> <span class="nn">c</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span><span class="p">,</span> <span class="n">check_selector</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">Comparable</span><span class="p">,</span> <span class="n">TagSearcher</span><span class="p">,</span> <span class="n">TagSearcherExceptions</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.selectors.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span><span class="p">,</span> <span class="n">check_selector</span>
 
 <span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="post">
+<a class="viewcode-back" href="../../../soupsavvy.models.base.html#soupsavvy.models.post">[docs]</a>
+<span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator to mark a method as a post-processor for a model field.</span>
+<span class="sd">    The method will be called after the field is extracted from the tag</span>
+<span class="sd">    in model instance initialization.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    class MyModel(BaseModel):</span>
+<span class="sd">        ...</span>
+<span class="sd">        field = ...</span>
+
+<span class="sd">        @post(&quot;field&quot;)</span>
+<span class="sd">        def post_process_field(self, value):</span>
+<span class="sd">            return value.strip()</span>
+
+<span class="sd">    Methods of custom model class, that are decorated with `@post` decorator,</span>
+<span class="sd">    must accept only one argument, which is the value of the field to be processed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">POST_ATTR</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">func</span>
+
+    <span class="k">return</span> <span class="n">decorator</span></div>
+
 
 
 <div class="viewcode-block" id="ModelMeta">
@@ -144,6 +175,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">)</span>
 
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">POST_PROCESSORS</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">post_processors</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">POST_PROCESSORS</span><span class="p">)</span>
+
+        <span class="c1"># Inherit post-processors from base classes</span>
+        <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">bases</span><span class="p">:</span>
+            <span class="n">post_processors</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">POST_PROCESSORS</span><span class="p">,</span> <span class="p">{}))</span>
+
         <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">BASE_MODELS</span><span class="p">:</span>
             <span class="k">return</span>
 
@@ -160,10 +198,24 @@
         <span class="p">)</span>
         <span class="n">check_selector</span><span class="p">(</span><span class="n">scope</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_fields</span><span class="p">():</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_fields</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fields</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">FieldsNotDefinedException</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Model &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; has no fields defined. At least one required.&quot;</span>
-            <span class="p">)</span></div>
+            <span class="p">)</span>
+
+        <span class="c1"># register post processors</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">field</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">POST_ATTR</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                <span class="n">post_processors</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span></div>
 
 
     <span class="nd">@property</span>
@@ -237,6 +289,8 @@
     <span class="n">__scope__</span><span class="p">:</span> <span class="n">SoupSelector</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: ignore</span>
     <span class="n">__inherit_fields__</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 
+    <span class="n">__post_processors__</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
 <div class="viewcode-block" id="BaseModel.__init__">
 <a class="viewcode-back" href="../../../soupsavvy.models.base.html#soupsavvy.models.BaseModel.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -268,6 +322,11 @@
                     <span class="sa">f</span><span class="s2">&quot;Cannot initialize model &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;without &#39;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">&#39; field.&quot;</span>
                 <span class="p">)</span>
+
+            <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">POST_PROCESSORS</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 

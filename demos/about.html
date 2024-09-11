@@ -246,14 +246,14 @@ While BeautifulSoup excels in excellent at parsing HTML documents, it falls shor
 <h4>Docs<a class="headerlink" href="#docs" title="Link to this heading"></a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.selectors.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
 
 <span class="n">help</span><span class="p">(</span><span class="n">SoupSelector</span><span class="o">.</span><span class="n">find</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function find in module soupsavvy.selectors.base:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function find in module soupsavvy.base:
 
 find(self, tag: &#39;Tag&#39;, strict: &#39;bool&#39; = False, recursive: &#39;bool&#39; = True) -&gt; &#39;Optional[Tag]&#39;
     Finds a first matching element in provided BeautifulSoup Tag.
@@ -382,14 +382,14 @@ Tag was not found in markup.
 <h4>Docs<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.selectors.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
 
 <span class="n">help</span><span class="p">(</span><span class="n">SoupSelector</span><span class="o">.</span><span class="n">find_all</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function find_all in module soupsavvy.selectors.base:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function find_all in module soupsavvy.base:
 
 find_all(self, tag: &#39;Tag&#39;, recursive: &#39;bool&#39; = True, limit: &#39;Optional[int]&#39; = None) -&gt; &#39;list[Tag]&#39;
     Finds all matching elements in provided BeautifulSoup Tag.
@@ -518,14 +518,14 @@ find_all(self, tag: &#39;Tag&#39;, recursive: &#39;bool&#39; = True, limit: &#39
 <h4>Docs<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.selectors.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
 
 <span class="n">help</span><span class="p">(</span><span class="n">SoupSelector</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function __eq__ in module soupsavvy.selectors.base:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function __eq__ in module soupsavvy.base:
 
 __eq__(self, other: &#39;object&#39;) -&gt; &#39;bool&#39;
     Check self and other object for equality.

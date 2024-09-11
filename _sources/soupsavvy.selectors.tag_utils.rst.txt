@@ -1,7 +1,0 @@
-selectors.tag\_utils
-=====================================
-
-.. automodule:: soupsavvy.selectors.tag_utils
-   :members:
-   :undoc-members:
-   :show-inheritance:

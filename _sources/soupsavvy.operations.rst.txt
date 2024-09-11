@@ -7,9 +7,11 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   soupsavvy.operations.base
+   soupsavvy.operations.conditional
    soupsavvy.operations.general
    soupsavvy.operations.selection_pipeline
+   soupsavvy.operations.soup
+   soupsavvy.operations.wrappers
 
 Module contents
 ---------------

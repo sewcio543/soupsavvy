@@ -8,6 +8,7 @@ Submodules
    :maxdepth: 4
 
    soupsavvy.utils.logging
+   soupsavvy.utils.selector_utils
 
 Module contents
 ---------------
