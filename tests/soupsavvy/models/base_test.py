@@ -18,7 +18,7 @@ from soupsavvy.exceptions import (
     UnknownModelFieldException,
 )
 from soupsavvy.models import All, Default, Required
-from soupsavvy.models.base import BaseModel, post
+from soupsavvy.models.base import BaseModel, MigrationSchema, post
 from soupsavvy.operations import (
     Break,
     Continue,
@@ -993,6 +993,189 @@ class TestBaseModel:
         assert migrated.title == "Title"
         assert migrated.price == 10
 
+    def test_model_migration_to_othaers_class(self):
+        """
+        Tests if model can be migrated to other class, migrate calls constructor
+        of provided class with all fields as keyword arguments and if successful,
+        returns instance of provided class.
+        """
+
+        class MockTitle(BaseModel):
+            __scope__ = MockLinkSelector()
+
+            name = MockLinkSelector()
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = MockTitle
+            price = PRICE_SELECTOR
+
+        model = MockModel(title=MockTitle(name="Title"), price=10)
+        migrated = model.migrate(MockMigrationModel)
+
+        assert isinstance(migrated, MockMigrationModel)
+        assert migrated.title == MockTitle(name="Title")
+        assert migrated.price == 10
+
+    def test_model_migration_ssto_othaers_class(self):
+        """
+        Tests if model can be migrated to other class, migrate calls constructor
+        of provided class with all fields as keyword arguments and if successful,
+        returns instance of provided class.
+        """
+
+        class MockTitle(BaseModel):
+            __scope__ = MockLinkSelector()
+
+            name = MockLinkSelector()
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = MockTitle
+            price = PRICE_SELECTOR
+
+        model = MockModel(title=MockTitle(name="Title"), price=10)
+        migrated = model.migrate(
+            MockMigrationModel,
+            mapping={MockModel: MockMigrationModel},
+        )
+
+        assert isinstance(migrated, MockMigrationModel)
+        assert migrated.title == MockTitle(name="Title")
+        assert migrated.price == 10
+
+    def test_model_migration_to_othdaers_class(self):
+        """
+        Tests if model can be migrated to other class, migrate calls constructor
+        of provided class with all fields as keyword arguments and if successful,
+        returns instance of provided class.
+        """
+
+        class MockTitle(BaseModel):
+            __scope__ = MockLinkSelector()
+
+            name = MockLinkSelector()
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = MockTitle
+            price = PRICE_SELECTOR
+
+        class MockMigrationTitle:
+            def __init__(self, name: str, top: bool = True):
+                self.name = name
+                self.top = top
+
+            def __eq__(self, other):
+                return self.name == other.name and self.top == other.top
+
+        model = MockModel(title=MockTitle(name="Title"), price=10)
+        migrated = model.migrate(
+            MockMigrationModel, mapping={MockTitle: MockMigrationTitle}
+        )
+
+        assert isinstance(migrated, MockMigrationModel)
+        assert migrated.title == MockMigrationTitle(name="Title")
+        assert migrated.price == 10
+
+    def test_model_migration_ssto_othdaers_class(self):
+        """
+        Tests if model can be migrated to other class, migrate calls constructor
+        of provided class with all fields as keyword arguments and if successful,
+        returns instance of provided class.
+        """
+
+        class MockTitle(BaseModel):
+            __scope__ = MockLinkSelector()
+
+            name = MockLinkSelector()
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = MockTitle
+            price = PRICE_SELECTOR
+
+        class MockMigrationTitle:
+            def __init__(self, name: str, top: bool = True):
+                self.name = name
+                self.top = top
+
+            def __eq__(self, other):
+                return self.name == other.name and self.top == other.top
+
+        model = MockModel(title=MockTitle(name="Title"), price=10)
+        migrated = model.migrate(
+            MockMigrationModel,
+            mapping={
+                MockTitle: MigrationSchema(MockMigrationTitle, params={"top": False})
+            },
+        )
+
+        assert isinstance(migrated, MockMigrationModel)
+        assert migrated.title == MockMigrationTitle(name="Title", top=False)
+        assert migrated.price == 10
+
+    def test_model_smigration_ssto_othdaers_class(self):
+        """
+        Tests if model can be migrated to other class, migrate calls constructor
+        of provided class with all fields as keyword arguments and if successful,
+        returns instance of provided class.
+        """
+
+        class MockName(BaseModel):
+            __scope__ = MockLinkSelector()
+
+            name = MockLinkSelector()
+
+        class MockTitle(BaseModel):
+            __scope__ = MockLinkSelector()
+
+            name = MockName
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = MockTitle
+            price = PRICE_SELECTOR
+
+        class MockMigrationTitle:
+            def __init__(self, name, top: bool = True):
+                self.name = name
+                self.top = top
+
+            def __eq__(self, other):
+                return self.name == other.name and self.top == other.top
+
+        class MockMigrationName:
+            def __init__(self, name: str):
+                self.name = name
+
+            def __eq__(self, other):
+                return self.name == other.name
+
+        model = MockModel(title=MockTitle(name=MockName(name="Title")), price=10)
+        migrated = model.migrate(
+            MockMigrationModel,
+            mapping={
+                MockTitle: MigrationSchema(MockMigrationTitle, params={"top": False}),
+                MockName: MockMigrationName,
+            },
+            hello="World",
+        )
+
+        assert isinstance(migrated, MockMigrationModel)
+        import logging
+
+        assert migrated.title == MockMigrationTitle(
+            name=MockMigrationName(name="Title"), top=False
+        )
+        assert migrated.price == 10
+        assert getattr(migrated, "hello") == "World"
+
     def test_migrate_passes_keyword_arguments_to_model_init(self):
         """
         Tests if migrate method passes keyword arguments to model init method
@@ -1006,8 +1189,8 @@ class TestBaseModel:
 
         assert migrated.title == "Title"
         assert migrated.price == 10
-        assert getattr(migrated, "hello", None) == "World"
-        assert getattr(migrated, "number", None) == 42
+        assert getattr(migrated, "hello") == "World"
+        assert getattr(migrated, "number") == 42
 
     def test_migrate_propagates_errors_from_model_init(self):
         """

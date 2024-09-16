@@ -1,4 +1,4 @@
-from .base import BaseModel
+from .base import BaseModel, MigrationSchema, post
 from .wrappers import All, Default, Required
 
 __all__ = [
@@ -6,4 +6,6 @@ __all__ = [
     "All",
     "Default",
     "Required",
+    "post",
+    "MigrationSchema",
 ]

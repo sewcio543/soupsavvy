@@ -7,8 +7,9 @@ from __future__ import annotations
 
 from abc import ABC
 from collections.abc import Callable
+from dataclasses import dataclass
 from functools import reduce
-from typing import Any, Literal, Optional, Type, TypeVar, overload
+from typing import Any, Literal, Optional, Type, TypeVar, Union, overload
 
 from bs4 import Tag
 from typing_extensions import Self
@@ -18,7 +19,26 @@ import soupsavvy.models.constants as c
 from soupsavvy.base import SoupSelector, check_selector
 from soupsavvy.interfaces import Comparable, TagSearcher, TagSearcherExceptions
 
+# Generic type variable for model migration
 T = TypeVar("T")
+
+
+@dataclass
+class MigrationSchema:
+    """
+    Defines schema for model migration in need of providing additional parameters
+    to the target model initialization in nested models.
+
+    Attributes
+    ----------
+    target : Type
+        Target model class to migrate to.
+    params : dict, optional
+        Additional parameters to pass to the target model initialization.
+    """
+
+    target: Type
+    params: Optional[dict] = None
 
 
 def post(field: str) -> Callable[[Callable], Callable]:
@@ -408,7 +428,12 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         elements = cls.scope.find_all(tag=tag, recursive=recursive, limit=limit)
         return [cls._find(element) for element in elements]
 
-    def migrate(self, model: Type[T], **kwargs) -> T:
+    def migrate(
+        self,
+        model: Type[T],
+        mapping: Optional[dict[Type[BaseModel], Union[Type, MigrationSchema]]] = None,
+        **kwargs,
+    ) -> T:
         """
         Migrates the model instance to another model class using its fields
         in target class initialization.
@@ -417,6 +442,9 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         ----------
         model : Type[Model]
             The target model class to migrate the instance to.
+        mapping : dict[Type[BaseModel], Union[Type, MigrationSchema]], optional
+            Mapping of base model fields to target models. By default, if field
+            is instance of BaseModel, it will be passed directly to the target model.
         kwargs : Any
             Additional keyword arguments to pass to model initialization.
 
@@ -425,7 +453,31 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         Model
             An instance of the target model class.
         """
-        return model(**self.attributes, **kwargs)
+        if mapping is None:
+            return model(**self.attributes, **kwargs)
+
+        params = self.attributes.copy()
+
+        for name, value in self.attributes.items():
+            if not isinstance(value, BaseModel):
+                continue
+
+            schema = mapping.get(value.__class__)
+
+            if schema is None:
+                continue
+
+            if isinstance(schema, MigrationSchema):
+                params[name] = value.migrate(
+                    schema.target,
+                    mapping=mapping,
+                    **(schema.params or {}),
+                )
+                continue
+
+            params[name] = value.migrate(schema, mapping=mapping)
+
+        return model(**params, **kwargs)
 
     def __str__(self) -> str:
         params = [
