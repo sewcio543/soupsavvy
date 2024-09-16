@@ -3,8 +3,6 @@ Module with unit tests for BaseModel component,
 which is parent class of all user-defined models.
 """
 
-from __future__ import annotations
-
 import pydantic
 import pytest
 from sqlalchemy import Column, ForeignKey, Integer, String
@@ -107,7 +105,7 @@ class MockMigrationTitle:
         self.name = name
         self.top = top
 
-    def __eq__(self, other: MockMigrationTitle) -> bool:
+    def __eq__(self, other) -> bool:
         return self.name == other.name and self.top == other.top
 
 
@@ -121,7 +119,7 @@ class MockMigrationName:
         """Initializes MockMigrationName with name attribute."""
         self.name = name
 
-    def __eq__(self, other: MockMigrationName) -> bool:
+    def __eq__(self, other) -> bool:
         return self.name == other.name
 
 
