@@ -8,15 +8,7 @@ import pytest
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import DeclarativeBase, relationship
 
-from soupsavvy.exceptions import (
-    FieldExtractionException,
-    FieldsNotDefinedException,
-    MissingFieldsException,
-    ModelNotFoundException,
-    NotSoupSelectorException,
-    ScopeNotDefinedException,
-    UnknownModelFieldException,
-)
+import soupsavvy.exceptions as exc
 from soupsavvy.models import All, Default, Required
 from soupsavvy.models.base import BaseModel, MigrationSchema, post
 from soupsavvy.operations import (
@@ -85,6 +77,19 @@ class MockModelTitleField(BaseModel):
     __scope__ = MockDivSelector()
 
     title = MockTitle
+    price = PRICE_SELECTOR
+
+
+class MockFrozenModel(BaseModel):
+    """
+    Mock model for testing frozen model instances.
+    Setting attribute on them or computing hash.
+    """
+
+    __scope__ = MockDivSelector()
+    __frozen__ = True
+
+    title = TITLE_SELECTOR
     price = PRICE_SELECTOR
 
 
@@ -198,7 +203,7 @@ class TestBaseModel:
         It's mandatory attribute to define in model.
         """
 
-        with pytest.raises(ScopeNotDefinedException):
+        with pytest.raises(exc.ScopeNotDefinedException):
 
             class MockModel(BaseModel):
                 title = MockLinkSelector() | MockTextOperation()
@@ -210,7 +215,7 @@ class TestBaseModel:
         Fields is class attribute with value of instance `TagSearcher`.
         """
 
-        with pytest.raises(FieldsNotDefinedException):
+        with pytest.raises(exc.FieldsNotDefinedException):
 
             class MockModel(BaseModel):
                 __scope__ = MockDivSelector()
@@ -222,7 +227,7 @@ class TestBaseModel:
         This is not usual way of creating models, which should be done with find methods.
         """
 
-        with pytest.raises(MissingFieldsException):
+        with pytest.raises(exc.MissingFieldsException):
             MockModel(title="Title")
 
     def test_raises_error_on_init_if_unknown_field(self):
@@ -231,7 +236,7 @@ class TestBaseModel:
         to model constructor. Only fields defined in model class are allowed.
         """
 
-        with pytest.raises(UnknownModelFieldException):
+        with pytest.raises(exc.UnknownModelFieldException):
             MockModel(title="Title", price=10, name="Name")
 
     def test_raises_error_when_scope_is_not_soup_selector(self):
@@ -240,7 +245,7 @@ class TestBaseModel:
         when __scope__ is not instance of SoupSelector.
         """
 
-        with pytest.raises(NotSoupSelectorException):
+        with pytest.raises(exc.NotSoupSelectorException):
 
             class MockModel(BaseModel):
                 __scope__ = MockTextOperation()  # type: ignore
@@ -454,6 +459,17 @@ class TestBaseModel:
         expected = f"MockModel(title={repr(model.title)}, price={repr(model.price)})"
         assert str(model) == expected == repr(model)
 
+    def test_model_with_model_as_field_has_correct_string_representation(self):
+        """
+        Tests if model with another model as field has correct string representation.
+        It should use repr of instance of this model.
+        """
+        model = MockModelTitleField(title=MockTitle(name="Title"), price=10)
+        expected = (
+            f"MockModelTitleField(title={repr(model.title)}, price={repr(model.price)})"
+        )
+        assert str(model) == expected == repr(model)
+
     def test_find_returns_first_found_model_instance(self):
         """Tests if find method returns model instance within first found scope."""
         text = """
@@ -516,7 +532,7 @@ class TestBaseModel:
         bs = to_bs(text)
         selector = MockModel
 
-        with pytest.raises(ModelNotFoundException):
+        with pytest.raises(exc.ModelNotFoundException):
             selector.find(bs, strict=True)
 
     def test_find_returns_none_if_no_scope_found_with_recursive_false_and_strict_false(
@@ -561,7 +577,7 @@ class TestBaseModel:
         bs = find_body_element(to_bs(text))
         selector = MockModel
 
-        with pytest.raises(ModelNotFoundException):
+        with pytest.raises(exc.ModelNotFoundException):
             selector.find(bs, strict=True, recursive=False)
 
     def test_find_returns_first_matched_instance_with_recursive_false(self):
@@ -674,7 +690,7 @@ class TestBaseModel:
 
         # first scope price - <p class="widget">abc</p> is found, text is extracted,
         # but conversion to int raises error.
-        with pytest.raises(FieldExtractionException, match="price"):
+        with pytest.raises(exc.FieldExtractionException, match="price"):
             selector.find(bs, strict=strict)
 
     @pytest.mark.parametrize(argnames="strict", argvalues=[True, False])
@@ -701,7 +717,7 @@ class TestBaseModel:
         bs = to_bs(text)
         selector = MockModel
 
-        with pytest.raises(FieldExtractionException, match="title"):
+        with pytest.raises(exc.FieldExtractionException, match="title"):
             selector.find(bs, strict=strict)
 
     @pytest.mark.parametrize(argnames="strict", argvalues=[True, False])
@@ -949,7 +965,7 @@ class TestBaseModel:
         bs = to_bs(text)
         selector = MockModel
 
-        with pytest.raises(FieldExtractionException, match="price"):
+        with pytest.raises(exc.FieldExtractionException, match="price"):
             selector.find_all(bs)
 
     def test_find_all_allows_empty_attribute_if_handled_properly(self):
@@ -1308,6 +1324,149 @@ class TestBaseModel:
         assert migrated.title == MockTitle(name=MockMigrationName(name="Title"))
         assert migrated.price == 10
 
+    def test_not_frozen_model_instance_attributes_can_be_modified(self):
+        """
+        Tests if model instance (which is not frozen if not defined otherwise) attributes
+        can be modified, by setting new value to one of its fields.
+        """
+        model = MockModel(title="Title", price=10)
+        model.title = "Title2"  # type: ignore
+        assert model.title == "Title2"
+        assert model.price == 10
+
+    def test_frozen_model_instance_attributes_cannot_be_modified(self):
+        """
+        Tests if frozen model instance cannot be modified, by setting new value
+        to one of its fields. It raises FrozenInstanceError.
+        """
+        model = MockFrozenModel(title="Title", price=10)
+
+        with pytest.raises(exc.FrozenModelException):
+            model.title = "Title2"  # type: ignore
+
+    def test_frozen_model_instance_can_be_modified_during_initialization(self):
+        """
+        Tests if frozen model instance can be modified during initialization,
+        post init is part of initialization exposed to user in which model attributes
+        can freely be modified. It is not restricted by frozen attribute.
+        """
+
+        class MockFrozenModel(BaseModel):
+            __scope__ = MockDivSelector()
+            __frozen__ = True
+
+            title = TITLE_SELECTOR
+            price = PRICE_SELECTOR
+
+            def __post_init__(self) -> None:
+                self.title = "Title2"
+
+        MockFrozenModel(title="Title", price=10)
+
+    @pytest.mark.parametrize(argnames="frozen", argvalues=[True, False])
+    def test_no_fields_attributes_cannot_be_set(self, frozen: bool):
+        """
+        Tests if attributes, that are not defined as fields in model, cannot be set
+        on model instance. It raises AttributeError, as it is not allowed to set
+        arbitrary attributes on model instance. This behavior is independent of frozen
+        attribute and takes precedence over it.
+        """
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+            __frozen__ = frozen
+
+            title = TITLE_SELECTOR
+            price = PRICE_SELECTOR
+
+        model = MockModel(title="Title", price=10)
+
+        with pytest.raises(AttributeError):
+            model.name = 20  # type: ignore
+
+    def test_hash_raises_error_if_model_not_frozen(self):
+        """Tests if calling hash on model instance raises TypeError if model is not frozen."""
+        model = MockModel(title="Title", price=10)
+
+        with pytest.raises(TypeError):
+            hash(model)
+
+    def test_hash_raises_error_if_field_model_not_frozen(self):
+        """
+        Tests if calling hash on model instance raises TypeError if any of field models
+        or their nested field models are not frozen.
+        """
+
+        class MockModelTitleField(BaseModel):
+            __scope__ = MockDivSelector()
+            __frozen__ = True
+
+            title = MockTitle
+            price = PRICE_SELECTOR
+
+        model = MockModelTitleField(title=MockTitle(name="Title"), price=10)
+
+        with pytest.raises(TypeError):
+            hash(model)
+
+    def test_hash_equality_on_models_with_model_field(self):
+        """
+        Tests if has is computed correctly for different instances of the model
+        with another model as field.
+        """
+
+        class MockTitle(BaseModel):
+            __scope__ = MockLinkSelector()
+            __frozen__ = True
+
+            name = MockLinkSelector()
+
+        class MockModelTitleField(BaseModel):
+            __scope__ = MockDivSelector()
+            __frozen__ = True
+
+            title = MockTitle
+            price = PRICE_SELECTOR
+
+        model1 = MockModelTitleField(title=MockTitle(name="Title"), price=10)
+        model2 = MockModelTitleField(title=MockTitle(name="Title"), price=10)
+        model3 = MockModelTitleField(title=MockTitle(name="Title2"), price=10)
+
+        assert hash(model1) == hash(model2)
+        assert hash(model1) != hash(model3)
+
+    def test_hash_equality_of_different_instances(self):
+        """Tests if has is computed correctly for different instances of the model."""
+
+        class MockNotEqualFrozenModel(BaseModel):
+            __scope__ = MockDivSelector()
+            __frozen__ = True
+
+            title = TITLE_SELECTOR
+            price = PRICE_SELECTOR
+
+        model1 = MockFrozenModel(title="Title", price=10)
+        model2 = MockFrozenModel(title="Title", price=10)
+        model3 = MockFrozenModel(title="Title2", price=10)
+        model4 = MockNotEqualFrozenModel(title="Title", price=10)
+
+        assert hash(model1) == hash(model2)
+        assert hash(model1) != hash(model3)
+        assert hash(model1) != hash(model4)
+
+    def test_frozen_model_instances_can_be_keys_in_dict(self):
+        """
+        Tests if frozen model instances can be used as keys in dictionary.
+        They are hashable, which makes it possible.
+        """
+        lookup = {
+            MockFrozenModel(title="Title", price=10): 1,
+            MockFrozenModel(title="Title", price=20): 2,
+        }
+
+        assert lookup[MockFrozenModel(title="Title", price=10)] == 1
+        assert lookup[MockFrozenModel(title="Title", price=20)] == 2
+
 
 @pytest.mark.integration
 @pytest.mark.model
@@ -1340,7 +1499,7 @@ class TestBaseModelIntegration:
         bs = to_bs(text)
         selector = MockModel
 
-        with pytest.raises(FieldExtractionException, match="title"):
+        with pytest.raises(exc.FieldExtractionException, match="title"):
             selector.find(bs, strict=strict)
 
     def test_returns_default_if_extracted_field_is_none(self):
@@ -1392,7 +1551,7 @@ class TestBaseModelIntegration:
         bs = to_bs(text)
         selector = MockModel
 
-        with pytest.raises(FieldExtractionException, match="title"):
+        with pytest.raises(exc.FieldExtractionException, match="title"):
             selector.find(bs)
 
     def test_default_does_not_overwrite_field_value_if_found(self):

@@ -210,6 +210,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
 
     __scope__: SoupSelector = None  # type: ignore
     __inherit_fields__: bool = True
+    __frozen__: bool = False
 
     __post_processors__: dict[str, Callable] = {}
 
@@ -231,6 +232,8 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         UnknownModelFieldException
             If any unknown fields are provided in the kwargs.
         """
+        setattr(self, c.INITIALIZED, False)
+
         fields = self.__class__.fields.keys()
 
         for field_ in fields:
@@ -256,6 +259,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
             )
 
         self.__post_init__()
+        setattr(self, c.INITIALIZED, True)
 
     def __post_init__(self) -> None:
         """
@@ -489,11 +493,39 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         """
         return self.migrate(self.__class__)
 
+    def __setattr__(self, key, value) -> None:
+        initialized = getattr(self, c.INITIALIZED, False)
+
+        if not initialized:
+            return super().__setattr__(key, value)
+
+        fields = set(self.attributes.keys())
+
+        if key not in fields:
+            raise AttributeError(
+                f"Cannot set attribute '{key}'. Only fields - {fields} - are allowed."
+            )
+
+        if self.__class__.__frozen__:
+            raise exc.FrozenModelException(
+                f"Model '{self.__class__}' is frozen and attributes of its instance "
+                "cannot be modified."
+            )
+
+        super().__setattr__(key, value)
+
+    def __hash__(self) -> int:
+        if not self.__class__.__frozen__:
+            raise TypeError(
+                f"Cannot hash instance of model {self.__class__}, which is not frozen."
+            )
+
+        # Compute hash based on the model's attributes hashes and the class itself
+        field_hashes = (hash((key, value)) for key, value in self.attributes.items())
+        return hash((self.__class__, tuple(field_hashes)))
+
     def __str__(self) -> str:
-        params = [
-            f"{name}={repr(getattr(self, name))}"
-            for name in self.__class__.fields.keys()
-        ]
+        params = [f"{name}={value!r}" for name, value in self.attributes.items()]
         return f"{self.__class__.__name__}({', '.join(params)})"
 
     def __repr__(self) -> str:
@@ -507,5 +539,5 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         if not isinstance(x, self.__class__):
             return False
 
-        fields = self.__class__.fields.keys()
+        fields = self.attributes.keys()
         return all(getattr(self, key) == getattr(x, key) for key in fields)
