@@ -242,3 +242,10 @@ class MissingFieldsException(BaseModelException):
     Exception raised by BaseModel when parameters passed into the constructor
     do not contain all required fields defined in the model class.
     """
+
+
+class FrozenModelException(BaseModelException):
+    """
+    Exception raised by BaseModel when trying to modify frozen model instance.
+    Frozen model instances are read-only and cannot be modified.
+    """

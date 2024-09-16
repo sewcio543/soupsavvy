@@ -7,12 +7,15 @@ DEFAULT_STRICT = False
 
 # attribute to set on method that post-processes field value of model
 POST_ATTR = "__post_process_method__"
+# name of the attribute that keep tracks of initialization state
+INITIALIZED = "_initialized"
 
 SCOPE = "__scope__"
 INHERIT_FIELDS = "__inherit_fields__"
 POST_PROCESSORS = "__post_processors__"
+FROZEN = "__frozen__"
 
-SPECIAL_FIELDS = {SCOPE, INHERIT_FIELDS, POST_PROCESSORS}
+SPECIAL_FIELDS = {SCOPE, INHERIT_FIELDS, POST_PROCESSORS, FROZEN}
 
 # based model classes that skip initialization checks
 BASE_MODELS = {"BaseModel"}

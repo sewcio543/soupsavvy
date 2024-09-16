@@ -7,8 +7,9 @@ from __future__ import annotations
 
 from abc import ABC
 from collections.abc import Callable
+from dataclasses import dataclass, field
 from functools import reduce
-from typing import Any, Literal, Optional, Type, TypeVar, overload
+from typing import Any, Literal, Optional, Type, TypeVar, Union, overload
 
 from bs4 import Tag
 from typing_extensions import Self
@@ -18,7 +19,26 @@ import soupsavvy.models.constants as c
 from soupsavvy.base import SoupSelector, check_selector
 from soupsavvy.interfaces import Comparable, TagSearcher, TagSearcherExceptions
 
+# Generic type variable for model migration
 T = TypeVar("T")
+
+
+@dataclass
+class MigrationSchema:
+    """
+    Defines schema for model migration in need of providing additional parameters
+    to the target model initialization in nested models.
+
+    Attributes
+    ----------
+    target : Type
+        Target model class to migrate to.
+    params : dict, optional
+        Additional parameters to pass to the target model initialization.
+    """
+
+    target: Type
+    params: dict = field(default_factory=dict)
 
 
 def post(field: str) -> Callable[[Callable], Callable]:
@@ -190,6 +210,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
 
     __scope__: SoupSelector = None  # type: ignore
     __inherit_fields__: bool = True
+    __frozen__: bool = False
 
     __post_processors__: dict[str, Callable] = {}
 
@@ -211,24 +232,25 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         UnknownModelFieldException
             If any unknown fields are provided in the kwargs.
         """
+        setattr(self, c.INITIALIZED, False)
+
         fields = self.__class__.fields.keys()
 
-        for field in fields:
-
+        for field_ in fields:
             try:
-                value = kwargs.pop(field)
+                value = kwargs.pop(field_)
             except KeyError:
                 raise exc.MissingFieldsException(
                     f"Cannot initialize model '{self.__class__.__name__}' "
-                    f"without '{field}' field."
+                    f"without '{field_}' field."
                 )
 
-            func = getattr(self, c.POST_PROCESSORS).get(field)
+            func = getattr(self, c.POST_PROCESSORS).get(field_)
 
             if func is not None:
                 value = func(self, value)
 
-            setattr(self, field, value)
+            setattr(self, field_, value)
 
         if kwargs:
             raise exc.UnknownModelFieldException(
@@ -237,6 +259,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
             )
 
         self.__post_init__()
+        setattr(self, c.INITIALIZED, True)
 
     def __post_init__(self) -> None:
         """
@@ -408,30 +431,101 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         elements = cls.scope.find_all(tag=tag, recursive=recursive, limit=limit)
         return [cls._find(element) for element in elements]
 
-    def migrate(self, model: Type[T], **kwargs) -> T:
+    def migrate(
+        self,
+        model: Type[T],
+        mapping: Optional[dict[Type[BaseModel], Union[Type, MigrationSchema]]] = None,
+        **kwargs,
+    ) -> T:
         """
         Migrates the model instance to another model class using its fields
-        in target class initialization.
+        in target class initialization. Recursively migrates nested models, creating
+        new instances, even when target model is not defined in the mapping.
 
         Parameters
         ----------
         model : Type[Model]
             The target model class to migrate the instance to.
+        mapping : dict[Type[BaseModel], Union[Type, MigrationSchema]], optional
+            Mapping of base model fields to target models. By default, if field
+            is instance of BaseModel, it will be passed directly to the target model.
         kwargs : Any
             Additional keyword arguments to pass to model initialization.
+
+        Migrating to the same model is equivalent to creating deep copy of the model,
+        which can be achieved by calling `copy` method.
 
         Returns
         -------
         Model
             An instance of the target model class.
         """
-        return model(**self.attributes, **kwargs)
+        mapping = mapping or {}
+        params = self.attributes.copy()
+
+        for name, value in self.attributes.items():
+            if not isinstance(value, BaseModel):
+                continue
+
+            schema = mapping.get(value.__class__, value.__class__)
+
+            if isinstance(schema, MigrationSchema):
+                params[name] = value.migrate(
+                    schema.target,
+                    mapping=mapping,
+                    **schema.params,
+                )
+                continue
+
+            params[name] = value.migrate(schema, mapping=mapping)
+
+        return model(**params, **kwargs)
+
+    def copy(self) -> Self:
+        """
+        Creates a deep copy of the model instance by migrating it to the same model class.
+        Only model fields defined in `attributes` are used to create new instance.
+
+        Returns
+        -------
+        Self
+            A deep copy of the model instance.
+        """
+        return self.migrate(self.__class__)
+
+    def __setattr__(self, key, value) -> None:
+        initialized = getattr(self, c.INITIALIZED, False)
+
+        if not initialized:
+            return super().__setattr__(key, value)
+
+        fields = set(self.attributes.keys())
+
+        if key not in fields:
+            raise AttributeError(
+                f"Cannot set attribute '{key}'. Only fields - {fields} - are allowed."
+            )
+
+        if self.__class__.__frozen__:
+            raise exc.FrozenModelException(
+                f"Model '{self.__class__}' is frozen and attributes of its instance "
+                "cannot be modified."
+            )
+
+        super().__setattr__(key, value)
+
+    def __hash__(self) -> int:
+        if not self.__class__.__frozen__:
+            raise TypeError(
+                f"Cannot hash instance of model {self.__class__}, which is not frozen."
+            )
+
+        # Compute hash based on the model's attributes hashes and the class itself
+        field_hashes = (hash((key, value)) for key, value in self.attributes.items())
+        return hash((self.__class__, tuple(field_hashes)))
 
     def __str__(self) -> str:
-        params = [
-            f"{name}={repr(getattr(self, name))}"
-            for name in self.__class__.fields.keys()
-        ]
+        params = [f"{name}={value!r}" for name, value in self.attributes.items()]
         return f"{self.__class__.__name__}({', '.join(params)})"
 
     def __repr__(self) -> str:
@@ -445,5 +539,5 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         if not isinstance(x, self.__class__):
             return False
 
-        fields = self.__class__.fields.keys()
+        fields = self.attributes.keys()
         return all(getattr(self, key) == getattr(x, key) for key in fields)
