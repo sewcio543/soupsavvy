@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from abc import ABC
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import reduce
 from typing import Any, Literal, Optional, Type, TypeVar, Union, overload
 
@@ -38,7 +38,7 @@ class MigrationSchema:
     """
 
     target: Type
-    params: Optional[dict] = None
+    params: dict = field(default_factory=dict)
 
 
 def post(field: str) -> Callable[[Callable], Callable]:
@@ -233,22 +233,21 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         """
         fields = self.__class__.fields.keys()
 
-        for field in fields:
-
+        for field_ in fields:
             try:
-                value = kwargs.pop(field)
+                value = kwargs.pop(field_)
             except KeyError:
                 raise exc.MissingFieldsException(
                     f"Cannot initialize model '{self.__class__.__name__}' "
-                    f"without '{field}' field."
+                    f"without '{field_}' field."
                 )
 
-            func = getattr(self, c.POST_PROCESSORS).get(field)
+            func = getattr(self, c.POST_PROCESSORS).get(field_)
 
             if func is not None:
                 value = func(self, value)
 
-            setattr(self, field, value)
+            setattr(self, field_, value)
 
         if kwargs:
             raise exc.UnknownModelFieldException(
@@ -436,7 +435,8 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
     ) -> T:
         """
         Migrates the model instance to another model class using its fields
-        in target class initialization.
+        in target class initialization. Recursively migrates nested models, creating
+        new instances, even when target model is not defined in the mapping.
 
         Parameters
         ----------
@@ -448,36 +448,46 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         kwargs : Any
             Additional keyword arguments to pass to model initialization.
 
+        Migrating to the same model is equivalent to creating deep copy of the model,
+        which can be achieved by calling `copy` method.
+
         Returns
         -------
         Model
             An instance of the target model class.
         """
-        if mapping is None:
-            return model(**self.attributes, **kwargs)
-
+        mapping = mapping or {}
         params = self.attributes.copy()
 
         for name, value in self.attributes.items():
             if not isinstance(value, BaseModel):
                 continue
 
-            schema = mapping.get(value.__class__)
-
-            if schema is None:
-                continue
+            schema = mapping.get(value.__class__, value.__class__)
 
             if isinstance(schema, MigrationSchema):
                 params[name] = value.migrate(
                     schema.target,
                     mapping=mapping,
-                    **(schema.params or {}),
+                    **schema.params,
                 )
                 continue
 
             params[name] = value.migrate(schema, mapping=mapping)
 
         return model(**params, **kwargs)
+
+    def copy(self) -> Self:
+        """
+        Creates a deep copy of the model instance by migrating it to the same model class.
+        Only model fields defined in `attributes` are used to create new instance.
+
+        Returns
+        -------
+        Self
+            A deep copy of the model instance.
+        """
+        return self.migrate(self.__class__)
 
     def __str__(self) -> str:
         params = [
