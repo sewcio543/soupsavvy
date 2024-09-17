@@ -28,7 +28,7 @@ class FieldWrapper(TagSearcher, Comparable):
 
     def __init__(self, selector: TagSearcher) -> None:
         """
-        Initialize FieldWrapper.
+        Initializes FieldWrapper.
 
         Parameters
         ----------
@@ -51,7 +51,7 @@ class FieldWrapper(TagSearcher, Comparable):
     @property
     def selector(self) -> TagSearcher:
         """
-        Return searcher, that is wrapped by this FieldWrapper.
+        Returns searcher, that is wrapped by this FieldWrapper.
 
         Returns
         -------

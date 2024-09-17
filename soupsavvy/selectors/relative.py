@@ -25,7 +25,7 @@ class RelativeSelector(SoupSelector):
     Example
     -------
     >>> selector = Anchor > TypeSelector("div")
-    >>> selector.find_all(tag)
+    ... selector.find_all(tag)
 
     Uses RelativeChild selector to find any div tag that is a direct child of the
     tag that is being searched (passed as an argument).
@@ -568,16 +568,16 @@ class HasSelector(CompositeSoupSelector):
     Example
     -------
     >>> from soupsavvy.selectors.relative import Anchor
-    >>> HasSelector(Anchor > TypeSelector("div"))
-    >>> HasSelector(Anchor + TypeSelector("div"))
+    ... HasSelector(Anchor > TypeSelector("div"))
+    ... HasSelector(Anchor + TypeSelector("div"))
 
     or by using RelativeSelector components directly:
 
     Example
     -------
     >>> from soupsavvy.selectors.relative import RelativeChild, RelativeNextSibling
-    >>> HasSelector(RelativeChild(TypeSelector("div")))
-    >>> HasSelector(RelativeNextSibling(TypeSelector("div"))
+    ... HasSelector(RelativeChild(TypeSelector("div")))
+    ... HasSelector(RelativeNextSibling(TypeSelector("div"))
 
     Example
     -------
@@ -604,8 +604,8 @@ class HasSelector(CompositeSoupSelector):
     Example
     -------
     >>> from soupsavvy.selectors.relative import Anchor
-    >>> HasSelector(TypeSelector("div"), TypeSelector("a"))
-    >>> HasSelector(Anchor + TypeSelector("div"), Anchor > TypeSelector("a"))
+    ... HasSelector(TypeSelector("div"), TypeSelector("a"))
+    ... HasSelector(Anchor + TypeSelector("div"), Anchor > TypeSelector("a"))
 
     Notes
     -----

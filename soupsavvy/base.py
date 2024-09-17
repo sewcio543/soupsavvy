@@ -262,10 +262,10 @@ class SoupSelector(TagSearcher, Comparable):
         Example
         -------
         >>> selector1 = TypeSelector("div")
-        >>> selector2 = TypeSelector("div")
-        >>> selector1 == selector2
+        ... selector2 = TypeSelector("div")
+        ... selector1 == selector2
         True
-        >>> selector1.find(tag) == selector2.find(tag)
+        ... selector1.find(tag) == selector2.find(tag)
         True
         """
 

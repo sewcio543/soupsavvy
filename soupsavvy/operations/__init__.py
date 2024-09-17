@@ -1,3 +1,7 @@
+"""
+Subpackage with operations used to postprocessing the results of selectors.
+"""
+
 from .conditional import Break, Continue, IfElse
 from .general import Operation
 from .soup import Href, Parent, Text

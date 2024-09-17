@@ -37,7 +37,7 @@ class NavigableStringException(SoupSelectorException):
     Example
     -------
     >>> nav_string = NavigableString("Hello World")
-    >>> BeautifulSoup(nav_string)
+    ... BeautifulSoup(nav_string)
     <html><body><p>Hello World</p></body></html>
 
     BeautifulSoup constructor always wraps NavigableString in <p> element.

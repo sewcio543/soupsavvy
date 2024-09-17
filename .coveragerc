@@ -5,6 +5,7 @@ source = soupsavvy
 omit =
     *__init__.py
     tests\*
+    soupsavvy\api.py
 
 exclude_lines =
     @overload
