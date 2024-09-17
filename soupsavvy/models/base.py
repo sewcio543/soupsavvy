@@ -49,13 +49,13 @@ def post(field: str) -> Callable[[Callable], Callable]:
 
     Example
     -------
-    class MyModel(BaseModel):
-        ...
-        field = ...
-
-        @post("field")
-        def post_process_field(self, value):
-            return value.strip()
+    >>> class MyModel(BaseModel):
+    ...    ...
+    ...    field = ...
+    ...
+    ...    @post("field")
+    ...    def post_process_field(self, value):
+    ...        return value.strip()
 
     Methods of custom model class, that are decorated with `@post` decorator,
     must accept only one argument, which is the value of the field to be processed.

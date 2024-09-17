@@ -215,8 +215,8 @@ class TagResultSet:
         Example
         -------
         >>> base = TagResultSet([x, y, b])
-        >>> other = TagResultSet([c, y, x])
-        >>> base & other
+        ... other = TagResultSet([c, y, x])
+        ... base & other
         TagResultSet([x, y])
 
         Returns
@@ -245,8 +245,8 @@ class TagResultSet:
         Example
         -------
         >>> base = TagResultSet([x, y, b])
-        >>> other = TagResultSet([c, y, x])
-        >>> base | other
+        ... other = TagResultSet([c, y, x])
+        ... base | other
         TagResultSet([x, y, b, c])
 
         Returns
@@ -274,8 +274,8 @@ class TagResultSet:
         Example
         -------
         >>> base = TagResultSet([x, y, b])
-        >>> other = TagResultSet([c, y, x])
-        >>> base - other
+        ... other = TagResultSet([c, y, x])
+        ... base - other
         TagResultSet([b])
 
         Returns
@@ -303,8 +303,8 @@ class TagResultSet:
         Example
         -------
         >>> base = TagResultSet([x, y, b])
-        >>> other = TagResultSet([c, y, x])
-        >>> base.symmetric_difference(other)
+        ... other = TagResultSet([c, y, x])
+        ... base.symmetric_difference(other)
         TagResultSet([b, c])
 
         Returns

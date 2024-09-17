@@ -26,7 +26,11 @@ extensions = [
     "myst_nb",
 ]
 
-exclude_patterns = ["*namespace*.rst"]
+exclude_patterns = [
+    "*namespace*.rst",
+    "soupsavvy.selectors.nth.nth_utils.rst",
+    "soupsavvy.models.constants.rst",
+]
 
 add_module_names = False
 
@@ -42,6 +46,7 @@ html_show_sphinx = False
 def skip(app, what, name, obj, would_skip, options):
     if name == "__init__":
         return False
+
     return would_skip
 
 

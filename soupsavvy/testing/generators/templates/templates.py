@@ -18,7 +18,7 @@ class EmptyTemplate(BaseTemplate):
     Example
     -------
     >>> template = EmptyTemplate()
-    >>> template.generate()
+    ... template.generate()
     ''
     """
 
@@ -42,7 +42,7 @@ class ConstantTemplate(BaseTemplate):
     Example
     -------
     >>> template = ConstantTemplate("Hello World!")
-    >>> template.generate()
+    ... template.generate()
     'Hello World!'
     """
 
@@ -76,7 +76,7 @@ class ChoiceTemplate(BaseTemplate):
     Example
     -------
     >>> template = ChoiceTemplate(["apple", "banana", "cherry"], seed=42)
-    >>> template.generate()
+    ... template.generate()
     'cherry'
     """
 
@@ -114,7 +114,7 @@ class RandomTemplate(BaseTemplate):
     Example
     -------
     >>> template = RandomTemplate(length=4, seed=42)
-    >>> template.generate()
+    ... template.generate()
     'Nbrn'
     """
 

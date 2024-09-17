@@ -77,7 +77,7 @@ class AttributeGenerator(BaseGenerator):
     Example
     --------
     >>> gen = AttributeGenerator("class")
-    >>> gen.generate()
+    ... gen.generate()
     'class=""'
 
     Attribute can also be generated with specified constant value:
@@ -85,7 +85,7 @@ class AttributeGenerator(BaseGenerator):
     Example
     --------
     >>> gen = AttributeGenerator("class", value="container")
-    >>> gen.generate()
+    ... gen.generate()
     'class="container"'
 
     Value can be passed as BaseTemplate instance as well:
@@ -93,9 +93,9 @@ class AttributeGenerator(BaseGenerator):
     Example
     --------
     >>> from soupsavvy.testing.generators import RandomTemplate
-    >>> template = RandomTemplate(length=4, seed=42)
-    >>> gen = AttributeGenerator("id", value=template)
-    >>> gen.generate()
+    ... template = RandomTemplate(length=4, seed=42)
+    ... gen = AttributeGenerator("id", value=template)
+    ... gen.generate()
     'id="Nbrn"'
 
     For more information on available Templates, how to use them
@@ -173,7 +173,7 @@ class TagGenerator(BaseGenerator):
     Example
     --------
     >>> gen = TagGenerator("div")
-    >>> gen.generate()
+    ... gen.generate()
     '<div></div>'
 
     Tag can also be generated with specified attributes:
@@ -181,7 +181,7 @@ class TagGenerator(BaseGenerator):
     Example
     --------
     >>> gen = TagGenerator("div", attrs=[("class", "container")])
-    >>> gen.generate()
+    ... gen.generate()
     '<div class="container"></div>'
 
     Attributes can be passed as an iterable of of mixed types:
@@ -192,14 +192,14 @@ class TagGenerator(BaseGenerator):
     Example
     --------
     >>> gen = TagGenerator(
-    >>>     name="a",
-    >>>     attrs=[
-    >>>         ("id", "link"),
-    >>>         AttributeGenerator("href", "/endpoint"),
-    >>>         "class",
-    >>>     ],
-    >>> )
-    >>> gen.generate()
+    ...     name="a",
+    ...     attrs=[
+    ...         ("id", "link"),
+    ...         AttributeGenerator("href", "/endpoint"),
+    ...         "class",
+    ...     ],
+    ... )
+    ... gen.generate()
     '<div id="link" href="/endpoint", class=""></div>'
 
     Similarly, children can be passed as an iterable of mixed types:
@@ -209,13 +209,13 @@ class TagGenerator(BaseGenerator):
     Example
     --------
     >>> gen = TagGenerator(
-    >>>     name="div",
-    >>>     children=[
-    >>>         "a",
-    >>>         TagGenerator("span", attrs=[("class", "container")],
-    >>>     ],
-    >>> )
-    >>> gen.generate()
+    ...     name="div",
+    ...     children=[
+    ...         "a",
+    ...         TagGenerator("span", attrs=[("class", "container")],
+    ...     ],
+    ... )
+    ... gen.generate()
     '<div><a></a><span class="container"></span></div>'
 
     Text of the tag can be passed as a string or a Template:
@@ -223,15 +223,15 @@ class TagGenerator(BaseGenerator):
     Example
     --------
     >>> gen = TagGenerator("p", text="Hello, World!")
-    >>> gen.generate()
+    ... gen.generate()
     '<p>Hello, World!</p>'
 
     Example
     --------
     >>> from soupsavvy.testing.generators import RandomTemplate
-    >>> template = RandomTemplate(length=4, seed=42)
-    >>> gen = TagGenerator("p", text=template)
-    >>> gen.generate()
+    ... template = RandomTemplate(length=4, seed=42)
+    ... gen = TagGenerator("p", text=template)
+    ... gen.generate()
     '<p>Nbrn</p>'
 
     For more information on available Templates, how to use them
@@ -243,7 +243,7 @@ class TagGenerator(BaseGenerator):
     Example
     --------
     >>> gen = TagGenerator("img", attrs=[("src", "/path/to/image.jpg")])
-    >>> gen.generate()
+    ... gen.generate()
     '<img src="/path/to/image.jpg"/>'
 
     No children are allowed for void tags, and an error will be raised.

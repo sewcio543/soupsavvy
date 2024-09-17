@@ -13,7 +13,7 @@ from soupsavvy.selectors.nth.nth_utils import parse_nth
 from soupsavvy.utils.selector_utils import TagIterator, TagResultSet
 
 
-class _BaseNthOfSelector(SoupSelector):
+class BaseNthOfSelector(SoupSelector):
     """
     Base class for nth-of-selector and nth-last-of-selector
     that implements general logic for finding matching elements.
@@ -98,7 +98,7 @@ class _BaseNthOfSelector(SoupSelector):
         return repr(self)
 
 
-class NthOfSelector(_BaseNthOfSelector):
+class NthOfSelector(BaseNthOfSelector):
     """
     Component that matches nth-of-type elements in the soup, with use of standard
     css nth selectors. Element is of type if it matches provided SoupSelector instance.
@@ -129,7 +129,7 @@ class NthOfSelector(_BaseNthOfSelector):
     _slice = slice(None)
 
 
-class NthLastOfSelector(_BaseNthOfSelector):
+class NthLastOfSelector(BaseNthOfSelector):
     """
     Component that matches nth-last-of-type elements in the soup, with use of standard
     css nth selectors. Element is of type if it matches provided SoupSelector instance.

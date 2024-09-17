@@ -1,3 +1,7 @@
+"""
+Subpackage with soup selectors for declarative search procedures.
+"""
+
 from .attributes import AttributeSelector, ClassSelector, IdSelector
 from .combinators import (
     AncestorCombinator,
