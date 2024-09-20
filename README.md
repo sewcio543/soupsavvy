@@ -18,7 +18,7 @@
 
 ## About
 
-**soupsavvy** is flexible search engine for `BeautifulSoup`, designed to provide more powerful capabilities, making more complex searches simple and web scraping tasks more efficient and manageable.
+**soupsavvy** is flexible search engine for [`BeautifulSoup`](https://pypi.org/project/beautifulsoup4/), designed to provide more powerful capabilities, making more complex searches simple and web scraping tasks more efficient and manageable.
 
 ## Key Features
 
