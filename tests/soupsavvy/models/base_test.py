@@ -10,7 +10,7 @@ from sqlalchemy.orm import DeclarativeBase, relationship
 
 import soupsavvy.exceptions as exc
 from soupsavvy.models import All, Default, Required
-from soupsavvy.models.base import BaseModel, MigrationSchema, post
+from soupsavvy.models.base import BaseModel, Field, MigrationSchema, post
 from soupsavvy.operations import (
     Break,
     Continue,
@@ -255,9 +255,13 @@ class TestBaseModel:
     def test_class_attribute_fields_is_defined_correctly(self):
         """
         Tests if class attribute fields is defined correctly in model.
-        It should be dictionary with field names as keys and provided selectors as values.
+        It should be dictionary with field names as keys and provided selectors as values
+        wrapped in Field class.
         """
-        assert MockModel.fields == {"title": TITLE_SELECTOR, "price": PRICE_SELECTOR}
+        assert MockModel.fields == {
+            "title": Field(TITLE_SELECTOR),
+            "price": Field(PRICE_SELECTOR),
+        }
 
     def test_class_attribute_fields_contains_inherited_and_model_fields(self):
         """
@@ -271,9 +275,9 @@ class TestBaseModel:
             name = name_selector
 
         assert ChildModel.fields == {
-            "title": TITLE_SELECTOR,
-            "price": PRICE_SELECTOR,
-            "name": name_selector,
+            "title": Field(TITLE_SELECTOR),
+            "price": Field(PRICE_SELECTOR),
+            "name": Field(name_selector),
         }
 
     def test_fields_are_not_inherited_from_base_class_if_explicitly_set(self):
@@ -288,7 +292,7 @@ class TestBaseModel:
 
             name = name_selector
 
-        assert ChildModel.fields == {"name": name_selector}
+        assert ChildModel.fields == {"name": Field(name_selector)}
 
     def test_custom_post_init_modifies_attributes(self):
         """

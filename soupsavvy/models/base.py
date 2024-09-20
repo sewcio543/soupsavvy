@@ -68,6 +68,41 @@ def post(field: str) -> Callable[[Callable], Callable]:
     return decorator
 
 
+class Field(TagSearcher, Comparable):
+    def __init__(
+        self,
+        selector: Union[TagSearcher, type[BaseModel]],
+        repr: bool = True,
+        compare: bool = True,
+        migrate: bool = True,
+    ) -> None:
+        self.selector = selector
+        self.repr = repr
+        self.compare = compare
+        self.migrate = migrate
+
+    def find_all(
+        self, tag: Tag, recursive: bool = True, limit: Optional[int] = None
+    ) -> list[Any]:
+        return self.selector.find_all(tag, recursive=recursive, limit=limit)
+
+    def find(self, tag: Tag, strict: bool = False, recursive: bool = True) -> Any:
+        return self.selector.find(tag, strict=strict, recursive=recursive)
+
+    def __eq__(self, x: Any) -> bool:
+        if not isinstance(x, Field):
+            return False
+
+        return all(
+            [
+                self.selector == x.selector,
+                self.repr == x.repr,
+                self.compare == x.compare,
+                self.migrate == x.migrate,
+            ]
+        )
+
+
 class ModelMeta(type(ABC)):
     """
     Metaclass for all models derived from `BaseModel`. This metaclass ensures that
@@ -158,7 +193,7 @@ class ModelMeta(type(ABC)):
         return getattr(cls, c.SCOPE)
 
     @property
-    def fields(cls) -> dict[str, TagSearcher]:
+    def fields(cls) -> dict[str, Field]:
         """
         Returns the fields of the model class with their
         respective TagSearcher instances. The fields are aggregated based on
@@ -171,7 +206,7 @@ class ModelMeta(type(ABC)):
         """
         return cls._get_fields()
 
-    def _get_fields(cls) -> dict[str, TagSearcher]:
+    def _get_fields(cls) -> dict[str, Field]:
         """
         Returns the fields of the model class with their
         respective TagSearcher instances based on the `__inherit_fields__` setting.
@@ -190,7 +225,7 @@ class ModelMeta(type(ABC)):
             dict.__or__,
             [
                 {
-                    key: value
+                    key: value if isinstance(value, Field) else Field(value)
                     for key, value in class_.__dict__.items()
                     if (
                         # accepted field must be TagSearcher
@@ -461,9 +496,14 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
             An instance of the target model class.
         """
         mapping = mapping or {}
+
+        include = {key for key, value in self.__class__.fields.items() if value.compare}
         params = self.attributes.copy()
 
         for name, value in self.attributes.items():
+            if name not in include:
+                params.pop(name)
+
             if not isinstance(value, BaseModel):
                 continue
 
@@ -520,12 +560,22 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
                 f"Cannot hash instance of model {self.__class__}, which is not frozen."
             )
 
+        include = {key for key, value in self.__class__.fields.items() if value.compare}
         # Compute hash based on the model's attributes hashes and the class itself
-        field_hashes = (hash((key, value)) for key, value in self.attributes.items())
+        field_hashes = (
+            hash((key, value))
+            for key, value in self.attributes.items()
+            if key in include
+        )
         return hash((self.__class__, tuple(field_hashes)))
 
     def __str__(self) -> str:
-        params = [f"{name}={value!r}" for name, value in self.attributes.items()]
+        include = {key for key, value in self.__class__.fields.items() if value.repr}
+        params = [
+            f"{name}={value!r}"
+            for name, value in self.attributes.items()
+            if name in include
+        ]
         return f"{self.__class__.__name__}({', '.join(params)})"
 
     def __repr__(self) -> str:
@@ -539,5 +589,8 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         if not isinstance(x, self.__class__):
             return False
 
+        include = {key for key, value in self.__class__.fields.items() if value.compare}
         fields = self.attributes.keys()
-        return all(getattr(self, key) == getattr(x, key) for key in fields)
+        return all(
+            getattr(self, key) == getattr(x, key) for key in fields if key in include
+        )
