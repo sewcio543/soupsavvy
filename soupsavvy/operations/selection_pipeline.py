@@ -174,3 +174,6 @@ class SelectionPipeline(TagSearcher, Comparable):
             return False
 
         return self.selector == x.selector and self.operation == x.operation
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.selector}, {self.operation})"

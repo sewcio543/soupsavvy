@@ -68,18 +68,45 @@ def post(field: str) -> Callable[[Callable], Callable]:
     return decorator
 
 
+@dataclass
 class Field(TagSearcher, Comparable):
-    def __init__(
-        self,
-        selector: Union[TagSearcher, type[BaseModel]],
-        repr: bool = True,
-        compare: bool = True,
-        migrate: bool = True,
-    ) -> None:
-        self.selector = selector
-        self.repr = repr
-        self.compare = compare
-        self.migrate = migrate
+    """
+    Model field wrapper, that defined field metadata.
+    Used for overwriting default behavior of attribute corresponding to field
+    in model instance, similarly to dataclass field function.
+
+    Attributes
+    ----------
+    selector : TagSearcher | type[BaseModel]
+        Any searcher used in model as field.
+    repr : bool, optional
+        Whether the field should be included in the model's representation.
+        Default is True.
+    compare : bool, optional
+        Whether the field should be included in the model's equality comparison
+        as well as in the hash calculation. Default is True.
+    migrate : bool, optional
+        Whether the field should be migrated to the target model in model migration.
+        Default is True.
+
+    Example
+    -------
+    >>> class MyModel(BaseModel):
+    ...    __scope__ = TypeSelector("p")
+    ...
+    ...    price = Text() | Operation(int)
+    ...    element = Field(SelfSelector(), repr=False, compare=False, migrate=False)
+
+    In this example, only price is relevant for model object. Element itself is just
+    for reference and should not be included in model representation, comparison or migration.
+
+    Using `Field` wrapper without any additional arguments is equivalent to default behavior.
+    """
+
+    selector: Union[TagSearcher, type[BaseModel]]
+    repr: bool = True
+    compare: bool = True
+    migrate: bool = True
 
     def find_all(
         self, tag: Tag, recursive: bool = True, limit: Optional[int] = None
@@ -100,6 +127,12 @@ class Field(TagSearcher, Comparable):
                 self.compare == x.compare,
                 self.migrate == x.migrate,
             ]
+        )
+
+    def __repr__(self) -> str:
+        return (
+            f"Field({self.selector}, repr={self.repr}, compare={self.compare}, "
+            f"migrate={self.migrate})"
         )
 
 
@@ -201,15 +234,18 @@ class ModelMeta(type(ABC)):
 
         Returns
         -------
-        dict[str, TagSearcher]
-            A dictionary mapping field names to their respective TagSearcher instances.
+        dict[str, Field]
+            A dictionary mapping field names to their respective Field instances.
         """
         return cls._get_fields()
 
     def _get_fields(cls) -> dict[str, Field]:
         """
-        Returns the fields of the model class with their
-        respective TagSearcher instances based on the `__inherit_fields__` setting.
+        Returns the fields of the model with their respective TagSearcher instances
+        based on the `__inherit_fields__` setting.
+
+        If searcher is already provided in form of Field object, it is used directly.
+        Otherwise, it is wrapped in Field object with default settings.
         """
         classes = (
             [
@@ -497,7 +533,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         """
         mapping = mapping or {}
 
-        include = {key for key, value in self.__class__.fields.items() if value.compare}
+        include = {key for key, value in self.__class__.fields.items() if value.migrate}
         params = self.attributes.copy()
 
         for name, value in self.attributes.items():
@@ -569,7 +605,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         )
         return hash((self.__class__, tuple(field_hashes)))
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         include = {key for key, value in self.__class__.fields.items() if value.repr}
         params = [
             f"{name}={value!r}"
@@ -577,9 +613,6 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
             if name in include
         ]
         return f"{self.__class__.__name__}({', '.join(params)})"
-
-    def __repr__(self) -> str:
-        return str(self)
 
     def __eq__(self, x: Any) -> bool:
         """
