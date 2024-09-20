@@ -1,4 +1,4 @@
-![SoupSavvy](https://github.com/sewcio543/soupsavvy/blob/main/resources/logo.png?raw=true)
+![soupsavvy](https://github.com/sewcio543/soupsavvy/blob/main/resources/logo.png?raw=true)
 ========
 
 ## Powerful and flexible engine for BeautifulSoup
@@ -22,7 +22,7 @@
 
 ## Key Features
 
-`soupsavvy` introduces the concept of a `Selector`, a declarative search procedure designed with simple and readable syntax. It encapsulates search logic, making it reusable across different scenarios. The package offers various types of selectors that can be easily combined to perform more complex searches.
+`soupsavvy` introduces the concept of `Selector`, a declarative search procedure designed with simple and readable syntax. It encapsulates search logic, making it reusable across different scenarios. The package offers various types of selectors that can be easily combined to perform more complex searches.
 
 ## Installation
 
@@ -55,5 +55,4 @@ If you'd like to contribute to soupsavvy, feel free to check out the [GitHub rep
 
 -----------------
 
-**Let's soap this soup!**
 **Happy scraping!** ✨
