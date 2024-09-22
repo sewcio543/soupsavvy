@@ -68,6 +68,11 @@ class Text(OperationSearcherMixin):
 
         return self.separator == x.separator and self.strip == x.strip
 
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}(separator={self.separator}, strip={self.strip})"
+        )
+
 
 class Href(OperationSearcherMixin):
     """
@@ -103,6 +108,9 @@ class Href(OperationSearcherMixin):
     def __eq__(self, x: Any) -> bool:
         # equal only if both are instances of Href
         return isinstance(x, Href)
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}()"
 
 
 class Parent(BaseOperation, SoupSelector):
@@ -154,3 +162,6 @@ class Parent(BaseOperation, SoupSelector):
     def __eq__(self, x: Any) -> bool:
         # equal only if both are instances of Parent
         return isinstance(x, Parent)
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}()"

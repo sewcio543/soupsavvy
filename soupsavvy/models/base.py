@@ -7,7 +7,8 @@ from __future__ import annotations
 
 from abc import ABC
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from dataclasses import field as datafield
 from functools import reduce
 from typing import Any, Literal, Optional, Type, TypeVar, Union, overload
 
@@ -38,7 +39,7 @@ class MigrationSchema:
     """
 
     target: Type
-    params: dict = field(default_factory=dict)
+    params: dict = datafield(default_factory=dict)
 
 
 def post(field: str) -> Callable[[Callable], Callable]:
@@ -66,6 +67,74 @@ def post(field: str) -> Callable[[Callable], Callable]:
         return func
 
     return decorator
+
+
+@dataclass
+class Field(TagSearcher, Comparable):
+    """
+    Model field wrapper, that defined field metadata.
+    Used for overwriting default behavior of attribute corresponding to field
+    in model instance, similarly to dataclass field function.
+
+    Attributes
+    ----------
+    selector : TagSearcher | type[BaseModel]
+        Any searcher used in model as field.
+    repr : bool, optional
+        Whether the field should be included in the model's representation.
+        Default is True.
+    compare : bool, optional
+        Whether the field should be included in the model's equality comparison
+        as well as in the hash calculation. Default is True.
+    migrate : bool, optional
+        Whether the field should be migrated to the target model in model migration.
+        Default is True.
+
+    Example
+    -------
+    >>> class MyModel(BaseModel):
+    ...    __scope__ = TypeSelector("p")
+    ...
+    ...    price = Text() | Operation(int)
+    ...    element = Field(SelfSelector(), repr=False, compare=False, migrate=False)
+
+    In this example, only price is relevant for model object. Element itself is just
+    for reference and should not be included in model representation, comparison or migration.
+
+    Using `Field` wrapper without any additional arguments is equivalent to default behavior.
+    """
+
+    selector: Union[TagSearcher, type[BaseModel]]
+    repr: bool = True
+    compare: bool = True
+    migrate: bool = True
+
+    def find_all(
+        self, tag: Tag, recursive: bool = True, limit: Optional[int] = None
+    ) -> list[Any]:
+        return self.selector.find_all(tag, recursive=recursive, limit=limit)
+
+    def find(self, tag: Tag, strict: bool = False, recursive: bool = True) -> Any:
+        return self.selector.find(tag, strict=strict, recursive=recursive)
+
+    def __eq__(self, x: Any) -> bool:
+        if not isinstance(x, Field):
+            return False
+
+        return all(
+            [
+                self.selector == x.selector,
+                self.repr == x.repr,
+                self.compare == x.compare,
+                self.migrate == x.migrate,
+            ]
+        )
+
+    def __repr__(self) -> str:
+        return (
+            f"Field({self.selector}, repr={self.repr}, compare={self.compare}, "
+            f"migrate={self.migrate})"
+        )
 
 
 class ModelMeta(type(ABC)):
@@ -158,7 +227,7 @@ class ModelMeta(type(ABC)):
         return getattr(cls, c.SCOPE)
 
     @property
-    def fields(cls) -> dict[str, TagSearcher]:
+    def fields(cls) -> dict[str, Field]:
         """
         Returns the fields of the model class with their
         respective TagSearcher instances. The fields are aggregated based on
@@ -166,15 +235,18 @@ class ModelMeta(type(ABC)):
 
         Returns
         -------
-        dict[str, TagSearcher]
-            A dictionary mapping field names to their respective TagSearcher instances.
+        dict[str, Field]
+            A dictionary mapping field names to their respective Field instances.
         """
         return cls._get_fields()
 
-    def _get_fields(cls) -> dict[str, TagSearcher]:
+    def _get_fields(cls) -> dict[str, Field]:
         """
-        Returns the fields of the model class with their
-        respective TagSearcher instances based on the `__inherit_fields__` setting.
+        Returns the fields of the model with their respective TagSearcher instances
+        based on the `__inherit_fields__` setting.
+
+        If searcher is already provided in form of Field object, it is used directly.
+        Otherwise, it is wrapped in Field object with default settings.
         """
         classes = (
             [
@@ -190,7 +262,7 @@ class ModelMeta(type(ABC)):
             dict.__or__,
             [
                 {
-                    key: value
+                    key: value if isinstance(value, Field) else Field(value)
                     for key, value in class_.__dict__.items()
                     if (
                         # accepted field must be TagSearcher
@@ -236,21 +308,21 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
 
         fields = self.__class__.fields.keys()
 
-        for field_ in fields:
+        for field in fields:
             try:
-                value = kwargs.pop(field_)
+                value = kwargs.pop(field)
             except KeyError:
                 raise exc.MissingFieldsException(
                     f"Cannot initialize model '{self.__class__.__name__}' "
-                    f"without '{field_}' field."
+                    f"without '{field}' field."
                 )
 
-            func = getattr(self, c.POST_PROCESSORS).get(field_)
+            func = getattr(self, c.POST_PROCESSORS).get(field)
 
             if func is not None:
                 value = func(self, value)
 
-            setattr(self, field_, value)
+            setattr(self, field, value)
 
         if kwargs:
             raise exc.UnknownModelFieldException(
@@ -461,9 +533,14 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
             An instance of the target model class.
         """
         mapping = mapping or {}
+
+        include = {key for key, value in self.__class__.fields.items() if value.migrate}
         params = self.attributes.copy()
 
         for name, value in self.attributes.items():
+            if name not in include:
+                params.pop(name)
+
             if not isinstance(value, BaseModel):
                 continue
 
@@ -520,16 +597,23 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
                 f"Cannot hash instance of model {self.__class__}, which is not frozen."
             )
 
+        include = {key for key, value in self.__class__.fields.items() if value.compare}
         # Compute hash based on the model's attributes hashes and the class itself
-        field_hashes = (hash((key, value)) for key, value in self.attributes.items())
+        field_hashes = (
+            hash((key, value))
+            for key, value in self.attributes.items()
+            if key in include
+        )
         return hash((self.__class__, tuple(field_hashes)))
 
-    def __str__(self) -> str:
-        params = [f"{name}={value!r}" for name, value in self.attributes.items()]
-        return f"{self.__class__.__name__}({', '.join(params)})"
-
     def __repr__(self) -> str:
-        return str(self)
+        include = {key for key, value in self.__class__.fields.items() if value.repr}
+        params = [
+            f"{name}={value!r}"
+            for name, value in self.attributes.items()
+            if name in include
+        ]
+        return f"{self.__class__.__name__}({', '.join(params)})"
 
     def __eq__(self, x: Any) -> bool:
         """
@@ -539,5 +623,8 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         if not isinstance(x, self.__class__):
             return False
 
+        include = {key for key, value in self.__class__.fields.items() if value.compare}
         fields = self.attributes.keys()
-        return all(getattr(self, key) == getattr(x, key) for key in fields)
+        return all(
+            getattr(self, key) == getattr(x, key) for key in fields if key in include
+        )

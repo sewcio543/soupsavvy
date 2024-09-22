@@ -104,6 +104,9 @@ class OperationPipeline(OperationSearcherMixin):
 
         return self.operations == x.operations
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.operations})"
+
 
 class Operation(OperationSearcherMixin):
     """
@@ -144,3 +147,6 @@ class Operation(OperationSearcherMixin):
             return False
 
         return self.operation is x.operation
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.operation})"
