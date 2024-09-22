@@ -37,7 +37,7 @@ class NavigableStringException(SoupSelectorException):
     Example
     -------
     >>> nav_string = NavigableString("Hello World")
-    >>> BeautifulSoup(nav_string)
+    ... BeautifulSoup(nav_string)
     <html><body><p>Hello World</p></body></html>
 
     BeautifulSoup constructor always wraps NavigableString in <p> element.
@@ -241,4 +241,11 @@ class MissingFieldsException(BaseModelException):
     """
     Exception raised by BaseModel when parameters passed into the constructor
     do not contain all required fields defined in the model class.
+    """
+
+
+class FrozenModelException(BaseModelException):
+    """
+    Exception raised by BaseModel when trying to modify frozen model instance.
+    Frozen model instances are read-only and cannot be modified.
     """

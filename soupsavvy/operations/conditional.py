@@ -7,7 +7,7 @@ Module for conditional operations to control flow in the pipeline.
 """
 
 from collections.abc import Callable
-from typing import Any, Optional
+from typing import Any
 
 import soupsavvy.exceptions as exc
 from soupsavvy.base import BaseOperation, OperationSearcherMixin, check_operation
@@ -88,6 +88,18 @@ class IfElse(OperationSearcherMixin):
             and self._else_operation == other._else_operation
         )
 
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}(condition={self._condition}, "
+            f"if_={self._if_operation}, else_={self._else_operation})"
+        )
+
+    def __str__(self) -> str:
+        return (
+            f"{self.__class__.__name__}("
+            f"{self._condition} ? {self._if_operation} : {self._else_operation})"
+        )
+
 
 class Break(OperationSearcherMixin):
     """
@@ -118,6 +130,9 @@ class Break(OperationSearcherMixin):
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, Break)
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}()"
+
 
 class Continue(OperationSearcherMixin):
     """
@@ -147,3 +162,6 @@ class Continue(OperationSearcherMixin):
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, Continue)
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}()"

@@ -7,8 +7,10 @@ from __future__ import annotations
 
 from abc import ABC
 from collections.abc import Callable
+from dataclasses import dataclass
+from dataclasses import field as datafield
 from functools import reduce
-from typing import Any, Literal, Optional, Type, TypeVar, overload
+from typing import Any, Literal, Optional, Type, TypeVar, Union, overload
 
 from bs4 import Tag
 from typing_extensions import Self
@@ -18,7 +20,26 @@ import soupsavvy.models.constants as c
 from soupsavvy.base import SoupSelector, check_selector
 from soupsavvy.interfaces import Comparable, TagSearcher, TagSearcherExceptions
 
+# Generic type variable for model migration
 T = TypeVar("T")
+
+
+@dataclass
+class MigrationSchema:
+    """
+    Defines schema for model migration in need of providing additional parameters
+    to the target model initialization in nested models.
+
+    Attributes
+    ----------
+    target : Type
+        Target model class to migrate to.
+    params : dict, optional
+        Additional parameters to pass to the target model initialization.
+    """
+
+    target: Type
+    params: dict = datafield(default_factory=dict)
 
 
 def post(field: str) -> Callable[[Callable], Callable]:
@@ -29,13 +50,13 @@ def post(field: str) -> Callable[[Callable], Callable]:
 
     Example
     -------
-    class MyModel(BaseModel):
-        ...
-        field = ...
-
-        @post("field")
-        def post_process_field(self, value):
-            return value.strip()
+    >>> class MyModel(BaseModel):
+    ...    ...
+    ...    field = ...
+    ...
+    ...    @post("field")
+    ...    def post_process_field(self, value):
+    ...        return value.strip()
 
     Methods of custom model class, that are decorated with `@post` decorator,
     must accept only one argument, which is the value of the field to be processed.
@@ -46,6 +67,74 @@ def post(field: str) -> Callable[[Callable], Callable]:
         return func
 
     return decorator
+
+
+@dataclass
+class Field(TagSearcher, Comparable):
+    """
+    Model field wrapper, that defined field metadata.
+    Used for overwriting default behavior of attribute corresponding to field
+    in model instance, similarly to dataclass field function.
+
+    Attributes
+    ----------
+    selector : TagSearcher | type[BaseModel]
+        Any searcher used in model as field.
+    repr : bool, optional
+        Whether the field should be included in the model's representation.
+        Default is True.
+    compare : bool, optional
+        Whether the field should be included in the model's equality comparison
+        as well as in the hash calculation. Default is True.
+    migrate : bool, optional
+        Whether the field should be migrated to the target model in model migration.
+        Default is True.
+
+    Example
+    -------
+    >>> class MyModel(BaseModel):
+    ...    __scope__ = TypeSelector("p")
+    ...
+    ...    price = Text() | Operation(int)
+    ...    element = Field(SelfSelector(), repr=False, compare=False, migrate=False)
+
+    In this example, only price is relevant for model object. Element itself is just
+    for reference and should not be included in model representation, comparison or migration.
+
+    Using `Field` wrapper without any additional arguments is equivalent to default behavior.
+    """
+
+    selector: Union[TagSearcher, type[BaseModel]]
+    repr: bool = True
+    compare: bool = True
+    migrate: bool = True
+
+    def find_all(
+        self, tag: Tag, recursive: bool = True, limit: Optional[int] = None
+    ) -> list[Any]:
+        return self.selector.find_all(tag, recursive=recursive, limit=limit)
+
+    def find(self, tag: Tag, strict: bool = False, recursive: bool = True) -> Any:
+        return self.selector.find(tag, strict=strict, recursive=recursive)
+
+    def __eq__(self, x: Any) -> bool:
+        if not isinstance(x, Field):
+            return False
+
+        return all(
+            [
+                self.selector == x.selector,
+                self.repr == x.repr,
+                self.compare == x.compare,
+                self.migrate == x.migrate,
+            ]
+        )
+
+    def __repr__(self) -> str:
+        return (
+            f"Field({self.selector}, repr={self.repr}, compare={self.compare}, "
+            f"migrate={self.migrate})"
+        )
 
 
 class ModelMeta(type(ABC)):
@@ -138,7 +227,7 @@ class ModelMeta(type(ABC)):
         return getattr(cls, c.SCOPE)
 
     @property
-    def fields(cls) -> dict[str, TagSearcher]:
+    def fields(cls) -> dict[str, Field]:
         """
         Returns the fields of the model class with their
         respective TagSearcher instances. The fields are aggregated based on
@@ -146,15 +235,18 @@ class ModelMeta(type(ABC)):
 
         Returns
         -------
-        dict[str, TagSearcher]
-            A dictionary mapping field names to their respective TagSearcher instances.
+        dict[str, Field]
+            A dictionary mapping field names to their respective Field instances.
         """
         return cls._get_fields()
 
-    def _get_fields(cls) -> dict[str, TagSearcher]:
+    def _get_fields(cls) -> dict[str, Field]:
         """
-        Returns the fields of the model class with their
-        respective TagSearcher instances based on the `__inherit_fields__` setting.
+        Returns the fields of the model with their respective TagSearcher instances
+        based on the `__inherit_fields__` setting.
+
+        If searcher is already provided in form of Field object, it is used directly.
+        Otherwise, it is wrapped in Field object with default settings.
         """
         classes = (
             [
@@ -170,7 +262,7 @@ class ModelMeta(type(ABC)):
             dict.__or__,
             [
                 {
-                    key: value
+                    key: value if isinstance(value, Field) else Field(value)
                     for key, value in class_.__dict__.items()
                     if (
                         # accepted field must be TagSearcher
@@ -190,6 +282,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
 
     __scope__: SoupSelector = None  # type: ignore
     __inherit_fields__: bool = True
+    __frozen__: bool = False
 
     __post_processors__: dict[str, Callable] = {}
 
@@ -211,10 +304,11 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         UnknownModelFieldException
             If any unknown fields are provided in the kwargs.
         """
+        setattr(self, c.INITIALIZED, False)
+
         fields = self.__class__.fields.keys()
 
         for field in fields:
-
             try:
                 value = kwargs.pop(field)
             except KeyError:
@@ -237,6 +331,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
             )
 
         self.__post_init__()
+        setattr(self, c.INITIALIZED, True)
 
     def __post_init__(self) -> None:
         """
@@ -408,34 +503,117 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         elements = cls.scope.find_all(tag=tag, recursive=recursive, limit=limit)
         return [cls._find(element) for element in elements]
 
-    def migrate(self, model: Type[T], **kwargs) -> T:
+    def migrate(
+        self,
+        model: Type[T],
+        mapping: Optional[dict[Type[BaseModel], Union[Type, MigrationSchema]]] = None,
+        **kwargs,
+    ) -> T:
         """
         Migrates the model instance to another model class using its fields
-        in target class initialization.
+        in target class initialization. Recursively migrates nested models, creating
+        new instances, even when target model is not defined in the mapping.
 
         Parameters
         ----------
         model : Type[Model]
             The target model class to migrate the instance to.
+        mapping : dict[Type[BaseModel], Union[Type, MigrationSchema]], optional
+            Mapping of base model fields to target models. By default, if field
+            is instance of BaseModel, it will be passed directly to the target model.
         kwargs : Any
             Additional keyword arguments to pass to model initialization.
+
+        Migrating to the same model is equivalent to creating deep copy of the model,
+        which can be achieved by calling `copy` method.
 
         Returns
         -------
         Model
             An instance of the target model class.
         """
-        return model(**self.attributes, **kwargs)
+        mapping = mapping or {}
 
-    def __str__(self) -> str:
-        params = [
-            f"{name}={repr(getattr(self, name))}"
-            for name in self.__class__.fields.keys()
-        ]
-        return f"{self.__class__.__name__}({', '.join(params)})"
+        include = {key for key, value in self.__class__.fields.items() if value.migrate}
+        params = self.attributes.copy()
+
+        for name, value in self.attributes.items():
+            if name not in include:
+                params.pop(name)
+
+            if not isinstance(value, BaseModel):
+                continue
+
+            schema = mapping.get(value.__class__, value.__class__)
+
+            if isinstance(schema, MigrationSchema):
+                params[name] = value.migrate(
+                    schema.target,
+                    mapping=mapping,
+                    **schema.params,
+                )
+                continue
+
+            params[name] = value.migrate(schema, mapping=mapping)
+
+        return model(**params, **kwargs)
+
+    def copy(self) -> Self:
+        """
+        Creates a deep copy of the model instance by migrating it to the same model class.
+        Only model fields defined in `attributes` are used to create new instance.
+
+        Returns
+        -------
+        Self
+            A deep copy of the model instance.
+        """
+        return self.migrate(self.__class__)
+
+    def __setattr__(self, key, value) -> None:
+        initialized = getattr(self, c.INITIALIZED, False)
+
+        if not initialized:
+            return super().__setattr__(key, value)
+
+        fields = set(self.attributes.keys())
+
+        if key not in fields:
+            raise AttributeError(
+                f"Cannot set attribute '{key}'. Only fields - {fields} - are allowed."
+            )
+
+        if self.__class__.__frozen__:
+            raise exc.FrozenModelException(
+                f"Model '{self.__class__}' is frozen and attributes of its instance "
+                "cannot be modified."
+            )
+
+        super().__setattr__(key, value)
+
+    def __hash__(self) -> int:
+        if not self.__class__.__frozen__:
+            raise TypeError(
+                f"Cannot hash instance of model {self.__class__}, which is not frozen."
+            )
+
+        include = {key for key, value in self.__class__.fields.items() if value.compare}
+        # Compute hash based on the model's attributes hashes and the class itself
+        field_hashes = (
+            hash((key, value))
+            for key, value in self.attributes.items()
+            if key in include
+        )
+        return hash((self.__class__, tuple(field_hashes)))
 
     def __repr__(self) -> str:
-        return str(self)
+        include = {key for key, value in self.__class__.fields.items() if value.repr}
+        params = [
+            f"{name}={value!r}"
+            for name, value in self.attributes.items()
+            if name in include
+        ]
+        return f"{self.__class__.__name__}({', '.join(params)})"
 
     def __eq__(self, x: Any) -> bool:
         """
@@ -445,5 +623,8 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         if not isinstance(x, self.__class__):
             return False
 
-        fields = self.__class__.fields.keys()
-        return all(getattr(self, key) == getattr(x, key) for key in fields)
+        include = {key for key, value in self.__class__.fields.items() if value.compare}
+        fields = self.attributes.keys()
+        return all(
+            getattr(self, key) == getattr(x, key) for key in fields if key in include
+        )

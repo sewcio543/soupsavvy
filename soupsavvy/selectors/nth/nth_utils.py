@@ -30,11 +30,11 @@ class NthGenerator:
     Examples
     --------
     >>> nth = NthGenerator(step=2, offset=1)
-    >>> list(nth.generate(10))
+    ... list(nth.generate(10))
     [1, 3, 5, 7, 9]
 
     >>> nth = NthGenerator(step=3, offset=2)
-    >>> list(nth.generate(10))
+    ... list(nth.generate(10))
     [2, 5, 8]
 
     Generate method has stop parameter that limits the range of integers generated.
@@ -44,9 +44,9 @@ class NthGenerator:
     Examples
     --------
     >>> nth = NthGenerator(step=-1, offset=3)
-    >>> elements = ["a", "b", "c", "d", "e", "f"]
-    >>> index = [x-1 for x in nth.generate(len(elements))]
-    >>> [elements[i] for i in index]
+    ... elements = ["a", "b", "c", "d", "e", "f"]
+    ... index = [x-1 for x in nth.generate(len(elements))]
+    ... [elements[i] for i in index]
     ["d", "e", "f"]
 
     This selector matches first three children, and can be used the way shown above

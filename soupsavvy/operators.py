@@ -1,19 +1,25 @@
 """
-This module is deprecated and will be removed in the future.
-Use soupsavvy.operators module instead.
-"""
+Module for operators, which are alternative way to create composite selectors
+by combining multiple of them in particular way.
 
-import warnings
+Contains
+--------
+* is_: function to create SelectorList from multiple selectors
+* where: alias for is_, no difference in behavior in scraping context
+* or_: alias for is_, no difference in behavior in scraping context
+* not_: function to create NotSelector from multiple selectors
+* and_: function to create AndSelector from multiple selectors
+* has: function to create HasSelector from multiple selectors
+* xor: function to create XORSelector from multiple selectors
+
+These utils do not brings extra functionality into the package, but they can be
+used for convenience and readability in some cases.
+"""
 
 from soupsavvy.base import SoupSelector
 from soupsavvy.selectors.combinators import SelectorList
 from soupsavvy.selectors.logical import AndSelector, NotSelector, XORSelector
 from soupsavvy.selectors.relative import HasSelector
-
-warnings.warn(
-    "soupsavvy.api module is deprecated, use soupsavvy.operators",
-    DeprecationWarning,
-)
 
 
 def is_(
