@@ -55,7 +55,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="use_cases.html">Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="selectors.html">Selectors</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Composite Selectors</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#combinators">Combinators</a><ul>
@@ -159,7 +160,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#combining">Combining</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#api-module">API module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#operators-module">Operators module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
 </ul>
 </li>
@@ -693,12 +694,12 @@ left &gt;&gt; right == right &gt;&gt; left: False
 <span class="sd">        &lt;span&gt;Breaking relationship :(&lt;/span&gt;</span>
 <span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $15&lt;/p&gt;</span>
 <span class="sd">        &lt;span class=&quot;title&quot;&gt;Animal Farm 1&lt;/span&gt;</span>
-<span class="sd">        </span>
+
 <span class="sd">        &lt;h2&gt;Discounted&lt;/h2&gt;</span>
 <span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $15&lt;/p&gt;</span>
 <span class="sd">        &lt;span&gt;Breaking relationship :(&lt;/span&gt;</span>
 <span class="sd">        &lt;span class=&quot;title&quot;&gt;Animal Farm 2&lt;/span&gt;</span>
-<span class="sd">        </span>
+
 <span class="sd">        &lt;h2&gt;Discounted&lt;/h2&gt;</span>
 <span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $15&lt;/p&gt;</span>
 <span class="sd">        &lt;span class=&quot;title&quot;&gt;Animal Farm 3&lt;/span&gt;</span>
@@ -878,13 +879,16 @@ left &gt;&gt; right == right &gt;&gt; left: False
     <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">),</span>
     <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;discount&quot;</span><span class="p">),</span>
 <span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">prettify</span><span class="p">())</span>  <span class="c1"># type: ignore</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;discount&quot;&gt;
-&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;discount&quot;&gt;
+ &lt;p class=&quot;price&quot;&gt;
+  Price: $10
+ &lt;/p&gt;
 &lt;/span&gt;
 </pre></div>
 </div>
@@ -914,13 +918,16 @@ left &gt;&gt; right == right &gt;&gt; left: False
 <span class="n">selector</span> <span class="o">=</span> <span class="n">HasSelector</span><span class="p">(</span><span class="n">Anchor</span> <span class="o">&gt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">AttributeSelector</span><span class="p">(</span>
     <span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;discount&quot;</span>
 <span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">prettify</span><span class="p">())</span>  <span class="c1"># type: ignore</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;discount&quot;&gt;
-&lt;p class=&quot;price&quot;&gt;Price: $25&lt;/p&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;discount&quot;&gt;
+ &lt;p class=&quot;price&quot;&gt;
+  Price: $25
+ &lt;/p&gt;
 &lt;/span&gt;
 </pre></div>
 </div>
@@ -960,13 +967,16 @@ left &gt;&gt; right == right &gt;&gt; left: False
 <span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;discount&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">prettify</span><span class="p">())</span>  <span class="c1"># type: ignore</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;discount&quot;&gt;
-&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;discount&quot;&gt;
+ &lt;p class=&quot;price&quot;&gt;
+  Price: $10
+ &lt;/p&gt;
 &lt;/span&gt;
 </pre></div>
 </div>
@@ -999,15 +1009,18 @@ left &gt;&gt; right == right &gt;&gt; left: False
 <span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;discount&quot;</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">prettify</span><span class="p">())</span>  <span class="c1"># type: ignore</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div&gt;
-&lt;span class=&quot;discount&quot;&gt;
-&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;
-&lt;/span&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div&gt;
+ &lt;span class=&quot;discount&quot;&gt;
+  &lt;p class=&quot;price&quot;&gt;
+   Price: $10
+  &lt;/p&gt;
+ &lt;/span&gt;
 &lt;/div&gt;
 </pre></div>
 </div>
@@ -1053,17 +1066,24 @@ left &gt;&gt; right == right &gt;&gt; left: False
     <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">),</span>
     <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;discount&quot;</span><span class="p">),</span>
 <span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;span class=&quot;discount&quot;&gt;
- &lt;div&gt;&lt;p class=&quot;price&quot;&gt;Price: $35&lt;/p&gt;&lt;/div&gt;
- &lt;/span&gt;,
- &lt;span class=&quot;discount&quot;&gt;
- &lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;
- &lt;/span&gt;]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;discount&quot;&gt;
+ &lt;div&gt;
+  &lt;p class=&quot;price&quot;&gt;
+   Price: $35
+  &lt;/p&gt;
+ &lt;/div&gt;
+&lt;/span&gt;
+
+&lt;span class=&quot;discount&quot;&gt;
+ &lt;p class=&quot;price&quot;&gt;
+  Price: $10
+ &lt;/p&gt;
+&lt;/span&gt;
 </pre></div>
 </div>
 </div>
@@ -1093,17 +1113,24 @@ left &gt;&gt; right == right &gt;&gt; left: False
 <span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">HasSelector</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;discount&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;span class=&quot;discount&quot;&gt;
- &lt;div&gt;&lt;p class=&quot;price&quot;&gt;Price: $35&lt;/p&gt;&lt;/div&gt;
- &lt;/span&gt;,
- &lt;span class=&quot;discount&quot;&gt;
- &lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;
- &lt;/span&gt;]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;discount&quot;&gt;
+ &lt;div&gt;
+  &lt;p class=&quot;price&quot;&gt;
+   Price: $35
+  &lt;/p&gt;
+ &lt;/div&gt;
+&lt;/span&gt;
+
+&lt;span class=&quot;discount&quot;&gt;
+ &lt;p class=&quot;price&quot;&gt;
+  Price: $10
+ &lt;/p&gt;
+&lt;/span&gt;
 </pre></div>
 </div>
 </div>
@@ -1140,17 +1167,24 @@ left &gt;&gt; right == right &gt;&gt; left: False
 <span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;discount&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;span class=&quot;discount&quot;&gt;
- &lt;div&gt;&lt;p class=&quot;price&quot;&gt;Price: $35&lt;/p&gt;&lt;/div&gt;
- &lt;/span&gt;,
- &lt;span class=&quot;discount&quot;&gt;
- &lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;
- &lt;/span&gt;]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;discount&quot;&gt;
+ &lt;div&gt;
+  &lt;p class=&quot;price&quot;&gt;
+   Price: $35
+  &lt;/p&gt;
+ &lt;/div&gt;
+&lt;/span&gt;
+
+&lt;span class=&quot;discount&quot;&gt;
+ &lt;p class=&quot;price&quot;&gt;
+  Price: $10
+ &lt;/p&gt;
+&lt;/span&gt;
 </pre></div>
 </div>
 </div>
@@ -1184,23 +1218,28 @@ left &gt;&gt; right == right &gt;&gt; left: False
 <span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;discount&quot;</span><span class="p">))</span> <span class="o">&lt;&lt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;div&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div&gt;
  &lt;span class=&quot;book&quot;&gt;
+  &lt;span class=&quot;discount&quot;&gt;
+   &lt;p class=&quot;price&quot;&gt;
+    Price: $30
+   &lt;/p&gt;
+  &lt;/span&gt;
+ &lt;/span&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
  &lt;span class=&quot;discount&quot;&gt;
- &lt;p class=&quot;price&quot;&gt;Price: $30&lt;/p&gt;
+  &lt;p class=&quot;price&quot;&gt;
+   Price: $10
+  &lt;/p&gt;
  &lt;/span&gt;
- &lt;/span&gt;
- &lt;/div&gt;,
- &lt;div&gt;
- &lt;span class=&quot;discount&quot;&gt;
- &lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;
- &lt;/span&gt;
- &lt;/div&gt;]
+&lt;/div&gt;
 </pre></div>
 </div>
 </div>
@@ -1935,25 +1974,34 @@ left &gt;&gt; right == right &gt;&gt; left: False
 
 <span class="n">discount_selector</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;discount&quot;</span><span class="p">)</span>
 <span class="n">selector</span> <span class="o">=</span> <span class="n">HasSelector</span><span class="p">(</span><span class="n">discount_selector</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;div class=&quot;book&quot;&gt;
- &lt;span class=&quot;title&quot;&gt;Animal Farm&lt;/span&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div class=&quot;book&quot;&gt;
+ &lt;span class=&quot;title&quot;&gt;
+  Animal Farm
+ &lt;/span&gt;
  &lt;span&gt;
+  &lt;span class=&quot;discount&quot;&gt;
+   &lt;p class=&quot;price&quot;&gt;
+    Price: $15
+   &lt;/p&gt;
+  &lt;/span&gt;
+ &lt;/span&gt;
+ &lt;p class=&quot;price&quot;&gt;
+  Price: $20
+ &lt;/p&gt;
+&lt;/div&gt;
+
+&lt;span&gt;
  &lt;span class=&quot;discount&quot;&gt;
- &lt;p class=&quot;price&quot;&gt;Price: $15&lt;/p&gt;
+  &lt;p class=&quot;price&quot;&gt;
+   Price: $15
+  &lt;/p&gt;
  &lt;/span&gt;
- &lt;/span&gt;
- &lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
- &lt;/div&gt;,
- &lt;span&gt;
- &lt;span class=&quot;discount&quot;&gt;
- &lt;p class=&quot;price&quot;&gt;Price: $15&lt;/p&gt;
- &lt;/span&gt;
- &lt;/span&gt;]
+&lt;/span&gt;
 </pre></div>
 </div>
 </div>
@@ -1993,23 +2041,36 @@ left &gt;&gt; right == right &gt;&gt; left: False
 <span class="n">discount_selector</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;discount&quot;</span><span class="p">)</span>
 <span class="n">bestseller_selector</span> <span class="o">=</span> <span class="n">PatternSelector</span><span class="p">(</span><span class="s2">&quot;Bestseller&quot;</span><span class="p">)</span>
 <span class="n">selector</span> <span class="o">=</span> <span class="n">HasSelector</span><span class="p">(</span><span class="n">discount_selector</span><span class="p">,</span> <span class="n">bestseller_selector</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;div class=&quot;book&quot;&gt;
- &lt;span class=&quot;title&quot;&gt;Animal Farm&lt;/span&gt;
- &lt;span class=&quot;discount&quot;&gt;
- &lt;p class=&quot;price&quot;&gt;Price: $15&lt;/p&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div class=&quot;book&quot;&gt;
+ &lt;span class=&quot;title&quot;&gt;
+  Animal Farm
  &lt;/span&gt;
- &lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
- &lt;/div&gt;,
- &lt;div class=&quot;book&quot;&gt;
- &lt;span&gt;Bestseller&lt;/span&gt;
- &lt;span class=&quot;title&quot;&gt;Frankenstein&lt;/span&gt;
- &lt;p class=&quot;price&quot;&gt;Price: $30&lt;/p&gt;
- &lt;/div&gt;]
+ &lt;span class=&quot;discount&quot;&gt;
+  &lt;p class=&quot;price&quot;&gt;
+   Price: $15
+  &lt;/p&gt;
+ &lt;/span&gt;
+ &lt;p class=&quot;price&quot;&gt;
+  Price: $20
+ &lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;book&quot;&gt;
+ &lt;span&gt;
+  Bestseller
+ &lt;/span&gt;
+ &lt;span class=&quot;title&quot;&gt;
+  Frankenstein
+ &lt;/span&gt;
+ &lt;p class=&quot;price&quot;&gt;
+  Price: $30
+ &lt;/p&gt;
+&lt;/div&gt;
 </pre></div>
 </div>
 </div>
@@ -2111,19 +2172,28 @@ left &gt;&gt; right == right &gt;&gt; left: False
 <span class="n">relative_newspaper</span> <span class="o">=</span> <span class="n">Anchor</span> <span class="o">+</span> <span class="n">PatternSelector</span><span class="p">(</span><span class="s2">&quot;Read more&quot;</span><span class="p">)</span>
 <span class="n">relative_book</span> <span class="o">=</span> <span class="n">Anchor</span> <span class="o">&gt;</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
 <span class="n">has_selector</span> <span class="o">=</span> <span class="n">HasSelector</span><span class="p">(</span><span class="n">relative_newspaper</span><span class="p">,</span> <span class="n">relative_book</span><span class="p">)</span>
-<span class="n">has_selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">has_selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;div class=&quot;newspaper&quot;&gt;
- &lt;p class=&quot;title&quot;&gt;New York Times&lt;/p&gt;
- &lt;h1&gt;Only 5$!&lt;/h1&gt;
- &lt;/div&gt;,
- &lt;div class=&quot;book&quot;&gt;
- &lt;span&gt;Animal Farm&lt;/span&gt;
- &lt;p class=&quot;price&quot;&gt;Price: $30&lt;/p&gt;
- &lt;/div&gt;]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div class=&quot;newspaper&quot;&gt;
+ &lt;p class=&quot;title&quot;&gt;
+  New York Times
+ &lt;/p&gt;
+ &lt;h1&gt;
+  Only 5$!
+ &lt;/h1&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;book&quot;&gt;
+ &lt;span&gt;
+  Animal Farm
+ &lt;/span&gt;
+ &lt;p class=&quot;price&quot;&gt;
+  Price: $30
+ &lt;/p&gt;
+&lt;/div&gt;
 </pre></div>
 </div>
 </div>
@@ -2152,15 +2222,26 @@ left &gt;&gt; right == right &gt;&gt; left: False
 
 <span class="n">relative_countdown</span> <span class="o">=</span> <span class="n">Anchor</span> <span class="o">*</span> <span class="n">PatternSelector</span><span class="p">(</span><span class="s2">&quot;Stop&quot;</span><span class="p">)</span>
 <span class="n">has_selector</span> <span class="o">=</span> <span class="n">HasSelector</span><span class="p">(</span><span class="n">relative_countdown</span><span class="p">)</span>
-<span class="n">has_selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">has_selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;div class=&quot;countdown&quot;&gt;4&lt;/div&gt;,
- &lt;span&gt;3&lt;/span&gt;,
- &lt;p id=&quot;fgai23&quot;&gt;2&lt;/p&gt;,
- &lt;a href=&quot;https://example.com&quot;&gt;1&lt;/a&gt;]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div class=&quot;countdown&quot;&gt;
+ 4
+&lt;/div&gt;
+
+&lt;span&gt;
+ 3
+&lt;/span&gt;
+
+&lt;p id=&quot;fgai23&quot;&gt;
+ 2
+&lt;/p&gt;
+
+&lt;a href=&quot;https://example.com&quot;&gt;
+ 1
+&lt;/a&gt;
 </pre></div>
 </div>
 </div>
@@ -2193,16 +2274,20 @@ left &gt;&gt; right == right &gt;&gt; left: False
 <span class="n">anchor</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;info&quot;</span><span class="p">})</span>
 
 <span class="n">div_ancestor</span> <span class="o">=</span> <span class="n">Anchor</span> <span class="o">&lt;&lt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
-<span class="n">div_ancestor</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">anchor</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">div_ancestor</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">anchor</span><span class="p">)</span><span class="o">.</span><span class="n">prettify</span><span class="p">())</span>  <span class="c1"># type: ignore</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div&gt;
-&lt;span&gt;
-&lt;span class=&quot;info&quot;&gt;Important!&lt;/span&gt;
-&lt;span&gt;Actual Information&lt;/span&gt;
-&lt;/span&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div&gt;
+ &lt;span&gt;
+  &lt;span class=&quot;info&quot;&gt;
+   Important!
+  &lt;/span&gt;
+  &lt;span&gt;
+   Actual Information
+  &lt;/span&gt;
+ &lt;/span&gt;
 &lt;/div&gt;
 </pre></div>
 </div>
@@ -2233,15 +2318,19 @@ left &gt;&gt; right == right &gt;&gt; left: False
 <span class="n">anchor</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;info&quot;</span><span class="p">})</span>
 
 <span class="n">div_ancestor</span> <span class="o">=</span> <span class="n">Anchor</span> <span class="o">&lt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
-<span class="n">div_ancestor</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">anchor</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">div_ancestor</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">anchor</span><span class="p">)))</span>  <span class="c1"># type: ignore</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;div&gt;
- &lt;span class=&quot;info&quot;&gt;Important!&lt;/span&gt;
- &lt;span&gt;Actual Information&lt;/span&gt;
- &lt;/div&gt;]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div&gt;
+ &lt;span class=&quot;info&quot;&gt;
+  Important!
+ &lt;/span&gt;
+ &lt;span&gt;
+  Actual Information
+ &lt;/span&gt;
+&lt;/div&gt;
 </pre></div>
 </div>
 </div>
@@ -2305,16 +2394,32 @@ left &gt;&gt; right == right &gt;&gt; left: False
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;breaking&quot;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">UniversalSelector</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;When searching &lt;span&gt;: &quot;</span><span class="p">,</span> <span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">span</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;When searching &lt;html&gt;: &quot;</span><span class="p">,</span> <span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;When searching &lt;html&gt;: </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)),</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>When searching &lt;span&gt;:  []
-When searching &lt;html&gt;:  [&lt;span&gt;
-&lt;span class=&quot;info&quot;&gt;Important!&lt;/span&gt;
-&lt;span&gt;Actual Information&lt;/span&gt;
-&lt;/span&gt;, &lt;span class=&quot;info&quot;&gt;Important!&lt;/span&gt;, &lt;span&gt;Actual Information&lt;/span&gt;]
+When searching &lt;html&gt;: 
+ &lt;span&gt;
+ &lt;span class=&quot;info&quot;&gt;
+  Important!
+ &lt;/span&gt;
+ &lt;span&gt;
+  Actual Information
+ &lt;/span&gt;
+&lt;/span&gt;
+
+&lt;span class=&quot;info&quot;&gt;
+ Important!
+&lt;/span&gt;
+
+&lt;span&gt;
+ Actual Information
+&lt;/span&gt;
 </pre></div>
 </div>
 </div>
@@ -2498,9 +2603,9 @@ When searching &lt;html&gt;:  [&lt;span&gt;
 </div>
 </section>
 </section>
-<section id="api-module">
-<h2>API module<a class="headerlink" href="#api-module" title="Link to this heading"></a></h2>
-<p>As an alternative way of combining selectors, <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> offers a set of convenient API functions within the <code class="docutils literal notranslate"><span class="pre">soupsavvy.selectors.api</span></code> module, which acts as shortcuts:</p>
+<section id="operators-module">
+<h2>Operators module<a class="headerlink" href="#operators-module" title="Link to this heading"></a></h2>
+<p>As an alternative way of combining selectors, <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> offers a set of convenient operator functions within the <code class="docutils literal notranslate"><span class="pre">soupsavvy.operators</span></code> module, which acts as shortcuts:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">and_</span></code> - for creating <code class="docutils literal notranslate"><span class="pre">AndSelector</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">or_</span></code> - for creating <code class="docutils literal notranslate"><span class="pre">SelectorList</span></code></p></li>

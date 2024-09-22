@@ -52,7 +52,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/use_cases.html">Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../demos/selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../demos/css.html">CSS Selectors</a></li>
@@ -114,7 +115,7 @@
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; selector = Anchor &gt; TypeSelector(&quot;div&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; selector.find_all(tag)</span>
+<span class="sd">    ... selector.find_all(tag)</span>
 
 <span class="sd">    Uses RelativeChild selector to find any div tag that is a direct child of the</span>
 <span class="sd">    tag that is being searched (passed as an argument).</span>
@@ -699,16 +700,16 @@
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; from soupsavvy.selectors.relative import Anchor</span>
-<span class="sd">    &gt;&gt;&gt; HasSelector(Anchor &gt; TypeSelector(&quot;div&quot;))</span>
-<span class="sd">    &gt;&gt;&gt; HasSelector(Anchor + TypeSelector(&quot;div&quot;))</span>
+<span class="sd">    ... HasSelector(Anchor &gt; TypeSelector(&quot;div&quot;))</span>
+<span class="sd">    ... HasSelector(Anchor + TypeSelector(&quot;div&quot;))</span>
 
 <span class="sd">    or by using RelativeSelector components directly:</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; from soupsavvy.selectors.relative import RelativeChild, RelativeNextSibling</span>
-<span class="sd">    &gt;&gt;&gt; HasSelector(RelativeChild(TypeSelector(&quot;div&quot;)))</span>
-<span class="sd">    &gt;&gt;&gt; HasSelector(RelativeNextSibling(TypeSelector(&quot;div&quot;))</span>
+<span class="sd">    ... HasSelector(RelativeChild(TypeSelector(&quot;div&quot;)))</span>
+<span class="sd">    ... HasSelector(RelativeNextSibling(TypeSelector(&quot;div&quot;))</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -735,8 +736,8 @@
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; from soupsavvy.selectors.relative import Anchor</span>
-<span class="sd">    &gt;&gt;&gt; HasSelector(TypeSelector(&quot;div&quot;), TypeSelector(&quot;a&quot;))</span>
-<span class="sd">    &gt;&gt;&gt; HasSelector(Anchor + TypeSelector(&quot;div&quot;), Anchor &gt; TypeSelector(&quot;a&quot;))</span>
+<span class="sd">    ... HasSelector(TypeSelector(&quot;div&quot;), TypeSelector(&quot;a&quot;))</span>
+<span class="sd">    ... HasSelector(Anchor + TypeSelector(&quot;div&quot;), Anchor &gt; TypeSelector(&quot;a&quot;))</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>

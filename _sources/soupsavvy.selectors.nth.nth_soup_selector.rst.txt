@@ -1,6 +1,3 @@
-selectors.nth.nth\_soup\_selector
-==================================================
-
 .. automodule:: soupsavvy.selectors.nth.nth_soup_selector
    :members:
    :undoc-members:

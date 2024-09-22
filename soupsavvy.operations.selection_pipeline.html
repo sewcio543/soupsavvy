@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>operations.selection_pipeline &mdash; soupsavvy  documentation</title>
+  <title>Example &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -23,8 +23,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="operations.soup" href="soupsavvy.operations.soup.html" />
-    <link rel="prev" title="operations.general" href="soupsavvy.operations.general.html" /> 
+    <link rel="next" title="Example" href="soupsavvy.operations.soup.html" />
+    <link rel="prev" title="Example" href="soupsavvy.operations.general.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -52,14 +52,25 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.html">models</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="soupsavvy.operations.html">operations</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="soupsavvy.operations.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.conditional.html">operations.conditional</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html">operations.general</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">operations.selection_pipeline</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.selection_pipeline.SelectionPipeline"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.conditional.html"><code class="docutils literal notranslate"><span class="pre">Break</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.conditional.html#soupsavvy.operations.conditional.Continue"><code class="docutils literal notranslate"><span class="pre">Continue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.conditional.html#soupsavvy.operations.conditional.IfElse"><code class="docutils literal notranslate"><span class="pre">IfElse</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html"><code class="docutils literal notranslate"><span class="pre">Operation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationPipeline"><code class="docutils literal notranslate"><span class="pre">OperationPipeline</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.selection_pipeline.SelectionPipeline.__init__"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.selection_pipeline.SelectionPipeline.find"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.find()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.selection_pipeline.SelectionPipeline.find_all"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.find_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.selection_pipeline.SelectionPipeline.operation"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.operation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.selection_pipeline.SelectionPipeline.selector"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.selector</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html">operations.soup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.wrappers.html">operations.wrappers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html"><code class="docutils literal notranslate"><span class="pre">Href</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Parent"><code class="docutils literal notranslate"><span class="pre">Parent</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Text"><code class="docutils literal notranslate"><span class="pre">Text</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.wrappers.html"><code class="docutils literal notranslate"><span class="pre">OperationWrapper</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.wrappers.html#soupsavvy.operations.wrappers.SkipNone"><code class="docutils literal notranslate"><span class="pre">SkipNone</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.wrappers.html#soupsavvy.operations.wrappers.Suppress"><code class="docutils literal notranslate"><span class="pre">Suppress</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.html#module-soupsavvy.operations">Module contents</a></li>
@@ -69,7 +80,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/use_cases.html">Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
@@ -92,7 +104,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="soupsavvy.operations.html">operations</a></li>
-      <li class="breadcrumb-item active">operations.selection_pipeline</li>
+      <li class="breadcrumb-item active">Example</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/soupsavvy.operations.selection_pipeline.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -102,9 +114,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-soupsavvy.operations.selection_pipeline">
-<span id="operations-selection-pipeline"></span><h1>operations.selection_pipeline<a class="headerlink" href="#module-soupsavvy.operations.selection_pipeline" title="Link to this heading"></a></h1>
-<p>Module for selection pipeline class.
+  <p id="module-soupsavvy.operations.selection_pipeline">Module for selection pipeline class.
 Pipeline for chaining selector and operation together, used as a bridge between
 selecting html elements and processing the data.</p>
 <dl class="py class">
@@ -114,7 +124,7 @@ selecting html elements and processing the data.</p>
 <p>Class for chaining searcher and operation together.
 Uses searcher to find information in tag and operation to process the data.</p>
 <section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
 <span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 <span class="gp">... </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
@@ -129,7 +139,7 @@ on selector and operation.</p>
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.BaseOperation" title="soupsavvy.base.BaseOperation"><span class="pre">BaseOperation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/selection_pipeline.html#SelectionPipeline.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.selection_pipeline.SelectionPipeline.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes SelectionPipeline with selector and operation.</p>
 <section id="parameters">
-<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>selector<span class="classifier">TagSearcher</span></dt><dd><p>Selector used for finding target information in the tag.</p>
 </dd>
@@ -144,7 +154,7 @@ on selector and operation.</p>
 <span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/selection_pipeline.html#SelectionPipeline.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.selection_pipeline.SelectionPipeline.find" title="Link to this definition"></a></dt>
 <dd><p>Finds a first element matching selector and processes it with operation.</p>
 <section id="id1">
-<h3>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<h2>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
 </dd>
@@ -160,14 +170,14 @@ By default True.</p>
 </dl>
 </section>
 <section id="returns">
-<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>Any</dt><dd><p>Result of the operation applied to the found tag.</p>
 </dd>
 </dl>
 </section>
 <section id="raises">
-<h3>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h3>
+<h2>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>TagNotFoundException</dt><dd><p>If strict parameter is set to True and tag was not found in markup.</p>
 </dd>
@@ -180,7 +190,7 @@ By default True.</p>
 <span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/selection_pipeline.html#SelectionPipeline.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.selection_pipeline.SelectionPipeline.find_all" title="Link to this definition"></a></dt>
 <dd><p>Finds all elements matching selector and processes them with operation.</p>
 <section id="id2">
-<h3>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<h2>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
 </dd>
@@ -194,7 +204,7 @@ to return. If set to None, all results are returned. By default None.</p>
 </dl>
 </section>
 <section id="id3">
-<h3>Returns<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<h2>Returns<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>list[Any]</dt><dd><p>A list of results, if none found, the list is empty.</p>
 </dd>
@@ -207,7 +217,7 @@ to return. If set to None, all results are returned. By default None.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">operation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.BaseOperation" title="soupsavvy.base.BaseOperation"><span class="pre">BaseOperation</span></a></em><a class="headerlink" href="#soupsavvy.operations.selection_pipeline.SelectionPipeline.operation" title="Link to this definition"></a></dt>
 <dd><p>Returns BaseOperation object of this pipeline used for processing the data.</p>
 <section id="id4">
-<h3>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<h2>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>BaseOperation</dt><dd><p>BaseOperation object used in this pipeline.</p>
 </dd>
@@ -221,7 +231,7 @@ to return. If set to None, all results are returned. By default None.</p>
 <dd><p>Returns TagSearcher object of this pipeline used for finding target
 information in the tag.</p>
 <section id="id5">
-<h3>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<h2>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>TagSearcher</dt><dd><p>TagSearcher object used in this pipeline.</p>
 </dd>
@@ -232,14 +242,13 @@ information in the tag.</p>
 </section>
 </dd></dl>
 
-</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="soupsavvy.operations.general.html" class="btn btn-neutral float-left" title="operations.general" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="soupsavvy.operations.soup.html" class="btn btn-neutral float-right" title="operations.soup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="soupsavvy.operations.general.html" class="btn btn-neutral float-left" title="Example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soupsavvy.operations.soup.html" class="btn btn-neutral float-right" title="Example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

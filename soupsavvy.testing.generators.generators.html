@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>testing.generators.generators &mdash; soupsavvy  documentation</title>
+  <title>Example &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -23,8 +23,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Soupsavvy" href="demos/about.html" />
-    <link rel="prev" title="testing.generators.base" href="soupsavvy.testing.generators.base.html" /> 
+    <link rel="next" title="Use Cases" href="demos/use_cases.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="soupsavvy.testing.generators.base.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -67,7 +67,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/use_cases.html">Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
@@ -91,7 +92,7 @@
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="soupsavvy.testing.html">testing</a></li>
           <li class="breadcrumb-item"><a href="soupsavvy.testing.generators.html">testing.generators</a></li>
-      <li class="breadcrumb-item active">testing.generators.generators</li>
+      <li class="breadcrumb-item active">Example</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/soupsavvy.testing.generators.generators.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -101,9 +102,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-soupsavvy.testing.generators.generators">
-<span id="testing-generators-generators"></span><h1>testing.generators.generators<a class="headerlink" href="#module-soupsavvy.testing.generators.generators" title="Link to this heading"></a></h1>
-<p>Module with HTML generators.</p>
+  <p id="module-soupsavvy.testing.generators.generators">Module with HTML generators.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.testing.generators.generators.AttributeGenerator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AttributeGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.testing.generators.templates.base.html#soupsavvy.testing.generators.templates.base.BaseTemplate" title="soupsavvy.testing.generators.templates.base.BaseTemplate"><span class="pre">BaseTemplate</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/testing/generators/generators.html#AttributeGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.testing.generators.generators.AttributeGenerator" title="Link to this definition"></a></dt>
@@ -111,29 +110,29 @@
 <p>Class for generating HTML attribute strings.</p>
 <p>AttributeGenerator allows to generate empty HTML attribute with specific name:</p>
 <section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span> <span class="o">=</span> <span class="n">AttributeGenerator</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="gp">... </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 <span class="go">&#39;class=&quot;&quot;&#39;</span>
 </pre></div>
 </div>
 <p>Attribute can also be generated with specified constant value:</p>
 </section>
 <section id="id1">
-<h2>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span> <span class="o">=</span> <span class="n">AttributeGenerator</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;container&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="gp">... </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 <span class="go">&#39;class=&quot;container&quot;&#39;</span>
 </pre></div>
 </div>
 <p>Value can be passed as BaseTemplate instance as well:</p>
 </section>
 <section id="id2">
-<h2>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.testing.generators</span> <span class="kn">import</span> <span class="n">RandomTemplate</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">template</span> <span class="o">=</span> <span class="n">RandomTemplate</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span> <span class="o">=</span> <span class="n">AttributeGenerator</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">template</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="gp">... </span><span class="n">template</span> <span class="o">=</span> <span class="n">RandomTemplate</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">gen</span> <span class="o">=</span> <span class="n">AttributeGenerator</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">template</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 <span class="go">&#39;id=&quot;Nbrn&quot;&#39;</span>
 </pre></div>
 </div>
@@ -141,7 +140,7 @@
 and customize for your needs, see the documentation.</p>
 </section>
 <section id="see-also">
-<h2>See also<a class="headerlink" href="#see-also" title="Link to this heading"></a></h2>
+<h1>See also<a class="headerlink" href="#see-also" title="Link to this heading"></a></h1>
 <p>soupsavvy.testing.generators.templates module
 soupsavvy.testing.generators.TagGenerator class</p>
 <dl class="py method">
@@ -149,7 +148,7 @@ soupsavvy.testing.generators.TagGenerator class</p>
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.testing.generators.templates.base.html#soupsavvy.testing.generators.templates.base.BaseTemplate" title="soupsavvy.testing.generators.templates.base.BaseTemplate"><span class="pre">BaseTemplate</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/testing/generators/generators.html#AttributeGenerator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.testing.generators.generators.AttributeGenerator.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the AttributeGenerator.</p>
 <section id="parameters">
-<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>name<span class="classifier">str</span></dt><dd><p>The name of the attribute.</p>
 </dd>
@@ -164,7 +163,7 @@ soupsavvy.testing.generators.TagGenerator class</p>
 <span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/soupsavvy/testing/generators/generators.html#AttributeGenerator.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.testing.generators.generators.AttributeGenerator.generate" title="Link to this definition"></a></dt>
 <dd><p>Generates the HTML attribute string.</p>
 <section id="returns">
-<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>str</dt><dd><p>The generated HTML attribute string.</p>
 </dd>
@@ -182,18 +181,18 @@ soupsavvy.testing.generators.TagGenerator class</p>
 <p>Class for generating HTML tag strings.</p>
 <p>TagGenerator allows to generate empty HTML tag with specific name:</p>
 <section id="id3">
-<h2>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="gp">... </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 <span class="go">&#39;&lt;div&gt;&lt;/div&gt;&#39;</span>
 </pre></div>
 </div>
 <p>Tag can also be generated with specified attributes:</p>
 </section>
 <section id="id4">
-<h2>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;container&quot;</span><span class="p">)])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="gp">... </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 <span class="go">&#39;&lt;div class=&quot;container&quot;&gt;&lt;/div&gt;&#39;</span>
 </pre></div>
 </div>
@@ -203,16 +202,16 @@ soupsavvy.testing.generators.TagGenerator class</p>
 * tuple[str, TemplateType] - attribute name and literal value or Template</p>
 </section>
 <section id="id5">
-<h2>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">attrs</span><span class="o">=</span><span class="p">[</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;link&quot;</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="n">AttributeGenerator</span><span class="p">(</span><span class="s2">&quot;href&quot;</span><span class="p">,</span> <span class="s2">&quot;/endpoint&quot;</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="s2">&quot;class&quot;</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="p">],</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">attrs</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">... </span>        <span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;link&quot;</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="n">AttributeGenerator</span><span class="p">(</span><span class="s2">&quot;href&quot;</span><span class="p">,</span> <span class="s2">&quot;/endpoint&quot;</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="s2">&quot;class&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="p">],</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">... </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 <span class="go">&#39;&lt;div id=&quot;link&quot; href=&quot;/endpoint&quot;, class=&quot;&quot;&gt;&lt;/div&gt;&#39;</span>
 </pre></div>
 </div>
@@ -221,34 +220,34 @@ soupsavvy.testing.generators.TagGenerator class</p>
 * str - tag name, children tags would be empty</p>
 </section>
 <section id="id6">
-<h2>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">children</span><span class="o">=</span><span class="p">[</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="s2">&quot;a&quot;</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;container&quot;</span><span class="p">)],</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="p">],</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">... </span>        <span class="s2">&quot;a&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;container&quot;</span><span class="p">)],</span>
+<span class="gp">... </span>    <span class="p">],</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">... </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 <span class="go">&#39;&lt;div&gt;&lt;a&gt;&lt;/a&gt;&lt;span class=&quot;container&quot;&gt;&lt;/span&gt;&lt;/div&gt;&#39;</span>
 </pre></div>
 </div>
 <p>Text of the tag can be passed as a string or a Template:</p>
 </section>
 <section id="id7">
-<h2>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Hello, World!&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="gp">... </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 <span class="go">&#39;&lt;p&gt;Hello, World!&lt;/p&gt;&#39;</span>
 </pre></div>
 </div>
 </section>
 <section id="id8">
-<h2>Example<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id8" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.testing.generators</span> <span class="kn">import</span> <span class="n">RandomTemplate</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">template</span> <span class="o">=</span> <span class="n">RandomTemplate</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">template</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="gp">... </span><span class="n">template</span> <span class="o">=</span> <span class="n">RandomTemplate</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">gen</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">template</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 <span class="go">&#39;&lt;p&gt;Nbrn&lt;/p&gt;&#39;</span>
 </pre></div>
 </div>
@@ -258,16 +257,16 @@ and customize for your needs, see the documentation.</p>
 and are automatically closed:</p>
 </section>
 <section id="id9">
-<h2>Example<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id9" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span> <span class="o">=</span> <span class="n">TagGenerator</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;src&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/image.jpg&quot;</span><span class="p">)])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
+<span class="gp">... </span><span class="n">gen</span><span class="o">.</span><span class="n">generate</span><span class="p">()</span>
 <span class="go">&#39;&lt;img src=&quot;/path/to/image.jpg&quot;/&gt;&#39;</span>
 </pre></div>
 </div>
 <p>No children are allowed for void tags, and an error will be raised.</p>
 </section>
 <section id="id10">
-<h2>See also<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<h1>See also<a class="headerlink" href="#id10" title="Link to this heading"></a></h1>
 <p>soupsavvy.testing.generators.templates module
 soupsavvy.testing.generators.AttributeGenerator class</p>
 <dl class="py method">
@@ -275,7 +274,7 @@ soupsavvy.testing.generators.AttributeGenerator class</p>
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soupsavvy.testing.generators.generators.AttributeGenerator" title="soupsavvy.testing.generators.generators.AttributeGenerator"><span class="pre">AttributeGenerator</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="soupsavvy.testing.generators.templates.base.html#soupsavvy.testing.generators.templates.base.BaseTemplate" title="soupsavvy.testing.generators.templates.base.BaseTemplate"><span class="pre">BaseTemplate</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">children</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soupsavvy.testing.generators.generators.TagGenerator" title="soupsavvy.testing.generators.generators.TagGenerator"><span class="pre">TagGenerator</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.testing.generators.templates.base.html#soupsavvy.testing.generators.templates.base.BaseTemplate" title="soupsavvy.testing.generators.templates.base.BaseTemplate"><span class="pre">BaseTemplate</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/testing/generators/generators.html#TagGenerator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.testing.generators.generators.TagGenerator.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initialize the TagGenerator.</p>
 <section id="id11">
-<h3>Parameters<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<h2>Parameters<a class="headerlink" href="#id11" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>name<span class="classifier">str</span></dt><dd><p>The name of the HTML tag.</p>
 </dd>
@@ -295,7 +294,7 @@ Defaults to None, which generates empty string.</p>
 <span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/soupsavvy/testing/generators/generators.html#TagGenerator.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.testing.generators.generators.TagGenerator.generate" title="Link to this definition"></a></dt>
 <dd><p>Generates the HTML tag string.</p>
 <section id="id12">
-<h3>Returns<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<h2>Returns<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>str</dt><dd><p>The generated HTML tag string.</p>
 </dd>
@@ -306,14 +305,13 @@ Defaults to None, which generates empty string.</p>
 </section>
 </dd></dl>
 
-</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="soupsavvy.testing.generators.base.html" class="btn btn-neutral float-left" title="testing.generators.base" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="demos/about.html" class="btn btn-neutral float-right" title="Soupsavvy" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="soupsavvy.testing.generators.base.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="demos/use_cases.html" class="btn btn-neutral float-right" title="Use Cases" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

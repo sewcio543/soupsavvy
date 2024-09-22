@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>interfaces &mdash; soupsavvy  documentation</title>
+  <title>Parameters &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -53,7 +53,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/use_cases.html">Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
@@ -75,7 +76,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">interfaces</li>
+      <li class="breadcrumb-item active">Parameters</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/soupsavvy.interfaces.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -85,9 +86,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-soupsavvy.interfaces">
-<span id="interfaces"></span><h1>interfaces<a class="headerlink" href="#module-soupsavvy.interfaces" title="Link to this heading"></a></h1>
-<p>Module with <cite>soupsavvy</cite> interfaces used across the package.</p>
+  <p id="module-soupsavvy.interfaces">Module with <cite>soupsavvy</cite> interfaces used across the package.</p>
 <ul class="simple">
 <li><p><cite>Executable</cite> - Interface for operations that can be executed on single argument.</p></li>
 <li><p><cite>Comparable</cite> - Interface for objects that can be compared for equality.</p></li>
@@ -125,7 +124,7 @@ Derived classes must implement the <cite>execute</cite> method.</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/soupsavvy/interfaces.html#TagSearcher.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.interfaces.TagSearcher.find" title="Link to this definition"></a></dt>
 <dd><p>Finds first target information within the given tag and returns the result.</p>
 <section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<h1>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
 </dd>
@@ -138,7 +137,7 @@ By default True.</p>
 </dl>
 </section>
 <section id="returns">
-<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<h1>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>Any</dt><dd><p>Result of the search operation.</p>
 </dd>
@@ -151,7 +150,7 @@ By default True.</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/interfaces.html#TagSearcher.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.interfaces.TagSearcher.find_all" title="Link to this definition"></a></dt>
 <dd><p>Finds all target information within the given tag and returns the result.</p>
 <section id="id1">
-<h2>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<h1>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
 </dd>
@@ -165,7 +164,7 @@ to return. If set to None, all results are returned. By default None.</p>
 </dl>
 </section>
 <section id="id2">
-<h2>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<h1>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>list[Any]</dt><dd><p>A list of results, if none found, the list is empty.</p>
 </dd>
@@ -175,7 +174,6 @@ to return. If set to None, all results are returned. By default None.</p>
 
 </dd></dl>
 
-</section>
 
 
            </div>

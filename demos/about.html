@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Soupsavvy &mdash; soupsavvy  documentation</title>
+  <title>About &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -24,7 +24,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Selectors" href="selectors.html" />
-    <link rel="prev" title="testing.generators.generators" href="../soupsavvy.testing.generators.generators.html" /> 
+    <link rel="prev" title="Use Cases" href="use_cases.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -55,7 +55,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Soupsavvy</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="use_cases.html">Use Cases</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">About</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#motivation">Motivation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#concept-of-selector">Concept of Selector</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#flaws">Flaws</a></li>
@@ -112,7 +113,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Soupsavvy</li>
+      <li class="breadcrumb-item active">About</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/demos/about.ipynb.txt" rel="nofollow"> View page source</a>
       </li>
@@ -122,8 +123,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="soupsavvy">
-<h1>Soupsavvy<a class="headerlink" href="#soupsavvy" title="Link to this heading"></a></h1>
+  <section id="about">
+<h1>About<a class="headerlink" href="#about" title="Link to this heading"></a></h1>
 <section id="motivation">
 <h2>Motivation<a class="headerlink" href="#motivation" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> is flexible search engine for <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>, designed to provide more powerful capabilities.
@@ -297,9 +298,6 @@ find(self, tag: &#39;Tag&#39;, strict: &#39;bool&#39; = False, recursive: &#39;b
 <h4>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">find</span></code> method is one of the two primary search methods in <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> selectors, alongside <code class="docutils literal notranslate"><span class="pre">find_all</span></code>. Much like the <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> <code class="docutils literal notranslate"><span class="pre">Tag.find</span></code> method, <code class="docutils literal notranslate"><span class="pre">find</span></code> returns the first element in document that matches the selector. In addition to the <code class="docutils literal notranslate"><span class="pre">recursive</span></code> option from <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>, it introduces a <code class="docutils literal notranslate"><span class="pre">strict</span></code> parameter.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">strict</span></code> parameter addresses a common issue: often, not finding an element is not expected and can break the application. Continuously checking if returned objects are <code class="docutils literal notranslate"><span class="pre">None</span></code> creates a lot of boilerplate code. By setting the <code class="docutils literal notranslate"><span class="pre">strict</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the <code class="docutils literal notranslate"><span class="pre">find</span></code> method will raise a <code class="docutils literal notranslate"><span class="pre">TagNotFoundException</span></code> if no element is found, ensuring that the application does not proceed in such cases. By default, <code class="docutils literal notranslate"><span class="pre">strict</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
-<p>A particular challenge with <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> arises when only a string is provided as a parameter to the <code class="docutils literal notranslate"><span class="pre">find</span></code> method, which if anything was matched returns <code class="docutils literal notranslate"><span class="pre">NavigableString</span></code> object. This makes searches based solely on text difficult. <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> tackles this problem with the <code class="docutils literal notranslate"><span class="pre">PatternSelector</span></code>, though it won’t be covered in this article.</p>
-<p>Furthermore, <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> raises <code class="docutils literal notranslate"><span class="pre">NavigableStringException</span></code> if any selector’s <code class="docutils literal notranslate"><span class="pre">find</span></code> method returns a <code class="docutils literal notranslate"><span class="pre">NavigableString</span></code> object, preventing unintended behavior.</p>
-<p>Generally, in most selectors, the <code class="docutils literal notranslate"><span class="pre">find</span></code> method operates by returning the first element from the results of the <code class="docutils literal notranslate"><span class="pre">find_all</span></code> method, but some selectors optimize this process.</p>
 </section>
 <section id="examples">
 <h4>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h4>
@@ -539,10 +537,10 @@ __eq__(self, other: &#39;object&#39;) -&gt; &#39;bool&#39;
     Example
     -------
     &gt;&gt;&gt; selector1 = TypeSelector(&quot;div&quot;)
-    &gt;&gt;&gt; selector2 = TypeSelector(&quot;div&quot;)
-    &gt;&gt;&gt; selector1 == selector2
+    ... selector2 = TypeSelector(&quot;div&quot;)
+    ... selector1 == selector2
     True
-    &gt;&gt;&gt; selector1.find(tag) == selector2.find(tag)
+    ... selector1.find(tag) == selector2.find(tag)
     True
 </pre></div>
 </div>
@@ -577,7 +575,7 @@ TypeSelector(&#39;p&#39;) == TypeSelector(&#39;p&#39;) = True
 <h3>Combining selectors<a class="headerlink" href="#combining-selectors" title="Link to this heading"></a></h3>
 <section id="id7">
 <h4>Overview<a class="headerlink" href="#id7" title="Link to this heading"></a></h4>
-<p>All selectors in <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> can be combined using Higher Order Selectors, such as <code class="docutils literal notranslate"><span class="pre">AndSelector</span></code>, or with syntactical sugar operators. This flexibility allows for complex and nuanced queries, enabling users to construct sophisticated search criteria. For more detailed information about combining selectors read that section of the documentation.</p>
+<p>All selectors in <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> can be combined using Higher Order Selectors, such as <code class="docutils literal notranslate"><span class="pre">AndSelector</span></code>, or with syntactical sugar operators. This flexibility allows for complex and nuanced queries, enabling users to construct sophisticated search criteria. For more detailed information about <strong>combining selectors</strong> read that section of the <a class="reference external" href="https://soupsavvy.readthedocs.io/">Documentation</a>.</p>
 </section>
 <section id="id8">
 <h4>Examples<a class="headerlink" href="#id8" title="Link to this heading"></a></h4>
@@ -650,7 +648,7 @@ TypeSelector(&#39;p&#39;) == TypeSelector(&#39;p&#39;) = True
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../soupsavvy.testing.generators.generators.html" class="btn btn-neutral float-left" title="testing.generators.generators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="use_cases.html" class="btn btn-neutral float-left" title="Use Cases" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="selectors.html" class="btn btn-neutral float-right" title="Selectors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

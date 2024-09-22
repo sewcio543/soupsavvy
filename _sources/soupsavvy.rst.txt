@@ -23,6 +23,7 @@ Submodules
    soupsavvy.base
    soupsavvy.exceptions
    soupsavvy.interfaces
+   soupsavvy.operators
 
 Module contents
 ---------------

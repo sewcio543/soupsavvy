@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>selectors.attributes &mdash; soupsavvy  documentation</title>
+  <title>Classes &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -23,8 +23,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="selectors.combinators" href="soupsavvy.selectors.combinators.html" />
-    <link rel="prev" title="selectors.nth.nth_utils" href="soupsavvy.selectors.nth.nth_utils.html" /> 
+    <link rel="next" title="Classes" href="soupsavvy.selectors.combinators.html" />
+    <link rel="prev" title="Parameters" href="soupsavvy.selectors.nth.nth_soup_selector.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,17 +51,47 @@
 <li class="toctree-l1 current"><a class="reference internal" href="soupsavvy.selectors.html">selectors</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.html#subpackages">Subpackages</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="soupsavvy.selectors.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">selectors.attributes</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#classes">Classes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.attributes.AttributeSelector"><code class="docutils literal notranslate"><span class="pre">AttributeSelector</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.attributes.ClassSelector"><code class="docutils literal notranslate"><span class="pre">ClassSelector</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.attributes.IdSelector"><code class="docutils literal notranslate"><span class="pre">IdSelector</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.selectors.attributes.AttributeSelector"><code class="docutils literal notranslate"><span class="pre">AttributeSelector</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.attributes.AttributeSelector.__init__"><code class="docutils literal notranslate"><span class="pre">AttributeSelector.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.attributes.AttributeSelector.find_all"><code class="docutils literal notranslate"><span class="pre">AttributeSelector.find_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.attributes.AttributeSelector.name"><code class="docutils literal notranslate"><span class="pre">AttributeSelector.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.attributes.AttributeSelector.value"><code class="docutils literal notranslate"><span class="pre">AttributeSelector.value</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.combinators.html">selectors.combinators</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.general.html">selectors.general</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.logical.html">selectors.logical</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html">selectors.relative</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.selectors.attributes.ClassSelector"><code class="docutils literal notranslate"><span class="pre">ClassSelector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.selectors.attributes.IdSelector"><code class="docutils literal notranslate"><span class="pre">IdSelector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.combinators.html">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.combinators.html#notes">Notes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.AncestorCombinator"><code class="docutils literal notranslate"><span class="pre">AncestorCombinator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.BaseAncestorCombinator"><code class="docutils literal notranslate"><span class="pre">BaseAncestorCombinator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.BaseCombinator"><code class="docutils literal notranslate"><span class="pre">BaseCombinator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.ChildCombinator"><code class="docutils literal notranslate"><span class="pre">ChildCombinator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.DescendantCombinator"><code class="docutils literal notranslate"><span class="pre">DescendantCombinator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.NextSiblingCombinator"><code class="docutils literal notranslate"><span class="pre">NextSiblingCombinator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.ParentCombinator"><code class="docutils literal notranslate"><span class="pre">ParentCombinator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.SelectorList"><code class="docutils literal notranslate"><span class="pre">SelectorList</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.SubsequentSiblingCombinator"><code class="docutils literal notranslate"><span class="pre">SubsequentSiblingCombinator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.general.html">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.AnyTagSelector"><code class="docutils literal notranslate"><span class="pre">AnyTagSelector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.PatternSelector"><code class="docutils literal notranslate"><span class="pre">PatternSelector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.SelfSelector"><code class="docutils literal notranslate"><span class="pre">SelfSelector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.TypeSelector"><code class="docutils literal notranslate"><span class="pre">TypeSelector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.UniversalSelector"><code class="docutils literal notranslate"><span class="pre">UniversalSelector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.logical.html">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.AndSelector"><code class="docutils literal notranslate"><span class="pre">AndSelector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.NotSelector"><code class="docutils literal notranslate"><span class="pre">NotSelector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.XORSelector"><code class="docutils literal notranslate"><span class="pre">XORSelector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html"><code class="docutils literal notranslate"><span class="pre">BaseAncestorSelector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.BaseRelativeSibling"><code class="docutils literal notranslate"><span class="pre">BaseRelativeSibling</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.HasSelector"><code class="docutils literal notranslate"><span class="pre">HasSelector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeAncestor"><code class="docutils literal notranslate"><span class="pre">RelativeAncestor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeChild"><code class="docutils literal notranslate"><span class="pre">RelativeChild</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeDescendant"><code class="docutils literal notranslate"><span class="pre">RelativeDescendant</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeNextSibling"><code class="docutils literal notranslate"><span class="pre">RelativeNextSibling</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeParent"><code class="docutils literal notranslate"><span class="pre">RelativeParent</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeSelector"><code class="docutils literal notranslate"><span class="pre">RelativeSelector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeSubsequentSibling"><code class="docutils literal notranslate"><span class="pre">RelativeSubsequentSibling</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.html#module-soupsavvy.selectors">Module contents</a></li>
@@ -73,7 +103,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/use_cases.html">Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
@@ -96,7 +127,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="soupsavvy.selectors.html">selectors</a></li>
-      <li class="breadcrumb-item active">selectors.attributes</li>
+      <li class="breadcrumb-item active">Classes</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/soupsavvy.selectors.attributes.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -106,13 +137,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-soupsavvy.selectors.attributes">
-<span id="selectors-attributes"></span><h1>selectors.attributes<a class="headerlink" href="#module-soupsavvy.selectors.attributes" title="Link to this heading"></a></h1>
-<p>Module for selectors that are based on HTML element attributes.</p>
+  <p id="module-soupsavvy.selectors.attributes">Module for selectors that are based on HTML element attributes.</p>
 <p>They are used for selection of various elements in the markup,
 based on attributes values.</p>
 <section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<h1>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h1>
 <p>AttributeSelector - Selects element for any attribute value.
 IdSelector - Selects element based on ‘id’ attribute value.
 ClassSelector - Selects element based on ‘class’ attribute value.</p>
@@ -125,21 +154,21 @@ ClassSelector - Selects element based on ‘class’ attribute value.</p>
 <cite>soupsavvy</cite> counterpart of css attribute selectors, where any substring value
 syntax is handled by regex pattern matching.</p>
 <section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">AttributeSelector</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;widget&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>matches all elements that have ‘class’ attribute with value “widget”.</p>
 </section>
 <section id="id1">
-<h2>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;Hello World&lt;/div&gt; ✔️
 &gt;&gt;&gt; &lt;div class=&quot;menu&quot;&gt;Hello World&lt;/div&gt; ❌
 </pre></div>
 </div>
 </section>
 <section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<h1>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>name<span class="classifier">str</span></dt><dd><p>HTML element attribute name ex. “class”, “href”</p>
 </dd>
@@ -151,7 +180,7 @@ of characters is used.</p>
 </dl>
 </section>
 <section id="notes">
-<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<h1>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h1>
 <p>For more information about attribute selectors see:
 <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors">https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors</a></p>
 <dl class="py method">
@@ -164,7 +193,7 @@ of characters is used.</p>
 <span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/attributes.html#AttributeSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.attributes.AttributeSelector.find_all" title="Link to this definition"></a></dt>
 <dd><p>Finds all matching elements in provided BeautifulSoup Tag.</p>
 <section id="id2">
-<h3>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<h2>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
 </dd>
@@ -178,7 +207,7 @@ to return. If set to None, all elements are returned. By default None.</p>
 </dl>
 </section>
 <section id="returns">
-<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>list[Tag]</dt><dd><p>A list of Tag objects matching tag specifications.
 If none found, the list is empty.</p>
@@ -208,21 +237,21 @@ If none found, the list is empty.</p>
 Convenience wrapper for AttributeSelector with default attribute name ‘class’,
 as its use is very common in CSS selectors.</p>
 <section id="id3">
-<h2>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;main&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>matches all elements that have ‘class’ attribute with value “main”.</p>
 </section>
 <section id="id4">
-<h2>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div class=&quot;main&quot;&gt;Hello World&lt;/div&gt; ✔️
 &gt;&gt;&gt; &lt;div class=&quot;content&quot;&gt;Hello World&lt;/div&gt; ❌
 </pre></div>
 </div>
 </section>
 <section id="id5">
-<h2>Notes<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<h1>Notes<a class="headerlink" href="#id5" title="Link to this heading"></a></h1>
 <p>For more information about class attribute see:
 <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors">https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors</a></p>
 </section>
@@ -236,34 +265,33 @@ as its use is very common in CSS selectors.</p>
 Convenience wrapper for AttributeSelector with default attribute name ‘id’,
 as its use is very common in CSS selectors.</p>
 <section id="id6">
-<h2>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">IdSelector</span><span class="p">(</span><span class="s2">&quot;main&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>matches all elements that have ‘id’ attribute with value “main”.</p>
 </section>
 <section id="id7">
-<h2>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div id=&quot;main&quot;&gt;Hello World&lt;/div&gt; ✔️
 &gt;&gt;&gt; &lt;div id=&quot;content&quot;&gt;Hello World&lt;/div&gt; ❌
 </pre></div>
 </div>
 </section>
 <section id="id8">
-<h2>Notes<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<h1>Notes<a class="headerlink" href="#id8" title="Link to this heading"></a></h1>
 <p>For more information about id attribute see:
 <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors">https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors</a></p>
 </section>
 </dd></dl>
 
-</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="soupsavvy.selectors.nth.nth_utils.html" class="btn btn-neutral float-left" title="selectors.nth.nth_utils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="soupsavvy.selectors.combinators.html" class="btn btn-neutral float-right" title="selectors.combinators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="soupsavvy.selectors.nth.nth_soup_selector.html" class="btn btn-neutral float-left" title="Parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soupsavvy.selectors.combinators.html" class="btn btn-neutral float-right" title="Classes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

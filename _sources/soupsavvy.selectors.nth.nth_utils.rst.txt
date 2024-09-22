@@ -1,7 +1,0 @@
-selectors.nth.nth\_utils
-=========================================
-
-.. automodule:: soupsavvy.selectors.nth.nth_utils
-   :members:
-   :undoc-members:
-   :show-inheritance:

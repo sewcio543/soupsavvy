@@ -1,6 +1,3 @@
-operations.conditional
-=======================================
-
 .. automodule:: soupsavvy.operations.conditional
    :members:
    :undoc-members:

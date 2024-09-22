@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>exceptions &mdash; soupsavvy  documentation</title>
+  <title>Example &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -53,7 +53,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/use_cases.html">Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
@@ -75,7 +76,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">exceptions</li>
+      <li class="breadcrumb-item active">Example</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/soupsavvy.exceptions.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -85,9 +86,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-soupsavvy.exceptions">
-<span id="exceptions"></span><h1>exceptions<a class="headerlink" href="#module-soupsavvy.exceptions" title="Link to this heading"></a></h1>
-<p>Module for custom <cite>soupsavvy</cite> exceptions.</p>
+  <p id="module-soupsavvy.exceptions">Module for custom <cite>soupsavvy</cite> exceptions.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="soupsavvy.exceptions.AttributeParsingError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AttributeParsingError</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#AttributeParsingError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.AttributeParsingError" title="Link to this definition"></a></dt>
@@ -97,21 +96,21 @@ contains element that couldn’t be parsed into AttributeGenerator object.
 Relevant only to elements in attributes iterable that
 are not already AttributeGenerator objects.</p>
 <section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">[</span><span class="mi">123</span><span class="p">])</span> <span class="c1"># not a string</span>
 <span class="go">AttributeParsingError</span>
 </pre></div>
 </div>
 </section>
 <section id="id1">
-<h2>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">)])</span> <span class="c1"># empty name string</span>
 <span class="go">AttributeParsingError</span>
 </pre></div>
 </div>
 </section>
 <section id="id2">
-<h2>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="s2">&quot;soupsavvy&quot;</span><span class="p">]])</span> <span class="c1"># invalid value template</span>
 <span class="go">AttributeParsingError</span>
 </pre></div>
@@ -147,14 +146,14 @@ of the pipeline. Special exception that accepts result as first argument.</p>
 Exception raised by AttributeGenerator when input name of the attribute is empty.</p>
 <p>Empty string is not acceptable in these contexts.</p>
 <section id="id3">
-<h2>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 <span class="go">EmptyNamException</span>
 </pre></div>
 </div>
 </section>
 <section id="id4">
-<h2>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">AttributeGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 <span class="go">EmptyNamException</span>
 </pre></div>
@@ -187,6 +186,14 @@ At least one field should be defined in class to be a valid model.</p>
 </dd></dl>
 
 <dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.exceptions.FrozenModelException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FrozenModelException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#FrozenModelException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.FrozenModelException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.BaseModelException" title="soupsavvy.exceptions.BaseModelException"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModelException</span></code></a></p>
+<p>Exception raised by BaseModel when trying to modify frozen model instance.
+Frozen model instances are read-only and cannot be modified.</p>
+</dd></dl>
+
+<dl class="py exception">
 <dt class="sig sig-object py" id="soupsavvy.exceptions.HTMLGeneratorException">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HTMLGeneratorException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#HTMLGeneratorException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.HTMLGeneratorException" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.SoupsavvyException" title="soupsavvy.exceptions.SoupsavvyException"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupsavvyException</span></code></a></p>
@@ -200,7 +207,7 @@ At least one field should be defined in class to be a valid model.</p>
 <p>Raised when the provided CSS selector is invalid.
 Usually raised when invalid formula was passed into ‘nth’ selector.</p>
 <section id="id5">
-<h2>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">NthChild</span><span class="p">(</span><span class="s2">&quot;2x + 1&quot;</span><span class="p">)</span>
 <span class="go">InvalidCSSSelector</span>
 </pre></div>
@@ -216,14 +223,14 @@ Usually raised when invalid formula was passed into ‘nth’ selector.</p>
 or by TagGenerator when invalid template is passed as text.
 Allowed types are str, BaseTemplate and None. Passing other types is not acceptable.</p>
 <section id="id6">
-<h2>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">AttributeGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
 <span class="go">InvalidTemplateException</span>
 </pre></div>
 </div>
 </section>
 <section id="id7">
-<h2>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="s2">&quot;world&quot;</span><span class="p">])</span>
 <span class="go">InvalidTemplateException</span>
 </pre></div>
@@ -256,9 +263,9 @@ It does not return expected bs4 markup after conversion to bs4.Tag.
 When bs4.Tag find method was used with only ‘string’ parameter if any tag
 matches NavigableString is returned which does not have information about the tag.</p>
 <section id="id8">
-<h2>Example<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id8" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nav_string</span> <span class="o">=</span> <span class="n">NavigableString</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">nav_string</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">nav_string</span><span class="p">)</span>
 <span class="go">&lt;html&gt;&lt;body&gt;&lt;p&gt;Hello World&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</span>
 </pre></div>
 </div>
@@ -299,7 +306,7 @@ and got argument of the different, invalid type.</p>
 <p>Exception raised by TagGenerator when input attributes have non-unique names.
 HTML tags cannot have multiple attributes with the same name.</p>
 <section id="id9">
-<h2>Example<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id9" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;href&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;href&quot;</span><span class="p">,</span> <span class="s2">&quot;/endpoint&quot;</span><span class="p">)]</span>
 <span class="go">NotUniqueAttributesException</span>
 </pre></div>
@@ -368,7 +375,7 @@ to model constructor.</p>
 <p>Exception raised by TagGenerator when input name of the tag is a void html tag
 like &lt;img&gt; or &lt;br&gt; and children are specified, which is not an allowed operation.</p>
 <section id="id10">
-<h2>Example<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id10" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;img&quot;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="s2">&quot;span&quot;</span><span class="p">])</span>
 <span class="go">VoidTagWithChildrenException</span>
 </pre></div>
@@ -376,7 +383,6 @@ like &lt;img&gt; or &lt;br&gt; and children are specified, which is not an allow
 </section>
 </dd></dl>
 
-</section>
 
 
            </div>

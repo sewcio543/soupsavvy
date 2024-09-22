@@ -23,8 +23,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="operations.conditional" href="soupsavvy.operations.conditional.html" />
-    <link rel="prev" title="models.wrappers" href="soupsavvy.models.wrappers.html" /> 
+    <link rel="next" title="Example" href="soupsavvy.operations.conditional.html" />
+    <link rel="prev" title="Classes" href="soupsavvy.models.wrappers.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -52,11 +52,18 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.html">models</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">operations</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.conditional.html">operations.conditional</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html">operations.general</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html">operations.selection_pipeline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html">operations.soup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.wrappers.html">operations.wrappers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.conditional.html"><code class="docutils literal notranslate"><span class="pre">Break</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.conditional.html#soupsavvy.operations.conditional.Continue"><code class="docutils literal notranslate"><span class="pre">Continue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.conditional.html#soupsavvy.operations.conditional.IfElse"><code class="docutils literal notranslate"><span class="pre">IfElse</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html"><code class="docutils literal notranslate"><span class="pre">Operation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationPipeline"><code class="docutils literal notranslate"><span class="pre">OperationPipeline</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html"><code class="docutils literal notranslate"><span class="pre">Href</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Parent"><code class="docutils literal notranslate"><span class="pre">Parent</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Text"><code class="docutils literal notranslate"><span class="pre">Text</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.wrappers.html"><code class="docutils literal notranslate"><span class="pre">OperationWrapper</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.wrappers.html#soupsavvy.operations.wrappers.SkipNone"><code class="docutils literal notranslate"><span class="pre">SkipNone</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.wrappers.html#soupsavvy.operations.wrappers.Suppress"><code class="docutils literal notranslate"><span class="pre">Suppress</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-soupsavvy.operations">Module contents</a><ul>
@@ -92,7 +99,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/use_cases.html">Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
@@ -130,59 +138,44 @@
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.conditional.html">operations.conditional</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.conditional.html#soupsavvy.operations.conditional.Break"><code class="docutils literal notranslate"><span class="pre">Break</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.conditional.html#soupsavvy.operations.conditional.Continue"><code class="docutils literal notranslate"><span class="pre">Continue</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.conditional.html#soupsavvy.operations.conditional.IfElse"><code class="docutils literal notranslate"><span class="pre">IfElse</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.conditional.html#soupsavvy.operations.conditional.IfElse.__init__"><code class="docutils literal notranslate"><span class="pre">IfElse.__init__()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.conditional.html"><code class="docutils literal notranslate"><span class="pre">Break</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.conditional.html#soupsavvy.operations.conditional.Continue"><code class="docutils literal notranslate"><span class="pre">Continue</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.conditional.html#soupsavvy.operations.conditional.IfElse"><code class="docutils literal notranslate"><span class="pre">IfElse</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.conditional.html#soupsavvy.operations.conditional.IfElse.__init__"><code class="docutils literal notranslate"><span class="pre">IfElse.__init__()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.general.html"><code class="docutils literal notranslate"><span class="pre">Operation</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.Operation.__init__"><code class="docutils literal notranslate"><span class="pre">Operation.__init__()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.general.html">operations.general</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.Operation"><code class="docutils literal notranslate"><span class="pre">Operation</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.Operation.__init__"><code class="docutils literal notranslate"><span class="pre">Operation.__init__()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationPipeline"><code class="docutils literal notranslate"><span class="pre">OperationPipeline</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationPipeline.__init__"><code class="docutils literal notranslate"><span class="pre">OperationPipeline.__init__()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationPipeline"><code class="docutils literal notranslate"><span class="pre">OperationPipeline</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationPipeline.__init__"><code class="docutils literal notranslate"><span class="pre">OperationPipeline.__init__()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.__init__"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.__init__()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.find"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.find()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.find_all"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.find_all()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.operation"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.operation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.selector"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.selector</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.soup.html"><code class="docutils literal notranslate"><span class="pre">Href</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Parent"><code class="docutils literal notranslate"><span class="pre">Parent</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Parent.find_all"><code class="docutils literal notranslate"><span class="pre">Parent.find_all()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html">operations.selection_pipeline</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.__init__"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.find"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.find()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.find_all"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.find_all()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.operation"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.operation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.selector"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline.selector</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Text"><code class="docutils literal notranslate"><span class="pre">Text</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Text.__init__"><code class="docutils literal notranslate"><span class="pre">Text.__init__()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.wrappers.html"><code class="docutils literal notranslate"><span class="pre">OperationWrapper</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.wrappers.html#soupsavvy.operations.wrappers.OperationWrapper.__init__"><code class="docutils literal notranslate"><span class="pre">OperationWrapper.__init__()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.soup.html">operations.soup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Href"><code class="docutils literal notranslate"><span class="pre">Href</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Parent"><code class="docutils literal notranslate"><span class="pre">Parent</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Parent.find_all"><code class="docutils literal notranslate"><span class="pre">Parent.find_all()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Text"><code class="docutils literal notranslate"><span class="pre">Text</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Text.__init__"><code class="docutils literal notranslate"><span class="pre">Text.__init__()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.wrappers.html">operations.wrappers</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.wrappers.html#soupsavvy.operations.wrappers.OperationWrapper"><code class="docutils literal notranslate"><span class="pre">OperationWrapper</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.wrappers.html#soupsavvy.operations.wrappers.OperationWrapper.__init__"><code class="docutils literal notranslate"><span class="pre">OperationWrapper.__init__()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.wrappers.html#soupsavvy.operations.wrappers.SkipNone"><code class="docutils literal notranslate"><span class="pre">SkipNone</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.wrappers.html#soupsavvy.operations.wrappers.Suppress"><code class="docutils literal notranslate"><span class="pre">Suppress</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.wrappers.html#soupsavvy.operations.wrappers.Suppress.__init__"><code class="docutils literal notranslate"><span class="pre">Suppress.__init__()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.wrappers.html#soupsavvy.operations.wrappers.SkipNone"><code class="docutils literal notranslate"><span class="pre">SkipNone</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.wrappers.html#soupsavvy.operations.wrappers.Suppress"><code class="docutils literal notranslate"><span class="pre">Suppress</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.wrappers.html#soupsavvy.operations.wrappers.Suppress.__init__"><code class="docutils literal notranslate"><span class="pre">Suppress.__init__()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -190,6 +183,7 @@
 </section>
 <section id="module-soupsavvy.operations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-soupsavvy.operations" title="Link to this heading"></a></h2>
+<p>Subpackage with operations used to postprocessing the results of selectors.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.operations.Break">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Break</span></span><a class="reference internal" href="_modules/soupsavvy/operations/conditional.html#Break"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.Break" title="Link to this definition"></a></dt>
@@ -584,8 +578,8 @@ by default False.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="soupsavvy.models.wrappers.html" class="btn btn-neutral float-left" title="models.wrappers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="soupsavvy.operations.conditional.html" class="btn btn-neutral float-right" title="operations.conditional" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="soupsavvy.models.wrappers.html" class="btn btn-neutral float-left" title="Classes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soupsavvy.operations.conditional.html" class="btn btn-neutral float-right" title="Example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

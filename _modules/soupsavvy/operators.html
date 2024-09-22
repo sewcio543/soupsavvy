@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>soupsavvy.api &mdash; soupsavvy  documentation</title>
+  <title>soupsavvy.operators &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -76,7 +76,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">soupsavvy.api</li>
+      <li class="breadcrumb-item active">soupsavvy.operators</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -85,27 +85,33 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for soupsavvy.api</h1><div class="highlight"><pre>
+  <h1>Source code for soupsavvy.operators</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This module is deprecated and will be removed in the future.</span>
-<span class="sd">Use soupsavvy.operators module instead.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module for operators, which are alternative way to create composite selectors</span>
+<span class="sd">by combining multiple of them in particular way.</span>
 
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="sd">Contains</span>
+<span class="sd">--------</span>
+<span class="sd">* is_: function to create SelectorList from multiple selectors</span>
+<span class="sd">* where: alias for is_, no difference in behavior in scraping context</span>
+<span class="sd">* or_: alias for is_, no difference in behavior in scraping context</span>
+<span class="sd">* not_: function to create NotSelector from multiple selectors</span>
+<span class="sd">* and_: function to create AndSelector from multiple selectors</span>
+<span class="sd">* has: function to create HasSelector from multiple selectors</span>
+<span class="sd">* xor: function to create XORSelector from multiple selectors</span>
+
+<span class="sd">These utils do not brings extra functionality into the package, but they can be</span>
+<span class="sd">used for convenience and readability in some cases.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.selectors.combinators</span> <span class="kn">import</span> <span class="n">SelectorList</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.selectors.logical</span> <span class="kn">import</span> <span class="n">AndSelector</span><span class="p">,</span> <span class="n">NotSelector</span><span class="p">,</span> <span class="n">XORSelector</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.selectors.relative</span> <span class="kn">import</span> <span class="n">HasSelector</span>
 
-<span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-    <span class="s2">&quot;soupsavvy.api module is deprecated, use soupsavvy.operators&quot;</span><span class="p">,</span>
-    <span class="ne">DeprecationWarning</span><span class="p">,</span>
-<span class="p">)</span>
-
 
 <div class="viewcode-block" id="is_">
-<a class="viewcode-back" href="../../soupsavvy.api.html#soupsavvy.api.is_">[docs]</a>
+<a class="viewcode-back" href="../../soupsavvy.operators.html#soupsavvy.operators.is_">[docs]</a>
 <span class="k">def</span> <span class="nf">is_</span><span class="p">(</span>
     <span class="n">selector1</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
     <span class="n">selector2</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
@@ -158,7 +164,7 @@
 
 
 <div class="viewcode-block" id="not_">
-<a class="viewcode-back" href="../../soupsavvy.api.html#soupsavvy.api.not_">[docs]</a>
+<a class="viewcode-back" href="../../soupsavvy.operators.html#soupsavvy.operators.not_">[docs]</a>
 <span class="k">def</span> <span class="nf">not_</span><span class="p">(</span><span class="n">selector</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="n">selectors</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NotSelector</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns an negation of multiple soup selectors.</span>
@@ -195,7 +201,7 @@
 
 
 <div class="viewcode-block" id="and_">
-<a class="viewcode-back" href="../../soupsavvy.api.html#soupsavvy.api.and_">[docs]</a>
+<a class="viewcode-back" href="../../soupsavvy.operators.html#soupsavvy.operators.and_">[docs]</a>
 <span class="k">def</span> <span class="nf">and_</span><span class="p">(</span>
     <span class="n">selector1</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
     <span class="n">selector2</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
@@ -232,7 +238,7 @@
 
 
 <div class="viewcode-block" id="has">
-<a class="viewcode-back" href="../../soupsavvy.api.html#soupsavvy.api.has">[docs]</a>
+<a class="viewcode-back" href="../../soupsavvy.operators.html#soupsavvy.operators.has">[docs]</a>
 <span class="k">def</span> <span class="nf">has</span><span class="p">(</span>
     <span class="n">selector</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
     <span class="o">/</span><span class="p">,</span>
@@ -281,7 +287,7 @@
 
 
 <div class="viewcode-block" id="xor">
-<a class="viewcode-back" href="../../soupsavvy.api.html#soupsavvy.api.xor">[docs]</a>
+<a class="viewcode-back" href="../../soupsavvy.operators.html#soupsavvy.operators.xor">[docs]</a>
 <span class="k">def</span> <span class="nf">xor</span><span class="p">(</span>
     <span class="n">selector1</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
     <span class="n">selector2</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>

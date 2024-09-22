@@ -1,6 +1,3 @@
-base
-=====================
-
 .. automodule:: soupsavvy.base
    :members:
    :undoc-members:

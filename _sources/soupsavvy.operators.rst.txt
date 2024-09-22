@@ -1,4 +1,4 @@
-.. automodule:: soupsavvy.api
+.. automodule:: soupsavvy.operators
    :members:
    :undoc-members:
    :show-inheritance:

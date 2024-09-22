@@ -52,7 +52,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/use_cases.html">Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../demos/selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../demos/css.html">CSS Selectors</a></li>
@@ -166,7 +167,7 @@
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; gen = AttributeGenerator(&quot;class&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    ... gen.generate()</span>
 <span class="sd">    &#39;class=&quot;&quot;&#39;</span>
 
 <span class="sd">    Attribute can also be generated with specified constant value:</span>
@@ -174,7 +175,7 @@
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; gen = AttributeGenerator(&quot;class&quot;, value=&quot;container&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    ... gen.generate()</span>
 <span class="sd">    &#39;class=&quot;container&quot;&#39;</span>
 
 <span class="sd">    Value can be passed as BaseTemplate instance as well:</span>
@@ -182,9 +183,9 @@
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; from soupsavvy.testing.generators import RandomTemplate</span>
-<span class="sd">    &gt;&gt;&gt; template = RandomTemplate(length=4, seed=42)</span>
-<span class="sd">    &gt;&gt;&gt; gen = AttributeGenerator(&quot;id&quot;, value=template)</span>
-<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    ... template = RandomTemplate(length=4, seed=42)</span>
+<span class="sd">    ... gen = AttributeGenerator(&quot;id&quot;, value=template)</span>
+<span class="sd">    ... gen.generate()</span>
 <span class="sd">    &#39;id=&quot;Nbrn&quot;&#39;</span>
 
 <span class="sd">    For more information on available Templates, how to use them</span>
@@ -271,7 +272,7 @@
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; gen = TagGenerator(&quot;div&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    ... gen.generate()</span>
 <span class="sd">    &#39;&lt;div&gt;&lt;/div&gt;&#39;</span>
 
 <span class="sd">    Tag can also be generated with specified attributes:</span>
@@ -279,7 +280,7 @@
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; gen = TagGenerator(&quot;div&quot;, attrs=[(&quot;class&quot;, &quot;container&quot;)])</span>
-<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    ... gen.generate()</span>
 <span class="sd">    &#39;&lt;div class=&quot;container&quot;&gt;&lt;/div&gt;&#39;</span>
 
 <span class="sd">    Attributes can be passed as an iterable of of mixed types:</span>
@@ -290,14 +291,14 @@
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; gen = TagGenerator(</span>
-<span class="sd">    &gt;&gt;&gt;     name=&quot;a&quot;,</span>
-<span class="sd">    &gt;&gt;&gt;     attrs=[</span>
-<span class="sd">    &gt;&gt;&gt;         (&quot;id&quot;, &quot;link&quot;),</span>
-<span class="sd">    &gt;&gt;&gt;         AttributeGenerator(&quot;href&quot;, &quot;/endpoint&quot;),</span>
-<span class="sd">    &gt;&gt;&gt;         &quot;class&quot;,</span>
-<span class="sd">    &gt;&gt;&gt;     ],</span>
-<span class="sd">    &gt;&gt;&gt; )</span>
-<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    ...     name=&quot;a&quot;,</span>
+<span class="sd">    ...     attrs=[</span>
+<span class="sd">    ...         (&quot;id&quot;, &quot;link&quot;),</span>
+<span class="sd">    ...         AttributeGenerator(&quot;href&quot;, &quot;/endpoint&quot;),</span>
+<span class="sd">    ...         &quot;class&quot;,</span>
+<span class="sd">    ...     ],</span>
+<span class="sd">    ... )</span>
+<span class="sd">    ... gen.generate()</span>
 <span class="sd">    &#39;&lt;div id=&quot;link&quot; href=&quot;/endpoint&quot;, class=&quot;&quot;&gt;&lt;/div&gt;&#39;</span>
 
 <span class="sd">    Similarly, children can be passed as an iterable of mixed types:</span>
@@ -307,13 +308,13 @@
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; gen = TagGenerator(</span>
-<span class="sd">    &gt;&gt;&gt;     name=&quot;div&quot;,</span>
-<span class="sd">    &gt;&gt;&gt;     children=[</span>
-<span class="sd">    &gt;&gt;&gt;         &quot;a&quot;,</span>
-<span class="sd">    &gt;&gt;&gt;         TagGenerator(&quot;span&quot;, attrs=[(&quot;class&quot;, &quot;container&quot;)],</span>
-<span class="sd">    &gt;&gt;&gt;     ],</span>
-<span class="sd">    &gt;&gt;&gt; )</span>
-<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    ...     name=&quot;div&quot;,</span>
+<span class="sd">    ...     children=[</span>
+<span class="sd">    ...         &quot;a&quot;,</span>
+<span class="sd">    ...         TagGenerator(&quot;span&quot;, attrs=[(&quot;class&quot;, &quot;container&quot;)],</span>
+<span class="sd">    ...     ],</span>
+<span class="sd">    ... )</span>
+<span class="sd">    ... gen.generate()</span>
 <span class="sd">    &#39;&lt;div&gt;&lt;a&gt;&lt;/a&gt;&lt;span class=&quot;container&quot;&gt;&lt;/span&gt;&lt;/div&gt;&#39;</span>
 
 <span class="sd">    Text of the tag can be passed as a string or a Template:</span>
@@ -321,15 +322,15 @@
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; gen = TagGenerator(&quot;p&quot;, text=&quot;Hello, World!&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    ... gen.generate()</span>
 <span class="sd">    &#39;&lt;p&gt;Hello, World!&lt;/p&gt;&#39;</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; from soupsavvy.testing.generators import RandomTemplate</span>
-<span class="sd">    &gt;&gt;&gt; template = RandomTemplate(length=4, seed=42)</span>
-<span class="sd">    &gt;&gt;&gt; gen = TagGenerator(&quot;p&quot;, text=template)</span>
-<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    ... template = RandomTemplate(length=4, seed=42)</span>
+<span class="sd">    ... gen = TagGenerator(&quot;p&quot;, text=template)</span>
+<span class="sd">    ... gen.generate()</span>
 <span class="sd">    &#39;&lt;p&gt;Nbrn&lt;/p&gt;&#39;</span>
 
 <span class="sd">    For more information on available Templates, how to use them</span>
@@ -341,7 +342,7 @@
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; gen = TagGenerator(&quot;img&quot;, attrs=[(&quot;src&quot;, &quot;/path/to/image.jpg&quot;)])</span>
-<span class="sd">    &gt;&gt;&gt; gen.generate()</span>
+<span class="sd">    ... gen.generate()</span>
 <span class="sd">    &#39;&lt;img src=&quot;/path/to/image.jpg&quot;/&gt;&#39;</span>
 
 <span class="sd">    No children are allowed for void tags, and an error will be raised.</span>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>selectors.nth.nth_soup_selector &mdash; soupsavvy  documentation</title>
+  <title>Parameters &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -23,7 +23,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="selectors.nth.nth_utils" href="soupsavvy.selectors.nth.nth_utils.html" />
+    <link rel="next" title="Classes" href="soupsavvy.selectors.attributes.html" />
     <link rel="prev" title="selectors.nth" href="soupsavvy.selectors.nth.html" /> 
 </head>
 
@@ -68,7 +68,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/use_cases.html">Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
@@ -92,7 +93,7 @@
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="soupsavvy.selectors.html">selectors</a></li>
           <li class="breadcrumb-item"><a href="soupsavvy.selectors.nth.html">selectors.nth</a></li>
-      <li class="breadcrumb-item active">selectors.nth.nth_soup_selector</li>
+      <li class="breadcrumb-item active">Parameters</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/soupsavvy.selectors.nth.nth_soup_selector.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -102,26 +103,95 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-soupsavvy.selectors.nth.nth_soup_selector">
-<span id="selectors-nth-nth-soup-selector"></span><h1>selectors.nth.nth_soup_selector<a class="headerlink" href="#module-soupsavvy.selectors.nth.nth_soup_selector" title="Link to this heading"></a></h1>
-<p>Module with nth-of-type selector implementations for SoupSelectors.
+  <p id="module-soupsavvy.selectors.nth.nth_soup_selector">Module with nth-of-type selector implementations for SoupSelectors.
 Searches for nth-of-type element in similar fashion to CSS nth-of-type selector,
 but ‘type’ is any SoupSelector instance.</p>
 <dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.selectors.nth.nth_soup_selector.BaseNthOfSelector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseNthOfSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/nth/nth_soup_selector.html#BaseNthOfSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.nth.nth_soup_selector.BaseNthOfSelector" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupSelector</span></code></a></p>
+<p>Base class for nth-of-selector and nth-last-of-selector
+that implements general logic for finding matching elements.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.selectors.nth.nth_soup_selector.BaseNthOfSelector.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/nth/nth_soup_selector.html#BaseNthOfSelector.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.nth.nth_soup_selector.BaseNthOfSelector.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes NthOfSelector instance</p>
+<section id="parameters">
+<h1>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h1>
+<dl class="simple">
+<dt>selector<span class="classifier">SoupSelector</span></dt><dd><p>Any SoupSelector instance to match tags.</p>
+</dd>
+<dt>nth<span class="classifier">str</span></dt><dd><p>CSS nth selector string. Accepts all valid css nth selectors.</p>
+</dd>
+</dl>
+</section>
+<section id="raises">
+<h1>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h1>
+<dl class="simple">
+<dt>NotSoupSelectorException</dt><dd><p>If selector is not an instance of SoupSelector.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.selectors.nth.nth_soup_selector.BaseNthOfSelector.find_all">
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/nth/nth_soup_selector.html#BaseNthOfSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.nth.nth_soup_selector.BaseNthOfSelector.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all matching elements in provided BeautifulSoup Tag.</p>
+<section id="id1">
+<h1>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<dl class="simple">
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
+</dd>
+<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>bs4.Tag.find method parameter that specifies if search should be recursive.
+If set to False, only direct children of the tag will be searched.
+By default True.</p>
+</dd>
+<dt>limit<span class="classifier">int, optional</span></dt><dd><p>bs4.Tag.find_all method parameter that specifies maximum number of elements
+to return. If set to None, all elements are returned. By default None.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h1>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h1>
+<dl class="simple">
+<dt>list[Tag]</dt><dd><p>A list of Tag objects matching tag specifications.
+If none found, the list is empty.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.selectors.nth.nth_soup_selector.BaseNthOfSelector.selector">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selector</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></em><a class="headerlink" href="#soupsavvy.selectors.nth.nth_soup_selector.BaseNthOfSelector.selector" title="Link to this definition"></a></dt>
+<dd><p>Returns selector instance used for matching elements in this nth selector.</p>
+<section id="id2">
+<h1>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h1>
+<dl class="simple">
+<dt>SoupSelector</dt><dd><p>Selector used in this nth selector.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.selectors.nth.nth_soup_selector.NthLastOfSelector">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NthLastOfSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/nth/nth_soup_selector.html#NthLastOfSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.nth.nth_soup_selector.NthLastOfSelector" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_BaseNthOfSelector</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.selectors.nth.nth_soup_selector.BaseNthOfSelector" title="soupsavvy.selectors.nth.nth_soup_selector.BaseNthOfSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseNthOfSelector</span></code></a></p>
 <p>Component that matches nth-last-of-type elements in the soup, with use of standard
 css nth selectors. Element is of type if it matches provided SoupSelector instance.</p>
 <section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">selector</span> <span class="o">=</span> <span class="n">NthLastOfSelector</span><span class="p">(</span><span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;item&quot;</span><span class="p">),</span> <span class="s2">&quot;2n+1&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>matches all odd elements with class “item” starting from the last element.</p>
 </section>
-<section id="id1">
-<h2>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<section id="id3">
+<h1>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;1&lt;/div&gt; ❌
 &gt;&gt;&gt; &lt;div id=&quot;item&quot;&gt;&lt;/div&gt; ❌
 &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;2&lt;/div&gt; ✔️
@@ -140,18 +210,18 @@ css nth selectors. Element is of type if it matches provided SoupSelector instan
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.selectors.nth.nth_soup_selector.NthOfSelector">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NthOfSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/nth/nth_soup_selector.html#NthOfSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.nth.nth_soup_selector.NthOfSelector" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_BaseNthOfSelector</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.selectors.nth.nth_soup_selector.BaseNthOfSelector" title="soupsavvy.selectors.nth.nth_soup_selector.BaseNthOfSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseNthOfSelector</span></code></a></p>
 <p>Component that matches nth-of-type elements in the soup, with use of standard
 css nth selectors. Element is of type if it matches provided SoupSelector instance.</p>
-<section id="id2">
-<h2>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<section id="id4">
+<h1>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">selector</span> <span class="o">=</span> <span class="n">NthOfSelector</span><span class="p">(</span><span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;item&quot;</span><span class="p">),</span> <span class="s2">&quot;2n+1&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>matches all odd elements with class “item”.</p>
 </section>
-<section id="id3">
-<h2>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="id5">
+<h1>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;1&lt;/div&gt; ✔️
 &gt;&gt;&gt; &lt;div id=&quot;item&quot;&gt;&lt;/div&gt; ❌
 &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;2&lt;/div&gt; ❌
@@ -173,16 +243,16 @@ css nth selectors. Element is of type if it matches provided SoupSelector instan
 <dd><p>Bases: <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupSelector</span></code></a></p>
 <p>Component that matches only-of-type elements in the soup. Element is of type
 if it matches provided SoupSelector instance.</p>
-<section id="id4">
-<h2>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<section id="id6">
+<h1>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">selector</span> <span class="o">=</span> <span class="n">NthLastOnlyOfSelectorOfSelector</span><span class="p">(</span><span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;item&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>matches all elements with class “item” that are the only child of their parent
 that matches the selector.</p>
 </section>
-<section id="id5">
-<h2>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<section id="id7">
+<h1>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;&lt;div class=&quot;item&quot;&gt;&lt;/div&gt;&lt;a class=&quot;item&quot;&gt;&lt;/a&gt;&lt;/div&gt; ❌
 &gt;&gt;&gt; &lt;div&gt;&lt;div class=&quot;item&quot;&gt;&lt;/div&gt;&lt;a class=&quot;widget&quot;&gt;&lt;/a&gt;&lt;/div&gt; ✔️
 &gt;&gt;&gt; &lt;div&gt;&lt;div class=&quot;item&quot;&gt;&lt;/div&gt;&lt;/div&gt; ✔️
@@ -198,15 +268,15 @@ that matches the selector.</p>
 <dt class="sig sig-object py" id="soupsavvy.selectors.nth.nth_soup_selector.OnlyOfSelector.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/nth/nth_soup_selector.html#OnlyOfSelector.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.nth.nth_soup_selector.OnlyOfSelector.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes OnlyOfSelector instance.</p>
-<section id="parameters">
-<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<section id="id8">
+<h2>Parameters<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>selector<span class="classifier">SoupSelector</span></dt><dd><p>Any SoupSelector instance to match tags.</p>
 </dd>
 </dl>
 </section>
-<section id="raises">
-<h3>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h3>
+<section id="id9">
+<h2>Raises<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>NotSoupSelectorException</dt><dd><p>If selector is not an instance of SoupSelector.</p>
 </dd>
@@ -218,8 +288,8 @@ that matches the selector.</p>
 <dt class="sig sig-object py" id="soupsavvy.selectors.nth.nth_soup_selector.OnlyOfSelector.find_all">
 <span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/nth/nth_soup_selector.html#OnlyOfSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.nth.nth_soup_selector.OnlyOfSelector.find_all" title="Link to this definition"></a></dt>
 <dd><p>Finds all matching elements in provided BeautifulSoup Tag.</p>
-<section id="id6">
-<h3>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<section id="id10">
+<h2>Parameters<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
 </dd>
@@ -232,8 +302,8 @@ to return. If set to None, all elements are returned. By default None.</p>
 </dd>
 </dl>
 </section>
-<section id="returns">
-<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<section id="id11">
+<h2>Returns<a class="headerlink" href="#id11" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>list[Tag]</dt><dd><p>A list of Tag objects matching tag specifications.
 If none found, the list is empty.</p>
@@ -245,14 +315,13 @@ If none found, the list is empty.</p>
 </section>
 </dd></dl>
 
-</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="soupsavvy.selectors.nth.html" class="btn btn-neutral float-left" title="selectors.nth" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="soupsavvy.selectors.nth.nth_utils.html" class="btn btn-neutral float-right" title="selectors.nth.nth_utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="soupsavvy.selectors.attributes.html" class="btn btn-neutral float-right" title="Classes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -52,7 +52,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../demos/use_cases.html">Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../demos/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../demos/selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../demos/css.html">CSS Selectors</a></li>
@@ -107,7 +108,7 @@
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; template = EmptyTemplate()</span>
-<span class="sd">    &gt;&gt;&gt; template.generate()</span>
+<span class="sd">    ... template.generate()</span>
 <span class="sd">    &#39;&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -137,7 +138,7 @@
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; template = ConstantTemplate(&quot;Hello World!&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; template.generate()</span>
+<span class="sd">    ... template.generate()</span>
 <span class="sd">    &#39;Hello World!&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -180,7 +181,7 @@
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; template = ChoiceTemplate([&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;], seed=42)</span>
-<span class="sd">    &gt;&gt;&gt; template.generate()</span>
+<span class="sd">    ... template.generate()</span>
 <span class="sd">    &#39;cherry&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -227,7 +228,7 @@
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; template = RandomTemplate(length=4, seed=42)</span>
-<span class="sd">    &gt;&gt;&gt; template.generate()</span>
+<span class="sd">    ... template.generate()</span>
 <span class="sd">    &#39;Nbrn&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 

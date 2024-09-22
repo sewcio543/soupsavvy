@@ -1,6 +1,3 @@
-testing.generators.base
-========================================
-
 .. automodule:: soupsavvy.testing.generators.base
    :members:
    :undoc-members:

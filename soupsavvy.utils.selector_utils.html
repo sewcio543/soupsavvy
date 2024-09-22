@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>utils.selector_utils &mdash; soupsavvy  documentation</title>
+  <title>Parameters &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -53,7 +53,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/use_cases.html">Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
@@ -75,7 +76,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">utils.selector_utils</li>
+      <li class="breadcrumb-item active">Parameters</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/soupsavvy.utils.selector_utils.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -85,16 +86,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-soupsavvy.utils.selector_utils">
-<span id="utils-selector-utils"></span><h1>utils.selector_utils<a class="headerlink" href="#module-soupsavvy.utils.selector_utils" title="Link to this heading"></a></h1>
-<p>Module for utility functions for tag selectors.</p>
+  <p id="module-soupsavvy.utils.selector_utils">Module for utility functions for tag selectors.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.utils.selector_utils.TagIterator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TagIterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/utils/selector_utils.html#TagIterator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.utils.selector_utils.TagIterator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Wrapper class for iterating over bs4.Tag.</p>
 <section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<h1>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>BeautifulSoup Tag to iterate over.</p>
 </dd>
@@ -143,7 +142,7 @@ It provides operations on sets of results like intersection and union.</p>
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/utils/selector_utils.html#TagResultSet.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.utils.selector_utils.TagResultSet.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes TagResultSet instance.</p>
 <section id="id1">
-<h2>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<h1>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>tags<span class="classifier">list[Tag], optional</span></dt><dd><p>List of bs4.Tag instances to store in the collection.
 Default is None, which initializes empty collection.</p>
@@ -158,7 +157,7 @@ Default is None, which initializes empty collection.</p>
 <dd><p>Fetches n first unique bs4.Tag instances from collection.
 Ensures that the order of the initial list is preserved.</p>
 <section id="id2">
-<h2>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<h1>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>n<span class="classifier">int, optional</span></dt><dd><p>Number of bs4.Tag instances to fetch.
 If default None, fetches all unique bs4.Tag instances.</p>
@@ -166,7 +165,7 @@ If default None, fetches all unique bs4.Tag instances.</p>
 </dl>
 </section>
 <section id="returns">
-<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<h1>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>list[Tag]</dt><dd><p>List of bs4.Tag instances fetched from collection.</p>
 </dd>
@@ -181,23 +180,23 @@ If default None, fetches all unique bs4.Tag instances.</p>
 with current instance as a base,
 preserving the order of tags from the base instance.</p>
 <section id="id3">
-<h2>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<h1>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>other<span class="classifier">TagResultSet</span></dt><dd><p>TagResultSet instance to perform symmetric difference with.</p>
 </dd>
 </dl>
 </section>
 <section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">base</span> <span class="o">=</span> <span class="n">TagResultSet</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">b</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">other</span> <span class="o">=</span> <span class="n">TagResultSet</span><span class="p">([</span><span class="n">c</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">base</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">other</span> <span class="o">=</span> <span class="n">TagResultSet</span><span class="p">([</span><span class="n">c</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">])</span>
+<span class="gp">... </span><span class="n">base</span><span class="o">.</span><span class="n">symmetric_difference</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 <span class="go">TagResultSet([b, c])</span>
 </pre></div>
 </div>
 </section>
 <section id="id4">
-<h2>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<h1>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>TagResultSet</dt><dd><p>New TagResultSet instance with results of symmetric difference operation.</p>
 </dd>
@@ -224,7 +223,7 @@ only for hashing and equality check.</p>
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/utils/selector_utils.html#UniqueTag.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.utils.selector_utils.UniqueTag.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes UniqueTag instance.</p>
 <section id="id5">
-<h2>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<h1>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>tag<span class="classifier">bs4.Tag</span></dt><dd><p>BeautifulSoup Tag instance to wrap.</p>
 </dd>
@@ -234,7 +233,6 @@ only for hashing and equality check.</p>
 
 </dd></dl>
 
-</section>
 
 
            </div>

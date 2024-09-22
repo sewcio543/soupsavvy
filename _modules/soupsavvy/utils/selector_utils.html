@@ -52,7 +52,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/use_cases.html">Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../demos/selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../demos/css.html">CSS Selectors</a></li>
@@ -319,8 +320,8 @@
 <span class="sd">        Example</span>
 <span class="sd">        -------</span>
 <span class="sd">        &gt;&gt;&gt; base = TagResultSet([x, y, b])</span>
-<span class="sd">        &gt;&gt;&gt; other = TagResultSet([c, y, x])</span>
-<span class="sd">        &gt;&gt;&gt; base &amp; other</span>
+<span class="sd">        ... other = TagResultSet([c, y, x])</span>
+<span class="sd">        ... base &amp; other</span>
 <span class="sd">        TagResultSet([x, y])</span>
 
 <span class="sd">        Returns</span>
@@ -349,8 +350,8 @@
 <span class="sd">        Example</span>
 <span class="sd">        -------</span>
 <span class="sd">        &gt;&gt;&gt; base = TagResultSet([x, y, b])</span>
-<span class="sd">        &gt;&gt;&gt; other = TagResultSet([c, y, x])</span>
-<span class="sd">        &gt;&gt;&gt; base | other</span>
+<span class="sd">        ... other = TagResultSet([c, y, x])</span>
+<span class="sd">        ... base | other</span>
 <span class="sd">        TagResultSet([x, y, b, c])</span>
 
 <span class="sd">        Returns</span>
@@ -378,8 +379,8 @@
 <span class="sd">        Example</span>
 <span class="sd">        -------</span>
 <span class="sd">        &gt;&gt;&gt; base = TagResultSet([x, y, b])</span>
-<span class="sd">        &gt;&gt;&gt; other = TagResultSet([c, y, x])</span>
-<span class="sd">        &gt;&gt;&gt; base - other</span>
+<span class="sd">        ... other = TagResultSet([c, y, x])</span>
+<span class="sd">        ... base - other</span>
 <span class="sd">        TagResultSet([b])</span>
 
 <span class="sd">        Returns</span>
@@ -409,8 +410,8 @@
 <span class="sd">        Example</span>
 <span class="sd">        -------</span>
 <span class="sd">        &gt;&gt;&gt; base = TagResultSet([x, y, b])</span>
-<span class="sd">        &gt;&gt;&gt; other = TagResultSet([c, y, x])</span>
-<span class="sd">        &gt;&gt;&gt; base.symmetric_difference(other)</span>
+<span class="sd">        ... other = TagResultSet([c, y, x])</span>
+<span class="sd">        ... base.symmetric_difference(other)</span>
 <span class="sd">        TagResultSet([b, c])</span>
 
 <span class="sd">        Returns</span>

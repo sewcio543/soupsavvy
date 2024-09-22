@@ -54,7 +54,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="use_cases.html">Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="css.html">CSS Selectors</a></li>
@@ -88,9 +89,15 @@
 <li class="toctree-l3"><a class="reference internal" href="#finding-all">Finding all</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#recursive-option">Recursive option</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#typing">Typing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#model-composition">Model Composition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#frozen-model">Frozen Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#field">Field</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#migration">Migration</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pydantic">Pydantic</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#sqlalchemy">SQLAlchemy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mapping">Mapping</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#migrationschema">MigrationSchema</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#copy">Copy</a></li>
 </ul>
 </li>
 </ul>
@@ -126,7 +133,7 @@
              
   <section id="models">
 <h1>Models<a class="headerlink" href="#models" title="Link to this heading"></a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> provides a streamlined approach to object-oriented web scraping through user-defined models. These models allow you to locate and extract specific structures within HTML content. Each model represents an object expected to be found within a defined scope element.</p>
+<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> <strong>Model</strong> is user-defined <strong>scraping schema</strong>, that uses selectors and operations to extract structured information from the webpage. Model represents an entity of interest in scraping like product, article, job, etc.</p>
 <section id="operation">
 <h2>Operation<a class="headerlink" href="#operation" title="Link to this heading"></a></h2>
 <p>Operations are objects designed to encapsulate transformation logic, such as extracting text from an element, converting data types, or applying custom transformations. You can apply operations after a selector and chain them as needed using the pipe <code class="docutils literal notranslate"><span class="pre">|</span></code> operator. For example, to extract and format the price of a book from a specific HTML structure, you might chain operations to extract text (<code class="docutils literal notranslate"><span class="pre">Text</span></code>), remove a currency symbol (using a custom <code class="docutils literal notranslate"><span class="pre">Operation</span></code>), and convert the value to float (<code class="docutils literal notranslate"><span class="pre">Operation</span></code>).</p>
@@ -1121,56 +1128,56 @@ Is affordable: True
 </div>
 </div>
 </div>
-<p>As previously mentioned, any model class can serve as a field selector. In the example below, the <code class="docutils literal notranslate"><span class="pre">Author</span></code> model is utilized to extract author information from the <code class="docutils literal notranslate"><span class="pre">author</span></code> element within the scope. The <code class="docutils literal notranslate"><span class="pre">Author</span></code> model class is assigned as an attribute of the <code class="docutils literal notranslate"><span class="pre">Book</span></code> model.</p>
+<p>In addition to the <code class="docutils literal notranslate"><span class="pre">__post_init__</span></code> method, individual postprocessing methods can be defined for each field in model. These methods are executed before setting the corresponding instance attribute and allow for customized transformations of field values.</p>
+<p>To define a field-specific postprocessing method:</p>
+<ol class="arabic simple">
+<li><p>The method must be part of the user-defined model.</p></li>
+<li><p>The method can have any name but must be decorated with the <code class="docutils literal notranslate"><span class="pre">&#64;soupsavvy.models.post</span></code> decorator.</p></li>
+<li><p>It accepts the value extracted by the field’s selector and returns the transformed value, which is then used to set the instance attribute.</p></li>
+</ol>
+<p>This feature is useful for performing field-specific transformations or validations right before the data is stored in the model’s attributes. It can be used in conjunction with the <code class="docutils literal notranslate"><span class="pre">__post_init__</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
-
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">FirstChild</span>
-
-
-<span class="k">class</span> <span class="nc">Author</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">__scope__</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;author&quot;</span><span class="p">)</span>
-
-    <span class="n">birth</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">PatternSelector</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\d</span><span class="si">{4}</span><span class="s2">-\d</span><span class="si">{2}</span><span class="s2">-\d</span><span class="si">{2}</span><span class="s2">&quot;</span><span class="p">))</span>
-        <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
-        <span class="o">|</span> <span class="n">Operation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">))</span>
-    <span class="p">)</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">FirstChild</span><span class="p">()</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">post</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">LastOfType</span>
 
 
 <span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 
     <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span>
 
-    <span class="n">author</span> <span class="o">=</span> <span class="n">Author</span>
     <span class="n">title</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+    <span class="n">price</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="p">(</span><span class="n">LastOfType</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">))</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">process_title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+    <span class="nd">@post</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">process_price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">))</span>
 
 
 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    &lt;div class=&quot;book&quot; href=&quot;www.book.com&quot;&gt;</span>
 <span class="s2">        &lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;</span>
-<span class="s2">        &lt;div class=&quot;author&quot;&gt;</span>
-<span class="s2">            &lt;p&gt;George Orwell&lt;/p&gt;</span>
-<span class="s2">            &lt;p&gt;Great author&lt;/p&gt;</span>
-<span class="s2">            &lt;p&gt;1903-06-25&lt;/p&gt;</span>
-<span class="s2">        &lt;/div&gt;</span>
+<span class="s2">        &lt;p class=&quot;price&quot;&gt;100$&lt;/p&gt;</span>
+<span class="s2">        &lt;p&gt;George Orwell&lt;/p&gt;</span>
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Book(author=Author(birth=datetime.datetime(1903, 6, 25, 0, 0), name=&#39;George Orwell&#39;), title=&#39;Animal Farm&#39;)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Book(title=&#39;ANIMAL FARM&#39;, price=100, author=&#39;George Orwell&#39;)
 </pre></div>
 </div>
 </div>
@@ -1699,6 +1706,209 @@ Is affordable: True
 </div>
 </div>
 </section>
+<section id="model-composition">
+<h3>Model Composition<a class="headerlink" href="#model-composition" title="Link to this heading"></a></h3>
+<p>As previously mentioned, any model class can serve as a field selector. In the example below, the <code class="docutils literal notranslate"><span class="pre">Author</span></code> model is utilized to extract author information from the <code class="docutils literal notranslate"><span class="pre">author</span></code> element within the scope. The <code class="docutils literal notranslate"><span class="pre">Author</span></code> model class is assigned as an attribute of the <code class="docutils literal notranslate"><span class="pre">Book</span></code> model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">FirstChild</span>
+
+
+<span class="k">class</span> <span class="nc">Author</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">__scope__</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;author&quot;</span><span class="p">)</span>
+
+    <span class="n">birth</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">PatternSelector</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\d</span><span class="si">{4}</span><span class="s2">-\d</span><span class="si">{2}</span><span class="s2">-\d</span><span class="si">{2}</span><span class="s2">&quot;</span><span class="p">))</span>
+        <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+        <span class="o">|</span> <span class="n">Operation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">))</span>
+    <span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">FirstChild</span><span class="p">()</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span>
+
+    <span class="n">author</span> <span class="o">=</span> <span class="n">Author</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;div class=&quot;book&quot; href=&quot;www.book.com&quot;&gt;</span>
+<span class="s2">        &lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;</span>
+<span class="s2">        &lt;div class=&quot;author&quot;&gt;</span>
+<span class="s2">            &lt;p&gt;George Orwell&lt;/p&gt;</span>
+<span class="s2">            &lt;p&gt;Great author&lt;/p&gt;</span>
+<span class="s2">            &lt;p&gt;1903-06-25&lt;/p&gt;</span>
+<span class="s2">        &lt;/div&gt;</span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Book(author=Author(birth=datetime.datetime(1903, 6, 25, 0, 0), name=&#39;George Orwell&#39;), title=&#39;Animal Farm&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="frozen-model">
+<h3>Frozen Model<a class="headerlink" href="#frozen-model" title="Link to this heading"></a></h3>
+<p>By default, all model field attributes are mutable. To make the model immutable, set the <code class="docutils literal notranslate"><span class="pre">__frozen__</span></code> attribute to <code class="docutils literal notranslate"><span class="pre">True</span></code> in the model definition. This will enforce immutability and automatically make the model hashable, similar to the behavior of Python’s <code class="docutils literal notranslate"><span class="pre">dataclass</span></code>. Attempting to modify any field of a frozen instance will raise a <code class="docutils literal notranslate"><span class="pre">FrozenModelException</span></code>.</p>
+<p>Additionally, whether the model is frozen or not, trying to set an attribute that is not defined as a field will result in an <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.exceptions</span> <span class="kn">import</span> <span class="n">FrozenModelException</span>
+
+
+<span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span>
+    <span class="n">__frozen__</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+    <span class="n">price</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;div class=&quot;book&quot; href=&quot;www.book.com&quot;&gt;</span>
+<span class="s2">        &lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;</span>
+<span class="s2">        &lt;p class=&quot;price&quot;&gt;100$&lt;/p&gt;</span>
+<span class="s2">        &lt;p&gt;George Orwell&lt;/p&gt;</span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="mi">200</span>  <span class="c1"># type: ignore</span>
+<span class="k">except</span> <span class="n">FrozenModelException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model &#39;&lt;class &#39;__main__.Book&#39;&gt;&#39; is frozen and attributes of its instance cannot be modified.
+</pre></div>
+</div>
+</div>
+</div>
+<p>A frozen model is hashable, allowing its instances to be used as keys in dictionaries or stored in sets.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">LastOfType</span>
+
+
+<span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span>
+    <span class="n">__frozen__</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="p">(</span><span class="n">LastOfType</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">))</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;div class=&quot;book&quot; href=&quot;www.book.com&quot;&gt;</span>
+<span class="s2">        &lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;</span>
+<span class="s2">        &lt;p class=&quot;price&quot;&gt;100$&lt;/p&gt;</span>
+<span class="s2">        &lt;p&gt;George Orwell&lt;/p&gt;</span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">lookup</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">Book</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Animal Farm&quot;</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="s2">&quot;George Orwell&quot;</span><span class="p">):</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">Book</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Animal Farm&quot;</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="s2">&quot;Unknown&quot;</span><span class="p">):</span> <span class="mi">2</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">lookup</span><span class="p">[</span><span class="n">result</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="field">
+<h3>Field<a class="headerlink" href="#field" title="Link to this heading"></a></h3>
+<p>By default, all fields defined in a model are part of:</p>
+<ul class="simple">
+<li><p><strong>String representation:</strong> Fields are included when generating the model’s string representation.</p></li>
+<li><p><strong>Equality comparison:</strong> Fields are considered when comparing model instances for equality.</p></li>
+<li><p><strong>Hash calculation:</strong> Fields are used in computing the model’s hash value (for frozen models).</p></li>
+<li><p><strong>Migration:</strong> Fields are passed along during the migration process to other data structures.</p></li>
+</ul>
+<p>To exclude a field from any of these operations, the <code class="docutils literal notranslate"><span class="pre">Field</span></code> class can be used as a wrapper. It allows you to control field behavior through the following parameters, all of them are of type <code class="docutils literal notranslate"><span class="pre">bool</span></code> and default to <code class="docutils literal notranslate"><span class="pre">True</span></code>:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">repr</span></code>:</strong> Determines if the field is included in the model’s string representation.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">compare</span></code>:</strong> Determines if the field is considered in equality comparisons and in hash computation (for frozen models).</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">migrate</span></code>:</strong> Determines if the field is included in the migration process.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
+
+<span class="n">PRICE_SELECTOR</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span>
+    <span class="n">__frozen__</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+    <span class="n">price</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">PRICE_SELECTOR</span><span class="p">,</span> <span class="n">compare</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">migrate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;div class=&quot;book&quot;&gt;</span>
+<span class="s2">        &lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;</span>
+<span class="s2">        &lt;p class=&quot;price&quot;&gt;100$&lt;/p&gt;</span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">    &lt;div class=&quot;book&quot;&gt;</span>
+<span class="s2">        &lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;</span>
+<span class="s2">        &lt;p class=&quot;price&quot;&gt;50$&lt;/p&gt;</span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> == </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Book(title=&#39;Animal Farm&#39;) == Book(title=&#39;Animal Farm&#39;): True
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 <section id="migration">
 <h3>Migration<a class="headerlink" href="#migration" title="Link to this heading"></a></h3>
 <p>You can migrate an instance of a model to another model using <code class="docutils literal notranslate"><span class="pre">migrate</span></code> method. This method takes another class as an argument and initializes it with the field values from the current model instance. It’s particularly useful for migrating data to <code class="docutils literal notranslate"><span class="pre">pydantic</span></code> model for validation or to an <code class="docutils literal notranslate"><span class="pre">SQLAlchemy</span></code> model for database operations. The fields in both models must match for migration to work seamlessly. Additionally, you can pass extra parameters as keyword arguments, which will be forwarded to the target model’s constructor.</p>
@@ -1741,15 +1951,7 @@ Is affordable: True
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">40</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">pydantic</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;pydantic&#39;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PydanticBook(title=&#39;Animal Farm&#39;, price=100)
 </pre></div>
 </div>
 </div>
@@ -1791,6 +1993,14 @@ Is affordable: True
     <span class="n">book</span><span class="o">.</span><span class="n">migrate</span><span class="p">(</span><span class="n">PydanticBook</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1 validation error for PydanticBook
+price
+  Input should be a valid string [type=string_type, input_value=100, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.8/v/string_type
 </pre></div>
 </div>
 </div>
@@ -1843,6 +2053,190 @@ Is affordable: True
 <span class="n">book</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">book</span><span class="o">.</span><span class="n">migrate</span><span class="p">(</span><span class="n">SABook</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;SABook(title=Animal Farm, price=100)&gt;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="mapping">
+<h4>Mapping<a class="headerlink" href="#mapping" title="Link to this heading"></a></h4>
+<p>For more complex models with another models as fields, <code class="docutils literal notranslate"><span class="pre">mapping</span></code> can be passed to <code class="docutils literal notranslate"><span class="pre">migrate</span></code> method to specify how <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> models should be transformed into respective target models.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pydantic</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
+
+
+<span class="k">class</span> <span class="nc">PydanticAuthor</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">country</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="k">class</span> <span class="nc">PydanticBook</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">author</span><span class="p">:</span> <span class="n">PydanticAuthor</span>
+
+
+<span class="k">class</span> <span class="nc">Author</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+    <span class="n">country</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;country&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="n">Author</span>
+
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;div class=&quot;book&quot; href=&quot;www.book.com&quot;&gt;</span>
+<span class="s2">        &lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;</span>
+<span class="s2">        &lt;span&gt;</span>
+<span class="s2">            &lt;p&gt;George Orwell&lt;/p&gt;</span>
+<span class="s2">            &lt;a class=&quot;country&quot;&gt;United Kingdom&lt;/a&gt;</span>
+<span class="s2">        &lt;/span&gt;</span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">book</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">book</span><span class="o">.</span><span class="n">migrate</span><span class="p">(</span><span class="n">PydanticBook</span><span class="p">,</span> <span class="n">mapping</span><span class="o">=</span><span class="p">{</span><span class="n">Author</span><span class="p">:</span> <span class="n">PydanticAuthor</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PydanticBook(title=&#39;Animal Farm&#39;, author=PydanticAuthor(name=&#39;George Orwell&#39;, country=&#39;United Kingdom&#39;))
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="migrationschema">
+<h4>MigrationSchema<a class="headerlink" href="#migrationschema" title="Link to this heading"></a></h4>
+<p>When additional initialization parameters are required for model’s fields, <code class="docutils literal notranslate"><span class="pre">MigrationSchema</span></code> can be used. It contains both the target model and a dictionary of keyword arguments passed to the target model’s initializer.</p>
+<p>It’s important to note that <code class="docutils literal notranslate"><span class="pre">migrate</span></code> can also accept keyword arguments, but these are applied only to the target model and not to any nested models within it.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">MigrationSchema</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
+
+
+<span class="k">class</span> <span class="nc">TargetAuthor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">country</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">genre</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="n">country</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genre</span> <span class="o">=</span> <span class="n">genre</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;TargetAuthor(name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2">, country=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">country</span><span class="si">!r}</span><span class="s2">, genre=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">genre</span><span class="si">!r}</span><span class="s2">)&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">TargetBook</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">author</span><span class="p">:</span> <span class="n">TargetAuthor</span><span class="p">,</span> <span class="n">price</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">author</span> <span class="o">=</span> <span class="n">author</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="n">price</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;TargetBook(title=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="si">!r}</span><span class="s2">, author=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">author</span><span class="si">!r}</span><span class="s2">, price=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">price</span><span class="si">!r}</span><span class="s2">)&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">Author</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+    <span class="n">country</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;country&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+    <span class="n">author</span> <span class="o">=</span> <span class="n">Author</span>
+
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;div class=&quot;book&quot; href=&quot;www.book.com&quot;&gt;</span>
+<span class="s2">        &lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;</span>
+<span class="s2">        &lt;span&gt;</span>
+<span class="s2">            &lt;p&gt;George Orwell&lt;/p&gt;</span>
+<span class="s2">            &lt;a class=&quot;country&quot;&gt;United Kingdom&lt;/a&gt;</span>
+<span class="s2">        &lt;/span&gt;</span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">book</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">book</span><span class="o">.</span><span class="n">migrate</span><span class="p">(</span>
+    <span class="n">TargetBook</span><span class="p">,</span>
+    <span class="n">mapping</span><span class="o">=</span><span class="p">{</span><span class="n">Author</span><span class="p">:</span> <span class="n">MigrationSchema</span><span class="p">(</span><span class="n">TargetAuthor</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;genre&quot;</span><span class="p">:</span> <span class="s2">&quot;Dystopia&quot;</span><span class="p">})},</span>
+    <span class="n">price</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TargetBook(title=&#39;Animal Farm&#39;, author=TargetAuthor(name=&#39;George Orwell&#39;, country=&#39;United Kingdom&#39;, genre=&#39;Dystopia&#39;), price=10)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="copy">
+<h4>Copy<a class="headerlink" href="#copy" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">copy</span></code> method allows model to <em>migrated to itself</em>, creating a new identical instance. This operation acts as deep copy, meaning that all nested models within the original model are copied as well.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
+
+
+<span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+    <span class="n">price</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span> <span class="o">|</span> <span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;div class=&quot;book&quot; href=&quot;www.book.com&quot;&gt;</span>
+<span class="s2">        &lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;</span>
+<span class="s2">        &lt;p class=&quot;price&quot;&gt;100&lt;/p&gt;</span>
+<span class="s2">        &lt;p&gt;George Orwell&lt;/p&gt;</span>
+<span class="s2">    &lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">book</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">book_copy</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="k">assert</span> <span class="n">book</span> <span class="o">==</span> <span class="n">book_copy</span>
+<span class="k">assert</span> <span class="n">book</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">book_copy</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">book_copy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Book(title=&#39;Animal Farm&#39;, price=100)
 </pre></div>
 </div>
 </div>

@@ -52,7 +52,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../demos/use_cases.html">Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../demos/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../demos/selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../demos/css.html">CSS Selectors</a></li>
@@ -138,7 +139,7 @@
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; nav_string = NavigableString(&quot;Hello World&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; BeautifulSoup(nav_string)</span>
+<span class="sd">    ... BeautifulSoup(nav_string)</span>
 <span class="sd">    &lt;html&gt;&lt;body&gt;&lt;p&gt;Hello World&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</span>
 
 <span class="sd">    BeautifulSoup constructor always wraps NavigableString in &lt;p&gt; element.</span>
@@ -405,6 +406,16 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Exception raised by BaseModel when parameters passed into the constructor</span>
 <span class="sd">    do not contain all required fields defined in the model class.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="FrozenModelException">
+<a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.FrozenModelException">[docs]</a>
+<span class="k">class</span> <span class="nc">FrozenModelException</span><span class="p">(</span><span class="n">BaseModelException</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exception raised by BaseModel when trying to modify frozen model instance.</span>
+<span class="sd">    Frozen model instances are read-only and cannot be modified.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 </pre></div>

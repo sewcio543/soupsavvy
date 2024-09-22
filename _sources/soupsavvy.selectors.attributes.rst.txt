@@ -1,6 +1,3 @@
-selectors.attributes
-=====================================
-
 .. automodule:: soupsavvy.selectors.attributes
    :members:
    :undoc-members:

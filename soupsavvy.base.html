@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>base &mdash; soupsavvy  documentation</title>
+  <title>Example &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -53,7 +53,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="demos/about.html">Soupsavvy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/use_cases.html">Use Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
@@ -75,7 +76,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">base</li>
+      <li class="breadcrumb-item active">Example</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/soupsavvy.base.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -85,9 +86,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-soupsavvy.base">
-<span id="base"></span><h1>base<a class="headerlink" href="#module-soupsavvy.base" title="Link to this heading"></a></h1>
-<p>Module for base classes used across the package.
+  <p id="module-soupsavvy.base">Module for base classes used across the package.
 Introduces another layer of abstraction for operations and selectors.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.base.BaseOperation">
@@ -98,7 +97,7 @@ Operations are used to process the selection results from the soup,
 extract and transform the data.</p>
 <p>Operations can be chained together using the pipe operator ‘|’.</p>
 <section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations.general</span> <span class="kn">import</span> <span class="n">Operation</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Operation</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span> <span class="o">|</span> <span class="n">Operation</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">)</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;  TEXT  &quot;</span><span class="p">)</span>
@@ -109,7 +108,7 @@ extract and transform the data.</p>
 target information.</p>
 </section>
 <section id="id1">
-<h2>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<h1>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
 <span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 <span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span> <span class="o">|</span> <span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
@@ -124,14 +123,14 @@ implemented in derived classes.</p>
 <span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/soupsavvy/base.html#BaseOperation.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.base.BaseOperation.execute" title="Link to this definition"></a></dt>
 <dd><p>Execute the operation on the given argument and return the result.</p>
 <section id="parameters">
-<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>arg<span class="classifier">Any</span></dt><dd><p>Argument to be processed by the operation.</p>
 </dd>
 </dl>
 </section>
 <section id="returns">
-<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>Any</dt><dd><p>Result of the operation.</p>
 </dd>
@@ -148,12 +147,12 @@ implemented in derived classes.</p>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupSelector</span></code></a></p>
 <p>Interface for Tags that uses multiple steps to find elements.</p>
 <section id="notes">
-<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<h1>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h1>
 <p>To implement CompositeSoupSelector interface, child class must implement
 call super init method with provided tags as arguments to check and assign them.</p>
 </section>
 <section id="attributes">
-<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<h1>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>selectors<span class="classifier">list[SoupSelector]</span></dt><dd><p>List of SoupSelector objects passed to CompositeSoupSelector.</p>
 </dd>
@@ -170,14 +169,14 @@ call super init method with provided tags as arguments to check and assign them.
 Checks if all tags are instances of SoupSelector and assigns
 them to ‘selectors’ attribute.</p>
 <section id="id2">
-<h3>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<h2>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>selectors: Iterable[SoupSelector]</dt><dd><p>SoupSelector objects passed to CompositeSoupSelector.</p>
 </dd>
 </dl>
 </section>
 <section id="raises">
-<h3>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h3>
+<h2>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>NotSoupSelectorException</dt><dd><p>If any of provided parameters is not an instance of SoupSelector.</p>
 </dd>
@@ -190,7 +189,7 @@ them to ‘selectors’ attribute.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selectors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.base.CompositeSoupSelector.selectors" title="Link to this definition"></a></dt>
 <dd><p>Returns a list of selectors that composite selector consists of.</p>
 <section id="id3">
-<h3>Returns<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<h2>Returns<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>list[SoupSelector]</dt><dd><p>List of SoupSelector objects.</p>
 </dd>
@@ -213,7 +212,7 @@ to perform operation directly on scope element.</p>
 <span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/soupsavvy/base.html#OperationSearcherMixin.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.base.OperationSearcherMixin.find" title="Link to this definition"></a></dt>
 <dd><p>Extracts information from provided element.</p>
 <section id="id4">
-<h2>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<h1>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object to extract text from.</p>
 </dd>
@@ -224,7 +223,7 @@ to perform operation directly on scope element.</p>
 </dl>
 </section>
 <section id="id5">
-<h2>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<h1>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>Any</dt><dd><p>Extracted information from the tag.</p>
 </dd>
@@ -237,7 +236,7 @@ to perform operation directly on scope element.</p>
 <span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/base.html#OperationSearcherMixin.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.base.OperationSearcherMixin.find_all" title="Link to this definition"></a></dt>
 <dd><p>Extracts information from provided element.</p>
 <section id="id6">
-<h2>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<h1>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object to extract text from.</p>
 </dd>
@@ -248,7 +247,7 @@ to perform operation directly on scope element.</p>
 </dl>
 </section>
 <section id="id7">
-<h2>Returns<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<h1>Returns<a class="headerlink" href="#id7" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>list[Any]</dt><dd><p>Extracted information from the tag.</p>
 </dd>
@@ -264,7 +263,7 @@ to perform operation directly on scope element.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Interface for Tags that can be searched with css selector.</p>
 <section id="id8">
-<h2>Notes<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<h1>Notes<a class="headerlink" href="#id8" title="Link to this heading"></a></h1>
 <p>To implement SelectableCSS interface, child class must implement:
 * ‘selector’ property, which return a string representing element css selector.</p>
 <dl class="py property">
@@ -289,7 +288,7 @@ to perform operation directly on scope element.</p>
 <p>Interface for classes that define tags and provide functionality
 to find them in BeautifulSoup Tags.</p>
 <section id="methods">
-<h2>Methods<a class="headerlink" href="#methods" title="Link to this heading"></a></h2>
+<h1>Methods<a class="headerlink" href="#methods" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>find(tag: Tag, strict: bool = False)</dt><dd><p>Finds tag element in BeautifulSoup Tag by wrapping Tag find method
 and passing parameters specific to given tag.
@@ -304,7 +303,7 @@ and passing parameters specific to given tag.</p>
 </dl>
 </section>
 <section id="id9">
-<h2>Notes<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<h1>Notes<a class="headerlink" href="#id9" title="Link to this heading"></a></h1>
 <p>To implement SoupSelector interface child class must implement:
 * ‘find_all’ method that returns a list of matching elements in bs4.Tag.
 It could optionally implement:
@@ -322,7 +321,7 @@ can be overridden in child class.</p>
 <span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tag</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span></dt>
 <dd><p>Finds a first matching element in provided BeautifulSoup Tag.</p>
 <section id="id10">
-<h3>Parameters<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<h2>Parameters<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
 </dd>
@@ -338,19 +337,19 @@ By default True.</p>
 </dl>
 </section>
 <section id="id11">
-<h3>Returns<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<h2>Returns<a class="headerlink" href="#id11" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>Tag | None</dt><dd><p>BeautifulSoup Tag if it tag was found in the markup, else None.</p>
 </dd>
 </dl>
 </section>
 <section id="id12">
-<h3>Notes<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<h2>Notes<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
 <p>If result is an instance of NavigableString,
 exception is raised to avoid any type of inconsistency downstream.</p>
 </section>
 <section id="id13">
-<h3>Raises<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<h2>Raises<a class="headerlink" href="#id13" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>TagNotFoundException</dt><dd><p>If strict parameter is set to True and tag was not found in markup.</p>
 </dd>
@@ -365,7 +364,7 @@ exception is raised to avoid any type of inconsistency downstream.</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/base.html#SoupSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.base.SoupSelector.find_all" title="Link to this definition"></a></dt>
 <dd><p>Finds all matching elements in provided BeautifulSoup Tag.</p>
 <section id="id14">
-<h3>Parameters<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
+<h2>Parameters<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
 </dd>
@@ -379,7 +378,7 @@ to return. If set to None, all elements are returned. By default None.</p>
 </dl>
 </section>
 <section id="id15">
-<h3>Returns<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<h2>Returns<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>list[Tag]</dt><dd><p>A list of Tag objects matching tag specifications.
 If none found, the list is empty.</p>
@@ -398,7 +397,7 @@ If none found, the list is empty.</p>
 Checks for instance of BaseOperation and raises an exception if not.
 Returns provided object if fulfills the condition for convenience.</p>
 <section id="id16">
-<h2>Parameters<a class="headerlink" href="#id16" title="Link to this heading"></a></h2>
+<h1>Parameters<a class="headerlink" href="#id16" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>x<span class="classifier">Any</span></dt><dd><p>Any object to be validated as correct operation.</p>
 </dd>
@@ -408,7 +407,7 @@ By default None, which results in default message.</p>
 </dl>
 </section>
 <section id="id17">
-<h2>Raises<a class="headerlink" href="#id17" title="Link to this heading"></a></h2>
+<h1>Raises<a class="headerlink" href="#id17" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>NotOperationException</dt><dd><p>If provided object is not an instance of BaseOperation.</p>
 </dd>
@@ -423,7 +422,7 @@ By default None, which results in default message.</p>
 Checks for instance of SoupSelector and raises an exception if not.
 Returns provided object if fulfills the condition for convenience.</p>
 <section id="id18">
-<h2>Parameters<a class="headerlink" href="#id18" title="Link to this heading"></a></h2>
+<h1>Parameters<a class="headerlink" href="#id18" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>x<span class="classifier">Any</span></dt><dd><p>Any object to be validated as correct selector.</p>
 </dd>
@@ -433,7 +432,7 @@ By default None, which results in default message.</p>
 </dl>
 </section>
 <section id="id19">
-<h2>Raises<a class="headerlink" href="#id19" title="Link to this heading"></a></h2>
+<h1>Raises<a class="headerlink" href="#id19" title="Link to this heading"></a></h1>
 <dl class="simple">
 <dt>NotSoupSelectorException</dt><dd><p>If provided object is not an instance of SoupSelector.</p>
 </dd>
@@ -441,7 +440,6 @@ By default None, which results in default message.</p>
 </section>
 </dd></dl>
 
-</section>
 
 
            </div>
