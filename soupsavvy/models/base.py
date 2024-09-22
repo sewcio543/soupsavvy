@@ -7,7 +7,8 @@ from __future__ import annotations
 
 from abc import ABC
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from dataclasses import field as datafield
 from functools import reduce
 from typing import Any, Literal, Optional, Type, TypeVar, Union, overload
 
@@ -38,7 +39,7 @@ class MigrationSchema:
     """
 
     target: Type
-    params: dict = field(default_factory=dict)
+    params: dict = datafield(default_factory=dict)
 
 
 def post(field: str) -> Callable[[Callable], Callable]:
@@ -307,21 +308,21 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
 
         fields = self.__class__.fields.keys()
 
-        for field_ in fields:
+        for field in fields:
             try:
-                value = kwargs.pop(field_)
+                value = kwargs.pop(field)
             except KeyError:
                 raise exc.MissingFieldsException(
                     f"Cannot initialize model '{self.__class__.__name__}' "
-                    f"without '{field_}' field."
+                    f"without '{field}' field."
                 )
 
-            func = getattr(self, c.POST_PROCESSORS).get(field_)
+            func = getattr(self, c.POST_PROCESSORS).get(field)
 
             if func is not None:
                 value = func(self, value)
 
-            setattr(self, field_, value)
+            setattr(self, field, value)
 
         if kwargs:
             raise exc.UnknownModelFieldException(

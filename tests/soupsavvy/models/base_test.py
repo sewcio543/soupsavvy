@@ -3,6 +3,8 @@ Module with unit tests for BaseModel component,
 which is parent class of all user-defined models.
 """
 
+from dataclasses import dataclass
+
 import pydantic
 import pytest
 from sqlalchemy import Column, ForeignKey, Integer, String
@@ -30,6 +32,7 @@ from tests.soupsavvy.conftest import (
     MockPlus10Operation,
     MockTextOperation,
     find_body_element,
+    strip,
     to_bs,
 )
 
@@ -71,7 +74,8 @@ class MockAddress(BaseModel):
 
 class MockModelTitleField(BaseModel):
     """
-    Mock model with field, which is instance of another model to test migration in such cases.
+    Mock model with field, which is instance of another model
+    to test migration in such cases.
     """
 
     __scope__ = MockDivSelector()
@@ -116,8 +120,8 @@ class MockMigrationTitle:
 
 class MockMigrationName:
     """
-    Mock class for testing migration of MockName model, which is a field of model, that is
-    used as field of migrated model. Tests recursive behavior of migrate method.
+    Mock class for testing migration of MockName model, which is a field of model,
+    that is used as field of migrated model. Tests recursive behavior of migrate method.
     """
 
     def __init__(self, name: str) -> None:
@@ -130,7 +134,8 @@ class MockMigrationName:
 
 class MockNotEqualModel(BaseModel):
     """
-    Mock model for testing model equality, if two instances of models are of different type,
+    Mock model for testing model equality,
+    if two instances of models are of different type,
     they are never equal, even if they have the same attributes.
     """
 
@@ -210,7 +215,8 @@ class TestBaseModel:
 
     def test_raises_error_when_creating_model_class_without_fields(self):
         """
-        Tests if FieldsNotDefinedException is raised when fields are not defined in model.
+        Tests if FieldsNotDefinedException is raised
+        when fields are not defined in model.
         At least one field must be defined in model to make sense and work properly.
         Fields is class attribute with value of instance `TagSearcher`.
         """
@@ -223,8 +229,9 @@ class TestBaseModel:
     def test_raises_error_on_init_if_field_missing_in_kwargs(self):
         """
         Tests if MissingFieldsException is raised when field is missing in kwargs
-        during model initialization. All fields must be provided, only as keyword arguments.
-        This is not usual way of creating models, which should be done with find methods.
+        during model initialization. All fields must be provided,
+        only as keyword arguments. This is not usual way of creating models,
+        which should be done with find methods.
         """
 
         with pytest.raises(exc.MissingFieldsException):
@@ -255,8 +262,8 @@ class TestBaseModel:
     def test_class_attribute_fields_is_defined_correctly(self):
         """
         Tests if class attribute fields is defined correctly in model.
-        It should be dictionary with field names as keys and provided selectors as values
-        wrapped in Field class.
+        It should be dictionary with field names as keys
+        and provided selectors wrapped in Field with default parameters as values.
         """
         assert MockModel.fields == {
             "title": Field(TITLE_SELECTOR),
@@ -266,7 +273,8 @@ class TestBaseModel:
     def test_class_attribute_fields_contains_inherited_and_model_fields(self):
         """
         Tests if class attribute fields contains both inherited fields
-        from base class and fields defined in model. Inheriting fields behavior is default,
+        from base class and fields defined in model.
+        Inheriting fields behavior is default,
         but can be overridden by setting __inherit_fields__ to False.
         """
         name_selector = MockClassWidgetSelector() | MockTextOperation()
@@ -611,9 +619,9 @@ class TestBaseModel:
     def test_find_uses_recursive_search_inside_scope_element_with_recursive_true(self):
         """
         Tests if find method of model uses recursive search inside scope element.
-        Recursive parameter only applies to search for scope element. Once scope is found,
-        search for fields is always recursive, unless specified otherwise
-        with ex. relative selector.
+        Recursive parameter only applies to search for scope element.
+        Once scope is found, search for fields is always recursive,
+        unless specified otherwise with ex. relative selector.
         """
         text = """
             <span>
@@ -705,8 +713,8 @@ class TestBaseModel:
         Tests if FieldExtractionException is raised when field element is not found
         by selector and subsequent operation failed as it expected Tag.
         If this case is not explicitly handled in selector by ex. Suppress or SkipNone,
-        field extraction fails. This works the same way for both strict and non-strict mode
-        to ensure integrity.
+        field extraction fails. This works the same way for both strict
+        and non-strict mode to ensure integrity.
         """
         text = """
             <span>Hello</span>
@@ -729,9 +737,10 @@ class TestBaseModel:
         self, strict: bool
     ):
         """
-        Tests if find method allows empty attributes of model if fields are defined in a way,
-        that it handles exceptions properly. MockTextOperation is set to skip None values,
-        so if no title is found, it returns None. Strict option applies only to scope search,
+        Tests if find method allows empty attributes of model
+        if fields are defined in a way, that it handles exceptions properly.
+        MockTextOperation is set to skip None values, so if no title is found,
+        it returns None. Strict option applies only to scope search,
         if scope is found, but field extractor returns None, it's not treated as error.
         """
         text = """
@@ -751,7 +760,8 @@ class TestBaseModel:
 
     def test_find_all_returns_list_of_models_from_all_found_scopes(self):
         """
-        Tests if find_all method returns a list of models extracted from all found scopes.
+        Tests if find_all method returns a list of models extracted
+        from all found scopes.
         """
         text = """
             <a>Not in scope</a>
@@ -837,9 +847,10 @@ class TestBaseModel:
         self,
     ):
         """
-        Tests if find_all method returns a list of models extracted from all found scopes
-        when recursive is set to False. Recursive option applies only to scope search,
-        so only models from scope elements, that are children of body element are extracted.
+        Tests if find_all method returns a list of models
+        extracted from all found scopes when recursive is set to False.
+        Recursive option applies only to scope search, so only models from
+        scope elements, that are children of body element are extracted.
         """
         text = """
             <a>Not in scope</a>
@@ -1142,8 +1153,9 @@ class TestBaseModel:
 
     def test_migrate_raises_error_if_field_model_param_in_its_migration_schema(self):
         """
-        Tests if migrate method raises TypeError if MigrationSchema in field model mapping
-        contains param of the same name as one of the field model attributes.
+        Tests if migrate method raises TypeError
+        if MigrationSchema in field model mapping contains param of the same name
+        as one of the field model attributes.
         It results in `multiple values for keyword argument`.
         """
         model = MockModelTitleField(title=MockTitle(name="Title"), price=10)
@@ -1196,9 +1208,9 @@ class TestBaseModel:
         self,
     ):
         """
-        Tests if field, which is another model, is migrated as target model, when mapping
-        is provided and it contains field class as key. Testing case, where value
-        of mapping is class of the model to migrate to.
+        Tests if field, which is another model, is migrated as target model,
+        when mapping is provided and it contains field class as key.
+        Testing case, where value of mapping is class of the model to migrate to.
         """
 
         model = MockModelTitleField(title=MockTitle(name="Title"), price=10)
@@ -1215,9 +1227,9 @@ class TestBaseModel:
         self,
     ):
         """
-        Tests if keyword parameters passed to migrate method are used only for high level
-        model init, not for any field model init. When there is need for specifying
-        additional parameters for field model,
+        Tests if keyword parameters passed to migrate method
+        are used only for high level model init, not for any field model init.
+        When there is need for specifying additional parameters for field model,
         it should be done in mapping via MigrationSchema.
         """
 
@@ -1330,8 +1342,8 @@ class TestBaseModel:
 
     def test_not_frozen_model_instance_attributes_can_be_modified(self):
         """
-        Tests if model instance (which is not frozen if not defined otherwise) attributes
-        can be modified, by setting new value to one of its fields.
+        Tests if model instance (which is not frozen if not defined otherwise)
+        attributes can be modified, by setting new value to one of its fields.
         """
         model = MockModel(title="Title", price=10)
         model.title = "Title2"  # type: ignore
@@ -1389,7 +1401,10 @@ class TestBaseModel:
             model.name = 20  # type: ignore
 
     def test_hash_raises_error_if_model_not_frozen(self):
-        """Tests if calling hash on model instance raises TypeError if model is not frozen."""
+        """
+        Tests if calling hash on model instance raises TypeError
+        if model is not frozen.
+        """
         model = MockModel(title="Title", price=10)
 
         with pytest.raises(TypeError):
@@ -1536,8 +1551,8 @@ class TestBaseModelIntegration:
         """
         Tests if Default propagates errors of selector, so if any exception was raised
         by selector, it raises FieldExtractionException. Default is only applied
-        if selector did not raise any exception and returned None. In this case None is not
-        handled in MockTextOperation, so it raises exception.
+        if selector did not raise any exception and returned None.
+        In this case None is not handled in MockTextOperation, so it raises exception.
         """
 
         class MockModel(BaseModel):
@@ -1971,3 +1986,426 @@ class TestBaseModelIntegration:
             name="JOE",
             text="Title--Hello",
         )
+
+    def test_field_with_compare_false_is_not_compared(self):
+        """
+        Tests if field with compare=False is ignored when comparing instances.
+        This also applies to computing hash of the instance.
+        """
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+            __frozen__ = True
+
+            title = TITLE_SELECTOR
+            price = Field(PRICE_SELECTOR, compare=False)
+
+        assert MockModel(title="Title", price=10) == MockModel(title="Title", price=20)
+        assert hash(MockModel(title="Title", price=10)) == hash(
+            MockModel(title="Title", price=20)
+        )
+        assert (
+            MockModel(title="Title", price=10)
+            != MockModel(title="Title2", price=10)
+            != MockTitle(name="Title")
+        )
+        assert hash(MockModel(title="Title", price=10)) != hash(
+            MockModel(title="Title2", price=10)
+        )
+
+    def test_field_with_repr_false_is_not_in_representation(self):
+        """
+        Tests if field with repr=False is ignored when creating representation
+        of the instance. It also applies to string representation.
+        """
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = TITLE_SELECTOR
+            price = Field(PRICE_SELECTOR, repr=False)
+
+        instance = MockModel(title="Title", price=10)
+        assert repr(instance) == "MockModel(title='Title')" == str(instance)
+
+    def test_field_with_migrate_false_is_not_migrated(self):
+        """
+        Tests if field with migrate=False is ignored when migrating instance
+        to another class. It is not passed to constructor of target class.
+        """
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = TITLE_SELECTOR
+            price = Field(PRICE_SELECTOR, migrate=False)
+
+        @dataclass
+        class MockMigrationModel:
+            title: str
+
+        instance = MockModel(title="Title", price=10)
+        migrated = instance.migrate(MockMigrationModel)
+
+        assert isinstance(migrated, MockMigrationModel)
+        assert migrated == MockMigrationModel(title="Title")
+
+    def test_model_works_properly_when_all_fields_has_all_parameters_false(self):
+        """
+        Tests if model behaves properly when all its fields has all parameters
+        set to False. Comparison checks only model class, representation has only
+        class name, migration is without passing any parameters.
+        """
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+            __frozen__ = True
+
+            title = Field(TITLE_SELECTOR, repr=False, compare=False, migrate=False)
+            price = Field(PRICE_SELECTOR, repr=False, compare=False, migrate=False)
+
+        @dataclass
+        class MockMigrationModel: ...
+
+        instance = MockModel(title="Title", price=10)
+
+        assert repr(instance) == "MockModel()" == str(instance)
+        assert (
+            instance
+            == MockModel(title="Title2", price=20)
+            == MockModel(title="Title", price=10)
+        )
+        assert instance != MockTitle(name="Title")
+
+        assert (
+            hash(instance)
+            == hash(MockModel(title="Title2", price=20))
+            == hash(MockModel(title="Title", price=10))
+        )
+
+        migrated = instance.migrate(MockMigrationModel)
+        assert isinstance(migrated, MockMigrationModel)
+        assert migrated == MockMigrationModel()
+
+    def test_find_methods_work_properly_on_field(self):
+        """
+        Tests if find and find_all methods work properly when model field
+        is directly defined as Field.
+        """
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = Field(TITLE_SELECTOR, repr=False)
+            price = Field(PRICE_SELECTOR, compare=False, migrate=False)
+
+        text = """
+            <div>
+                <a>Title</a>
+                <p class="widget">10</p>
+            </div>
+            <div>
+                <a>Title2</a>
+                <p class="widget">20</p>
+            </div>
+        """
+        bs = to_bs(text)
+        selector = MockModel
+        result = selector.find(bs)
+        assert result == MockModel(title="Title", price=10)
+
+        result = selector.find_all(bs)
+        assert result == [
+            MockModel(title="Title", price=10),
+            MockModel(title="Title2", price=20),
+        ]
+
+
+@pytest.mark.selector
+class TestField:
+    """
+    Unit tests suite for Field class, it's a wrapper of selector to which it delegates.
+    Runs full set of tests on find methods with use of simple selector to make sure
+    it delegates correctly with passing all parameters.
+    Field is supposed to be used with BaseModel, so it's tested in integration tests
+    as well, but, it's worth to have unit tests as it can be used independently.
+    """
+
+    def test_find_returns_first_tag_matching_selector(self):
+        """Tests if find method returns first tag matching selector."""
+        text = """
+            <div href="github"></div>
+            <a class="widget">1</a>
+            <a><p>2</p></a>
+            <span>
+                <a>3</a>
+            </span>
+        """
+        bs = to_bs(text)
+        selector = Field(MockLinkSelector())
+        result = selector.find(bs)
+        assert strip(str(result)) == strip("""<a class="widget">1</a>""")
+
+    def test_find_returns_none_if_no_match_and_strict_false(self):
+        """
+        Tests if find returns None if no element matches the selector
+        and strict is False.
+        """
+        text = """
+            <div href="github"></div>
+            <span class="widget"></span>
+            <div><p>Hello</p></div>
+            <span>
+                <div>Hello</div>
+            </span>
+        """
+        bs = to_bs(text)
+        selector = Field(MockLinkSelector())
+        result = selector.find(bs)
+        assert result is None
+
+    def test_find_raises_exception_if_no_match_and_strict_true(self):
+        """
+        Tests if find raises TagNotFoundException if no element matches the selector
+        and strict is True.
+        """
+        text = """
+            <div href="github"></div>
+            <span class="widget"></span>
+            <div><p>Hello</p></div>
+            <span>
+                <div>Hello</div>
+            </span>
+        """
+        bs = to_bs(text)
+        selector = Field(MockLinkSelector())
+
+        with pytest.raises(exc.TagNotFoundException):
+            selector.find(bs, strict=True)
+
+    def test_find_all_returns_empty_list_when_no_match(self):
+        """Tests if find returns an empty list if no element matches the selector."""
+        text = """
+            <div href="github"></div>
+            <span class="widget"></span>
+            <div><p>Hello</p></div>
+            <span>
+                <div>Hello</div>
+            </span>
+        """
+        bs = to_bs(text)
+        selector = Field(MockLinkSelector())
+        result = selector.find_all(bs)
+        assert result == []
+
+    def test_find_all_returns_all_matching_elements(self):
+        """Tests if find_all returns a list of all matching elements."""
+        text = """
+            <div href="github"></div>
+            <a class="widget">1</a>
+            <a><p>2</p></a>
+            <span>
+                <a>3</a>
+            </span>
+        """
+        bs = to_bs(text)
+        selector = Field(MockLinkSelector())
+        result = selector.find_all(bs)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="widget">1</a>"""),
+            strip("""<a><p>2</p></a>"""),
+            strip("""<a>3</a>"""),
+        ]
+
+    def test_find_returns_first_matching_child_if_recursive_false(self):
+        """
+        Tests if find returns first matching child element if recursive is False.
+        """
+        text = """
+            <div class="google">
+                <a href="github">Not child</a>
+            </div>
+            <a href="github">1</a>
+            <div><a>Not child</a></div>
+            <a><p>2</p></a>
+            <span>Hello</span>
+            <a>3</a>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = Field(MockLinkSelector())
+        result = selector.find(bs, recursive=False)
+        assert strip(str(result)) == strip("""<a href="github">1</a>""")
+
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+        """
+        Tests if find returns None if no child element matches the selector
+        and recursive is False.
+        """
+        text = """
+            <div class="google">
+                <a href="github">Not child</a>
+            </div>
+            <div><a>Not child</a></div>
+            <span>Hello</span>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = Field(MockLinkSelector())
+        result = selector.find(bs, recursive=False)
+        assert result is None
+
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+        """
+        Tests if find raises TagNotFoundException if no child element
+        matches the selector, when recursive is False and strict is True.
+        """
+        text = """
+            <div class="google">
+                <a href="github">Not child</a>
+            </div>
+            <div><a>Not child</a></div>
+            <span>Hello</span>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = Field(MockLinkSelector())
+
+        with pytest.raises(exc.TagNotFoundException):
+            selector.find(bs, strict=True, recursive=False)
+
+    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+        """
+        Tests if find_all returns all matching children if recursive is False.
+        It returns only matching children of the body element.
+        """
+        text = """
+            <div class="google">
+                <a href="github">Not child</a>
+            </div>
+            <a href="github">1</a>
+            <div><a>Not child</a></div>
+            <a><p>2</p></a>
+            <span>Hello</span>
+            <a>3</a>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = Field(MockLinkSelector())
+        result = selector.find_all(bs, recursive=False)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a href="github">1</a>"""),
+            strip("""<a><p>2</p></a>"""),
+            strip("""<a>3</a>"""),
+        ]
+
+    def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns an empty list if no child element matches the selector
+        and recursive is False.
+        """
+        text = """
+            <div class="google">
+                <a href="github">Not child</a>
+            </div>
+            <div><a>Not child</a></div>
+            <span>Hello</span>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = Field(MockLinkSelector())
+        result = selector.find_all(bs, recursive=False)
+        assert result == []
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+        """
+        Tests if find_all returns only x elements when limit is set.
+        In this case only 2 first in order elements are returned.
+        """
+        text = """
+            <div href="github"></div>
+            <a class="widget">1</a>
+            <a><p>2</p></a>
+            <span>
+                <a>3</a>
+            </span>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = Field(MockLinkSelector())
+        result = selector.find_all(bs, limit=2)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a class="widget">1</a>"""),
+            strip("""<a><p>2</p></a>"""),
+        ]
+
+    def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
+        self,
+    ):
+        """
+        Tests if find_all returns only x elements when limit is set and recursive
+        is False. In this case only 2 first in order children matching
+        the selector are returned.
+        """
+        text = """
+            <div class="google">
+                <a href="github">Not child</a>
+            </div>
+            <a href="github">1</a>
+            <div><a>Not child</a></div>
+            <a><p>2</p></a>
+            <span>Hello</span>
+            <a>3</a>
+        """
+        bs = find_body_element(to_bs(text))
+        selector = Field(MockLinkSelector())
+        result = selector.find_all(bs, recursive=False, limit=2)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a href="github">1</a>"""),
+            strip("""<a><p>2</p></a>"""),
+        ]
+
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            (Field(MockLinkSelector()), Field(MockLinkSelector())),
+            (
+                Field(MockLinkSelector(), repr=True),
+                Field(MockLinkSelector(), repr=True),
+            ),
+            (
+                Field(MockLinkSelector(), repr=True, migrate=True),
+                Field(MockLinkSelector(), repr=True, migrate=True),
+            ),
+            (
+                Field(MockLinkSelector(), repr=True, migrate=True, compare=True),
+                Field(MockLinkSelector(), repr=True, migrate=True, compare=True),
+            ),
+        ],
+    )
+    def test_two_tag_selectors_are_equal(self, selectors: tuple):
+        """Tests if two field selectors are equal."""
+        assert (selectors[0] == selectors[1]) is True
+
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # different selectors
+            (Field(MockLinkSelector()), Field(MockDivSelector())),
+            # different param
+            (
+                Field(MockLinkSelector(), repr=True),
+                Field(MockLinkSelector(), repr=False),
+            ),
+            # different one param
+            (
+                Field(MockLinkSelector(), repr=True, migrate=True),
+                Field(MockLinkSelector(), repr=True, migrate=False),
+            ),
+            # not field
+            (Field(MockLinkSelector()), MockLinkSelector()),
+        ],
+    )
+    def test_two_tag_selectors_are_not_equal(self, selectors: tuple):
+        """Tests if two field selectors are not equal."""
+        assert (selectors[0] == selectors[1]) is False
