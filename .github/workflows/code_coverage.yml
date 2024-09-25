@@ -38,6 +38,7 @@ jobs:
       - name: Report coverage
         run: |
           python -m coverage report
+          python -m coverage report --skip-covered --skip-empty --format=markdown >> $GITHUB_STEP_SUMMARY
 
       - name: Upload coverage reports to Codecov
         run: |
