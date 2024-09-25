@@ -143,7 +143,7 @@ class NthGenerator:
         c = ((1 - b) / a) if self._increasing else ((stop - b) / a)
         start = max(math.ceil(c), 0)
 
-        for x in count(start):
+        for x in count(start):  # pragma: no branch
             y = self._func(x)
 
             if not (1 <= y <= stop):

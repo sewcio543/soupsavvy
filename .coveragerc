@@ -1,5 +1,6 @@
 [run]
 source = soupsavvy
+branch = True
 
 [report]
 omit =
