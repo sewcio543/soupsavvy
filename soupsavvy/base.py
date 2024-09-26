@@ -25,10 +25,9 @@ if TYPE_CHECKING:
         DescendantCombinator,
         NextSiblingCombinator,
         ParentCombinator,
-        SelectorList,
         SubsequentSiblingCombinator,
     )
-    from soupsavvy.selectors.logical import AndSelector
+    from soupsavvy.selectors.logical import AndSelector, SelectorList
 
 
 def check_selector(x: Any, message: Optional[str] = None) -> SoupSelector:
@@ -306,7 +305,7 @@ class SoupSelector(TagSearcher, Comparable):
         """
         from soupsavvy.base import BaseOperation
         from soupsavvy.operations.selection_pipeline import SelectionPipeline
-        from soupsavvy.selectors.combinators import SelectorList
+        from soupsavvy.selectors.logical import SelectorList
 
         if isinstance(x, BaseOperation):
             return SelectionPipeline(selector=self, operation=x)
@@ -650,7 +649,8 @@ class SoupSelector(TagSearcher, Comparable):
 
         Notes
         -----
-        For more information on descendant combinator see:
+        For more information on descendant combinator, see:
+
         https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_combinator
         """
         from soupsavvy.selectors.combinators import DescendantCombinator

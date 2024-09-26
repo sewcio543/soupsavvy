@@ -458,6 +458,7 @@ class Anchor_:
     Notes
     -------
     For more information on relative selectors, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors/Selector_structure#relative_selector
     """
 
@@ -551,7 +552,8 @@ class HasSelector(CompositeSoupSelector):
 
     Three of the above examples are equivalent.
 
-    For more information on :has() pseudo-class see:
+    For more information on :has() pseudo-class, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:has
     """
 

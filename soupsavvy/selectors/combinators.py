@@ -15,8 +15,9 @@ Classes
 
 Notes
 -----
-For more information on CSS combinators see:
-`https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Combinators`
+For more information on CSS combinators, see:
+
+https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Combinators
 """
 
 from abc import abstractmethod
@@ -243,7 +244,8 @@ class ChildCombinator(BaseCombinator):
 
     Notes
     -----
-    For more information on child combinator see:
+    For more information on child combinator, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/Child_combinator
     """
 
@@ -287,10 +289,10 @@ class NextSiblingCombinator(BaseCombinator):
 
     Notes
     -----
-    For more information on next sibling combinator see:
-    https://developer.mozilla.org/en-US/docs/Web/CSS/Next-sibling_combinator
-
     This is also known as the `adjacent sibling combinator` in CSS.
+    For more information on next sibling combinator, see:
+
+    https://developer.mozilla.org/en-US/docs/Web/CSS/Next-sibling_combinator
     """
 
     @property
@@ -332,10 +334,10 @@ class SubsequentSiblingCombinator(BaseCombinator):
 
     Notes
     -----
-    For more information on subsequent sibling combinator see:
-    https://developer.mozilla.org/en-US/docs/Web/CSS/Subsequent-sibling_combinator
-
     This combinator is also known as `general sibling combinator` in CSS.
+    For more information on subsequent sibling combinator, see:
+
+    https://developer.mozilla.org/en-US/docs/Web/CSS/Subsequent-sibling_combinator
     """
 
     @property
@@ -378,7 +380,8 @@ class DescendantCombinator(BaseCombinator):
 
     Notes
     -----
-    For more information on subsequent sibling combinator see:
+    For more information on subsequent sibling combinator, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_combinator
     """
 

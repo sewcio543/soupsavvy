@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.abspath(".."))
 
 project = "soupsavvy"
 author = "sewcio543"
+copyright = "soupsavvy"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

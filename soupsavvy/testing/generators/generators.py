@@ -103,8 +103,9 @@ class AttributeGenerator(BaseGenerator):
 
     See also
     --------
-    soupsavvy.testing.generators.templates module
-    soupsavvy.testing.generators.TagGenerator class
+    `soupsavvy.testing.generators.templates` module
+
+    `soupsavvy.testing.generators.TagGenerator` class
     """
 
     def __init__(self, name: str, value: TemplateType = None) -> None:
@@ -251,6 +252,7 @@ class TagGenerator(BaseGenerator):
     See also
     --------
     `soupsavvy.testing.generators.templates`
+
     `soupsavvy.testing.generators.AttributeGenerator`
     """
 

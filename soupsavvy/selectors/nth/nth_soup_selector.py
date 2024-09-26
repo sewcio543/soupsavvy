@@ -128,6 +128,7 @@ class NthOfSelector(BaseNthOfSelector):
     Notes
     -----
     For more information about standard :nth-of-type pseudo-class, visit:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-of-type
     """
 
@@ -158,6 +159,7 @@ class NthLastOfSelector(BaseNthOfSelector):
     Notes
     -----
     For more information about standard :nth-of-type pseudo-class, visit:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-of-type
     """
 
@@ -187,6 +189,7 @@ class OnlyOfSelector(SoupSelector):
     Notes
     -----
     For more information about standard :only-of-type pseudo-class, visit:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:only-of-type
     """
 

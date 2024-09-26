@@ -52,7 +52,8 @@ class SelectorList(CompositeSoupSelector):
 
     Notes
     -----
-    For more information on selector list see:
+    For more information on selector list, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list
     """
 
@@ -134,7 +135,8 @@ class NotSelector(CompositeSoupSelector):
 
     Notes
     -----
-    For more information on :not() pseudo-class see:
+    For more information on :not() pseudo-class, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:not
     """
 
@@ -222,7 +224,8 @@ class AndSelector(CompositeSoupSelector):
 
     Notes
     -----
-    For more information on compound selectors see:
+    For more information on compound selectors ,see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors/Selector_structure#compound_selector
     """
 

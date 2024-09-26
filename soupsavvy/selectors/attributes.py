@@ -61,7 +61,8 @@ class AttributeSelector(SoupSelector):
 
     Notes
     -----
-    For more information about attribute selectors see:
+    For more information about attribute selectors, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors
     """
 
@@ -159,7 +160,8 @@ class IdSelector(SpecificAttributeSelector):
 
     Notes
     -----
-    For more information about id attribute see:
+    For more information about id attribute, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors
     """
 
@@ -200,7 +202,8 @@ class ClassSelector(SpecificAttributeSelector):
 
     Notes
     -----
-    For more information about class attribute see:
+    For more information about class attribute, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors
     """
 

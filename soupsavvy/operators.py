@@ -17,8 +17,12 @@ used for convenience and readability in some cases.
 """
 
 from soupsavvy.base import SoupSelector
-from soupsavvy.selectors.combinators import SelectorList
-from soupsavvy.selectors.logical import AndSelector, NotSelector, XORSelector
+from soupsavvy.selectors.logical import (
+    AndSelector,
+    NotSelector,
+    SelectorList,
+    XORSelector,
+)
 from soupsavvy.selectors.relative import HasSelector
 
 
@@ -60,9 +64,12 @@ def is_(
 
     Notes
     -----
-    For more information on selector list see:
+    For more information on selector list, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:is
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:where
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list
     """
     return SelectorList(selector1, selector2, *selectors)
@@ -100,7 +107,8 @@ def not_(selector: SoupSelector, /, *selectors: SoupSelector) -> NotSelector:
 
     Notes
     -----
-    For more information on selector list see:
+    For more information on selector list, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:not
     """
     return NotSelector(selector, *selectors)
@@ -180,7 +188,8 @@ def has(
 
     Notes
     -----
-    For more information on :has() pseudo-class see:
+    For more information on :has() pseudo-class, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:has
     """
     return HasSelector(selector, *selectors)

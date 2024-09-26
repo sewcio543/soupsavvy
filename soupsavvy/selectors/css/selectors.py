@@ -105,6 +105,7 @@ class OnlyChild(CSSSoupSelector):
     Notes
     --------
     For more information on the :only-child pseudo-class, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:only-child
     """
 
@@ -134,6 +135,7 @@ class Empty(CSSSoupSelector):
     Notes
     --------
     For more information on the :empty selector, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:empty
     """
 
@@ -160,6 +162,7 @@ class FirstChild(CSSSoupSelector):
     `FirstChild` object is essentially the same as NthChild("1").
 
     For more information on the :first-child selector, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:first-child
     """
 
@@ -187,6 +190,7 @@ class LastChild(CSSSoupSelector):
     Element that is the first and only child is matched as well.
 
     For more information on the :last-child selector, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:last-child
     """
 
@@ -230,6 +234,7 @@ class NthChild(NthBaseSelector):
     Notes
     --------
     For more information on the formula, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-child
     """
 
@@ -253,6 +258,7 @@ class NthLastChild(NthBaseSelector):
     Notes
     --------
     For more information on the formula, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-child
     """
 
@@ -281,6 +287,7 @@ class FirstOfType(CSSSoupSelector):
     case of finding single tag is equivalent to `FirstChild` results.
 
     For more information on the formula, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:first-of-type
     """
 
@@ -309,6 +316,7 @@ class LastOfType(CSSSoupSelector):
     case of finding single tag is the equivalent to `LastChild` results.
 
     For more information on the formula, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:last-of-type
     """
 
@@ -332,6 +340,7 @@ class NthOfType(NthBaseSelector):
     Notes
     --------
     For more information on the formula, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-of-type
     """
 
@@ -355,6 +364,7 @@ class NthLastOfType(NthBaseSelector):
     Notes
     --------
     For more information on the formula, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-of-type
     """
 
@@ -381,6 +391,7 @@ class OnlyOfType(CSSSoupSelector):
     Notes
     --------
     For more information on the :only-of-type selector, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:only-of-type
     """
 

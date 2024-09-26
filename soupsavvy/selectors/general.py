@@ -58,7 +58,8 @@ class TypeSelector(SoupSelector, SelectableCSS):
 
     Notes
     -----
-    For more information about type selectors see:
+    For more information about type selectors, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors
     """
 
@@ -175,7 +176,8 @@ class UniversalSelector(SoupSelector, SelectableCSS):
 
     Notes
     -----
-    For more information on universal selector see:
+    For more information on universal selector, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors
     """
 
