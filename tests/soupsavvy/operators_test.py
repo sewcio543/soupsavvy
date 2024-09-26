@@ -6,8 +6,12 @@ It contains functions used to combine selectors and create composite ones.
 import pytest
 
 from soupsavvy import operators
-from soupsavvy.selectors.combinators import SelectorList
-from soupsavvy.selectors.logical import AndSelector, NotSelector, XORSelector
+from soupsavvy.selectors.logical import (
+    AndSelector,
+    NotSelector,
+    SelectorList,
+    XORSelector,
+)
 from soupsavvy.selectors.relative import HasSelector
 from tests.soupsavvy.conftest import MockSelector
 

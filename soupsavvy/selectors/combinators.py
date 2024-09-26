@@ -25,8 +25,10 @@ from functools import reduce
 from typing import Optional, Type
 
 from bs4 import Tag
+from typing_extensions import deprecated
 
 from soupsavvy.base import CompositeSoupSelector, SoupSelector
+from soupsavvy.selectors.logical import SelectorList as _SelectorList
 from soupsavvy.selectors.relative import (
     RelativeAncestor,
     RelativeChild,
@@ -37,6 +39,10 @@ from soupsavvy.selectors.relative import (
     RelativeSubsequentSibling,
 )
 from soupsavvy.utils.selector_utils import TagIterator, TagResultSet
+
+
+@deprecated("`SelectorList` was moved to `soupsavvy.selectors.logical` module.")
+class SelectorList(_SelectorList): ...
 
 
 class BaseCombinator(CompositeSoupSelector):

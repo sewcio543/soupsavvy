@@ -6,8 +6,12 @@ Use soupsavvy.operators module instead.
 import warnings
 
 from soupsavvy.base import SoupSelector
-from soupsavvy.selectors.combinators import SelectorList
-from soupsavvy.selectors.logical import AndSelector, NotSelector, XORSelector
+from soupsavvy.selectors.logical import (
+    AndSelector,
+    NotSelector,
+    SelectorList,
+    XORSelector,
+)
 from soupsavvy.selectors.relative import HasSelector
 
 warnings.warn(
