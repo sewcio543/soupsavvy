@@ -1,9 +1,9 @@
 """
 Module with `soupsavvy` interfaces used across the package.
 
-* `Executable` - Interface for operations that can be executed on single argument.
-* `Comparable` - Interface for objects that can be compared for equality.
-* `TagSearcher` - Interface for objects that can search within BeautifulSoup tags.
+- `Executable` - Interface for operations that can be executed on single argument.
+- `Comparable` - Interface for objects that can be compared for equality.
+- `TagSearcher` - Interface for objects that can search within BeautifulSoup tags.
 """
 
 from __future__ import annotations

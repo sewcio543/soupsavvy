@@ -4,13 +4,13 @@ by combining multiple of them in particular way.
 
 Contains
 --------
-* is_: function to create SelectorList from multiple selectors
-* where: alias for is_, no difference in behavior in scraping context
-* or_: alias for is_, no difference in behavior in scraping context
-* not_: function to create NotSelector from multiple selectors
-* and_: function to create AndSelector from multiple selectors
-* has: function to create HasSelector from multiple selectors
-* xor: function to create XORSelector from multiple selectors
+- is_: function to create SelectorList from multiple selectors
+- where: alias for is_, no difference in behavior in scraping context
+- or_: alias for is_, no difference in behavior in scraping context
+- not_: function to create NotSelector from multiple selectors
+- and_: function to create AndSelector from multiple selectors
+- has: function to create HasSelector from multiple selectors
+- xor: function to create XORSelector from multiple selectors
 
 These utils do not brings extra functionality into the package, but they can be
 used for convenience and readability in some cases.

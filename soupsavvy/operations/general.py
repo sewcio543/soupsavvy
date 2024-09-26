@@ -1,8 +1,10 @@
 """
 Module for general purpose operations.
 
-* Operation - Executes custom operation with any function.
-* OperationPipeline - Chains multiple operations together.
+Classes
+-------
+- Operation - Executes custom operation with any function.
+- OperationPipeline - Chains multiple operations together.
 """
 
 from __future__ import annotations

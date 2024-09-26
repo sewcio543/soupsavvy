@@ -6,9 +6,9 @@ based on attributes values.
 
 Classes
 -------
-AttributeSelector - Selects element for any attribute value.
-IdSelector - Selects element based on 'id' attribute value.
-ClassSelector - Selects element based on 'class' attribute value.
+`AttributeSelector` - Selects element for any attribute value.
+`IdSelector` - Selects element based on 'id' attribute value.
+`ClassSelector` - Selects element based on 'class' attribute value.
 """
 
 import re

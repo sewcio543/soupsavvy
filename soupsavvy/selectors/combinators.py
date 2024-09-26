@@ -4,24 +4,24 @@ Module for combinators defined in css.
 They they combine other selectors in a way that gives them a useful relationship
 to each other and the location of content in the document.
 
-Soupsavvy provides combinators that are used to combine multiple SoupSelector
+`soupsavvy` provides combinators that are used to combine multiple SoupSelector
 objects in a similar fashion to CSS combinators.
 
 Classes
 -------
-ChildCombinator - equivalent of CSS child combinator (>)
-NextSiblingCombinator - equivalent of CSS adjacent sibling combinator (+)
-SubsequentSiblingCombinator - equivalent of CSS general sibling combinator (*)
-DescentCombinator - equivalent of CSS descendant combinator (" ")
-SelectorList - equivalent of CSS selector list (,) or :is() pseudo-class
-OrSelector - alias for SelectorList
-ParentCombinator - matches parent of preceding selector
-AncestorCombinator - matches ancestor of preceding selector
+- `ChildCombinator` - equivalent of CSS child combinator (>)
+- `NextSiblingCombinator` - equivalent of CSS adjacent sibling combinator (+)
+- `SubsequentSiblingCombinator` - equivalent of CSS general sibling combinator (*)
+- `DescentCombinator` - equivalent of CSS descendant combinator (" ")
+- `SelectorList` - equivalent of CSS selector list (,) or :is() pseudo-class
+- `OrSelector` - alias for SelectorList
+- `ParentCombinator` - matches parent of preceding selector
+- `AncestorCombinator` - matches ancestor of preceding selector
 
 Notes
 -----
 For more information on CSS combinators see:
-https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Combinators
+`https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Combinators`
 """
 
 from abc import abstractmethod

@@ -1,7 +1,7 @@
 """
 Script to update the docs index.rst file automatically.
-* Removes the deleted sub-packages from the toctree directive (if any).
-* Adds the new sub-packages to the toctree directive (if any).
+- Removes the deleted sub-packages from the toctree directive (if any).
+- Adds the new sub-packages to the toctree directive (if any).
 """
 
 from pathlib import Path

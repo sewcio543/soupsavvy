@@ -7,19 +7,20 @@ Contains implementation of basic CSS pseudo-classes like
 They can be used in combination with other SoupSelector objects
 to create more complex tag selection conditions.
 
-This module contains the following classes:
-* OnlyChild
-* Empty
-* FirstChild
-* LastChild
-* NthChild
-* NthLastChild
-* FirstOfType
-* LastOfType
-* NthOfType
-* NthLastOfType
-* OnlyOfType
-* CSS - wrapper for simple search with CSS selectors
+Classes
+-------
+- OnlyChild
+- Empty
+- FirstChild
+- LastChild
+- NthChild
+- NthLastChild
+- FirstOfType
+- LastOfType
+- NthOfType
+- NthLastOfType
+- OnlyOfType
+- CSS - wrapper for simple search with CSS selectors
 """
 
 from itertools import islice
@@ -439,7 +440,7 @@ class OnlyOfType(CSSSoupSelector):
 
 class CSS(CSSSoupSelector):
     """
-    Soupsavvy wrapper for simple search with CSS selectors.
+    `soupsavvy` wrapper for simple search with CSS selectors.
     Uses soupsieve library to match the tag, based on the provided CSS selector.
 
     Extends bs4 Tag.select implementation by adding non recursive search option.

@@ -1,9 +1,11 @@
 """
 Module for conditional operations to control flow in the pipeline.
 
-* IfElse - Executes different operations based on the condition.
-* Break - Stops the pipeline execution.
-* Continue - Skips the operation and continues with the next one.
+Classes
+-------
+- IfElse - Executes different operations based on the condition.
+- Break - Stops the pipeline execution.
+- Continue - Skips the operation and continues with the next one.
 """
 
 from collections.abc import Callable

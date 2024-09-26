@@ -47,13 +47,65 @@ img[src*="https://img.shields.io/badge/docs"]
   display: none;
 }
 
-/* Hide the SoupSavvy logo from README, it's already included at the top */
-h1:has(img[alt="SoupSavvy"]) {
+/* Hide the soupsavvy logo from README, it's already included at the top */
+h1:has(img[alt="soupsavvy"]) {
   display: none;
 }
 
 /* Hide 'View page source' link to rst.txt or md.txt files */
 a[href$="rst.txt"],
 a[href$="md.txt"] {
+  display: none;
+}
+
+.wy-side-nav-search {
+  background-color: blueviolet;
+}
+
+.caption-text {
+  color: blueviolet;
+}
+
+li > a[href*="submodules"],
+#submodules,
+#subpackages {
+  display: none !important;
+}
+
+li > .icon-home {
+  color: blueviolet !important;
+}
+
+h1 img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1:has(+ #subpackages, + #submodules),
+[id^="module"] h1 {
+  font-size: 2em;
+  border-bottom: 2px solid #0f0f0f;
+}
+
+#module-contents + h2 {
+  display: none;
+}
+
+dl.py.class {
+  border-bottom: 2px solid #0f0f0f;
+}
+
+dt.sig {
+  font-size: 1em !important;
+}
+
+.breadcrumb-item {
+  font-weight: bold;
+  font-size: 1em;
+}
+
+[itemprop="articleBody"] .toctree-wrapper,
+#table-of-contents {
   display: none;
 }

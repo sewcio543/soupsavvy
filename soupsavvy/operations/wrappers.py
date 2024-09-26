@@ -2,8 +2,10 @@
 Module for operations wrappers,
 operations that control behavior of the wrapped operation.
 
-* SkipNone - Skips the operation if the input is None.
-* Suppress - Suppresses exceptions raised by the operation.
+Classes
+-------
+- SkipNone - Skips the operation if the input is None.
+- Suppress - Suppresses exceptions raised by the operation.
 """
 
 from __future__ import annotations

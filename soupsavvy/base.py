@@ -106,9 +106,9 @@ class SoupSelector(TagSearcher, Comparable):
     Notes
     -----
     To implement SoupSelector interface child class must implement:
-    * 'find_all' method that returns a list of matching elements in bs4.Tag.
+    - 'find_all' method that returns a list of matching elements in bs4.Tag.
     It could optionally implement:
-    * '_find' method that returns result of bs4.Tag 'find' method.
+    - '_find' method that returns result of bs4.Tag 'find' method.
     By default '_find' method is implemented by calling 'find_all' method
     and returning first element if any found or None otherwise.
     If different logic is required or performance can be improved, '_find' method
@@ -725,7 +725,7 @@ class SelectableCSS(ABC):
     Notes
     -----
     To implement SelectableCSS interface, child class must implement:
-    * 'selector' property, which return a string representing element css selector.
+    - 'selector' property, which return a string representing element css selector.
     """
 
     @property

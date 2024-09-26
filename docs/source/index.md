@@ -1,4 +1,4 @@
-![logo](https://github.com/sewcio543/soupsavvy/blob/main/resources/logo.png?raw=true)
+![logo](../../../resources//logo.png?raw=true)
 ========
 
 ```{toctree}

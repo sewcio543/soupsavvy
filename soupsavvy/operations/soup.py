@@ -1,9 +1,11 @@
 """
 Module for operations specific to BeautifulSoup tags.
 
-* Text - Extracts text from a BeautifulSoup Tag - most common operation.
-* Href - Extracts href attribute from a BeautifulSoup Tag.
-* Parent - Extracts parent of a BeautifulSoup Tag.
+Classes
+-------
+- Text - Extracts text from a BeautifulSoup Tag - most common operation.
+- Href - Extracts href attribute from a BeautifulSoup Tag.
+- Parent - Extracts parent of a BeautifulSoup Tag.
 
 These components are design to be used for processing html tags and extracting
 desired information. They can be used in combination with selectors.
