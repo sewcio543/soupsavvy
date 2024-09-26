@@ -1,7 +1,14 @@
 """
-Module with nth-of-type selector implementations for SoupSelectors.
-Searches for nth-of-type element in similar fashion to CSS nth-of-type selector,
-but 'type' is any SoupSelector instance.
+Module provides `nth-of-type` selector implementations for `SoupSelector`.
+It allows you to search for the nth occurrence of an element,
+similar to how the CSS `nth-of-type` pseudo-class works.
+However, instead of being limited to css selectors, it works with any `SoupSelector` instance.
+
+Classes
+-------
+- `NthOfSelector` - Selects nth element matching given selector
+- `NthLastOfSelector` - Selects nth last element matching given selector
+- `OnlyOfSelector` - Selects only element matching given selector
 """
 
 from typing import Optional
@@ -24,19 +31,19 @@ class BaseNthOfSelector(SoupSelector):
 
     def __init__(self, selector: SoupSelector, nth: str) -> None:
         """
-        Initializes NthOfSelector instance
+        Initializes nth selector instance.
 
         Parameters
         ----------
         selector : SoupSelector
-            Any SoupSelector instance to match tags.
+            Any `SoupSelector` instance used to match elements.
         nth : str
-            CSS nth selector string. Accepts all valid css nth selectors.
+            CSS nth selector string. Accepts all valid css nth formulas.
 
         Raises
         ------
         NotSoupSelectorException
-            If selector is not an instance of SoupSelector.
+            If selector is not an instance of `SoupSelector`.
         """
         self._selector = check_selector(selector)
         self.nth_selector = parse_nth(nth)
@@ -100,29 +107,28 @@ class BaseNthOfSelector(SoupSelector):
 
 class NthOfSelector(BaseNthOfSelector):
     """
-    Component that matches nth-of-type elements in the soup, with use of standard
-    css nth selectors. Element is of type if it matches provided SoupSelector instance.
+    Selector for finding nth-of elements in the soup among elements that match
+    provided `SoupSelector` instance.
 
     Example
     -------
-    >>> selector = NthOfSelector(AttributeSelector("class", "item"), "2n+1")
+    >>> selector = NthOfSelector(ClassSelector("item"), "2n+1")
 
     matches all odd elements with class "item".
 
     Example
     -------
     >>> <div class="item">1</div> ✔️
-    >>> <div id="item"></div> ❌
-    >>> <div class="item">2</div> ❌
-    >>> <div class="item">3</div> ✔️
-    >>> <div class="widget"></div> ❌
-    >>> <div class="item">4</div> ❌
+    ... <div id="item"></div> ❌
+    ... <div class="item">2</div> ❌
+    ... <div class="item">3</div> ✔️
+    ... <div class="widget"></div> ❌
+    ... <div class="item">4</div> ❌
 
-    For more information about standard :nth-of-type selector, visit:
+    Notes
+    -----
+    For more information about standard :nth-of-type pseudo-class, visit:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-of-type
-
-    and check out soupsavvy implementation of :nth-of-type selector:
-    `soupsavvy.tags.css.tag_selectors.NthOfType`
     """
 
     # keep initial order of matching elements
@@ -131,29 +137,28 @@ class NthOfSelector(BaseNthOfSelector):
 
 class NthLastOfSelector(BaseNthOfSelector):
     """
-    Component that matches nth-last-of-type elements in the soup, with use of standard
-    css nth selectors. Element is of type if it matches provided SoupSelector instance.
+    Selector for finding nth-last-of elements in the soup among elements that match
+    provided `SoupSelector` instance.
 
     Example
     -------
-    >>> selector = NthLastOfSelector(AttributeSelector("class", "item"), "2n+1")
+    >>> selector = NthLastOfSelector(ClassSelector("item"), "2n+1")
 
     matches all odd elements with class "item" starting from the last element.
 
     Example
     -------
     >>> <div class="item">1</div> ❌
-    >>> <div id="item"></div> ❌
-    >>> <div class="item">2</div> ✔️
-    >>> <div class="item">3</div> ❌
-    >>> <div class="widget"></div> ❌
-    >>> <div class="item">4</div> ✔️
+    ... <div id="item"></div> ❌
+    ... <div class="item">2</div> ✔️
+    ... <div class="item">3</div> ❌
+    ... <div class="widget"></div> ❌
+    ... <div class="item">4</div> ✔️
 
-    For more information about standard :nth-of-type selector, visit:
+    Notes
+    -----
+    For more information about standard :nth-of-type pseudo-class, visit:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-of-type
-
-    and check out soupsavvy implementation of :nth-of-type selector:
-    `soupsavvy.tags.css.tag_selectors.NthLastOfType`
     """
 
     # reverse order of matching elements
@@ -162,12 +167,12 @@ class NthLastOfSelector(BaseNthOfSelector):
 
 class OnlyOfSelector(SoupSelector):
     """
-    Component that matches only-of-type elements in the soup. Element is of type
-    if it matches provided SoupSelector instance.
+    Selector for finding the only element,
+    that matches provided `SoupSelector` instance among its siblings.
 
     Example
     -------
-    >>> selector = NthLastOnlyOfSelectorOfSelector(AttributeSelector("class", "item"))
+    >>> selector = OnlyOfSelector(ClassSelector("item"))
 
     matches all elements with class "item" that are the only child of their parent
     that matches the selector.
@@ -179,28 +184,25 @@ class OnlyOfSelector(SoupSelector):
     >>> <div><div class="item"></div></div> ✔️
     >>> <div><div class="widget"></div></div> ❌
 
-    For all positive examples above, `<div class="item">` is matched.
-
-    For more information about standard :only-of-type selector, visit:
+    Notes
+    -----
+    For more information about standard :only-of-type pseudo-class, visit:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:only-of-type
-
-    and check out soupsavvy implementation of :only-of-type selector:
-    `soupsavvy.tags.css.tag_selectors.OnlyOfType`
     """
 
     def __init__(self, selector: SoupSelector) -> None:
         """
-        Initializes OnlyOfSelector instance.
+        Initializes `OnlyOfSelector` instance.
 
         Parameters
         ----------
         selector : SoupSelector
-            Any SoupSelector instance to match tags.
+            Any `SoupSelector` instance used to match elements.
 
         Raises
         ------
         NotSoupSelectorException
-            If selector is not an instance of SoupSelector.
+            If selector is not an instance of `SoupSelector`.
         """
         self.selector = check_selector(selector)
 
@@ -232,6 +234,3 @@ class OnlyOfSelector(SoupSelector):
     def __repr__(self):
         cls = self.__class__.__name__
         return f"{cls}(selector={self.selector})"
-
-    def __str__(self):
-        return repr(self)

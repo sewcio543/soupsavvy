@@ -1,3 +1,8 @@
+:root {
+  --main-color: rgb(93, 0, 133);
+  --second-color: rgb(252, 250, 180);
+}
+
 /* Make headers in functions and methods smaller */
 .rst-content .method h2,
 .rst-content .function h2 {
@@ -5,7 +10,7 @@
 }
 
 /* Make TOC headers smaller */
-.rst-content .toctree-wrapper > p.caption {
+.rst-content .toctree-wrapper>p.caption {
   font-size: 100%;
 }
 
@@ -15,7 +20,7 @@
 }
 
 /* Hide the first cell, it's just a configuration not worth showing in the docs */
-.rst-content h1 + .cell.docutils.container {
+.rst-content h1+.cell.docutils.container {
   display: none;
 }
 
@@ -42,8 +47,7 @@
   border: none;
 }
 
-img[src*="https://img.shields.io/badge/docs"]
-{
+img[src*="https://img.shields.io/badge/docs"] {
   display: none;
 }
 
@@ -59,42 +63,54 @@ a[href$="md.txt"] {
 }
 
 .wy-side-nav-search {
-  background-color: blueviolet;
+  background-color: var(--main-color);
 }
 
 .caption-text {
-  color: blueviolet;
+  color: var(--second-color);
 }
 
-li > a[href*="submodules"],
+li>a[href*="submodules"],
 #submodules,
 #subpackages {
   display: none !important;
 }
 
-li > .icon-home {
-  color: blueviolet !important;
+li>.icon-home {
+  color: var(--main-color) !important;
 }
 
+/* logo on home page */
 h1 img {
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
 
+
 h1:has(+ #subpackages, + #submodules),
 [id^="module"] h1 {
   font-size: 2em;
-  border-bottom: 2px solid #0f0f0f;
 }
 
-#module-contents + h2 {
+[id^="module"]> :not(dl.py)+dl.py {
+  padding-top: 1em;
+  border-top: 2px solid var(--main-color) !important;
+}
+
+[id^="module"] h2 {
+  display: none;
+
+}
+
+#module-contents+h2 {
   display: none;
 }
 
 dl.py.class {
-  border-bottom: 2px solid #0f0f0f;
+  border-bottom: 2px solid var(--main-color) !important;
 }
+
 
 dt.sig {
   font-size: 1em !important;
@@ -108,4 +124,8 @@ dt.sig {
 [itemprop="articleBody"] .toctree-wrapper,
 #table-of-contents {
   display: none;
+}
+
+.doctest>.highlight {
+  border: 2px solid var(--main-color) !important;
 }

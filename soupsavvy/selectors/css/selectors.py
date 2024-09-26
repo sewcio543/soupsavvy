@@ -5,7 +5,7 @@ Contains implementation of basic CSS pseudo-classes like
 :only-child, :empty, :nth-child().
 
 They can be used in combination with other SoupSelector objects
-to create more complex tag selection conditions.
+to create more complex search procedures.
 
 Classes
 -------
@@ -36,21 +36,21 @@ from soupsavvy.utils.selector_utils import TagIterator
 
 class CSSSoupSelector(SoupSelector, SelectableCSS):
     """
-    Base class for CSS selector based tag selection.
+    Base class for selectors based on css selectors.
     Classes that base their selection on CSS selectors should inherit from this class
     and implement the `selector` property.
 
-    By default, the `find` methods are implemented using the soupsieve library
+    By default, the `find` methods are implemented using the `soupsieve` library
     to match the selector.
 
-    CSSSoupSelector objects are based on SoupSelector interface
-    and can be easily used in combination with other SoupSelector objects.
+    CSSSoupSelector objects inherit from `SoupSelector` and can be easily used
+    in combination with other `SoupSelector` objects.
     """
 
-    _SELECTOR: str
+    SELECTOR: str
 
     def __init__(self) -> None:
-        selector = self.__class__._SELECTOR.format(*self._formats)
+        selector = self.__class__.SELECTOR.format(*self._formats)
 
         try:
             self._compiled = sv.compile(selector)
@@ -64,7 +64,7 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
     @property
     def _formats(self) -> list[str]:
         """
-        List of arguments to be used to format css selector string of the selector.
+        Returns list of arguments to be used to format css selector string.
         """
         return []
 
@@ -89,8 +89,8 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
 
 class OnlyChild(CSSSoupSelector):
     """
-    Class to select tags that are the only child of their parent.
-    It uses the CSS selector `:only-child`.
+    Selector for finding elements, that do not have any siblings.
+    Counterpart of the CSS selector `:only-child` pseudo-class.
 
     Example
     --------
@@ -102,24 +102,19 @@ class OnlyChild(CSSSoupSelector):
     ...    <div class="menu">Hello World 2 </div> ❌
     ... </div>
 
-    Tag is only selected if it is the only child of its parent.
-
-    Example
+    Notes
     --------
-    >>> OnlyChild().selector
-    :only-child
-
-    For more information on the :only-child selector, see:
+    For more information on the :only-child pseudo-class, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:only-child
     """
 
-    _SELECTOR = ":only-child"
+    SELECTOR = ":only-child"
 
 
 class Empty(CSSSoupSelector):
     """
-    Class to select tags that are empty, i.e., have no children.
-    It uses the CSS selector `:empty`.
+    Selector for finding empty elements, i.e., that have no children.
+    Counterpart of the CSS selector `:empty` pseudo-class.
 
     Example
     --------
@@ -127,36 +122,28 @@ class Empty(CSSSoupSelector):
     ...    <div class="menu"></div> ✔️
     ... </div>
 
-    Tag is only selected if it is empty.
-
-    Example
-    --------
-    >>> Empty().selector
-    :empty
-
-    Notes
-    --------
-    Any text or whitespace inside the tag is consider as a child
-    and makes the tag non-empty.
+    Any text node is considered as a child and makes the element non-empty.
 
     Example
     --------
     >>> <div class="widget">Hello World</div> ❌
     ... <div class="widget"> </div> ❌
 
-    These tags are not empty and do not match the selector.
+    These elements are not empty and do not match the selector.
 
+    Notes
+    --------
     For more information on the :empty selector, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:empty
     """
 
-    _SELECTOR = ":empty"
+    SELECTOR = ":empty"
 
 
 class FirstChild(CSSSoupSelector):
     """
-    Class to select tags that are the first child of their parent.
-    It uses the CSS selector `:first-child`.
+    Selector for finding elements, that are the first child of their parent.
+    Counterpart of the CSS selector `:first-child` pseudo-class.
 
     Example
     --------
@@ -168,28 +155,21 @@ class FirstChild(CSSSoupSelector):
     ...    <div class="menu">Hello World 2 </div> ❌
     ... </div>
 
-    Tag is only selected if it is the first child of its parent.
-
-    Example
-    --------
-    >>> FirstChild().selector
-    :first-child
-
     Notes
     --------
-    FirstChild object is essentially the same as NthChild("1").
+    `FirstChild` object is essentially the same as NthChild("1").
 
     For more information on the :first-child selector, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:first-child
     """
 
-    _SELECTOR = ":first-child"
+    SELECTOR = ":first-child"
 
 
 class LastChild(CSSSoupSelector):
     """
-    Class to select tags that are the last child of their parent.
-    It uses the CSS selector `:last-child`.
+    Selector for finding elements, that are the last child of their parent.
+    Counterpart of the CSS selector `:last-child` pseudo-class.
 
     Example
     --------
@@ -201,29 +181,30 @@ class LastChild(CSSSoupSelector):
     ...    <div class="menu">Hello World 2 </div> ✔️
     ... </div>
 
-    Tag is only selected if it is the last child of its parent.
-    Element that is the first and only child is matched as well.
-
-    Example
-    --------
-    >>> LastChild().selector
-    :last-child
-
     Notes
     --------
     LastChild object is essentially the same as NthLastChild("1").
+    Element that is the first and only child is matched as well.
 
     For more information on the :last-child selector, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:last-child
     """
 
-    _SELECTOR = ":last-child"
+    SELECTOR = ":last-child"
 
 
-class _NthBaseSelector(CSSSoupSelector):
+class NthBaseSelector(CSSSoupSelector):
     """Base class for selectors based on nth formula."""
 
     def __init__(self, nth: str) -> None:
+        """
+        Initialize the selector with the nth formula.
+
+        Parameters
+        ----------
+        nth : str, positional
+            Nth formula used to select the elements.
+        """
         self._nth = nth
         super().__init__()
 
@@ -232,15 +213,10 @@ class _NthBaseSelector(CSSSoupSelector):
         return [self._nth]
 
 
-class NthChild(_NthBaseSelector):
+class NthChild(NthBaseSelector):
     """
-    Class to select tags that are the nth child of their parent.
-    It uses the CSS selector `:nth-child(n)`.
-
-    Parameters
-    ----------
-    nth : str, positional
-        Number of the child to be selected. Can be a number or a formula.
+    Selector for finding elements, that are the nth child of their parent.
+    Counterpart of the CSS selector `:nth-child(n)`.
 
     Example
     --------
@@ -251,22 +227,19 @@ class NthChild(_NthBaseSelector):
     >>> NthChild("odd").selector
     :nth-child(odd)
 
+    Notes
+    --------
     For more information on the formula, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-child
     """
 
-    _SELECTOR = ":nth-child({})"
+    SELECTOR = ":nth-child({})"
 
 
-class NthLastChild(_NthBaseSelector):
+class NthLastChild(NthBaseSelector):
     """
-    Class to select tags that are the nth last child of their parent.
-    It uses the CSS selector `:nth-last-child(n)`.
-
-    Parameters
-    ----------
-    nth : str, positional
-        Number of the child to be selected. Can be a number or a formula.
+    Selector for finding elements, that are the nth last child of their parent.
+    Counterpart of the CSS selector `:nth-last-child(n)`.
 
     Example
     --------
@@ -277,17 +250,19 @@ class NthLastChild(_NthBaseSelector):
     >>> NthLastChild("odd").selector
     :nth-last-child(odd)
 
+    Notes
+    --------
     For more information on the formula, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-child
     """
 
-    _SELECTOR = ":nth-last-child({})"
+    SELECTOR = ":nth-last-child({})"
 
 
 class FirstOfType(CSSSoupSelector):
     """
-    Class to select tags that are the first of their type in their parent.
-    It uses the CSS selector `:first-of-type`.
+    Selector for finding elements, that are the first of their type in their parent.
+    Counterpart of the CSS selector `:first-of-type` pseudo-class.
 
     Example
     --------
@@ -300,29 +275,22 @@ class FirstOfType(CSSSoupSelector):
     ...    <div class="menu">Hello World 3 </div> ❌
     ... </div>
 
-    Tag is only selected if it is the first of its type in its parent.
-
-    Example
-    --------
-    >>> FirstOfType().selector
-    :first-of-type
-
     Notes
     --------
     For this selector the first tag of any type is selected, which in
-    case of finding single tag is equivalent to FirstChild() results.
+    case of finding single tag is equivalent to `FirstChild` results.
 
     For more information on the formula, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:first-of-type
     """
 
-    _SELECTOR = ":first-of-type"
+    SELECTOR = ":first-of-type"
 
 
 class LastOfType(CSSSoupSelector):
     """
-    Class to select tags that are the last of their type in their parent.
-    It uses the CSS selector `:last-of-type`.
+    Selector for finding elements, that are the last of their type in their parent.
+    Counterpart of the CSS selector `:last-of-type` pseudo-class.
 
     Example
     --------
@@ -335,35 +303,22 @@ class LastOfType(CSSSoupSelector):
     ...    <div class="menu">Hello World 3 </div> ✔️
     ... </div>
 
-    Tag is only selected if it is the last of its type in its parent.
-    Element that is the first and only child is matched as well.
-
-    Example
-    --------
-    >>> LastOfType().selector
-    :last-of-type
-
     Notes
     --------
     For this selector the last tag of any type is selected, which in
-    case of finding single tag is the equivalent to LastChild() results.
+    case of finding single tag is the equivalent to `LastChild` results.
 
     For more information on the formula, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:last-of-type
     """
 
-    _SELECTOR = ":last-of-type"
+    SELECTOR = ":last-of-type"
 
 
-class NthOfType(_NthBaseSelector):
+class NthOfType(NthBaseSelector):
     """
-    Class to select tags that are the nth of their type in their parent.
-    It uses the CSS selector `:nth-of-type(n)`.
-
-    Parameters
-    ----------
-    nth : str, positional
-        Number of the tag to be selected. Can be a number or a formula.
+    Selector for finding elements, that are the nth of their type in their parent.
+    Counterpart of the CSS selector `:nth-of-type(n)`.
 
     Example
     --------
@@ -374,22 +329,19 @@ class NthOfType(_NthBaseSelector):
     >>> NthOfType("even").selector
     :nth-of-type(even)
 
+    Notes
+    --------
     For more information on the formula, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-of-type
     """
 
-    _SELECTOR = ":nth-of-type({})"
+    SELECTOR = ":nth-of-type({})"
 
 
-class NthLastOfType(_NthBaseSelector):
+class NthLastOfType(NthBaseSelector):
     """
-    Class to select tags that are the nth last of their type in their parent.
-    It uses the CSS selector `:nth-last-of-type(n)`.
-
-    Parameters
-    ----------
-    nth : str, positional
-        Number of the tag to be selected. Can be a number or a formula.
+    Selector for finding elements, that are the nth last of their type in their parent.
+    Counterpart of the CSS selector `:nth-last-of-type(n)`.
 
     Example
     --------
@@ -400,17 +352,19 @@ class NthLastOfType(_NthBaseSelector):
     >>> NthLastOfType("even").selector
     :nth-last-of-type(even)
 
+    Notes
+    --------
     For more information on the formula, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-of-type
     """
 
-    _SELECTOR = ":nth-last-of-type({})"
+    SELECTOR = ":nth-last-of-type({})"
 
 
 class OnlyOfType(CSSSoupSelector):
     """
-    Class to select tags that are the only of their type in their parent.
-    It uses the CSS selector `:only-of-type`.
+    Selector for finding elements, that don't have siblings of the same type.
+    Counterpart of the CSS selector `:only-of-type` pseudo-class.
 
     Example
     --------
@@ -424,32 +378,20 @@ class OnlyOfType(CSSSoupSelector):
     ... </div>
     ... <a class="widget"></a> ✔️
 
-    Tag is only selected if it is the only tag of its type in its parent.
-
-    Example
+    Notes
     --------
-    >>> OnlyOfType().selector
-    :only-of-type
-
     For more information on the :only-of-type selector, see:
     https://developer.mozilla.org/en-US/docs/Web/CSS/:only-of-type
     """
 
-    _SELECTOR = ":only-of-type"
+    SELECTOR = ":only-of-type"
 
 
 class CSS(CSSSoupSelector):
     """
-    `soupsavvy` wrapper for simple search with CSS selectors.
-    Uses soupsieve library to match the tag, based on the provided CSS selector.
-
-    Extends bs4 Tag.select implementation by adding non recursive search option.
-    Provided css selector might be any selector supported by soupsieve.
-
-    Parameters
-    ----------
-    css : str
-        CSS selector to be used for tag selection.
+    Selector for finding elements based on any provided CSS selector.
+    `soupsieve` adapter, that allows any supported css selector
+    to be used with other `soupsavvy` components.
 
     Example
     --------
@@ -466,11 +408,24 @@ class CSS(CSSSoupSelector):
     ...    <a class="menu">Hello World</a> ❌
     ... </div>
     ... <div class="menu"></div> ✔️
+
+    Notes
+    --------
+    `CSS` component extends `bs4.Tag.select` implementatio
+    by adding non recursive search option.
     """
 
-    _SELECTOR = "{}"
+    SELECTOR = "{}"
 
     def __init__(self, css: str) -> None:
+        """
+        Initializes the selector with the provided css selector.
+
+        Parameters
+        ----------
+        css : str
+            CSS selector to be used for selecting elements.
+        """
         self._css = css
         super().__init__()
 

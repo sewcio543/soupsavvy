@@ -11,6 +11,8 @@ main_dir_name = "soupsavvy"
 soupsavvy_dir = Path(main_dir_name)
 # sub-packages to ignore and exclude from docs
 IGNORE = ["utils"]
+# include to package docs
+INCLUDE = ["operators.py"]
 # The docs main index file to be updated
 index_file = Path("docs", "source", "index.md")
 
@@ -23,9 +25,10 @@ def main():
 
     # Get the list of current sub-packages (only if directory has __init__.py file)
     current_folders = {
-        f"{main_dir_name}.{f.name}"
+        f"{main_dir_name}.{f.name}".replace(".py", "")
         for f in soupsavvy_dir.iterdir()
         if all([f.is_dir(), Path(f, "__init__.py").exists(), f.name not in IGNORE])
+        or f.name in INCLUDE
     }
 
     # check for changes

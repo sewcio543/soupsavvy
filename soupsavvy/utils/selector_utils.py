@@ -105,8 +105,8 @@ class TagResultSet:
     """
     TagResultSet class is collection that stores and manages results of find_all
     method of selectors. Prerequisites for returned results are:
-    * bs4.Tag instances are unique
-    * the order of results == order of their appearance in html
+    - bs4.Tag instances are unique
+    - the order of results == order of their appearance in html
 
     This components consumes list of bs4.Tag instances and provides methods
     for fetching unique results with preserved order.
@@ -119,7 +119,7 @@ class TagResultSet:
 
     def __init__(self, tags: Optional[list[Tag]] = None) -> None:
         """
-        Initializes TagResultSet instance.
+        Initializes `TagResultSet` instance.
 
         Parameters
         ----------
