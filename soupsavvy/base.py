@@ -33,7 +33,7 @@ if TYPE_CHECKING:
 def check_selector(x: Any, message: Optional[str] = None) -> SoupSelector:
     """
     Checks if provided object is a valid `soupsavvy` selector.
-    Checks for instance of SoupSelector and raises an exception if not.
+    Checks for instance of `SoupSelector` and raises an exception if not.
     Returns provided object if fulfills the condition for convenience.
 
     Parameters
@@ -47,7 +47,7 @@ def check_selector(x: Any, message: Optional[str] = None) -> SoupSelector:
     Raises
     ------
     NotSoupSelectorException
-        If provided object is not an instance of SoupSelector.
+        If provided object is not an instance of `SoupSelector`.
     """
     message = message or f"Object {x} is not an instance of {SoupSelector.__name__}."
 
@@ -60,7 +60,7 @@ def check_selector(x: Any, message: Optional[str] = None) -> SoupSelector:
 def check_operation(x: Any, message: Optional[str] = None) -> BaseOperation:
     """
     Checks if provided object is a valid `soupsavvy` operation.
-    Checks for instance of BaseOperation and raises an exception if not.
+    Checks for instance of `BaseOperation` and raises an exception if not.
     Returns provided object if fulfills the condition for convenience.
 
     Parameters
@@ -74,7 +74,7 @@ def check_operation(x: Any, message: Optional[str] = None) -> BaseOperation:
     Raises
     ------
     NotOperationException
-        If provided object is not an instance of BaseOperation.
+        If provided object is not an instance of `BaseOperation`.
     """
     message = message or f"Object {x} is not an instance of {BaseOperation.__name__}."
 
@@ -86,32 +86,33 @@ def check_operation(x: Any, message: Optional[str] = None) -> BaseOperation:
 
 class SoupSelector(TagSearcher, Comparable):
     """
-    Interface for classes that define tags and provide functionality
-    to find them in BeautifulSoup Tags.
+    Base class for all `soupsavvy` selectors, that define declarative search procedure
+    of searching for elements in BeautifulSoup Tag.
+
+    Selectors can be combined with other selectors to create search procedures.
+    They can be chained with operations to extract and transform the data.
 
     Methods
     -------
-    find(tag: Tag, strict: bool = False)
-        Finds tag element in BeautifulSoup Tag by wrapping Tag find method
-        and passing parameters specific to given tag.
-        If strict parameter is set to True and element is not found exception is raised.
-        If strict is set to False, which is a default and element is not found
-        result of Tag.find is return, which is None.
-        Otherwise matching Tag is returned.
-    find_all(tag: Tag)
-        Finds all tag elements in BeautifulSoup Tag by wrapping Tag find_all method
-        and passing parameters specific to given tag.
+    - find(tag: Tag, strict: bool = False, recursive: bool = True) -> Optional[Tag]
+
+        Finds first element matching selector in provided tag if found.
+        If no element is found, returns None by default,
+        or raises an exception if `strict` mode is enabled.
+        Additionally `recursive` parameter can be set to search only direct children.
+
+    - find_all(tag: Tag, recursive: bool = True, limit: Optional[int] = None) -> list[Tag]
+
+        Finds all elements matching selector in provided tag and returns them in a list.
+        Additionally `limit` and `recursive` parameters can be set.
 
     Notes
     -----
-    To implement SoupSelector interface child class must implement:
-    - 'find_all' method that returns a list of matching elements in bs4.Tag.
-    It could optionally implement:
-    - '_find' method that returns result of bs4.Tag 'find' method.
-    By default '_find' method is implemented by calling 'find_all' method
-    and returning first element if any found or None otherwise.
-    If different logic is required or performance can be improved, '_find' method
-    can be overridden in child class.
+    - Specific selector inheriting from this class, need to implement:
+        - `find_all` method that returns a list of matching elements in bs4.Tag.
+        - `__eq__` method to compare two selectors for equality.
+    - Optionally `find` method can be implemented to return first matching element,
+    but, by default, it uses `find_all` under the hood.
     """
 
     @overload
@@ -145,38 +146,33 @@ class SoupSelector(TagSearcher, Comparable):
         recursive: bool = True,
     ) -> Optional[Tag]:
         """
-        Finds a first matching element in provided BeautifulSoup Tag.
+        Finds the first matching element in provided `Tag`.
 
         Parameters
         ----------
         tag : Tag
-            Any BeautifulSoup Tag object.
+            Any `bs4.Tag` object to search within.
         strict : bool, optional
-            If True, raises an exception if tag was not found in markup,
-            if False and tag was not found, returns None by defaulting to BeautifulSoup
-            implementation. Value of this parameter does not affect behavior if tag
-            was successfully found in the markup. By default False.
+            If `True`, raises an exception if tag was not found in markup,
+            if `False` and tag was not found, returns `None`.
+            Value of this parameter does not affect behavior if element
+            was successfully found. By default `False`.
         recursive : bool, optional
-            bs4.Tag.find method parameter that specifies if search should be recursive.
-            If set to False, only direct children of the tag will be searched.
-            By default True.
+            Specifies if search should be recursive.
+            If set to `False`, only direct children of the tag will be searched.
+            By default `True`.
 
         Returns
         -------
         Tag | None
-            BeautifulSoup Tag if it tag was found in the markup, else None.
-
-        Notes
-        -----
-        If result is an instance of NavigableString,
-        exception is raised to avoid any type of inconsistency downstream.
+            First `bs4.Tag` object matching selector or `None` if none matching.
 
         Raises
         ------
         TagNotFoundException
-            If strict parameter is set to True and tag was not found in markup.
+            If strict parameter is set to `True` and none matching tag was found.
         NavigableStringException
-            If NavigableString was returned by bs4.
+            If `bs4.NavigableString` was returned by selector.
         """
         result = self._find(tag, recursive=recursive)
 
@@ -201,25 +197,24 @@ class SoupSelector(TagSearcher, Comparable):
         limit: Optional[int] = None,
     ) -> list[Tag]:
         """
-        Finds all matching elements in provided BeautifulSoup Tag.
+        Finds all elements matching selector in provided `Tag`.
 
         Parameters
         ----------
         tag : Tag
-            Any BeautifulSoup Tag object.
+            Any `bs4.Tag` object to search within.
         recursive : bool, optional
-            bs4.Tag.find method parameter that specifies if search should be recursive.
-            If set to False, only direct children of the tag will be searched.
-            By default True.
+            Specifies if search should be recursive.
+            If set to `False`, only direct children of the tag will be searched.
+            By default `True`.
         limit : int, optional
-            bs4.Tag.find_all method parameter that specifies maximum number of elements
-            to return. If set to None, all elements are returned. By default None.
+            Specifies maximum number of elements to return.
+            By default `None`, all found elements are returned.
 
         Returns
         -------
         list[Tag]
-            A list of Tag objects matching tag specifications.
-            If none found, the list is empty.
+            List of `bs4.Tag` objects matching selector. If none found, the list is empty.
         """
         raise NotImplementedError(
             f"{self.__class__.__name__} is an interface, "
@@ -228,21 +223,21 @@ class SoupSelector(TagSearcher, Comparable):
 
     def _find(self, tag: Tag, recursive: bool = True) -> ns.FindResult:
         """
-        Returns an object that is a result of markup search.
+        Returns an object that is a result of tag search.
 
         Parameters
         ----------
         tag : Tag
-            Any BeautifulSoup Tag object.
+            Any `bs4.Tag` object to search within.
         recursive : bool, optional
-            bs4.Tag.find method parameter that specifies if search should be recursive.
-            If set to False, only direct children of the tag will be searched.
-            By default True.
+            Specifies if search should be recursive.
+            If set to `False`, only direct children of the tag will be searched.
+            By default `True`.
 
         Returns
         -------
         NavigableString | Tag | None:
-            Result of bs4.Tag find method with tag parameters.
+            Result of selector search within provided `bs4.Tag`.
         """
         elements = self.find_all(tag, recursive=recursive, limit=1)
         return elements[0] if elements else None
@@ -250,13 +245,12 @@ class SoupSelector(TagSearcher, Comparable):
     @abstractmethod
     def __eq__(self, other: object) -> bool:
         """
-        Check self and other object for equality.
+        Checks self and other object for equality.
 
         This method is abstract and must be implemented by all selectors.
-        Selectors are considered equal if their find methods return the same result.
 
-        Calling find or find_all methods on selectors that are equal
-        should return the same results.
+        Calling `find` or `find_all` methods on selectors that are equal
+        should return the same results, provided the same parameters.
 
         Example
         -------
@@ -283,25 +277,33 @@ class SoupSelector(TagSearcher, Comparable):
         self, x: Union[SoupSelector, BaseOperation]
     ) -> Union[SelectorList, SelectionPipeline]:
         """
-        Overrides __or__ method called also by pipe operator '|'.
-        Syntactical Sugar for logical disjunction, that creates SelectorList,
-        which matches at least one of the elements.
+        Overrides `__or__` method called also by pipe operator '|'.
+
+        Syntactical Sugar for logical disjunction, that creates `SelectorList`,
+        when combining two `SoupSelector` objects, or `SelectionPipeline`,
+        when combining `SoupSelector` with `BaseOperation`.
 
         Parameters
         ----------
-        x : SoupSelector
-            SoupSelector object to be combined into new SelectorList with current one.
+        x : SoupSelector | BaseOperation
+            `SoupSelector` object to be combined into new `SelectorList`
+            object as `SelectorList(this, other)` or `BaseOperation` to bew chained
+            with it as `SelectionPipeline(this, other)`.
 
         Returns
         -------
         SelectorList
-            Union of two SoupSelector that can be used to get all elements
+            Union of two `SoupSelector` objects, that can be used to get all elements
             that match at least one of the elements in the Union.
+        SelectionPipeline
+            Pipeline of `SoupSelector` and `BaseOperation` objects that can be used
+            to extract and transform the data from the elements.
 
         Raises
         ------
         NotSoupSelectorException
-            If provided object is not of SoupSelector type.
+            If provided object is not an instance of `SoupSelector`
+            or `BaseOperation`.
         """
         from soupsavvy.base import BaseOperation
         from soupsavvy.operations.selection_pipeline import SelectionPipeline
@@ -325,28 +327,27 @@ class SoupSelector(TagSearcher, Comparable):
 
     def __invert__(self) -> SoupSelector:
         """
-        Overrides __invert__ method called also by tilde operator '~'.
-        Syntactical Sugar for bitwise NOT operator, that creates a NotSelector
-        matching everything that is not matched by the SoupSelector.
+        Overrides `__invert__` method called also by tilde operator '~'.
+        Syntactical Sugar for bitwise NOT operator, that creates `NotSelector` instance
+        matching everything that is not matched by this `SoupSelector`.
 
         Parameters
         ----------
         x : SoupSelector
-            SoupSelector object to be negated into new NotSelector.
+            `SoupSelector` object to be negated into new `NotSelector` as `NotSelector(this)`.
 
         Returns
         -------
         NotSelector
-            Negation of SoupSelector that can be used to get all elements
-            that do not match the SoupSelector.
+            `NotSelector(this)`.
         SoupSelector
-            Any SoupSelector object in case of directly inverting
-            NotSelector to get original SoupSelector.
+            Any `SoupSelector` object in case of directly inverting
+            `NotSelector` to get original `SoupSelector`.
 
         Raises
         ------
         NotSoupSelectorException
-            If provided object is not of SoupSelector type.
+            If provided object is not an instance of `SoupSelector`.
         """
         from soupsavvy.selectors.logical import NotSelector
 
@@ -354,26 +355,25 @@ class SoupSelector(TagSearcher, Comparable):
 
     def __and__(self, x: SoupSelector) -> AndSelector:
         """
-        Overrides __and__ method called also by ampersand operator '&'.
-        Syntactical Sugar for bitwise AND operator, that creates an AndSelector
-        matching everything that is matched by both SoupSelector.
+        Overrides `__and_`_ method called also by ampersand operator '&'.
+        Syntactical Sugar for bitwise AND operator, that creates `AndSelector` instance
+        matching everything that is matched by both `SoupSelector` objects.
 
         Parameters
         ----------
         x : SoupSelector
-            SoupSelector object to be combined into new AndSelector
-            with current SoupSelector.
+            `SoupSelector` object to be combined into new `AndSelector`
+            object as `AndSelector(this, other)`.
 
         Returns
         -------
         AndSelector
-            Intersection of two SoupSelector that can be used to get all elements
-            that match both SoupSelector.
+            `AndSelector(this, other)`.
 
         Raises
         ------
         NotSoupSelectorException
-            If provided object is not of SoupSelector type.
+            If provided object is not an instance of `SoupSelector`.
         """
         from soupsavvy.selectors.logical import AndSelector
 
@@ -392,43 +392,23 @@ class SoupSelector(TagSearcher, Comparable):
 
     def __gt__(self, x: SoupSelector) -> ChildCombinator:
         """
-        Overrides __gt__ method called also by greater-than operator '>'.
-        Syntactical Sugar for greater-than operator, that creates a ChildCombinator
-        which is equivalent to child combinator in css.
-
-        Example
-        -------
-        >>> div > a
-
-        matches all 'a' elements that are direct children of 'div' elements.
-        The same can be achieved by using '>' operator on two SoupSelector objects.
-
-        Example
-        -------
-        >>> TypeSelector("div") > TypeSelector("a")
-
-        Which results in
-
-        Example
-        -------
-        >>> ChildCombinator(TypeSelector("div"), TypeSelector("a"))
+        Overrides `__gt__` method called also by greater-than operator '>'.
+        Syntactical Sugar for greater-than operator, that creates `ChildCombinator`.
 
         Parameters
         ----------
         x : SoupSelector
-            SoupSelector object to be combined into new ChildCombinator
-            as selector for children of elements matched by current SoupSelector.
+            `SoupSelector` object to be combined into new `ChildCombinator`
+            object as `ChildCombinator(this, other)`.
 
         Returns
         -------
         ChildCombinator
-            ChildCombinator object that can be used to get all matching elements
-            that are direct children of the elements matched by current SoupSelector.
-
+            `ChildCombinator(this, other)`
         Raises
         ------
         NotSoupSelectorException
-            If provided object is not of SoupSelector type.
+            If provided object is not an instance of `SoupSelector`.
         """
         from soupsavvy.selectors.combinators import ChildCombinator
 
@@ -447,37 +427,28 @@ class SoupSelector(TagSearcher, Comparable):
 
     def __lt__(self, x: SoupSelector) -> ParentCombinator:
         """
-        Overrides __lt__ method called also by less-than operator '<'.
-        Syntactical Sugar for less-than operator, that creates a ParentCombinator.
+        Overrides `__lt__` method called also by less-than operator '<'.
+        Syntactical Sugar for less-than operator, that creates `ParentCombinator` instance.
 
         Example
         -------
         >>> TypeSelector("a") < TypeSelector("div")
 
-        Which results in
-
-        Example
-        -------
-        >>> ParentCombinator(TypeSelector("a"), TypeSelector("div"))
-
-        Matches all 'div' elements that are parents of 'a' elements.
-
         Parameters
         ----------
         x : SoupSelector
-            SoupSelector object to be combined into new ParentCombinator
-            as selector for parent of elements matched by current SoupSelector.
+            `SoupSelector` object to be combined into new `ParentCombinator`
+            object as `ParentCombinator(this, other)`.
 
         Returns
         -------
         ParentCombinator
-            ParentCombinator object that can be used to get all matching elements
-            that are parents of the elements matched by current SoupSelector.
+            `ParentCombinator(this, other)`
 
         Raises
         ------
         NotSoupSelectorException
-            If provided object is not of SoupSelector type.
+            If provided object is not an instance of `SoupSelector`.
         """
         from soupsavvy.selectors.combinators import ParentCombinator
 
@@ -496,45 +467,29 @@ class SoupSelector(TagSearcher, Comparable):
 
     def __add__(self, x: SoupSelector) -> NextSiblingCombinator:
         """
-        Overrides __add__ method called also by plus operator '+'.
-        Syntactical Sugar for addition operator, that creates a NextSiblingCombinator
-        which is equivalent to next sibling element css selector.
-
-        Example
-        -------
-        >>> div + a
-
-        matches all 'a' elements that immediately follow 'div' elements,
-        it means that both elements are children of the same parent element.
-
-        The same can be achieved by using '+' operator on two SoupSelector objects.
+        Overrides `__add__` method called also by plus operator '+'.
+        Syntactical Sugar for addition operator, that creates `NextSiblingCombinator`
+        instance.
 
         Example
         -------
         >>> TypeSelector("div") + TypeSelector("a")
 
-        Which results in
-
-        Example
-        -------
-        >>> NextSiblingCombinator(TypeSelector("div"), TypeSelector("a"))
-
         Parameters
         ----------
         x : SoupSelector
-            SoupSelector object to be combined into new NextSiblingCombinator
-            as selector for next sibling of current SoupSelector.
+            `SoupSelector` object to be combined into new` NextSiblingCombinator`
+            object as `NextSiblingCombinator(this, other)`.
 
         Returns
         -------
         NextSiblingCombinator
-            NextSiblingCombinator object that can be used to get all matching elements
-            that are next siblings of the current SoupSelector.
+            `NextSiblingCombinator(this, other)`
 
         Raises
         ------
         NotSoupSelectorException
-            If provided object is not of SoupSelector type.
+            If provided object is not an instance of `SoupSelector`.
         """
         from soupsavvy.selectors.combinators import NextSiblingCombinator
 
@@ -553,44 +508,29 @@ class SoupSelector(TagSearcher, Comparable):
 
     def __mul__(self, x: SoupSelector) -> SubsequentSiblingCombinator:
         """
-        Overrides __mul__ method called also by multiplication operator '*'.
+        Overrides `__mul__` method called also by multiplication operator '*'.
         Syntactical Sugar for multiplication operator, that creates
-        a SubsequentSiblingCombinator which is equivalent to subsequent sibling
-        element css selector.
-
-        Example
-        -------
-        >>> div ~ a
-
-        matches all 'a' elements that follow 'div' elements and share the same parent.
-        The same can be achieved by using '*' operator on two SoupSelector objects.
+        `SubsequentSiblingCombinator` instance.
 
         Example
         -------
         >>> TypeSelector("div") * TypeSelector("a")
 
-        Which results in
-
-        Example
-        -------
-        >>> SubsequentSiblingCombinator(TypeSelector("div"), TypeSelector("a"))
-
         Parameters
         ----------
         x : SoupSelector
-            SoupSelector object to be combined into new SubsequentSiblingCombinator
-            as selector for following sibling of current SoupSelector.
+            `SoupSelector` object to be combined into new `SubsequentSiblingCombinator`
+            object as `SubsequentSiblingCombinator(this, other)`.
 
         Returns
         -------
         SubsequentSiblingCombinator
-            SubsequentSiblingCombinator object that can be used to get all
-            matching elements that are following siblings of the current SoupSelector.
+            `SubsequentSiblingCombinator(this, other)`
 
         Raises
         ------
         NotSoupSelectorException
-            If provided object is not of SoupSelector type.
+            If provided object is not an instance of `SoupSelector`.
         """
         from soupsavvy.selectors.combinators import SubsequentSiblingCombinator
 
@@ -609,49 +549,29 @@ class SoupSelector(TagSearcher, Comparable):
 
     def __rshift__(self, x: SoupSelector) -> DescendantCombinator:
         """
-        Overrides __rshift__ method called also by right shift operator '>>'.
-        Syntactical Sugar for right shift operator, that creates a DescendantCombinator
-        which is equivalent to descendant combinator in css, typically represented
-        by a single space character.
-
-        Example
-        -------
-        >>> div a
-
-        matches all 'a' elements with 'div' as their ancestor.
+        Overrides `__rshift__` method called also by right shift operator '>>'.
+        Syntactical Sugar for right shift operator,
+        that creates `DescendantCombinator` instance.
 
         Example
         -------
         >>> TypeSelector("div") >> TypeSelector("a")
 
-        Which results in
-
-        Example
-        -------
-        >>> DescendantCombinator(TypeSelector("div"), TypeSelector("a"))
-
         Parameters
         ----------
         x : SoupSelector
-            SoupSelector object to be combined into new DescendantCombinator
-            as selector for descendant of current SoupSelector.
+            `SoupSelector` object to be combined into new `DescendantCombinator`
+            object as `DescendantCombinator(this, other)`.
 
         Returns
         -------
         DescendantCombinator
-            DescendantCombinator object that can be used to get all matching elements
-            that are descendants of the current SoupSelector.
+            `DescendantCombinator(this, other)`
 
         Raises
         ------
         NotSoupSelectorException
-            If provided object is not of SoupSelector type.
-
-        Notes
-        -----
-        For more information on descendant combinator, see:
-
-        https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_combinator
+            If provided object is not an instance of `SoupSelector`.
         """
         from soupsavvy.selectors.combinators import DescendantCombinator
 
@@ -670,37 +590,29 @@ class SoupSelector(TagSearcher, Comparable):
 
     def __lshift__(self, x: SoupSelector) -> AncestorCombinator:
         """
-        Overrides __lshift__ method called also by left shift operator '<<'.
-        Syntactical Sugar for left-shift operator, that creates an AncestorCombinator.
+        Overrides `__lshift__` method called also by left shift operator '<<'.
+        Syntactical Sugar for left-shift operator,
+        that creates `AncestorCombinator` instance.
 
         Example
         -------
         >>> TypeSelector("a") << TypeSelector("div")
 
-        Which results in
-
-        Example
-        -------
-        >>> AncestorCombinator(TypeSelector("a"), TypeSelector("div"))
-
-        Matches all 'div' elements that are ancestors of 'a' elements.
-
         Parameters
         ----------
         x : SoupSelector
-            SoupSelector object to be combined into new AncestorCombinator
-            as ancestor selector of current SoupSelector.
+            `SoupSelector` object to be combined into new `AncestorCombinator`
+            object as `AncestorCombinator(this, other)`.
 
         Returns
         -------
         AncestorCombinator
-            AncestorCombinator object that can be used to get all matching elements
-            that are ancestors of the elements matched by current SoupSelector.
+            `AncestorCombinator(this, other)`
 
         Raises
         ------
         NotSoupSelectorException
-            If provided object is not of SoupSelector type.
+            If provided object is not an instance of `SoupSelector`.
         """
         from soupsavvy.selectors.combinators import AncestorCombinator
 
@@ -720,12 +632,13 @@ class SoupSelector(TagSearcher, Comparable):
 
 class SelectableCSS(ABC):
     """
-    Interface for Tags that can be searched with css selector.
+    Interface for selectors, that can clearly and unambiguously defined css selector,
+    used to search for elements, that matches the same tags as find methods.
 
     Notes
     -----
     To implement SelectableCSS interface, child class must implement:
-    - 'selector' property, which return a string representing element css selector.
+    - 'selector' property, which return a string representing css selector.
     """
 
     @property
@@ -746,17 +659,17 @@ class SelectableCSS(ABC):
 
 class CompositeSoupSelector(SoupSelector):
     """
-    Interface for Tags that uses multiple steps to find elements.
+    Interface for selectors consisting of multiple selectors.
 
     Notes
     -----
-    To implement CompositeSoupSelector interface, child class must implement
-    call super init method with provided tags as arguments to check and assign them.
+    To implement `CompositeSoupSelector` interface, child class must
+    call its init method with provided selectors to set up the object.
 
     Attributes
     ----------
     selectors : list[SoupSelector]
-        List of SoupSelector objects passed to CompositeSoupSelector.
+        List of `SoupSelector` objects used for searching elements.
     """
 
     # if the order of selectors is not relevant - by default True
@@ -764,19 +677,18 @@ class CompositeSoupSelector(SoupSelector):
 
     def __init__(self, selectors: Iterable[SoupSelector]) -> None:
         """
-        Initializes CompositeSoupSelector object with provided tags.
-        Checks if all tags are instances of SoupSelector and assigns
-        them to 'selectors' attribute.
+        Initializes composite selector object with provided selectors.
+        Checks if all selectors are instances of `SoupSelector`.
 
         Parameters
         ----------
         selectors: Iterable[SoupSelector]
-            SoupSelector objects passed to CompositeSoupSelector.
+            Selectors used to search for elements.
 
         Raises
         ------
         NotSoupSelectorException
-            If any of provided parameters is not an instance of SoupSelector.
+            If any of provided parameters is not an instance of `SoupSelector`.
         """
         self._selectors = [check_selector(selector) for selector in selectors]
 
@@ -788,7 +700,7 @@ class CompositeSoupSelector(SoupSelector):
         Returns
         -------
         list[SoupSelector]
-            List of SoupSelector objects.
+            List of `SoupSelector` objects used for searching elements.
         """
         return self._selectors
 
@@ -832,7 +744,7 @@ class BaseOperation(Executable, Comparable):
 
     Example
     -------
-    >>> from soupsavvy.operations.general import Operation
+    >>> from soupsavvy.operations import Operation
     ... operation = Operation(str.lower) | Operation(str.strip)
     ... operation.execute("  TEXT  ")
     'text'
@@ -848,8 +760,8 @@ class BaseOperation(Executable, Comparable):
     ... selector.find(soup)
     42
 
-    BaseOperation inherits from `Comparable` interface, `__eq__` method needs to be
-    implemented in derived classes.
+    `BaseOperation` inherits from `Comparable` interface,
+    `__eq__` method needs to be implemented in derived classes.
     """
 
     def execute(self, arg: Any) -> Any:
@@ -887,24 +799,25 @@ class BaseOperation(Executable, Comparable):
 
     def __or__(self, x: Any) -> OperationPipeline:
         """
-        Overrides __or__ method called also by pipe operator '|'.
-        Syntactical Sugar for logical disjunction, that creates OperationPipeline,
+        Overrides `__or__` method called also by pipe operator '|'.
+        Syntactical Sugar for logical disjunction, that creates `OperationPipeline` instance,
         which chains two operations together.
 
         Parameters
         ----------
         x : BaseOperation
-            BaseOperation object to be combined into new OperationPipeline.
+            `BaseOperation` object to be combined into new `OperationPipeline`
+            with this operation.
 
         Returns
         -------
         OperationPipeline
-            New `OperationPipeline` with extended operations.
+            `OperationPipeline(this, other)`.
 
         Raises
         ------
         NotOperationException
-            If provided object is not of type BaseOperation.
+            If provided object is not an instance of `BaseOperation`.
         """
         from soupsavvy.operations.general import OperationPipeline
 
@@ -930,12 +843,12 @@ class OperationSearcherMixin(BaseOperation, TagSearcher):
         limit: Optional[int] = None,
     ) -> list[Any]:
         """
-        Extracts information from provided element.
+        Processes provided element and returns the result in a list.
 
         Parameters
         ----------
         tag : Tag
-            Any BeautifulSoup Tag object to extract text from.
+            Any `bs4.Tag` object to process.
         recursive : bool, optional
             Ignored, for consistency with interface.
         limit : int, optional
@@ -944,7 +857,7 @@ class OperationSearcherMixin(BaseOperation, TagSearcher):
         Returns
         -------
         list[Any]
-            Extracted information from the tag.
+            Result of applied operation on element in a list.
         """
         return [self.execute(tag)]
 
@@ -955,20 +868,20 @@ class OperationSearcherMixin(BaseOperation, TagSearcher):
         recursive: bool = True,
     ) -> Any:
         """
-        Extracts information from provided element.
+        Processes provided element and returns the result.
 
         Parameters
         ----------
         tag : Tag
-            Any BeautifulSoup Tag object to extract text from.
+            Any `bs4.Tag` object to process.
         strict : bool, optional
             Ignored, for consistency with interface.
-        recursive : int, optional
+        limit : int, optional
             Ignored, for consistency with interface.
 
         Returns
         -------
         Any
-            Extracted information from the tag.
+            Result of applied operation on element.
         """
         return self.execute(tag)

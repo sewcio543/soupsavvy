@@ -1,4 +1,13 @@
-"""Module for utility functions for tag selectors."""
+"""
+Module for utility functions for selectors, used internally across package
+to ensure consistent and reliable results.
+
+Classes
+-------
+- `TagIterator` - Wrapper class for iterating over bs4.Tag.
+- `UniqueTag` - Wrapper class for bs4.Tag to make it hashable by id.
+- `TagResultSet` - Collection that stores and manages results of selection.
+"""
 
 from __future__ import annotations
 

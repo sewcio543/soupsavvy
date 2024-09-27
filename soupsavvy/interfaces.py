@@ -3,7 +3,7 @@ Module with `soupsavvy` interfaces used across the package.
 
 - `Executable` - Interface for operations that can be executed on single argument.
 - `Comparable` - Interface for objects that can be compared for equality.
-- `TagSearcher` - Interface for objects that can search within BeautifulSoup tags.
+- `TagSearcher` - Interface for objects that can search within `bs4.Tag`.
 """
 
 from __future__ import annotations
@@ -51,7 +51,9 @@ TagSearcherExceptions = (exc.FailedOperationExecution, exc.TagNotFoundException)
 
 class TagSearcher(ABC):
     """
-    Interface for objects that can search within BeautifulSoup tags.
+    Interface for objects that can search within `bs4.Tag`.
+    Derived classes must implement the `find` and `find_all` methods,
+    that process `bs4.Tag` object and return results.
     """
 
     @abstractmethod
@@ -62,23 +64,23 @@ class TagSearcher(ABC):
         recursive: bool = True,
     ) -> Any:
         """
-        Finds first target information within the given tag and returns the result.
+        Processes `bs4.Tag` object and returns result.
 
         Parameters
         ----------
         tag : Tag
-            Any BeautifulSoup Tag object.
+            Any `bs4.Tag` object to process.
         strict : bool, optional
             If True, enforces results to be found in the tag, by default False.
         recursive : bool, optional
-            bs4.Tag.find method parameter that specifies if search should be recursive.
-            If set to False, only direct children of the tag will be searched.
-            By default True.
+            Specifies if search should be recursive.
+            If set to `False`, only direct children of the tag will be searched.
+            By default `True`.
 
         Returns
         -------
         Any
-            Result of the search operation.
+            Processed result from the tag.
         """
         raise NotImplementedError(
             f"{self.__class__.__name__} is an interface "
@@ -93,24 +95,24 @@ class TagSearcher(ABC):
         limit: Optional[int] = None,
     ) -> list[Any]:
         """
-        Finds all target information within the given tag and returns the result.
+        Processes `bs4.Tag` object and returns list of results.
 
         Parameters
         ----------
         tag : Tag
-            Any BeautifulSoup Tag object.
+            Any `bs4.Tag` object to process.
         recursive : bool, optional
-            bs4.Tag.find method parameter that specifies if search should be recursive.
-            If set to False, only direct children of the tag will be searched.
-            By default True.
+            Specifies if search should be recursive.
+            If set to `False`, only direct children of the tag will be searched.
+            By default `True`.
         limit : int, optional
-            bs4.Tag.find_all method parameter that specifies maximum number of results
-            to return. If set to None, all results are returned. By default None.
+            Specifies maximum number of results to return in a list.
+            By default `None`, everything is returned.
 
         Returns
         -------
         list[Any]
-            A list of results, if none found, the list is empty.
+            A list of results from processed tag.
         """
         raise NotImplementedError(
             f"{self.__class__.__name__} is an interface "

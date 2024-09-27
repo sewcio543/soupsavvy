@@ -1,5 +1,13 @@
 """
-Module with implementation of templates that enhance generator components.
+Module with implementation of templates that complement generator components
+providing more customization options.
+
+Classes
+-------
+- `EmptyTemplate` - Template for generating an empty string.
+- `ConstantTemplate` - Template for generating a constant string.
+- `ChoiceTemplate` - Template for randomly selecting from a list of choices.
+- `RandomTemplate` - Template for generating a random string of ASCII letters and digits.
 """
 
 import random
@@ -13,7 +21,7 @@ from soupsavvy.testing.generators.templates.base import BaseTemplate
 class EmptyTemplate(BaseTemplate):
     """
     Template for generating an empty string.
-    It's a convenient default template for always generating an empty string.
+    Convenience template for default generator behavior.
 
     Example
     -------
@@ -37,7 +45,7 @@ class EmptyTemplate(BaseTemplate):
 class ConstantTemplate(BaseTemplate):
     """
     Template for generating a constant string.
-    It's a convenient template for always generating the same, defined string.
+    Convenience template for always generating the same content.
 
     Example
     -------
@@ -48,7 +56,7 @@ class ConstantTemplate(BaseTemplate):
 
     def __init__(self, value: str) -> None:
         """
-        Initializes the ConstantTemplate.
+        Initializes `ConstantTemplate` instance.
 
         Parameters
         ----------
@@ -82,12 +90,12 @@ class ChoiceTemplate(BaseTemplate):
 
     def __init__(self, choices: Iterable, seed: Optional[int] = None) -> None:
         """
-        Initializes the ChoiceTemplate.
+        Initializes `ChoiceTemplate` instance.
 
         Parameters
         ----------
         choices : Iterable
-            Iterable of choices.
+            Iterable of choices to select from.
         seed : int, optional
             Random seed for reproducibility. Defaults to None, no seed is used.
         """
@@ -109,7 +117,7 @@ class ChoiceTemplate(BaseTemplate):
 
 class RandomTemplate(BaseTemplate):
     """
-    Template for generating a random string.
+    Template for generating a random string of ASCII letters and digits.
 
     Example
     -------
@@ -122,7 +130,7 @@ class RandomTemplate(BaseTemplate):
 
     def __init__(self, length: int = 4, seed: Optional[int] = None) -> None:
         """
-        Initializes the RandomTemplate.
+        Initializes `RandomTemplate` instance.
 
         Parameters
         ----------

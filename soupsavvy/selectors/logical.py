@@ -286,7 +286,7 @@ class XORSelector(CompositeSoupSelector):
     Example
     -------
     >>> selector1 = TypeSelector("div")
-    ... selector2 = AttributeSelector("class", value="widget")
+    ... selector2 = ClassSelector("widget")
     ... xor = (selector1 & (~selector2)) | ((~selector1) & selector2)
     """
 

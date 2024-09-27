@@ -1,4 +1,13 @@
-"""Module with HTML generators."""
+"""
+Module with generators for producing HTML content.
+Generators can be used to create customizable HTML content,
+that can be used to test selectors and workflows.
+
+Classes
+-------
+- `AttributeGenerator` - class for generating HTML attribute strings.
+- `TagGenerator` - class for generating HTML tag strings.
+"""
 
 from __future__ import annotations
 
@@ -103,9 +112,8 @@ class AttributeGenerator(BaseGenerator):
 
     See also
     --------
-    `soupsavvy.testing.generators.templates` module
-
-    `soupsavvy.testing.generators.TagGenerator` class
+    - `soupsavvy.testing.generators.templates` package
+    - `soupsavvy.testing.TagGenerator` class
     """
 
     def __init__(self, name: str, value: TemplateType = None) -> None:
@@ -251,9 +259,8 @@ class TagGenerator(BaseGenerator):
 
     See also
     --------
-    `soupsavvy.testing.generators.templates`
-
-    `soupsavvy.testing.generators.AttributeGenerator`
+    - `soupsavvy.testing.generators.templates` package
+    - `soupsavvy.testing.AttributeGenerator` class
     """
 
     def __init__(
