@@ -3,9 +3,9 @@ Module for operations specific to BeautifulSoup tags.
 
 Classes
 -------
-- Text - Extracts text from a BeautifulSoup Tag - most common operation.
-- Href - Extracts href attribute from a BeautifulSoup Tag.
-- Parent - Extracts parent of a BeautifulSoup Tag.
+- `Text` - Extracts text from `bs4.Tag` - most common operation.
+- `Href` - Extracts href attribute from `bs4.Tag`
+- `Parent` - Extracts parent of `bs4.Tag`
 
 These components are design to be used for processing html tags and extracting
 desired information. They can be used in combination with selectors.
@@ -20,7 +20,7 @@ from soupsavvy.base import BaseOperation, OperationSearcherMixin, SoupSelector
 
 class Text(OperationSearcherMixin):
     """
-    Operation to extract text from a BeautifulSoup Tag.
+    Operation to extract text from `bs4.Tag`.
     Wrapper of most common operation used in web scraping.
 
     Example
@@ -30,7 +30,7 @@ class Text(OperationSearcherMixin):
     ... operation.execute(tag)
     "Extracted text from the tag"
 
-    Wrapper for BeautifulSoup `get_text` method, that exposes all its options,
+    Wrapper for `bs4.Tag.get_text` method, that exposes all its options,
     and imitates its default behavior.
 
     Implements `TagSearcher` interface for convenience. It has find methods
@@ -46,7 +46,7 @@ class Text(OperationSearcherMixin):
 
     def __init__(self, separator: str = "", strip: bool = False) -> None:
         """
-        Initializes Text operation with optional separator and strip option.
+        Initializes `Text` operation with optional separator and strip options.
 
         Parameters
         ----------
@@ -60,7 +60,7 @@ class Text(OperationSearcherMixin):
         self.strip = strip
 
     def _execute(self, arg: Tag) -> str:
-        """Extracts text from a BeautifulSoup Tag."""
+        """Extracts text from `bs4.Tag`."""
         return arg.get_text(separator=self.separator, strip=self.strip)
 
     def __eq__(self, x: Any) -> bool:
@@ -78,7 +78,7 @@ class Text(OperationSearcherMixin):
 
 class Href(OperationSearcherMixin):
     """
-    Operation to extract href attribute from a BeautifulSoup Tag.
+    Operation to extract href attribute from `bs4.Tag`.
     Wrapper of one of the common operation used in web scraping.
     If href attribute is not present, returns None.
 
@@ -117,7 +117,7 @@ class Href(OperationSearcherMixin):
 
 class Parent(BaseOperation, SoupSelector):
     """
-    Operation to extract parent of a BeautifulSoup Tag.
+    Operation to extract parent of `bs4.Tag`.
 
     Example
     -------
@@ -146,11 +146,13 @@ class Parent(BaseOperation, SoupSelector):
     ... operation.execute(tag)
     "<div><div>--tag--</div></div>"
 
+    Notes
+    -----
     If element does not have parent, returns None.
     """
 
     def _execute(self, arg: Tag) -> Optional[Tag]:
-        """Extracts parent of a BeautifulSoup Tag."""
+        """Extracts parent of `bs4.Tag`."""
         return arg.parent
 
     def find_all(

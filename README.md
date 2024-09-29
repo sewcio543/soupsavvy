@@ -1,4 +1,4 @@
-![soupsavvy](resources/logo.png)
+![soupsavvy](https://github.com/sewcio543/soupsavvy/blob/main/resources/logo.png?raw=true)
 ========
 
 ## Powerful and flexible engine for BeautifulSoup

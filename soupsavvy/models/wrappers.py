@@ -1,12 +1,12 @@
 """
-Module with wrappers for selectors used mostly in models.
+Module with wrappers for selectors used mostly in model schemas.
 Wrappers are used to control behavior and define how fields of the models are defined.
 
 Classes
 -------
-- All : FieldWrapper
-- Required : FieldWrapper
-- Default : FieldWrapper
+- `All` - Wrapper to find all information matching criteria.
+- `Default` - Wrapper to set default value if information is not found.
+- `Required` - Wrapper to enforce that information must be found.
 """
 
 from typing import Any, Optional
@@ -21,24 +21,24 @@ from soupsavvy.operations.selection_pipeline import SelectionPipeline
 
 class FieldWrapper(TagSearcher, Comparable):
     """
-    A wrapper for TagSearcher objects, that acts as a higher order searcher,
+    A wrapper for `TagSearcher` objects, that acts as a higher order searcher,
     which controls behavior of the wrapped searcher.
     Used as field to defined model.
     """
 
     def __init__(self, selector: TagSearcher) -> None:
         """
-        Initializes FieldWrapper.
+        Initializes wrapper with a `TagSearcher` instance.
 
         Parameters
         ----------
         selector : TagSearcher
-            The TagSearcher instance to be wrapped.
+            The `TagSearcher` instance to be wrapped.
 
         Raises
         ------
         NotTagSearcherException
-            If provided object is not an instance of TagSearcher.
+            If provided object is not an instance of `TagSearcher`.
         """
 
         if not isinstance(selector, TagSearcher):
@@ -51,12 +51,12 @@ class FieldWrapper(TagSearcher, Comparable):
     @property
     def selector(self) -> TagSearcher:
         """
-        Returns searcher, that is wrapped by this FieldWrapper.
+        Returns searcher, that is wrapped by this wrapper.
 
         Returns
         -------
         TagSearcher
-            TagSearcher instance wrapped by this FieldWrapper.
+            `TagSearcher` instance wrapped by this wrapper.
         """
         return self._selector
 
@@ -68,13 +68,13 @@ class FieldWrapper(TagSearcher, Comparable):
     ) -> list[Any]:
         """
         Find all matching tags using the wrapped selector.
-        Used for compatibility with TagSearcher interface,
+        Used for compatibility with `TagSearcher` interface,
         delegates to wrapped selector.
 
         Parameters
         ----------
         tag : Tag
-            Any BeautifulSoup tag to search within.
+            Any `bs4.Tag` to search within.
         recursive : bool, optional
             Whether to search recursively, by default True.
         limit : int, optional
@@ -89,7 +89,7 @@ class FieldWrapper(TagSearcher, Comparable):
 
     def __eq__(self, x: Any) -> bool:
         """
-        Check if two FieldWrapper instances are equal.
+        Check if two `FieldWrapper` instances are equal.
         They need to be of the same class and wrap the same selector.
 
         Parameters
@@ -106,23 +106,24 @@ class FieldWrapper(TagSearcher, Comparable):
 
     def __or__(self, x: Any) -> SelectionPipeline:
         """
-        Overrides __or__ method called also by pipe operator '|'.
-        Combines the current FieldWrapper with an operation.
+        Overrides `__or__` method called also by pipe operator '|'.
+        Combines this `FieldWrapper` with an operation.
 
         Parameters
         ----------
         x : BaseOperation
-            The operation to be combined with the FieldWrapper.
+            The operation to be combined with this `FieldWrapper`.
 
         Returns
         -------
         SelectionPipeline
-            New SelectionPipeline object created from combining selector and operation.
+            New `SelectionPipeline` object created from
+            combining selector and operation.
 
         Raises
         ------
         NotOperationException
-            If provided object is not of BaseOperation type.
+            If provided object is not an instance of `BaseOperation`.
         """
         x = check_operation(x)
         return SelectionPipeline(selector=self, operation=x)
@@ -156,9 +157,9 @@ class All(FieldWrapper):
         Parameters
         ----------
         tag : Tag
-            Any BeautifulSoup tag to search within.
+            Any `bs4.Tag` to search within.
         strict : bool, optional
-            Ignored, as this method always falls back to find_all.
+            Ignored, as this method always falls back to `find_all`.
         recursive : bool, optional
             Whether to search recursively, by default True.
 
@@ -193,7 +194,7 @@ class Required(FieldWrapper):
         Parameters
         ----------
         tag : Tag
-            Any BeautifulSoup tag to search within.
+            Any `bs4.Tag` to search within.
         strict : bool, optional
             If True, raises an exception if no matches are found, by default False.
         recursive : bool, optional
@@ -232,12 +233,12 @@ class Default(FieldWrapper):
 
     def __init__(self, selector: TagSearcher, default: Any) -> None:
         """
-        Initializes Default FieldWrapper.
+        Initializes `Default` field wrapper.
 
         Parameters
         ----------
         selector : TagSearcher
-            The TagSearcher instance to be wrapped.
+            The `TagSearcher` instance to be wrapped.
         default : Any
             The default value to return if no match is found.
         """
@@ -252,7 +253,7 @@ class Default(FieldWrapper):
         Parameters
         ----------
         tag : Tag
-            Any BeautifulSoup tag to search within.
+            Any bs4.Tag` to search within.
         strict : bool, optional
             If True, raises an exception if no matches are found, by default False.
         recursive : bool, optional
