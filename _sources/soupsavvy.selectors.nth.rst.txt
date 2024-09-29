@@ -10,7 +10,7 @@ Submodules
    soupsavvy.selectors.nth.nth_soup_selector
    soupsavvy.selectors.nth.nth_utils
 
-Module contents
+Content
 ---------------
 
 .. automodule:: soupsavvy.selectors.nth

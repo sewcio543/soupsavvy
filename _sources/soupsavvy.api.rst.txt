@@ -1,3 +1,6 @@
+api
+====================
+
 .. automodule:: soupsavvy.api
    :members:
    :undoc-members:

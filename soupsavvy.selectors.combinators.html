@@ -4,11 +4,11 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Classes &mdash; soupsavvy  documentation</title>
+  <title>selectors.combinators &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -23,8 +23,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Classes" href="soupsavvy.selectors.general.html" />
-    <link rel="prev" title="Classes" href="soupsavvy.selectors.attributes.html" /> 
+    <link rel="next" title="selectors.general" href="soupsavvy.selectors.general.html" />
+    <link rel="prev" title="selectors.attributes" href="soupsavvy.selectors.attributes.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,58 +51,33 @@
 <li class="toctree-l1 current"><a class="reference internal" href="soupsavvy.selectors.html">selectors</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.html#subpackages">Subpackages</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="soupsavvy.selectors.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.attributes.html">Classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.attributes.html#soupsavvy.selectors.attributes.AttributeSelector"><code class="docutils literal notranslate"><span class="pre">AttributeSelector</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.attributes.html#soupsavvy.selectors.attributes.ClassSelector"><code class="docutils literal notranslate"><span class="pre">ClassSelector</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.attributes.html#soupsavvy.selectors.attributes.IdSelector"><code class="docutils literal notranslate"><span class="pre">IdSelector</span></code></a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#notes">Notes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.selectors.combinators.AncestorCombinator"><code class="docutils literal notranslate"><span class="pre">AncestorCombinator</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.selectors.combinators.BaseAncestorCombinator"><code class="docutils literal notranslate"><span class="pre">BaseAncestorCombinator</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.selectors.combinators.BaseCombinator"><code class="docutils literal notranslate"><span class="pre">BaseCombinator</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.combinators.BaseCombinator.COMMUTATIVE"><code class="docutils literal notranslate"><span class="pre">BaseCombinator.COMMUTATIVE</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.combinators.BaseCombinator.__init__"><code class="docutils literal notranslate"><span class="pre">BaseCombinator.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.combinators.BaseCombinator.find_all"><code class="docutils literal notranslate"><span class="pre">BaseCombinator.find_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.attributes.html">selectors.attributes</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">selectors.combinators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#notes">Notes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.combinators.SelectorList"><code class="docutils literal notranslate"><span class="pre">SelectorList</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.combinators.BaseCombinator"><code class="docutils literal notranslate"><span class="pre">BaseCombinator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.combinators.BaseAncestorCombinator"><code class="docutils literal notranslate"><span class="pre">BaseAncestorCombinator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.combinators.ChildCombinator"><code class="docutils literal notranslate"><span class="pre">ChildCombinator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.combinators.NextSiblingCombinator"><code class="docutils literal notranslate"><span class="pre">NextSiblingCombinator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.combinators.SubsequentSiblingCombinator"><code class="docutils literal notranslate"><span class="pre">SubsequentSiblingCombinator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.combinators.DescendantCombinator"><code class="docutils literal notranslate"><span class="pre">DescendantCombinator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.combinators.ParentCombinator"><code class="docutils literal notranslate"><span class="pre">ParentCombinator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.combinators.AncestorCombinator"><code class="docutils literal notranslate"><span class="pre">AncestorCombinator</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.selectors.combinators.ChildCombinator"><code class="docutils literal notranslate"><span class="pre">ChildCombinator</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.selectors.combinators.DescendantCombinator"><code class="docutils literal notranslate"><span class="pre">DescendantCombinator</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.selectors.combinators.NextSiblingCombinator"><code class="docutils literal notranslate"><span class="pre">NextSiblingCombinator</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.selectors.combinators.ParentCombinator"><code class="docutils literal notranslate"><span class="pre">ParentCombinator</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.selectors.combinators.SelectorList"><code class="docutils literal notranslate"><span class="pre">SelectorList</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.combinators.SelectorList.__init__"><code class="docutils literal notranslate"><span class="pre">SelectorList.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.combinators.SelectorList.find_all"><code class="docutils literal notranslate"><span class="pre">SelectorList.find_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.general.html">selectors.general</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.logical.html">selectors.logical</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html">selectors.relative</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.selectors.combinators.SubsequentSiblingCombinator"><code class="docutils literal notranslate"><span class="pre">SubsequentSiblingCombinator</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.general.html">Classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.AnyTagSelector"><code class="docutils literal notranslate"><span class="pre">AnyTagSelector</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.PatternSelector"><code class="docutils literal notranslate"><span class="pre">PatternSelector</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.SelfSelector"><code class="docutils literal notranslate"><span class="pre">SelfSelector</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.TypeSelector"><code class="docutils literal notranslate"><span class="pre">TypeSelector</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.UniversalSelector"><code class="docutils literal notranslate"><span class="pre">UniversalSelector</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.logical.html">Classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.AndSelector"><code class="docutils literal notranslate"><span class="pre">AndSelector</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.NotSelector"><code class="docutils literal notranslate"><span class="pre">NotSelector</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.XORSelector"><code class="docutils literal notranslate"><span class="pre">XORSelector</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html"><code class="docutils literal notranslate"><span class="pre">BaseAncestorSelector</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.BaseRelativeSibling"><code class="docutils literal notranslate"><span class="pre">BaseRelativeSibling</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.HasSelector"><code class="docutils literal notranslate"><span class="pre">HasSelector</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeAncestor"><code class="docutils literal notranslate"><span class="pre">RelativeAncestor</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeChild"><code class="docutils literal notranslate"><span class="pre">RelativeChild</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeDescendant"><code class="docutils literal notranslate"><span class="pre">RelativeDescendant</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeNextSibling"><code class="docutils literal notranslate"><span class="pre">RelativeNextSibling</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeParent"><code class="docutils literal notranslate"><span class="pre">RelativeParent</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeSelector"><code class="docutils literal notranslate"><span class="pre">RelativeSelector</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeSubsequentSibling"><code class="docutils literal notranslate"><span class="pre">RelativeSubsequentSibling</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.html#module-soupsavvy.selectors">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.html#module-soupsavvy.selectors">Content</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -130,7 +105,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="soupsavvy.selectors.html">selectors</a></li>
-      <li class="breadcrumb-item active">Classes</li>
+      <li class="breadcrumb-item active">selectors.combinators</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/soupsavvy.selectors.combinators.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -140,92 +115,112 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <p id="module-soupsavvy.selectors.combinators">Module for combinators defined in css.</p>
-<p>They they combine other selectors in a way that gives them a useful relationship
-to each other and the location of content in the document.</p>
-<p>Soupsavvy provides combinators that are used to combine multiple SoupSelector
-objects in a similar fashion to CSS combinators.</p>
+  <section id="module-soupsavvy.selectors.combinators">
+<span id="selectors-combinators"></span><h1>selectors.combinators<a class="headerlink" href="#module-soupsavvy.selectors.combinators" title="Link to this heading"></a></h1>
+<p>Module with combinators, which are composite selectors, that define a relationship
+between multiple selectors related to their position in the document.</p>
+<p>Most of them are counterpart of CSS combinators, but others extend their functionality.</p>
 <section id="classes">
-<h1>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h1>
-<p>ChildCombinator - equivalent of CSS child combinator (&gt;)
-NextSiblingCombinator - equivalent of CSS adjacent sibling combinator (+)
-SubsequentSiblingCombinator - equivalent of CSS general sibling combinator (*)
-DescentCombinator - equivalent of CSS descendant combinator (” “)
-SelectorList - equivalent of CSS selector list (,) or :is() pseudo-class
-OrSelector - alias for SelectorList
-ParentCombinator - matches parent of preceding selector
-AncestorCombinator - matches ancestor of preceding selector</p>
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><cite>ChildCombinator</cite> - counterpart of CSS child combinator (&gt;)</p></li>
+<li><p><cite>NextSiblingCombinator</cite> - counterpart of CSS adjacent sibling combinator (+)</p></li>
+<li><p><cite>SubsequentSiblingCombinator</cite> - counterpart of CSS subsequent sibling combinator (*)</p></li>
+<li><p><cite>DescentCombinator</cite> - counterpart of CSS descendant combinator (” “)</p></li>
+<li><p><cite>ParentCombinator</cite> - matches parent of preceding selector</p></li>
+<li><p><cite>AncestorCombinator</cite> - matches ancestor of preceding selector</p></li>
+</ul>
 </section>
 <section id="notes">
-<h1>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h1>
-<p>For more information on CSS combinators see:
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Combinators">https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Combinators</a></p>
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>For more information on CSS combinators, see:</p>
+<p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Combinators">https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Combinators</a></p>
 </section>
 <dl class="py class">
-<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.AncestorCombinator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AncestorCombinator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#AncestorCombinator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.AncestorCombinator" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#soupsavvy.selectors.combinators.BaseAncestorCombinator" title="soupsavvy.selectors.combinators.BaseAncestorCombinator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAncestorCombinator</span></code></a></p>
-<p>Ancestor combinator separates two selectors and matches all instances
-of the second element that are ancestors of the first element.</p>
-<p>Two <cite>SoupSelector</cite> objects are required to create AncestorCombinator,
-but more can be provided as positional arguments, which binds them
-in a sequence of steps to match.</p>
-<section id="example">
-<h1>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">AncestorCombinator</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">),</span>
-<span class="gp">... </span>    <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;menu&quot;</span><span class="p">),</span>
-<span class="gp">... </span>    <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span>
-<span class="gp">... </span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The given selector would first look for ‘a’ elements, then find elements with
-‘menu’ class that are ancestors of ‘a’ elements, and finally find ‘div’ elements
-that are ancestors of ‘menu’ elements.</p>
+<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.SelectorList">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SelectorList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#SelectorList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.SelectorList" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.SelectorList" title="soupsavvy.selectors.logical.SelectorList"><code class="xref py py-class docutils literal notranslate"><span class="pre">SelectorList</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.BaseCombinator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseCombinator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#BaseCombinator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.BaseCombinator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.CompositeSoupSelector" title="soupsavvy.base.CompositeSoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompositeSoupSelector</span></code></a></p>
+<p>Base class for all combinators, which are composite selectors,
+that defined a relationship between multiple selectors and apply it to search
+for elements in the document.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.BaseCombinator.COMMUTATIVE">
+<span class="sig-name descname"><span class="pre">COMMUTATIVE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#soupsavvy.selectors.combinators.BaseCombinator.COMMUTATIVE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.BaseCombinator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#BaseCombinator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.BaseCombinator.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes Combinator object with provided positional arguments.
+At least two <cite>SoupSelector</cite> object are required to create Combinator.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>selectors: SoupSelector</dt><dd><p><cite>SoupSelector</cite> objects to match accepted as positional arguments.</p>
+</dd>
+</dl>
 </section>
 <section id="id1">
-<h1>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;&lt;span class=&quot;menu&quot;&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/span&gt;&lt;/div&gt; ✔️
-&gt;&gt;&gt; &lt;div&gt;&lt;span class=&quot;menu&quot;&gt;&lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/div&gt;&lt;/span&gt;&lt;/div&gt; ✔️
-&gt;&gt;&gt; &lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;span class=&quot;menu&quot;&gt;&lt;/span&gt;&lt;/div&gt; ❌
-&gt;&gt;&gt; &lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/span&gt;&lt;/div&gt; ❌
+<h2>Notes<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>Object can be initialized with more than two <cite>SoupSelector</cite> objects,
+which would be equal to chaining multiple combinators of the same type.</p>
+<p>For example, chaining child combinator in css:</p>
+</section>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span> <span class="o">&gt;</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">span</span>
 </pre></div>
 </div>
-<p>It is equivalent to using <cite>HasSelector</cite> with (default) descendant combinator
-and narrowing down results to <cite>div</cite> types with <cite>TypeSelector</cite>.</p>
+<p>translated to <cite>soupsavvy</cite> would be:</p>
 </section>
 <section id="id2">
-<h1>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">HasSelector</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;menu&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+<h2>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ChildCombinator</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>Although this combinator does not have its counterpart in CSS, it can be
-represented as has selector, where descendant combinator is implied:</p>
 </section>
+<section id="raises">
+<h2>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>NotSoupSelectorException</dt><dd><p>If any of provided parameters is not an instance of SoupSelector.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.BaseCombinator.find_all">
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#BaseCombinator.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.BaseCombinator.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all elements matching selector in provided <cite>Tag</cite>.</p>
 <section id="id3">
-<h1>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span><span class="p">:</span><span class="n">has</span><span class="p">(</span><span class="o">.</span><span class="n">menu</span> <span class="n">a</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Object can be created as well by using left shift operator ‘&lt;&lt;’
-on two SoupSelector objects.</p>
+<h2>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to search within.</p>
+</dd>
+<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
+If set to <cite>False</cite>, only direct children of the tag will be searched.
+By default <cite>True</cite>.</p>
+</dd>
+<dt>limit<span class="classifier">int, optional</span></dt><dd><p>Specifies maximum number of elements to return.
+By default <cite>None</cite>, all found elements are returned.</p>
+</dd>
+</dl>
 </section>
-<section id="id4">
-<h1>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span><span class="p">:</span><span class="n">has</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
-</pre></div>
-</div>
-<p>Which translated to soupsavvy would be:</p>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>list[Tag]</dt><dd><p>List of <cite>bs4.Tag</cite> objects matching selector. If none found, the list is empty.</p>
+</dd>
+</dl>
 </section>
-<section id="id5">
-<h1>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">AncestorCombinator</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
-</pre></div>
-</div>
-</section>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -239,202 +234,52 @@ after finding first step.</p>
 <li><p>Elements that match first step can be found</p></li>
 </ul>
 <p>anywhere in the tree, regardless of <cite>recursive</cite> parameter.
-* Final results should contain only children if <cite>recursive</cite> is False.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.BaseCombinator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseCombinator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#BaseCombinator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.BaseCombinator" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.CompositeSoupSelector" title="soupsavvy.base.CompositeSoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompositeSoupSelector</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.BaseCombinator.COMMUTATIVE">
-<span class="sig-name descname"><span class="pre">COMMUTATIVE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#soupsavvy.selectors.combinators.BaseCombinator.COMMUTATIVE" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.BaseCombinator.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#BaseCombinator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.BaseCombinator.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes Combinator object with provided positional arguments.
-At least two SoupSelector object are required to create Combinator.</p>
-<section id="parameters">
-<h1>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h1>
-<dl class="simple">
-<dt>selectors: SoupSelector</dt><dd><p>SoupSelector objects to match accepted as positional arguments.</p>
-</dd>
-</dl>
-</section>
-<section id="id6">
-<h1>Notes<a class="headerlink" href="#id6" title="Link to this heading"></a></h1>
-<p>Object can be initialized with more than two SoupSelector objects,
-which would be equal to chaining multiple combinators of the same type.</p>
-<p>For example, chaining child combinator in css:</p>
-</section>
-<section id="id7">
-<h1>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span> <span class="o">&gt;</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">span</span>
-</pre></div>
-</div>
-<p>translated to soupsavvy would be:</p>
-</section>
-<section id="id8">
-<h1>Example<a class="headerlink" href="#id8" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ChildCombinator</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">))</span>
-</pre></div>
-</div>
-</section>
-<section id="raises">
-<h1>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h1>
-<dl class="simple">
-<dt>NotSoupSelectorException</dt><dd><p>If any of provided parameters is not an instance of SoupSelector.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.BaseCombinator.find_all">
-<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#BaseCombinator.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.BaseCombinator.find_all" title="Link to this definition"></a></dt>
-<dd><p>Finds all matching elements in provided BeautifulSoup Tag.</p>
-<section id="id9">
-<h1>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h1>
-<dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
-</dd>
-<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>bs4.Tag.find method parameter that specifies if search should be recursive.
-If set to False, only direct children of the tag will be searched.
-By default True.</p>
-</dd>
-<dt>limit<span class="classifier">int, optional</span></dt><dd><p>bs4.Tag.find_all method parameter that specifies maximum number of elements
-to return. If set to None, all elements are returned. By default None.</p>
-</dd>
-</dl>
-</section>
-<section id="returns">
-<h1>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h1>
-<dl class="simple">
-<dt>list[Tag]</dt><dd><p>A list of Tag objects matching tag specifications.
-If none found, the list is empty.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
+- Final results should contain only children of element if <cite>recursive</cite> is False.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.selectors.combinators.ChildCombinator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ChildCombinator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#ChildCombinator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.ChildCombinator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.selectors.combinators.BaseCombinator" title="soupsavvy.selectors.combinators.BaseCombinator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCombinator</span></code></a></p>
-<p>Class representing a child combinator in CSS selectors.</p>
-<section id="id10">
-<h1>Example<a class="headerlink" href="#id10" title="Link to this heading"></a></h1>
+<p>Counterpart of CSS child combinator.
+Represents the relationship between selectors, where every next matching element
+is a direct child of the previous one.</p>
+<section id="id4">
+<h2>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ChildCombinator</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>matches all ‘a’ elements that are direct children of ‘div’ elements.</p>
 </section>
-<section id="id11">
-<h1>Example<a class="headerlink" href="#id11" title="Link to this heading"></a></h1>
+<section id="id5">
+<h2>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;a&gt;Hello World&lt;/a&gt;&lt;/div&gt; ✔️
 &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;a&gt;Hello World&lt;/a&gt;&lt;/div&gt; ✔️
 &gt;&gt;&gt; &lt;span class=&quot;widget&quot;&gt;&lt;a&gt;Hello World&lt;/a&gt;&lt;/span&gt; ❌
 &gt;&gt;&gt; &lt;div class=&quot;menu&quot;&gt;&lt;span&gt;Hello World&lt;/span&gt;&lt;/div&gt; ❌
 </pre></div>
 </div>
-<p>Object can be created as well by using greater than operator ‘&gt;’
-on two SoupSelector objects.</p>
+<p>Object can be created as well by using <cite>greater than</cite> operator ‘&gt;’
+on <cite>SoupSelector</cite> objects.</p>
 </section>
-<section id="id12">
-<h1>Example<a class="headerlink" href="#id12" title="Link to this heading"></a></h1>
+<section id="id6">
+<h2>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Which is equivalent to the first example.</p>
-<p>This is an equivalent of CSS child combinator, that matches elements
-that are direct children of a specified element.</p>
+<p>CSS counterpart can be represented as:</p>
 </section>
-<section id="id13">
-<h1>Example<a class="headerlink" href="#id13" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="o">.</span><span class="n">widget</span> <span class="o">&gt;</span> <span class="n">a</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
-</pre></div>
-</div>
-<p>which translated to soupsavvy would be:</p>
-</section>
-<section id="id14">
-<h1>Example<a class="headerlink" href="#id14" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ChildCombinator</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;widget&quot;</span><span class="p">),</span>
-<span class="gp">... </span>    <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="p">)</span>
-</pre></div>
-</div>
-<p>or with use of <cite>&gt;</cite> operator:</p>
-</section>
-<section id="id15">
-<h1>Example<a class="headerlink" href="#id15" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;widget&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<section id="id7">
+<h2>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span> <span class="o">&gt;</span> <span class="n">a</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
 </pre></div>
 </div>
 </section>
-<section id="id16">
-<h1>Notes<a class="headerlink" href="#id16" title="Link to this heading"></a></h1>
-<p>For more information on child combinator see:
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Child_combinator">https://developer.mozilla.org/en-US/docs/Web/CSS/Child_combinator</a></p>
-</section>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.DescendantCombinator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DescendantCombinator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#DescendantCombinator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.DescendantCombinator" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#soupsavvy.selectors.combinators.BaseCombinator" title="soupsavvy.selectors.combinators.BaseCombinator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCombinator</span></code></a></p>
-<p>Class representing a descent combinator in CSS selectors.
-Descent combinator separates two selectors and matches all instances
-of the second element that are descendants of the first element.</p>
-<p>Two SoupSelector objects are required to create DescentCombinator,
-but more can be provided as positional arguments, which binds them
-in a sequence of steps to match.</p>
-<section id="id17">
-<h1>Example<a class="headerlink" href="#id17" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DescentCombinator</span><span class="p">(</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">AttributeSelector</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;href&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;google.com&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
-</pre></div>
-</div>
-<p>matches all descendants of ‘div’ element
-that have href attribute equal to ‘google.com’.</p>
-</section>
-<section id="id18">
-<h1>Example<a class="headerlink" href="#id18" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;&lt;a href=&quot;google.com&quot;&gt;&lt;/a&gt;&lt;/div&gt; ✔️
-&gt;&gt;&gt; &lt;div&gt;&lt;div&gt;&lt;a href=&quot;google.com&quot;&gt;&lt;/a&gt;&lt;/div&gt;&lt;/div&gt; ✔️
-&gt;&gt;&gt; &lt;div&gt;&lt;a href=&quot;duckduckgo.com&quot;&gt;&lt;/a&gt;&lt;/div&gt; ❌
-&gt;&gt;&gt; &lt;span&gt;&lt;a href=&quot;google.com&quot;&gt;&lt;/a&gt;&lt;/span&gt; ❌
-&gt;&gt;&gt; &lt;a href=&quot;google.com&quot;&gt;&lt;/a&gt; ❌
-&gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;/div&gt; ❌
-</pre></div>
-</div>
-<p>Object can be created as well by using right shift operator ‘&gt;&gt;’
-on two SoupSelector objects.</p>
-</section>
-<section id="id19">
-<h1>Example<a class="headerlink" href="#id19" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span> <span class="n">a</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
-</pre></div>
-</div>
-<p>Which translated to soupsavvy would be:</p>
-</section>
-<section id="id20">
-<h1>Example<a class="headerlink" href="#id20" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">DescentCombinator</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">))</span>
-</pre></div>
-</div>
-</section>
-<section id="id21">
-<h1>Notes<a class="headerlink" href="#id21" title="Link to this heading"></a></h1>
-<p>For more information on subsequent sibling combinator see:
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_combinator">https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_combinator</a></p>
+<section id="id8">
+<h2>Notes<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<p>For more information on child combinator, see:</p>
+<p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Child_combinator">https://developer.mozilla.org/en-US/docs/Web/CSS/Child_combinator</a></p>
 </section>
 </dd></dl>
 
@@ -442,223 +287,45 @@ on two SoupSelector objects.</p>
 <dt class="sig sig-object py" id="soupsavvy.selectors.combinators.NextSiblingCombinator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NextSiblingCombinator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#NextSiblingCombinator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.NextSiblingCombinator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.selectors.combinators.BaseCombinator" title="soupsavvy.selectors.combinators.BaseCombinator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCombinator</span></code></a></p>
-<p>Class representing a next sibling combinator in CSS selectors.</p>
-<section id="id22">
-<h1>Example<a class="headerlink" href="#id22" title="Link to this heading"></a></h1>
+<p>Counterpart of CSS next sibling combinator.
+Represents the relationship between selectors, where every next matching element
+is a sibling immediately following the previous one.</p>
+<section id="id9">
+<h2>Example<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">NextSiblingCombinator</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>matches all ‘a’ elements that immediately follow ‘div’ elements,
 it means that both elements are children of the same parent element.</p>
 </section>
-<section id="id23">
-<h1>Example<a class="headerlink" href="#id23" title="Link to this heading"></a></h1>
+<section id="id10">
+<h2>Example<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;/div&gt;&lt;a&gt;Hello World&lt;/a&gt; ✔️
 &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;a&gt;Hello World&lt;/a&gt;&lt;/div&gt; ❌
 &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;/div&gt;&lt;span&gt;&lt;/span&gt;&lt;a&gt;Hello World&lt;/a&gt; ❌
 </pre></div>
 </div>
-<p>Object can be created as well by using plus operator ‘+’
-on two SoupSelector objects.</p>
+<p>Object can be created as well by using <cite>plus</cite> operator ‘+` on <cite>SoupSelector</cite> objects.</p>
 </section>
-<section id="id24">
-<h1>Example<a class="headerlink" href="#id24" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span> <span class="o">+</span> <span class="n">a</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
-</pre></div>
-</div>
-<p>Which translated to soupsavvy would be:</p>
-</section>
-<section id="id25">
-<h1>Example<a class="headerlink" href="#id25" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">NextSiblingCombinator</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="id26">
-<h1>Notes<a class="headerlink" href="#id26" title="Link to this heading"></a></h1>
-<p>For more information on next sibling combinator see:
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Next-sibling_combinator">https://developer.mozilla.org/en-US/docs/Web/CSS/Next-sibling_combinator</a></p>
-<p>This is also known as the adjacent sibling combinator.</p>
-</section>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.ParentCombinator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ParentCombinator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#ParentCombinator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.ParentCombinator" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#soupsavvy.selectors.combinators.BaseAncestorCombinator" title="soupsavvy.selectors.combinators.BaseAncestorCombinator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAncestorCombinator</span></code></a></p>
-<p>Parent combinator separates two selectors and matches all instances
-of the second element that are parents of the first element.</p>
-<p>Two <cite>SoupSelector</cite> objects are required to create ParentCombinator,
-but more can be provided as positional arguments, which binds them
-in a sequence of steps to match.</p>
-<section id="id27">
-<h1>Example<a class="headerlink" href="#id27" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ParentCombinator</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">),</span>
-<span class="gp">... </span>    <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;menu&quot;</span><span class="p">),</span>
-<span class="gp">... </span>    <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span>
-<span class="gp">... </span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The given selector would first look for ‘a’ elements, then find elements with
-‘menu’ class that are parents of ‘a’ elements, and finally find ‘div’ elements
-that are parents of ‘menu’ elements.</p>
-</section>
-<section id="id28">
-<h1>Example<a class="headerlink" href="#id28" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;&lt;span class=&quot;menu&quot;&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/span&gt;&lt;/div&gt; ✔️
-&gt;&gt;&gt; &lt;div&gt;&lt;span class=&quot;menu&quot;&gt;&lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/div&gt;&lt;/span&gt;&lt;/div&gt; ❌
-&gt;&gt;&gt; &lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;span class=&quot;menu&quot;&gt;&lt;/span&gt;&lt;/div&gt; ❌
-&gt;&gt;&gt; &lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/span&gt;&lt;/div&gt; ❌
-</pre></div>
-</div>
-<p>It is equivalent to using <cite>HasSelector</cite> with child combinator and narrowing
-down results to <cite>div</cite> types with <cite>TypeSelector</cite>.</p>
-</section>
-<section id="id29">
-<h1>Example<a class="headerlink" href="#id29" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">HasSelector</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">Anchor</span> <span class="o">&gt;</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;menu&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Although this combinator does not have its counterpart in CSS, it can be
-represented as:</p>
-</section>
-<section id="id30">
-<h1>Example<a class="headerlink" href="#id30" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span><span class="p">:</span><span class="n">has</span><span class="p">(</span><span class="o">&gt;</span> <span class="o">.</span><span class="n">menu</span> <span class="o">&gt;</span> <span class="n">a</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Object can be created as well by using lt operator ‘&lt;’
-on two SoupSelector objects.</p>
-</section>
-<section id="id31">
-<h1>Example<a class="headerlink" href="#id31" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span><span class="p">:</span><span class="n">has</span><span class="p">(</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
-</pre></div>
-</div>
-<p>Which translated to soupsavvy would be:</p>
-</section>
-<section id="id32">
-<h1>Example<a class="headerlink" href="#id32" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ParentCombinator</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
-</pre></div>
-</div>
-</section>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.SelectorList">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SelectorList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#SelectorList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.SelectorList" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.CompositeSoupSelector" title="soupsavvy.base.CompositeSoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompositeSoupSelector</span></code></a></p>
-<p>Class representing a list of selectors in CSS,
-a selector list is a comma-separated list of selectors,
-that selects all the matching nodes.</p>
-<p>Class represents an Union of multiple soup selectors.
-Provides elements matching any of the selectors in an Union.</p>
-<p>At least two SoupSelector objects are required to create SelectorList,
-but more can be provided as positional arguments.</p>
-<section id="id33">
-<h1>Example<a class="headerlink" href="#id33" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">SelectorList</span><span class="p">(</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">AttributeSelector</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;widget&quot;</span><span class="p">)])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
-</pre></div>
-</div>
-<p>matches all elements that have “a” tag name OR ‘class’ attribute “widget”.</p>
-</section>
-<section id="id34">
-<h1>Example<a class="headerlink" href="#id34" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;a&gt;Hello World&lt;/a&gt; ✔️
-&gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;Hello World&lt;/div&gt; ✔️
-&gt;&gt;&gt; &lt;div&gt;Hello Python&lt;/div&gt; ❌
-</pre></div>
-</div>
-<p>This is an equivalent of CSS comma selector (selector list) or :is() selector.</p>
-</section>
-<section id="id35">
-<h1>Example<a class="headerlink" href="#id35" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">h1</span><span class="p">,</span> <span class="n">h1</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="ow">is</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
-</pre></div>
-</div>
-<p>This example translated to soupsavvy would be:</p>
-</section>
-<section id="id36">
-<h1>Example<a class="headerlink" href="#id36" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">SoupUnionTag</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Object can be created as well by using bitwise OR operator ‘|’
-on two SoupSelector objects.</p>
-</section>
-<section id="id37">
-<h1>Example<a class="headerlink" href="#id37" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">AttributeSelector</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;widget&quot;</span><span class="p">)])</span>
+<section id="id11">
+<h2>Example<a class="headerlink" href="#id11" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Which is equivalent to the first example.</p>
+<p>CSS counterpart can be represented as:</p>
 </section>
-<section id="id38">
-<h1>Notes<a class="headerlink" href="#id38" title="Link to this heading"></a></h1>
-<p>This Combinator does not inherit from BaseCombinator,
-as its logic differs from other combinators.</p>
-<p>For more information on selector list see:
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list">https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list</a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.SelectorList.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#SelectorList.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.SelectorList.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes SelectorList object with provided positional arguments.
-At least two SoupSelector objects are required to create SelectorList.</p>
-<section id="id39">
-<h2>Parameters<a class="headerlink" href="#id39" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt>selectors: SoupSelector</dt><dd><p>SoupSelector objects to match accepted as positional arguments.</p>
-</dd>
-</dl>
+<section id="id12">
+<h2>Example<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span> <span class="o">+</span> <span class="n">a</span>
+</pre></div>
+</div>
 </section>
-<section id="id40">
-<h2>Raises<a class="headerlink" href="#id40" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt>NotSoupSelectorException</dt><dd><p>If any of provided parameters is not an instance of SoupSelector.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.SelectorList.find_all">
-<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#SelectorList.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.SelectorList.find_all" title="Link to this definition"></a></dt>
-<dd><p>Finds all matching elements in provided BeautifulSoup Tag.</p>
-<section id="id41">
-<h2>Parameters<a class="headerlink" href="#id41" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
-</dd>
-<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>bs4.Tag.find method parameter that specifies if search should be recursive.
-If set to False, only direct children of the tag will be searched.
-By default True.</p>
-</dd>
-<dt>limit<span class="classifier">int, optional</span></dt><dd><p>bs4.Tag.find_all method parameter that specifies maximum number of elements
-to return. If set to None, all elements are returned. By default None.</p>
-</dd>
-</dl>
-</section>
-<section id="id42">
-<h2>Returns<a class="headerlink" href="#id42" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt>list[Tag]</dt><dd><p>A list of Tag objects matching tag specifications.
-If none found, the list is empty.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
+<section id="id13">
+<h2>Notes<a class="headerlink" href="#id13" title="Link to this heading"></a></h2>
+<p>This is also known as the <cite>adjacent sibling combinator</cite> in CSS.
+For more information on next sibling combinator, see:</p>
+<p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Next-sibling_combinator">https://developer.mozilla.org/en-US/docs/Web/CSS/Next-sibling_combinator</a></p>
 </section>
 </dd></dl>
 
@@ -666,62 +333,184 @@ If none found, the list is empty.</p>
 <dt class="sig sig-object py" id="soupsavvy.selectors.combinators.SubsequentSiblingCombinator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SubsequentSiblingCombinator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#SubsequentSiblingCombinator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.SubsequentSiblingCombinator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.selectors.combinators.BaseCombinator" title="soupsavvy.selectors.combinators.BaseCombinator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCombinator</span></code></a></p>
-<p>Class representing a subsequent sibling combinator in CSS selectors.
-Subsequent sibling combinator separates two selectors
-and matches all instances of the second element that follow the first element
-(not necessarily immediately) and share the same parent element.</p>
-<section id="id43">
-<h1>Example<a class="headerlink" href="#id43" title="Link to this heading"></a></h1>
+<p>Counterpart of CSS subsequent sibling combinator.
+Represents the relationship between selectors, where every next matching element
+is a sibling following the previous one, but not necessarily immediately.</p>
+<section id="id14">
+<h2>Example<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">SubsequentSiblingCombinator</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>matches all ‘a’ elements that follow ‘div’ elements.</p>
 </section>
-<section id="id44">
-<h1>Example<a class="headerlink" href="#id44" title="Link to this heading"></a></h1>
+<section id="id15">
+<h2>Example<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;/div&gt;&lt;a&gt;Hello World&lt;/a&gt; ✔️
 &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;a&gt;Hello World&lt;/a&gt;&lt;/div&gt; ✔️
 &gt;&gt;&gt; &lt;span class=&quot;widget&quot;&gt;&lt;a&gt;Hello World&lt;/a&gt;&lt;/span&gt; ❌
 &gt;&gt;&gt; &lt;a&gt;Hello World&lt;/a&gt;&lt;div class=&quot;menu&quot;&gt;&lt;/div&gt; ❌
 </pre></div>
 </div>
-<p>Object can be created as well by using multiplication operator ‘*’
-on two SoupSelector objects, due to the lack of support for ‘~’ operator
-between two operands.
-Example
-——-
-&gt;&gt;&gt; div ~ a { color: red; }</p>
-<p>Which translated to soupsavvy would be:</p>
+<p>Object can be created as well by using <cite>multiplication</cite> operator ‘*’
+on <cite>SoupSelector</cite> objects.</p>
 </section>
-<section id="id45">
-<h1>Example<a class="headerlink" href="#id45" title="Link to this heading"></a></h1>
+<section id="id16">
+<h2>Example<a class="headerlink" href="#id16" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">SubsequentSiblingCombinator</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>CSS counterpart can be represented as:</p>
+</section>
+<section id="id17">
+<h2>Example<a class="headerlink" href="#id17" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span> <span class="o">~</span> <span class="n">a</span>
 </pre></div>
 </div>
 </section>
-<section id="id46">
-<h1>Notes<a class="headerlink" href="#id46" title="Link to this heading"></a></h1>
-<p>For more information on subsequent sibling combinator see:
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Subsequent-sibling_combinator">https://developer.mozilla.org/en-US/docs/Web/CSS/Subsequent-sibling_combinator</a></p>
-<p>This combinator is also known as <cite>general sibling combinator</cite>
-or <cite>adjacent sibling combinator</cite>.</p>
+<section id="id18">
+<h2>Notes<a class="headerlink" href="#id18" title="Link to this heading"></a></h2>
+<p>This combinator is also known as <cite>general sibling combinator</cite> in CSS.
+For more information on subsequent sibling combinator, see:</p>
+<p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Subsequent-sibling_combinator">https://developer.mozilla.org/en-US/docs/Web/CSS/Subsequent-sibling_combinator</a></p>
 </section>
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.DescendantCombinator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DescendantCombinator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#DescendantCombinator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.DescendantCombinator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.selectors.combinators.BaseCombinator" title="soupsavvy.selectors.combinators.BaseCombinator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCombinator</span></code></a></p>
+<p>Counterpart of CSS descendant combinator.
+Represents the relationship between selectors, where every next matching element
+is a descendant of the previous one.</p>
+<section id="id19">
+<h2>Example<a class="headerlink" href="#id19" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">DescentCombinator</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;widget&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>matches all descendants of ‘div’ element with ‘widget’ class.</p>
+</section>
+<section id="id20">
+<h2>Example<a class="headerlink" href="#id20" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;&lt;a class=&quot;widget&quot;&gt;&lt;/a&gt;&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;div&gt;&lt;div&gt;&lt;a class=&quot;widget&quot;&gt;&lt;/a&gt;&lt;/div&gt;&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;div&gt;&lt;a id=&quot;widget&quot;&gt;&lt;/a&gt;&lt;/div&gt; ❌
+&gt;&gt;&gt; &lt;span&gt;&lt;a class=&quot;widget&quot;&gt;&lt;/a&gt;&lt;/span&gt; ❌
+&gt;&gt;&gt; &lt;a class=&quot;widget&quot;&gt;&lt;/a&gt; ❌
+</pre></div>
+</div>
+<p>Object can be created as well by using <cite>right shift</cite> operator ‘&gt;&gt;’
+on <cite>SoupSelector</cite> objects.</p>
+</section>
+<section id="id21">
+<h2>Example<a class="headerlink" href="#id21" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;widget&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>CSS counterpart can be represented as:</p>
+</section>
+<section id="id22">
+<h2>Example<a class="headerlink" href="#id22" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span> <span class="o">.</span><span class="n">widget</span>
+</pre></div>
+</div>
+</section>
+<section id="id23">
+<h2>Notes<a class="headerlink" href="#id23" title="Link to this heading"></a></h2>
+<p>For more information on subsequent sibling combinator, see:</p>
+<p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_combinator">https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_combinator</a></p>
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.ParentCombinator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ParentCombinator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#ParentCombinator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.ParentCombinator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.selectors.combinators.BaseAncestorCombinator" title="soupsavvy.selectors.combinators.BaseAncestorCombinator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAncestorCombinator</span></code></a></p>
+<p>Defines a relationship between selectors, where every next matching element
+is a parent of the previous one.</p>
+<section id="id24">
+<h2>Example<a class="headerlink" href="#id24" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ParentCombinator</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The given selector matches all ‘div’ elements that are parents of ‘a’ elements.</p>
+</section>
+<section id="id25">
+<h2>Example<a class="headerlink" href="#id25" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;div&gt;&lt;span&gt;&lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/span&gt;&lt;/div&gt; ❌
+&gt;&gt;&gt; &lt;span&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/span&gt; ❌
+</pre></div>
+</div>
+<p>Object can be created as well by using <cite>lt</cite> operator ‘&lt;’ on <cite>SoupSelector</cite> objects.</p>
+</section>
+<section id="id26">
+<h2>Example<a class="headerlink" href="#id26" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Although this combinator does not have its counterpart in CSS, it can be represented as:</p>
+</section>
+<section id="id27">
+<h2>Example<a class="headerlink" href="#id27" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span><span class="p">:</span><span class="n">has</span><span class="p">(</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.selectors.combinators.AncestorCombinator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AncestorCombinator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/combinators.html#AncestorCombinator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.combinators.AncestorCombinator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.selectors.combinators.BaseAncestorCombinator" title="soupsavvy.selectors.combinators.BaseAncestorCombinator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAncestorCombinator</span></code></a></p>
+<p>Defines a relationship between selectors, where every next matching element
+is an ancestor of the previous one.</p>
+<section id="id28">
+<h2>Example<a class="headerlink" href="#id28" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">AncestorCombinator</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The given selector matches all ‘div’ elements that are ancestors of ‘a’ elements.</p>
+</section>
+<section id="id29">
+<h2>Example<a class="headerlink" href="#id29" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; &lt;div&gt;&lt;span&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/span&gt;&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/div&gt; ✔️
+&gt;&gt;&gt; &lt;div&gt;&lt;span class=&quot;menu&quot;&gt;&lt;/span&gt;/div&gt; ❌
+&gt;&gt;&gt; &lt;span&gt;&lt;a class=&quot;menu&quot;&gt;&lt;/span&gt;/div&gt; ❌
+</pre></div>
+</div>
+<p>Object can be created as well by using <cite>left shift</cite> operator ‘&lt;&lt;’
+on <cite>SoupSelector</cite> objects.</p>
+</section>
+<section id="id30">
+<h2>Example<a class="headerlink" href="#id30" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Although this combinator does not have its counterpart in CSS, it can be represented as:</p>
+</section>
+<section id="id31">
+<h2>Example<a class="headerlink" href="#id31" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span><span class="p">:</span><span class="n">has</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="soupsavvy.selectors.attributes.html" class="btn btn-neutral float-left" title="Classes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="soupsavvy.selectors.general.html" class="btn btn-neutral float-right" title="Classes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="soupsavvy.selectors.attributes.html" class="btn btn-neutral float-left" title="selectors.attributes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soupsavvy.selectors.general.html" class="btn btn-neutral float-right" title="selectors.general" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

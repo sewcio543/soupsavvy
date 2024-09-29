@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -87,7 +88,7 @@
              
   <h1>Source code for soupsavvy.testing.generators.templates.base</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Module for the BaseTemplate class.</span>
+<span class="sd">Module with template interface.</span>
 
 <span class="sd">Templates are the components used to fill the generated structures with content.</span>
 <span class="sd">They are the building blocks for the generators.</span>
@@ -103,10 +104,10 @@
 <a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.base.html#soupsavvy.testing.BaseTemplate">[docs]</a>
 <span class="k">class</span> <span class="nc">BaseTemplate</span><span class="p">(</span><span class="n">BaseGenerator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Abstract base class for templates.</span>
+<span class="sd">    Interface for templates used in generators.</span>
 
-<span class="sd">    BaseTemplate is also the subclass of BaseGenerator, all Templates</span>
-<span class="sd">    implement BaseGenerator interface and are easy to interchange with</span>
+<span class="sd">    `BaseTemplate` is also the subclass of BaseGenerator, all Templates</span>
+<span class="sd">    implement `BaseGenerator` interface and are easy to interchange with</span>
 <span class="sd">    other generators.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -137,7 +138,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

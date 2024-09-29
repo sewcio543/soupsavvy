@@ -1,3 +1,6 @@
+operators
+==========================
+
 .. automodule:: soupsavvy.operators
    :members:
    :undoc-members:

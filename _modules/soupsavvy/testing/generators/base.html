@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -87,9 +88,9 @@
              
   <h1>Source code for soupsavvy.testing.generators.base</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Module for the BaseGenerator abstract class that is a parent for all generators.</span>
+<span class="sd">Module with interface for generators.</span>
 
-<span class="sd">soupsavvy generator is anything that generates content,</span>
+<span class="sd">`soupsavvy` generator is anything that generates content,</span>
 <span class="sd">they should all inherit from this class and implement the &#39;generate&#39; method.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -100,10 +101,10 @@
 <a class="viewcode-back" href="../../../../soupsavvy.testing.generators.base.html#soupsavvy.testing.generators.base.BaseGenerator">[docs]</a>
 <span class="k">class</span> <span class="nc">BaseGenerator</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Abstract base class for all kind of soupsavvy generators.</span>
+<span class="sd">    Interface for all kind of `soupsavvy` generators.</span>
 
 <span class="sd">    All components generating content should inherit from this class</span>
-<span class="sd">    and implement the &#39;generate&#39; method to return the generated content.</span>
+<span class="sd">    and implement the `generate` method to return the generated content.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="BaseGenerator.generate">
@@ -125,7 +126,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -88,14 +89,18 @@
   <h1>Source code for soupsavvy.api</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module is deprecated and will be removed in the future.</span>
-<span class="sd">Use soupsavvy.operators module instead.</span>
+<span class="sd">Use `soupsavvy.operators` module instead.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.selectors.combinators</span> <span class="kn">import</span> <span class="n">SelectorList</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.selectors.logical</span> <span class="kn">import</span> <span class="n">AndSelector</span><span class="p">,</span> <span class="n">NotSelector</span><span class="p">,</span> <span class="n">XORSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.logical</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AndSelector</span><span class="p">,</span>
+    <span class="n">NotSelector</span><span class="p">,</span>
+    <span class="n">SelectorList</span><span class="p">,</span>
+    <span class="n">XORSelector</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.selectors.relative</span> <span class="kn">import</span> <span class="n">HasSelector</span>
 
 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
@@ -114,40 +119,42 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SelectorList</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns an union of multiple soup selectors.</span>
-<span class="sd">    Provides elements matching any of the selectors in the union.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    selectors: SoupSelector</span>
-<span class="sd">        SoupSelector objects to match accepted as positional arguments.</span>
-<span class="sd">        At least two objects are required per SelectorList class requirements.</span>
+<span class="sd">         At least two `SoupSelector` objects to match accepted as positional arguments.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    SelectorList</span>
-<span class="sd">        SelectorList object that represents union of provided selectors.</span>
+<span class="sd">        `SelectorList` object that represents union of provided selectors.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; is_(TypeSelector(&quot;h1&quot;), TypeSelector(&quot;h2&quot;))</span>
-<span class="sd">    &gt;&gt;&gt; where(TypeSelector(&quot;h1&quot;), TypeSelector(&quot;h2&quot;))</span>
+<span class="sd">    ... where(TypeSelector(&quot;h1&quot;), TypeSelector(&quot;h2&quot;))</span>
 
-<span class="sd">    This is an equivalent of CSS comma selector (selector list) or :is() selector.</span>
-<span class="sd">    Function is also aliased by &#39;where&#39; function that imitate css :where pseudo-class.</span>
-<span class="sd">    In css the main difference is their specificity, but in this context they are the same.</span>
+<span class="sd">    This is CSS counterpart of `selector list`, `:is()` or `:where` pseudo-classes.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; h1, h1 { color: red;}</span>
-<span class="sd">    &gt;&gt;&gt; :is(h1, h2) { color: red; }</span>
-<span class="sd">    &gt;&gt;&gt; :where(h1, h2) { color: red; }</span>
+<span class="sd">    &gt;&gt;&gt; h1, h1</span>
+<span class="sd">    &gt;&gt;&gt; :is(h1, h2)</span>
+<span class="sd">    &gt;&gt;&gt; :where(h1, h2)</span>
+
+<span class="sd">    Aliases</span>
+<span class="sd">    -------</span>
+<span class="sd">    - `where` - to imitate css `:where` pseudo-class</span>
+<span class="sd">    - `or_` - to imitate logical operator `or`</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    For more information on selector list see:</span>
-<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:is</span>
-<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:where</span>
-<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list</span>
+<span class="sd">    For more information on css counterparts, see:</span>
+
+<span class="sd">    - https://developer.mozilla.org/en-US/docs/Web/CSS/:is</span>
+<span class="sd">    - https://developer.mozilla.org/en-US/docs/Web/CSS/:where</span>
+<span class="sd">    - https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">SelectorList</span><span class="p">(</span><span class="n">selector1</span><span class="p">,</span> <span class="n">selector2</span><span class="p">,</span> <span class="o">*</span><span class="n">selectors</span><span class="p">)</span></div>
 
@@ -161,34 +168,35 @@
 <a class="viewcode-back" href="../../soupsavvy.api.html#soupsavvy.api.not_">[docs]</a>
 <span class="k">def</span> <span class="nf">not_</span><span class="p">(</span><span class="n">selector</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="n">selectors</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NotSelector</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns an negation of multiple soup selectors.</span>
-<span class="sd">    NotSelector represents elements that do not match a list of selectors.</span>
+<span class="sd">    Returns the negation of multiple soup selectors.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    selectors: SoupSelector</span>
-<span class="sd">        SoupSelector objects to negate match accepted as positional arguments.</span>
+<span class="sd">        `SoupSelector` object(s) to negate match accepted as positional arguments.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    NotSelector</span>
-<span class="sd">        NotSelector object that represents negation of provided selectors.</span>
+<span class="sd">        `NotSelector` object that represents negation of provided selector(s).</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; not_(TypeSelector(&quot;div&quot;), TypeSelector(&quot;a&quot;))</span>
 
-<span class="sd">    This is an equivalent of CSS :not() negation pseudo-class,</span>
-<span class="sd">    that represents elements that do not match a list of selectors</span>
+
+<span class="sd">    This is the counterpart of CSS `:not()` negation pseudo-class,</span>
+<span class="sd">    that represents elements that do not match a list of selectors.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; :not(div, a) { color: red; }</span>
+<span class="sd">    &gt;&gt;&gt; :not(div, a)</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    For more information on selector list see:</span>
-<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:not</span>
+<span class="sd">    For more information on `:not()` pseudo-class, see:</span>
+
+<span class="sd">    - https://developer.mozilla.org/en-US/docs/Web/CSS/:not</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">NotSelector</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="o">*</span><span class="n">selectors</span><span class="p">)</span></div>
 
@@ -209,23 +217,28 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    selectors: SoupSelector</span>
-<span class="sd">        SoupSelector objects to match accepted as positional arguments.</span>
-<span class="sd">        At least two objects are required per AndSelector class requirements.</span>
+<span class="sd">        At least two `SoupSelector` objects to match accepted as positional arguments.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    AndSelector</span>
-<span class="sd">        AndSelector object that represents intersection of provided selectors.</span>
+<span class="sd">        `AndSelector` object that represents intersection of provided selectors.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; and_(TypeSelector(&quot;div&quot;), AttributeSelector(name=&quot;class&quot;, value=&quot;widget&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; and_(TypeSelector(&quot;div&quot;), ClassSelector(&quot;widget&quot;))</span>
 
-<span class="sd">    This is an equivalent of CSS selectors concatenation.</span>
+<span class="sd">    This is the counterpart of CSS compound selector (selector concatenation):</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; div.class1#id1 { color: red; }</span>
+<span class="sd">    &gt;&gt;&gt; div.widget</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    For more information on compound selectors, see:</span>
+
+<span class="sd">    - https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors/Selector_structure#compound_selector</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">AndSelector</span><span class="p">(</span><span class="n">selector1</span><span class="p">,</span> <span class="n">selector2</span><span class="p">,</span> <span class="o">*</span><span class="n">selectors</span><span class="p">)</span></div>
 
@@ -239,42 +252,35 @@
     <span class="o">*</span><span class="n">selectors</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HasSelector</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns HasSelector whose behavior imitate css :has() pseudo-class,</span>
+<span class="sd">    Returns `HasSelector`, whose behavior imitate css `:has()` pseudo-class,</span>
 <span class="sd">    that represents elements if any of the relative selectors that are passed as an argument</span>
 <span class="sd">    match at least one element when anchored against this element.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    selectors: SoupSelector</span>
-<span class="sd">        SoupSelector objects to match accepted as positional arguments.</span>
-<span class="sd">        At least two objects are required per AndSelector class requirements.</span>
+<span class="sd">        `SoupSelector` object(s) to match accepted as positional arguments.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    HasSelector</span>
-<span class="sd">        HasSelector object that represents :has() pseudo-class behavior.</span>
+<span class="sd">        `HasSelector` object that represents `:has()` pseudo-class behavior.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; has_(TypeSelector(&quot;div&quot;), TypeSelector(&quot;div&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; has_(TypeSelector(&quot;div&quot;), TypeSelector(&quot;a&quot;))</span>
 
-<span class="sd">    This is an equivalent of CSS :has() pseudo-class:</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; :has(div, a) { color: red; }</span>
-
-<span class="sd">    For now only default combinator (descendant) for &#39;relative&#39; selectors is supported,</span>
-<span class="sd">    so imitating css behavior of this kind is not possible yet.</span>
+<span class="sd">    This is the counterpart of CSS `:has()` pseudo-class:</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; :has(+ div, &gt; a) { color: red; }</span>
+<span class="sd">    &gt;&gt;&gt; :has(div, a)</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    For more information on :has() pseudo-class see:</span>
-<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:has</span>
+<span class="sd">    For more information on `:has()` pseudo-class, see:</span>
+
+<span class="sd">    - https://developer.mozilla.org/en-US/docs/Web/CSS/:has</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">HasSelector</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="o">*</span><span class="n">selectors</span><span class="p">)</span></div>
 
@@ -295,17 +301,24 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    selectors: SoupSelector</span>
-<span class="sd">        SoupSelector objects to match accepted as positional arguments.</span>
-<span class="sd">        At least two objects are required per XORSelector class requirements.</span>
+<span class="sd">        At least two `SoupSelector` objects to match accepted as positional arguments.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    XORSelector</span>
-<span class="sd">        XORSelector object that represents symmetric difference of provided selectors.</span>
+<span class="sd">       `XORSelector` object that represents symmetric difference of provided selectors.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; xor(TypeSelector(&quot;div&quot;), AttributeSelector(name=&quot;class&quot;, value=&quot;widget&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; xor(TypeSelector(&quot;div&quot;), ClassSelector(&quot;widget&quot;))</span>
+
+<span class="sd">    This is a shortcut for defining `XOR` operation between two selectors like this:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; selector1 = TypeSelector(&quot;div&quot;)</span>
+<span class="sd">    ... selector2 = ClassSelector(&quot;widget&quot;)</span>
+<span class="sd">    ... xor = (selector1 &amp; (~selector2)) | ((~selector1) &amp; selector2)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">XORSelector</span><span class="p">(</span><span class="n">selector1</span><span class="p">,</span> <span class="n">selector2</span><span class="p">,</span> <span class="o">*</span><span class="n">selectors</span><span class="p">)</span></div>
 
@@ -318,7 +331,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

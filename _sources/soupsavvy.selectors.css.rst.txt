@@ -9,7 +9,7 @@ Submodules
 
    soupsavvy.selectors.css.selectors
 
-Module contents
+Content
 ---------------
 
 .. automodule:: soupsavvy.selectors.css

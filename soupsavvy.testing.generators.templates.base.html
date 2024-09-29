@@ -4,11 +4,11 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Returns &mdash; soupsavvy  documentation</title>
+  <title>testing.generators.templates.base &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -23,7 +23,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="soupsavvy.testing.generators.templates.config.html" />
+    <link rel="next" title="testing.generators.templates.config" href="soupsavvy.testing.generators.templates.config.html" />
     <link rel="prev" title="testing.generators.templates" href="soupsavvy.testing.generators.templates.html" /> 
 </head>
 
@@ -56,14 +56,15 @@
 <li class="toctree-l3 current"><a class="reference internal" href="soupsavvy.testing.generators.html">testing.generators</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="soupsavvy.testing.generators.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.testing.generators.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="soupsavvy.testing.generators.html#module-soupsavvy.testing.generators">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="soupsavvy.testing.generators.html#module-soupsavvy.testing.generators">Content</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.testing.html#module-soupsavvy.testing">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.testing.html#module-soupsavvy.testing">Content</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -93,7 +94,7 @@
           <li class="breadcrumb-item"><a href="soupsavvy.testing.html">testing</a></li>
           <li class="breadcrumb-item"><a href="soupsavvy.testing.generators.html">testing.generators</a></li>
           <li class="breadcrumb-item"><a href="soupsavvy.testing.generators.templates.html">testing.generators.templates</a></li>
-      <li class="breadcrumb-item active">Returns</li>
+      <li class="breadcrumb-item active">testing.generators.templates.base</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/soupsavvy.testing.generators.templates.base.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -103,7 +104,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <p id="module-soupsavvy.testing.generators.templates.base">Module for the BaseTemplate class.</p>
+  <section id="module-soupsavvy.testing.generators.templates.base">
+<span id="testing-generators-templates-base"></span><h1>testing.generators.templates.base<a class="headerlink" href="#module-soupsavvy.testing.generators.templates.base" title="Link to this heading"></a></h1>
+<p>Module with template interface.</p>
 <p>Templates are the components used to fill the generated structures with content.
 They are the building blocks for the generators.
 This way generated content can be controlled and customized.</p>
@@ -111,16 +114,16 @@ This way generated content can be controlled and customized.</p>
 <dt class="sig sig-object py" id="soupsavvy.testing.generators.templates.base.BaseTemplate">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseTemplate</span></span><a class="reference internal" href="_modules/soupsavvy/testing/generators/templates/base.html#BaseTemplate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.testing.generators.templates.base.BaseTemplate" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="soupsavvy.testing.generators.base.html#soupsavvy.testing.generators.base.BaseGenerator" title="soupsavvy.testing.generators.base.BaseGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGenerator</span></code></a></p>
-<p>Abstract base class for templates.</p>
-<p>BaseTemplate is also the subclass of BaseGenerator, all Templates
-implement BaseGenerator interface and are easy to interchange with
+<p>Interface for templates used in generators.</p>
+<p><cite>BaseTemplate</cite> is also the subclass of BaseGenerator, all Templates
+implement <cite>BaseGenerator</cite> interface and are easy to interchange with
 other generators.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.testing.generators.templates.base.BaseTemplate.generate">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/soupsavvy/testing/generators/templates/base.html#BaseTemplate.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.testing.generators.templates.base.BaseTemplate.generate" title="Link to this definition"></a></dt>
 <dd><p>Generates a string based on the template.</p>
 <section id="returns">
-<h1>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h1>
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>str</dt><dd><p>The generated string.</p>
 </dd>
@@ -130,19 +133,20 @@ other generators.</p>
 
 </dd></dl>
 
+</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="soupsavvy.testing.generators.templates.html" class="btn btn-neutral float-left" title="testing.generators.templates" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="soupsavvy.testing.generators.templates.config.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="soupsavvy.testing.generators.templates.config.html" class="btn btn-neutral float-right" title="testing.generators.templates.config" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

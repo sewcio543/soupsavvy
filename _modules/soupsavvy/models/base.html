@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -87,8 +88,13 @@
              
   <h1>Source code for soupsavvy.models.base</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Module with base model class used as a parent for all user defined</span>
-<span class="sd">`soupsavvy` models.</span>
+<span class="sd">Module with base model schema and its configuration.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">- `BaseModel` - Base class for defining search schemas.</span>
+<span class="sd">- `Field` - Field configuration for search schema.</span>
+<span class="sd">- `MigrationSchema` - Configuration of model migration.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
@@ -195,9 +201,11 @@
 <span class="sd">    ...    element = Field(SelfSelector(), repr=False, compare=False, migrate=False)</span>
 
 <span class="sd">    In this example, only price is relevant for model object. Element itself is just</span>
-<span class="sd">    for reference and should not be included in model representation, comparison or migration.</span>
+<span class="sd">    for reference and should not be included in model representation,</span>
+<span class="sd">    comparison or migration.</span>
 
-<span class="sd">    Using `Field` wrapper without any additional arguments is equivalent to default behavior.</span>
+<span class="sd">    Using `Field` wrapper without any additional arguments</span>
+<span class="sd">    is equivalent to default behavior.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">selector</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">TagSearcher</span><span class="p">,</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]]</span>
@@ -344,17 +352,17 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        dict[str, Field]</span>
-<span class="sd">            A dictionary mapping field names to their respective Field instances.</span>
+<span class="sd">            A dictionary mapping field names to their respective `Field` instances.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_fields</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_get_fields</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Field</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the fields of the model with their respective TagSearcher instances</span>
+<span class="sd">        Returns the fields of the model with their respective `TagSearcher` instances</span>
 <span class="sd">        based on the `__inherit_fields__` setting.</span>
 
 <span class="sd">        If searcher is already provided in form of Field object, it is used directly.</span>
-<span class="sd">        Otherwise, it is wrapped in Field object with default settings.</span>
+<span class="sd">        Otherwise, it is wrapped in `Field` object with default settings.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">classes</span> <span class="o">=</span> <span class="p">(</span>
             <span class="p">[</span>
@@ -510,10 +518,9 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        tag : Tag</span>
-<span class="sd">            Any BeautifulSoup Tag object within which to search for the model.</span>
+<span class="sd">            Any `bs4.Tag` object to search within for the model.</span>
 <span class="sd">        strict : bool, optional</span>
-<span class="sd">            Whether to raise an exception if the scope element</span>
-<span class="sd">            for the model is not found. Default is False, None is returned.</span>
+<span class="sd">            If True, enforces model scope to be found in the tag.</span>
 <span class="sd">        recursive : bool, optional</span>
 <span class="sd">            Whether the search for the model scope element should be recursive.</span>
 <span class="sd">            Default is True.</span>
@@ -606,7 +613,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        tag : Tag</span>
-<span class="sd">            Any BeautifulSoup Tag object within which to search for the model.</span>
+<span class="sd">            Any `bs4.Tag` object to search within for the model.</span>
 <span class="sd">        recursive : bool, optional</span>
 <span class="sd">            Whether the search for the model scope element should be recursive.</span>
 <span class="sd">            Default is True.</span>
@@ -642,7 +649,7 @@
 <span class="sd">            The target model class to migrate the instance to.</span>
 <span class="sd">        mapping : dict[Type[BaseModel], Union[Type, MigrationSchema]], optional</span>
 <span class="sd">            Mapping of base model fields to target models. By default, if field</span>
-<span class="sd">            is instance of BaseModel, it will be passed directly to the target model.</span>
+<span class="sd">            is instance of `BaseModel`, it will be passed directly to the target model.</span>
 <span class="sd">        kwargs : Any</span>
 <span class="sd">            Additional keyword arguments to pass to model initialization.</span>
 
@@ -685,7 +692,8 @@
 <a class="viewcode-back" href="../../../soupsavvy.models.base.html#soupsavvy.models.BaseModel.copy">[docs]</a>
     <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Creates a deep copy of the model instance by migrating it to the same model class.</span>
+<span class="sd">        Creates a deep copy of the model instance by migrating</span>
+<span class="sd">        it to the same model class.</span>
 <span class="sd">        Only model fields defined in `attributes` are used to create new instance.</span>
 
 <span class="sd">        Returns</span>
@@ -764,7 +772,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

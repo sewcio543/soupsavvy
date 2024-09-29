@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -87,28 +88,24 @@
              
   <h1>Source code for soupsavvy.selectors.combinators</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Module for combinators defined in css.</span>
+<span class="sd">Module with combinators, which are composite selectors, that define a relationship</span>
+<span class="sd">between multiple selectors related to their position in the document.</span>
 
-<span class="sd">They they combine other selectors in a way that gives them a useful relationship</span>
-<span class="sd">to each other and the location of content in the document.</span>
-
-<span class="sd">Soupsavvy provides combinators that are used to combine multiple SoupSelector</span>
-<span class="sd">objects in a similar fashion to CSS combinators.</span>
+<span class="sd">Most of them are counterpart of CSS combinators, but others extend their functionality.</span>
 
 <span class="sd">Classes</span>
 <span class="sd">-------</span>
-<span class="sd">ChildCombinator - equivalent of CSS child combinator (&gt;)</span>
-<span class="sd">NextSiblingCombinator - equivalent of CSS adjacent sibling combinator (+)</span>
-<span class="sd">SubsequentSiblingCombinator - equivalent of CSS general sibling combinator (*)</span>
-<span class="sd">DescentCombinator - equivalent of CSS descendant combinator (&quot; &quot;)</span>
-<span class="sd">SelectorList - equivalent of CSS selector list (,) or :is() pseudo-class</span>
-<span class="sd">OrSelector - alias for SelectorList</span>
-<span class="sd">ParentCombinator - matches parent of preceding selector</span>
-<span class="sd">AncestorCombinator - matches ancestor of preceding selector</span>
+<span class="sd">- `ChildCombinator` - counterpart of CSS child combinator (&gt;)</span>
+<span class="sd">- `NextSiblingCombinator` - counterpart of CSS adjacent sibling combinator (+)</span>
+<span class="sd">- `SubsequentSiblingCombinator` - counterpart of CSS subsequent sibling combinator (*)</span>
+<span class="sd">- `DescentCombinator` - counterpart of CSS descendant combinator (&quot; &quot;)</span>
+<span class="sd">- `ParentCombinator` - matches parent of preceding selector</span>
+<span class="sd">- `AncestorCombinator` - matches ancestor of preceding selector</span>
 
 <span class="sd">Notes</span>
 <span class="sd">-----</span>
-<span class="sd">For more information on CSS combinators see:</span>
+<span class="sd">For more information on CSS combinators, see:</span>
+
 <span class="sd">https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Selectors/Combinators</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -117,8 +114,10 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span>
 
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">Tag</span>
+<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">deprecated</span>
 
 <span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">CompositeSoupSelector</span><span class="p">,</span> <span class="n">SoupSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.logical</span> <span class="kn">import</span> <span class="n">SelectorList</span> <span class="k">as</span> <span class="n">_SelectorList</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.selectors.relative</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">RelativeAncestor</span><span class="p">,</span>
     <span class="n">RelativeChild</span><span class="p">,</span>
@@ -131,9 +130,22 @@
 <span class="kn">from</span> <span class="nn">soupsavvy.utils.selector_utils</span> <span class="kn">import</span> <span class="n">TagIterator</span><span class="p">,</span> <span class="n">TagResultSet</span>
 
 
+<div class="viewcode-block" id="SelectorList">
+<a class="viewcode-back" href="../../../soupsavvy.selectors.combinators.html#soupsavvy.SelectorList">[docs]</a>
+<span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;`SelectorList` was moved to `soupsavvy.selectors.logical` module.&quot;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SelectorList</span><span class="p">(</span><span class="n">_SelectorList</span><span class="p">):</span> <span class="o">...</span></div>
+
+
+
 <div class="viewcode-block" id="BaseCombinator">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.combinators.html#soupsavvy.BaseCombinator">[docs]</a>
 <span class="k">class</span> <span class="nc">BaseCombinator</span><span class="p">(</span><span class="n">CompositeSoupSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for all combinators, which are composite selectors,</span>
+<span class="sd">    that defined a relationship between multiple selectors and apply it to search</span>
+<span class="sd">    for elements in the document.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># order of selectors is relevant in context of results</span>
     <span class="n">COMMUTATIVE</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -148,16 +160,16 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes Combinator object with provided positional arguments.</span>
-<span class="sd">        At least two SoupSelector object are required to create Combinator.</span>
+<span class="sd">        At least two `SoupSelector` object are required to create Combinator.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        selectors: SoupSelector</span>
-<span class="sd">            SoupSelector objects to match accepted as positional arguments.</span>
+<span class="sd">            `SoupSelector` objects to match accepted as positional arguments.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        Object can be initialized with more than two SoupSelector objects,</span>
+<span class="sd">        Object can be initialized with more than two `SoupSelector` objects,</span>
 <span class="sd">        which would be equal to chaining multiple combinators of the same type.</span>
 
 <span class="sd">        For example, chaining child combinator in css:</span>
@@ -166,7 +178,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        &gt;&gt;&gt; div &gt; a &gt; span</span>
 
-<span class="sd">        translated to soupsavvy would be:</span>
+<span class="sd">        translated to `soupsavvy` would be:</span>
 
 <span class="sd">        Example</span>
 <span class="sd">        -------</span>
@@ -287,9 +299,9 @@
 <span class="sd">    unlike other combinators, they move up the tree of elements, rather than down</span>
 <span class="sd">    after finding first step.</span>
 
-<span class="sd">    * Elements that match first step can be found</span>
+<span class="sd">    - Elements that match first step can be found</span>
 <span class="sd">    anywhere in the tree, regardless of `recursive` parameter.</span>
-<span class="sd">    * Final results should contain only children if `recursive` is False.</span>
+<span class="sd">    - Final results should contain only children of element if `recursive` is False.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">_find_first_step</span><span class="p">(</span>
@@ -310,7 +322,9 @@
 <a class="viewcode-back" href="../../../soupsavvy.selectors.combinators.html#soupsavvy.ChildCombinator">[docs]</a>
 <span class="k">class</span> <span class="nc">ChildCombinator</span><span class="p">(</span><span class="n">BaseCombinator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class representing a child combinator in CSS selectors.</span>
+<span class="sd">    Counterpart of CSS child combinator.</span>
+<span class="sd">    Represents the relationship between selectors, where every next matching element</span>
+<span class="sd">    is a direct child of the previous one.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -325,8 +339,8 @@
 <span class="sd">    &gt;&gt;&gt; &lt;span class=&quot;widget&quot;&gt;&lt;a&gt;Hello World&lt;/a&gt;&lt;/span&gt; ❌</span>
 <span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;menu&quot;&gt;&lt;span&gt;Hello World&lt;/span&gt;&lt;/div&gt; ❌</span>
 
-<span class="sd">    Object can be created as well by using greater than operator &#39;&gt;&#39;</span>
-<span class="sd">    on two SoupSelector objects.</span>
+<span class="sd">    Object can be created as well by using `greater than` operator &#39;&gt;&#39;</span>
+<span class="sd">    on `SoupSelector` objects.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -334,31 +348,16 @@
 
 <span class="sd">    Which is equivalent to the first example.</span>
 
-<span class="sd">    This is an equivalent of CSS child combinator, that matches elements</span>
-<span class="sd">    that are direct children of a specified element.</span>
+<span class="sd">    CSS counterpart can be represented as:</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; .widget &gt; a { color: red; }</span>
-
-<span class="sd">    which translated to soupsavvy would be:</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; ChildCombinator(</span>
-<span class="sd">    ...     AttributeSelector(&quot;class&quot;, &quot;widget&quot;),</span>
-<span class="sd">    ...     TypeSelector(&quot;a&quot;)</span>
-<span class="sd">    ... )</span>
-
-<span class="sd">    or with use of `&gt;` operator:</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; AttributeSelector(&quot;class&quot;, &quot;widget&quot;) &gt; TypeSelector(&quot;a&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; div &gt; a { color: red; }</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    For more information on child combinator see:</span>
+<span class="sd">    For more information on child combinator, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/Child_combinator</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -372,7 +371,9 @@
 <a class="viewcode-back" href="../../../soupsavvy.selectors.combinators.html#soupsavvy.NextSiblingCombinator">[docs]</a>
 <span class="k">class</span> <span class="nc">NextSiblingCombinator</span><span class="p">(</span><span class="n">BaseCombinator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class representing a next sibling combinator in CSS selectors.</span>
+<span class="sd">    Counterpart of CSS next sibling combinator.</span>
+<span class="sd">    Represents the relationship between selectors, where every next matching element</span>
+<span class="sd">    is a sibling immediately following the previous one.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -387,26 +388,26 @@
 <span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;a&gt;Hello World&lt;/a&gt;&lt;/div&gt; ❌</span>
 <span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;/div&gt;&lt;span&gt;&lt;/span&gt;&lt;a&gt;Hello World&lt;/a&gt; ❌</span>
 
-<span class="sd">    Object can be created as well by using plus operator &#39;+&#39;</span>
-<span class="sd">    on two SoupSelector objects.</span>
+<span class="sd">    Object can be created as well by using `plus` operator &#39;+` on `SoupSelector` objects.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; div + a { color: red; }</span>
-
-<span class="sd">    Which translated to soupsavvy would be:</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; NextSiblingCombinator(TypeSelector(&quot;div&quot;), TypeSelector(&quot;a&quot;))</span>
 <span class="sd">    &gt;&gt;&gt; TypeSelector(&quot;div&quot;) + TypeSelector(&quot;a&quot;)</span>
+
+<span class="sd">    Which is equivalent to the first example.</span>
+
+<span class="sd">    CSS counterpart can be represented as:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; div + a</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    For more information on next sibling combinator see:</span>
-<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/Next-sibling_combinator</span>
+<span class="sd">    This is also known as the `adjacent sibling combinator` in CSS.</span>
+<span class="sd">    For more information on next sibling combinator, see:</span>
 
-<span class="sd">    This is also known as the adjacent sibling combinator.</span>
+<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/Next-sibling_combinator</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
@@ -419,10 +420,9 @@
 <a class="viewcode-back" href="../../../soupsavvy.selectors.combinators.html#soupsavvy.SubsequentSiblingCombinator">[docs]</a>
 <span class="k">class</span> <span class="nc">SubsequentSiblingCombinator</span><span class="p">(</span><span class="n">BaseCombinator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class representing a subsequent sibling combinator in CSS selectors.</span>
-<span class="sd">    Subsequent sibling combinator separates two selectors</span>
-<span class="sd">    and matches all instances of the second element that follow the first element</span>
-<span class="sd">    (not necessarily immediately) and share the same parent element.</span>
+<span class="sd">    Counterpart of CSS subsequent sibling combinator.</span>
+<span class="sd">    Represents the relationship between selectors, where every next matching element</span>
+<span class="sd">    is a sibling following the previous one, but not necessarily immediately.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -437,27 +437,25 @@
 <span class="sd">    &gt;&gt;&gt; &lt;span class=&quot;widget&quot;&gt;&lt;a&gt;Hello World&lt;/a&gt;&lt;/span&gt; ❌</span>
 <span class="sd">    &gt;&gt;&gt; &lt;a&gt;Hello World&lt;/a&gt;&lt;div class=&quot;menu&quot;&gt;&lt;/div&gt; ❌</span>
 
-<span class="sd">    Object can be created as well by using multiplication operator &#39;*&#39;</span>
-<span class="sd">    on two SoupSelector objects, due to the lack of support for &#39;~&#39; operator</span>
-<span class="sd">    between two operands.</span>
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; div ~ a { color: red; }</span>
-
-<span class="sd">    Which translated to soupsavvy would be:</span>
+<span class="sd">    Object can be created as well by using `multiplication` operator &#39;*&#39;</span>
+<span class="sd">    on `SoupSelector` objects.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; TypeSelector(&quot;div&quot;) * TypeSelector(&quot;a&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; SubsequentSiblingCombinator(TypeSelector(&quot;div&quot;), TypeSelector(&quot;a&quot;))</span>
+
+<span class="sd">    CSS counterpart can be represented as:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; div ~ a</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    For more information on subsequent sibling combinator see:</span>
-<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/Subsequent-sibling_combinator</span>
+<span class="sd">    This combinator is also known as `general sibling combinator` in CSS.</span>
+<span class="sd">    For more information on subsequent sibling combinator, see:</span>
 
-<span class="sd">    This combinator is also known as `general sibling combinator`</span>
-<span class="sd">    or `adjacent sibling combinator`.</span>
+<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/Subsequent-sibling_combinator</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
@@ -470,50 +468,41 @@
 <a class="viewcode-back" href="../../../soupsavvy.selectors.combinators.html#soupsavvy.DescendantCombinator">[docs]</a>
 <span class="k">class</span> <span class="nc">DescendantCombinator</span><span class="p">(</span><span class="n">BaseCombinator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class representing a descent combinator in CSS selectors.</span>
-<span class="sd">    Descent combinator separates two selectors and matches all instances</span>
-<span class="sd">    of the second element that are descendants of the first element.</span>
-
-<span class="sd">    Two SoupSelector objects are required to create DescentCombinator,</span>
-<span class="sd">    but more can be provided as positional arguments, which binds them</span>
-<span class="sd">    in a sequence of steps to match.</span>
+<span class="sd">    Counterpart of CSS descendant combinator.</span>
+<span class="sd">    Represents the relationship between selectors, where every next matching element</span>
+<span class="sd">    is a descendant of the previous one.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; DescentCombinator(</span>
-<span class="sd">    &gt;&gt;&gt;     TypeSelector(&quot;div&quot;),</span>
-<span class="sd">    &gt;&gt;&gt;     AttributeSelector(name=&quot;href&quot;, value=&quot;google.com&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; )</span>
+<span class="sd">    &gt;&gt;&gt; DescentCombinator(TypeSelector(&quot;div&quot;), ClassSelector(&quot;widget&quot;))</span>
 
-<span class="sd">    matches all descendants of &#39;div&#39; element</span>
-<span class="sd">    that have href attribute equal to &#39;google.com&#39;.</span>
+<span class="sd">    matches all descendants of &#39;div&#39; element with &#39;widget&#39; class.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;a href=&quot;google.com&quot;&gt;&lt;/a&gt;&lt;/div&gt; ✔️</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;div&gt;&lt;a href=&quot;google.com&quot;&gt;&lt;/a&gt;&lt;/div&gt;&lt;/div&gt; ✔️</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;a href=&quot;duckduckgo.com&quot;&gt;&lt;/a&gt;&lt;/div&gt; ❌</span>
-<span class="sd">    &gt;&gt;&gt; &lt;span&gt;&lt;a href=&quot;google.com&quot;&gt;&lt;/a&gt;&lt;/span&gt; ❌</span>
-<span class="sd">    &gt;&gt;&gt; &lt;a href=&quot;google.com&quot;&gt;&lt;/a&gt; ❌</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;a class=&quot;widget&quot;&gt;&lt;/a&gt;&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;div&gt;&lt;a class=&quot;widget&quot;&gt;&lt;/a&gt;&lt;/div&gt;&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;a id=&quot;widget&quot;&gt;&lt;/a&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;span&gt;&lt;a class=&quot;widget&quot;&gt;&lt;/a&gt;&lt;/span&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;a class=&quot;widget&quot;&gt;&lt;/a&gt; ❌</span>
 
-<span class="sd">    Object can be created as well by using right shift operator &#39;&gt;&gt;&#39;</span>
-<span class="sd">    on two SoupSelector objects.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; div a { color: red; }</span>
-
-<span class="sd">    Which translated to soupsavvy would be:</span>
+<span class="sd">    Object can be created as well by using `right shift` operator &#39;&gt;&gt;&#39;</span>
+<span class="sd">    on `SoupSelector` objects.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; TypeSelector(&quot;div&quot;) &gt;&gt; TypeSelector(&quot;a&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; DescentCombinator(TypeSelector(&quot;div&quot;), TypeSelector(&quot;a&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; TypeSelector(&quot;div&quot;) &gt;&gt; ClassSelector(&quot;widget&quot;)</span>
+
+<span class="sd">    CSS counterpart can be represented as:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; div .widget</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    For more information on subsequent sibling combinator see:</span>
+<span class="sd">    For more information on subsequent sibling combinator, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_combinator</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -527,61 +516,32 @@
 <a class="viewcode-back" href="../../../soupsavvy.selectors.combinators.html#soupsavvy.ParentCombinator">[docs]</a>
 <span class="k">class</span> <span class="nc">ParentCombinator</span><span class="p">(</span><span class="n">BaseAncestorCombinator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Parent combinator separates two selectors and matches all instances</span>
-<span class="sd">    of the second element that are parents of the first element.</span>
-
-<span class="sd">    Two `SoupSelector` objects are required to create ParentCombinator,</span>
-<span class="sd">    but more can be provided as positional arguments, which binds them</span>
-<span class="sd">    in a sequence of steps to match.</span>
+<span class="sd">    Defines a relationship between selectors, where every next matching element</span>
+<span class="sd">    is a parent of the previous one.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; ParentCombinator(</span>
-<span class="sd">    ...     TypeSelector(&quot;a&quot;),</span>
-<span class="sd">    ...     AttributeSelector(&quot;class&quot;, &quot;menu&quot;),</span>
-<span class="sd">    ...     TypeSelector(&quot;div&quot;),</span>
-<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; ParentCombinator(TypeSelector(&quot;a&quot;), TypeSelector(&quot;div&quot;))</span>
 
-<span class="sd">    The given selector would first look for &#39;a&#39; elements, then find elements with</span>
-<span class="sd">    &#39;menu&#39; class that are parents of &#39;a&#39; elements, and finally find &#39;div&#39; elements</span>
-<span class="sd">    that are parents of &#39;menu&#39; elements.</span>
+<span class="sd">    The given selector matches all &#39;div&#39; elements that are parents of &#39;a&#39; elements.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;span class=&quot;menu&quot;&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/span&gt;&lt;/div&gt; ✔️</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;span class=&quot;menu&quot;&gt;&lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/div&gt;&lt;/span&gt;&lt;/div&gt; ❌</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;span class=&quot;menu&quot;&gt;&lt;/span&gt;&lt;/div&gt; ❌</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/span&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;span&gt;&lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/span&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;span&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/span&gt; ❌</span>
 
-<span class="sd">    It is equivalent to using `HasSelector` with child combinator and narrowing</span>
-<span class="sd">    down results to `div` types with `TypeSelector`.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; HasSelector(</span>
-<span class="sd">    ...     Anchor &gt; AttributeSelector(&quot;class&quot;, &quot;menu&quot;) &gt; TypeSelector(&quot;a&quot;)</span>
-<span class="sd">    ... ) &amp; TypeSelector(&quot;div&quot;)</span>
-
-<span class="sd">    Although this combinator does not have its counterpart in CSS, it can be</span>
-<span class="sd">    represented as:</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; div:has(&gt; .menu &gt; a)</span>
-
-<span class="sd">    Object can be created as well by using lt operator &#39;&lt;&#39;</span>
-<span class="sd">    on two SoupSelector objects.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; div:has(&gt; a) { color: red; }</span>
-
-<span class="sd">    Which translated to soupsavvy would be:</span>
+<span class="sd">    Object can be created as well by using `lt` operator &#39;&lt;&#39; on `SoupSelector` objects.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; TypeSelector(&quot;a&quot;) &lt; TypeSelector(&quot;div&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; ParentCombinator(TypeSelector(&quot;a&quot;), TypeSelector(&quot;div&quot;))</span>
+
+<span class="sd">    Although this combinator does not have its counterpart in CSS, it can be represented as:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; div:has(&gt; a)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
@@ -594,175 +554,39 @@
 <a class="viewcode-back" href="../../../soupsavvy.selectors.combinators.html#soupsavvy.AncestorCombinator">[docs]</a>
 <span class="k">class</span> <span class="nc">AncestorCombinator</span><span class="p">(</span><span class="n">BaseAncestorCombinator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Ancestor combinator separates two selectors and matches all instances</span>
-<span class="sd">    of the second element that are ancestors of the first element.</span>
-
-<span class="sd">    Two `SoupSelector` objects are required to create AncestorCombinator,</span>
-<span class="sd">    but more can be provided as positional arguments, which binds them</span>
-<span class="sd">    in a sequence of steps to match.</span>
+<span class="sd">    Defines a relationship between selectors, where every next matching element</span>
+<span class="sd">    is an ancestor of the previous one.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; AncestorCombinator(</span>
-<span class="sd">    ...     TypeSelector(&quot;a&quot;),</span>
-<span class="sd">    ...     AttributeSelector(&quot;class&quot;, &quot;menu&quot;),</span>
-<span class="sd">    ...     TypeSelector(&quot;div&quot;),</span>
-<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; AncestorCombinator(TypeSelector(&quot;a&quot;), TypeSelector(&quot;div&quot;))</span>
 
-<span class="sd">    The given selector would first look for &#39;a&#39; elements, then find elements with</span>
-<span class="sd">    &#39;menu&#39; class that are ancestors of &#39;a&#39; elements, and finally find &#39;div&#39; elements</span>
-<span class="sd">    that are ancestors of &#39;menu&#39; elements.</span>
+<span class="sd">    The given selector matches all &#39;div&#39; elements that are ancestors of &#39;a&#39; elements.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;span class=&quot;menu&quot;&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/span&gt;&lt;/div&gt; ✔️</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;span class=&quot;menu&quot;&gt;&lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/div&gt;&lt;/span&gt;&lt;/div&gt; ✔️</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;span class=&quot;menu&quot;&gt;&lt;/span&gt;&lt;/div&gt; ❌</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/span&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;span&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/span&gt;&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;a href=&quot;/shop&quot;&gt;&lt;/a&gt;&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;span class=&quot;menu&quot;&gt;&lt;/span&gt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;span&gt;&lt;a class=&quot;menu&quot;&gt;&lt;/span&gt;/div&gt; ❌</span>
 
-<span class="sd">    It is equivalent to using `HasSelector` with (default) descendant combinator</span>
-<span class="sd">    and narrowing down results to `div` types with `TypeSelector`.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; HasSelector(</span>
-<span class="sd">    ...     AttributeSelector(&quot;class&quot;, &quot;menu&quot;) &gt; TypeSelector(&quot;a&quot;)</span>
-<span class="sd">    ... ) &amp; TypeSelector(&quot;div&quot;)</span>
-
-<span class="sd">    Although this combinator does not have its counterpart in CSS, it can be</span>
-<span class="sd">    represented as has selector, where descendant combinator is implied:</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; div:has(.menu a)</span>
-
-<span class="sd">    Object can be created as well by using left shift operator &#39;&lt;&lt;&#39;</span>
-<span class="sd">    on two SoupSelector objects.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; div:has(a) { color: red; }</span>
-
-<span class="sd">    Which translated to soupsavvy would be:</span>
+<span class="sd">    Object can be created as well by using `left shift` operator &#39;&lt;&lt;&#39;</span>
+<span class="sd">    on `SoupSelector` objects.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; TypeSelector(&quot;a&quot;) &lt;&lt; TypeSelector(&quot;div&quot;)</span>
-<span class="sd">    &gt;&gt;&gt; AncestorCombinator(TypeSelector(&quot;a&quot;), TypeSelector(&quot;div&quot;))</span>
+
+<span class="sd">    Although this combinator does not have its counterpart in CSS, it can be represented as:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; div:has(a)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">_selector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">[</span><span class="n">RelativeSelector</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">RelativeAncestor</span></div>
-
-
-
-<div class="viewcode-block" id="SelectorList">
-<a class="viewcode-back" href="../../../soupsavvy.selectors.combinators.html#soupsavvy.SelectorList">[docs]</a>
-<span class="k">class</span> <span class="nc">SelectorList</span><span class="p">(</span><span class="n">CompositeSoupSelector</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class representing a list of selectors in CSS,</span>
-<span class="sd">    a selector list is a comma-separated list of selectors,</span>
-<span class="sd">    that selects all the matching nodes.</span>
-
-<span class="sd">    Class represents an Union of multiple soup selectors.</span>
-<span class="sd">    Provides elements matching any of the selectors in an Union.</span>
-
-<span class="sd">    At least two SoupSelector objects are required to create SelectorList,</span>
-<span class="sd">    but more can be provided as positional arguments.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; SelectorList(</span>
-<span class="sd">    &gt;&gt;&gt;     TypeSelector(&quot;a&quot;),</span>
-<span class="sd">    &gt;&gt;&gt;     TypeSelector(&quot;div&quot;, [AttributeSelector(name=&quot;class&quot;, value=&quot;widget&quot;)])</span>
-<span class="sd">    &gt;&gt;&gt; )</span>
-
-<span class="sd">    matches all elements that have &quot;a&quot; tag name OR &#39;class&#39; attribute &quot;widget&quot;.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; &lt;a&gt;Hello World&lt;/a&gt; ✔️</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;Hello World&lt;/div&gt; ✔️</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello Python&lt;/div&gt; ❌</span>
-
-<span class="sd">    This is an equivalent of CSS comma selector (selector list) or :is() selector.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; h1, h1 { color: red;}</span>
-<span class="sd">    &gt;&gt;&gt; :is(h1, h2) { color: red; }</span>
-
-<span class="sd">    This example translated to soupsavvy would be:</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; SoupUnionTag(TypeSelector(&quot;h1&quot;), TypeSelector(&quot;h2&quot;))</span>
-<span class="sd">    &gt;&gt;&gt; TypeSelector(&quot;h1&quot;) | TypeSelector(&quot;h2&quot;)</span>
-
-<span class="sd">    Object can be created as well by using bitwise OR operator &#39;|&#39;</span>
-<span class="sd">    on two SoupSelector objects.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; TypeSelector(&quot;a&quot;) | TypeSelector(&quot;div&quot;, [AttributeSelector(name=&quot;class&quot;, value=&quot;widget&quot;)])</span>
-
-<span class="sd">    Which is equivalent to the first example.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    This Combinator does not inherit from BaseCombinator,</span>
-<span class="sd">    as its logic differs from other combinators.</span>
-
-<span class="sd">    For more information on selector list see:</span>
-<span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-<div class="viewcode-block" id="SelectorList.__init__">
-<a class="viewcode-back" href="../../../soupsavvy.selectors.combinators.html#soupsavvy.SelectorList.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">selector1</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
-        <span class="n">selector2</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
-        <span class="o">/</span><span class="p">,</span>
-        <span class="o">*</span><span class="n">selectors</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes SelectorList object with provided positional arguments.</span>
-<span class="sd">        At least two SoupSelector objects are required to create SelectorList.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        selectors: SoupSelector</span>
-<span class="sd">            SoupSelector objects to match accepted as positional arguments.</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        NotSoupSelectorException</span>
-<span class="sd">            If any of provided parameters is not an instance of SoupSelector.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">([</span><span class="n">selector1</span><span class="p">,</span> <span class="n">selector2</span><span class="p">,</span> <span class="o">*</span><span class="n">selectors</span><span class="p">])</span></div>
-
-
-<div class="viewcode-block" id="SelectorList.find_all">
-<a class="viewcode-back" href="../../../soupsavvy.selectors.combinators.html#soupsavvy.SelectorList.find_all">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
-        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="n">TagResultSet</span><span class="p">()</span>
-
-        <span class="k">for</span> <span class="n">selector</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectors</span><span class="p">:</span>
-            <span class="n">results</span> <span class="o">|=</span> <span class="n">TagResultSet</span><span class="p">(</span>
-                <span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">),</span>
-            <span class="p">)</span>
-
-        <span class="c1"># keep order of tags and limit</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="n">TagResultSet</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">TagIterator</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)))</span> <span class="o">&amp;</span> <span class="n">results</span>
-        <span class="k">return</span> <span class="n">results</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span></div>
-</div>
 
 </pre></div>
 
@@ -773,7 +597,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

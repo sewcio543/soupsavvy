@@ -4,11 +4,11 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Example &mdash; soupsavvy  documentation</title>
+  <title>operations.conditional &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -23,7 +23,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Example" href="soupsavvy.operations.general.html" />
+    <link rel="next" title="operations.general" href="soupsavvy.operations.general.html" />
     <link rel="prev" title="operations" href="soupsavvy.operations.html" /> 
 </head>
 
@@ -52,27 +52,24 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.html">models</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="soupsavvy.operations.html">operations</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="soupsavvy.operations.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">Break</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.operations.conditional.Continue"><code class="docutils literal notranslate"><span class="pre">Continue</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.operations.conditional.IfElse"><code class="docutils literal notranslate"><span class="pre">IfElse</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.conditional.IfElse.__init__"><code class="docutils literal notranslate"><span class="pre">IfElse.__init__()</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">operations.conditional</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.conditional.IfElse"><code class="docutils literal notranslate"><span class="pre">IfElse</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.conditional.Break"><code class="docutils literal notranslate"><span class="pre">Break</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.conditional.Continue"><code class="docutils literal notranslate"><span class="pre">Continue</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html"><code class="docutils literal notranslate"><span class="pre">Operation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationPipeline"><code class="docutils literal notranslate"><span class="pre">OperationPipeline</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html"><code class="docutils literal notranslate"><span class="pre">Href</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Parent"><code class="docutils literal notranslate"><span class="pre">Parent</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Text"><code class="docutils literal notranslate"><span class="pre">Text</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.wrappers.html"><code class="docutils literal notranslate"><span class="pre">OperationWrapper</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.wrappers.html#soupsavvy.operations.wrappers.SkipNone"><code class="docutils literal notranslate"><span class="pre">SkipNone</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.wrappers.html#soupsavvy.operations.wrappers.Suppress"><code class="docutils literal notranslate"><span class="pre">Suppress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html">operations.general</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html">operations.selection_pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html">operations.soup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.wrappers.html">operations.wrappers</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.html#module-soupsavvy.operations">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.html#module-soupsavvy.operations">Content</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -100,7 +97,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="soupsavvy.operations.html">operations</a></li>
-      <li class="breadcrumb-item active">Example</li>
+      <li class="breadcrumb-item active">operations.conditional</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/soupsavvy.operations.conditional.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -110,12 +107,75 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <p id="module-soupsavvy.operations.conditional">Module for conditional operations to control flow in the pipeline.</p>
+  <section id="module-soupsavvy.operations.conditional">
+<span id="operations-conditional"></span><h1>operations.conditional<a class="headerlink" href="#module-soupsavvy.operations.conditional" title="Link to this heading"></a></h1>
+<p>Module for conditional operations to control flow in the pipeline.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>IfElse - Executes different operations based on the condition.</p></li>
-<li><p>Break - Stops the pipeline execution.</p></li>
-<li><p>Continue - Skips the operation and continues with the next one.</p></li>
+<li><p><cite>IfElse</cite> - Executes different operations based on the condition.</p></li>
+<li><p><cite>Break</cite> - Stops the pipeline execution.</p></li>
+<li><p><cite>Continue</cite> - Skips the operation and continues with the next one.</p></li>
 </ul>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.operations.conditional.IfElse">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IfElse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.BaseOperation" title="soupsavvy.base.BaseOperation"><span class="pre">BaseOperation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">else_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.BaseOperation" title="soupsavvy.base.BaseOperation"><span class="pre">BaseOperation</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/operations/conditional.html#IfElse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.conditional.IfElse" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.OperationSearcherMixin" title="soupsavvy.base.OperationSearcherMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">OperationSearcherMixin</span></code></a></p>
+<p>Operation to control flow in the pipeline.
+Allows to execute different operations based on the condition.</p>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">IfElse</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">Operation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">Operation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">/</span> <span class="mi">100</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="go">... operation.execute(100)</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+<p>Implements <cite>TagSearcher</cite> interface for convenience. It can conditionally
+apply operations to the tag and can be used as model field.</p>
+</section>
+<section id="id1">
+<h2>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">IfElse</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">Text</span><span class="p">(),</span>
+<span class="gp">... </span>    <span class="n">Href</span><span class="p">(),</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">user_tag</span><span class="p">)</span>
+<span class="go">username</span>
+<span class="go">... operation.find(other_tag)</span>
+<span class="go">www.example.com</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.operations.conditional.IfElse.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.BaseOperation" title="soupsavvy.base.BaseOperation"><span class="pre">BaseOperation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">else_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.BaseOperation" title="soupsavvy.base.BaseOperation"><span class="pre">BaseOperation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/conditional.html#IfElse.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.conditional.IfElse.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes <a href="#id2"><span class="problematic" id="id3">`</span></a>IfEls`e operation with condition and two operations.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>condition<span class="classifier">Callable[[Any], bool]</span></dt><dd><p>Condition to check if the operation should be executed.
+If callable returns True, <cite>if_</cite> operation is executed, otherwise <cite>else_</cite>.</p>
+</dd>
+<dt><a href="#id6"><span class="problematic" id="id7">if_</span></a><span class="classifier">BaseOperation</span></dt><dd><p>Operation to execute if condition is fulfilled.</p>
+</dd>
+<dt><a href="#id8"><span class="problematic" id="id9">else_</span></a><span class="classifier">BaseOperation</span></dt><dd><p>Operation to execute if condition is not fulfilled.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.operations.conditional.Break">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Break</span></span><a class="reference internal" href="_modules/soupsavvy/operations/conditional.html#Break"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.conditional.Break" title="Link to this definition"></a></dt>
@@ -123,8 +183,8 @@
 <p>Operation to break the pipeline execution and return the current result.
 Can be used in selection/operation pipelines with <cite>IfElse</cite> operation
 to conditionally stop the execution.</p>
-<section id="example">
-<h1>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h1>
+<section id="id4">
+<h2>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Break</span><span class="p">,</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">IfElse</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
@@ -149,8 +209,8 @@ so next operation is not executed.</p>
 <p>Operation to skip the current operation ad move to the next one.
 Can be used in selection/operation pipelines with <cite>IfElse</cite> operation
 to conditionally skip the operation.</p>
-<section id="id1">
-<h1>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<section id="id5">
+<h2>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Continue</span><span class="p">,</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">IfElse</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
@@ -168,77 +228,20 @@ operation is skipped and the next one is executed.</p>
 </section>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="soupsavvy.operations.conditional.IfElse">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IfElse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.BaseOperation" title="soupsavvy.base.BaseOperation"><span class="pre">BaseOperation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">else_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.BaseOperation" title="soupsavvy.base.BaseOperation"><span class="pre">BaseOperation</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/operations/conditional.html#IfElse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.conditional.IfElse" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.OperationSearcherMixin" title="soupsavvy.base.OperationSearcherMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">OperationSearcherMixin</span></code></a></p>
-<p>Operation to control flow in the pipeline.
-Allows to execute different operations based on the condition.</p>
-<section id="id2">
-<h1>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span>
-<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">IfElse</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">Operation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span><span class="p">),</span>
-<span class="gp">... </span>    <span class="n">Operation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">/</span> <span class="mi">100</span><span class="p">),</span>
-<span class="gp">... </span><span class="p">)</span>
-<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="go">None</span>
-<span class="go">... operation.execute(100)</span>
-<span class="go">1</span>
-</pre></div>
-</div>
-<p>Implements <cite>TagSearcher</cite> interface for convenience. It can conditionally
-apply operations to the tag and can be used as model field.</p>
 </section>
-<section id="id3">
-<h1>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
-<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">IfElse</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">Text</span><span class="p">(),</span>
-<span class="gp">... </span>    <span class="n">Href</span><span class="p">(),</span>
-<span class="gp">... </span><span class="p">)</span>
-<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">user_tag</span><span class="p">)</span>
-<span class="go">username</span>
-<span class="go">... operation.find(other_tag)</span>
-<span class="go">www.example.com</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.operations.conditional.IfElse.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.BaseOperation" title="soupsavvy.base.BaseOperation"><span class="pre">BaseOperation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">else_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.BaseOperation" title="soupsavvy.base.BaseOperation"><span class="pre">BaseOperation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/conditional.html#IfElse.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.conditional.IfElse.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes IfElse operation with condition and two operations.</p>
-<section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
-<dl class="simple">
-<dt>condition<span class="classifier">Callable[[Any], bool]</span></dt><dd><p>Condition to check if the operation should be executed.
-If callable returns True, <cite>if_</cite> operation is executed, otherwise <cite>else_</cite>.</p>
-</dd>
-<dt><a href="#id4"><span class="problematic" id="id5">if_</span></a><span class="classifier">BaseOperation</span></dt><dd><p>Operation to execute if condition is fulfilled.</p>
-</dd>
-<dt><a href="#id6"><span class="problematic" id="id7">else_</span></a><span class="classifier">BaseOperation</span></dt><dd><p>Operation to execute if condition is not fulfilled.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-</section>
-</dd></dl>
-
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="soupsavvy.operations.html" class="btn btn-neutral float-left" title="operations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="soupsavvy.operations.general.html" class="btn btn-neutral float-right" title="Example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="soupsavvy.operations.general.html" class="btn btn-neutral float-right" title="operations.general" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

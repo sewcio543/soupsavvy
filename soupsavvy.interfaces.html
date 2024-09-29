@@ -4,11 +4,11 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parameters &mdash; soupsavvy  documentation</title>
+  <title>interfaces &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -50,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -76,7 +77,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Parameters</li>
+      <li class="breadcrumb-item active">interfaces</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/soupsavvy.interfaces.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -86,20 +87,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <p id="module-soupsavvy.interfaces">Module with <cite>soupsavvy</cite> interfaces used across the package.</p>
+  <section id="module-soupsavvy.interfaces">
+<span id="interfaces"></span><h1>interfaces<a class="headerlink" href="#module-soupsavvy.interfaces" title="Link to this heading"></a></h1>
+<p>Module with <cite>soupsavvy</cite> interfaces used across the package.</p>
 <ul class="simple">
 <li><p><cite>Executable</cite> - Interface for operations that can be executed on single argument.</p></li>
 <li><p><cite>Comparable</cite> - Interface for objects that can be compared for equality.</p></li>
-<li><p><cite>TagSearcher</cite> - Interface for objects that can search within BeautifulSoup tags.</p></li>
+<li><p><cite>TagSearcher</cite> - Interface for objects that can search within <cite>bs4.Tag</cite>.</p></li>
 </ul>
-<dl class="py class">
-<dt class="sig sig-object py" id="soupsavvy.interfaces.Comparable">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Comparable</span></span><a class="reference internal" href="_modules/soupsavvy/interfaces.html#Comparable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.interfaces.Comparable" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
-<p>Interface for objects that can be compared for equality.
-Derived classes must implement the <cite>__eq__</cite> method.</p>
-</dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.interfaces.Executable">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Executable</span></span><a class="reference internal" href="_modules/soupsavvy/interfaces.html#Executable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.interfaces.Executable" title="Link to this definition"></a></dt>
@@ -115,31 +110,41 @@ Derived classes must implement the <cite>execute</cite> method.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.interfaces.Comparable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Comparable</span></span><a class="reference internal" href="_modules/soupsavvy/interfaces.html#Comparable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.interfaces.Comparable" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Interface for objects that can be compared for equality.
+Derived classes must implement the <cite>__eq__</cite> method.</p>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.interfaces.TagSearcher">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TagSearcher</span></span><a class="reference internal" href="_modules/soupsavvy/interfaces.html#TagSearcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.interfaces.TagSearcher" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
-<p>Interface for objects that can search within BeautifulSoup tags.</p>
+<p>Interface for objects that can search within <cite>bs4.Tag</cite>.
+Derived classes must implement the <cite>find</cite> and <cite>find_all</cite> methods,
+that process <cite>bs4.Tag</cite> object and return results.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.interfaces.TagSearcher.find">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/soupsavvy/interfaces.html#TagSearcher.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.interfaces.TagSearcher.find" title="Link to this definition"></a></dt>
-<dd><p>Finds first target information within the given tag and returns the result.</p>
+<dd><p>Processes <cite>bs4.Tag</cite> object and returns result.</p>
 <section id="parameters">
-<h1>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h1>
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to process.</p>
 </dd>
 <dt>strict<span class="classifier">bool, optional</span></dt><dd><p>If True, enforces results to be found in the tag, by default False.</p>
 </dd>
-<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>bs4.Tag.find method parameter that specifies if search should be recursive.
-If set to False, only direct children of the tag will be searched.
-By default True.</p>
+<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
+If set to <cite>False</cite>, only direct children of the tag will be searched.
+By default <cite>True</cite>.</p>
 </dd>
 </dl>
 </section>
 <section id="returns">
-<h1>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h1>
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>Any</dt><dd><p>Result of the search operation.</p>
+<dt>Any</dt><dd><p>Processed result from the tag.</p>
 </dd>
 </dl>
 </section>
@@ -148,25 +153,25 @@ By default True.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.interfaces.TagSearcher.find_all">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/interfaces.html#TagSearcher.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.interfaces.TagSearcher.find_all" title="Link to this definition"></a></dt>
-<dd><p>Finds all target information within the given tag and returns the result.</p>
+<dd><p>Processes <cite>bs4.Tag</cite> object and returns list of results.</p>
 <section id="id1">
-<h1>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<h2>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to process.</p>
 </dd>
-<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>bs4.Tag.find method parameter that specifies if search should be recursive.
-If set to False, only direct children of the tag will be searched.
-By default True.</p>
+<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
+If set to <cite>False</cite>, only direct children of the tag will be searched.
+By default <cite>True</cite>.</p>
 </dd>
-<dt>limit<span class="classifier">int, optional</span></dt><dd><p>bs4.Tag.find_all method parameter that specifies maximum number of results
-to return. If set to None, all results are returned. By default None.</p>
+<dt>limit<span class="classifier">int, optional</span></dt><dd><p>Specifies maximum number of results to return in a list.
+By default <cite>None</cite>, everything is returned.</p>
 </dd>
 </dl>
 </section>
 <section id="id2">
-<h1>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h1>
+<h2>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>list[Any]</dt><dd><p>A list of results, if none found, the list is empty.</p>
+<dt>list[Any]</dt><dd><p>A list of results from processed tag.</p>
 </dd>
 </dl>
 </section>
@@ -174,6 +179,7 @@ to return. If set to None, all results are returned. By default None.</p>
 
 </dd></dl>
 
+</section>
 
 
            </div>
@@ -183,7 +189,7 @@ to return. If set to None, all results are returned. By default None.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

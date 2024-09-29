@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -86,7 +87,16 @@
            <div itemprop="articleBody">
              
   <h1>Source code for soupsavvy.testing.generators.generators</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Module with HTML generators.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module with generators for producing HTML content.</span>
+<span class="sd">Generators can be used to create customizable HTML content,</span>
+<span class="sd">that can be used to test selectors and workflows.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">- `AttributeGenerator` - class for generating HTML attribute strings.</span>
+<span class="sd">- `TagGenerator` - class for generating HTML tag strings.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
@@ -193,8 +203,8 @@
 
 <span class="sd">    See also</span>
 <span class="sd">    --------</span>
-<span class="sd">    soupsavvy.testing.generators.templates module</span>
-<span class="sd">    soupsavvy.testing.generators.TagGenerator class</span>
+<span class="sd">    - `soupsavvy.testing.generators.templates` package</span>
+<span class="sd">    - `soupsavvy.testing.TagGenerator` class</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AttributeGenerator.__init__">
@@ -284,9 +294,9 @@
 <span class="sd">    &#39;&lt;div class=&quot;container&quot;&gt;&lt;/div&gt;&#39;</span>
 
 <span class="sd">    Attributes can be passed as an iterable of of mixed types:</span>
-<span class="sd">    * AttributeGenerator - instance of AttributeGenerator class</span>
-<span class="sd">    * str - attribute name, value would be a default Template (empty string)</span>
-<span class="sd">    * tuple[str, TemplateType] - attribute name and literal value or Template</span>
+<span class="sd">    - AttributeGenerator - instance of AttributeGenerator class</span>
+<span class="sd">    - str - attribute name, value would be a default Template (empty string)</span>
+<span class="sd">    - tuple[str, TemplateType] - attribute name and literal value or Template</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
@@ -302,8 +312,8 @@
 <span class="sd">    &#39;&lt;div id=&quot;link&quot; href=&quot;/endpoint&quot;, class=&quot;&quot;&gt;&lt;/div&gt;&#39;</span>
 
 <span class="sd">    Similarly, children can be passed as an iterable of mixed types:</span>
-<span class="sd">    * TagGenerator - instance of TagGenerator class</span>
-<span class="sd">    * str - tag name, children tags would be empty</span>
+<span class="sd">    - TagGenerator - instance of TagGenerator class</span>
+<span class="sd">    - str - tag name, children tags would be empty</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
@@ -336,7 +346,7 @@
 <span class="sd">    For more information on available Templates, how to use them</span>
 <span class="sd">    and customize for your needs, see the documentation.</span>
 
-<span class="sd">    Void tags like &lt;img&gt;, &lt;br&gt;, &lt;hr&gt; etc. can be generated as well</span>
+<span class="sd">    Void tags like `&lt;img&gt;`, `&lt;br&gt;`, `&lt;hr&gt;` etc. can be generated as well</span>
 <span class="sd">    and are automatically closed:</span>
 
 <span class="sd">    Example</span>
@@ -349,8 +359,8 @@
 
 <span class="sd">    See also</span>
 <span class="sd">    --------</span>
-<span class="sd">    soupsavvy.testing.generators.templates module</span>
-<span class="sd">    soupsavvy.testing.generators.AttributeGenerator class</span>
+<span class="sd">    - `soupsavvy.testing.generators.templates` package</span>
+<span class="sd">    - `soupsavvy.testing.AttributeGenerator` class</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TagGenerator.__init__">
@@ -363,7 +373,7 @@
         <span class="n">text</span><span class="p">:</span> <span class="n">TemplateType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize the TagGenerator.</span>
+<span class="sd">        Initialize the `TagGenerator`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -508,7 +518,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

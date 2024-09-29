@@ -23,7 +23,7 @@ Submodules
    soupsavvy.selectors.namespace
    soupsavvy.selectors.relative
 
-Module contents
+Content
 ---------------
 
 .. automodule:: soupsavvy.selectors

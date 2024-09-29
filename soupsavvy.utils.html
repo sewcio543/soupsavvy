@@ -8,7 +8,7 @@
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -50,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -92,28 +93,33 @@
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.utils.selector_utils.html"><code class="docutils literal notranslate"><span class="pre">TagIterator</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagIterator.__init__"><code class="docutils literal notranslate"><span class="pre">TagIterator.__init__()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagIterator.include_self"><code class="docutils literal notranslate"><span class="pre">TagIterator.include_self</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagIterator.recursive"><code class="docutils literal notranslate"><span class="pre">TagIterator.recursive</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagIterator.tag"><code class="docutils literal notranslate"><span class="pre">TagIterator.tag</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.utils.logging.html">utils.logging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.utils.selector_utils.html">utils.selector_utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagIterator"><code class="docutils literal notranslate"><span class="pre">TagIterator</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagIterator.tag"><code class="docutils literal notranslate"><span class="pre">TagIterator.tag</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagIterator.recursive"><code class="docutils literal notranslate"><span class="pre">TagIterator.recursive</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagIterator.include_self"><code class="docutils literal notranslate"><span class="pre">TagIterator.include_self</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagIterator.__init__"><code class="docutils literal notranslate"><span class="pre">TagIterator.__init__()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagResultSet"><code class="docutils literal notranslate"><span class="pre">TagResultSet</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagResultSet.__init__"><code class="docutils literal notranslate"><span class="pre">TagResultSet.__init__()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagResultSet.fetch"><code class="docutils literal notranslate"><span class="pre">TagResultSet.fetch()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagResultSet.symmetric_difference"><code class="docutils literal notranslate"><span class="pre">TagResultSet.symmetric_difference()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.UniqueTag"><code class="docutils literal notranslate"><span class="pre">UniqueTag</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.UniqueTag.__init__"><code class="docutils literal notranslate"><span class="pre">UniqueTag.__init__()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.UniqueTag"><code class="docutils literal notranslate"><span class="pre">UniqueTag</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.UniqueTag.__init__"><code class="docutils literal notranslate"><span class="pre">UniqueTag.__init__()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagResultSet"><code class="docutils literal notranslate"><span class="pre">TagResultSet</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagResultSet.__init__"><code class="docutils literal notranslate"><span class="pre">TagResultSet.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagResultSet.fetch"><code class="docutils literal notranslate"><span class="pre">TagResultSet.fetch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagResultSet.symmetric_difference"><code class="docutils literal notranslate"><span class="pre">TagResultSet.symmetric_difference()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </div>
 </section>
 <section id="module-soupsavvy.utils">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-soupsavvy.utils" title="Link to this heading"></a></h2>
+<span id="content"></span><h2>Content<a class="headerlink" href="#module-soupsavvy.utils" title="Link to this heading"></a></h2>
 <p>Subpackage with internal utilities for <cite>soupsavvy</cite> package.</p>
 </section>
 </section>
@@ -126,7 +132,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

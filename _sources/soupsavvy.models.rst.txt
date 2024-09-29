@@ -11,7 +11,7 @@ Submodules
    soupsavvy.models.constants
    soupsavvy.models.wrappers
 
-Module contents
+Content
 ---------------
 
 .. automodule:: soupsavvy.models

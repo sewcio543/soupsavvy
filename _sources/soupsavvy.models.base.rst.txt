@@ -1,3 +1,6 @@
+models.base
+============================
+
 .. automodule:: soupsavvy.models.base
    :members:
    :undoc-members:

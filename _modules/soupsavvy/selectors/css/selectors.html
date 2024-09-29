@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -93,21 +94,22 @@
 <span class="sd">:only-child, :empty, :nth-child().</span>
 
 <span class="sd">They can be used in combination with other SoupSelector objects</span>
-<span class="sd">to create more complex tag selection conditions.</span>
+<span class="sd">to create more complex search procedures.</span>
 
-<span class="sd">This module contains the following classes:</span>
-<span class="sd">* OnlyChild</span>
-<span class="sd">* Empty</span>
-<span class="sd">* FirstChild</span>
-<span class="sd">* LastChild</span>
-<span class="sd">* NthChild</span>
-<span class="sd">* NthLastChild</span>
-<span class="sd">* FirstOfType</span>
-<span class="sd">* LastOfType</span>
-<span class="sd">* NthOfType</span>
-<span class="sd">* NthLastOfType</span>
-<span class="sd">* OnlyOfType</span>
-<span class="sd">* CSS - wrapper for simple search with CSS selectors</span>
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">- OnlyChild</span>
+<span class="sd">- Empty</span>
+<span class="sd">- FirstChild</span>
+<span class="sd">- LastChild</span>
+<span class="sd">- NthChild</span>
+<span class="sd">- NthLastChild</span>
+<span class="sd">- FirstOfType</span>
+<span class="sd">- LastOfType</span>
+<span class="sd">- NthOfType</span>
+<span class="sd">- NthLastOfType</span>
+<span class="sd">- OnlyOfType</span>
+<span class="sd">- CSS - wrapper for simple search with CSS selectors</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
@@ -125,23 +127,23 @@
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.CSSSoupSelector">[docs]</a>
 <span class="k">class</span> <span class="nc">CSSSoupSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">,</span> <span class="n">SelectableCSS</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Base class for CSS selector based tag selection.</span>
+<span class="sd">    Base class for selectors based on css selectors.</span>
 <span class="sd">    Classes that base their selection on CSS selectors should inherit from this class</span>
 <span class="sd">    and implement the `selector` property.</span>
 
-<span class="sd">    By default, the `find` methods are implemented using the soupsieve library</span>
+<span class="sd">    By default, the `find` methods are implemented using the `soupsieve` library</span>
 <span class="sd">    to match the selector.</span>
 
-<span class="sd">    CSSSoupSelector objects are based on SoupSelector interface</span>
-<span class="sd">    and can be easily used in combination with other SoupSelector objects.</span>
+<span class="sd">    CSSSoupSelector objects inherit from `SoupSelector` and can be easily used</span>
+<span class="sd">    in combination with other `SoupSelector` objects.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_SELECTOR</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">SELECTOR</span><span class="p">:</span> <span class="nb">str</span>
 
 <div class="viewcode-block" id="CSSSoupSelector.__init__">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.CSSSoupSelector.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">selector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_SELECTOR</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_formats</span><span class="p">)</span>
+        <span class="n">selector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">SELECTOR</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_formats</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span> <span class="o">=</span> <span class="n">sv</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
@@ -156,7 +158,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">_formats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        List of arguments to be used to format css selector string of the selector.</span>
+<span class="sd">        Returns list of arguments to be used to format css selector string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[]</span>
 
@@ -187,8 +189,8 @@
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.OnlyChild">[docs]</a>
 <span class="k">class</span> <span class="nc">OnlyChild</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to select tags that are the only child of their parent.</span>
-<span class="sd">    It uses the CSS selector `:only-child`.</span>
+<span class="sd">    Selector for finding elements, that do not have any siblings.</span>
+<span class="sd">    Counterpart of the CSS selector `:only-child` pseudo-class.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
@@ -200,18 +202,14 @@
 <span class="sd">    ...    &lt;div class=&quot;menu&quot;&gt;Hello World 2 &lt;/div&gt; ❌</span>
 <span class="sd">    ... &lt;/div&gt;</span>
 
-<span class="sd">    Tag is only selected if it is the only child of its parent.</span>
-
-<span class="sd">    Example</span>
+<span class="sd">    Notes</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; OnlyChild().selector</span>
-<span class="sd">    :only-child</span>
+<span class="sd">    For more information on the :only-child pseudo-class, see:</span>
 
-<span class="sd">    For more information on the :only-child selector, see:</span>
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:only-child</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:only-child&quot;</span></div>
+    <span class="n">SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:only-child&quot;</span></div>
 
 
 
@@ -219,8 +217,8 @@
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.Empty">[docs]</a>
 <span class="k">class</span> <span class="nc">Empty</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to select tags that are empty, i.e., have no children.</span>
-<span class="sd">    It uses the CSS selector `:empty`.</span>
+<span class="sd">    Selector for finding empty elements, i.e., that have no children.</span>
+<span class="sd">    Counterpart of the CSS selector `:empty` pseudo-class.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
@@ -228,30 +226,23 @@
 <span class="sd">    ...    &lt;div class=&quot;menu&quot;&gt;&lt;/div&gt; ✔️</span>
 <span class="sd">    ... &lt;/div&gt;</span>
 
-<span class="sd">    Tag is only selected if it is empty.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; Empty().selector</span>
-<span class="sd">    :empty</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    --------</span>
-<span class="sd">    Any text or whitespace inside the tag is consider as a child</span>
-<span class="sd">    and makes the tag non-empty.</span>
+<span class="sd">    Any text node is considered as a child and makes the element non-empty.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;Hello World&lt;/div&gt; ❌</span>
 <span class="sd">    ... &lt;div class=&quot;widget&quot;&gt; &lt;/div&gt; ❌</span>
 
-<span class="sd">    These tags are not empty and do not match the selector.</span>
+<span class="sd">    These elements are not empty and do not match the selector.</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    --------</span>
 <span class="sd">    For more information on the :empty selector, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:empty</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:empty&quot;</span></div>
+    <span class="n">SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:empty&quot;</span></div>
 
 
 
@@ -259,8 +250,8 @@
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.FirstChild">[docs]</a>
 <span class="k">class</span> <span class="nc">FirstChild</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to select tags that are the first child of their parent.</span>
-<span class="sd">    It uses the CSS selector `:first-child`.</span>
+<span class="sd">    Selector for finding elements, that are the first child of their parent.</span>
+<span class="sd">    Counterpart of the CSS selector `:first-child` pseudo-class.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
@@ -272,22 +263,16 @@
 <span class="sd">    ...    &lt;div class=&quot;menu&quot;&gt;Hello World 2 &lt;/div&gt; ❌</span>
 <span class="sd">    ... &lt;/div&gt;</span>
 
-<span class="sd">    Tag is only selected if it is the first child of its parent.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; FirstChild().selector</span>
-<span class="sd">    :first-child</span>
-
 <span class="sd">    Notes</span>
 <span class="sd">    --------</span>
-<span class="sd">    FirstChild object is essentially the same as NthChild(&quot;1&quot;).</span>
+<span class="sd">    `FirstChild` object is essentially the same as NthChild(&quot;1&quot;).</span>
 
 <span class="sd">    For more information on the :first-child selector, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:first-child</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:first-child&quot;</span></div>
+    <span class="n">SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:first-child&quot;</span></div>
 
 
 
@@ -295,8 +280,8 @@
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.LastChild">[docs]</a>
 <span class="k">class</span> <span class="nc">LastChild</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to select tags that are the last child of their parent.</span>
-<span class="sd">    It uses the CSS selector `:last-child`.</span>
+<span class="sd">    Selector for finding elements, that are the last child of their parent.</span>
+<span class="sd">    Counterpart of the CSS selector `:last-child` pseudo-class.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
@@ -308,49 +293,52 @@
 <span class="sd">    ...    &lt;div class=&quot;menu&quot;&gt;Hello World 2 &lt;/div&gt; ✔️</span>
 <span class="sd">    ... &lt;/div&gt;</span>
 
-<span class="sd">    Tag is only selected if it is the last child of its parent.</span>
-<span class="sd">    Element that is the first and only child is matched as well.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; LastChild().selector</span>
-<span class="sd">    :last-child</span>
-
 <span class="sd">    Notes</span>
 <span class="sd">    --------</span>
 <span class="sd">    LastChild object is essentially the same as NthLastChild(&quot;1&quot;).</span>
+<span class="sd">    Element that is the first and only child is matched as well.</span>
 
 <span class="sd">    For more information on the :last-child selector, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:last-child</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:last-child&quot;</span></div>
+    <span class="n">SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:last-child&quot;</span></div>
 
 
 
-<span class="k">class</span> <span class="nc">_NthBaseSelector</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
+<div class="viewcode-block" id="NthBaseSelector">
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.NthBaseSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">NthBaseSelector</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for selectors based on nth formula.&quot;&quot;&quot;</span>
 
+<div class="viewcode-block" id="NthBaseSelector.__init__">
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.NthBaseSelector.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nth</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the selector with the nth formula.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nth : str, positional</span>
+<span class="sd">            Nth formula used to select the elements.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nth</span> <span class="o">=</span> <span class="n">nth</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
+
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">_formats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_nth</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_nth</span><span class="p">]</span></div>
+
 
 
 <div class="viewcode-block" id="NthChild">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.NthChild">[docs]</a>
-<span class="k">class</span> <span class="nc">NthChild</span><span class="p">(</span><span class="n">_NthBaseSelector</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">NthChild</span><span class="p">(</span><span class="n">NthBaseSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to select tags that are the nth child of their parent.</span>
-<span class="sd">    It uses the CSS selector `:nth-child(n)`.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    nth : str, positional</span>
-<span class="sd">        Number of the child to be selected. Can be a number or a formula.</span>
+<span class="sd">    Selector for finding elements, that are the nth child of their parent.</span>
+<span class="sd">    Counterpart of the CSS selector `:nth-child(n)`.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
@@ -361,25 +349,23 @@
 <span class="sd">    &gt;&gt;&gt; NthChild(&quot;odd&quot;).selector</span>
 <span class="sd">    :nth-child(odd)</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    --------</span>
 <span class="sd">    For more information on the formula, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-child</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:nth-child(</span><span class="si">{}</span><span class="s2">)&quot;</span></div>
+    <span class="n">SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:nth-child(</span><span class="si">{}</span><span class="s2">)&quot;</span></div>
 
 
 
 <div class="viewcode-block" id="NthLastChild">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.NthLastChild">[docs]</a>
-<span class="k">class</span> <span class="nc">NthLastChild</span><span class="p">(</span><span class="n">_NthBaseSelector</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">NthLastChild</span><span class="p">(</span><span class="n">NthBaseSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to select tags that are the nth last child of their parent.</span>
-<span class="sd">    It uses the CSS selector `:nth-last-child(n)`.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    nth : str, positional</span>
-<span class="sd">        Number of the child to be selected. Can be a number or a formula.</span>
+<span class="sd">    Selector for finding elements, that are the nth last child of their parent.</span>
+<span class="sd">    Counterpart of the CSS selector `:nth-last-child(n)`.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
@@ -390,11 +376,14 @@
 <span class="sd">    &gt;&gt;&gt; NthLastChild(&quot;odd&quot;).selector</span>
 <span class="sd">    :nth-last-child(odd)</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    --------</span>
 <span class="sd">    For more information on the formula, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-child</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:nth-last-child(</span><span class="si">{}</span><span class="s2">)&quot;</span></div>
+    <span class="n">SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:nth-last-child(</span><span class="si">{}</span><span class="s2">)&quot;</span></div>
 
 
 
@@ -402,8 +391,8 @@
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.FirstOfType">[docs]</a>
 <span class="k">class</span> <span class="nc">FirstOfType</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to select tags that are the first of their type in their parent.</span>
-<span class="sd">    It uses the CSS selector `:first-of-type`.</span>
+<span class="sd">    Selector for finding elements, that are the first of their type in their parent.</span>
+<span class="sd">    Counterpart of the CSS selector `:first-of-type` pseudo-class.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
@@ -416,23 +405,17 @@
 <span class="sd">    ...    &lt;div class=&quot;menu&quot;&gt;Hello World 3 &lt;/div&gt; ❌</span>
 <span class="sd">    ... &lt;/div&gt;</span>
 
-<span class="sd">    Tag is only selected if it is the first of its type in its parent.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; FirstOfType().selector</span>
-<span class="sd">    :first-of-type</span>
-
 <span class="sd">    Notes</span>
 <span class="sd">    --------</span>
 <span class="sd">    For this selector the first tag of any type is selected, which in</span>
-<span class="sd">    case of finding single tag is equivalent to FirstChild() results.</span>
+<span class="sd">    case of finding single tag is equivalent to `FirstChild` results.</span>
 
 <span class="sd">    For more information on the formula, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:first-of-type</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:first-of-type&quot;</span></div>
+    <span class="n">SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:first-of-type&quot;</span></div>
 
 
 
@@ -440,8 +423,8 @@
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.LastOfType">[docs]</a>
 <span class="k">class</span> <span class="nc">LastOfType</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to select tags that are the last of their type in their parent.</span>
-<span class="sd">    It uses the CSS selector `:last-of-type`.</span>
+<span class="sd">    Selector for finding elements, that are the last of their type in their parent.</span>
+<span class="sd">    Counterpart of the CSS selector `:last-of-type` pseudo-class.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
@@ -454,38 +437,26 @@
 <span class="sd">    ...    &lt;div class=&quot;menu&quot;&gt;Hello World 3 &lt;/div&gt; ✔️</span>
 <span class="sd">    ... &lt;/div&gt;</span>
 
-<span class="sd">    Tag is only selected if it is the last of its type in its parent.</span>
-<span class="sd">    Element that is the first and only child is matched as well.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; LastOfType().selector</span>
-<span class="sd">    :last-of-type</span>
-
 <span class="sd">    Notes</span>
 <span class="sd">    --------</span>
 <span class="sd">    For this selector the last tag of any type is selected, which in</span>
-<span class="sd">    case of finding single tag is the equivalent to LastChild() results.</span>
+<span class="sd">    case of finding single tag is the equivalent to `LastChild` results.</span>
 
 <span class="sd">    For more information on the formula, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:last-of-type</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:last-of-type&quot;</span></div>
+    <span class="n">SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:last-of-type&quot;</span></div>
 
 
 
 <div class="viewcode-block" id="NthOfType">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.NthOfType">[docs]</a>
-<span class="k">class</span> <span class="nc">NthOfType</span><span class="p">(</span><span class="n">_NthBaseSelector</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">NthOfType</span><span class="p">(</span><span class="n">NthBaseSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to select tags that are the nth of their type in their parent.</span>
-<span class="sd">    It uses the CSS selector `:nth-of-type(n)`.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    nth : str, positional</span>
-<span class="sd">        Number of the tag to be selected. Can be a number or a formula.</span>
+<span class="sd">    Selector for finding elements, that are the nth of their type in their parent.</span>
+<span class="sd">    Counterpart of the CSS selector `:nth-of-type(n)`.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
@@ -496,25 +467,23 @@
 <span class="sd">    &gt;&gt;&gt; NthOfType(&quot;even&quot;).selector</span>
 <span class="sd">    :nth-of-type(even)</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    --------</span>
 <span class="sd">    For more information on the formula, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-of-type</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:nth-of-type(</span><span class="si">{}</span><span class="s2">)&quot;</span></div>
+    <span class="n">SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:nth-of-type(</span><span class="si">{}</span><span class="s2">)&quot;</span></div>
 
 
 
 <div class="viewcode-block" id="NthLastOfType">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.NthLastOfType">[docs]</a>
-<span class="k">class</span> <span class="nc">NthLastOfType</span><span class="p">(</span><span class="n">_NthBaseSelector</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">NthLastOfType</span><span class="p">(</span><span class="n">NthBaseSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to select tags that are the nth last of their type in their parent.</span>
-<span class="sd">    It uses the CSS selector `:nth-last-of-type(n)`.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    nth : str, positional</span>
-<span class="sd">        Number of the tag to be selected. Can be a number or a formula.</span>
+<span class="sd">    Selector for finding elements, that are the nth last of their type in their parent.</span>
+<span class="sd">    Counterpart of the CSS selector `:nth-last-of-type(n)`.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
@@ -525,11 +494,14 @@
 <span class="sd">    &gt;&gt;&gt; NthLastOfType(&quot;even&quot;).selector</span>
 <span class="sd">    :nth-last-of-type(even)</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    --------</span>
 <span class="sd">    For more information on the formula, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-of-type</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:nth-last-of-type(</span><span class="si">{}</span><span class="s2">)&quot;</span></div>
+    <span class="n">SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:nth-last-of-type(</span><span class="si">{}</span><span class="s2">)&quot;</span></div>
 
 
 
@@ -537,8 +509,8 @@
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.OnlyOfType">[docs]</a>
 <span class="k">class</span> <span class="nc">OnlyOfType</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to select tags that are the only of their type in their parent.</span>
-<span class="sd">    It uses the CSS selector `:only-of-type`.</span>
+<span class="sd">    Selector for finding elements, that don&#39;t have siblings of the same type.</span>
+<span class="sd">    Counterpart of the CSS selector `:only-of-type` pseudo-class.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
@@ -552,18 +524,14 @@
 <span class="sd">    ... &lt;/div&gt;</span>
 <span class="sd">    ... &lt;a class=&quot;widget&quot;&gt;&lt;/a&gt; ✔️</span>
 
-<span class="sd">    Tag is only selected if it is the only tag of its type in its parent.</span>
-
-<span class="sd">    Example</span>
+<span class="sd">    Notes</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; OnlyOfType().selector</span>
-<span class="sd">    :only-of-type</span>
-
 <span class="sd">    For more information on the :only-of-type selector, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:only-of-type</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:only-of-type&quot;</span></div>
+    <span class="n">SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;:only-of-type&quot;</span></div>
 
 
 
@@ -571,16 +539,9 @@
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.CSS">[docs]</a>
 <span class="k">class</span> <span class="nc">CSS</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Soupsavvy wrapper for simple search with CSS selectors.</span>
-<span class="sd">    Uses soupsieve library to match the tag, based on the provided CSS selector.</span>
-
-<span class="sd">    Extends bs4 Tag.select implementation by adding non recursive search option.</span>
-<span class="sd">    Provided css selector might be any selector supported by soupsieve.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    css : str</span>
-<span class="sd">        CSS selector to be used for tag selection.</span>
+<span class="sd">    Selector for finding elements based on any provided CSS selector.</span>
+<span class="sd">    `soupsieve` adapter, that allows any supported css selector</span>
+<span class="sd">    to be used with other `soupsavvy` components.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    --------</span>
@@ -597,13 +558,26 @@
 <span class="sd">    ...    &lt;a class=&quot;menu&quot;&gt;Hello World&lt;/a&gt; ❌</span>
 <span class="sd">    ... &lt;/div&gt;</span>
 <span class="sd">    ... &lt;div class=&quot;menu&quot;&gt;&lt;/div&gt; ✔️</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    --------</span>
+<span class="sd">    `CSS` component extends `bs4.Tag.select` implementatio</span>
+<span class="sd">    by adding non recursive search option.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span>
+    <span class="n">SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="CSS.__init__">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.CSS.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">css</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the selector with the provided css selector.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        css : str</span>
+<span class="sd">            CSS selector to be used for selecting elements.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_css</span> <span class="o">=</span> <span class="n">css</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
 
@@ -621,7 +595,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

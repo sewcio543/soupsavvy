@@ -9,7 +9,7 @@ Subpackages
 
    soupsavvy.testing.generators
 
-Module contents
+Content
 ---------------
 
 .. automodule:: soupsavvy.testing

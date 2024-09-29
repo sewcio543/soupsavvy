@@ -4,11 +4,11 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contains &mdash; soupsavvy  documentation</title>
+  <title>operators &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -22,7 +22,9 @@
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Use Cases" href="demos/use_cases.html" />
+    <link rel="prev" title="testing.generators.generators" href="soupsavvy.testing.generators.generators.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,11 +47,22 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Components</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.selectors.html">selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">operators</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#contains">Contains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#soupsavvy.operators.is_"><code class="docutils literal notranslate"><span class="pre">is_()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#soupsavvy.operators.where"><code class="docutils literal notranslate"><span class="pre">where()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#soupsavvy.operators.or_"><code class="docutils literal notranslate"><span class="pre">or_()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#soupsavvy.operators.not_"><code class="docutils literal notranslate"><span class="pre">not_()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#soupsavvy.operators.and_"><code class="docutils literal notranslate"><span class="pre">and_()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#soupsavvy.operators.has"><code class="docutils literal notranslate"><span class="pre">has()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#soupsavvy.operators.xor"><code class="docutils literal notranslate"><span class="pre">xor()</span></code></a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -76,7 +89,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Contains</li>
+      <li class="breadcrumb-item active">operators</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/soupsavvy.operators.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -86,284 +99,301 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <p id="module-soupsavvy.operators">Module for operators, which are alternative way to create composite selectors
+  <section id="module-soupsavvy.operators">
+<span id="operators"></span><h1>operators<a class="headerlink" href="#module-soupsavvy.operators" title="Link to this heading"></a></h1>
+<p>Module for operators, which are alternative way to create composite selectors
 by combining multiple of them in particular way.</p>
 <section id="contains">
-<h1>Contains<a class="headerlink" href="#contains" title="Link to this heading"></a></h1>
+<h2>Contains<a class="headerlink" href="#contains" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><a href="#id30"><span class="problematic" id="id31">is_</span></a>: function to create SelectorList from multiple selectors</p></li>
-<li><p>where: alias for <a href="#id32"><span class="problematic" id="id33">is_</span></a>, no difference in behavior in scraping context</p></li>
-<li><p><a href="#id34"><span class="problematic" id="id35">or_</span></a>: alias for <a href="#id36"><span class="problematic" id="id37">is_</span></a>, no difference in behavior in scraping context</p></li>
-<li><p><a href="#id38"><span class="problematic" id="id39">not_</span></a>: function to create NotSelector from multiple selectors</p></li>
-<li><p><a href="#id40"><span class="problematic" id="id41">and_</span></a>: function to create AndSelector from multiple selectors</p></li>
-<li><p>has: function to create HasSelector from multiple selectors</p></li>
-<li><p>xor: function to create XORSelector from multiple selectors</p></li>
+<li><p><cite>is_</cite> - function to create <cite>SelectorList</cite> from multiple selectors</p></li>
+<li><p><cite>where</cite> - alias for <cite>is_</cite>, no difference in behavior in scraping context</p></li>
+<li><p><cite>or_</cite> - alias for <cite>is_</cite>, no difference in behavior in scraping context</p></li>
+<li><p><cite>not_</cite> - function to create <cite>NotSelector</cite> from multiple selectors</p></li>
+<li><p><cite>and_</cite> - function to create <cite>AndSelector</cite> from multiple selectors</p></li>
+<li><p><cite>has</cite> - function to create <cite>HasSelector</cite> from multiple selectors</p></li>
+<li><p><cite>xor</cite> - function to create <cite>XORSelector</cite> from multiple selectors</p></li>
 </ul>
 <p>These utils do not brings extra functionality into the package, but they can be
 used for convenience and readability in some cases.</p>
 </section>
 <dl class="py function">
-<dt class="sig sig-object py" id="soupsavvy.operators.and_">
-<span class="sig-name descname"><span class="pre">and_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.AndSelector" title="soupsavvy.selectors.logical.AndSelector"><span class="pre">AndSelector</span></a></span></span><a class="reference internal" href="_modules/soupsavvy/operators.html#and_"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operators.and_" title="Link to this definition"></a></dt>
-<dd><p>Returns an intersection of multiple soup selectors.
-Element must match all of them to be selected.</p>
+<dt class="sig sig-object py" id="soupsavvy.operators.is_">
+<span class="sig-name descname"><span class="pre">is_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.SelectorList" title="soupsavvy.selectors.logical.SelectorList"><span class="pre">SelectorList</span></a></span></span><a class="reference internal" href="_modules/soupsavvy/operators.html#is_"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operators.is_" title="Link to this definition"></a></dt>
+<dd><p>Returns an union of multiple soup selectors.</p>
 <section id="parameters">
-<h1>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h1>
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>selectors: SoupSelector</dt><dd><p>SoupSelector objects to match accepted as positional arguments.
-At least two objects are required per AndSelector class requirements.</p>
+<dt>selectors: SoupSelector</dt><dd><p>At least two <cite>SoupSelector</cite> objects to match accepted as positional arguments.</p>
 </dd>
 </dl>
 </section>
 <section id="returns">
-<h1>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h1>
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>AndSelector</dt><dd><p>AndSelector object that represents intersection of provided selectors.</p>
+<dt>SelectorList</dt><dd><p><cite>SelectorList</cite> object that represents union of provided selectors.</p>
 </dd>
 </dl>
 </section>
 <section id="example">
-<h1>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">and_</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;widget&quot;</span><span class="p">))</span>
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">))</span>
+<span class="gp">... </span><span class="n">where</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>This is an equivalent of CSS selectors concatenation.</p>
+<p>This is CSS counterpart of <cite>selector list</cite>, <cite>:is()</cite> or <cite>:where</cite> pseudo-classes.</p>
 </section>
 <section id="id1">
-<h1>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span><span class="o">.</span><span class="n">class1</span><span class="c1">#id1 { color: red; }</span>
+<h2>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">h1</span><span class="p">,</span> <span class="n">h1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="ow">is</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="n">where</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="aliases">
+<h2>Aliases<a class="headerlink" href="#aliases" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><cite>where</cite> - to imitate css <cite>:where</cite> pseudo-class</p></li>
+<li><p><cite>or_</cite> - to imitate logical operator <cite>or</cite></p></li>
+</ul>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<p>For more information on css counterparts, see:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:is">https://developer.mozilla.org/en-US/docs/Web/CSS/:is</a></p></li>
+<li><p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:where">https://developer.mozilla.org/en-US/docs/Web/CSS/:where</a></p></li>
+<li><p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list">https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list</a></p></li>
+</ul>
 </section>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="soupsavvy.operators.has">
-<span class="sig-name descname"><span class="pre">has</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.HasSelector" title="soupsavvy.selectors.relative.HasSelector"><span class="pre">HasSelector</span></a></span></span><a class="reference internal" href="_modules/soupsavvy/operators.html#has"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operators.has" title="Link to this definition"></a></dt>
-<dd><p>Returns HasSelector whose behavior imitate css :has() pseudo-class,
-that represents elements if any of the relative selectors that are passed as an argument
-match at least one element when anchored against this element.</p>
+<dt class="sig sig-object py" id="soupsavvy.operators.where">
+<span class="sig-name descname"><span class="pre">where</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.SelectorList" title="soupsavvy.selectors.logical.SelectorList"><span class="pre">SelectorList</span></a></span></span><a class="headerlink" href="#soupsavvy.operators.where" title="Link to this definition"></a></dt>
+<dd><p>Returns an union of multiple soup selectors.</p>
 <section id="id2">
-<h1>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h1>
+<h2>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>selectors: SoupSelector</dt><dd><p>SoupSelector objects to match accepted as positional arguments.
-At least two objects are required per AndSelector class requirements.</p>
+<dt>selectors: SoupSelector</dt><dd><p>At least two <cite>SoupSelector</cite> objects to match accepted as positional arguments.</p>
 </dd>
 </dl>
 </section>
 <section id="id3">
-<h1>Returns<a class="headerlink" href="#id3" title="Link to this heading"></a></h1>
+<h2>Returns<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>HasSelector</dt><dd><p>HasSelector object that represents :has() pseudo-class behavior.</p>
+<dt>SelectorList</dt><dd><p><cite>SelectorList</cite> object that represents union of provided selectors.</p>
 </dd>
 </dl>
 </section>
 <section id="id4">
-<h1>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">has_</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
+<h2>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">))</span>
+<span class="gp">... </span><span class="n">where</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>This is an equivalent of CSS :has() pseudo-class:</p>
+<p>This is CSS counterpart of <cite>selector list</cite>, <cite>:is()</cite> or <cite>:where</cite> pseudo-classes.</p>
 </section>
 <section id="id5">
-<h1>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="n">has</span><span class="p">(</span><span class="n">div</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
+<h2>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">h1</span><span class="p">,</span> <span class="n">h1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="ow">is</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="n">where</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For now only default combinator (descendant) for ‘relative’ selectors is supported,
-so imitating css behavior of this kind is not possible yet.</p>
 </section>
 <section id="id6">
-<h1>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="n">has</span><span class="p">(</span><span class="o">+</span> <span class="n">div</span><span class="p">,</span> <span class="o">&gt;</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
-</pre></div>
-</div>
+<h2>Aliases<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><cite>where</cite> - to imitate css <cite>:where</cite> pseudo-class</p></li>
+<li><p><cite>or_</cite> - to imitate logical operator <cite>or</cite></p></li>
+</ul>
 </section>
-<section id="notes">
-<h1>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h1>
-<p>For more information on :has() pseudo-class see:
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:has">https://developer.mozilla.org/en-US/docs/Web/CSS/:has</a></p>
+<section id="id7">
+<h2>Notes<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<p>For more information on css counterparts, see:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:is">https://developer.mozilla.org/en-US/docs/Web/CSS/:is</a></p></li>
+<li><p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:where">https://developer.mozilla.org/en-US/docs/Web/CSS/:where</a></p></li>
+<li><p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list">https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list</a></p></li>
+</ul>
 </section>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="soupsavvy.operators.is_">
-<span class="sig-name descname"><span class="pre">is_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.SelectorList" title="soupsavvy.selectors.combinators.SelectorList"><span class="pre">SelectorList</span></a></span></span><a class="reference internal" href="_modules/soupsavvy/operators.html#is_"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operators.is_" title="Link to this definition"></a></dt>
-<dd><p>Returns an union of multiple soup selectors.
-Provides elements matching any of the selectors in the union.</p>
-<section id="id7">
-<h1>Parameters<a class="headerlink" href="#id7" title="Link to this heading"></a></h1>
-<dl class="simple">
-<dt>selectors: SoupSelector</dt><dd><p>SoupSelector objects to match accepted as positional arguments.
-At least two objects are required per SelectorList class requirements.</p>
-</dd>
-</dl>
-</section>
+<dt class="sig sig-object py" id="soupsavvy.operators.or_">
+<span class="sig-name descname"><span class="pre">or_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.SelectorList" title="soupsavvy.selectors.logical.SelectorList"><span class="pre">SelectorList</span></a></span></span><a class="headerlink" href="#soupsavvy.operators.or_" title="Link to this definition"></a></dt>
+<dd><p>Returns an union of multiple soup selectors.</p>
 <section id="id8">
-<h1>Returns<a class="headerlink" href="#id8" title="Link to this heading"></a></h1>
+<h2>Parameters<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>SelectorList</dt><dd><p>SelectorList object that represents union of provided selectors.</p>
+<dt>selectors: SoupSelector</dt><dd><p>At least two <cite>SoupSelector</cite> objects to match accepted as positional arguments.</p>
 </dd>
 </dl>
 </section>
 <section id="id9">
-<h1>Example<a class="headerlink" href="#id9" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">where</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>This is an equivalent of CSS comma selector (selector list) or :is() selector.
-Function is also aliased by ‘where’ function that imitate css :where pseudo-class.
-In css the main difference is their specificity, but in this context they are the same.</p>
+<h2>Returns<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>SelectorList</dt><dd><p><cite>SelectorList</cite> object that represents union of provided selectors.</p>
+</dd>
+</dl>
 </section>
 <section id="id10">
-<h1>Example<a class="headerlink" href="#id10" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">h1</span><span class="p">,</span> <span class="n">h1</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="ow">is</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="n">where</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
+<h2>Example<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">))</span>
+<span class="gp">... </span><span class="n">where</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This is CSS counterpart of <cite>selector list</cite>, <cite>:is()</cite> or <cite>:where</cite> pseudo-classes.</p>
+</section>
+<section id="id11">
+<h2>Example<a class="headerlink" href="#id11" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">h1</span><span class="p">,</span> <span class="n">h1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="ow">is</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="n">where</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="id11">
-<h1>Notes<a class="headerlink" href="#id11" title="Link to this heading"></a></h1>
-<p>For more information on selector list see:
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:is">https://developer.mozilla.org/en-US/docs/Web/CSS/:is</a>
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:where">https://developer.mozilla.org/en-US/docs/Web/CSS/:where</a>
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list">https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list</a></p>
+<section id="id12">
+<h2>Aliases<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><cite>where</cite> - to imitate css <cite>:where</cite> pseudo-class</p></li>
+<li><p><cite>or_</cite> - to imitate logical operator <cite>or</cite></p></li>
+</ul>
+</section>
+<section id="id13">
+<h2>Notes<a class="headerlink" href="#id13" title="Link to this heading"></a></h2>
+<p>For more information on css counterparts, see:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:is">https://developer.mozilla.org/en-US/docs/Web/CSS/:is</a></p></li>
+<li><p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:where">https://developer.mozilla.org/en-US/docs/Web/CSS/:where</a></p></li>
+<li><p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list">https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list</a></p></li>
+</ul>
 </section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="soupsavvy.operators.not_">
 <span class="sig-name descname"><span class="pre">not_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.NotSelector" title="soupsavvy.selectors.logical.NotSelector"><span class="pre">NotSelector</span></a></span></span><a class="reference internal" href="_modules/soupsavvy/operators.html#not_"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operators.not_" title="Link to this definition"></a></dt>
-<dd><p>Returns an negation of multiple soup selectors.
-NotSelector represents elements that do not match a list of selectors.</p>
-<section id="id12">
-<h1>Parameters<a class="headerlink" href="#id12" title="Link to this heading"></a></h1>
-<dl class="simple">
-<dt>selectors: SoupSelector</dt><dd><p>SoupSelector objects to negate match accepted as positional arguments.</p>
-</dd>
-</dl>
-</section>
-<section id="id13">
-<h1>Returns<a class="headerlink" href="#id13" title="Link to this heading"></a></h1>
-<dl class="simple">
-<dt>NotSelector</dt><dd><p>NotSelector object that represents negation of provided selectors.</p>
-</dd>
-</dl>
-</section>
+<dd><p>Returns the negation of multiple soup selectors.</p>
 <section id="id14">
-<h1>Example<a class="headerlink" href="#id14" title="Link to this heading"></a></h1>
+<h2>Parameters<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>selectors: SoupSelector</dt><dd><p><cite>SoupSelector</cite> object(s) to negate match accepted as positional arguments.</p>
+</dd>
+</dl>
+</section>
+<section id="id15">
+<h2>Returns<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>NotSelector</dt><dd><p><cite>NotSelector</cite> object that represents negation of provided selector(s).</p>
+</dd>
+</dl>
+</section>
+<section id="id16">
+<h2>Example<a class="headerlink" href="#id16" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">not_</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>This is an equivalent of CSS :not() negation pseudo-class,
-that represents elements that do not match a list of selectors</p>
+<p>This is the counterpart of CSS <cite>:not()</cite> negation pseudo-class,
+that represents elements that do not match a list of selectors.</p>
 </section>
-<section id="id15">
-<h1>Example<a class="headerlink" href="#id15" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="ow">not</span><span class="p">(</span><span class="n">div</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
+<section id="id17">
+<h2>Example<a class="headerlink" href="#id17" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="ow">not</span><span class="p">(</span><span class="n">div</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="id16">
-<h1>Notes<a class="headerlink" href="#id16" title="Link to this heading"></a></h1>
-<p>For more information on selector list see:
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:not">https://developer.mozilla.org/en-US/docs/Web/CSS/:not</a></p>
-</section>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="soupsavvy.operators.or_">
-<span class="sig-name descname"><span class="pre">or_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.SelectorList" title="soupsavvy.selectors.combinators.SelectorList"><span class="pre">SelectorList</span></a></span></span><a class="headerlink" href="#soupsavvy.operators.or_" title="Link to this definition"></a></dt>
-<dd><p>Returns an union of multiple soup selectors.
-Provides elements matching any of the selectors in the union.</p>
-<section id="id17">
-<h1>Parameters<a class="headerlink" href="#id17" title="Link to this heading"></a></h1>
-<dl class="simple">
-<dt>selectors: SoupSelector</dt><dd><p>SoupSelector objects to match accepted as positional arguments.
-At least two objects are required per SelectorList class requirements.</p>
-</dd>
-</dl>
 </section>
 <section id="id18">
-<h1>Returns<a class="headerlink" href="#id18" title="Link to this heading"></a></h1>
-<dl class="simple">
-<dt>SelectorList</dt><dd><p>SelectorList object that represents union of provided selectors.</p>
-</dd>
-</dl>
-</section>
-<section id="id19">
-<h1>Example<a class="headerlink" href="#id19" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">where</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>This is an equivalent of CSS comma selector (selector list) or :is() selector.
-Function is also aliased by ‘where’ function that imitate css :where pseudo-class.
-In css the main difference is their specificity, but in this context they are the same.</p>
-</section>
-<section id="id20">
-<h1>Example<a class="headerlink" href="#id20" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">h1</span><span class="p">,</span> <span class="n">h1</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="ow">is</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="n">where</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
-</pre></div>
-</div>
-</section>
-<section id="id21">
-<h1>Notes<a class="headerlink" href="#id21" title="Link to this heading"></a></h1>
-<p>For more information on selector list see:
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:is">https://developer.mozilla.org/en-US/docs/Web/CSS/:is</a>
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:where">https://developer.mozilla.org/en-US/docs/Web/CSS/:where</a>
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list">https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list</a></p>
+<h2>Notes<a class="headerlink" href="#id18" title="Link to this heading"></a></h2>
+<p>For more information on <cite>:not()</cite> pseudo-class, see:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:not">https://developer.mozilla.org/en-US/docs/Web/CSS/:not</a></p></li>
+</ul>
 </section>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="soupsavvy.operators.where">
-<span class="sig-name descname"><span class="pre">where</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.SelectorList" title="soupsavvy.selectors.combinators.SelectorList"><span class="pre">SelectorList</span></a></span></span><a class="headerlink" href="#soupsavvy.operators.where" title="Link to this definition"></a></dt>
-<dd><p>Returns an union of multiple soup selectors.
-Provides elements matching any of the selectors in the union.</p>
-<section id="id22">
-<h1>Parameters<a class="headerlink" href="#id22" title="Link to this heading"></a></h1>
+<dt class="sig sig-object py" id="soupsavvy.operators.and_">
+<span class="sig-name descname"><span class="pre">and_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.AndSelector" title="soupsavvy.selectors.logical.AndSelector"><span class="pre">AndSelector</span></a></span></span><a class="reference internal" href="_modules/soupsavvy/operators.html#and_"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operators.and_" title="Link to this definition"></a></dt>
+<dd><p>Returns an intersection of multiple soup selectors.
+Element must match all of them to be selected.</p>
+<section id="id19">
+<h2>Parameters<a class="headerlink" href="#id19" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>selectors: SoupSelector</dt><dd><p>SoupSelector objects to match accepted as positional arguments.
-At least two objects are required per SelectorList class requirements.</p>
+<dt>selectors: SoupSelector</dt><dd><p>At least two <cite>SoupSelector</cite> objects to match accepted as positional arguments.</p>
 </dd>
 </dl>
+</section>
+<section id="id20">
+<h2>Returns<a class="headerlink" href="#id20" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>AndSelector</dt><dd><p><cite>AndSelector</cite> object that represents intersection of provided selectors.</p>
+</dd>
+</dl>
+</section>
+<section id="id21">
+<h2>Example<a class="headerlink" href="#id21" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">and_</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;widget&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This is the counterpart of CSS compound selector (selector concatenation):</p>
+</section>
+<section id="id22">
+<h2>Example<a class="headerlink" href="#id22" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">div</span><span class="o">.</span><span class="n">widget</span>
+</pre></div>
+</div>
 </section>
 <section id="id23">
-<h1>Returns<a class="headerlink" href="#id23" title="Link to this heading"></a></h1>
+<h2>Notes<a class="headerlink" href="#id23" title="Link to this heading"></a></h2>
+<p>For more information on compound selectors, see:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors/Selector_structure#compound_selector">https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors/Selector_structure#compound_selector</a></p></li>
+</ul>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="soupsavvy.operators.has">
+<span class="sig-name descname"><span class="pre">has</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.HasSelector" title="soupsavvy.selectors.relative.HasSelector"><span class="pre">HasSelector</span></a></span></span><a class="reference internal" href="_modules/soupsavvy/operators.html#has"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operators.has" title="Link to this definition"></a></dt>
+<dd><p>Returns <cite>HasSelector</cite>, whose behavior imitate css <cite>:has()</cite> pseudo-class,
+that represents elements if any of the relative selectors that are passed as an argument
+match at least one element when anchored against this element.</p>
+<section id="id24">
+<h2>Parameters<a class="headerlink" href="#id24" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>SelectorList</dt><dd><p>SelectorList object that represents union of provided selectors.</p>
+<dt>selectors: SoupSelector</dt><dd><p><cite>SoupSelector</cite> object(s) to match accepted as positional arguments.</p>
 </dd>
 </dl>
 </section>
-<section id="id24">
-<h1>Example<a class="headerlink" href="#id24" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">where</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>This is an equivalent of CSS comma selector (selector list) or :is() selector.
-Function is also aliased by ‘where’ function that imitate css :where pseudo-class.
-In css the main difference is their specificity, but in this context they are the same.</p>
-</section>
 <section id="id25">
-<h1>Example<a class="headerlink" href="#id25" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">h1</span><span class="p">,</span> <span class="n">h1</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="ow">is</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="n">where</span><span class="p">(</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">)</span> <span class="p">{</span> <span class="n">color</span><span class="p">:</span> <span class="n">red</span><span class="p">;</span> <span class="p">}</span>
-</pre></div>
-</div>
+<h2>Returns<a class="headerlink" href="#id25" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>HasSelector</dt><dd><p><cite>HasSelector</cite> object that represents <cite>:has()</cite> pseudo-class behavior.</p>
+</dd>
+</dl>
 </section>
 <section id="id26">
-<h1>Notes<a class="headerlink" href="#id26" title="Link to this heading"></a></h1>
-<p>For more information on selector list see:
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:is">https://developer.mozilla.org/en-US/docs/Web/CSS/:is</a>
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:where">https://developer.mozilla.org/en-US/docs/Web/CSS/:where</a>
-<a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list">https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list</a></p>
+<h2>Example<a class="headerlink" href="#id26" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">has_</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This is the counterpart of CSS <cite>:has()</cite> pseudo-class:</p>
+</section>
+<section id="id27">
+<h2>Example<a class="headerlink" href="#id27" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">:</span><span class="n">has</span><span class="p">(</span><span class="n">div</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id28">
+<h2>Notes<a class="headerlink" href="#id28" title="Link to this heading"></a></h2>
+<p>For more information on <cite>:has()</cite> pseudo-class, see:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:has">https://developer.mozilla.org/en-US/docs/Web/CSS/:has</a></p></li>
+</ul>
 </section>
 </dd></dl>
 
@@ -372,39 +402,51 @@ In css the main difference is their specificity, but in this context they are th
 <span class="sig-name descname"><span class="pre">xor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.XORSelector" title="soupsavvy.selectors.logical.XORSelector"><span class="pre">XORSelector</span></a></span></span><a class="reference internal" href="_modules/soupsavvy/operators.html#xor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operators.xor" title="Link to this definition"></a></dt>
 <dd><p>Returns an symmetric difference of multiple soup selectors.
 Element must match exactly one of them to be selected.</p>
-<section id="id27">
-<h1>Parameters<a class="headerlink" href="#id27" title="Link to this heading"></a></h1>
-<dl class="simple">
-<dt>selectors: SoupSelector</dt><dd><p>SoupSelector objects to match accepted as positional arguments.
-At least two objects are required per XORSelector class requirements.</p>
-</dd>
-</dl>
-</section>
-<section id="id28">
-<h1>Returns<a class="headerlink" href="#id28" title="Link to this heading"></a></h1>
-<dl class="simple">
-<dt>XORSelector</dt><dd><p>XORSelector object that represents symmetric difference of provided selectors.</p>
-</dd>
-</dl>
-</section>
 <section id="id29">
-<h1>Example<a class="headerlink" href="#id29" title="Link to this heading"></a></h1>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xor</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">AttributeSelector</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;widget&quot;</span><span class="p">))</span>
+<h2>Parameters<a class="headerlink" href="#id29" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>selectors: SoupSelector</dt><dd><p>At least two <cite>SoupSelector</cite> objects to match accepted as positional arguments.</p>
+</dd>
+</dl>
+</section>
+<section id="id30">
+<h2>Returns<a class="headerlink" href="#id30" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>XORSelector</dt><dd><p><cite>XORSelector</cite> object that represents symmetric difference of provided selectors.</p>
+</dd>
+</dl>
+</section>
+<section id="id31">
+<h2>Example<a class="headerlink" href="#id31" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xor</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;widget&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This is a shortcut for defining <cite>XOR</cite> operation between two selectors like this:</p>
+</section>
+<section id="id32">
+<h2>Example<a class="headerlink" href="#id32" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">selector1</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">selector2</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;widget&quot;</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">xor</span> <span class="o">=</span> <span class="p">(</span><span class="n">selector1</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="n">selector2</span><span class="p">))</span> <span class="o">|</span> <span class="p">((</span><span class="o">~</span><span class="n">selector1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">selector2</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 </dd></dl>
 
+</section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="soupsavvy.testing.generators.generators.html" class="btn btn-neutral float-left" title="testing.generators.generators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="demos/use_cases.html" class="btn btn-neutral float-right" title="Use Cases" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -87,16 +88,13 @@
              
   <h1>Source code for soupsavvy.selectors.attributes</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Module for selectors that are based on HTML element attributes.</span>
-
-<span class="sd">They are used for selection of various elements in the markup,</span>
-<span class="sd">based on attributes values.</span>
+<span class="sd">Module with selectors that search for elements based on their attributes.</span>
 
 <span class="sd">Classes</span>
 <span class="sd">-------</span>
-<span class="sd">AttributeSelector - Selects element for any attribute value.</span>
-<span class="sd">IdSelector - Selects element based on &#39;id&#39; attribute value.</span>
-<span class="sd">ClassSelector - Selects element based on &#39;class&#39; attribute value.</span>
+<span class="sd">- `AttributeSelector` - Selects element based on any attribute value.</span>
+<span class="sd">- `IdSelector` - Selects element based on &#39;id&#39; attribute value.</span>
+<span class="sd">- `ClassSelector` - Selects element based on &#39;class&#39; attribute value.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">re</span>
@@ -115,34 +113,47 @@
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">AttributeSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class representing attribute of the HTML element.</span>
-<span class="sd">    `soupsavvy` counterpart of css attribute selectors, where any substring value</span>
-<span class="sd">    syntax is handled by regex pattern matching.</span>
+<span class="sd">    Selector for searching element based on its attribute value.</span>
+<span class="sd">    Counterpart of css attribute selectors, that extends its capability</span>
+<span class="sd">    with regex pattern matching.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; AttributeSelector(name=&quot;class&quot;, value=&quot;widget&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; AttributeSelector(name=&quot;role&quot;, value=&quot;widget&quot;)</span>
 
-<span class="sd">    matches all elements that have &#39;class&#39; attribute with value &quot;widget&quot;.</span>
+<span class="sd">    matches all elements that have &#39;role&#39; attribute with value &quot;widget&quot;.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;Hello World&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div role=&quot;widget&quot;&gt;Hello World&lt;/div&gt; ✔️</span>
 <span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;menu&quot;&gt;Hello World&lt;/div&gt; ❌</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div role=&quot;menu&quot;&gt;Hello World&lt;/div&gt; ❌</span>
+
+<span class="sd">    CSS counterpart can be represented as:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; [role=&quot;widget&quot;]</span>
+
+<span class="sd">    In case of using regex pattern, `re.search` is used to match the attribute value.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; AttributeSelector(name=&quot;href&quot;, value=re.compile(r&quot;wikipedia&quot;))</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    name : str</span>
 <span class="sd">        HTML element attribute name ex. &quot;class&quot;, &quot;href&quot;</span>
 <span class="sd">    value : str | Pattern, optional</span>
-<span class="sd">        Value of the attribute, like a class name. Can be regex pattern,</span>
-<span class="sd">        which results in using re.search to match the attribute value.</span>
+<span class="sd">        Value of the attribute to match.</span>
 <span class="sd">        By default None, if not provided, default pattern matching any sequence</span>
 <span class="sd">        of characters is used.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    For more information about attribute selectors see:</span>
+<span class="sd">    For more information about attribute selectors, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -150,7 +161,7 @@
     <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PatternType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets pattern attribute used in SoupSelector find operations.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets pattern attribute used in `SoupSelector` find operations.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_pattern</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_parse_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PatternType</span><span class="p">:</span>
@@ -185,17 +196,21 @@
 
 
 
-<span class="k">class</span> <span class="nc">_SpecificAttributeSelector</span><span class="p">(</span><span class="n">AttributeSelector</span><span class="p">):</span>
+<div class="viewcode-block" id="SpecificAttributeSelector">
+<a class="viewcode-back" href="../../../soupsavvy.selectors.attributes.html#soupsavvy.SpecificAttributeSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">SpecificAttributeSelector</span><span class="p">(</span><span class="n">AttributeSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for specific attribute selectors,</span>
-<span class="sd">    that wraps AttributeSelector with default attribute name for user convenience.</span>
+<span class="sd">    that wraps `AttributeSelector` with default attribute name for user convenience.</span>
 
 <span class="sd">    Child classes should define _NAME attribute with default attribute name,</span>
-<span class="sd">    that will be used in the AttributeSelector.</span>
+<span class="sd">    that will be used in the `AttributeSelector`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_NAME</span><span class="p">:</span> <span class="nb">str</span>
 
+<div class="viewcode-block" id="SpecificAttributeSelector.__init__">
+<a class="viewcode-back" href="../../../soupsavvy.selectors.attributes.html#soupsavvy.SpecificAttributeSelector.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PatternType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes specific attribute selector with default attribute name.</span>
@@ -203,21 +218,20 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        value : str | Pattern, optional</span>
-<span class="sd">            Value of the attribute, like a class name. Can be regex pattern,</span>
-<span class="sd">            which results in using re.search to match the attribute value.</span>
+<span class="sd">            Value of the attribute to match.</span>
 <span class="sd">            By default None, if not provided, default pattern matching any sequence</span>
 <span class="sd">            of characters is used.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_NAME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_NAME</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span></div>
+</div>
+
 
 
 <div class="viewcode-block" id="IdSelector">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.attributes.html#soupsavvy.IdSelector">[docs]</a>
-<span class="k">class</span> <span class="nc">IdSelector</span><span class="p">(</span><span class="n">_SpecificAttributeSelector</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">IdSelector</span><span class="p">(</span><span class="n">SpecificAttributeSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Component for selecting HTML elements based on &#39;id&#39; attribute value.</span>
-<span class="sd">    Convenience wrapper for AttributeSelector with default attribute name &#39;id&#39;,</span>
-<span class="sd">    as its use is very common in CSS selectors.</span>
+<span class="sd">    Specific `AttributeSelector` for matching elements based on &#39;id&#39; attribute value.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -230,9 +244,27 @@
 <span class="sd">    &gt;&gt;&gt; &lt;div id=&quot;main&quot;&gt;Hello World&lt;/div&gt; ✔️</span>
 <span class="sd">    &gt;&gt;&gt; &lt;div id=&quot;content&quot;&gt;Hello World&lt;/div&gt; ❌</span>
 
+<span class="sd">    `IdSelector` is a convenience wrapper for `AttributeSelector`,</span>
+<span class="sd">    thus example above is equivalent to using:</span>
+
+<span class="sd">    &gt;&gt;&gt; AttributeSelector(name=&quot;id&quot;, value=&quot;main&quot;)</span>
+
+<span class="sd">    CSS counterpart can be represented as:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; #main</span>
+
+<span class="sd">    In case of using regex pattern, `re.search` is used to match the attribute value.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; IdSelector(re.compile(r&quot;content[0-9]+&quot;))</span>
+
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    For more information about id attribute see:</span>
+<span class="sd">    For more information about id attribute, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -242,26 +274,42 @@
 
 <div class="viewcode-block" id="ClassSelector">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.attributes.html#soupsavvy.ClassSelector">[docs]</a>
-<span class="k">class</span> <span class="nc">ClassSelector</span><span class="p">(</span><span class="n">_SpecificAttributeSelector</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">ClassSelector</span><span class="p">(</span><span class="n">SpecificAttributeSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Component for selecting HTML elements based on &#39;class&#39; attribute value.</span>
-<span class="sd">    Convenience wrapper for AttributeSelector with default attribute name &#39;class&#39;,</span>
-<span class="sd">    as its use is very common in CSS selectors.</span>
+<span class="sd">    Specific `AttributeSelector` for matching elements based on &#39;class&#39; attribute value.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; ClassSelector(&quot;main&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; ClassSelector(&quot;widget&quot;)</span>
 
-<span class="sd">    matches all elements that have &#39;class&#39; attribute with value &quot;main&quot;.</span>
+<span class="sd">    matches all elements that have &#39;class&#39; attribute with value &quot;widget&quot;.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;main&quot;&gt;Hello World&lt;/div&gt; ✔️</span>
+<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;Hello World&lt;/div&gt; ✔️</span>
 <span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;content&quot;&gt;Hello World&lt;/div&gt; ❌</span>
+
+<span class="sd">    `ClassSelector` is a convenience wrapper for `AttributeSelector`,</span>
+<span class="sd">    thus example above is equivalent to using:</span>
+
+<span class="sd">    &gt;&gt;&gt; AttributeSelector(name=&quot;class&quot;, value=&quot;widget&quot;)</span>
+
+<span class="sd">    CSS counterpart can be represented as:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; .widget</span>
+
+<span class="sd">    In case of using regex pattern, `re.search` is used to match the attribute value.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; ClassSelector(re.compile(r&quot;nav&quot;))</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    For more information about class attribute see:</span>
+<span class="sd">    For more information about class attribute, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -276,7 +324,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -87,13 +88,14 @@
              
   <h1>Source code for soupsavvy.selectors.general</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Module for general purpose selectors.</span>
+<span class="sd">Module with miscellaneous selectors.</span>
 
 <span class="sd">Classes</span>
 <span class="sd">-------</span>
-<span class="sd">TypeSelector - combines type and attribute selectors</span>
-<span class="sd">PatternSelector - matches elements based on text content and selector</span>
-<span class="sd">UniversalSelector - universal selector (*)</span>
+<span class="sd">- `TypeSelector` - combines type and attribute selectors</span>
+<span class="sd">- `PatternSelector` - matches elements based on text content and selector</span>
+<span class="sd">- `UniversalSelector` - universal selector (*)</span>
+<span class="sd">- `SelfSelector` - matches the element itself</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">itertools</span>
@@ -113,8 +115,8 @@
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">TypeSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">,</span> <span class="n">SelectableCSS</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Component for finding elements based on tag name.</span>
-<span class="sd">    `soupsavvy` counterpart of css type selector.</span>
+<span class="sd">    Selector for finding elements based on tag name (type).</span>
+<span class="sd">    Counterpart of css type selectors.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -127,26 +129,28 @@
 <span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;Hello World&lt;/div&gt; ✔️</span>
 <span class="sd">    &gt;&gt;&gt; &lt;a href=&quot;/shop&quot;&gt;Hello World&lt;/a&gt; ❌</span>
 
-<span class="sd">    It&#39;s soupsavvy counterpart of passing name to bs4 find methods.</span>
+<span class="sd">    CSS counterpart can be represented as:</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; soup.find_all(&quot;div&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; div</span>
 
-<span class="sd">    Returns the same result as:</span>
+<span class="sd">    And can be retrieved with `css` property.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; TypeSelector(&quot;div&quot;).find_all(soup)</span>
+<span class="sd">    &gt;&gt;&gt; TypeSelector(&quot;div&quot;).css</span>
+<span class="sd">    &quot;div&quot;</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    name : str</span>
-<span class="sd">        HTML tag name ex. &quot;a&quot;, &quot;div&quot;.</span>
+<span class="sd">        Tag name of the element ex. &quot;a&quot;, &quot;div&quot;.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    For more information about type selectors see:</span>
+<span class="sd">    For more information about type selectors, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -183,8 +187,7 @@
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">PatternSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class representing HTML element with specific string pattern for text.</span>
-<span class="sd">    Provides elements matching with text matching the pattern.</span>
+<span class="sd">    Selector for finding elements based on text content pattern.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -198,40 +201,35 @@
 <span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello Python&lt;/div&gt; ❌</span>
 <span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello World 3&lt;/div&gt; ❌</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    pattern: str | Pattern</span>
-<span class="sd">        A pattern to match text of the element. Can be a string for exact match</span>
-<span class="sd">        or Pattern for any more complex regular expressions.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    Selector uses re.search function to match text content</span>
-<span class="sd">    if compiled regex is passed as pattern.</span>
-<span class="sd">    Providing &#39;re.compile(r&quot;[0-9]&quot;)&#39; as pattern will much any element with a digit in text.</span>
+<span class="sd">    In case of using regex pattern, `re.search` is used to match the attribute value.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; import re</span>
-<span class="sd">    &gt;&gt;&gt; PatternSelector(pattern=re.compile(r&quot;[0-9]&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; PatternSelector(pattern=re.compile(r&quot;[0-9]+&quot;))</span>
+
+<span class="sd">    matches all elements with text content containing at least one digit.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello World 123&lt;/div&gt; ✔️</span>
 <span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello World&lt;/div&gt; ❌</span>
 
-<span class="sd">    Due to bs4 implementation, element does not match the pattern if it has any children.</span>
-<span class="sd">    Only leaf nodes can be returned by PatternSelector find methods.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pattern: str | Pattern</span>
+<span class="sd">        Pattern to match text of the element. Can be a string for exact match</span>
+<span class="sd">        or `Pattern` for any more complex regular expressions.</span>
 
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello World&lt;span&gt;&lt;/span&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Due to `bs4` implementation, element does not match the pattern if it has any children.</span>
+<span class="sd">    Only leaf nodes can be returned by `PatternSelector` find methods.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">pattern</span><span class="p">:</span> <span class="n">ns</span><span class="o">.</span><span class="n">PatternType</span>
 
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets up compiled regex pattern used for SoupStrainer in find methods.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets up compiled regex pattern used for `SoupStrainer` in find methods.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_pattern</span> <span class="o">=</span> <span class="p">(</span>
             <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span>
         <span class="p">)</span>
@@ -260,21 +258,29 @@
 <span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">UniversalSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">,</span> <span class="n">SelectableCSS</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class representing a wildcard tag that matches ny and all types of elements</span>
-<span class="sd">    in html page.</span>
-
-<span class="sd">    UniversalSelector implements SelectableCSS interface with wildcard css selector &quot;*&quot;,</span>
-<span class="sd">    aka. universal selector, that matches all elements in html page.</span>
+<span class="sd">    Selector representing a wildcard pattern, that matches all elements in the html page.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; any_element = UniversalSelector()</span>
-<span class="sd">    &gt;&gt;&gt; any_element.selector</span>
+<span class="sd">    &gt;&gt;&gt; UniversalSelector()</span>
+
+<span class="sd">    CSS counterpart can be represented as:</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; *</span>
+
+<span class="sd">    And can be retrieved with `css` property.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; UniversalSelector().css</span>
 <span class="sd">    &quot;*&quot;</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    For more information on universal selector see:</span>
+<span class="sd">    For more information on universal selector, see:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -302,9 +308,9 @@
 
 <div class="viewcode-block" id="AnyTagSelector">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.general.html#soupsavvy.AnyTagSelector">[docs]</a>
-<span class="nd">@deprecated</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AnyTagSelector is deprecated, use &#39;UniversalSelector&#39; class instead.&quot;</span><span class="p">)</span>
+<span class="nd">@deprecated</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;AnyTagSelector&#39; is deprecated, use &#39;UniversalSelector&#39; class instead.&quot;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">AnyTagSelector</span><span class="p">(</span><span class="n">UniversalSelector</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Alias for UniversalSelector class. Deprecated component.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Alias for `UniversalSelector` class. Deprecated component.&quot;&quot;&quot;</span></div>
 
 
 
@@ -312,7 +318,7 @@
 <a class="viewcode-back" href="../../../soupsavvy.selectors.general.html#soupsavvy.SelfSelector">[docs]</a>
 <span class="k">class</span> <span class="nc">SelfSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class representing a selector that matches the element itself.</span>
+<span class="sd">    Selector matching only the element itself.</span>
 <span class="sd">    Convenience component that can be used for compatibility.</span>
 
 <span class="sd">    Example</span>
@@ -321,6 +327,8 @@
 
 <span class="sd">    always matches the tag that is passed to the find methods.</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
 <span class="sd">    Can be used in user-defined model for scope if element itself is the scope.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -348,7 +356,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

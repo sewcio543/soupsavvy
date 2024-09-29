@@ -8,7 +8,7 @@
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -23,8 +23,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Parameters" href="soupsavvy.models.base.html" />
-    <link rel="prev" title="Parameters" href="soupsavvy.selectors.relative.html" /> 
+    <link rel="next" title="models.base" href="soupsavvy.models.base.html" />
+    <link rel="prev" title="selectors.relative" href="soupsavvy.selectors.relative.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,30 +51,23 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.selectors.html">selectors</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">models</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html"><code class="docutils literal notranslate"><span class="pre">BaseModel</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field"><code class="docutils literal notranslate"><span class="pre">Field</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.MigrationSchema"><code class="docutils literal notranslate"><span class="pre">MigrationSchema</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.ModelMeta"><code class="docutils literal notranslate"><span class="pre">ModelMeta</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.post"><code class="docutils literal notranslate"><span class="pre">post()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html">Classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.All"><code class="docutils literal notranslate"><span class="pre">All</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Default"><code class="docutils literal notranslate"><span class="pre">Default</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper"><code class="docutils literal notranslate"><span class="pre">FieldWrapper</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Required"><code class="docutils literal notranslate"><span class="pre">Required</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html">models.base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html">models.wrappers</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-soupsavvy.models">Module contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.models.All"><code class="docutils literal notranslate"><span class="pre">All</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.All.find"><code class="docutils literal notranslate"><span class="pre">All.find()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-soupsavvy.models">Content</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#soupsavvy.models.BaseModel"><code class="docutils literal notranslate"><span class="pre">BaseModel</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.BaseModel.__init__"><code class="docutils literal notranslate"><span class="pre">BaseModel.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.BaseModel.attributes"><code class="docutils literal notranslate"><span class="pre">BaseModel.attributes</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.BaseModel.copy"><code class="docutils literal notranslate"><span class="pre">BaseModel.copy()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.BaseModel.find"><code class="docutils literal notranslate"><span class="pre">BaseModel.find()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.BaseModel.find_all"><code class="docutils literal notranslate"><span class="pre">BaseModel.find_all()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.BaseModel.migrate"><code class="docutils literal notranslate"><span class="pre">BaseModel.migrate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.BaseModel.copy"><code class="docutils literal notranslate"><span class="pre">BaseModel.copy()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.models.All"><code class="docutils literal notranslate"><span class="pre">All</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.All.find"><code class="docutils literal notranslate"><span class="pre">All.find()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#soupsavvy.models.Default"><code class="docutils literal notranslate"><span class="pre">Default</span></code></a><ul>
@@ -82,33 +75,34 @@
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Default.find"><code class="docutils literal notranslate"><span class="pre">Default.find()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.models.Field"><code class="docutils literal notranslate"><span class="pre">Field</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Field.__init__"><code class="docutils literal notranslate"><span class="pre">Field.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Field.compare"><code class="docutils literal notranslate"><span class="pre">Field.compare</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Field.find"><code class="docutils literal notranslate"><span class="pre">Field.find()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Field.find_all"><code class="docutils literal notranslate"><span class="pre">Field.find_all()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Field.migrate"><code class="docutils literal notranslate"><span class="pre">Field.migrate</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Field.repr"><code class="docutils literal notranslate"><span class="pre">Field.repr</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Field.selector"><code class="docutils literal notranslate"><span class="pre">Field.selector</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.models.MigrationSchema"><code class="docutils literal notranslate"><span class="pre">MigrationSchema</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.MigrationSchema.__init__"><code class="docutils literal notranslate"><span class="pre">MigrationSchema.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.MigrationSchema.params"><code class="docutils literal notranslate"><span class="pre">MigrationSchema.params</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.MigrationSchema.target"><code class="docutils literal notranslate"><span class="pre">MigrationSchema.target</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="#soupsavvy.models.Required"><code class="docutils literal notranslate"><span class="pre">Required</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Required.find"><code class="docutils literal notranslate"><span class="pre">Required.find()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#soupsavvy.models.post"><code class="docutils literal notranslate"><span class="pre">post()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.models.Field"><code class="docutils literal notranslate"><span class="pre">Field</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Field.selector"><code class="docutils literal notranslate"><span class="pre">Field.selector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Field.repr"><code class="docutils literal notranslate"><span class="pre">Field.repr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Field.compare"><code class="docutils literal notranslate"><span class="pre">Field.compare</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Field.migrate"><code class="docutils literal notranslate"><span class="pre">Field.migrate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Field.find_all"><code class="docutils literal notranslate"><span class="pre">Field.find_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Field.find"><code class="docutils literal notranslate"><span class="pre">Field.find()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.Field.__init__"><code class="docutils literal notranslate"><span class="pre">Field.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.models.MigrationSchema"><code class="docutils literal notranslate"><span class="pre">MigrationSchema</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.MigrationSchema.target"><code class="docutils literal notranslate"><span class="pre">MigrationSchema.target</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.MigrationSchema.params"><code class="docutils literal notranslate"><span class="pre">MigrationSchema.params</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.models.MigrationSchema.__init__"><code class="docutils literal notranslate"><span class="pre">MigrationSchema.__init__()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -151,107 +145,82 @@
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.base.html"><code class="docutils literal notranslate"><span class="pre">BaseModel</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.__init__"><code class="docutils literal notranslate"><span class="pre">BaseModel.__init__()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.attributes"><code class="docutils literal notranslate"><span class="pre">BaseModel.attributes</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.copy"><code class="docutils literal notranslate"><span class="pre">BaseModel.copy()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.find"><code class="docutils literal notranslate"><span class="pre">BaseModel.find()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.find_all"><code class="docutils literal notranslate"><span class="pre">BaseModel.find_all()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.migrate"><code class="docutils literal notranslate"><span class="pre">BaseModel.migrate()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.base.html">models.base</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.MigrationSchema"><code class="docutils literal notranslate"><span class="pre">MigrationSchema</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.MigrationSchema.target"><code class="docutils literal notranslate"><span class="pre">MigrationSchema.target</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.MigrationSchema.params"><code class="docutils literal notranslate"><span class="pre">MigrationSchema.params</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.MigrationSchema.__init__"><code class="docutils literal notranslate"><span class="pre">MigrationSchema.__init__()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field"><code class="docutils literal notranslate"><span class="pre">Field</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field.__init__"><code class="docutils literal notranslate"><span class="pre">Field.__init__()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field.compare"><code class="docutils literal notranslate"><span class="pre">Field.compare</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field.find"><code class="docutils literal notranslate"><span class="pre">Field.find()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field.find_all"><code class="docutils literal notranslate"><span class="pre">Field.find_all()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field.migrate"><code class="docutils literal notranslate"><span class="pre">Field.migrate</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field.repr"><code class="docutils literal notranslate"><span class="pre">Field.repr</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field.selector"><code class="docutils literal notranslate"><span class="pre">Field.selector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.post"><code class="docutils literal notranslate"><span class="pre">post()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field"><code class="docutils literal notranslate"><span class="pre">Field</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field.selector"><code class="docutils literal notranslate"><span class="pre">Field.selector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field.repr"><code class="docutils literal notranslate"><span class="pre">Field.repr</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field.compare"><code class="docutils literal notranslate"><span class="pre">Field.compare</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field.migrate"><code class="docutils literal notranslate"><span class="pre">Field.migrate</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field.find_all"><code class="docutils literal notranslate"><span class="pre">Field.find_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field.find"><code class="docutils literal notranslate"><span class="pre">Field.find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.Field.__init__"><code class="docutils literal notranslate"><span class="pre">Field.__init__()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.MigrationSchema"><code class="docutils literal notranslate"><span class="pre">MigrationSchema</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.MigrationSchema.__init__"><code class="docutils literal notranslate"><span class="pre">MigrationSchema.__init__()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.MigrationSchema.params"><code class="docutils literal notranslate"><span class="pre">MigrationSchema.params</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.MigrationSchema.target"><code class="docutils literal notranslate"><span class="pre">MigrationSchema.target</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.ModelMeta"><code class="docutils literal notranslate"><span class="pre">ModelMeta</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.ModelMeta.__init__"><code class="docutils literal notranslate"><span class="pre">ModelMeta.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.ModelMeta.scope"><code class="docutils literal notranslate"><span class="pre">ModelMeta.scope</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.ModelMeta.fields"><code class="docutils literal notranslate"><span class="pre">ModelMeta.fields</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.ModelMeta"><code class="docutils literal notranslate"><span class="pre">ModelMeta</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.ModelMeta.__init__"><code class="docutils literal notranslate"><span class="pre">ModelMeta.__init__()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.ModelMeta.fields"><code class="docutils literal notranslate"><span class="pre">ModelMeta.fields</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.ModelMeta.scope"><code class="docutils literal notranslate"><span class="pre">ModelMeta.scope</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel"><code class="docutils literal notranslate"><span class="pre">BaseModel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.__init__"><code class="docutils literal notranslate"><span class="pre">BaseModel.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.attributes"><code class="docutils literal notranslate"><span class="pre">BaseModel.attributes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.find"><code class="docutils literal notranslate"><span class="pre">BaseModel.find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.find_all"><code class="docutils literal notranslate"><span class="pre">BaseModel.find_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.migrate"><code class="docutils literal notranslate"><span class="pre">BaseModel.migrate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.copy"><code class="docutils literal notranslate"><span class="pre">BaseModel.copy()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.post"><code class="docutils literal notranslate"><span class="pre">post()</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.wrappers.html">Classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.All"><code class="docutils literal notranslate"><span class="pre">All</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.All.find"><code class="docutils literal notranslate"><span class="pre">All.find()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Default"><code class="docutils literal notranslate"><span class="pre">Default</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Default.__init__"><code class="docutils literal notranslate"><span class="pre">Default.__init__()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Default.find"><code class="docutils literal notranslate"><span class="pre">Default.find()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.wrappers.html">models.wrappers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper"><code class="docutils literal notranslate"><span class="pre">FieldWrapper</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper.__init__"><code class="docutils literal notranslate"><span class="pre">FieldWrapper.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper.selector"><code class="docutils literal notranslate"><span class="pre">FieldWrapper.selector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper.find_all"><code class="docutils literal notranslate"><span class="pre">FieldWrapper.find_all()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper"><code class="docutils literal notranslate"><span class="pre">FieldWrapper</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper.__init__"><code class="docutils literal notranslate"><span class="pre">FieldWrapper.__init__()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper.find_all"><code class="docutils literal notranslate"><span class="pre">FieldWrapper.find_all()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper.selector"><code class="docutils literal notranslate"><span class="pre">FieldWrapper.selector</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.All"><code class="docutils literal notranslate"><span class="pre">All</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.All.find"><code class="docutils literal notranslate"><span class="pre">All.find()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Required"><code class="docutils literal notranslate"><span class="pre">Required</span></code></a><ul>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Required.find"><code class="docutils literal notranslate"><span class="pre">Required.find()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Required"><code class="docutils literal notranslate"><span class="pre">Required</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Required.find"><code class="docutils literal notranslate"><span class="pre">Required.find()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Default"><code class="docutils literal notranslate"><span class="pre">Default</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Default.__init__"><code class="docutils literal notranslate"><span class="pre">Default.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Default.find"><code class="docutils literal notranslate"><span class="pre">Default.find()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </div>
 </section>
 <section id="module-soupsavvy.models">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-soupsavvy.models" title="Link to this heading"></a></h2>
-<p>Subpackage with models for defining search schemas with operations and selectors.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="soupsavvy.models.All">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">All</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#All"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.All" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper" title="soupsavvy.models.wrappers.FieldWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">FieldWrapper</span></code></a></p>
-<p>Field wrapper for selecting multiple elements matching the selector.
-Forces find method to fall back to find_all method and return all matches.</p>
-<section id="example">
-<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">All</span>
-<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
-<span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">All</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
-<span class="gp">... </span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
-<span class="go">[element1, element2, element3]</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.models.All.find">
-<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#All.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.All.find" title="Link to this definition"></a></dt>
-<dd><p>Find all matching tags using the wrapped selector,
-enforcing the use of find_all method.</p>
-<section id="parameters">
-<h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h4>
-<dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup tag to search within.</p>
-</dd>
-<dt>strict<span class="classifier">bool, optional</span></dt><dd><p>Ignored, as this method always falls back to find_all.</p>
-</dd>
-<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Whether to search recursively, by default True.</p>
-</dd>
-</dl>
+<span id="content"></span><h2>Content<a class="headerlink" href="#module-soupsavvy.models" title="Link to this heading"></a></h2>
+<p>Package with models for defining search schemas with operations and selectors.</p>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><cite>BaseModel</cite> - Base class for defining search schemas.</p></li>
+<li><p><cite>Field</cite> - Field configuration for search schema.</p></li>
+<li><p><cite>MigrationSchema</cite> - Configuration of model migration.</p></li>
+<li><p><cite>All</cite> - Wrapper to find all information matching criteria.</p></li>
+<li><p><cite>Default</cite> - Wrapper to set default value if information is not found.</p></li>
+<li><p><cite>Required</cite> - Wrapper to enforce that information must be found.</p></li>
+</ul>
 </section>
-<section id="returns">
-<h4>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h4>
-<dl class="simple">
-<dt>list[Any]</dt><dd><p>A list of matching results.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-</section>
-</dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.models.BaseModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/models/base.html#BaseModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.BaseModel" title="Link to this definition"></a></dt>
@@ -262,8 +231,8 @@ enforcing the use of find_all method.</p>
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/models/base.html#BaseModel.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.BaseModel.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes a model instance with provided field values.
 Model should not be initialized directly, but through the <cite>find</cite> methods.</p>
-<section id="id1">
-<h3>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>kwargs<span class="classifier">Any</span></dt><dd><p>Field values to initialize the model with provided
 as keyword arguments.</p>
@@ -286,24 +255,10 @@ as keyword arguments.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attributes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.models.BaseModel.attributes" title="Link to this definition"></a></dt>
 <dd><p>Returns a dictionary of model instance attributes representing
 model fields and their respective values.</p>
-<section id="id2">
-<h3>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>dict[str, Any]</dt><dd><p>A dictionary mapping model field names to their respective values.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.models.BaseModel.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="_modules/soupsavvy/models/base.html#BaseModel.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.BaseModel.copy" title="Link to this definition"></a></dt>
-<dd><p>Creates a deep copy of the model instance by migrating it to the same model class.
-Only model fields defined in <cite>attributes</cite> are used to create new instance.</p>
-<section id="id3">
-<h3>Returns<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>Self</dt><dd><p>A deep copy of the model instance.</p>
 </dd>
 </dl>
 </section>
@@ -319,28 +274,27 @@ Only model fields defined in <cite>attributes</cite> are used to create new inst
 <dd><p>Searches for and returns an instance of the model within the provided tag.
 By default, perform recursive, non-strict search for model fields
 within the scope element.</p>
-<section id="id4">
-<h3>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object within which to search for the model.</p>
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to search within for the model.</p>
 </dd>
-<dt>strict<span class="classifier">bool, optional</span></dt><dd><p>Whether to raise an exception if the scope element
-for the model is not found. Default is False, None is returned.</p>
+<dt>strict<span class="classifier">bool, optional</span></dt><dd><p>If True, enforces model scope to be found in the tag.</p>
 </dd>
 <dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Whether the search for the model scope element should be recursive.
 Default is True.</p>
 </dd>
 </dl>
 </section>
-<section id="id5">
-<h3>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<section id="id2">
+<h3>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>Self | None</dt><dd><p>An instance of the model if found, otherwise None.</p>
 </dd>
 </dl>
 </section>
-<section id="id6">
-<h3>Raises<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<section id="id3">
+<h3>Raises<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>ModelNotFoundException</dt><dd><p>If the model’s scope is not found and strict is True.</p>
 </dd>
@@ -356,10 +310,10 @@ Default is True.</p>
 <dd><p>Searches for and returns all instances of the model within the provided tag.
 By default, perform recursive, non-strict search for model fields
 just like in <cite>find</cite> method.</p>
-<section id="id7">
-<h3>Parameters<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<section id="id4">
+<h3>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object within which to search for the model.</p>
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to search within for the model.</p>
 </dd>
 <dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Whether the search for the model scope element should be recursive.
 Default is True.</p>
@@ -369,8 +323,8 @@ returns all instances found.</p>
 </dd>
 </dl>
 </section>
-<section id="id8">
-<h3>Returns<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<section id="id5">
+<h3>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>list[Self]</dt><dd><p>A list of model instances found within the tag.</p>
 </dd>
@@ -384,13 +338,13 @@ returns all instances found.</p>
 <dd><p>Migrates the model instance to another model class using its fields
 in target class initialization. Recursively migrates nested models, creating
 new instances, even when target model is not defined in the mapping.</p>
-<section id="id9">
-<h3>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<section id="id6">
+<h3>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>model<span class="classifier">Type[Model]</span></dt><dd><p>The target model class to migrate the instance to.</p>
 </dd>
 <dt>mapping<span class="classifier">dict[Type[BaseModel], Union[Type, MigrationSchema]], optional</span></dt><dd><p>Mapping of base model fields to target models. By default, if field
-is instance of BaseModel, it will be passed directly to the target model.</p>
+is instance of <cite>BaseModel</cite>, it will be passed directly to the target model.</p>
 </dd>
 <dt>kwargs<span class="classifier">Any</span></dt><dd><p>Additional keyword arguments to pass to model initialization.</p>
 </dd>
@@ -398,8 +352,8 @@ is instance of BaseModel, it will be passed directly to the target model.</p>
 <p>Migrating to the same model is equivalent to creating deep copy of the model,
 which can be achieved by calling <cite>copy</cite> method.</p>
 </section>
-<section id="id10">
-<h3>Returns<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<section id="id7">
+<h3>Returns<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>Model</dt><dd><p>An instance of the target model class.</p>
 </dd>
@@ -407,6 +361,64 @@ which can be achieved by calling <cite>copy</cite> method.</p>
 </section>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.models.BaseModel.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="reference internal" href="_modules/soupsavvy/models/base.html#BaseModel.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.BaseModel.copy" title="Link to this definition"></a></dt>
+<dd><p>Creates a deep copy of the model instance by migrating
+it to the same model class.
+Only model fields defined in <cite>attributes</cite> are used to create new instance.</p>
+<section id="id8">
+<h3>Returns<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Self</dt><dd><p>A deep copy of the model instance.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.models.All">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">All</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#All"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.All" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper" title="soupsavvy.models.wrappers.FieldWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">FieldWrapper</span></code></a></p>
+<p>Field wrapper for selecting multiple elements matching the selector.
+Forces find method to fall back to find_all method and return all matches.</p>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">All</span>
+<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
+<span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">All</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
+<span class="gp">... </span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+<span class="go">[element1, element2, element3]</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.models.All.find">
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#All.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.All.find" title="Link to this definition"></a></dt>
+<dd><p>Find all matching tags using the wrapped selector,
+enforcing the use of find_all method.</p>
+<section id="id9">
+<h4>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> to search within.</p>
+</dd>
+<dt>strict<span class="classifier">bool, optional</span></dt><dd><p>Ignored, as this method always falls back to <cite>find_all</cite>.</p>
+</dd>
+<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Whether to search recursively, by default True.</p>
+</dd>
+</dl>
+</section>
+<section id="id10">
+<h4>Returns<a class="headerlink" href="#id10" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>list[Any]</dt><dd><p>A list of matching results.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
 </dd></dl>
 
 <dl class="py class">
@@ -426,11 +438,11 @@ which can be achieved by calling <cite>copy</cite> method.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.models.Default.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#Default.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.Default.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes Default FieldWrapper.</p>
+<dd><p>Initializes <cite>Default</cite> field wrapper.</p>
 <section id="id12">
 <h4>Parameters<a class="headerlink" href="#id12" title="Link to this heading"></a></h4>
 <dl class="simple">
-<dt>selector<span class="classifier">TagSearcher</span></dt><dd><p>The TagSearcher instance to be wrapped.</p>
+<dt>selector<span class="classifier">TagSearcher</span></dt><dd><p>The <cite>TagSearcher</cite> instance to be wrapped.</p>
 </dd>
 <dt>default<span class="classifier">Any</span></dt><dd><p>The default value to return if no match is found.</p>
 </dd>
@@ -446,7 +458,7 @@ by wrapped selector. Any exception raised during the search is propagated.</p>
 <section id="id13">
 <h4>Parameters<a class="headerlink" href="#id13" title="Link to this heading"></a></h4>
 <dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup tag to search within.</p>
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any bs4.Tag` to search within.</p>
 </dd>
 <dt>strict<span class="classifier">bool, optional</span></dt><dd><p>If True, raises an exception if no matches are found, by default False.</p>
 </dd>
@@ -463,6 +475,79 @@ by wrapped selector. Any exception raised during the search is propagated.</p>
 </section>
 </dd></dl>
 
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.models.Required">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Required</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#Required"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.Required" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper" title="soupsavvy.models.wrappers.FieldWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">FieldWrapper</span></code></a></p>
+<p>Field wrapper for enforcing matched element not to be None.
+Raises an exception if searcher does not find any matches.</p>
+<section id="id15">
+<h3>Example<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Required</span>
+<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
+<span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">Required</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
+<span class="gp">... </span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+<span class="go">RequiredConstraintException</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.models.Required.find">
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#Required.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.Required.find" title="Link to this definition"></a></dt>
+<dd><p>Finds a required element using the wrapped selector,
+enforcing matched element not to be None.
+If any exception is raised during the search, it’s propagated to the caller.</p>
+<section id="id16">
+<h4>Parameters<a class="headerlink" href="#id16" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> to search within.</p>
+</dd>
+<dt>strict<span class="classifier">bool, optional</span></dt><dd><p>If True, raises an exception if no matches are found, by default False.</p>
+</dd>
+<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Whether to search recursively, by default True.</p>
+</dd>
+</dl>
+</section>
+<section id="id17">
+<h4>Returns<a class="headerlink" href="#id17" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>Any</dt><dd><p>The found element.</p>
+</dd>
+</dl>
+</section>
+<section id="id18">
+<h4>Raises<a class="headerlink" href="#id18" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>RequiredConstraintException</dt><dd><p>If selector returns None, indicating that required element was not found.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="soupsavvy.models.post">
+<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/models/base.html#post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.post" title="Link to this definition"></a></dt>
+<dd><p>Decorator to mark a method as a post-processor for a model field.
+The method will be called after the field is extracted from the tag
+in model instance initialization.</p>
+<section id="id19">
+<h3>Example<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="o">...</span>
+<span class="gp">... </span>   <span class="n">field</span> <span class="o">=</span> <span class="o">...</span>
+<span class="gp">...</span>
+<span class="gp">... </span>   <span class="nd">@post</span><span class="p">(</span><span class="s2">&quot;field&quot;</span><span class="p">)</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="nf">post_process_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="gp">... </span>       <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Methods of custom model class, that are decorated with <cite>&#64;post</cite> decorator,
+must accept only one argument, which is the value of the field to be processed.</p>
 </section>
 </dd></dl>
 
@@ -489,8 +574,8 @@ Default is True.</p>
 </dd>
 </dl>
 </section>
-<section id="id15">
-<h3>Example<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<section id="id20">
+<h3>Example<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="gp">... </span>   <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
 <span class="gp">...</span>
@@ -499,74 +584,13 @@ Default is True.</p>
 </pre></div>
 </div>
 <p>In this example, only price is relevant for model object. Element itself is just
-for reference and should not be included in model representation, comparison or migration.</p>
-<p>Using <cite>Field</cite> wrapper without any additional arguments is equivalent to default behavior.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.models.Field.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel" title="soupsavvy.models.base.BaseModel"><span class="pre">BaseModel</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">migrate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#soupsavvy.models.Field.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
+for reference and should not be included in model representation,
+comparison or migration.</p>
+<p>Using <cite>Field</cite> wrapper without any additional arguments
+is equivalent to default behavior.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="soupsavvy.models.Field.compare">
-<span class="sig-name descname"><span class="pre">compare</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#soupsavvy.models.Field.compare" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.models.Field.find">
-<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/soupsavvy/models/base.html#Field.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.Field.find" title="Link to this definition"></a></dt>
-<dd><p>Finds first target information within the given tag and returns the result.</p>
-<section id="id16">
-<h4>Parameters<a class="headerlink" href="#id16" title="Link to this heading"></a></h4>
-<dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
-</dd>
-<dt>strict<span class="classifier">bool, optional</span></dt><dd><p>If True, enforces results to be found in the tag, by default False.</p>
-</dd>
-<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>bs4.Tag.find method parameter that specifies if search should be recursive.
-If set to False, only direct children of the tag will be searched.
-By default True.</p>
-</dd>
-</dl>
-</section>
-<section id="id17">
-<h4>Returns<a class="headerlink" href="#id17" title="Link to this heading"></a></h4>
-<dl class="simple">
-<dt>Any</dt><dd><p>Result of the search operation.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.models.Field.find_all">
-<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/models/base.html#Field.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.Field.find_all" title="Link to this definition"></a></dt>
-<dd><p>Finds all target information within the given tag and returns the result.</p>
-<section id="id18">
-<h4>Parameters<a class="headerlink" href="#id18" title="Link to this heading"></a></h4>
-<dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup Tag object.</p>
-</dd>
-<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>bs4.Tag.find method parameter that specifies if search should be recursive.
-If set to False, only direct children of the tag will be searched.
-By default True.</p>
-</dd>
-<dt>limit<span class="classifier">int, optional</span></dt><dd><p>bs4.Tag.find_all method parameter that specifies maximum number of results
-to return. If set to None, all results are returned. By default None.</p>
-</dd>
-</dl>
-</section>
-<section id="id19">
-<h4>Returns<a class="headerlink" href="#id19" title="Link to this heading"></a></h4>
-<dl class="simple">
-<dt>list[Any]</dt><dd><p>A list of results, if none found, the list is empty.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="soupsavvy.models.Field.migrate">
-<span class="sig-name descname"><span class="pre">migrate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#soupsavvy.models.Field.migrate" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="soupsavvy.models.Field.selector">
+<span class="sig-name descname"><span class="pre">selector</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel" title="soupsavvy.models.base.BaseModel"><span class="pre">BaseModel</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.models.Field.selector" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -575,8 +599,71 @@ to return. If set to None, all results are returned. By default None.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="soupsavvy.models.Field.selector">
-<span class="sig-name descname"><span class="pre">selector</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel" title="soupsavvy.models.base.BaseModel"><span class="pre">BaseModel</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.models.Field.selector" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="soupsavvy.models.Field.compare">
+<span class="sig-name descname"><span class="pre">compare</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#soupsavvy.models.Field.compare" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="soupsavvy.models.Field.migrate">
+<span class="sig-name descname"><span class="pre">migrate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#soupsavvy.models.Field.migrate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.models.Field.find_all">
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/models/base.html#Field.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.Field.find_all" title="Link to this definition"></a></dt>
+<dd><p>Processes <cite>bs4.Tag</cite> object and returns list of results.</p>
+<section id="id21">
+<h4>Parameters<a class="headerlink" href="#id21" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to process.</p>
+</dd>
+<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
+If set to <cite>False</cite>, only direct children of the tag will be searched.
+By default <cite>True</cite>.</p>
+</dd>
+<dt>limit<span class="classifier">int, optional</span></dt><dd><p>Specifies maximum number of results to return in a list.
+By default <cite>None</cite>, everything is returned.</p>
+</dd>
+</dl>
+</section>
+<section id="id22">
+<h4>Returns<a class="headerlink" href="#id22" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>list[Any]</dt><dd><p>A list of results from processed tag.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.models.Field.find">
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/soupsavvy/models/base.html#Field.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.Field.find" title="Link to this definition"></a></dt>
+<dd><p>Processes <cite>bs4.Tag</cite> object and returns result.</p>
+<section id="id23">
+<h4>Parameters<a class="headerlink" href="#id23" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to process.</p>
+</dd>
+<dt>strict<span class="classifier">bool, optional</span></dt><dd><p>If True, enforces results to be found in the tag, by default False.</p>
+</dd>
+<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
+If set to <cite>False</cite>, only direct children of the tag will be searched.
+By default <cite>True</cite>.</p>
+</dd>
+</dl>
+</section>
+<section id="id24">
+<h4>Returns<a class="headerlink" href="#id24" title="Link to this heading"></a></h4>
+<dl class="simple">
+<dt>Any</dt><dd><p>Processed result from the tag.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.models.Field.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel" title="soupsavvy.models.base.BaseModel"><span class="pre">BaseModel</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">migrate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#soupsavvy.models.Field.__init__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
@@ -588,17 +675,17 @@ to return. If set to None, all results are returned. By default None.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Defines schema for model migration in need of providing additional parameters
 to the target model initialization in nested models.</p>
-<section id="id20">
-<h3>Attributes<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
+<section id="id25">
+<h3>Attributes<a class="headerlink" href="#id25" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>target<span class="classifier">Type</span></dt><dd><p>Target model class to migrate to.</p>
 </dd>
 <dt>params<span class="classifier">dict, optional</span></dt><dd><p>Additional parameters to pass to the target model initialization.</p>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.models.MigrationSchema.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target:</span> <span class="pre">~typing.Type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#soupsavvy.models.MigrationSchema.__init__" title="Link to this definition"></a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="soupsavvy.models.MigrationSchema.target">
+<span class="sig-name descname"><span class="pre">target</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Type</span></em><a class="headerlink" href="#soupsavvy.models.MigrationSchema.target" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -606,84 +693,11 @@ to the target model initialization in nested models.</p>
 <span class="sig-name descname"><span class="pre">params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#soupsavvy.models.MigrationSchema.params" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="soupsavvy.models.MigrationSchema.target">
-<span class="sig-name descname"><span class="pre">target</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Type</span></em><a class="headerlink" href="#soupsavvy.models.MigrationSchema.target" title="Link to this definition"></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.models.MigrationSchema.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target:</span> <span class="pre">~typing.Type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#soupsavvy.models.MigrationSchema.__init__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-</section>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="soupsavvy.models.Required">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Required</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#Required"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.Required" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.FieldWrapper" title="soupsavvy.models.wrappers.FieldWrapper"><code class="xref py py-class docutils literal notranslate"><span class="pre">FieldWrapper</span></code></a></p>
-<p>Field wrapper for enforcing matched element not to be None.
-Raises an exception if searcher does not find any matches.</p>
-<section id="id21">
-<h3>Example<a class="headerlink" href="#id21" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Required</span>
-<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
-<span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">Required</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
-<span class="gp">... </span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
-<span class="go">RequiredConstraintException</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.models.Required.find">
-<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/soupsavvy/models/wrappers.html#Required.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.Required.find" title="Link to this definition"></a></dt>
-<dd><p>Finds a required element using the wrapped selector,
-enforcing matched element not to be None.
-If any exception is raised during the search, it’s propagated to the caller.</p>
-<section id="id22">
-<h4>Parameters<a class="headerlink" href="#id22" title="Link to this heading"></a></h4>
-<dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any BeautifulSoup tag to search within.</p>
-</dd>
-<dt>strict<span class="classifier">bool, optional</span></dt><dd><p>If True, raises an exception if no matches are found, by default False.</p>
-</dd>
-<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Whether to search recursively, by default True.</p>
-</dd>
-</dl>
-</section>
-<section id="id23">
-<h4>Returns<a class="headerlink" href="#id23" title="Link to this heading"></a></h4>
-<dl class="simple">
-<dt>Any</dt><dd><p>The found element.</p>
-</dd>
-</dl>
-</section>
-<section id="id24">
-<h4>Raises<a class="headerlink" href="#id24" title="Link to this heading"></a></h4>
-<dl class="simple">
-<dt>RequiredConstraintException</dt><dd><p>If selector returns None, indicating that required element was not found.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-</section>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="soupsavvy.models.post">
-<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/models/base.html#post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.models.post" title="Link to this definition"></a></dt>
-<dd><p>Decorator to mark a method as a post-processor for a model field.
-The method will be called after the field is extracted from the tag
-in model instance initialization.</p>
-<section id="id25">
-<h3>Example<a class="headerlink" href="#id25" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<span class="gp">... </span>   <span class="o">...</span>
-<span class="gp">... </span>   <span class="n">field</span> <span class="o">=</span> <span class="o">...</span>
-<span class="gp">...</span>
-<span class="gp">... </span>   <span class="nd">@post</span><span class="p">(</span><span class="s2">&quot;field&quot;</span><span class="p">)</span>
-<span class="gp">... </span>   <span class="k">def</span> <span class="nf">post_process_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<span class="gp">... </span>       <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>Methods of custom model class, that are decorated with <cite>&#64;post</cite> decorator,
-must accept only one argument, which is the value of the field to be processed.</p>
 </section>
 </dd></dl>
 
@@ -694,14 +708,14 @@ must accept only one argument, which is the value of the field to be processed.<
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="soupsavvy.selectors.relative.html" class="btn btn-neutral float-left" title="Parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="soupsavvy.models.base.html" class="btn btn-neutral float-right" title="Parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="soupsavvy.selectors.relative.html" class="btn btn-neutral float-left" title="selectors.relative" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soupsavvy.models.base.html" class="btn btn-neutral float-right" title="models.base" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

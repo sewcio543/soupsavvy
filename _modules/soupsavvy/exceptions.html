@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -100,7 +101,7 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.NotTagSearcherException">[docs]</a>
 <span class="k">class</span> <span class="nc">NotTagSearcherException</span><span class="p">(</span><span class="n">SoupsavvyException</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception to be raised when function excepted TagSearcher as input</span>
+<span class="sd">    Exception to be raised when function excepted `TagSearcher` as input</span>
 <span class="sd">    and got argument of the different, invalid type.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
@@ -112,7 +113,7 @@
 <div class="viewcode-block" id="SoupSelectorException">
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.SoupSelectorException">[docs]</a>
 <span class="k">class</span> <span class="nc">SoupSelectorException</span><span class="p">(</span><span class="n">SoupsavvyException</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom Base Exception for SoupSelector specific Exceptions.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom Base Exception for `SoupSelector` specific Exceptions.&quot;&quot;&quot;</span></div>
 
 
 
@@ -120,9 +121,9 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.TagNotFoundException">[docs]</a>
 <span class="k">class</span> <span class="nc">TagNotFoundException</span><span class="p">(</span><span class="n">SoupSelectorException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception to be raised when SoupSelector element was not found in the markup.</span>
-<span class="sd">    Raised by SoupSelector find method when strict parameter is set to True</span>
-<span class="sd">    and target element was not found in provided bs4.Tag object.</span>
+<span class="sd">    Exception to be raised when `SoupSelector` element was not found in the markup.</span>
+<span class="sd">    Raised by `SoupSelector` find method when strict parameter is set to True</span>
+<span class="sd">    and target element was not found in provided `bs4.Tag` object.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
@@ -131,10 +132,9 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.NavigableStringException">[docs]</a>
 <span class="k">class</span> <span class="nc">NavigableStringException</span><span class="p">(</span><span class="n">SoupSelectorException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception to be raised when NavigableString was found in find method.</span>
-<span class="sd">    It does not return expected bs4 markup after conversion to bs4.Tag.</span>
-<span class="sd">    When bs4.Tag find method was used with only &#39;string&#39; parameter if any tag</span>
-<span class="sd">    matches NavigableString is returned which does not have information about the tag.</span>
+<span class="sd">    Exception to be raised when `NavigableString` was returned in `_find` method.</span>
+<span class="sd">    When `bs4.Tag` find method was used with only &#39;string&#39; parameter and any tag</span>
+<span class="sd">    matched, `NavigableString` is returned, which does not have information about the tag.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -142,8 +142,8 @@
 <span class="sd">    ... BeautifulSoup(nav_string)</span>
 <span class="sd">    &lt;html&gt;&lt;body&gt;&lt;p&gt;Hello World&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</span>
 
-<span class="sd">    BeautifulSoup constructor always wraps NavigableString in &lt;p&gt; element.</span>
-<span class="sd">    It is rather an unexpected behavior and should rather be avoided in SoupSelector</span>
+<span class="sd">    `BeautifulSoup` constructor always wraps NavigableString in &lt;p&gt; element.</span>
+<span class="sd">    It is rather an unexpected behavior and should rather be avoided in `SoupSelector`</span>
 <span class="sd">    find method, thus this exception is raised.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
@@ -153,7 +153,7 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.NotSoupSelectorException">[docs]</a>
 <span class="k">class</span> <span class="nc">NotSoupSelectorException</span><span class="p">(</span><span class="n">SoupSelectorException</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception to be raised when function excepted SoupSelector as input</span>
+<span class="sd">    Exception to be raised when function excepted `SoupSelector` as input</span>
 <span class="sd">    and got argument of the different, invalid type.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
@@ -188,7 +188,7 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.NotUniqueAttributesException">[docs]</a>
 <span class="k">class</span> <span class="nc">NotUniqueAttributesException</span><span class="p">(</span><span class="n">HTMLGeneratorException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception raised by TagGenerator when input attributes have non-unique names.</span>
+<span class="sd">    Exception raised by `TagGenerator` when input attributes have non-unique names.</span>
 <span class="sd">    HTML tags cannot have multiple attributes with the same name.</span>
 
 <span class="sd">    Example</span>
@@ -203,7 +203,7 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.VoidTagWithChildrenException">[docs]</a>
 <span class="k">class</span> <span class="nc">VoidTagWithChildrenException</span><span class="p">(</span><span class="n">HTMLGeneratorException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception raised by TagGenerator when input name of the tag is a void html tag</span>
+<span class="sd">    Exception raised by `TagGenerator` when input name of the tag is a void html tag</span>
 <span class="sd">    like &lt;img&gt; or &lt;br&gt; and children are specified, which is not an allowed operation.</span>
 
 <span class="sd">    Example</span>
@@ -218,8 +218,8 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.EmptyNameException">[docs]</a>
 <span class="k">class</span> <span class="nc">EmptyNameException</span><span class="p">(</span><span class="n">HTMLGeneratorException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception raised by TagGenerator when input name of the tag is empty.</span>
-<span class="sd">    Exception raised by AttributeGenerator when input name of the attribute is empty.</span>
+<span class="sd">    Exception raised by `TagGenerator` when input name of the tag is empty.</span>
+<span class="sd">    Exception raised by `AttributeGenerator` when input name of the attribute is empty.</span>
 
 <span class="sd">    Empty string is not acceptable in these contexts.</span>
 
@@ -240,9 +240,9 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.InvalidTemplateException">[docs]</a>
 <span class="k">class</span> <span class="nc">InvalidTemplateException</span><span class="p">(</span><span class="n">HTMLGeneratorException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception raised by AttributeGenerator when invalid template is passed as value</span>
-<span class="sd">    or by TagGenerator when invalid template is passed as text.</span>
-<span class="sd">    Allowed types are str, BaseTemplate and None. Passing other types is not acceptable.</span>
+<span class="sd">    Exception raised by `AttributeGenerator` when invalid template is passed as value</span>
+<span class="sd">    or by `TagGenerator` when invalid template is passed as text.</span>
+<span class="sd">    Allowed types are str, `BaseTemplate` and None. Passing other types is not acceptable.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    ------</span>
@@ -261,10 +261,10 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.AttributeParsingError">[docs]</a>
 <span class="k">class</span> <span class="nc">AttributeParsingError</span><span class="p">(</span><span class="n">HTMLGeneratorException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception raised by TagGenerator when data passed into attributes iterable</span>
-<span class="sd">    contains element that couldn&#39;t be parsed into AttributeGenerator object.</span>
+<span class="sd">    Exception raised by `TagGenerator` when data passed into attributes iterable</span>
+<span class="sd">    contains element that couldn&#39;t be parsed into `AttributeGenerator` object.</span>
 <span class="sd">    Relevant only to elements in attributes iterable that</span>
-<span class="sd">    are not already AttributeGenerator objects.</span>
+<span class="sd">    are not already `AttributeGenerator` objects.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    ------</span>
@@ -290,7 +290,7 @@
 <div class="viewcode-block" id="OperationException">
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.OperationException">[docs]</a>
 <span class="k">class</span> <span class="nc">OperationException</span><span class="p">(</span><span class="n">SoupsavvyException</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception for the BaseOperation related errors&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception for the `BaseOperation` related errors&quot;&quot;&quot;</span></div>
 
 
 
@@ -298,7 +298,7 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.FailedOperationExecution">[docs]</a>
 <span class="k">class</span> <span class="nc">FailedOperationExecution</span><span class="p">(</span><span class="n">SoupsavvyException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception raised by BaseOperation when operation execution failed and raised</span>
+<span class="sd">    Exception raised by `BaseOperation` when operation execution failed and raised</span>
 <span class="sd">    any exception.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
@@ -308,7 +308,7 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.NotOperationException">[docs]</a>
 <span class="k">class</span> <span class="nc">NotOperationException</span><span class="p">(</span><span class="n">OperationException</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception to be raised when function excepted BaseOperation as input</span>
+<span class="sd">    Exception to be raised when function excepted `BaseOperation` as input</span>
 <span class="sd">    and got argument of the different, invalid type.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
@@ -318,7 +318,7 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.BreakOperationException">[docs]</a>
 <span class="k">class</span> <span class="nc">BreakOperationException</span><span class="p">(</span><span class="n">OperationException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception raised by breaking operations such Break, to stop the execution</span>
+<span class="sd">    Exception raised by breaking operations such `Break`, to stop the execution</span>
 <span class="sd">    of the pipeline. Special exception that accepts result as first argument.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -336,7 +336,7 @@
 <div class="viewcode-block" id="BaseModelException">
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.BaseModelException">[docs]</a>
 <span class="k">class</span> <span class="nc">BaseModelException</span><span class="p">(</span><span class="n">SoupsavvyException</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception related to models package and BaseModel class.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception related to models package and `BaseModel` class.&quot;&quot;&quot;</span></div>
 
 
 
@@ -344,7 +344,7 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.UnknownModelFieldException">[docs]</a>
 <span class="k">class</span> <span class="nc">UnknownModelFieldException</span><span class="p">(</span><span class="n">BaseModelException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception raised by BaseModel when model passing unknown field name</span>
+<span class="sd">    Exception raised by `BaseModel` when model passing unknown field name</span>
 <span class="sd">    to model constructor.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
@@ -354,7 +354,7 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.ModelNotFoundException">[docs]</a>
 <span class="k">class</span> <span class="nc">ModelNotFoundException</span><span class="p">(</span><span class="n">BaseModelException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception raised by BaseModel when model scope was not found in provided tag</span>
+<span class="sd">    Exception raised by `BaseModel` when model scope was not found in provided tag</span>
 <span class="sd">    and strict parameter was set to True.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
@@ -364,7 +364,7 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.FieldExtractionException">[docs]</a>
 <span class="k">class</span> <span class="nc">FieldExtractionException</span><span class="p">(</span><span class="n">BaseModelException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception raised by BaseModel when field extraction failed and related exception</span>
+<span class="sd">    Exception raised by `BaseModel` when field extraction failed and related exception</span>
 <span class="sd">    was raised by any selector step.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
@@ -374,8 +374,8 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.ScopeNotDefinedException">[docs]</a>
 <span class="k">class</span> <span class="nc">ScopeNotDefinedException</span><span class="p">(</span><span class="n">BaseModelException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception raised by BaseModel when scope was not found in defined model class.</span>
-<span class="sd">    __scope__ class attribute is mandatory in BaseModel derived classes.</span>
+<span class="sd">    Exception raised by `BaseModel` when scope was not found in defined model class.</span>
+<span class="sd">    `__scope__` class attribute is mandatory in `BaseModel` derived classes.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
@@ -384,7 +384,7 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.RequiredConstraintException">[docs]</a>
 <span class="k">class</span> <span class="nc">RequiredConstraintException</span><span class="p">(</span><span class="n">BaseModelException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception raised by Required field wrapper when required field was not found</span>
+<span class="sd">    Exception raised by `Required` field wrapper when required field was not found</span>
 <span class="sd">    in provided tag.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
@@ -394,7 +394,7 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.FieldsNotDefinedException">[docs]</a>
 <span class="k">class</span> <span class="nc">FieldsNotDefinedException</span><span class="p">(</span><span class="n">BaseModelException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception raised by BaseModel when fields were not found in defined model class.</span>
+<span class="sd">    Exception raised by `BaseModel` when fields were not found in defined model class.</span>
 <span class="sd">    At least one field should be defined in class to be a valid model.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
@@ -404,7 +404,7 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.MissingFieldsException">[docs]</a>
 <span class="k">class</span> <span class="nc">MissingFieldsException</span><span class="p">(</span><span class="n">BaseModelException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception raised by BaseModel when parameters passed into the constructor</span>
+<span class="sd">    Exception raised by `BaseModel` when parameters passed into the constructor</span>
 <span class="sd">    do not contain all required fields defined in the model class.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
@@ -414,7 +414,7 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.FrozenModelException">[docs]</a>
 <span class="k">class</span> <span class="nc">FrozenModelException</span><span class="p">(</span><span class="n">BaseModelException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception raised by BaseModel when trying to modify frozen model instance.</span>
+<span class="sd">    Exception raised by `BaseModel` when trying to modify frozen model instance.</span>
 <span class="sd">    Frozen model instances are read-only and cannot be modified.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
@@ -427,7 +427,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

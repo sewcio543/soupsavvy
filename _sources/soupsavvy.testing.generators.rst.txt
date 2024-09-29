@@ -19,7 +19,7 @@ Submodules
    soupsavvy.testing.generators.generators
    soupsavvy.testing.generators.namespace
 
-Module contents
+Content
 ---------------
 
 .. automodule:: soupsavvy.testing.generators

@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -89,8 +90,10 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Module for general purpose operations.</span>
 
-<span class="sd">* Operation - Executes custom operation with any function.</span>
-<span class="sd">* OperationPipeline - Chains multiple operations together.</span>
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">- `Operation` - Executes custom operation with any function.</span>
+<span class="sd">- `OperationPipeline` - Chains multiple operations together.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
@@ -120,7 +123,7 @@
 <span class="sd">    on two operations.</span>
 
 <span class="sd">    `OperationPipeline` is operation-searcher mixin, which means it can be used</span>
-<span class="sd">    to find information in bs4 Tag directly with find methods.</span>
+<span class="sd">    to find information in `bs4.Tag` object directly with find methods.</span>
 <span class="sd">    This way, it can be used as field in model or `execute` method can be replaced</span>
 <span class="sd">    with `find` method, which would produce the same result.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -135,17 +138,17 @@
         <span class="o">*</span><span class="n">operations</span><span class="p">:</span> <span class="n">BaseOperation</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes OperationPipeline with multiple operations.</span>
+<span class="sd">        Initializes `OperationPipeline` with multiple operations.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        operations : BaseOperation</span>
-<span class="sd">            BaseOperation instances to be chained together.</span>
+<span class="sd">            `BaseOperation` instances to be chained together.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        NotOperationException</span>
-<span class="sd">            If any of the input operations is not a valid operation.</span>
+<span class="sd">            If any of the input operations is not an instance of `BaseOperation`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">operations</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">check_operation</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span>
@@ -169,13 +172,13 @@
 
     <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationPipeline</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Overrides __or__ method called also by pipe operator &#39;|&#39;.</span>
-<span class="sd">        Creates new `OperationPipeline` with additional provided operation.</span>
+<span class="sd">        Overrides `__or__` method called also by pipe operator &#39;|&#39;.</span>
+<span class="sd">        Creates new `OperationPipeline` object extended by provided operation.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        x : BaseOperation</span>
-<span class="sd">            BaseOperation object used to extend the pipeline.</span>
+<span class="sd">            `BaseOperation` object used to extend the pipeline.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -185,7 +188,7 @@
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        NotOperationException</span>
-<span class="sd">            If provided object is not of type BaseOperation.</span>
+<span class="sd">            If provided object is not an instance of `BaseOperation`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">check_operation</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">OperationPipeline</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">operations</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
@@ -217,7 +220,7 @@
 <span class="sd">    &quot;text&quot;</span>
 
 <span class="sd">    `Operation` is operation-searcher mixin, which means it can be used</span>
-<span class="sd">    to find information in bs4 Tag directly with find methods.</span>
+<span class="sd">    to find information in `bs4.Tag` directly with find methods.</span>
 <span class="sd">    This way, it can be used as field in model or `execute` method can be replaced</span>
 <span class="sd">    with `find` method, which would produce the same result.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -226,7 +229,7 @@
 <a class="viewcode-back" href="../../../soupsavvy.operations.general.html#soupsavvy.operations.Operation.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes Operation with a custom function.</span>
+<span class="sd">        Initializes `Operation` with provided function.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -259,7 +262,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

@@ -1,3 +1,6 @@
+operations.general
+===================================
+
 .. automodule:: soupsavvy.operations.general
    :members:
    :undoc-members:

@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -89,9 +90,11 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Module for operations specific to BeautifulSoup tags.</span>
 
-<span class="sd">* Text - Extracts text from a BeautifulSoup Tag - most common operation.</span>
-<span class="sd">* Href - Extracts href attribute from a BeautifulSoup Tag.</span>
-<span class="sd">* Parent - Extracts parent of a BeautifulSoup Tag.</span>
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">- `Text` - Extracts text from `bs4.Tag` - most common operation.</span>
+<span class="sd">- `Href` - Extracts href attribute from `bs4.Tag`</span>
+<span class="sd">- `Parent` - Extracts parent of `bs4.Tag`</span>
 
 <span class="sd">These components are design to be used for processing html tags and extracting</span>
 <span class="sd">desired information. They can be used in combination with selectors.</span>
@@ -108,7 +111,7 @@
 <a class="viewcode-back" href="../../../soupsavvy.operations.soup.html#soupsavvy.operations.Text">[docs]</a>
 <span class="k">class</span> <span class="nc">Text</span><span class="p">(</span><span class="n">OperationSearcherMixin</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Operation to extract text from a BeautifulSoup Tag.</span>
+<span class="sd">    Operation to extract text from `bs4.Tag`.</span>
 <span class="sd">    Wrapper of most common operation used in web scraping.</span>
 
 <span class="sd">    Example</span>
@@ -118,7 +121,7 @@
 <span class="sd">    ... operation.execute(tag)</span>
 <span class="sd">    &quot;Extracted text from the tag&quot;</span>
 
-<span class="sd">    Wrapper for BeautifulSoup `get_text` method, that exposes all its options,</span>
+<span class="sd">    Wrapper for `bs4.Tag.get_text` method, that exposes all its options,</span>
 <span class="sd">    and imitates its default behavior.</span>
 
 <span class="sd">    Implements `TagSearcher` interface for convenience. It has find methods</span>
@@ -136,7 +139,7 @@
 <a class="viewcode-back" href="../../../soupsavvy.operations.soup.html#soupsavvy.operations.Text.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">strip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes Text operation with optional separator and strip option.</span>
+<span class="sd">        Initializes `Text` operation with optional separator and strip options.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -151,7 +154,7 @@
 
 
     <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts text from a BeautifulSoup Tag.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts text from `bs4.Tag`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">arg</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span> <span class="n">strip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">strip</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -172,7 +175,7 @@
 <a class="viewcode-back" href="../../../soupsavvy.operations.soup.html#soupsavvy.operations.Href">[docs]</a>
 <span class="k">class</span> <span class="nc">Href</span><span class="p">(</span><span class="n">OperationSearcherMixin</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Operation to extract href attribute from a BeautifulSoup Tag.</span>
+<span class="sd">    Operation to extract href attribute from `bs4.Tag`.</span>
 <span class="sd">    Wrapper of one of the common operation used in web scraping.</span>
 <span class="sd">    If href attribute is not present, returns None.</span>
 
@@ -214,7 +217,7 @@
 <a class="viewcode-back" href="../../../soupsavvy.operations.soup.html#soupsavvy.operations.Parent">[docs]</a>
 <span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">BaseOperation</span><span class="p">,</span> <span class="n">SoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Operation to extract parent of a BeautifulSoup Tag.</span>
+<span class="sd">    Operation to extract parent of `bs4.Tag`.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -243,11 +246,13 @@
 <span class="sd">    ... operation.execute(tag)</span>
 <span class="sd">    &quot;&lt;div&gt;&lt;div&gt;--tag--&lt;/div&gt;&lt;/div&gt;&quot;</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
 <span class="sd">    If element does not have parent, returns None.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts parent of a BeautifulSoup Tag.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts parent of `bs4.Tag`.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">arg</span><span class="o">.</span><span class="n">parent</span>
 
 <div class="viewcode-block" id="Parent.find_all">
@@ -277,7 +282,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

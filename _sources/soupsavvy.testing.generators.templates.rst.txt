@@ -11,7 +11,7 @@ Submodules
    soupsavvy.testing.generators.templates.config
    soupsavvy.testing.generators.templates.templates
 
-Module contents
+Content
 ---------------
 
 .. automodule:: soupsavvy.testing.generators.templates

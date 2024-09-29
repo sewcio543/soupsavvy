@@ -1,3 +1,6 @@
+interfaces
+===========================
+
 .. automodule:: soupsavvy.interfaces
    :members:
    :undoc-members:

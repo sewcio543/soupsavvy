@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -87,14 +88,14 @@
              
   <h1>Source code for soupsavvy.models.wrappers</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Module with wrappers for selectors used mostly in models.</span>
+<span class="sd">Module with wrappers for selectors used mostly in model schemas.</span>
 <span class="sd">Wrappers are used to control behavior and define how fields of the models are defined.</span>
 
 <span class="sd">Classes</span>
 <span class="sd">-------</span>
-<span class="sd">- All : FieldWrapper</span>
-<span class="sd">- Required : FieldWrapper</span>
-<span class="sd">- Default : FieldWrapper</span>
+<span class="sd">- `All` - Wrapper to find all information matching criteria.</span>
+<span class="sd">- `Default` - Wrapper to set default value if information is not found.</span>
+<span class="sd">- `Required` - Wrapper to enforce that information must be found.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
@@ -111,7 +112,7 @@
 <a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.FieldWrapper">[docs]</a>
 <span class="k">class</span> <span class="nc">FieldWrapper</span><span class="p">(</span><span class="n">TagSearcher</span><span class="p">,</span> <span class="n">Comparable</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A wrapper for TagSearcher objects, that acts as a higher order searcher,</span>
+<span class="sd">    A wrapper for `TagSearcher` objects, that acts as a higher order searcher,</span>
 <span class="sd">    which controls behavior of the wrapped searcher.</span>
 <span class="sd">    Used as field to defined model.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -120,17 +121,17 @@
 <a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.FieldWrapper.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">TagSearcher</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes FieldWrapper.</span>
+<span class="sd">        Initializes wrapper with a `TagSearcher` instance.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        selector : TagSearcher</span>
-<span class="sd">            The TagSearcher instance to be wrapped.</span>
+<span class="sd">            The `TagSearcher` instance to be wrapped.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        NotTagSearcherException</span>
-<span class="sd">            If provided object is not an instance of TagSearcher.</span>
+<span class="sd">            If provided object is not an instance of `TagSearcher`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="n">TagSearcher</span><span class="p">):</span>
@@ -144,12 +145,12 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">selector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TagSearcher</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns searcher, that is wrapped by this FieldWrapper.</span>
+<span class="sd">        Returns searcher, that is wrapped by this wrapper.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        TagSearcher</span>
-<span class="sd">            TagSearcher instance wrapped by this FieldWrapper.</span>
+<span class="sd">            `TagSearcher` instance wrapped by this wrapper.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_selector</span>
 
@@ -163,13 +164,13 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find all matching tags using the wrapped selector.</span>
-<span class="sd">        Used for compatibility with TagSearcher interface,</span>
+<span class="sd">        Used for compatibility with `TagSearcher` interface,</span>
 <span class="sd">        delegates to wrapped selector.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        tag : Tag</span>
-<span class="sd">            Any BeautifulSoup tag to search within.</span>
+<span class="sd">            Any `bs4.Tag` to search within.</span>
 <span class="sd">        recursive : bool, optional</span>
 <span class="sd">            Whether to search recursively, by default True.</span>
 <span class="sd">        limit : int, optional</span>
@@ -185,7 +186,7 @@
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check if two FieldWrapper instances are equal.</span>
+<span class="sd">        Check if two `FieldWrapper` instances are equal.</span>
 <span class="sd">        They need to be of the same class and wrap the same selector.</span>
 
 <span class="sd">        Parameters</span>
@@ -202,23 +203,24 @@
 
     <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SelectionPipeline</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Overrides __or__ method called also by pipe operator &#39;|&#39;.</span>
-<span class="sd">        Combines the current FieldWrapper with an operation.</span>
+<span class="sd">        Overrides `__or__` method called also by pipe operator &#39;|&#39;.</span>
+<span class="sd">        Combines this `FieldWrapper` with an operation.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        x : BaseOperation</span>
-<span class="sd">            The operation to be combined with the FieldWrapper.</span>
+<span class="sd">            The operation to be combined with this `FieldWrapper`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        SelectionPipeline</span>
-<span class="sd">            New SelectionPipeline object created from combining selector and operation.</span>
+<span class="sd">            New `SelectionPipeline` object created from</span>
+<span class="sd">            combining selector and operation.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        NotOperationException</span>
-<span class="sd">            If provided object is not of BaseOperation type.</span>
+<span class="sd">            If provided object is not an instance of `BaseOperation`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">check_operation</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">SelectionPipeline</span><span class="p">(</span><span class="n">selector</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
@@ -257,9 +259,9 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        tag : Tag</span>
-<span class="sd">            Any BeautifulSoup tag to search within.</span>
+<span class="sd">            Any `bs4.Tag` to search within.</span>
 <span class="sd">        strict : bool, optional</span>
-<span class="sd">            Ignored, as this method always falls back to find_all.</span>
+<span class="sd">            Ignored, as this method always falls back to `find_all`.</span>
 <span class="sd">        recursive : bool, optional</span>
 <span class="sd">            Whether to search recursively, by default True.</span>
 
@@ -300,7 +302,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        tag : Tag</span>
-<span class="sd">            Any BeautifulSoup tag to search within.</span>
+<span class="sd">            Any `bs4.Tag` to search within.</span>
 <span class="sd">        strict : bool, optional</span>
 <span class="sd">            If True, raises an exception if no matches are found, by default False.</span>
 <span class="sd">        recursive : bool, optional</span>
@@ -345,12 +347,12 @@
 <a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.Default.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">TagSearcher</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes Default FieldWrapper.</span>
+<span class="sd">        Initializes `Default` field wrapper.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        selector : TagSearcher</span>
-<span class="sd">            The TagSearcher instance to be wrapped.</span>
+<span class="sd">            The `TagSearcher` instance to be wrapped.</span>
 <span class="sd">        default : Any</span>
 <span class="sd">            The default value to return if no match is found.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -368,7 +370,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        tag : Tag</span>
-<span class="sd">            Any BeautifulSoup tag to search within.</span>
+<span class="sd">            Any bs4.Tag` to search within.</span>
 <span class="sd">        strict : bool, optional</span>
 <span class="sd">            If True, raises an exception if no matches are found, by default False.</span>
 <span class="sd">        recursive : bool, optional</span>
@@ -395,7 +397,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

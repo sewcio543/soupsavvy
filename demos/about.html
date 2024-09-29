@@ -8,7 +8,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul class="current">
@@ -257,38 +258,33 @@ While BeautifulSoup excels in excellent at parsing HTML documents, it falls shor
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function find in module soupsavvy.base:
 
 find(self, tag: &#39;Tag&#39;, strict: &#39;bool&#39; = False, recursive: &#39;bool&#39; = True) -&gt; &#39;Optional[Tag]&#39;
-    Finds a first matching element in provided BeautifulSoup Tag.
+    Finds the first matching element in provided `Tag`.
     
     Parameters
     ----------
     tag : Tag
-        Any BeautifulSoup Tag object.
+        Any `bs4.Tag` object to search within.
     strict : bool, optional
-        If True, raises an exception if tag was not found in markup,
-        if False and tag was not found, returns None by defaulting to BeautifulSoup
-        implementation. Value of this parameter does not affect behavior if tag
-        was successfully found in the markup. By default False.
+        If `True`, raises an exception if tag was not found in markup,
+        if `False` and tag was not found, returns `None`.
+        Value of this parameter does not affect behavior if element
+        was successfully found. By default `False`.
     recursive : bool, optional
-        bs4.Tag.find method parameter that specifies if search should be recursive.
-        If set to False, only direct children of the tag will be searched.
-        By default True.
+        Specifies if search should be recursive.
+        If set to `False`, only direct children of the tag will be searched.
+        By default `True`.
     
     Returns
     -------
     Tag | None
-        BeautifulSoup Tag if it tag was found in the markup, else None.
-    
-    Notes
-    -----
-    If result is an instance of NavigableString,
-    exception is raised to avoid any type of inconsistency downstream.
+        First `bs4.Tag` object matching selector or `None` if none matching.
     
     Raises
     ------
     TagNotFoundException
-        If strict parameter is set to True and tag was not found in markup.
+        If strict parameter is set to `True` and none matching tag was found.
     NavigableStringException
-        If NavigableString was returned by bs4.
+        If `bs4.NavigableString` was returned by selector.
 </pre></div>
 </div>
 </div>
@@ -390,25 +386,24 @@ Tag was not found in markup.
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function find_all in module soupsavvy.base:
 
 find_all(self, tag: &#39;Tag&#39;, recursive: &#39;bool&#39; = True, limit: &#39;Optional[int]&#39; = None) -&gt; &#39;list[Tag]&#39;
-    Finds all matching elements in provided BeautifulSoup Tag.
+    Finds all elements matching selector in provided `Tag`.
     
     Parameters
     ----------
     tag : Tag
-        Any BeautifulSoup Tag object.
+        Any `bs4.Tag` object to search within.
     recursive : bool, optional
-        bs4.Tag.find method parameter that specifies if search should be recursive.
-        If set to False, only direct children of the tag will be searched.
-        By default True.
+        Specifies if search should be recursive.
+        If set to `False`, only direct children of the tag will be searched.
+        By default `True`.
     limit : int, optional
-        bs4.Tag.find_all method parameter that specifies maximum number of elements
-        to return. If set to None, all elements are returned. By default None.
+        Specifies maximum number of elements to return.
+        By default `None`, all found elements are returned.
     
     Returns
     -------
     list[Tag]
-        A list of Tag objects matching tag specifications.
-        If none found, the list is empty.
+        List of `bs4.Tag` objects matching selector. If none found, the list is empty.
 </pre></div>
 </div>
 </div>
@@ -526,13 +521,12 @@ find_all(self, tag: &#39;Tag&#39;, recursive: &#39;bool&#39; = True, limit: &#39
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Help on function __eq__ in module soupsavvy.base:
 
 __eq__(self, other: &#39;object&#39;) -&gt; &#39;bool&#39;
-    Check self and other object for equality.
+    Checks self and other object for equality.
     
     This method is abstract and must be implemented by all selectors.
-    Selectors are considered equal if their find methods return the same result.
     
-    Calling find or find_all methods on selectors that are equal
-    should return the same results.
+    Calling `find` or `find_all` methods on selectors that are equal
+    should return the same results, provided the same parameters.
     
     Example
     -------
@@ -655,7 +649,7 @@ TypeSelector(&#39;p&#39;) == TypeSelector(&#39;p&#39;) = True
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

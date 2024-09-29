@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -87,9 +88,16 @@
              
   <h1>Source code for soupsavvy.selectors.nth.nth_soup_selector</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Module with nth-of-type selector implementations for SoupSelectors.</span>
-<span class="sd">Searches for nth-of-type element in similar fashion to CSS nth-of-type selector,</span>
-<span class="sd">but &#39;type&#39; is any SoupSelector instance.</span>
+<span class="sd">Module provides `nth-of-type` selector implementations for `SoupSelector`.</span>
+<span class="sd">It allows you to search for the nth occurrence of an element,</span>
+<span class="sd">similar to how the CSS `nth-of-type` pseudo-class works.</span>
+<span class="sd">However, instead of being limited to css selectors, it works with any `SoupSelector` instance.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">- `NthOfSelector` - Selects nth element matching given selector</span>
+<span class="sd">- `NthLastOfSelector` - Selects nth last element matching given selector</span>
+<span class="sd">- `OnlyOfSelector` - Selects only element matching given selector</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
@@ -116,19 +124,19 @@
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.BaseNthOfSelector.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span> <span class="n">nth</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes NthOfSelector instance</span>
+<span class="sd">        Initializes nth selector instance.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        selector : SoupSelector</span>
-<span class="sd">            Any SoupSelector instance to match tags.</span>
+<span class="sd">            Any `SoupSelector` instance used to match elements.</span>
 <span class="sd">        nth : str</span>
-<span class="sd">            CSS nth selector string. Accepts all valid css nth selectors.</span>
+<span class="sd">            CSS nth selector string. Accepts all valid css nth formulas.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        NotSoupSelectorException</span>
-<span class="sd">            If selector is not an instance of SoupSelector.</span>
+<span class="sd">            If selector is not an instance of `SoupSelector`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_selector</span> <span class="o">=</span> <span class="n">check_selector</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nth_selector</span> <span class="o">=</span> <span class="n">parse_nth</span><span class="p">(</span><span class="n">nth</span><span class="p">)</span></div>
@@ -199,29 +207,29 @@
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.NthOfSelector">[docs]</a>
 <span class="k">class</span> <span class="nc">NthOfSelector</span><span class="p">(</span><span class="n">BaseNthOfSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Component that matches nth-of-type elements in the soup, with use of standard</span>
-<span class="sd">    css nth selectors. Element is of type if it matches provided SoupSelector instance.</span>
+<span class="sd">    Selector for finding nth-of elements in the soup among elements that match</span>
+<span class="sd">    provided `SoupSelector` instance.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; selector = NthOfSelector(AttributeSelector(&quot;class&quot;, &quot;item&quot;), &quot;2n+1&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; selector = NthOfSelector(ClassSelector(&quot;item&quot;), &quot;2n+1&quot;)</span>
 
 <span class="sd">    matches all odd elements with class &quot;item&quot;.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;1&lt;/div&gt; ✔️</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div id=&quot;item&quot;&gt;&lt;/div&gt; ❌</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;2&lt;/div&gt; ❌</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;3&lt;/div&gt; ✔️</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;/div&gt; ❌</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;4&lt;/div&gt; ❌</span>
+<span class="sd">    ... &lt;div id=&quot;item&quot;&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    ... &lt;div class=&quot;item&quot;&gt;2&lt;/div&gt; ❌</span>
+<span class="sd">    ... &lt;div class=&quot;item&quot;&gt;3&lt;/div&gt; ✔️</span>
+<span class="sd">    ... &lt;div class=&quot;widget&quot;&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    ... &lt;div class=&quot;item&quot;&gt;4&lt;/div&gt; ❌</span>
 
-<span class="sd">    For more information about standard :nth-of-type selector, visit:</span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    For more information about standard :nth-of-type pseudo-class, visit:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-of-type</span>
-
-<span class="sd">    and check out soupsavvy implementation of :nth-of-type selector:</span>
-<span class="sd">    `soupsavvy.tags.css.tag_selectors.NthOfType`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># keep initial order of matching elements</span>
@@ -233,29 +241,29 @@
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.NthLastOfSelector">[docs]</a>
 <span class="k">class</span> <span class="nc">NthLastOfSelector</span><span class="p">(</span><span class="n">BaseNthOfSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Component that matches nth-last-of-type elements in the soup, with use of standard</span>
-<span class="sd">    css nth selectors. Element is of type if it matches provided SoupSelector instance.</span>
+<span class="sd">    Selector for finding nth-last-of elements in the soup among elements that match</span>
+<span class="sd">    provided `SoupSelector` instance.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; selector = NthLastOfSelector(AttributeSelector(&quot;class&quot;, &quot;item&quot;), &quot;2n+1&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; selector = NthLastOfSelector(ClassSelector(&quot;item&quot;), &quot;2n+1&quot;)</span>
 
 <span class="sd">    matches all odd elements with class &quot;item&quot; starting from the last element.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;1&lt;/div&gt; ❌</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div id=&quot;item&quot;&gt;&lt;/div&gt; ❌</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;2&lt;/div&gt; ✔️</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;3&lt;/div&gt; ❌</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;&lt;/div&gt; ❌</span>
-<span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;item&quot;&gt;4&lt;/div&gt; ✔️</span>
+<span class="sd">    ... &lt;div id=&quot;item&quot;&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    ... &lt;div class=&quot;item&quot;&gt;2&lt;/div&gt; ✔️</span>
+<span class="sd">    ... &lt;div class=&quot;item&quot;&gt;3&lt;/div&gt; ❌</span>
+<span class="sd">    ... &lt;div class=&quot;widget&quot;&gt;&lt;/div&gt; ❌</span>
+<span class="sd">    ... &lt;div class=&quot;item&quot;&gt;4&lt;/div&gt; ✔️</span>
 
-<span class="sd">    For more information about standard :nth-of-type selector, visit:</span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    For more information about standard :nth-of-type pseudo-class, visit:</span>
+
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-of-type</span>
-
-<span class="sd">    and check out soupsavvy implementation of :nth-of-type selector:</span>
-<span class="sd">    `soupsavvy.tags.css.tag_selectors.NthLastOfType`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># reverse order of matching elements</span>
@@ -267,12 +275,12 @@
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.OnlyOfSelector">[docs]</a>
 <span class="k">class</span> <span class="nc">OnlyOfSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Component that matches only-of-type elements in the soup. Element is of type</span>
-<span class="sd">    if it matches provided SoupSelector instance.</span>
+<span class="sd">    Selector for finding the only element,</span>
+<span class="sd">    that matches provided `SoupSelector` instance among its siblings.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; selector = NthLastOnlyOfSelectorOfSelector(AttributeSelector(&quot;class&quot;, &quot;item&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; selector = OnlyOfSelector(ClassSelector(&quot;item&quot;))</span>
 
 <span class="sd">    matches all elements with class &quot;item&quot; that are the only child of their parent</span>
 <span class="sd">    that matches the selector.</span>
@@ -284,30 +292,28 @@
 <span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;div class=&quot;item&quot;&gt;&lt;/div&gt;&lt;/div&gt; ✔️</span>
 <span class="sd">    &gt;&gt;&gt; &lt;div&gt;&lt;div class=&quot;widget&quot;&gt;&lt;/div&gt;&lt;/div&gt; ❌</span>
 
-<span class="sd">    For all positive examples above, `&lt;div class=&quot;item&quot;&gt;` is matched.</span>
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    For more information about standard :only-of-type pseudo-class, visit:</span>
 
-<span class="sd">    For more information about standard :only-of-type selector, visit:</span>
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/:only-of-type</span>
-
-<span class="sd">    and check out soupsavvy implementation of :only-of-type selector:</span>
-<span class="sd">    `soupsavvy.tags.css.tag_selectors.OnlyOfType`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="OnlyOfSelector.__init__">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.OnlyOfSelector.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes OnlyOfSelector instance.</span>
+<span class="sd">        Initializes `OnlyOfSelector` instance.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        selector : SoupSelector</span>
-<span class="sd">            Any SoupSelector instance to match tags.</span>
+<span class="sd">            Any `SoupSelector` instance used to match elements.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        NotSoupSelectorException</span>
-<span class="sd">            If selector is not an instance of SoupSelector.</span>
+<span class="sd">            If selector is not an instance of `SoupSelector`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">=</span> <span class="n">check_selector</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span></div>
 
@@ -342,10 +348,7 @@
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2">(selector=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="si">}</span><span class="s2">)&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2">(selector=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="si">}</span><span class="s2">)&quot;</span></div>
 
 </pre></div>
 
@@ -356,7 +359,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

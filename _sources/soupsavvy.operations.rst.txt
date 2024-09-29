@@ -13,7 +13,7 @@ Submodules
    soupsavvy.operations.soup
    soupsavvy.operations.wrappers
 
-Module contents
+Content
 ---------------
 
 .. automodule:: soupsavvy.operations

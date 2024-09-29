@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -87,7 +88,15 @@
              
   <h1>Source code for soupsavvy.testing.generators.templates.templates</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Module with implementation of templates that enhance generator components.</span>
+<span class="sd">Module with implementation of templates that complement generator components</span>
+<span class="sd">providing more customization options.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">- `EmptyTemplate` - Template for generating an empty string.</span>
+<span class="sd">- `ConstantTemplate` - Template for generating a constant string.</span>
+<span class="sd">- `ChoiceTemplate` - Template for randomly selecting from a list of choices.</span>
+<span class="sd">- `RandomTemplate` - Template for generating a random string of ASCII letters and digits.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">random</span>
@@ -103,7 +112,7 @@
 <span class="k">class</span> <span class="nc">EmptyTemplate</span><span class="p">(</span><span class="n">BaseTemplate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Template for generating an empty string.</span>
-<span class="sd">    It&#39;s a convenient default template for always generating an empty string.</span>
+<span class="sd">    Convenience template for default generator behavior.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -133,7 +142,7 @@
 <span class="k">class</span> <span class="nc">ConstantTemplate</span><span class="p">(</span><span class="n">BaseTemplate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Template for generating a constant string.</span>
-<span class="sd">    It&#39;s a convenient template for always generating the same, defined string.</span>
+<span class="sd">    Convenience template for always generating the same content.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -146,7 +155,7 @@
 <a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.ConstantTemplate.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes the ConstantTemplate.</span>
+<span class="sd">        Initializes `ConstantTemplate` instance.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -189,12 +198,12 @@
 <a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.ChoiceTemplate.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choices</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes the ChoiceTemplate.</span>
+<span class="sd">        Initializes `ChoiceTemplate` instance.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        choices : Iterable</span>
-<span class="sd">            Iterable of choices.</span>
+<span class="sd">            Iterable of choices to select from.</span>
 <span class="sd">        seed : int, optional</span>
 <span class="sd">            Random seed for reproducibility. Defaults to None, no seed is used.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -223,7 +232,7 @@
 <a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.RandomTemplate">[docs]</a>
 <span class="k">class</span> <span class="nc">RandomTemplate</span><span class="p">(</span><span class="n">BaseTemplate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Template for generating a random string.</span>
+<span class="sd">    Template for generating a random string of ASCII letters and digits.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -238,7 +247,7 @@
 <a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.RandomTemplate.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes the RandomTemplate.</span>
+<span class="sd">        Initializes `RandomTemplate` instance.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -314,7 +323,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

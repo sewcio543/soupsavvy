@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -90,8 +91,10 @@
 <span class="sd">Module for operations wrappers,</span>
 <span class="sd">operations that control behavior of the wrapped operation.</span>
 
-<span class="sd">* SkipNone - Skips the operation if the input is None.</span>
-<span class="sd">* Suppress - Suppresses exceptions raised by the operation.</span>
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">- `SkipNone` - Skips the operation if the input is None.</span>
+<span class="sd">- `Suppress` - Suppresses exceptions raised by the operation.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
@@ -117,7 +120,7 @@
 <a class="viewcode-back" href="../../../soupsavvy.operations.wrappers.html#soupsavvy.operations.OperationWrapper.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">:</span> <span class="n">BaseOperation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize Higher Order Operation.</span>
+<span class="sd">        Initialize Operation Wrapper.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -127,14 +130,14 @@
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        NotOperationException</span>
-<span class="sd">            If provided object is not an instance of BaseOperation.</span>
+<span class="sd">            If provided object is not an instance of `BaseOperation`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="n">check_operation</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span></div>
 
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check if two OperationWrapper instances are equal.</span>
+<span class="sd">        Check if two `OperationWrapper` instances are equal.</span>
 <span class="sd">        They need to be of the same class and wrap the same operation.</span>
 
 <span class="sd">        Parameters</span>
@@ -246,7 +249,7 @@
         <span class="n">category</span><span class="p">:</span> <span class="n">ExceptionCategory</span> <span class="o">=</span> <span class="ne">Exception</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize Suppress OperationWrapper.</span>
+<span class="sd">        Initialize `Suppress` operation instance.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -254,12 +257,12 @@
 <span class="sd">            The operation to be wrapped.</span>
 <span class="sd">        category : Type[Exception] | tuple[Type[Exception], ...], optional</span>
 <span class="sd">            The exception type(s) to suppress. By default, suppresses all exceptions</span>
-<span class="sd">            that inherit from Exception.</span>
+<span class="sd">            that inherit from `Exception`.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        NotOperationException</span>
-<span class="sd">            If provided object is not an instance of BaseOperation.</span>
+<span class="sd">            If provided object is not an instance of `BaseOperation`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_category</span> <span class="o">=</span> <span class="n">category</span></div>
@@ -284,7 +287,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

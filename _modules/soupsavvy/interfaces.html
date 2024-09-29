@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -89,9 +90,9 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Module with `soupsavvy` interfaces used across the package.</span>
 
-<span class="sd">* `Executable` - Interface for operations that can be executed on single argument.</span>
-<span class="sd">* `Comparable` - Interface for objects that can be compared for equality.</span>
-<span class="sd">* `TagSearcher` - Interface for objects that can search within BeautifulSoup tags.</span>
+<span class="sd">- `Executable` - Interface for operations that can be executed on single argument.</span>
+<span class="sd">- `Comparable` - Interface for objects that can be compared for equality.</span>
+<span class="sd">- `TagSearcher` - Interface for objects that can search within `bs4.Tag`.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
@@ -150,7 +151,9 @@
 <a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher">[docs]</a>
 <span class="k">class</span> <span class="nc">TagSearcher</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Interface for objects that can search within BeautifulSoup tags.</span>
+<span class="sd">    Interface for objects that can search within `bs4.Tag`.</span>
+<span class="sd">    Derived classes must implement the `find` and `find_all` methods,</span>
+<span class="sd">    that process `bs4.Tag` object and return results.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TagSearcher.find">
@@ -163,23 +166,23 @@
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Finds first target information within the given tag and returns the result.</span>
+<span class="sd">        Processes `bs4.Tag` object and returns result.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        tag : Tag</span>
-<span class="sd">            Any BeautifulSoup Tag object.</span>
+<span class="sd">            Any `bs4.Tag` object to process.</span>
 <span class="sd">        strict : bool, optional</span>
 <span class="sd">            If True, enforces results to be found in the tag, by default False.</span>
 <span class="sd">        recursive : bool, optional</span>
-<span class="sd">            bs4.Tag.find method parameter that specifies if search should be recursive.</span>
-<span class="sd">            If set to False, only direct children of the tag will be searched.</span>
-<span class="sd">            By default True.</span>
+<span class="sd">            Specifies if search should be recursive.</span>
+<span class="sd">            If set to `False`, only direct children of the tag will be searched.</span>
+<span class="sd">            By default `True`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        Any</span>
-<span class="sd">            Result of the search operation.</span>
+<span class="sd">            Processed result from the tag.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an interface &quot;</span>
@@ -197,24 +200,24 @@
         <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Finds all target information within the given tag and returns the result.</span>
+<span class="sd">        Processes `bs4.Tag` object and returns list of results.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        tag : Tag</span>
-<span class="sd">            Any BeautifulSoup Tag object.</span>
+<span class="sd">            Any `bs4.Tag` object to process.</span>
 <span class="sd">        recursive : bool, optional</span>
-<span class="sd">            bs4.Tag.find method parameter that specifies if search should be recursive.</span>
-<span class="sd">            If set to False, only direct children of the tag will be searched.</span>
-<span class="sd">            By default True.</span>
+<span class="sd">            Specifies if search should be recursive.</span>
+<span class="sd">            If set to `False`, only direct children of the tag will be searched.</span>
+<span class="sd">            By default `True`.</span>
 <span class="sd">        limit : int, optional</span>
-<span class="sd">            bs4.Tag.find_all method parameter that specifies maximum number of results</span>
-<span class="sd">            to return. If set to None, all results are returned. By default None.</span>
+<span class="sd">            Specifies maximum number of results to return in a list.</span>
+<span class="sd">            By default `None`, everything is returned.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        list[Any]</span>
-<span class="sd">            A list of results, if none found, the list is empty.</span>
+<span class="sd">            A list of results from processed tag.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an interface &quot;</span>
@@ -231,7 +234,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

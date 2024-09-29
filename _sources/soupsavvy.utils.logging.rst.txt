@@ -1,3 +1,6 @@
+utils.logging
+==============================
+
 .. automodule:: soupsavvy.utils.logging
    :members:
    :undoc-members:

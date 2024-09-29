@@ -1,3 +1,6 @@
+selectors.css.selectors
+========================================
+
 .. automodule:: soupsavvy.selectors.css.selectors
    :members:
    :undoc-members:

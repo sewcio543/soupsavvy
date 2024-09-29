@@ -4,11 +4,11 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parameters &mdash; soupsavvy  documentation</title>
+  <title>operations.wrappers &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -24,7 +24,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="testing" href="soupsavvy.testing.html" />
-    <link rel="prev" title="Example" href="soupsavvy.operations.soup.html" /> 
+    <link rel="prev" title="operations.soup" href="soupsavvy.operations.soup.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -52,30 +52,24 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.html">models</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="soupsavvy.operations.html">operations</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="soupsavvy.operations.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.conditional.html"><code class="docutils literal notranslate"><span class="pre">Break</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.conditional.html#soupsavvy.operations.conditional.Continue"><code class="docutils literal notranslate"><span class="pre">Continue</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.conditional.html#soupsavvy.operations.conditional.IfElse"><code class="docutils literal notranslate"><span class="pre">IfElse</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html"><code class="docutils literal notranslate"><span class="pre">Operation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html#soupsavvy.operations.general.OperationPipeline"><code class="docutils literal notranslate"><span class="pre">OperationPipeline</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html"><code class="docutils literal notranslate"><span class="pre">SelectionPipeline</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html"><code class="docutils literal notranslate"><span class="pre">Href</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Parent"><code class="docutils literal notranslate"><span class="pre">Parent</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Text"><code class="docutils literal notranslate"><span class="pre">Text</span></code></a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">OperationWrapper</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.wrappers.OperationWrapper.__init__"><code class="docutils literal notranslate"><span class="pre">OperationWrapper.__init__()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.operations.wrappers.SkipNone"><code class="docutils literal notranslate"><span class="pre">SkipNone</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#soupsavvy.operations.wrappers.Suppress"><code class="docutils literal notranslate"><span class="pre">Suppress</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.wrappers.Suppress.__init__"><code class="docutils literal notranslate"><span class="pre">Suppress.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.conditional.html">operations.conditional</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html">operations.general</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html">operations.selection_pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html">operations.soup</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">operations.wrappers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#classes">Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.wrappers.OperationWrapper"><code class="docutils literal notranslate"><span class="pre">OperationWrapper</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.wrappers.SkipNone"><code class="docutils literal notranslate"><span class="pre">SkipNone</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.wrappers.Suppress"><code class="docutils literal notranslate"><span class="pre">Suppress</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.html#module-soupsavvy.operations">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.html#module-soupsavvy.operations">Content</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -103,7 +97,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="soupsavvy.operations.html">operations</a></li>
-      <li class="breadcrumb-item active">Parameters</li>
+      <li class="breadcrumb-item active">operations.wrappers</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/soupsavvy.operations.wrappers.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -113,12 +107,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <p id="module-soupsavvy.operations.wrappers">Module for operations wrappers,
+  <section id="module-soupsavvy.operations.wrappers">
+<span id="operations-wrappers"></span><h1>operations.wrappers<a class="headerlink" href="#module-soupsavvy.operations.wrappers" title="Link to this heading"></a></h1>
+<p>Module for operations wrappers,
 operations that control behavior of the wrapped operation.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>SkipNone - Skips the operation if the input is None.</p></li>
-<li><p>Suppress - Suppresses exceptions raised by the operation.</p></li>
+<li><p><cite>SkipNone</cite> - Skips the operation if the input is None.</p></li>
+<li><p><cite>Suppress</cite> - Suppresses exceptions raised by the operation.</p></li>
 </ul>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.operations.wrappers.OperationWrapper">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OperationWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.BaseOperation" title="soupsavvy.base.BaseOperation"><span class="pre">BaseOperation</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/operations/wrappers.html#OperationWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.wrappers.OperationWrapper" title="Link to this definition"></a></dt>
@@ -128,18 +127,18 @@ Acts as a higher order operation, which controls behavior of the wrapped operati
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.operations.wrappers.OperationWrapper.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.BaseOperation" title="soupsavvy.base.BaseOperation"><span class="pre">BaseOperation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/wrappers.html#OperationWrapper.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.wrappers.OperationWrapper.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize Higher Order Operation.</p>
+<dd><p>Initialize Operation Wrapper.</p>
 <section id="parameters">
-<h1>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h1>
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>operation<span class="classifier">BaseOperation</span></dt><dd><p>The operation to be wrapped.</p>
 </dd>
 </dl>
 </section>
 <section id="raises">
-<h1>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h1>
+<h2>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>NotOperationException</dt><dd><p>If provided object is not an instance of BaseOperation.</p>
+<dt>NotOperationException</dt><dd><p>If provided object is not an instance of <cite>BaseOperation</cite>.</p>
 </dd>
 </dl>
 </section>
@@ -154,7 +153,7 @@ Acts as a higher order operation, which controls behavior of the wrapped operati
 <p>A wrapper that skips the operation if the input is None.
 Used to prevent exceptions where it’s safe and expected to skip the operation.</p>
 <section id="example">
-<h1>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h1>
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
 <span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">SkipNone</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">SkipNone</span><span class="p">(</span><span class="n">Text</span><span class="p">())</span>
@@ -175,7 +174,7 @@ and returns None.</p>
 returning None instead. Used to catch exceptions where it’s expected
 this might happen.</p>
 <section id="id1">
-<h1>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<h2>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
 <span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Suppress</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
@@ -187,7 +186,7 @@ this might happen.</p>
 when the operation fails.</p>
 </section>
 <section id="id2">
-<h1>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h1>
+<h2>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
 <span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Suppress</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Default</span><span class="p">(</span><span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">)),</span> <span class="mi">0</span><span class="p">)</span>
@@ -202,7 +201,7 @@ default can be set to None or known value.</p>
 all exceptions that inherit from Exception.</p>
 </section>
 <section id="id3">
-<h1>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h1>
+<h2>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
 <span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Suppress</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">category</span><span class="o">=</span><span class="ne">ValueError</span><span class="p">)</span>
@@ -214,7 +213,7 @@ all exceptions that inherit from Exception.</p>
 if the cause of exception is subclass of provided category.</p>
 </section>
 <section id="id4">
-<h1>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h1>
+<h2>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
 <span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Suppress</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">category</span><span class="o">=</span><span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">))</span>
@@ -225,21 +224,21 @@ if the cause of exception is subclass of provided category.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.operations.wrappers.Suppress.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">operation:</span> <span class="pre">~soupsavvy.base.BaseOperation,</span> <span class="pre">category:</span> <span class="pre">~typing.Type[Exception]</span> <span class="pre">|</span> <span class="pre">tuple[~typing.Type[Exception],</span> <span class="pre">...]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'Exception'&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/wrappers.html#Suppress.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.wrappers.Suppress.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initialize Suppress OperationWrapper.</p>
+<dd><p>Initialize <cite>Suppress</cite> operation instance.</p>
 <section id="id5">
-<h2>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<h3>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>operation<span class="classifier">BaseOperation</span></dt><dd><p>The operation to be wrapped.</p>
 </dd>
 <dt>category<span class="classifier">Type[Exception] | tuple[Type[Exception], …], optional</span></dt><dd><p>The exception type(s) to suppress. By default, suppresses all exceptions
-that inherit from Exception.</p>
+that inherit from <cite>Exception</cite>.</p>
 </dd>
 </dl>
 </section>
 <section id="id6">
-<h2>Raises<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<h3>Raises<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>NotOperationException</dt><dd><p>If provided object is not an instance of BaseOperation.</p>
+<dt>NotOperationException</dt><dd><p>If provided object is not an instance of <cite>BaseOperation</cite>.</p>
 </dd>
 </dl>
 </section>
@@ -248,19 +247,20 @@ that inherit from Exception.</p>
 </section>
 </dd></dl>
 
+</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="soupsavvy.operations.soup.html" class="btn btn-neutral float-left" title="Example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soupsavvy.operations.soup.html" class="btn btn-neutral float-left" title="operations.soup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="soupsavvy.testing.html" class="btn btn-neutral float-right" title="testing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    

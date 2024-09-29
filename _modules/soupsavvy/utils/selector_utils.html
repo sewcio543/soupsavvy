@@ -7,7 +7,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1bac72b6" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=acd973c5" />
 
   
   <!--[if lt IE 9]>
@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.models.html">models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operators.html">operators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -86,7 +87,16 @@
            <div itemprop="articleBody">
              
   <h1>Source code for soupsavvy.utils.selector_utils</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Module for utility functions for tag selectors.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module for utility functions for selectors, used internally across package</span>
+<span class="sd">to ensure consistent and reliable results.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">- `TagIterator` - Wrapper class for iterating over bs4.Tag.</span>
+<span class="sd">- `UniqueTag` - Wrapper class for bs4.Tag to make it hashable by id.</span>
+<span class="sd">- `TagResultSet` - Collection that stores and manages results of selection.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
@@ -204,8 +214,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    TagResultSet class is collection that stores and manages results of find_all</span>
 <span class="sd">    method of selectors. Prerequisites for returned results are:</span>
-<span class="sd">    * bs4.Tag instances are unique</span>
-<span class="sd">    * the order of results == order of their appearance in html</span>
+<span class="sd">    - bs4.Tag instances are unique</span>
+<span class="sd">    - the order of results == order of their appearance in html</span>
 
 <span class="sd">    This components consumes list of bs4.Tag instances and provides methods</span>
 <span class="sd">    for fetching unique results with preserved order.</span>
@@ -220,7 +230,7 @@
 <a class="viewcode-back" href="../../../soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagResultSet.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes TagResultSet instance.</span>
+<span class="sd">        Initializes `TagResultSet` instance.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -443,7 +453,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, sewcio543.</p>
+    <p>&#169; Copyright 2024, soupsavvy.</p>
   </div>
 
    
