@@ -54,6 +54,8 @@ def main(dir: str) -> None:
         for suffix in SUFFIXES:
             content = content.replace(f" {suffix}", "")
 
+        content = content.replace("Module contents", "Content")
+
         with open(path, "w") as file:
             file.write(content)
 

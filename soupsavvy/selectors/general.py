@@ -1,11 +1,12 @@
 """
-Module for general purpose selectors.
+Module with miscellaneous selectors.
 
 Classes
 -------
-TypeSelector - combines type and attribute selectors
-PatternSelector - matches elements based on text content and selector
-UniversalSelector - universal selector (*)
+- `TypeSelector` - combines type and attribute selectors
+- `PatternSelector` - matches elements based on text content and selector
+- `UniversalSelector` - universal selector (*)
+- `SelfSelector` - matches the element itself
 """
 
 import itertools
@@ -23,8 +24,8 @@ from soupsavvy.utils.selector_utils import TagIterator
 @dataclass
 class TypeSelector(SoupSelector, SelectableCSS):
     """
-    Component for finding elements based on tag name.
-    `soupsavvy` counterpart of css type selector.
+    Selector for finding elements based on tag name (type).
+    Counterpart of css type selectors.
 
     Example
     -------
@@ -37,26 +38,28 @@ class TypeSelector(SoupSelector, SelectableCSS):
     >>> <div class="widget">Hello World</div> ✔️
     >>> <a href="/shop">Hello World</a> ❌
 
-    It's soupsavvy counterpart of passing name to bs4 find methods.
+    CSS counterpart can be represented as:
 
     Example
     -------
-    >>> soup.find_all("div")
+    >>> div
 
-    Returns the same result as:
+    And can be retrieved with `css` property.
 
     Example
     -------
-    >>> TypeSelector("div").find_all(soup)
+    >>> TypeSelector("div").css
+    "div"
 
     Parameters
     ----------
     name : str
-        HTML tag name ex. "a", "div".
+        Tag name of the element ex. "a", "div".
 
     Notes
     -----
-    For more information about type selectors see:
+    For more information about type selectors, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors
     """
 
@@ -87,8 +90,7 @@ class TypeSelector(SoupSelector, SelectableCSS):
 @dataclass
 class PatternSelector(SoupSelector):
     """
-    Class representing HTML element with specific string pattern for text.
-    Provides elements matching with text matching the pattern.
+    Selector for finding elements based on text content pattern.
 
     Example
     -------
@@ -102,40 +104,35 @@ class PatternSelector(SoupSelector):
     >>> <div>Hello Python</div> ❌
     >>> <div>Hello World 3</div> ❌
 
-    Parameters
-    ----------
-    pattern: str | Pattern
-        A pattern to match text of the element. Can be a string for exact match
-        or Pattern for any more complex regular expressions.
-
-    Notes
-    -----
-    Selector uses re.search function to match text content
-    if compiled regex is passed as pattern.
-    Providing 're.compile(r"[0-9]")' as pattern will much any element with a digit in text.
+    In case of using regex pattern, `re.search` is used to match the attribute value.
 
     Example
     -------
-    >>> import re
-    >>> PatternSelector(pattern=re.compile(r"[0-9]"))
+    >>> PatternSelector(pattern=re.compile(r"[0-9]+"))
+
+    matches all elements with text content containing at least one digit.
 
     Example
     -------
     >>> <div>Hello World 123</div> ✔️
     >>> <div>Hello World</div> ❌
 
-    Due to bs4 implementation, element does not match the pattern if it has any children.
-    Only leaf nodes can be returned by PatternSelector find methods.
+    Parameters
+    ----------
+    pattern: str | Pattern
+        Pattern to match text of the element. Can be a string for exact match
+        or `Pattern` for any more complex regular expressions.
 
-    Example
-    -------
-    >>> <div>Hello World<span></span></div> ❌
+    Notes
+    -----
+    Due to `bs4` implementation, element does not match the pattern if it has any children.
+    Only leaf nodes can be returned by `PatternSelector` find methods.
     """
 
     pattern: ns.PatternType
 
     def __post_init__(self) -> None:
-        """Sets up compiled regex pattern used for SoupStrainer in find methods."""
+        """Sets up compiled regex pattern used for `SoupStrainer` in find methods."""
         self._pattern = (
             str(self.pattern) if not isinstance(self.pattern, Pattern) else self.pattern
         )
@@ -158,21 +155,29 @@ class PatternSelector(SoupSelector):
 @dataclass
 class UniversalSelector(SoupSelector, SelectableCSS):
     """
-    Class representing a wildcard tag that matches ny and all types of elements
-    in html page.
-
-    UniversalSelector implements SelectableCSS interface with wildcard css selector "*",
-    aka. universal selector, that matches all elements in html page.
+    Selector representing a wildcard pattern, that matches all elements in the html page.
 
     Example
     -------
-    >>> any_element = UniversalSelector()
-    >>> any_element.selector
+    >>> UniversalSelector()
+
+    CSS counterpart can be represented as:
+
+    Example
+    -------
+    >>> *
+
+    And can be retrieved with `css` property.
+
+    Example
+    -------
+    >>> UniversalSelector().css
     "*"
 
     Notes
     -----
-    For more information on universal selector see:
+    For more information on universal selector, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors
     """
 
@@ -194,14 +199,14 @@ class UniversalSelector(SoupSelector, SelectableCSS):
         return isinstance(other, UniversalSelector)
 
 
-@deprecated(f"AnyTagSelector is deprecated, use 'UniversalSelector' class instead.")
+@deprecated(f"'AnyTagSelector' is deprecated, use 'UniversalSelector' class instead.")
 class AnyTagSelector(UniversalSelector):
-    """Alias for UniversalSelector class. Deprecated component."""
+    """Alias for `UniversalSelector` class. Deprecated component."""
 
 
 class SelfSelector(SoupSelector):
     """
-    Class representing a selector that matches the element itself.
+    Selector matching only the element itself.
     Convenience component that can be used for compatibility.
 
     Example
@@ -210,6 +215,8 @@ class SelfSelector(SoupSelector):
 
     always matches the tag that is passed to the find methods.
 
+    Notes
+    -----
     Can be used in user-defined model for scope if element itself is the scope.
     """
 

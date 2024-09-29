@@ -6,14 +6,16 @@
 import os
 import sys
 
+from sphinx.application import Sphinx
+
 sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "soupsavvy"
-copyright = "2024, sewcio543"
 author = "sewcio543"
+copyright = "2024, soupsavvy"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -42,6 +44,8 @@ html_static_path = ["_static"]
 source_suffix = [".rst", ".md", ".ipynb"]
 html_show_sphinx = False
 
+autodoc_member_order = "bysource"
+
 
 def skip(app, what, name, obj, would_skip, options):
     if name == "__init__":
@@ -50,6 +54,6 @@ def skip(app, what, name, obj, would_skip, options):
     return would_skip
 
 
-def setup(app):
+def setup(app: Sphinx):
     app.connect("autodoc-skip-member", skip)
     app.add_css_file("css/custom.css")

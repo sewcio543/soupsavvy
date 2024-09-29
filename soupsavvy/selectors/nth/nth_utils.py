@@ -1,4 +1,12 @@
-"""Module with utility components operations with css nth-selectors."""
+"""
+Module with components used in nth selectors implementation.
+Provide the ways of parsing and generating numbers from nth selectors.
+
+Classes
+-------
+- `NthGenerator` - Generates a list of integers that match the nth CSS selector.
+- `parse_nth` - Parses CSS nth selector and returns NthGenerator instance.
+"""
 
 import math
 import re
@@ -37,8 +45,8 @@ class NthGenerator:
     ... list(nth.generate(10))
     [2, 5, 8]
 
-    Generate method has stop parameter that limits the range of integers generated.
-    When having list of 10 sibling elements, the stop parameter can be set to 10
+    `generate` method has `stop` parameter that limits the range of integers generated.
+    When having list of 10 sibling elements, the `stop` parameter can be set to 10
     to determine which elements match provided nth-child selector.
 
     Examples
@@ -154,17 +162,18 @@ class NthGenerator:
 
 def parse_nth(selector: str) -> NthGenerator:
     """
-    Parse CSS nth selector and return NthGenerator instance.
+    Parses CSS nth formula and return `NthGenerator` instance.
 
     Parameters
     ----------
     selector : str
-        CSS nth selector string. Accepts all valid css nth selectors.
+        CSS nth selector string. Accepts all valid css nth formulas.
 
     Returns
     -------
     NthGenerator
-        NthGenerator instance that represents the parsed nth selector.
+        `NthGenerator` instance that represents the parsed nth selector
+        and can be used for generating matching numbers.
 
     Raises
     ------

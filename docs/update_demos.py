@@ -1,7 +1,7 @@
 """
 Script to update the docs index.rst file automatically.
-* Removes deleted demos from the toctree directive (if any).
-* Adds new demos the toctree directive (if any).
+- Removes deleted demos from the toctree directive (if any).
+- Adds new demos the toctree directive (if any).
 """
 
 from pathlib import Path

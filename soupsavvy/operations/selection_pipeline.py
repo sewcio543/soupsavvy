@@ -1,5 +1,5 @@
 """
-Module for selection pipeline class.
+Module with selection pipeline class.
 Pipeline for chaining selector and operation together, used as a bridge between
 selecting html elements and processing the data.
 """
@@ -34,7 +34,7 @@ class SelectionPipeline(TagSearcher, Comparable):
 
     def __init__(self, selector: TagSearcher, operation: BaseOperation) -> None:
         """
-        Initializes SelectionPipeline with selector and operation.
+        Initializes `SelectionPipeline` with selector and operation.
 
         Parameters
         ----------
@@ -54,7 +54,7 @@ class SelectionPipeline(TagSearcher, Comparable):
     @property
     def selector(self) -> TagSearcher:
         """
-        Returns TagSearcher object of this pipeline used for finding target
+        Returns `TagSearcher` object of this pipeline used for finding target
         information in the tag.
 
         Returns
@@ -67,7 +67,7 @@ class SelectionPipeline(TagSearcher, Comparable):
     @property
     def operation(self) -> BaseOperation:
         """
-        Returns BaseOperation object of this pipeline used for processing the data.
+        Returns `BaseOperation` object of this pipeline used for processing the data.
 
         Returns
         -------
@@ -88,16 +88,13 @@ class SelectionPipeline(TagSearcher, Comparable):
         Parameters
         ----------
         tag : Tag
-            Any BeautifulSoup Tag object.
+            Any `bs4.Tag` object to process.
         strict : bool, optional
-            If True, raises an exception if tag was not found in markup,
-            if False and tag was not found, returns None by defaulting to BeautifulSoup
-            implementation. Value of this parameter does not affect behavior if tag
-            was successfully found in the markup. By default False.
+            If True, enforces results to be found in the tag, by default False.
         recursive : bool, optional
-            bs4.Tag.find method parameter that specifies if search should be recursive.
-            If set to False, only direct children of the tag will be searched.
-            By default True.
+            Specifies if search should be recursive.
+            If set to `False`, only direct children of the tag will be searched.
+            By default `True`.
 
         Returns
         -------
@@ -107,7 +104,7 @@ class SelectionPipeline(TagSearcher, Comparable):
         Raises
         ------
         TagNotFoundException
-            If strict parameter is set to True and tag was not found in markup.
+            If strict parameter is set to `True` and none matching tag was found.
         """
         return self.operation.execute(
             self.selector.find(tag, strict=strict, recursive=recursive)
@@ -125,14 +122,14 @@ class SelectionPipeline(TagSearcher, Comparable):
         Parameters
         ----------
         tag : Tag
-            Any BeautifulSoup Tag object.
+            Any `bs4.Tag` object to process.
         recursive : bool, optional
-            bs4.Tag.find method parameter that specifies if search should be recursive.
-            If set to False, only direct children of the tag will be searched.
-            By default True.
+            Specifies if search should be recursive.
+            If set to `False`, only direct children of the tag will be searched.
+            By default `True`.
         limit : int, optional
-            bs4.Tag.find_all method parameter that specifies maximum number of results
-            to return. If set to None, all results are returned. By default None.
+            Specifies maximum number of results to return in a list.
+            By default `None`, everything is returned.
 
         Returns
         -------
@@ -146,13 +143,13 @@ class SelectionPipeline(TagSearcher, Comparable):
 
     def __or__(self, x: Any) -> SelectionPipeline:
         """
-        Overrides __or__ method called also by pipe operator '|'.
-        Creates new SelectionPipeline by extending operations with provided one.
+        Overrides `__or__` method called also by pipe operator '|'.
+        Creates new `SelectionPipeline` by extending operations with provided one.
 
         Parameters
         ----------
         x : BaseOperation
-            BaseOperation object used to extend the pipeline.
+            `BaseOperation` object used to extend the pipeline.
 
         Returns
         -------
@@ -162,7 +159,7 @@ class SelectionPipeline(TagSearcher, Comparable):
         Raises
         ------
         NotOperationException
-            If provided object is not of type BaseOperation.
+            If provided object is not an instance of `BaseOperation`.
         """
         x = check_operation(x)
         operation = self.operation | x

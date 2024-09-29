@@ -9,6 +9,7 @@ soupsavvy.selectors
 soupsavvy.models
 soupsavvy.operations
 soupsavvy.testing
+soupsavvy.operators
 ```
 
 ```{toctree}

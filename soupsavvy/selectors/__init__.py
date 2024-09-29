@@ -1,5 +1,6 @@
 """
-Subpackage with soup selectors for declarative search procedures.
+Subpackage with soup selectors, which define declarative procedure
+of searching for elements in the document.
 """
 
 from .attributes import AttributeSelector, ClassSelector, IdSelector
@@ -9,7 +10,6 @@ from .combinators import (
     DescendantCombinator,
     NextSiblingCombinator,
     ParentCombinator,
-    SelectorList,
     SubsequentSiblingCombinator,
 )
 from .general import (
@@ -19,29 +19,29 @@ from .general import (
     TypeSelector,
     UniversalSelector,
 )
-from .logical import AndSelector, NotSelector, OrSelector, XORSelector
+from .logical import AndSelector, NotSelector, OrSelector, SelectorList, XORSelector
 from .relative import Anchor, HasSelector
 
 __all__ = [
-    "UniversalSelector",
-    "AttributeSelector",
     "TypeSelector",
+    "AttributeSelector",
+    "ClassSelector",
+    "IdSelector",
     "PatternSelector",
+    "UniversalSelector",
     "SelfSelector",
-    "SelectorList",
     "DescendantCombinator",
-    "AncestorCombinator",
-    "ParentCombinator",
-    "AndSelector",
-    "NotSelector",
     "ChildCombinator",
     "NextSiblingCombinator",
     "SubsequentSiblingCombinator",
+    "SelectorList",
+    "ParentCombinator",
+    "AncestorCombinator",
+    "AndSelector",
+    "NotSelector",
     "OrSelector",
     "HasSelector",
     "Anchor",
-    "IdSelector",
-    "ClassSelector",
     "XORSelector",
     "AnyTagSelector",
 ]

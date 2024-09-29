@@ -381,10 +381,10 @@ class TestAnchor:
     It's sole responsibility is to implement dunder methods for creating RelativeSelector
     that follow those implemented in SoupSelector interface for combinator selectors:
 
-    * gt operator for RelativeChild
-    * rshift operator for RelativeDescendant
-    * add operator for RelativeNextSibling
-    * mul operator for RelativeSubsequentSibling
+    - gt operator for RelativeChild
+    - rshift operator for RelativeDescendant
+    - add operator for RelativeNextSibling
+    - mul operator for RelativeSubsequentSibling
     """
 
     def test_anchoring_with_gt_operator_returns_relative_child(self):

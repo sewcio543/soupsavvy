@@ -2,8 +2,10 @@
 Module for operations wrappers,
 operations that control behavior of the wrapped operation.
 
-* SkipNone - Skips the operation if the input is None.
-* Suppress - Suppresses exceptions raised by the operation.
+Classes
+-------
+- `SkipNone` - Skips the operation if the input is None.
+- `Suppress` - Suppresses exceptions raised by the operation.
 """
 
 from __future__ import annotations
@@ -25,7 +27,7 @@ class OperationWrapper(OperationSearcherMixin):
 
     def __init__(self, operation: BaseOperation) -> None:
         """
-        Initialize Higher Order Operation.
+        Initialize Operation Wrapper.
 
         Parameters
         ----------
@@ -35,13 +37,13 @@ class OperationWrapper(OperationSearcherMixin):
         Raises
         ------
         NotOperationException
-            If provided object is not an instance of BaseOperation.
+            If provided object is not an instance of `BaseOperation`.
         """
         self.operation = check_operation(operation)
 
     def __eq__(self, x: Any) -> bool:
         """
-        Check if two OperationWrapper instances are equal.
+        Check if two `OperationWrapper` instances are equal.
         They need to be of the same class and wrap the same operation.
 
         Parameters
@@ -145,7 +147,7 @@ class Suppress(OperationWrapper):
         category: ExceptionCategory = Exception,
     ) -> None:
         """
-        Initialize Suppress OperationWrapper.
+        Initialize `Suppress` operation instance.
 
         Parameters
         ----------
@@ -153,12 +155,12 @@ class Suppress(OperationWrapper):
             The operation to be wrapped.
         category : Type[Exception] | tuple[Type[Exception], ...], optional
             The exception type(s) to suppress. By default, suppresses all exceptions
-            that inherit from Exception.
+            that inherit from `Exception`.
 
         Raises
         ------
         NotOperationException
-            If provided object is not an instance of BaseOperation.
+            If provided object is not an instance of `BaseOperation`.
         """
         super().__init__(operation)
         self._category = category

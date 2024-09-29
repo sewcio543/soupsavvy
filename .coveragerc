@@ -12,7 +12,6 @@ exclude_lines =
     @overload
     @abstract*
     raise NotImplementedError
-    pragma: no cover
     # Ignore imports
     from
     import
