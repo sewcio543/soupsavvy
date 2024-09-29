@@ -1,4 +1,13 @@
-"""Module with HTML generators."""
+"""
+Module with generators for producing HTML content.
+Generators can be used to create customizable HTML content,
+that can be used to test selectors and workflows.
+
+Classes
+-------
+- `AttributeGenerator` - class for generating HTML attribute strings.
+- `TagGenerator` - class for generating HTML tag strings.
+"""
 
 from __future__ import annotations
 
@@ -103,8 +112,8 @@ class AttributeGenerator(BaseGenerator):
 
     See also
     --------
-    soupsavvy.testing.generators.templates module
-    soupsavvy.testing.generators.TagGenerator class
+    - `soupsavvy.testing.generators.templates` package
+    - `soupsavvy.testing.TagGenerator` class
     """
 
     def __init__(self, name: str, value: TemplateType = None) -> None:
@@ -185,9 +194,9 @@ class TagGenerator(BaseGenerator):
     '<div class="container"></div>'
 
     Attributes can be passed as an iterable of of mixed types:
-    * AttributeGenerator - instance of AttributeGenerator class
-    * str - attribute name, value would be a default Template (empty string)
-    * tuple[str, TemplateType] - attribute name and literal value or Template
+    - AttributeGenerator - instance of AttributeGenerator class
+    - str - attribute name, value would be a default Template (empty string)
+    - tuple[str, TemplateType] - attribute name and literal value or Template
 
     Example
     --------
@@ -203,8 +212,8 @@ class TagGenerator(BaseGenerator):
     '<div id="link" href="/endpoint", class=""></div>'
 
     Similarly, children can be passed as an iterable of mixed types:
-    * TagGenerator - instance of TagGenerator class
-    * str - tag name, children tags would be empty
+    - TagGenerator - instance of TagGenerator class
+    - str - tag name, children tags would be empty
 
     Example
     --------
@@ -237,7 +246,7 @@ class TagGenerator(BaseGenerator):
     For more information on available Templates, how to use them
     and customize for your needs, see the documentation.
 
-    Void tags like <img>, <br>, <hr> etc. can be generated as well
+    Void tags like `<img>`, `<br>`, `<hr>` etc. can be generated as well
     and are automatically closed:
 
     Example
@@ -250,8 +259,8 @@ class TagGenerator(BaseGenerator):
 
     See also
     --------
-    soupsavvy.testing.generators.templates module
-    soupsavvy.testing.generators.AttributeGenerator class
+    - `soupsavvy.testing.generators.templates` package
+    - `soupsavvy.testing.AttributeGenerator` class
     """
 
     def __init__(
@@ -262,7 +271,7 @@ class TagGenerator(BaseGenerator):
         text: TemplateType = None,
     ) -> None:
         """
-        Initialize the TagGenerator.
+        Initialize the `TagGenerator`.
 
         Parameters
         ----------

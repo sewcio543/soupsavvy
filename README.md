@@ -9,7 +9,7 @@
 
 - [About](#about)
 - [Key features](#key-features)
-- [Instalation](#installation)
+- [Installation](#installation)
 - [Documentation](#documentation)
 - [Demos](#demos)
 - [Contributing](#contributing)
@@ -46,8 +46,7 @@ If you'd like to contribute to soupsavvy, feel free to check out the [GitHub rep
 
 ## License
 
-[![MIT License](https://img.shields.io/badge/license-MIT-green?style=plastic)](https://choosealicense.com/licenses/mit/)
-`soupsavvy` is licensed under the [MIT License](https://opensource.org/licenses/MIT), allowing for both personal and commercial use. See the `LICENSE` file for more information.
+`soupsavvy` is licensed under ![MIT License](https://img.shields.io/badge/license-MIT-green?style=plastic), allowing for both personal and commercial use. See the `LICENSE` file for more information.
 
 ## Acknowledgements
 

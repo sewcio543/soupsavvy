@@ -1,14 +1,13 @@
 """
-Module for selectors that represent logical operations on multiple selectors.
-These selectors are used to create more complex selectors by combining
-multiple selectors in a single object.
+Module with selectors that represent logical operations on multiple selectors.
 
 Classes
 -------
-AndSelector - intersection of multiple selectors
-NotSelector - negation of a selector (~)
-XORSelector - exclusive OR of multiple selectors
-OrSelector - union of multiple selectors (|)
+- `AndSelector` - intersection of multiple selectors (&)
+- `NotSelector` - negation of a selector (~)
+- `XORSelector` - exclusive OR of multiple selectors
+- `SelectorList` - counterpart of CSS selector list or :is() pseudo-class (|)
+- `OrSelector` - union of multiple selectors - alias of `SelectorList` (|)
 """
 
 from collections import Counter
@@ -18,16 +17,95 @@ from typing import Optional
 from bs4 import Tag
 
 from soupsavvy.base import CompositeSoupSelector, SoupSelector
-from soupsavvy.selectors.combinators import SelectorList
 from soupsavvy.utils.selector_utils import TagIterator, TagResultSet, UniqueTag
 
-# alias for SelectorList
+
+class SelectorList(CompositeSoupSelector):
+    """
+    Counterpart of CSS selector list.
+    At least one selector from list must match the element to be included.
+
+    Example
+    -------
+    >>> SelectorList(TypeSelector("a"), AttributeSelector(name="class", value="widget"))
+
+    matches all elements that have "a" tag name OR 'class' attribute "widget".
+
+    Example
+    -------
+    >>> <a>Hello World</a> ✔️
+    >>> <div class="widget">Hello World</div> ✔️
+    >>> <div>Hello Python</div> ❌
+
+    Object can be created as well by using `pipe` operator '|' on `SoupSelector` objects.
+
+    Example
+    -------
+    >>> TypeSelector("a") | ClassSelector("widget")
+
+    CSS counterpart can be represented as:
+
+    Example
+    -------
+    >>> a, .widget
+    >>> :is(a, .widget)
+
+    Notes
+    -----
+    For more information on selector list, see:
+
+    https://developer.mozilla.org/en-US/docs/Web/CSS/Selector_list
+    """
+
+    def __init__(
+        self,
+        selector1: SoupSelector,
+        selector2: SoupSelector,
+        /,
+        *selectors: SoupSelector,
+    ) -> None:
+        """
+        Initializes `SelectorList` object with provided positional arguments.
+        At least two `SoupSelector` objects are required to create `SelectorList`.
+
+        Parameters
+        ----------
+        selectors: SoupSelector
+            SoupSelector objects to match accepted as positional arguments.
+
+        Raises
+        ------
+        NotSoupSelectorException
+            If any of provided parameters is not an instance of SoupSelector.
+        """
+        super().__init__([selector1, selector2, *selectors])
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        results = TagResultSet()
+
+        for selector in self.selectors:
+            results |= TagResultSet(
+                selector.find_all(tag, recursive=recursive),
+            )
+
+        # keep order of tags and limit
+        results = TagResultSet(list(TagIterator(tag, recursive=recursive))) & results
+        return results.fetch(limit)
+
+
+# alias of `SelectorList`
 OrSelector = SelectorList
 
 
 class NotSelector(CompositeSoupSelector):
     """
-    Class representing selector of elements that do not match provided selectors.
+    Selector for finding elements that do not match provided selector(s).
+    Counterpart of CSS :not() pseudo-class.
 
     Example
     -------
@@ -40,11 +118,8 @@ class NotSelector(CompositeSoupSelector):
     >>> <span> class="widget">Hello World</span> ✔️
     >>> <div class="menu">Hello World</div> ❌
 
-    Object can be initialized with multiple selectors as well, in which case
-    at least one selector must match for element to be excluded from the result.
-
-    Object can be created as well by using bitwise NOT operator '~'
-    on a SoupSelector object.
+    Object can be created as well by using `bitwise NOT` operator '~'
+    on `SoupSelector` object.
 
     Example
     -------
@@ -52,24 +127,16 @@ class NotSelector(CompositeSoupSelector):
 
     Which is equivalent to the first example.
 
-    This is an equivalent of CSS :not() negation pseudo-class,
-    that represents elements that do not match a list of selectors
+    This is CSS counterpart of :not() pseudo-class.
 
     Example
     -------
-    >>> div:not(.widget) { color: red; }
-    >>> :not(strong, .important) { color: red; }
-
-    The second example translated to soupsavvy would be:
-
-    Example
-    -------
-    >>> NotSelector(TypeSelector("strong"), AttributeSelector("class", "important"))
-    >>> ~(TypeSelector("strong") | AttributeSelector("class", "important"))
+    >>> :not(div)
 
     Notes
     -----
-    For more information on :not() pseudo-class see:
+    For more information on :not() pseudo-class, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:not
     """
 
@@ -80,18 +147,18 @@ class NotSelector(CompositeSoupSelector):
         *selectors: SoupSelector,
     ) -> None:
         """
-        Initializes NotSelectors object with provided positional arguments as selectors.
+        Initializes `NotSelectors` object with provided positional arguments as selectors.
 
         Parameters
         ----------
         selectors: SoupSelector
-            SoupSelector objects to negate match accepted as positional arguments.
-            At least one SoupSelector object is required to create NotSelector.
+            `SoupSelector` objects to negate match accepted as positional arguments.
+            At least one `SoupSelector` object is required to create `NotSelector`.
 
         Raises
         ------
         NotSoupSelectorException
-            If any of provided parameters is not an instance of SoupSelector.
+            If any of provided parameters is not an instance of `SoupSelector`.
         """
         self._multiple = bool(selectors)
         super().__init__([selector, *selectors])
@@ -116,10 +183,8 @@ class NotSelector(CompositeSoupSelector):
     def __invert__(self) -> SoupSelector:
         """
         Overrides __invert__ method to cancel out negation by returning
-        the tag in case of single selector, or SoupUnionTag in case of multiple.
+        the tag in case of single selector, or `SelectorList` in case of multiple.
         """
-        from soupsavvy.selectors.combinators import SelectorList
-
         if not self._multiple:
             return self.selectors[0]
 
@@ -128,16 +193,13 @@ class NotSelector(CompositeSoupSelector):
 
 class AndSelector(CompositeSoupSelector):
     """
-    Class representing an intersection of multiple soup selectors.
-    Provides elements matching all of the listed selectors.
-    This is `soupsavvy` counterpart of CSS compound selector.
+    Selector representing an intersection of multiple selectors,
+    where element must be matched by all provided selectors.
+    Counterpart of CSS compound selector.
 
     Example
     -------
-    >>> AndSelector(
-    ...    TypeSelector("div"),
-    ...    AttributeSelector(name="class", value="widget")
-    ... )
+    >>> AndSelector(TypeSelector("div"), ClassSelector("widget"))
 
     matches all elements that have "div" tag name AND 'class' attribute "widget".
 
@@ -147,33 +209,23 @@ class AndSelector(CompositeSoupSelector):
     >>> <span class="widget">Hello World</span> ❌
     >>> <div class="menu">Hello World</div> ❌
 
-    Object can be initialized with multiple selectors as well, in which case
-    all selectors must match for element to be included in the result.
-
-    Object can be created as well by using bitwise AND operator '&'
-    on two SoupSelector objects.
+    Object can be created as well by using `bitwise AND` operator '&'
+    on `SoupSelector` objects.
 
     Example
     -------
-    >>> TypeSelector("div") & AttributeSelector(name="class", value="widget")
+    >>> TypeSelector("div") & ClassSelector("widget")
 
-    Which is equivalent to the first example.
-
-    This is an equivalent of CSS selectors concatenation.
+    CSS counterpart can be represented as:
 
     Example
     -------
-    >>> div.class1#id1 { color: red; }
-
-    which translated to soupsavvy would be:
-
-    Example
-    -------
-    >>> TypeSelector("div") & ClassSelector("class1") & IdSelector("id1")
+    >>> div.widget
 
     Notes
     -----
-    For more information on compound selectors see:
+    For more information on compound selectors ,see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors/Selector_structure#compound_selector
     """
 
@@ -185,19 +237,19 @@ class AndSelector(CompositeSoupSelector):
         *selectors: SoupSelector,
     ) -> None:
         """
-        Initializes AndSelector object with provided
+        Initializes `AndSelector` object with provided
         positional arguments as selectors.
 
         Parameters
         ----------
         selectors: SoupSelector
-            SoupSelector objects to match accepted as positional arguments.
-            At least two SoupSelector objects are required to create AndSelector.
+            `SoupSelector` objects to match accepted as positional arguments.
+            At least two `SoupSelector` objects are required to create `AndSelector`.
 
         Raises
         ------
         NotSoupSelectorException
-            If any of provided parameters is not an instance of SoupSelector.
+            If any of provided parameters is not an instance of `SoupSelector`.
         """
         super().__init__([selector1, selector2, *selectors])
 
@@ -219,26 +271,23 @@ class AndSelector(CompositeSoupSelector):
 
 class XORSelector(CompositeSoupSelector):
     """
-    Class representing an exclusive OR of multiple soup selectors.
-    Element is selected if it matches exactly one of the provided selectors.
+    Selector representing an exclusive OR of multiple selectors,
+    where element must be matched by exactly one of them.
 
     Example
     -------
-    >>> XORSelector(TypeSelector("div"), AttributeSelector(class="widget"))
+    >>> XORSelector(TypeSelector("div"), ClassSelector("widget"))
 
     Matches all elements that have either "div" tag name or 'class' attribute "widget".
-    Elements with "div" tag name and 'class' attribute "widget" do not match selector.
+    Elements with both "div" tag name and 'class' attribute "widget" do not match selector.
 
     This is a shortcut for defining XOR operation between two selectors like this:
 
     Example
     -------
     >>> selector1 = TypeSelector("div")
-    ... selector2 = AttributeSelector("class", value="widget")
+    ... selector2 = ClassSelector("widget")
     ... xor = (selector1 & (~selector2)) | ((~selector1) & selector2)
-
-    Object can be initialized with more then two selectors as well, in which case
-    exactly one selector must match for element to be included in the result.
     """
 
     def __init__(
@@ -249,18 +298,18 @@ class XORSelector(CompositeSoupSelector):
         *selectors: SoupSelector,
     ) -> None:
         """
-        Initializes XORSelector object with provided positional arguments as selectors.
+        Initializes `XORSelector` object with provided positional arguments as selectors.
 
         Parameters
         ----------
         selectors: SoupSelector
-            SoupSelector objects to match accepted as positional arguments.
-            At least two selector are required to create XORSelector.
+            `SoupSelector` objects to match accepted as positional arguments.
+            At least two selector are required to create `XORSelector`.
 
         Raises
         ------
         NotSoupSelectorException
-            If any of provided parameters is not an instance of SoupSelector.
+            If any of provided parameters is not an instance of `SoupSelector`.
         """
         super().__init__([selector1, selector2, *selectors])
 

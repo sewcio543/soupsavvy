@@ -1,14 +1,11 @@
 """
-Module for selectors that are based on HTML element attributes.
-
-They are used for selection of various elements in the markup,
-based on attributes values.
+Module with selectors that search for elements based on their attributes.
 
 Classes
 -------
-AttributeSelector - Selects element for any attribute value.
-IdSelector - Selects element based on 'id' attribute value.
-ClassSelector - Selects element based on 'class' attribute value.
+- `AttributeSelector` - Selects element based on any attribute value.
+- `IdSelector` - Selects element based on 'id' attribute value.
+- `ClassSelector` - Selects element based on 'class' attribute value.
 """
 
 import re
@@ -25,34 +22,47 @@ from soupsavvy.selectors.namespace import PatternType
 @dataclass
 class AttributeSelector(SoupSelector):
     """
-    Class representing attribute of the HTML element.
-    `soupsavvy` counterpart of css attribute selectors, where any substring value
-    syntax is handled by regex pattern matching.
+    Selector for searching element based on its attribute value.
+    Counterpart of css attribute selectors, that extends its capability
+    with regex pattern matching.
 
     Example
     -------
-    >>> AttributeSelector(name="class", value="widget")
+    >>> AttributeSelector(name="role", value="widget")
 
-    matches all elements that have 'class' attribute with value "widget".
+    matches all elements that have 'role' attribute with value "widget".
 
     Example
     -------
-    >>> <div class="widget">Hello World</div> ✔️
+    >>> <div role="widget">Hello World</div> ✔️
     >>> <div class="menu">Hello World</div> ❌
+    >>> <div role="menu">Hello World</div> ❌
+
+    CSS counterpart can be represented as:
+
+    Example
+    -------
+    >>> [role="widget"]
+
+    In case of using regex pattern, `re.search` is used to match the attribute value.
+
+    Example
+    -------
+    >>> AttributeSelector(name="href", value=re.compile(r"wikipedia"))
 
     Parameters
     ----------
     name : str
         HTML element attribute name ex. "class", "href"
     value : str | Pattern, optional
-        Value of the attribute, like a class name. Can be regex pattern,
-        which results in using re.search to match the attribute value.
+        Value of the attribute to match.
         By default None, if not provided, default pattern matching any sequence
         of characters is used.
 
     Notes
     -----
-    For more information about attribute selectors see:
+    For more information about attribute selectors, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors
     """
 
@@ -60,7 +70,7 @@ class AttributeSelector(SoupSelector):
     value: Optional[PatternType] = None
 
     def __post_init__(self) -> None:
-        """Sets pattern attribute used in SoupSelector find operations."""
+        """Sets pattern attribute used in `SoupSelector` find operations."""
         self._pattern = self._parse_pattern()
 
     def _parse_pattern(self) -> PatternType:
@@ -91,13 +101,13 @@ class AttributeSelector(SoupSelector):
         return self._pattern == other._pattern and self.name == other.name
 
 
-class _SpecificAttributeSelector(AttributeSelector):
+class SpecificAttributeSelector(AttributeSelector):
     """
     Base class for specific attribute selectors,
-    that wraps AttributeSelector with default attribute name for user convenience.
+    that wraps `AttributeSelector` with default attribute name for user convenience.
 
     Child classes should define _NAME attribute with default attribute name,
-    that will be used in the AttributeSelector.
+    that will be used in the `AttributeSelector`.
     """
 
     _NAME: str
@@ -109,19 +119,16 @@ class _SpecificAttributeSelector(AttributeSelector):
         Parameters
         ----------
         value : str | Pattern, optional
-            Value of the attribute, like a class name. Can be regex pattern,
-            which results in using re.search to match the attribute value.
+            Value of the attribute to match.
             By default None, if not provided, default pattern matching any sequence
             of characters is used.
         """
         super().__init__(name=self._NAME, value=value)
 
 
-class IdSelector(_SpecificAttributeSelector):
+class IdSelector(SpecificAttributeSelector):
     """
-    Component for selecting HTML elements based on 'id' attribute value.
-    Convenience wrapper for AttributeSelector with default attribute name 'id',
-    as its use is very common in CSS selectors.
+    Specific `AttributeSelector` for matching elements based on 'id' attribute value.
 
     Example
     -------
@@ -134,35 +141,69 @@ class IdSelector(_SpecificAttributeSelector):
     >>> <div id="main">Hello World</div> ✔️
     >>> <div id="content">Hello World</div> ❌
 
+    `IdSelector` is a convenience wrapper for `AttributeSelector`,
+    thus example above is equivalent to using:
+
+    >>> AttributeSelector(name="id", value="main")
+
+    CSS counterpart can be represented as:
+
+    Example
+    -------
+    >>> #main
+
+    In case of using regex pattern, `re.search` is used to match the attribute value.
+
+    Example
+    -------
+    >>> IdSelector(re.compile(r"content[0-9]+"))
+
     Notes
     -----
-    For more information about id attribute see:
+    For more information about id attribute, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors
     """
 
     _NAME = "id"
 
 
-class ClassSelector(_SpecificAttributeSelector):
+class ClassSelector(SpecificAttributeSelector):
     """
-    Component for selecting HTML elements based on 'class' attribute value.
-    Convenience wrapper for AttributeSelector with default attribute name 'class',
-    as its use is very common in CSS selectors.
+    Specific `AttributeSelector` for matching elements based on 'class' attribute value.
 
     Example
     -------
-    >>> ClassSelector("main")
+    >>> ClassSelector("widget")
 
-    matches all elements that have 'class' attribute with value "main".
+    matches all elements that have 'class' attribute with value "widget".
 
     Example
     -------
-    >>> <div class="main">Hello World</div> ✔️
+    >>> <div class="widget">Hello World</div> ✔️
     >>> <div class="content">Hello World</div> ❌
+
+    `ClassSelector` is a convenience wrapper for `AttributeSelector`,
+    thus example above is equivalent to using:
+
+    >>> AttributeSelector(name="class", value="widget")
+
+    CSS counterpart can be represented as:
+
+    Example
+    -------
+    >>> .widget
+
+    In case of using regex pattern, `re.search` is used to match the attribute value.
+
+    Example
+    -------
+    >>> ClassSelector(re.compile(r"nav"))
 
     Notes
     -----
-    For more information about class attribute see:
+    For more information about class attribute, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors
     """
 

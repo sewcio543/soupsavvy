@@ -1,5 +1,5 @@
 """
-Module for the BaseTemplate class.
+Module with template interface.
 
 Templates are the components used to fill the generated structures with content.
 They are the building blocks for the generators.
@@ -13,10 +13,10 @@ from soupsavvy.testing.generators.base import BaseGenerator
 
 class BaseTemplate(BaseGenerator):
     """
-    Abstract base class for templates.
+    Interface for templates used in generators.
 
-    BaseTemplate is also the subclass of BaseGenerator, all Templates
-    implement BaseGenerator interface and are easy to interchange with
+    `BaseTemplate` is also the subclass of BaseGenerator, all Templates
+    implement `BaseGenerator` interface and are easy to interchange with
     other generators.
     """
 

@@ -1,4 +1,4 @@
-"""Helper module with constants for the HTML generator module."""
+"""Helper module with constants for the generator modules."""
 
 VOID_TAGS = [
     "area",

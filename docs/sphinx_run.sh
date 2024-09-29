@@ -15,7 +15,7 @@ cp -rf $demo_source $demo_cp
 
 python $docs/update_index.py
 
-sphinx-apidoc -o $docs_source $package --separate --force --no-headings
+sphinx-apidoc -o $docs_source $package --separate --force
 
 python $docs/renaming.py $docs_source
 python $docs/update_demos.py

@@ -1,3 +1,8 @@
+:root {
+  --main-color: rgb(93, 0, 133);
+  --second-color: rgb(252, 250, 180);
+}
+
 /* Make headers in functions and methods smaller */
 .rst-content .method h2,
 .rst-content .function h2 {
@@ -5,17 +10,17 @@
 }
 
 /* Make TOC headers smaller */
-.rst-content .toctree-wrapper > p.caption {
+.rst-content .toctree-wrapper>p.caption {
   font-size: 100%;
 }
 
-/* Hide error messages - they doen't seem valuable, they are mostly random warnings */
+/* Hide error messages - they doesn't seem valuable, they are mostly random warnings */
 .rst-content .cell_output .output.stderr {
   display: none;
 }
 
 /* Hide the first cell, it's just a configuration not worth showing in the docs */
-.rst-content h1 + .cell.docutils.container {
+.rst-content h1+.cell.docutils.container {
   display: none;
 }
 
@@ -42,13 +47,12 @@
   border: none;
 }
 
-img[src*="https://img.shields.io/badge/docs"]
-{
+img[src*="https://img.shields.io/badge/docs"] {
   display: none;
 }
 
-/* Hide the SoupSavvy logo from README, it's already included at the top */
-h1:has(img[alt="SoupSavvy"]) {
+/* Hide the soupsavvy logo from README, it's already included at the top */
+h1:has(img[alt="soupsavvy"]) {
   display: none;
 }
 
@@ -56,4 +60,107 @@ h1:has(img[alt="SoupSavvy"]) {
 a[href$="rst.txt"],
 a[href$="md.txt"] {
   display: none;
+}
+
+/* Upper-left corner section of the page */
+.wy-side-nav-search {
+  background-color: var(--main-color);
+}
+
+/* Section names on the side-bar  */
+.caption-text {
+  color: rgb(230, 216, 236);
+}
+
+/* Empty sections in documentation page and side-bar */
+li>a[href*="submodules"],
+#submodules,
+#subpackages {
+  display: none !important;
+}
+
+/* Home page icon in the middle */
+li>.icon-home {
+  color: var(--main-color) !important;
+}
+
+/* logo on home page */
+h1 img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Empty sections in documentation page  */
+h1:has(+ #subpackages, + #submodules),
+[id^="module"] h1 {
+  font-size: 2em;
+}
+
+/* First documentation components on the page */
+[id^="module"]> :not(dl.py)+dl.py {
+  padding-top: 1em;
+  border-top: 2px solid var(--main-color) !important;
+}
+
+/* component of documentation */
+section[id^="module"]>dl.py {
+  border-bottom: 2px solid var(--main-color) !important;
+}
+
+/* all cites in docs wrapped by `...` */
+cite {
+  font-weight: bold;
+  background: #fff;
+  border: 1px solid #e1e4e5;
+  padding: 2px 5px;
+}
+
+/* signatures */
+dt.sig {
+  font-size: 1em !important;
+  background-color: rgb(230, 216, 236) !important;
+  border-top-color: var(--main-color) !important;
+  border-left-color: var(--main-color) !important;
+}
+
+/* reference to another component in signature */
+dt.sig .reference.internal[title] * {
+  color: var(--main-color) !important;
+}
+
+/* everything in signature */
+:is(dl.py.class, dl.py.function)>dt.sig * {
+  color: #555;
+}
+
+/* name of the component in signature */
+:is(dl.py.class, dl.py.function)>dt.sig .descname>.pre {
+  color: black !important;
+}
+
+/* source link to the code */
+dt.sig .reference.internal>.viewcode-link>.pre {
+  color: black !important;
+}
+
+/* Breadcrumb item, next to logo in the middle */
+.breadcrumb-item {
+  font-weight: bold;
+  font-size: 1em;
+}
+
+/* Hide the table of contents and sections on home page */
+[itemprop="articleBody"] .toctree-wrapper,
+#table-of-contents {
+  display: none;
+}
+
+/* Top navigation bar on mobile */
+.wy-nav-top {
+  background-color: var(--main-color);
+}
+
+.property:has(+ .descname) * {
+  color: var(--main-color) !important;
 }

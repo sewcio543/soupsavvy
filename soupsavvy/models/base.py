@@ -1,6 +1,11 @@
 """
-Module with base model class used as a parent for all user defined
-`soupsavvy` models.
+Module with base model schema and its configuration.
+
+Classes
+-------
+- `BaseModel` - Base class for defining search schemas.
+- `Field` - Field configuration for search schema.
+- `MigrationSchema` - Configuration of model migration.
 """
 
 from __future__ import annotations
@@ -99,9 +104,11 @@ class Field(TagSearcher, Comparable):
     ...    element = Field(SelfSelector(), repr=False, compare=False, migrate=False)
 
     In this example, only price is relevant for model object. Element itself is just
-    for reference and should not be included in model representation, comparison or migration.
+    for reference and should not be included in model representation,
+    comparison or migration.
 
-    Using `Field` wrapper without any additional arguments is equivalent to default behavior.
+    Using `Field` wrapper without any additional arguments
+    is equivalent to default behavior.
     """
 
     selector: Union[TagSearcher, type[BaseModel]]
@@ -236,17 +243,17 @@ class ModelMeta(type(ABC)):
         Returns
         -------
         dict[str, Field]
-            A dictionary mapping field names to their respective Field instances.
+            A dictionary mapping field names to their respective `Field` instances.
         """
         return cls._get_fields()
 
     def _get_fields(cls) -> dict[str, Field]:
         """
-        Returns the fields of the model with their respective TagSearcher instances
+        Returns the fields of the model with their respective `TagSearcher` instances
         based on the `__inherit_fields__` setting.
 
         If searcher is already provided in form of Field object, it is used directly.
-        Otherwise, it is wrapped in Field object with default settings.
+        Otherwise, it is wrapped in `Field` object with default settings.
         """
         classes = (
             [
@@ -394,10 +401,9 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         Parameters
         ----------
         tag : Tag
-            Any BeautifulSoup Tag object within which to search for the model.
+            Any `bs4.Tag` object to search within for the model.
         strict : bool, optional
-            Whether to raise an exception if the scope element
-            for the model is not found. Default is False, None is returned.
+            If True, enforces model scope to be found in the tag.
         recursive : bool, optional
             Whether the search for the model scope element should be recursive.
             Default is True.
@@ -487,7 +493,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         Parameters
         ----------
         tag : Tag
-            Any BeautifulSoup Tag object within which to search for the model.
+            Any `bs4.Tag` object to search within for the model.
         recursive : bool, optional
             Whether the search for the model scope element should be recursive.
             Default is True.
@@ -520,7 +526,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
             The target model class to migrate the instance to.
         mapping : dict[Type[BaseModel], Union[Type, MigrationSchema]], optional
             Mapping of base model fields to target models. By default, if field
-            is instance of BaseModel, it will be passed directly to the target model.
+            is instance of `BaseModel`, it will be passed directly to the target model.
         kwargs : Any
             Additional keyword arguments to pass to model initialization.
 
@@ -560,7 +566,8 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
 
     def copy(self) -> Self:
         """
-        Creates a deep copy of the model instance by migrating it to the same model class.
+        Creates a deep copy of the model instance by migrating
+        it to the same model class.
         Only model fields defined in `attributes` are used to create new instance.
 
         Returns

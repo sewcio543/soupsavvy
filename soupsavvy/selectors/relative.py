@@ -1,5 +1,17 @@
 """
-Module that contains relative selectors and utility components.
+Module with relative selectors and utility components.
+They are used for selecting elements based on their relation to the anchor element.
+
+Classes
+-------
+- `RelativeChild` - matches direct children of the anchor element
+- `RelativeDescendant` - matches descendants of the anchor element
+- `RelativeNextSibling` - matches next sibling of the anchor element
+- `RelativeSubsequentSibling` - matches subsequent siblings of the anchor element
+- `RelativeParent` - matches parent of the anchor element
+- `RelativeAncestor` - matches ancestors of the anchor element
+- `HasSelector` - selects elements based on matching reference elements
+- `Anchor` - Anchor object for easily creating relative selectors
 """
 
 from collections.abc import Callable
@@ -16,7 +28,7 @@ class RelativeSelector(SoupSelector):
     Base class for relative selectors, that are used to find tags relative
     to the tag that is being searched, which is considered an anchor.
 
-    CSS definition of relative selectors states that it is a selector representing
+    CSS definition of relative selectors state, that it is a selector representing
     an element relative to one or more anchor elements preceded by a combinator.
 
     In this use case, the anchor element is the tag that is being searched, and
@@ -27,17 +39,22 @@ class RelativeSelector(SoupSelector):
     >>> selector = Anchor > TypeSelector("div")
     ... selector.find_all(tag)
 
-    Uses RelativeChild selector to find any div tag that is a direct child of the
+    Uses `RelativeChild` selector to find any `div` tag that is a direct child of the
     tag that is being searched (passed as an argument).
 
-    In css such selectors can be used in :has pseudo-class, where selector
+    In css such selectors can be used for example in `:has` pseudo-class, where selector
     is anchored to the element:
 
     Example
     -------
-    >>> div:has(> a, + p)
+    >>> :has(> div)
 
-    Selects any div tag that has a direct child 'a' tag or a next sibling 'p' tag.
+    Selects any element that has a direct child `div` tag.
+
+    Notes
+    -------
+    Recursive parameter is ignored in relative selectors,
+    as they have their own logic of searching the document.
     """
 
     def __init__(self, selector: SoupSelector) -> None:
@@ -60,7 +77,7 @@ class RelativeSelector(SoupSelector):
         Returns
         -------
         SoupSelector
-            Selector used in this relative selector.
+            Selector used for searching elements relative to the anchor element.
         """
         return self._selector
 
@@ -87,9 +104,9 @@ class BaseRelativeSibling(RelativeSelector):
     """
     Base class with implementation for relative sibling selectors,
     searches for next sibling(s) of the anchor tag.
-    Child class needs to define '_limit' class attribute to specify
-    how many next siblings to search for and '_func' class attribute
-    to specify which method to use for finding siblings.
+    Child class needs to define:
+    - '_limit' - class attribute to specify how many next siblings to search for.
+    - '_func' - class attribute to specify which method to use for finding siblings.
     """
 
     # limit of next siblings to check
@@ -118,8 +135,8 @@ class BaseAncestorSelector(RelativeSelector):
     """
     Base class with implementation for ancestor selectors,
     searches for ancestor(s) of the anchor tag.
-    Child class needs to define '_limit' class attribute to specify
-    how many ancestors to search for.
+    Child class needs to define:
+    - '_limit' - class attribute to specify how many ancestors to search for.
     """
 
     _limit: Optional[int]
@@ -147,10 +164,7 @@ class BaseAncestorSelector(RelativeSelector):
 
 class RelativeChild(RelativeSelector):
     """
-    RelativeChild selector is used to find tags matching selector that are
-    direct children of the tag that is being searched.
-
-    For RelativeChild selector, with TypeSelector targeting 'p' tag.
+    Selector for finding direct children of the anchor element.
 
     Example
     -------
@@ -160,32 +174,21 @@ class RelativeChild(RelativeSelector):
 
     Example
     -------
-    >>> <div><p></p><a></a></div> ✔️
+    >>> <div><p></p></div> ✔️
     >>> <div><a><p></p></a></div> ❌
     >>> <div><a></a></div> ❌
 
-    Returns element only if it is a direct child of the anchor element
-    and matches the selector.
-
-    RelativeChild selector is equivalent to using '>' combinator in css selectors:
-
-    Example
-    -------
-    >>> div > p { color: red; }
-
-    It can be created with Anchor instance as well with use of '>' operator:
+    It can be created with `Anchor` instance as well with use of `gt` operator `>`:
 
     Example
     -------
     >>> Anchor > TypeSelector("p")
 
-    Which is equivalent to the first example and returns RelativeChild selector.
-
     Notes
     -------
-    Behavior of RelativeChild selector is equivalent to using find methods of
-    selector with recursive=False parameter and is implemented to support
-    'has' and ChildCombinator selector.
+    Behavior of `RelativeChild` selector is equivalent to using find methods of
+    selector with `recursive=False` and is implemented to support 'HasSelector'
+    and `ChildCombinator` selectors.
     """
 
     def find_all(
@@ -199,10 +202,7 @@ class RelativeChild(RelativeSelector):
 
 class RelativeDescendant(RelativeSelector):
     """
-    RelativeDescendant selector is used to find tags matching selector that are
-    descendants of the tag that is being searched.
-
-    For RelativeDescendant selector, with TypeSelector targeting 'p' tag,
+    Selector for finding descendants of the anchor element.
 
     Example
     -------
@@ -212,34 +212,22 @@ class RelativeDescendant(RelativeSelector):
 
     Example
     -------
-    >>> <div><p></p><a></a></div> ✔️
+    >>> <div><p></p></div> ✔️
     >>> <div><a><p></p></a></div> ✔️
     >>> <div><a></a></div> ❌
     >>> <div></div><p></p> ❌
 
-    Returns element only if it is a descendant of the anchor element
-    and matches the selector.
-
-    RelativeDescendant selector is equivalent to using whitespace " " combinator
-    in css selectors.
-
-    Example
-    -------
-    >>> div p { color: red; }
-
-    It can be created with Anchor instance as well with use of '>>' operator:
+    It can be created with `Anchor` instance as well with use of `right shift` operator `>>`:
 
     Example
     -------
     >>> Anchor >> TypeSelector("p")
 
-    Which is equivalent to the first example and returns RelativeDescendant selector.
-
     Notes
     -------
-    Behavior of RelativeDescendant selector is equivalent to using find methods of
-    selector with default recursive=True parameter and is implemented to support
-    'has' and DescendantCombinator selector.
+    Behavior of `RelativeDescendant` selector is equivalent to using find methods of
+    selector with default `recursive=True` and is implemented to support
+    'HasSelector' and `DescendantCombinator` selectors.
     """
 
     def find_all(
@@ -253,10 +241,7 @@ class RelativeDescendant(RelativeSelector):
 
 class RelativeNextSibling(BaseRelativeSibling):
     """
-    RelativeNextSibling selector is used to find tags matching selector that are
-    next siblings of the tag that is being searched.
-
-    For RelativeNextSibling selector, with TypeSelector targeting 'p' tag,
+    Selector for finding next sibling of the anchor element.
 
     Example
     -------
@@ -270,22 +255,11 @@ class RelativeNextSibling(BaseRelativeSibling):
     >>> <div></div><a></a><p></p>  ❌
     >>> <p></p><div></div> ❌
 
-    Returns element only if it is a next sibling of the anchor element
-    and matches the selector.
-
-    RelativeNextSibling selector is equivalent to using + combinator in css selectors.
-
-    Example
-    -------
-    >>> div + p { color: red; }
-
-    It can be created with Anchor instance as well with use of '+' operator:
+    It can be created with `Anchor` instance as well with use of `plus` operator `+`:
 
     Example
     -------
     >>> Anchor + TypeSelector("p")
-
-    Which is equivalent to the first example and returns RelativeNextSibling selector.
     """
 
     _limit = 1
@@ -294,10 +268,7 @@ class RelativeNextSibling(BaseRelativeSibling):
 
 class RelativeSubsequentSibling(BaseRelativeSibling):
     """
-    RelativeSubsequentSibling selector is used to find tags matching selector that are
-    subsequent siblings of the tag that is being searched.
-
-    For RelativeSubsequentSibling selector, with TypeSelector targeting 'p' tag,
+    Selector for finding subsequent siblings of the anchor element.
 
     Example
     -------
@@ -312,24 +283,12 @@ class RelativeSubsequentSibling(BaseRelativeSibling):
     >>> <p></p><div></div> ❌
     >>> <div></div><span><p></p></span> ❌
 
-    Returns element only if it is a subsequent sibling of the anchor element
-    and matches the selector.
-
-    RelativeSubsequentSibling selector is equivalent
-    to using ~ combinator in css selectors.
-
-    Example
-    -------
-    >>> div ~ p { color: red; }
-
-    It can be created with Anchor instance as well with use of '*' operator:
+    It can be created with `Anchor` instance as well
+    with use of `multiplication` operator `*`:
 
     Example
     -------
     >>> Anchor * TypeSelector("p")
-
-    Which is equivalent to the first example
-    and returns RelativeSubsequentSibling selector.
     """
 
     _limit = None
@@ -338,10 +297,7 @@ class RelativeSubsequentSibling(BaseRelativeSibling):
 
 class RelativeParent(BaseAncestorSelector):
     """
-    `RelativeParent` selector is used to find tags matching selector that are
-    parent of the tag that is being searched.
-
-    For `RelativeParent` selector, with `TypeSelector` targeting 'div' tag,
+    Selector for finding parent of the anchor element.
 
     Example
     -------
@@ -355,9 +311,6 @@ class RelativeParent(BaseAncestorSelector):
     >>> <div><a><p></p></a></div> ❌
     >>> <span><p></p></span> ❌
 
-    Returns element only if it is a parent of the anchor element
-    and matches the selector.
-
     Although this combinator does not have its counterpart in CSS, it can be
     represented as has selector, where child combinator is explicitly stated:
 
@@ -365,16 +318,11 @@ class RelativeParent(BaseAncestorSelector):
     -------
     >>> div:has(> p)
 
-    Where 'p' element is an anchor element passed to find methods and 'div' is
-    the selector that matches its parent.
-
-    It can be created with Anchor instance as well with use of '<' operator:
+    It can be created with `Anchor` instance as well with use of `lt` operator `<`:
 
     Example
     -------
     >>> Anchor < TypeSelector("div")
-
-    Which is equivalent to the first example and returns `RelativeParent` selector.
 
     Notes
     -------
@@ -388,10 +336,7 @@ class RelativeParent(BaseAncestorSelector):
 
 class RelativeAncestor(BaseAncestorSelector):
     """
-    `RelativeAncestor` selector is used to find tags matching selector that are
-    ancestors of the tag that is being searched.
-
-    For `RelativeAncestor` selector, with `TypeSelector` targeting 'div' tag,
+    Selector for finding ancestors of the anchor element.
 
     Example
     -------
@@ -406,8 +351,6 @@ class RelativeAncestor(BaseAncestorSelector):
     >>> <span><p></p></span> ❌
     >>> <p></p><div></div> ❌
 
-    Returns element only if it is an ancestor of the anchor element
-    and matches the selector.
 
     Although this combinator does not have its counterpart in CSS, it can be
     represented as has selector, where descendant combinator is implied:
@@ -416,16 +359,11 @@ class RelativeAncestor(BaseAncestorSelector):
     -------
     >>> div:has(p)
 
-    Where 'p' element is an anchor element passed to find methods and 'div' is
-    the selector that is being searched among its ancestors.
-
-    It can be created with Anchor instance as well with use of '<<' operator:
+    It can be created with `Anchor` instance as well with use of `left shift` operator `<<`:
 
     Example
     -------
     >>> Anchor << TypeSelector("div")
-
-    Which is equivalent to the first example and returns `RelativeAncestor` selector.
 
     Notes
     -------
@@ -436,79 +374,79 @@ class RelativeAncestor(BaseAncestorSelector):
     _limit = None
 
 
-class _Anchor:
+class Anchor_:
     """
-    Anchor components is a way to create relative selectors in a more
-    readable way by using operators.
+    Shortcut component used to create relative selectors
+    in a more readable way with use of operators.
 
-    _Anchor is an internal class and it's advisable to use the Anchor
-    instance instead, which can be considered like a singleton.
+    `Anchor_` is an internal class and can be considered a singleton.
+    It's advisable to use the `Anchor` instance instead of creating new objects.
 
-    Component supports the following operators:
-    * `>`: RelativeChild
+    `Anchor` supports the following operators:
+    - `>`: `RelativeChild`
 
     Example
     -------
     >>> Anchor > TypeSelector("div")
 
-    Creates a RelativeChild selector, that selects any div tag that is a direct
+    Creates `RelativeChild` selector, that selects any div tag that is a direct
     child of the tag that is being searched.
 
-    * `>>`: RelativeDescendant
+    - `>>`: `RelativeDescendant`
 
     Example
     -------
     >>> Anchor >> TypeSelector("div")
 
-    Creates a RelativeDescendant selector, that selects any div tag that is a descendant
+    Creates `RelativeDescendant` selector, that selects any div tag that is a descendant
     of the tag that is being searched. This is default behavior of selectors,
-    and is equivalent to using the TypeSelector directly, but is implemented
+    and is equivalent to using the `TypeSelector` directly, but is implemented
     for the sake of consistency.
 
-    * `+`: RelativeNextSibling
+    - `+`: `RelativeNextSibling`
 
     Example
     -------
     >>> Anchor + TypeSelector("div")
 
-    Creates a RelativeNextSibling selector, that selects any div tag that is next
+    Creates `RelativeNextSibling` selector, that selects any div tag that is next
     sibling of the tag that is being searched, it can logically return at most one tag.
 
-    * `*`: RelativeSubsequentSibling
+    - `*`: `RelativeSubsequentSibling`
 
     Example
     -------
     >>> Anchor * TypeSelector("div")
 
-    Creates a RelativeSubsequentSibling selector, that selects any div tag
+    Creates `RelativeSubsequentSibling` selector, that selects any div tag
     that is a subsequent sibling of the tag that is being searched.
 
-    * `<`: RelativeParent
+    - `<`: `RelativeParent`
 
     Example
     -------
     >>> Anchor < TypeSelector("div")
 
-    Creates a RelativeParent selector, that selects any div tag
+    Creates `RelativeParent` selector, that selects any div tag
     that is a parent of the tag that is being searched.
 
-    * `<<`: RelativeAncestor
+    - `<<`: `RelativeAncestor`
 
     Example
     -------
     >>> Anchor << TypeSelector("div")
 
-    Creates a RelativeAncestor selector, that selects any div tag
+    Creates `RelativeAncestor` selector, that selects any div tag
     that is an ancestor of the tag that is being searched.
 
     This imitates css selector relative selectors that are used for example in
-    :has pseudo-class, that accepts relative selector list as an argument.
+    `:has` pseudo-class, that accepts relative selector list as an argument.
 
     Example
     -------
     >>> :has(> div, + a)
 
-    This translated to soupsavvy would be:
+    This translated to `soupsavvy` would be:
 
     Example
     -------
@@ -520,6 +458,7 @@ class _Anchor:
     Notes
     -------
     For more information on relative selectors, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors/Selector_structure#relative_selector
     """
 
@@ -542,40 +481,37 @@ class _Anchor:
         return RelativeSubsequentSibling(check_selector(x))
 
 
-# instance of Anchor class with purpose to be used as a singleton
-Anchor = _Anchor()
+# instance of Anchor class
+Anchor = Anchor_()
 
 
 class HasSelector(CompositeSoupSelector):
     """
-    Class representing elements selected with respect to matching reference elements.
-    Element is selected if any of the provided selectors matched reference element.
+    Selector for finding elements based on matching reference elements.
 
     Example
     -------
     >>> HasSelector(TypeSelector("div"))
 
     matches all elements that have any descendant with "div" tag name.
-    It uses default combinator of relative selector, which is descendant.
+    It uses default combinator of relative selector, which is descendant combinator.
 
     Example
     -------
     >>> <span><div>Hello World</div></span> ✔️
     >>> <span><a>Hello World</a></span> ❌
 
-    Other relative selectors can be used with Anchor element.
+    Other relative selectors can be used with `Anchor` element.
 
     Example
     -------
-    >>> from soupsavvy.selectors.relative import Anchor
     ... HasSelector(Anchor > TypeSelector("div"))
     ... HasSelector(Anchor + TypeSelector("div"))
 
-    or by using RelativeSelector components directly:
+    or by using `RelativeSelector` components directly:
 
     Example
     -------
-    >>> from soupsavvy.selectors.relative import RelativeChild, RelativeNextSibling
     ... HasSelector(RelativeChild(TypeSelector("div")))
     ... HasSelector(RelativeNextSibling(TypeSelector("div"))
 
@@ -587,40 +523,37 @@ class HasSelector(CompositeSoupSelector):
     In this case, HasSelector is anchored against any element, and matches only elements
     that have "div" tag name as a child.
 
-    Object can be initialized with multiple selectors as well, in which case
-    at least one selector must match for element to be included in the result.
-
     This is an equivalent of CSS :has() pseudo-class,
-    that represents elements if any of the relative selectors that are passed as an argument
-    match at least one element when anchored against this element.
+    that matches element if any of the relative selectors that are passed as an argument
+    match element when anchored against it.
 
     Example
     -------
-    >>> :has(div, a) { color: red; }
-    >>> :has(+ div, > a) { color: red; }
+    >>> :has(div, a)
+    >>> :has(+ div, > a)
 
-    These examples translated to soupsavvy would be:
+    These examples translated to `soupsavvy` would be:
 
     Example
     -------
-    >>> from soupsavvy.selectors.relative import Anchor
     ... HasSelector(TypeSelector("div"), TypeSelector("a"))
     ... HasSelector(Anchor + TypeSelector("div"), Anchor > TypeSelector("a"))
 
     Notes
     -----
-    Passing RelativeDescendant selector into HasSelector is equivalent to using
-    its selector directly, as descendant combinator is default option.
+    Passing `RelativeDescendant` selector into HasSelector is equivalent to using
+    its selector directly, as descendant combinator is a default option.
 
     Example
     -------
     >>> HasSelector(RelativeDescendant(TypeSelector("div")))
-    >>> HasSelector(Anchor > TypeSelector("div"))
-    >>> HasSelector(TypeSelector("div"))
+    ... HasSelector(Anchor > TypeSelector("div"))
+    ... HasSelector(TypeSelector("div"))
 
     Three of the above examples are equivalent.
 
-    For more information on :has() pseudo-class see:
+    For more information on :has() pseudo-class, see:
+
     https://developer.mozilla.org/en-US/docs/Web/CSS/:has
     """
 
@@ -631,19 +564,18 @@ class HasSelector(CompositeSoupSelector):
         *selectors: SoupSelector,
     ) -> None:
         """
-        Initializes AndSelector object with provided
-        positional arguments as selectors.
+        Initializes `HasSelector` object with provided positional arguments as selectors.
 
         Parameters
         ----------
         selectors: SoupSelector
-            SoupSelector objects to match accepted as positional arguments.
-            At least one selector is required to create HasSelector.
+            `SoupSelector` objects to match accepted as positional arguments.
+            At least one selector is required to create `HasSelector`.
 
         Raises
         ------
         NotSoupSelectorException
-            If any of provided parameters is not an instance of SoupSelector.
+            If any of provided parameters is not an instance of `SoupSelector`.
         """
         super().__init__([selector, *selectors])
 

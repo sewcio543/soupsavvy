@@ -1,8 +1,10 @@
 """
 Module for general purpose operations.
 
-* Operation - Executes custom operation with any function.
-* OperationPipeline - Chains multiple operations together.
+Classes
+-------
+- `Operation` - Executes custom operation with any function.
+- `OperationPipeline` - Chains multiple operations together.
 """
 
 from __future__ import annotations
@@ -30,7 +32,7 @@ class OperationPipeline(OperationSearcherMixin):
     on two operations.
 
     `OperationPipeline` is operation-searcher mixin, which means it can be used
-    to find information in bs4 Tag directly with find methods.
+    to find information in `bs4.Tag` object directly with find methods.
     This way, it can be used as field in model or `execute` method can be replaced
     with `find` method, which would produce the same result.
     """
@@ -43,17 +45,17 @@ class OperationPipeline(OperationSearcherMixin):
         *operations: BaseOperation,
     ) -> None:
         """
-        Initializes OperationPipeline with multiple operations.
+        Initializes `OperationPipeline` with multiple operations.
 
         Parameters
         ----------
         operations : BaseOperation
-            BaseOperation instances to be chained together.
+            `BaseOperation` instances to be chained together.
 
         Raises
         ------
         NotOperationException
-            If any of the input operations is not a valid operation.
+            If any of the input operations is not an instance of `BaseOperation`.
         """
         self.operations = [
             check_operation(operation)
@@ -76,13 +78,13 @@ class OperationPipeline(OperationSearcherMixin):
 
     def __or__(self, x: Any) -> OperationPipeline:
         """
-        Overrides __or__ method called also by pipe operator '|'.
-        Creates new `OperationPipeline` with additional provided operation.
+        Overrides `__or__` method called also by pipe operator '|'.
+        Creates new `OperationPipeline` object extended by provided operation.
 
         Parameters
         ----------
         x : BaseOperation
-            BaseOperation object used to extend the pipeline.
+            `BaseOperation` object used to extend the pipeline.
 
         Returns
         -------
@@ -92,7 +94,7 @@ class OperationPipeline(OperationSearcherMixin):
         Raises
         ------
         NotOperationException
-            If provided object is not of type BaseOperation.
+            If provided object is not an instance of `BaseOperation`.
         """
         x = check_operation(x)
         return OperationPipeline(*self.operations, x)
@@ -121,14 +123,14 @@ class Operation(OperationSearcherMixin):
     "text"
 
     `Operation` is operation-searcher mixin, which means it can be used
-    to find information in bs4 Tag directly with find methods.
+    to find information in `bs4.Tag` directly with find methods.
     This way, it can be used as field in model or `execute` method can be replaced
     with `find` method, which would produce the same result.
     """
 
     def __init__(self, func: Callable) -> None:
         """
-        Initializes Operation with a custom function.
+        Initializes `Operation` with provided function.
 
         Parameters
         ----------

@@ -32,10 +32,9 @@ from soupsavvy.selectors.combinators import (
     DescendantCombinator,
     NextSiblingCombinator,
     ParentCombinator,
-    SelectorList,
     SubsequentSiblingCombinator,
 )
-from soupsavvy.selectors.logical import AndSelector, NotSelector
+from soupsavvy.selectors.logical import AndSelector, NotSelector, SelectorList
 from tests.soupsavvy.conftest import (
     MockBreakOperation,
     MockClassMenuSelector,

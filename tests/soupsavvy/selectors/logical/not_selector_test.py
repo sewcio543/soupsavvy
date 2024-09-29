@@ -3,8 +3,7 @@
 import pytest
 
 from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
-from soupsavvy.selectors.combinators import SelectorList
-from soupsavvy.selectors.logical import NotSelector
+from soupsavvy.selectors.logical import NotSelector, SelectorList
 from tests.soupsavvy.conftest import (
     MockDivSelector,
     MockLinkSelector,
@@ -278,7 +277,7 @@ class TestNotSelector:
         self,
     ):
         """
-        Tests if bitwise NOT operator (__invert__) returns SoupUnionTag instance
+        Tests if bitwise NOT operator (__invert__) returns SelectorList instance
         when applied to NotSelector instance with multiple selectors.
         """
         selector1 = MockDivSelector()
