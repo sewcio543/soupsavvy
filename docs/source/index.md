@@ -16,8 +16,8 @@ soupsavvy.operators
 :caption: 'Demos'
 :maxdepth: 1
 
-demos/use_cases
 demos/about
+demos/showcase
 demos/selectors
 demos/combining
 demos/css
