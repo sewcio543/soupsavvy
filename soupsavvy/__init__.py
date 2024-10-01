@@ -24,6 +24,9 @@ from .selectors import (
     IdSelector,
     NextSiblingCombinator,
     NotSelector,
+    NthLastOfSelector,
+    NthOfSelector,
+    OnlyOfSelector,
     OrSelector,
     ParentCombinator,
     PatternSelector,
@@ -60,4 +63,7 @@ __all__ = [
     "IdSelector",
     "XORSelector",
     "AnyTagSelector",
+    "NthOfSelector",
+    "NthLastOfSelector",
+    "OnlyOfSelector",
 ]
