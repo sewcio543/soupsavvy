@@ -5,8 +5,10 @@ with Operations specific to BeautifulSoup tags.
 
 import pytest
 
-from soupsavvy.exceptions import FailedOperationExecution
+from soupsavvy.exceptions import FailedOperationExecution, NotOperationException
+from soupsavvy.operations.general import OperationPipeline
 from soupsavvy.operations.soup import Href, Parent, Text
+from soupsavvy.selectors.logical import SelectorList
 from tests.soupsavvy.conftest import MockIntOperation, MockLinkSelector, strip, to_bs
 
 
@@ -339,3 +341,28 @@ class TestParent:
         """Tests if __eq__ method returns False if objects are not equal."""
         operation1, operation2 = operations
         assert (operation1 == operation2) is False
+
+    def test_piping_with_selector_returns_selector_list(self):
+        """Tests if piping operation with selector returns SelectorList."""
+        parent = Parent()
+        selector = MockLinkSelector()
+        result = parent | selector
+        assert result == SelectorList(parent, selector)
+
+    def test_piping_with_operator_returns_operation_pipeline(self):
+        """Tests if piping operation with another operation returns OperationPipeline."""
+        parent = Parent()
+        operation = MockIntOperation()
+        result = parent | operation
+        assert result == OperationPipeline(parent, operation)
+
+    def test_piping_with_invalid_type_raises_error(self):
+        """
+        Tests if piping operation with invalid type raises error.
+        In this case, it defaults to BaseOperation implementation,
+        which raises NotOperationException
+        """
+        parent = Parent()
+
+        with pytest.raises(NotOperationException):
+            parent | "string"  # type: ignore

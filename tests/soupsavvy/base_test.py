@@ -34,7 +34,12 @@ from soupsavvy.selectors.combinators import (
     ParentCombinator,
     SubsequentSiblingCombinator,
 )
-from soupsavvy.selectors.logical import AndSelector, NotSelector, SelectorList
+from soupsavvy.selectors.logical import (
+    AndSelector,
+    NotSelector,
+    SelectorList,
+    XORSelector,
+)
 from tests.soupsavvy.conftest import (
     MockBreakOperation,
     MockClassMenuSelector,
@@ -210,6 +215,20 @@ class TestLTOperator(BaseOperatorTest):
 
     TYPE = ParentCombinator
     OPERATOR = operator.lt
+
+
+class TestXOROperator(BaseOperatorTest):
+    """
+    Class for testing XOR operator for SoupSelector interface.
+    __xor__ operator applied correctly creates ParentCombinator instance.
+
+    Example
+    -------
+    >>> MockSelector() ^ MockSelector()
+    """
+
+    TYPE = XORSelector
+    OPERATOR = operator.xor
 
 
 @pytest.mark.selector
