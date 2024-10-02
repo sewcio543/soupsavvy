@@ -1,5 +1,7 @@
-![logo](https://github.com/sewcio543/soupsavvy/blob/main/resources/logo.png?raw=true)
-========
+<picture align="center">
+    <img src="https://github.com/sewcio543/soupsavvy/raw/main/resources/logo.png?raw=true" alt="soupsavvy" style="max-width: 50%;display: block;margin-right: auto;margin-left: auto;">
+</picture>
+<hr>
 
 ```{toctree}
 :caption: 'Components'
