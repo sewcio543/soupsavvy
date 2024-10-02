@@ -1,5 +1,5 @@
-<img src="https://github.com/sewcio543/soupsavvy/raw/main/resources/logo.png?raw=true" alt="soupsavvy" style="max-width: 50%;display: block;margin-right: auto;margin-left: auto;">
-<hr>
+![soupsavvy](https://github.com/sewcio543/soupsavvy/raw/main/resources/logo.png?raw=true)
+-----------------
 
 ## Powerful and flexible engine for BeautifulSoup
 
