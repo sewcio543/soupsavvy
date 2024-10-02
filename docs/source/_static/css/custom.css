@@ -56,7 +56,6 @@ h1:has(img[alt="soupsavvy"]) {
   display: none;
 }
 
-
 /* Hide 'View page source' link to rst.txt or md.txt files */
 a[href$="rst.txt"],
 a[href$="md.txt"] {
