@@ -56,8 +56,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="use_cases.html">Use Cases</a></li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="showcase.html">Showcase</a></li>
 <li class="toctree-l1"><a class="reference internal" href="selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="combining.html">Composite Selectors</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CSS Selectors</a><ul>
@@ -117,14 +117,13 @@
              
   <section id="css-selectors">
 <h1>CSS Selectors<a class="headerlink" href="#css-selectors" title="Link to this heading"></a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">soupsavvy.selectors.css</span></code> is a subpackage that provides a range of selectors based on css. These are wrappers, that use <a class="reference external" href="https://github.com/facelessuser/soupsieve"><code class="docutils literal notranslate"><span class="pre">soupsieve</span></code></a> library under the hood, which is a <em>modern CSS selector implementation for BeautifulSoup</em>. This module includes a variety of selectors that can be combined with other <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> selectors, using pure css or most commonly used css pseudo-classes.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">soupsavvy.selectors.css</span></code> subpackage provides a set of CSS-based selectors, built as wrappers around the <a class="reference external" href="https://github.com/facelessuser/soupsieve"><code class="docutils literal notranslate"><span class="pre">soupsieve</span></code></a> library — <em>‘a modern CSS selector implementation for BeautifulSoup’</em>. These selectors can be seamlessly combined with other <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> selectors, allowing for flexible use of pure CSS and common <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes"><code class="docutils literal notranslate"><span class="pre">pseudo-classes</span></code></a>.</p>
 <section id="child-selectors">
 <h2>Child Selectors<a class="headerlink" href="#child-selectors" title="Link to this heading"></a></h2>
-<p>Child selectors are designed to select elements based on their position relative to their siblings within a parent element. While the <code class="docutils literal notranslate"><span class="pre">nth-child</span></code> selector can theoretically handle any position-based selection, <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> offers convenient wrappers for a few commonly used CSS pseudo-classes.</p>
+<p>Child selectors target elements based on their position among siblings within a parent element. While <code class="docutils literal notranslate"><span class="pre">nth-child</span></code> can handle any position-based selection, <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> offers convenient wrappers for several frequently used CSS pseudo-classes.</p>
 <section id="firstchild">
 <h3>FirstChild<a class="headerlink" href="#firstchild" title="Link to this heading"></a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">FirstChild</span></code> selector selects every element that is the first child of its parent. This selector is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:first-child</span></code> pseudo-class.</p>
-<p><strong>CSS Example:</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">FirstChild</span></code> selector selects every element that is the first child of its parent.</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">first-child</span>
 </pre></div>
 </div>
@@ -161,8 +160,7 @@
 </section>
 <section id="lastchild">
 <h3>LastChild<a class="headerlink" href="#lastchild" title="Link to this heading"></a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">LastChild</span></code> selector selects every element that is the last child of its parent. This is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:last-child</span></code> pseudo-class.</p>
-<p><strong>CSS Example:</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">LastChild</span></code> selector selects every element that is the last child of its parent.</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">last-child</span>
 </pre></div>
 </div>
@@ -201,12 +199,11 @@
 </section>
 <section id="nthchild">
 <h3>NthChild<a class="headerlink" href="#nthchild" title="Link to this heading"></a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">NthChild</span></code> selector allows you to select elements based on their position among their siblings using a CSS-style <code class="docutils literal notranslate"><span class="pre">nth-child</span></code> expression.</p>
-<p><strong>CSS Example:</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">NthChild</span></code> selector allows you to target elements based on their position among siblings, using a CSS-like <code class="docutils literal notranslate"><span class="pre">nth-child</span></code> expression.</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">nth-child</span><span class="o">(</span><span class="nt">3</span><span class="o">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">NthChild</span></code> and all other nth selectors fully supports all valid CSS <code class="docutils literal notranslate"><span class="pre">nth</span></code> parameter values, enabling you to select elements based on their position among siblings using the same syntax as in CSS.</p>
+<p>It, along with other nth-based selectors, fully supports all valid CSS <code class="docutils literal notranslate"><span class="pre">nth</span></code> parameter values, letting you select elements using the same syntax as CSS.</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">nth-child</span><span class="o">(</span><span class="nt">2n</span><span class="o">)</span>
 <span class="p">:</span><span class="nd">nth-child</span><span class="o">(</span><span class="nt">odd</span><span class="o">)</span>
 <span class="p">:</span><span class="nd">nth-child</span><span class="o">(</span><span class="nt">even</span><span class="o">)</span>
@@ -251,8 +248,7 @@
 </section>
 <section id="nthlastchild">
 <h3>NthLastChild<a class="headerlink" href="#nthlastchild" title="Link to this heading"></a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">NthLastChild</span></code> selector allows you to select elements based on their position among their siblings, counting from the last child of the parent element. This is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:nth-last-child</span></code> pseudo-class.</p>
-<p><strong>CSS Example:</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">NthLastChild</span></code> selector allows you to select elements based on their position among their siblings, counting from the last child of the parent element.</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">nth-last-child</span><span class="o">(</span><span class="nt">3</span><span class="o">)</span>
 </pre></div>
 </div>
@@ -288,8 +284,7 @@
 </section>
 <section id="onlychild">
 <h3>OnlyChild<a class="headerlink" href="#onlychild" title="Link to this heading"></a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">OnlyChild</span></code> selector matches elements that are the only child of their parent. This mirrors the functionality of the CSS <code class="docutils literal notranslate"><span class="pre">:only-child</span></code> pseudo-class.</p>
-<p><strong>CSS Example:</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">OnlyChild</span></code> selector matches elements that are the only child of their parent.</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">only-child</span>
 </pre></div>
 </div>
@@ -326,11 +321,10 @@
 </section>
 <section id="type-selectors">
 <h2>Type selectors<a class="headerlink" href="#type-selectors" title="Link to this heading"></a></h2>
-<p>Type selectors are used to select elements based on their position relative to siblings of the same type.</p>
+<p>Type selectors are used to select elements based on their position among sibling elements of the same type.</p>
 <section id="firstoftype">
 <h3>FirstOfType<a class="headerlink" href="#firstoftype" title="Link to this heading"></a></h3>
-<p>Selects every element that is the first child of its parent of a particular type. This selector is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:first-of-type</span></code> pseudo-class.</p>
-<p><strong>CSS Example:</strong></p>
+<p>Selects every element that is the first child of the type.</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">first-of-type</span>
 </pre></div>
 </div>
@@ -370,8 +364,7 @@
 </section>
 <section id="lastoftype">
 <h3>LastOfType<a class="headerlink" href="#lastoftype" title="Link to this heading"></a></h3>
-<p>Selects every element that is the last child of its parent of a particular type. This selector is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:last-of-type</span></code> pseudo-class.</p>
-<p><strong>CSS Example:</strong></p>
+<p>Selects every element that is the last child of the type.</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">last-of-type</span>
 </pre></div>
 </div>
@@ -409,12 +402,10 @@
 </section>
 <section id="nthoftype">
 <h3>NthOfType<a class="headerlink" href="#nthoftype" title="Link to this heading"></a></h3>
-<p>Selects every element that is the nth child of its parent of a particular type. This selector is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:nth-of-type</span></code> pseudo-class.</p>
-<p><strong>CSS Example:</strong></p>
+<p>Selects every element that is the nth child of the type.</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">nth-of-type</span><span class="o">(</span><span class="nt">n</span><span class="o">)</span>
 </pre></div>
 </div>
-<p>Similar to nth child counterparts, every variant of valid CSS <code class="docutils literal notranslate"><span class="pre">nth</span></code> parameter values are supported.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
@@ -449,9 +440,7 @@
 </section>
 <section id="nthlastoftype">
 <h3>NthLastOfType<a class="headerlink" href="#nthlastoftype" title="Link to this heading"></a></h3>
-<p>Selects every element that is the nth child of its parent of a particular type, counting from the last child.
-This selector is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:nth-last-of-type</span></code> pseudo-class.</p>
-<p><strong>CSS Example:</strong></p>
+<p>Selects every element that is the nth child of the type, counting from the last child.</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">nth-last-of-type</span><span class="o">(</span><span class="nt">n</span><span class="o">)</span>
 </pre></div>
 </div>
@@ -489,8 +478,7 @@ This selector is equivalent to the CSS <code class="docutils literal notranslate
 </section>
 <section id="onlyoftype">
 <h3>OnlyOfType<a class="headerlink" href="#onlyoftype" title="Link to this heading"></a></h3>
-<p>Selects every element that is the only child of its parent of a particular type. This selector is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:only-of-type</span></code> pseudo-class.</p>
-<p><strong>CSS Example:</strong></p>
+<p>Selects every element that is the only child of the type.</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">only-of-type</span>
 </pre></div>
 </div>
@@ -532,7 +520,7 @@ This selector is equivalent to the CSS <code class="docutils literal notranslate
 <h2>Other selectors<a class="headerlink" href="#other-selectors" title="Link to this heading"></a></h2>
 <section id="empty">
 <h3>Empty<a class="headerlink" href="#empty" title="Link to this heading"></a></h3>
-<p>Selects every element that has no children and no text content. This selector is equivalent to the CSS <code class="docutils literal notranslate"><span class="pre">:empty</span></code> pseudo-class.</p>
+<p>Selects every element that has no children and no text content.</p>
 <p><strong>CSS Example:</strong></p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="nd">empty</span>
 </pre></div>
@@ -573,7 +561,7 @@ This selector is equivalent to the CSS <code class="docutils literal notranslate
 <section id="css">
 <h3>CSS<a class="headerlink" href="#css" title="Link to this heading"></a></h3>
 <p>Wrapper for any CSS selector, uses <code class="docutils literal notranslate"><span class="pre">soupsieve</span></code> under the hood, so support is limited to its version.
-Convenience class for search based on CSS selector, results of the search are equivalent to <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> <code class="docutils literal notranslate"><span class="pre">select</span></code> method.</p>
+Convenience class for search based on CSS selector, results of the search are equivalent to <code class="docutils literal notranslate"><span class="pre">BeautifulSoup.select</span></code> method.</p>
 <p><strong>Using BeautifulSoup:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;div &gt; p&#39;</span><span class="p">)</span>
 </pre></div>
@@ -686,7 +674,7 @@ Convenience class for search based on CSS selector, results of the search are eq
 </section>
 <section id="recursivity">
 <h2>Recursivity<a class="headerlink" href="#recursivity" title="Link to this heading"></a></h2>
-<p>On the contrary to <code class="docutils literal notranslate"><span class="pre">find</span></code> methods, <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> <code class="docutils literal notranslate"><span class="pre">select</span></code> does not provide option to search only for direct children of the element (<code class="docutils literal notranslate"><span class="pre">recursive=False</span></code>). This is justified, as CSS selectors have an implied anchor of universal selector (<code class="docutils literal notranslate"><span class="pre">*</span></code>), which selects all elements. <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> consistently allows to search in <strong>not recursive</strong> mode by setting <code class="docutils literal notranslate"><span class="pre">recursive=False</span></code> in the <code class="docutils literal notranslate"><span class="pre">find</span></code> methods. In such case, only direct children of the element that match the selector are returned.</p>
+<p>Unlike in <code class="docutils literal notranslate"><span class="pre">BeautifulSoup.select</span></code>, <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> allows non-recursive searches by setting <code class="docutils literal notranslate"><span class="pre">recursive=False</span></code> in the <code class="docutils literal notranslate"><span class="pre">find</span></code> methods, ensuring only direct children matching the selector are returned.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
@@ -697,7 +685,7 @@ Convenience class for search based on CSS selector, results of the search are eq
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        &lt;span class=&quot;foo&quot;&gt;&lt;/span&gt;</span>
 <span class="sd">        &lt;div class=&quot;goo&quot;&gt;</span>
-<span class="sd">            &lt;div class=&quot;foo&quot;&gt;Descendant&lt;/div&gt;</span>
+<span class="sd">            &lt;div class=&quot;foo&quot;&gt;&lt;/div&gt;</span>
 <span class="sd">        &lt;/div&gt;</span>
 <span class="sd">        &lt;div class=&quot;foo&quot;&gt;Child&lt;/div&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
@@ -718,7 +706,7 @@ Convenience class for search based on CSS selector, results of the search are eq
 </section>
 <section id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading"></a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> provides a convenient way to select elements using css selectors. It provides wrappers for commonly used pseudo-classes that share the same implementation as other selectors and can be easily combined.</p>
+<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> offers an easy way to select elements using CSS selectors. It includes wrappers for commonly used pseudo-classes that share the same implementation as other selectors, allowing them to be easily combined.</p>
 <p><strong>Enjoy <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> and leave us feedback!</strong><br />
 <strong>Happy scraping!</strong></p>
 </section>

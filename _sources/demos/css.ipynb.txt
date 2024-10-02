@@ -11,7 +11,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "`soupsavvy.selectors.css` is a subpackage that provides a range of selectors based on css. These are wrappers, that use [`soupsieve`](https://github.com/facelessuser/soupsieve) library under the hood, which is a *modern CSS selector implementation for BeautifulSoup*. This module includes a variety of selectors that can be combined with other `soupsavvy` selectors, using pure css or most commonly used css pseudo-classes."
+    "The `soupsavvy.selectors.css` subpackage provides a set of CSS-based selectors, built as wrappers around the [`soupsieve`](https://github.com/facelessuser/soupsieve) library — *'a modern CSS selector implementation for BeautifulSoup'*. These selectors can be seamlessly combined with other `soupsavvy` selectors, allowing for flexible use of pure CSS and common [`pseudo-classes`](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes)."
    ]
   },
   {
@@ -25,7 +25,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Child selectors are designed to select elements based on their position relative to their siblings within a parent element. While the `nth-child` selector can theoretically handle any position-based selection, `soupsavvy` offers convenient wrappers for a few commonly used CSS pseudo-classes."
+    "Child selectors target elements based on their position among siblings within a parent element. While `nth-child` can handle any position-based selection, `soupsavvy` offers convenient wrappers for several frequently used CSS pseudo-classes."
    ]
   },
   {
@@ -34,9 +34,8 @@
    "source": [
     "#### FirstChild\n",
     "\n",
-    "The `FirstChild` selector selects every element that is the first child of its parent. This selector is equivalent to the CSS `:first-child` pseudo-class.\n",
+    "The `FirstChild` selector selects every element that is the first child of its parent.\n",
     "\n",
-    "**CSS Example:**\n",
     "```css\n",
     ":first-child\n",
     "```"
@@ -75,9 +74,8 @@
    "source": [
     "#### LastChild\n",
     "\n",
-    "The `LastChild` selector selects every element that is the last child of its parent. This is equivalent to the CSS `:last-child` pseudo-class.\n",
+    "The `LastChild` selector selects every element that is the last child of its parent.\n",
     "\n",
-    "**CSS Example:**\n",
     "```css\n",
     ":last-child\n",
     "```"
@@ -118,14 +116,13 @@
    "source": [
     "### NthChild\n",
     "\n",
-    "The `NthChild` selector allows you to select elements based on their position among their siblings using a CSS-style `nth-child` expression.\n",
+    "The `NthChild` selector allows you to target elements based on their position among siblings, using a CSS-like `nth-child` expression.\n",
     "\n",
-    "**CSS Example:**\n",
     "```css\n",
     ":nth-child(3)\n",
     "```\n",
     "\n",
-    "`NthChild` and all other nth selectors fully supports all valid CSS `nth` parameter values, enabling you to select elements based on their position among siblings using the same syntax as in CSS.\n",
+    "It, along with other nth-based selectors, fully supports all valid CSS `nth` parameter values, letting you select elements using the same syntax as CSS.\n",
     "\n",
     "```css\n",
     ":nth-child(2n)\n",
@@ -174,9 +171,8 @@
    "source": [
     "### NthLastChild\n",
     "\n",
-    "The `NthLastChild` selector allows you to select elements based on their position among their siblings, counting from the last child of the parent element. This is equivalent to the CSS `:nth-last-child` pseudo-class.\n",
+    "The `NthLastChild` selector allows you to select elements based on their position among their siblings, counting from the last child of the parent element.\n",
     "\n",
-    "**CSS Example:**\n",
     "```css\n",
     ":nth-last-child(3)\n",
     "```"
@@ -214,9 +210,8 @@
    "source": [
     "### OnlyChild\n",
     "\n",
-    "The `OnlyChild` selector matches elements that are the only child of their parent. This mirrors the functionality of the CSS `:only-child` pseudo-class.\n",
+    "The `OnlyChild` selector matches elements that are the only child of their parent.\n",
     "\n",
-    "**CSS Example:**\n",
     "```css\n",
     ":only-child\n",
     "```"
@@ -259,7 +254,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Type selectors are used to select elements based on their position relative to siblings of the same type. "
+    "Type selectors are used to select elements based on their position among sibling elements of the same type."
    ]
   },
   {
@@ -268,9 +263,8 @@
    "source": [
     "### FirstOfType\n",
     "\n",
-    "Selects every element that is the first child of its parent of a particular type. This selector is equivalent to the CSS `:first-of-type` pseudo-class.\n",
+    "Selects every element that is the first child of the type.\n",
     "\n",
-    "**CSS Example:**\n",
     "```css\n",
     ":first-of-type\n",
     "```"
@@ -312,9 +306,8 @@
    "source": [
     "### LastOfType\n",
     "\n",
-    "Selects every element that is the last child of its parent of a particular type. This selector is equivalent to the CSS `:last-of-type` pseudo-class.\n",
+    "Selects every element that is the last child of the type.\n",
     "\n",
-    "**CSS Example:**\n",
     "```css\n",
     ":last-of-type\n",
     "```"
@@ -354,13 +347,11 @@
    "source": [
     "### NthOfType\n",
     "\n",
-    "Selects every element that is the nth child of its parent of a particular type. This selector is equivalent to the CSS `:nth-of-type` pseudo-class.\n",
+    "Selects every element that is the nth child of the type.\n",
     "\n",
-    "**CSS Example:**\n",
     "```css\n",
     ":nth-of-type(n)\n",
-    "```\n",
-    "Similar to nth child counterparts, every variant of valid CSS `nth` parameter values are supported."
+    "```"
    ]
   },
   {
@@ -397,10 +388,8 @@
    "source": [
     "### NthLastOfType\n",
     "\n",
-    "Selects every element that is the nth child of its parent of a particular type, counting from the last child.\n",
-    "This selector is equivalent to the CSS `:nth-last-of-type` pseudo-class.\n",
+    "Selects every element that is the nth child of the type, counting from the last child.\n",
     "\n",
-    "**CSS Example:**\n",
     "```css\n",
     ":nth-last-of-type(n)\n",
     "```"
@@ -440,9 +429,8 @@
    "source": [
     "### OnlyOfType\n",
     "\n",
-    "Selects every element that is the only child of its parent of a particular type. This selector is equivalent to the CSS `:only-of-type` pseudo-class.\n",
+    "Selects every element that is the only child of the type.\n",
     "\n",
-    "**CSS Example:**\n",
     "```css\n",
     ":only-of-type\n",
     "```"
@@ -490,7 +478,7 @@
    "source": [
     "### Empty\n",
     "\n",
-    "Selects every element that has no children and no text content. This selector is equivalent to the CSS `:empty` pseudo-class.\n",
+    "Selects every element that has no children and no text content.\n",
     "\n",
     "**CSS Example:**\n",
     "```css\n",
@@ -534,7 +522,7 @@
     "### CSS\n",
     "\n",
     "Wrapper for any CSS selector, uses `soupsieve` under the hood, so support is limited to its version.\n",
-    "Convenience class for search based on CSS selector, results of the search are equivalent to `BeautifulSoup` `select` method.\n",
+    "Convenience class for search based on CSS selector, results of the search are equivalent to `BeautifulSoup.select` method.\n",
     "\n",
     "**Using BeautifulSoup:**\n",
     "```python\n",
@@ -661,7 +649,7 @@
    "source": [
     "## Recursivity\n",
     "\n",
-    "On the contrary to `find` methods, `BeautifulSoup` `select` does not provide option to search only for direct children of the element (`recursive=False`). This is justified, as CSS selectors have an implied anchor of universal selector (`*`), which selects all elements. `soupsavvy` consistently allows to search in **not recursive** mode by setting `recursive=False` in the `find` methods. In such case, only direct children of the element that match the selector are returned."
+    "Unlike in `BeautifulSoup.select`, `soupsavvy` allows non-recursive searches by setting `recursive=False` in the `find` methods, ensuring only direct children matching the selector are returned."
    ]
   },
   {
@@ -678,7 +666,7 @@
     "    \"\"\"\n",
     "        <span class=\"foo\"></span>\n",
     "        <div class=\"goo\">\n",
-    "            <div class=\"foo\">Descendant</div>\n",
+    "            <div class=\"foo\"></div>\n",
     "        </div>\n",
     "        <div class=\"foo\">Child</div>\n",
     "    \"\"\",\n",
@@ -700,7 +688,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "`soupsavvy` provides a convenient way to select elements using css selectors. It provides wrappers for commonly used pseudo-classes that share the same implementation as other selectors and can be easily combined."
+    "`soupsavvy` offers an easy way to select elements using CSS selectors. It includes wrappers for commonly used pseudo-classes that share the same implementation as other selectors, allowing them to be easily combined."
    ]
   },
   {
@@ -728,7 +716,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.11.8"
+   "version": "3.11.9"
   }
  },
  "nbformat": 4,

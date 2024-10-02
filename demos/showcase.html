@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Use Cases &mdash; soupsavvy  documentation</title>
+  <title>Showcase &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -23,8 +23,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="About" href="about.html" />
-    <link rel="prev" title="operators" href="../soupsavvy.operators.html" /> 
+    <link rel="next" title="Selectors" href="selectors.html" />
+    <link rel="prev" title="About" href="about.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -56,7 +56,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Use Cases</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Showcase</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#selectors">Selectors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pipelines">Pipelines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#models">Models</a><ul>
@@ -67,7 +68,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="css.html">CSS Selectors</a></li>
@@ -89,9 +89,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Use Cases</li>
+      <li class="breadcrumb-item active">Showcase</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/demos/use_cases.ipynb.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/demos/showcase.ipynb.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -99,8 +99,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="use-cases">
-<h1>Use Cases<a class="headerlink" href="#use-cases" title="Link to this heading"></a></h1>
+  <section id="showcase">
+<h1>Showcase<a class="headerlink" href="#showcase" title="Link to this heading"></a></h1>
 <p>We will explore how to use <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> to extract information from the <a class="reference external" href="https://editorial.rottentomatoes.com/">Rotten Tomatoes</a> website, a well-known review aggregator for film and television.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -120,7 +120,7 @@
 </div>
 <section id="selectors">
 <h2>Selectors<a class="headerlink" href="#selectors" title="Link to this heading"></a></h2>
-<p>Selectors are the core feature of <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code>, enabling a declarative approach to locating HTML elements. In this example, we use <code class="docutils literal notranslate"><span class="pre">movie_selector</span></code> to identify movie elements on the webpage, which are characterized by <code class="docutils literal notranslate"><span class="pre">p</span></code> tag and <code class="docutils literal notranslate"><span class="pre">movie</span></code> class attribute. For a detailed guide and additional examples, visit the <em>Selectors</em> sections in the <a class="reference external" href="https://soupsavvy.readthedocs.io">Documentation</a>.</p>
+<p>Selectors are the core feature of <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code>, enabling a declarative approach to locating HTML elements. In this example, we use <code class="docutils literal notranslate"><span class="pre">movie_selector</span></code> to identify movie elements on the webpage, which are characterized by <code class="docutils literal notranslate"><span class="pre">p</span></code> tag name and <code class="docutils literal notranslate"><span class="pre">movie</span></code> class attribute. For a detailed guide and additional examples, see <a class="reference external" href="https://soupsavvy.readthedocs.io/en/stable/demos/selectors.html">tutorial</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
@@ -161,7 +161,7 @@
 </section>
 <section id="pipelines">
 <h2>Pipelines<a class="headerlink" href="#pipelines" title="Link to this heading"></a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> Pipeline is a combination of selectors and operations, providing an efficient way to extract and transform information from a webpage. For instance, we can use <code class="docutils literal notranslate"><span class="pre">title_pipeline</span></code> to locate the first 5 movie titles, extract their text, and transform them to uppercase. For detailed guide with examples, refer to the beginning of the <em>Models</em> section in the <a class="reference external" href="https://soupsavvy.readthedocs.io">Documentation</a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> selection pipeline is a combination of selectors and operations, which provides an efficient way to extract and transform information from a webpage. For instance, we can use <code class="docutils literal notranslate"><span class="pre">title_pipeline</span></code> to locate the first 5 movie titles, extract their text, and transform them to uppercase. For detailed guide with examples, see <a class="reference external" href="https://soupsavvy.readthedocs.io/en/stable/demos/models.html#combining-with-selector">tutorial</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
@@ -185,7 +185,7 @@
 </section>
 <section id="models">
 <h2>Models<a class="headerlink" href="#models" title="Link to this heading"></a></h2>
-<p>Models define <strong>scraping schemas</strong>, utilizing selectors and operations to extract structured information from the webpage. Model is user-defined data structure representing an entity of interest in scraping. For example, the <code class="docutils literal notranslate"><span class="pre">Movie</span></code> model can be used to extract details such as the movie’s <code class="docutils literal notranslate"><span class="pre">title</span></code> and <code class="docutils literal notranslate"><span class="pre">score</span></code> from <a class="reference external" href="https://www.rottentomatoes.com/">Rotten Tomatoes</a>. A comprehensive guide with examples on models is available in the <em>Models</em> section of the <a class="reference external" href="https://soupsavvy.readthedocs.io">Documentation</a>.</p>
+<p>Models define <strong>scraping schemas</strong>, utilizing selectors and operations to extract structured information from the webpage. Model is user-defined data structure representing an entity of interest in scraping. For example, the <code class="docutils literal notranslate"><span class="pre">Movie</span></code> model can be used to extract details such as the movie’s <code class="docutils literal notranslate"><span class="pre">title</span></code> and <code class="docutils literal notranslate"><span class="pre">score</span></code> from <a class="reference external" href="https://www.rottentomatoes.com/">Rotten Tomatoes</a>. A comprehensive guide with examples on models is available <a class="reference external" href="https://soupsavvy.readthedocs.io/en/stable/demos/models.html#model">here</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
@@ -220,7 +220,7 @@
 </div>
 <section id="migrations">
 <h3>Migrations<a class="headerlink" href="#migrations" title="Link to this heading"></a></h3>
-<p>Model instances can be seamlessly migrated to other data structures, with object attributes passed directly to the target model’s constructor. This functionality ensures smooth integration with third-party libraries such as <code class="docutils literal notranslate"><span class="pre">pydantic</span></code> or <code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code>. For example, <code class="docutils literal notranslate"><span class="pre">Movie</span></code> instances can be migrated to a parallel <code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code> model, <code class="docutils literal notranslate"><span class="pre">MovieSQL</span></code>, and saved to a database. More examples and complex use cases can be found in the <em>Models</em> section of the <a class="reference external" href="https://soupsavvy.readthedocs.io">Documentation</a>.</p>
+<p>Model instances can be seamlessly migrated to other data structures, with object attributes passed directly to the target model’s constructor. This functionality ensures smooth integration with third-party libraries such as <code class="docutils literal notranslate"><span class="pre">pydantic</span></code> or <code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code>. For example, <code class="docutils literal notranslate"><span class="pre">Movie</span></code> instances can be migrated to a parallel <code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code> model, <code class="docutils literal notranslate"><span class="pre">MovieSQL</span></code>, and saved to a database. More examples and complex use cases can be found in <a class="reference external" href="https://soupsavvy.readthedocs.io/en/stable/demos/models.html#migration">tutorial</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Identity</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">MetaData</span><span class="p">,</span> <span class="n">String</span><span class="p">,</span> <span class="n">create_engine</span>
@@ -278,7 +278,7 @@
 </section>
 <section id="composite-models">
 <h3>Composite Models<a class="headerlink" href="#composite-models" title="Link to this heading"></a></h3>
-<p>Models in <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> are highly flexible, supporting multiple fields, including sub-models. For instance, we will use <code class="docutils literal notranslate"><span class="pre">MovieDetails</span></code> as a field within the <code class="docutils literal notranslate"><span class="pre">Movie</span></code> model to separate movie-specific information from Rotten Tomatoes’ <code class="docutils literal notranslate"><span class="pre">score</span></code> and <code class="docutils literal notranslate"><span class="pre">rank</span></code>. This modularity allows models to be customized to suit user needs, with additional advanced features explained in detail in the <em>Models</em> section of the <a class="reference external" href="https://soupsavvy.readthedocs.io">Documentation</a>.</p>
+<p>Models in <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> are highly flexible, supporting multiple fields, including sub-models. For instance, we will use <code class="docutils literal notranslate"><span class="pre">MovieDetails</span></code> as a field within the <code class="docutils literal notranslate"><span class="pre">Movie</span></code> model to separate movie-specific information from Rotten Tomatoes’ <code class="docutils literal notranslate"><span class="pre">score</span></code> and <code class="docutils literal notranslate"><span class="pre">rank</span></code>. For more information, check out <a class="reference external" href="https://soupsavvy.readthedocs.io/en/stable/demos/models.html#model-composition">tutorial</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
@@ -338,8 +338,9 @@
 </section>
 <section id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading"></a></h2>
-<p>These are just a few of the many powerful features available in <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code>. To explore them further, dive into the <a class="reference external" href="https://soupsavvy.readthedocs.io">Documentation</a> and start building your scraping workflows!</p>
-<p><strong>Enjoy <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> and let us know what you think!</strong><br />
+<p>These are just a few of the many powerful features available in <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code>.<br />
+To explore them further, dive into the <a class="reference external" href="https://soupsavvy.readthedocs.io">Documentation</a> and start building your scraping workflows!</p>
+<p><strong>Enjoy <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> and leave us feedback!</strong><br />
 <strong>Happy scraping!</strong></p>
 </section>
 </section>
@@ -348,8 +349,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../soupsavvy.operators.html" class="btn btn-neutral float-left" title="operators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="about.html" class="btn btn-neutral float-right" title="About" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="about.html" class="btn btn-neutral float-left" title="About" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="selectors.html" class="btn btn-neutral float-right" title="Selectors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

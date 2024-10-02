@@ -53,8 +53,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../demos/use_cases.html">Use Cases</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../demos/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/showcase.html">Showcase</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../demos/selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../demos/css.html">CSS Selectors</a></li>
@@ -94,7 +94,7 @@
 <span class="sd">-------</span>
 <span class="sd">- `AndSelector` - intersection of multiple selectors (&amp;)</span>
 <span class="sd">- `NotSelector` - negation of a selector (~)</span>
-<span class="sd">- `XORSelector` - exclusive OR of multiple selectors</span>
+<span class="sd">- `XORSelector` - exclusive OR of multiple selectors (^)</span>
 <span class="sd">- `SelectorList` - counterpart of CSS selector list or :is() pseudo-class (|)</span>
 <span class="sd">- `OrSelector` - union of multiple selectors - alias of `SelectorList` (|)</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -128,7 +128,7 @@
 <span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;widget&quot;&gt;Hello World&lt;/div&gt; ✔️</span>
 <span class="sd">    &gt;&gt;&gt; &lt;div&gt;Hello Python&lt;/div&gt; ❌</span>
 
-<span class="sd">    Object can be created as well by using `pipe` operator &#39;|&#39; on `SoupSelector` objects.</span>
+<span class="sd">    Object can be created as well by using `pipe` operator `|` on `SoupSelector` objects.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -159,12 +159,11 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes `SelectorList` object with provided positional arguments.</span>
-<span class="sd">        At least two `SoupSelector` objects are required to create `SelectorList`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        selectors: SoupSelector</span>
-<span class="sd">            SoupSelector objects to match accepted as positional arguments.</span>
+<span class="sd">            At least two `SoupSelector` objects to match accepted as positional arguments.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -218,7 +217,7 @@
 <span class="sd">    &gt;&gt;&gt; &lt;span&gt; class=&quot;widget&quot;&gt;Hello World&lt;/span&gt; ✔️</span>
 <span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;menu&quot;&gt;Hello World&lt;/div&gt; ❌</span>
 
-<span class="sd">    Object can be created as well by using `bitwise NOT` operator &#39;~&#39;</span>
+<span class="sd">    Object can be created as well by using `bitwise NOT` operator `~`</span>
 <span class="sd">    on `SoupSelector` object.</span>
 
 <span class="sd">    Example</span>
@@ -254,8 +253,8 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        selectors: SoupSelector</span>
-<span class="sd">            `SoupSelector` objects to negate match accepted as positional arguments.</span>
-<span class="sd">            At least one `SoupSelector` object is required to create `NotSelector`.</span>
+<span class="sd">            At least one `SoupSelector` objects to negate match</span>
+<span class="sd">            accepted as positional arguments.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -318,7 +317,7 @@
 <span class="sd">    &gt;&gt;&gt; &lt;span class=&quot;widget&quot;&gt;Hello World&lt;/span&gt; ❌</span>
 <span class="sd">    &gt;&gt;&gt; &lt;div class=&quot;menu&quot;&gt;Hello World&lt;/div&gt; ❌</span>
 
-<span class="sd">    Object can be created as well by using `bitwise AND` operator &#39;&amp;&#39;</span>
+<span class="sd">    Object can be created as well by using `bitwise AND` operator `&amp;`</span>
 <span class="sd">    on `SoupSelector` objects.</span>
 
 <span class="sd">    Example</span>
@@ -348,14 +347,12 @@
         <span class="o">*</span><span class="n">selectors</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes `AndSelector` object with provided</span>
-<span class="sd">        positional arguments as selectors.</span>
+<span class="sd">        Initializes `AndSelector` object with provided positional arguments as selectors.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        selectors: SoupSelector</span>
-<span class="sd">            `SoupSelector` objects to match accepted as positional arguments.</span>
-<span class="sd">            At least two `SoupSelector` objects are required to create `AndSelector`.</span>
+<span class="sd">            At least two `SoupSelector` objects to match accepted as positional arguments.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -399,6 +396,13 @@
 <span class="sd">    Matches all elements that have either &quot;div&quot; tag name or &#39;class&#39; attribute &quot;widget&quot;.</span>
 <span class="sd">    Elements with both &quot;div&quot; tag name and &#39;class&#39; attribute &quot;widget&quot; do not match selector.</span>
 
+<span class="sd">    Object can be created as well by using `xor` operator `^` (caret)</span>
+<span class="sd">    on `SoupSelector` objects.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; TypeSelector(&quot;div&quot;) ^ ClassSelector(&quot;widget&quot;)</span>
+
 <span class="sd">    This is a shortcut for defining XOR operation between two selectors like this:</span>
 
 <span class="sd">    Example</span>
@@ -423,8 +427,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        selectors: SoupSelector</span>
-<span class="sd">            `SoupSelector` objects to match accepted as positional arguments.</span>
-<span class="sd">            At least two selector are required to create `XORSelector`.</span>
+<span class="sd">            At least two `SoupSelector` objects to match accepted as positional arguments.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>

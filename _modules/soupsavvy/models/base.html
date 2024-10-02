@@ -53,8 +53,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../demos/use_cases.html">Use Cases</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../demos/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/showcase.html">Showcase</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../demos/selectors.html">Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../demos/combining.html">Composite Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../demos/css.html">CSS Selectors</a></li>
@@ -545,7 +545,7 @@
         <span class="k">if</span> <span class="n">strict</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">ModelNotFoundException</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Scope for the model &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; was not found &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;from &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">scope</span><span class="si">}</span><span class="s2">&#39; in tag.&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;by &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">scope</span><span class="si">}</span><span class="s2">&#39; in tag.&quot;</span>
             <span class="p">)</span>
 
         <span class="k">return</span> <span class="kc">None</span></div>
@@ -584,12 +584,12 @@
             <span class="k">except</span> <span class="n">exc</span><span class="o">.</span><span class="n">RequiredConstraintException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">FieldExtractionException</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;Field &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; is required and was not found in model &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;for element:</span><span class="se">\n</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">.&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;for element:</span><span class="se">\n</span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">except</span> <span class="n">TagSearcherExceptions</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">FieldExtractionException</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;Extracting field &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; failed in model &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;for element:</span><span class="se">\n</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">.&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;for element:</span><span class="se">\n</span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
             <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
