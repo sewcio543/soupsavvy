@@ -20,6 +20,7 @@ from bs4 import Tag
 from soupsavvy.base import BaseOperation, OperationSearcherMixin, SoupSelector
 
 if TYPE_CHECKING:
+    from soupsavvy.operations.general import OperationPipeline
     from soupsavvy.selectors.logical import SelectorList
 
 
@@ -175,15 +176,15 @@ class Parent(BaseOperation, SoupSelector):
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}()"
 
-    @overload
-    def __or__(self, other: BaseOperation) -> BaseOperation: ...
+    @overload  # type: ignore
+    def __or__(self, other: BaseOperation) -> OperationPipeline: ...
 
     @overload
     def __or__(self, other: SoupSelector) -> SelectorList: ...
 
     def __or__(
         self, other: Union[BaseOperation, SoupSelector]
-    ) -> Union[BaseOperation, SelectorList]:
+    ) -> Union[OperationPipeline, SelectorList]:
         if isinstance(other, SoupSelector):
             return SoupSelector.__or__(self, other)
 
