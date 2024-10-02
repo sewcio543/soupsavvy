@@ -1,6 +1,4 @@
-<picture align="center">
-    <img src="https://github.com/sewcio543/soupsavvy/raw/main/resources/logo.png?raw=true" alt="soupsavvy" style="max-width: 50%;display: block;margin-right: auto;margin-left: auto;">
-</picture>
+<img src="https://github.com/sewcio543/soupsavvy/raw/main/resources/logo.png?raw=true" alt="soupsavvy" style="max-width: 50%;display: block;margin-right: auto;margin-left: auto;">
 <hr>
 
 ## Powerful and flexible engine for BeautifulSoup

@@ -52,8 +52,13 @@ img[src*="https://img.shields.io/badge/docs"] {
 }
 
 /* Hide the soupsavvy logo from README, it's already included at the top */
-h1:has(img[alt="soupsavvy"]) {
-  display: none;
+.toctree-wrapper+img[alt="soupsavvy"] {
+  display: none !important;
+}
+
+/* Hide README line under the logo */
+.toctree-wrapper+img[alt="soupsavvy"]+hr {
+  display: none !important;
 }
 
 /* Hide 'View page source' link to rst.txt or md.txt files */
