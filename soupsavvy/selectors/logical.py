@@ -5,7 +5,7 @@ Classes
 -------
 - `AndSelector` - intersection of multiple selectors (&)
 - `NotSelector` - negation of a selector (~)
-- `XORSelector` - exclusive OR of multiple selectors
+- `XORSelector` - exclusive OR of multiple selectors (^)
 - `SelectorList` - counterpart of CSS selector list or :is() pseudo-class (|)
 - `OrSelector` - union of multiple selectors - alias of `SelectorList` (|)
 """
@@ -37,7 +37,7 @@ class SelectorList(CompositeSoupSelector):
     >>> <div class="widget">Hello World</div> ✔️
     >>> <div>Hello Python</div> ❌
 
-    Object can be created as well by using `pipe` operator '|' on `SoupSelector` objects.
+    Object can be created as well by using `pipe` operator `|` on `SoupSelector` objects.
 
     Example
     -------
@@ -66,12 +66,11 @@ class SelectorList(CompositeSoupSelector):
     ) -> None:
         """
         Initializes `SelectorList` object with provided positional arguments.
-        At least two `SoupSelector` objects are required to create `SelectorList`.
 
         Parameters
         ----------
         selectors: SoupSelector
-            SoupSelector objects to match accepted as positional arguments.
+            At least two `SoupSelector` objects to match accepted as positional arguments.
 
         Raises
         ------
@@ -118,7 +117,7 @@ class NotSelector(CompositeSoupSelector):
     >>> <span> class="widget">Hello World</span> ✔️
     >>> <div class="menu">Hello World</div> ❌
 
-    Object can be created as well by using `bitwise NOT` operator '~'
+    Object can be created as well by using `bitwise NOT` operator `~`
     on `SoupSelector` object.
 
     Example
@@ -152,8 +151,8 @@ class NotSelector(CompositeSoupSelector):
         Parameters
         ----------
         selectors: SoupSelector
-            `SoupSelector` objects to negate match accepted as positional arguments.
-            At least one `SoupSelector` object is required to create `NotSelector`.
+            At least one `SoupSelector` objects to negate match
+            accepted as positional arguments.
 
         Raises
         ------
@@ -209,7 +208,7 @@ class AndSelector(CompositeSoupSelector):
     >>> <span class="widget">Hello World</span> ❌
     >>> <div class="menu">Hello World</div> ❌
 
-    Object can be created as well by using `bitwise AND` operator '&'
+    Object can be created as well by using `bitwise AND` operator `&`
     on `SoupSelector` objects.
 
     Example
@@ -237,14 +236,12 @@ class AndSelector(CompositeSoupSelector):
         *selectors: SoupSelector,
     ) -> None:
         """
-        Initializes `AndSelector` object with provided
-        positional arguments as selectors.
+        Initializes `AndSelector` object with provided positional arguments as selectors.
 
         Parameters
         ----------
         selectors: SoupSelector
-            `SoupSelector` objects to match accepted as positional arguments.
-            At least two `SoupSelector` objects are required to create `AndSelector`.
+            At least two `SoupSelector` objects to match accepted as positional arguments.
 
         Raises
         ------
@@ -281,6 +278,13 @@ class XORSelector(CompositeSoupSelector):
     Matches all elements that have either "div" tag name or 'class' attribute "widget".
     Elements with both "div" tag name and 'class' attribute "widget" do not match selector.
 
+    Object can be created as well by using `xor` operator `^` (caret)
+    on `SoupSelector` objects.
+
+    Example
+    -------
+    >>> TypeSelector("div") ^ ClassSelector("widget")
+
     This is a shortcut for defining XOR operation between two selectors like this:
 
     Example
@@ -303,8 +307,7 @@ class XORSelector(CompositeSoupSelector):
         Parameters
         ----------
         selectors: SoupSelector
-            `SoupSelector` objects to match accepted as positional arguments.
-            At least two selector are required to create `XORSelector`.
+            At least two `SoupSelector` objects to match accepted as positional arguments.
 
         Raises
         ------

@@ -233,7 +233,7 @@ class ChildCombinator(BaseCombinator):
     >>> <span class="widget"><a>Hello World</a></span> ❌
     >>> <div class="menu"><span>Hello World</span></div> ❌
 
-    Object can be created as well by using `greater than` operator '>'
+    Object can be created as well by using `greater than` operator `>`
     on `SoupSelector` objects.
 
     Example
@@ -279,7 +279,7 @@ class NextSiblingCombinator(BaseCombinator):
     >>> <div class="widget"><a>Hello World</a></div> ❌
     >>> <div class="widget"></div><span></span><a>Hello World</a> ❌
 
-    Object can be created as well by using `plus` operator '+` on `SoupSelector` objects.
+    Object can be created as well by using `plus` operator `+` on `SoupSelector` objects.
 
     Example
     -------
@@ -325,7 +325,7 @@ class SubsequentSiblingCombinator(BaseCombinator):
     >>> <span class="widget"><a>Hello World</a></span> ❌
     >>> <a>Hello World</a><div class="menu"></div> ❌
 
-    Object can be created as well by using `multiplication` operator '*'
+    Object can be created as well by using `multiplication` operator `*`
     on `SoupSelector` objects.
 
     Example
@@ -371,7 +371,7 @@ class DescendantCombinator(BaseCombinator):
     >>> <span><a class="widget"></a></span> ❌
     >>> <a class="widget"></a> ❌
 
-    Object can be created as well by using `right shift` operator '>>'
+    Object can be created as well by using `right shift` operator `>>`
     on `SoupSelector` objects.
 
     Example
@@ -413,7 +413,7 @@ class ParentCombinator(BaseAncestorCombinator):
     >>> <div><span><div><a href="/shop"></a></span></div> ❌
     >>> <span><a href="/shop"></a></span> ❌
 
-    Object can be created as well by using `lt` operator '<' on `SoupSelector` objects.
+    Object can be created as well by using `lt` operator `<` on `SoupSelector` objects.
 
     Example
     -------
@@ -449,7 +449,7 @@ class AncestorCombinator(BaseAncestorCombinator):
     >>> <div><span class="menu"></span>/div> ❌
     >>> <span><a class="menu"></span>/div> ❌
 
-    Object can be created as well by using `left shift` operator '<<'
+    Object can be created as well by using `left shift` operator `<<`
     on `SoupSelector` objects.
 
     Example

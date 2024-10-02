@@ -27,7 +27,7 @@ if TYPE_CHECKING:
         ParentCombinator,
         SubsequentSiblingCombinator,
     )
-    from soupsavvy.selectors.logical import AndSelector, SelectorList
+    from soupsavvy.selectors.logical import AndSelector, SelectorList, XORSelector
 
 
 def check_selector(x: Any, message: Optional[str] = None) -> SoupSelector:
@@ -277,7 +277,7 @@ class SoupSelector(TagSearcher, Comparable):
         self, x: Union[SoupSelector, BaseOperation]
     ) -> Union[SelectorList, SelectionPipeline]:
         """
-        Overrides `__or__` method called also by pipe operator '|'.
+        Overrides `__or__` method called also by pipe operator `|`.
 
         Syntactical Sugar for logical disjunction, that creates `SelectorList`,
         when combining two `SoupSelector` objects, or `SelectionPipeline`,
@@ -327,7 +327,7 @@ class SoupSelector(TagSearcher, Comparable):
 
     def __invert__(self) -> SoupSelector:
         """
-        Overrides `__invert__` method called also by tilde operator '~'.
+        Overrides `__invert__` method called also by tilde operator `~`.
         Syntactical Sugar for bitwise NOT operator, that creates `NotSelector` instance
         matching everything that is not matched by this `SoupSelector`.
 
@@ -355,7 +355,7 @@ class SoupSelector(TagSearcher, Comparable):
 
     def __and__(self, x: SoupSelector) -> AndSelector:
         """
-        Overrides `__and_`_ method called also by ampersand operator '&'.
+        Overrides `__and_`_ method called also by ampersand operator `&`.
         Syntactical Sugar for bitwise AND operator, that creates `AndSelector` instance
         matching everything that is matched by both `SoupSelector` objects.
 
@@ -392,7 +392,7 @@ class SoupSelector(TagSearcher, Comparable):
 
     def __gt__(self, x: SoupSelector) -> ChildCombinator:
         """
-        Overrides `__gt__` method called also by greater-than operator '>'.
+        Overrides `__gt__` method called also by greater-than operator `>`.
         Syntactical Sugar for greater-than operator, that creates `ChildCombinator`.
 
         Parameters
@@ -427,7 +427,7 @@ class SoupSelector(TagSearcher, Comparable):
 
     def __lt__(self, x: SoupSelector) -> ParentCombinator:
         """
-        Overrides `__lt__` method called also by less-than operator '<'.
+        Overrides `__lt__` method called also by less-than operator `<`.
         Syntactical Sugar for less-than operator, that creates `ParentCombinator` instance.
 
         Example
@@ -467,7 +467,7 @@ class SoupSelector(TagSearcher, Comparable):
 
     def __add__(self, x: SoupSelector) -> NextSiblingCombinator:
         """
-        Overrides `__add__` method called also by plus operator '+'.
+        Overrides `__add__` method called also by plus operator `+`.
         Syntactical Sugar for addition operator, that creates `NextSiblingCombinator`
         instance.
 
@@ -508,7 +508,7 @@ class SoupSelector(TagSearcher, Comparable):
 
     def __mul__(self, x: SoupSelector) -> SubsequentSiblingCombinator:
         """
-        Overrides `__mul__` method called also by multiplication operator '*'.
+        Overrides `__mul__` method called also by multiplication operator `*`.
         Syntactical Sugar for multiplication operator, that creates
         `SubsequentSiblingCombinator` instance.
 
@@ -549,7 +549,7 @@ class SoupSelector(TagSearcher, Comparable):
 
     def __rshift__(self, x: SoupSelector) -> DescendantCombinator:
         """
-        Overrides `__rshift__` method called also by right shift operator '>>'.
+        Overrides `__rshift__` method called also by right shift operator `>>`.
         Syntactical Sugar for right shift operator,
         that creates `DescendantCombinator` instance.
 
@@ -590,9 +590,8 @@ class SoupSelector(TagSearcher, Comparable):
 
     def __lshift__(self, x: SoupSelector) -> AncestorCombinator:
         """
-        Overrides `__lshift__` method called also by left shift operator '<<'.
-        Syntactical Sugar for left-shift operator,
-        that creates `AncestorCombinator` instance.
+        Overrides `__lshift__` method called also by left shift operator `<<`.
+        Syntactical Sugar for left-shift operator, that creates `AncestorCombinator` instance.
 
         Example
         -------
@@ -628,6 +627,46 @@ class SoupSelector(TagSearcher, Comparable):
             return AncestorCombinator(*args)
 
         return AncestorCombinator(self, x)
+
+    def __xor__(self, x: SoupSelector) -> XORSelector:
+        """
+        Overrides `__xor__` method called also by `xor` (caret) operator `^`.
+        Syntactical Sugar `xor` operator, that creates `XORSelector` instance.
+
+        Example
+        -------
+        >>> TypeSelector("a") ^ TypeSelector("div")
+
+        Parameters
+        ----------
+        x : SoupSelector
+            `SoupSelector` object to be combined into new `XORSelector`
+            object as `XORSelector(this, other)`.
+
+        Returns
+        -------
+        XORSelector
+            `XORSelector(this, other)`
+
+        Raises
+        ------
+        NotSoupSelectorException
+            If provided object is not an instance of `SoupSelector`.
+        """
+        from soupsavvy.selectors.logical import XORSelector
+
+        message = (
+            f"XOR operator not supported for types {type(self)} and {type(x)}, "
+            f"expected an instance of {SoupSelector.__name__}."
+        )
+        check_selector(x, message=message)
+
+        if isinstance(self, XORSelector):
+            args = [*self.selectors, x]
+            # return new XORSelector with updated steps
+            return XORSelector(*args)
+
+        return XORSelector(self, x)
 
 
 class SelectableCSS(ABC):

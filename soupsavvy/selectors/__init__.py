@@ -20,6 +20,7 @@ from .general import (
     UniversalSelector,
 )
 from .logical import AndSelector, NotSelector, OrSelector, SelectorList, XORSelector
+from .nth import NthLastOfSelector, NthOfSelector, OnlyOfSelector
 from .relative import Anchor, HasSelector
 
 __all__ = [
@@ -44,4 +45,7 @@ __all__ = [
     "Anchor",
     "XORSelector",
     "AnyTagSelector",
+    "NthOfSelector",
+    "NthLastOfSelector",
+    "OnlyOfSelector",
 ]

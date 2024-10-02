@@ -125,6 +125,9 @@ class SpecificAttributeSelector(AttributeSelector):
         """
         super().__init__(name=self._NAME, value=value)
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.value!r})"
+
 
 class IdSelector(SpecificAttributeSelector):
     """

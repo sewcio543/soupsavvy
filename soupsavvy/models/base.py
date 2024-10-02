@@ -428,7 +428,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         if strict:
             raise exc.ModelNotFoundException(
                 f"Scope for the model '{cls.__name__}' was not found "
-                f"from '{cls.scope}' in tag."
+                f"by '{cls.scope}' in tag."
             )
 
         return None
@@ -466,12 +466,12 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
             except exc.RequiredConstraintException as e:
                 raise exc.FieldExtractionException(
                     f"Field '{key}' is required and was not found in model '{cls.__name__}' "
-                    f"for element:\n{tag}."
+                    f"for element:\n{tag.prettify()}"
                 ) from e
             except TagSearcherExceptions as e:
                 raise exc.FieldExtractionException(
                     f"Extracting field '{key}' failed in model '{cls.__name__}' "
-                    f"for element:\n{tag}."
+                    f"for element:\n{tag.prettify()}"
                 ) from e
 
             params[key] = result

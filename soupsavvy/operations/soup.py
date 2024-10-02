@@ -11,11 +11,17 @@ These components are design to be used for processing html tags and extracting
 desired information. They can be used in combination with selectors.
 """
 
-from typing import Any, Optional
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, Optional, Union, overload
 
 from bs4 import Tag
 
 from soupsavvy.base import BaseOperation, OperationSearcherMixin, SoupSelector
+
+if TYPE_CHECKING:
+    from soupsavvy.operations.general import OperationPipeline
+    from soupsavvy.selectors.logical import SelectorList
 
 
 class Text(OperationSearcherMixin):
@@ -169,3 +175,17 @@ class Parent(BaseOperation, SoupSelector):
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}()"
+
+    @overload  # type: ignore
+    def __or__(self, other: BaseOperation) -> OperationPipeline: ...
+
+    @overload
+    def __or__(self, other: SoupSelector) -> SelectorList: ...
+
+    def __or__(
+        self, other: Union[BaseOperation, SoupSelector]
+    ) -> Union[OperationPipeline, SelectorList]:
+        if isinstance(other, SoupSelector):
+            return SoupSelector.__or__(self, other)
+
+        return BaseOperation.__or__(self, other)

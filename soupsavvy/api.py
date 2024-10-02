@@ -17,6 +17,7 @@ from soupsavvy.selectors.relative import HasSelector
 warnings.warn(
     "soupsavvy.api module is deprecated, use soupsavvy.operators",
     DeprecationWarning,
+    stacklevel=2,
 )
 
 
