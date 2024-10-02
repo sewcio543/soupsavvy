@@ -36,6 +36,7 @@ jobs:
           python -m pip install -r requirements_dev.txt
 
       - name: Show installed packages
+        run: |
           pip freeze
           pip check
 

@@ -40,6 +40,7 @@ jobs:
           python -m pip install .
 
       - name: Show installed packages
+        run: |
           pip freeze
           pip check
 
