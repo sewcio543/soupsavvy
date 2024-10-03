@@ -38,7 +38,7 @@ from .selectors import (
     XORSelector,
 )
 
-__version__ = "0.3.0-dev5"
+__version__ = "0.3.0-dev6"
 __author__ = "sewcio543"
 
 __all__ = [
