@@ -326,10 +326,156 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Found 300 movies
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Movie(rank=9, score=98, details=MovieDetails(title=&#39;Chinatown&#39;, year=1974))
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/base.py:821,</span> in <span class="ni">BaseOperation.execute</span><span class="nt">(self, arg)</span>
+<span class="g g-Whitespace">    </span><span class="mi">820</span> <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">821</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">822</span> <span class="k">except</span> <span class="n">exc</span><span class="o">.</span><span class="n">BreakOperationException</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">823</span>     <span class="c1"># break exception is propagated to the caller to handle</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/operations/soup.py:70,</span> in <span class="ni">Text._execute</span><span class="nt">(self, arg)</span>
+<span class="g g-Whitespace">     </span><span class="mi">69</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;Extracts text from `bs4.Tag`.&quot;&quot;&quot;</span>
+<span class="ne">---&gt; </span><span class="mi">70</span> <span class="k">return</span> <span class="n">arg</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span> <span class="n">strip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">strip</span><span class="p">)</span>
+
+<span class="ne">AttributeError</span>: &#39;NoneType&#39; object has no attribute &#39;get_text&#39;
+
+<span class="n">The</span> <span class="n">above</span> <span class="n">exception</span> <span class="n">was</span> <span class="n">the</span> <span class="n">direct</span> <span class="n">cause</span> <span class="n">of</span> <span class="n">the</span> <span class="n">following</span> <span class="n">exception</span><span class="p">:</span>
+
+<span class="ne">FailedOperationExecution</span><span class="g g-Whitespace">                  </span>Traceback (most recent call last)
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/base.py:821,</span> in <span class="ni">BaseOperation.execute</span><span class="nt">(self, arg)</span>
+<span class="g g-Whitespace">    </span><span class="mi">820</span> <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">821</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">822</span> <span class="k">except</span> <span class="n">exc</span><span class="o">.</span><span class="n">BreakOperationException</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">823</span>     <span class="c1"># break exception is propagated to the caller to handle</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/operations/general.py:73,</span> in <span class="ni">OperationPipeline._execute</span><span class="nt">(self, arg)</span>
+<span class="g g-Whitespace">     </span><span class="mi">72</span> <span class="k">try</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">73</span>     <span class="n">arg</span> <span class="o">=</span> <span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">74</span> <span class="k">except</span> <span class="n">exc</span><span class="o">.</span><span class="n">BreakOperationException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/base.py:826,</span> in <span class="ni">BaseOperation.execute</span><span class="nt">(self, arg)</span>
+<span class="g g-Whitespace">    </span><span class="mi">825</span> <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">826</span>     <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">FailedOperationExecution</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">827</span>         <span class="sa">f</span><span class="s2">&quot;Failed to execute operation: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">828</span>     <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+<span class="ne">FailedOperationExecution</span>: Failed to execute operation: &#39;NoneType&#39; object has no attribute &#39;get_text&#39;
+
+<span class="n">The</span> <span class="n">above</span> <span class="n">exception</span> <span class="n">was</span> <span class="n">the</span> <span class="n">direct</span> <span class="n">cause</span> <span class="n">of</span> <span class="n">the</span> <span class="n">following</span> <span class="n">exception</span><span class="p">:</span>
+
+<span class="ne">FailedOperationExecution</span><span class="g g-Whitespace">                  </span>Traceback (most recent call last)
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/models/base.py:461,</span> in <span class="ni">BaseModel._find</span><span class="nt">(cls, tag)</span>
+<span class="g g-Whitespace">    </span><span class="mi">460</span> <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">461</span>     <span class="n">result</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">462</span>         <span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">463</span>         <span class="n">strict</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">DEFAULT_STRICT</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">464</span>         <span class="n">recursive</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">DEFAULT_RECURSIVE</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">465</span>     <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">466</span> <span class="k">except</span> <span class="n">exc</span><span class="o">.</span><span class="n">RequiredConstraintException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/models/base.py:125,</span> in <span class="ni">Field.find</span><span class="nt">(self, tag, strict, recursive)</span>
+<span class="g g-Whitespace">    </span><span class="mi">124</span> <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">125</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="n">strict</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/operations/selection_pipeline.py:109,</span> in <span class="ni">SelectionPipeline.find</span><span class="nt">(self, tag, strict, recursive)</span>
+<span class="g g-Whitespace">     </span><span class="mi">85</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">     </span><span class="mi">86</span><span class="sd"> Finds a first element matching selector and processes it with operation.</span>
+<span class="g g-Whitespace">     </span><span class="mi">87</span><span class="sd"> </span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">107</span><span class="sd">     If strict parameter is set to `True` and none matching tag was found.</span>
+<span class="g g-Whitespace">    </span><span class="mi">108</span><span class="sd"> &quot;&quot;&quot;</span>
+<span class="ne">--&gt; </span><span class="mi">109</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">110</span>     <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="n">strict</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">111</span> <span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/base.py:826,</span> in <span class="ni">BaseOperation.execute</span><span class="nt">(self, arg)</span>
+<span class="g g-Whitespace">    </span><span class="mi">825</span> <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">826</span>     <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">FailedOperationExecution</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">827</span>         <span class="sa">f</span><span class="s2">&quot;Failed to execute operation: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">828</span>     <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+<span class="ne">FailedOperationExecution</span>: Failed to execute operation: Failed to execute operation: &#39;NoneType&#39; object has no attribute &#39;get_text&#39;
+
+<span class="n">The</span> <span class="n">above</span> <span class="n">exception</span> <span class="n">was</span> <span class="n">the</span> <span class="n">direct</span> <span class="n">cause</span> <span class="n">of</span> <span class="n">the</span> <span class="n">following</span> <span class="n">exception</span><span class="p">:</span>
+
+<span class="ne">FieldExtractionException</span><span class="g g-Whitespace">                  </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">line</span> <span class="mi">39</span>
+<span class="g g-Whitespace">     </span><span class="mi">32</span><span class="w">         </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">     </span><span class="mi">33</span><span class="sd">         Post initialization method is another way of transforming field values.</span>
+<span class="g g-Whitespace">     </span><span class="mi">34</span><span class="sd">         Here, access to all fields is available.</span>
+<span class="g g-Whitespace">     </span><span class="mi">35</span><span class="sd">         &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">     </span><span class="mi">36</span>         <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rank</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">))</span>
+<span class="ne">---&gt; </span><span class="mi">39</span> <span class="n">result</span> <span class="o">=</span> <span class="n">Movie</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">40</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s2"> movies&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">41</span> <span class="n">result</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/models/base.py:510,</span> in <span class="ni">BaseModel.find_all</span><span class="nt">(cls, tag, recursive, limit)</span>
+<span class="g g-Whitespace">    </span><span class="mi">488</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">489</span><span class="sd"> Searches for and returns all instances of the model within the provided tag.</span>
+<span class="g g-Whitespace">    </span><span class="mi">490</span><span class="sd"> By default, perform recursive, non-strict search for model fields</span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">507</span><span class="sd">     A list of model instances found within the tag.</span>
+<span class="g g-Whitespace">    </span><span class="mi">508</span><span class="sd"> &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">509</span> <span class="n">elements</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">510</span> <span class="k">return</span> <span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">_find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">]</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/models/base.py:510,</span> in <span class="ni">&lt;listcomp&gt;</span><span class="nt">(.0)</span>
+<span class="g g-Whitespace">    </span><span class="mi">488</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">489</span><span class="sd"> Searches for and returns all instances of the model within the provided tag.</span>
+<span class="g g-Whitespace">    </span><span class="mi">490</span><span class="sd"> By default, perform recursive, non-strict search for model fields</span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">507</span><span class="sd">     A list of model instances found within the tag.</span>
+<span class="g g-Whitespace">    </span><span class="mi">508</span><span class="sd"> &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">509</span> <span class="n">elements</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">510</span> <span class="k">return</span> <span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">_find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">]</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/models/base.py:461,</span> in <span class="ni">BaseModel._find</span><span class="nt">(cls, tag)</span>
+<span class="g g-Whitespace">    </span><span class="mi">459</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">selector</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="g g-Whitespace">    </span><span class="mi">460</span>     <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">461</span>         <span class="n">result</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">462</span>             <span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">463</span>             <span class="n">strict</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">DEFAULT_STRICT</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">464</span>             <span class="n">recursive</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">DEFAULT_RECURSIVE</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">465</span>         <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">466</span>     <span class="k">except</span> <span class="n">exc</span><span class="o">.</span><span class="n">RequiredConstraintException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">467</span>         <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">FieldExtractionException</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">468</span>             <span class="sa">f</span><span class="s2">&quot;Field &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; is required and was not found in model &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">469</span>             <span class="sa">f</span><span class="s2">&quot;for element:</span><span class="se">\n</span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">470</span>         <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/models/base.py:125,</span> in <span class="ni">Field.find</span><span class="nt">(self, tag, strict, recursive)</span>
+<span class="g g-Whitespace">    </span><span class="mi">124</span> <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">125</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="n">strict</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/models/base.py:426,</span> in <span class="ni">BaseModel.find</span><span class="nt">(cls, tag, strict, recursive)</span>
+<span class="g g-Whitespace">    </span><span class="mi">423</span> <span class="n">bound</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">425</span> <span class="k">if</span> <span class="n">bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">426</span>     <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_find</span><span class="p">(</span><span class="n">bound</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">428</span> <span class="k">if</span> <span class="n">strict</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">429</span>     <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">ModelNotFoundException</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">430</span>         <span class="sa">f</span><span class="s2">&quot;Scope for the model &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; was not found &quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">431</span>         <span class="sa">f</span><span class="s2">&quot;by &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">scope</span><span class="si">}</span><span class="s2">&#39; in tag.&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">432</span>     <span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/models/base.py:472,</span> in <span class="ni">BaseModel._find</span><span class="nt">(cls, tag)</span>
+<span class="g g-Whitespace">    </span><span class="mi">467</span>         <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">FieldExtractionException</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">468</span>             <span class="sa">f</span><span class="s2">&quot;Field &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; is required and was not found in model &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">469</span>             <span class="sa">f</span><span class="s2">&quot;for element:</span><span class="se">\n</span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">470</span>         <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+<span class="g g-Whitespace">    </span><span class="mi">471</span>     <span class="k">except</span> <span class="n">TagSearcherExceptions</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">472</span>         <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">FieldExtractionException</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">473</span>             <span class="sa">f</span><span class="s2">&quot;Extracting field &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; failed in model &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">474</span>             <span class="sa">f</span><span class="s2">&quot;for element:</span><span class="se">\n</span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">475</span>         <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+<span class="g g-Whitespace">    </span><span class="mi">477</span>     <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+<span class="g g-Whitespace">    </span><span class="mi">479</span> <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+
+<span class="ne">FieldExtractionException</span>: Extracting field &#39;year&#39; failed in model &#39;MovieDetails&#39; for element:
+<span class="o">&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;details&quot;</span><span class="o">&gt;</span>
+ <span class="o">&lt;</span><span class="n">a</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;title&quot;</span> <span class="n">href</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="o">&gt;</span>
+ <span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 </div>

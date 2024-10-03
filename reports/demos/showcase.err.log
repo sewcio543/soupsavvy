@@ -1,0 +1,224 @@
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/nbclient/client.py", line 1269, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/nbclient/util.py", line 85, in wrapped
+    return just_run(coro(*args, **kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/nbclient/util.py", line 60, in just_run
+    return loop.run_until_complete(coro)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/nbclient/client.py", line 707, in async_execute
+    await self.async_execute_cell(
+  File "/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/nbclient/client.py", line 1025, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/nbclient/client.py", line 919, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+from soupsavvy import ClassSelector, TypeSelector
+from soupsavvy.models import BaseModel, post
+from soupsavvy.operations import Operation, Text
+from soupsavvy.selectors.css import FirstOfType
+
+
+class MovieDetails(BaseModel):
+    __scope__ = ClassSelector("details")
+
+    title = ClassSelector("title") | Text(strip=True)
+    year = (
+        ClassSelector("year")
+        | Text()
+        | Operation(lambda x: x.strip("()"))
+        | Operation(int)
+    )
+
+
+class Movie(BaseModel):
+    __scope__ = (ClassSelector("movie") & TypeSelector("p")) << TypeSelector("tr")
+
+    rank = (FirstOfType() & TypeSelector("td")) | Text()
+    score = ClassSelector("score") | Text()
+    # Model can be a field of another model
+    details = MovieDetails
+
+    @post("score")
+    def process_score(self, score: str) -> int:
+        return int(score.strip("%"))
+
+    def __post_init__(self) -> None:
+        """
+        Post initialization method is another way of transforming field values.
+        Here, access to all fields is available.
+        """
+        self.rank = int(str(self.rank).strip("."))
+
+
+result = Movie.find_all(soup)
+print(f"Found {len(result)} movies")
+result[8]
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mAttributeError[0m                            Traceback (most recent call last)
+File [0;32m/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/base.py:821[0m, in [0;36mBaseOperation.execute[0;34m(self, arg)[0m
+[1;32m    820[0m [38;5;28;01mtry[39;00m:
+[0;32m--> 821[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_execute[49m[43m([49m[43marg[49m[43m)[49m
+[1;32m    822[0m [38;5;28;01mexcept[39;00m exc[38;5;241m.[39mBreakOperationException:
+[1;32m    823[0m     [38;5;66;03m# break exception is propagated to the caller to handle[39;00m
+
+File [0;32m/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/operations/soup.py:70[0m, in [0;36mText._execute[0;34m(self, arg)[0m
+[1;32m     69[0m [38;5;250m[39m[38;5;124;03m"""Extracts text from `bs4.Tag`."""[39;00m
+[0;32m---> 70[0m [38;5;28;01mreturn[39;00m [43marg[49m[38;5;241;43m.[39;49m[43mget_text[49m(separator[38;5;241m=[39m[38;5;28mself[39m[38;5;241m.[39mseparator, strip[38;5;241m=[39m[38;5;28mself[39m[38;5;241m.[39mstrip)
+
+[0;31mAttributeError[0m: 'NoneType' object has no attribute 'get_text'
+
+The above exception was the direct cause of the following exception:
+
+[0;31mFailedOperationExecution[0m                  Traceback (most recent call last)
+File [0;32m/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/base.py:821[0m, in [0;36mBaseOperation.execute[0;34m(self, arg)[0m
+[1;32m    820[0m [38;5;28;01mtry[39;00m:
+[0;32m--> 821[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_execute[49m[43m([49m[43marg[49m[43m)[49m
+[1;32m    822[0m [38;5;28;01mexcept[39;00m exc[38;5;241m.[39mBreakOperationException:
+[1;32m    823[0m     [38;5;66;03m# break exception is propagated to the caller to handle[39;00m
+
+File [0;32m/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/operations/general.py:73[0m, in [0;36mOperationPipeline._execute[0;34m(self, arg)[0m
+[1;32m     72[0m [38;5;28;01mtry[39;00m:
+[0;32m---> 73[0m     arg [38;5;241m=[39m [43moperation[49m[38;5;241;43m.[39;49m[43mexecute[49m[43m([49m[43marg[49m[43m)[49m
+[1;32m     74[0m [38;5;28;01mexcept[39;00m exc[38;5;241m.[39mBreakOperationException [38;5;28;01mas[39;00m e:
+
+File [0;32m/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/base.py:826[0m, in [0;36mBaseOperation.execute[0;34m(self, arg)[0m
+[1;32m    825[0m [38;5;28;01mexcept[39;00m [38;5;167;01mException[39;00m [38;5;28;01mas[39;00m e:
+[0;32m--> 826[0m     [38;5;28;01mraise[39;00m exc[38;5;241m.[39mFailedOperationExecution(
+[1;32m    827[0m         [38;5;124mf[39m[38;5;124m"[39m[38;5;124mFailed to execute operation: [39m[38;5;132;01m{[39;00me[38;5;132;01m}[39;00m[38;5;124m"[39m
+[1;32m    828[0m     ) [38;5;28;01mfrom[39;00m [38;5;21;01me[39;00m
+
+[0;31mFailedOperationExecution[0m: Failed to execute operation: 'NoneType' object has no attribute 'get_text'
+
+The above exception was the direct cause of the following exception:
+
+[0;31mFailedOperationExecution[0m                  Traceback (most recent call last)
+File [0;32m/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/models/base.py:461[0m, in [0;36mBaseModel._find[0;34m(cls, tag)[0m
+[1;32m    460[0m [38;5;28;01mtry[39;00m:
+[0;32m--> 461[0m     result [38;5;241m=[39m [43mselector[49m[38;5;241;43m.[39;49m[43mfind[49m[43m([49m
+[1;32m    462[0m [43m        [49m[43mtag[49m[38;5;241;43m=[39;49m[43mtag[49m[43m,[49m
+[1;32m    463[0m [43m        [49m[43mstrict[49m[38;5;241;43m=[39;49m[43mc[49m[38;5;241;43m.[39;49m[43mDEFAULT_STRICT[49m[43m,[49m
+[1;32m    464[0m [43m        [49m[43mrecursive[49m[38;5;241;43m=[39;49m[43mc[49m[38;5;241;43m.[39;49m[43mDEFAULT_RECURSIVE[49m[43m,[49m
+[1;32m    465[0m [43m    [49m[43m)[49m
+[1;32m    466[0m [38;5;28;01mexcept[39;00m exc[38;5;241m.[39mRequiredConstraintException [38;5;28;01mas[39;00m e:
+
+File [0;32m/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/models/base.py:125[0m, in [0;36mField.find[0;34m(self, tag, strict, recursive)[0m
+[1;32m    124[0m [38;5;28;01mdef[39;00m [38;5;21mfind[39m([38;5;28mself[39m, tag: Tag, strict: [38;5;28mbool[39m [38;5;241m=[39m [38;5;28;01mFalse[39;00m, recursive: [38;5;28mbool[39m [38;5;241m=[39m [38;5;28;01mTrue[39;00m) [38;5;241m-[39m[38;5;241m>[39m Any:
+[0;32m--> 125[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mselector[49m[38;5;241;43m.[39;49m[43mfind[49m[43m([49m[43mtag[49m[43m,[49m[43m [49m[43mstrict[49m[38;5;241;43m=[39;49m[43mstrict[49m[43m,[49m[43m [49m[43mrecursive[49m[38;5;241;43m=[39;49m[43mrecursive[49m[43m)[49m
+
+File [0;32m/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/operations/selection_pipeline.py:109[0m, in [0;36mSelectionPipeline.find[0;34m(self, tag, strict, recursive)[0m
+[1;32m     85[0m [38;5;250m[39m[38;5;124;03m"""[39;00m
+[1;32m     86[0m [38;5;124;03mFinds a first element matching selector and processes it with operation.[39;00m
+[1;32m     87[0m 
+[0;32m   (...)[0m
+[1;32m    107[0m [38;5;124;03m    If strict parameter is set to `True` and none matching tag was found.[39;00m
+[1;32m    108[0m [38;5;124;03m"""[39;00m
+[0;32m--> 109[0m [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43moperation[49m[38;5;241;43m.[39;49m[43mexecute[49m[43m([49m
+[1;32m    110[0m [43m    [49m[38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mselector[49m[38;5;241;43m.[39;49m[43mfind[49m[43m([49m[43mtag[49m[43m,[49m[43m [49m[43mstrict[49m[38;5;241;43m=[39;49m[43mstrict[49m[43m,[49m[43m [49m[43mrecursive[49m[38;5;241;43m=[39;49m[43mrecursive[49m[43m)[49m
+[1;32m    111[0m [43m[49m[43m)[49m
+
+File [0;32m/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/base.py:826[0m, in [0;36mBaseOperation.execute[0;34m(self, arg)[0m
+[1;32m    825[0m [38;5;28;01mexcept[39;00m [38;5;167;01mException[39;00m [38;5;28;01mas[39;00m e:
+[0;32m--> 826[0m     [38;5;28;01mraise[39;00m exc[38;5;241m.[39mFailedOperationExecution(
+[1;32m    827[0m         [38;5;124mf[39m[38;5;124m"[39m[38;5;124mFailed to execute operation: [39m[38;5;132;01m{[39;00me[38;5;132;01m}[39;00m[38;5;124m"[39m
+[1;32m    828[0m     ) [38;5;28;01mfrom[39;00m [38;5;21;01me[39;00m
+
+[0;31mFailedOperationExecution[0m: Failed to execute operation: Failed to execute operation: 'NoneType' object has no attribute 'get_text'
+
+The above exception was the direct cause of the following exception:
+
+[0;31mFieldExtractionException[0m                  Traceback (most recent call last)
+Cell [0;32mIn[6], line 39[0m
+[1;32m     32[0m [38;5;250m        [39m[38;5;124;03m"""[39;00m
+[1;32m     33[0m [38;5;124;03m        Post initialization method is another way of transforming field values.[39;00m
+[1;32m     34[0m [38;5;124;03m        Here, access to all fields is available.[39;00m
+[1;32m     35[0m [38;5;124;03m        """[39;00m
+[1;32m     36[0m         [38;5;28mself[39m[38;5;241m.[39mrank [38;5;241m=[39m [38;5;28mint[39m([38;5;28mstr[39m([38;5;28mself[39m[38;5;241m.[39mrank)[38;5;241m.[39mstrip([38;5;124m"[39m[38;5;124m.[39m[38;5;124m"[39m))
+[0;32m---> 39[0m result [38;5;241m=[39m [43mMovie[49m[38;5;241;43m.[39;49m[43mfind_all[49m[43m([49m[43msoup[49m[43m)[49m
+[1;32m     40[0m [38;5;28mprint[39m([38;5;124mf[39m[38;5;124m"[39m[38;5;124mFound [39m[38;5;132;01m{[39;00m[38;5;28mlen[39m(result)[38;5;132;01m}[39;00m[38;5;124m movies[39m[38;5;124m"[39m)
+[1;32m     41[0m result[[38;5;241m8[39m]
+
+File [0;32m/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/models/base.py:510[0m, in [0;36mBaseModel.find_all[0;34m(cls, tag, recursive, limit)[0m
+[1;32m    488[0m [38;5;250m[39m[38;5;124;03m"""[39;00m
+[1;32m    489[0m [38;5;124;03mSearches for and returns all instances of the model within the provided tag.[39;00m
+[1;32m    490[0m [38;5;124;03mBy default, perform recursive, non-strict search for model fields[39;00m
+[0;32m   (...)[0m
+[1;32m    507[0m [38;5;124;03m    A list of model instances found within the tag.[39;00m
+[1;32m    508[0m [38;5;124;03m"""[39;00m
+[1;32m    509[0m elements [38;5;241m=[39m [38;5;28mcls[39m[38;5;241m.[39mscope[38;5;241m.[39mfind_all(tag[38;5;241m=[39mtag, recursive[38;5;241m=[39mrecursive, limit[38;5;241m=[39mlimit)
+[0;32m--> 510[0m [38;5;28;01mreturn[39;00m [43m[[49m[38;5;28;43mcls[39;49m[38;5;241;43m.[39;49m[43m_find[49m[43m([49m[43melement[49m[43m)[49m[43m [49m[38;5;28;43;01mfor[39;49;00m[43m [49m[43melement[49m[43m [49m[38;5;129;43;01min[39;49;00m[43m [49m[43melements[49m[43m][49m
+
+File [0;32m/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/models/base.py:510[0m, in [0;36m<listcomp>[0;34m(.0)[0m
+[1;32m    488[0m [38;5;250m[39m[38;5;124;03m"""[39;00m
+[1;32m    489[0m [38;5;124;03mSearches for and returns all instances of the model within the provided tag.[39;00m
+[1;32m    490[0m [38;5;124;03mBy default, perform recursive, non-strict search for model fields[39;00m
+[0;32m   (...)[0m
+[1;32m    507[0m [38;5;124;03m    A list of model instances found within the tag.[39;00m
+[1;32m    508[0m [38;5;124;03m"""[39;00m
+[1;32m    509[0m elements [38;5;241m=[39m [38;5;28mcls[39m[38;5;241m.[39mscope[38;5;241m.[39mfind_all(tag[38;5;241m=[39mtag, recursive[38;5;241m=[39mrecursive, limit[38;5;241m=[39mlimit)
+[0;32m--> 510[0m [38;5;28;01mreturn[39;00m [[38;5;28;43mcls[39;49m[38;5;241;43m.[39;49m[43m_find[49m[43m([49m[43melement[49m[43m)[49m [38;5;28;01mfor[39;00m element [38;5;129;01min[39;00m elements]
+
+File [0;32m/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/models/base.py:461[0m, in [0;36mBaseModel._find[0;34m(cls, tag)[0m
+[1;32m    459[0m [38;5;28;01mfor[39;00m key, selector [38;5;129;01min[39;00m [38;5;28mcls[39m[38;5;241m.[39mfields[38;5;241m.[39mitems():
+[1;32m    460[0m     [38;5;28;01mtry[39;00m:
+[0;32m--> 461[0m         result [38;5;241m=[39m [43mselector[49m[38;5;241;43m.[39;49m[43mfind[49m[43m([49m
+[1;32m    462[0m [43m            [49m[43mtag[49m[38;5;241;43m=[39;49m[43mtag[49m[43m,[49m
+[1;32m    463[0m [43m            [49m[43mstrict[49m[38;5;241;43m=[39;49m[43mc[49m[38;5;241;43m.[39;49m[43mDEFAULT_STRICT[49m[43m,[49m
+[1;32m    464[0m [43m            [49m[43mrecursive[49m[38;5;241;43m=[39;49m[43mc[49m[38;5;241;43m.[39;49m[43mDEFAULT_RECURSIVE[49m[43m,[49m
+[1;32m    465[0m [43m        [49m[43m)[49m
+[1;32m    466[0m     [38;5;28;01mexcept[39;00m exc[38;5;241m.[39mRequiredConstraintException [38;5;28;01mas[39;00m e:
+[1;32m    467[0m         [38;5;28;01mraise[39;00m exc[38;5;241m.[39mFieldExtractionException(
+[1;32m    468[0m             [38;5;124mf[39m[38;5;124m"[39m[38;5;124mField [39m[38;5;124m'[39m[38;5;132;01m{[39;00mkey[38;5;132;01m}[39;00m[38;5;124m'[39m[38;5;124m is required and was not found in model [39m[38;5;124m'[39m[38;5;132;01m{[39;00m[38;5;28mcls[39m[38;5;241m.[39m[38;5;18m__name__[39m[38;5;132;01m}[39;00m[38;5;124m'[39m[38;5;124m [39m[38;5;124m"[39m
+[1;32m    469[0m             [38;5;124mf[39m[38;5;124m"[39m[38;5;124mfor element:[39m[38;5;130;01m\n[39;00m[38;5;132;01m{[39;00mtag[38;5;241m.[39mprettify()[38;5;132;01m}[39;00m[38;5;124m"[39m
+[1;32m    470[0m         ) [38;5;28;01mfrom[39;00m [38;5;21;01me[39;00m
+
+File [0;32m/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/models/base.py:125[0m, in [0;36mField.find[0;34m(self, tag, strict, recursive)[0m
+[1;32m    124[0m [38;5;28;01mdef[39;00m [38;5;21mfind[39m([38;5;28mself[39m, tag: Tag, strict: [38;5;28mbool[39m [38;5;241m=[39m [38;5;28;01mFalse[39;00m, recursive: [38;5;28mbool[39m [38;5;241m=[39m [38;5;28;01mTrue[39;00m) [38;5;241m-[39m[38;5;241m>[39m Any:
+[0;32m--> 125[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mselector[49m[38;5;241;43m.[39;49m[43mfind[49m[43m([49m[43mtag[49m[43m,[49m[43m [49m[43mstrict[49m[38;5;241;43m=[39;49m[43mstrict[49m[43m,[49m[43m [49m[43mrecursive[49m[38;5;241;43m=[39;49m[43mrecursive[49m[43m)[49m
+
+File [0;32m/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/models/base.py:426[0m, in [0;36mBaseModel.find[0;34m(cls, tag, strict, recursive)[0m
+[1;32m    423[0m bound [38;5;241m=[39m [38;5;28mcls[39m[38;5;241m.[39mscope[38;5;241m.[39mfind(tag[38;5;241m=[39mtag, strict[38;5;241m=[39m[38;5;28;01mFalse[39;00m, recursive[38;5;241m=[39mrecursive)
+[1;32m    425[0m [38;5;28;01mif[39;00m bound [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+[0;32m--> 426[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mcls[39;49m[38;5;241;43m.[39;49m[43m_find[49m[43m([49m[43mbound[49m[43m)[49m
+[1;32m    428[0m [38;5;28;01mif[39;00m strict:
+[1;32m    429[0m     [38;5;28;01mraise[39;00m exc[38;5;241m.[39mModelNotFoundException(
+[1;32m    430[0m         [38;5;124mf[39m[38;5;124m"[39m[38;5;124mScope for the model [39m[38;5;124m'[39m[38;5;132;01m{[39;00m[38;5;28mcls[39m[38;5;241m.[39m[38;5;18m__name__[39m[38;5;132;01m}[39;00m[38;5;124m'[39m[38;5;124m was not found [39m[38;5;124m"[39m
+[1;32m    431[0m         [38;5;124mf[39m[38;5;124m"[39m[38;5;124mby [39m[38;5;124m'[39m[38;5;132;01m{[39;00m[38;5;28mcls[39m[38;5;241m.[39mscope[38;5;132;01m}[39;00m[38;5;124m'[39m[38;5;124m in tag.[39m[38;5;124m"[39m
+[1;32m    432[0m     )
+
+File [0;32m/opt/hostedtoolcache/Python/3.11.10/x64/lib/python3.11/site-packages/soupsavvy/models/base.py:472[0m, in [0;36mBaseModel._find[0;34m(cls, tag)[0m
+[1;32m    467[0m         [38;5;28;01mraise[39;00m exc[38;5;241m.[39mFieldExtractionException(
+[1;32m    468[0m             [38;5;124mf[39m[38;5;124m"[39m[38;5;124mField [39m[38;5;124m'[39m[38;5;132;01m{[39;00mkey[38;5;132;01m}[39;00m[38;5;124m'[39m[38;5;124m is required and was not found in model [39m[38;5;124m'[39m[38;5;132;01m{[39;00m[38;5;28mcls[39m[38;5;241m.[39m[38;5;18m__name__[39m[38;5;132;01m}[39;00m[38;5;124m'[39m[38;5;124m [39m[38;5;124m"[39m
+[1;32m    469[0m             [38;5;124mf[39m[38;5;124m"[39m[38;5;124mfor element:[39m[38;5;130;01m\n[39;00m[38;5;132;01m{[39;00mtag[38;5;241m.[39mprettify()[38;5;132;01m}[39;00m[38;5;124m"[39m
+[1;32m    470[0m         ) [38;5;28;01mfrom[39;00m [38;5;21;01me[39;00m
+[1;32m    471[0m     [38;5;28;01mexcept[39;00m TagSearcherExceptions [38;5;28;01mas[39;00m e:
+[0;32m--> 472[0m         [38;5;28;01mraise[39;00m exc[38;5;241m.[39mFieldExtractionException(
+[1;32m    473[0m             [38;5;124mf[39m[38;5;124m"[39m[38;5;124mExtracting field [39m[38;5;124m'[39m[38;5;132;01m{[39;00mkey[38;5;132;01m}[39;00m[38;5;124m'[39m[38;5;124m failed in model [39m[38;5;124m'[39m[38;5;132;01m{[39;00m[38;5;28mcls[39m[38;5;241m.[39m[38;5;18m__name__[39m[38;5;132;01m}[39;00m[38;5;124m'[39m[38;5;124m [39m[38;5;124m"[39m
+[1;32m    474[0m             [38;5;124mf[39m[38;5;124m"[39m[38;5;124mfor element:[39m[38;5;130;01m\n[39;00m[38;5;132;01m{[39;00mtag[38;5;241m.[39mprettify()[38;5;132;01m}[39;00m[38;5;124m"[39m
+[1;32m    475[0m         ) [38;5;28;01mfrom[39;00m [38;5;21;01me[39;00m
+[1;32m    477[0m     params[key] [38;5;241m=[39m result
+[1;32m    479[0m [38;5;28;01mreturn[39;00m [38;5;28mcls[39m([38;5;241m*[39m[38;5;241m*[39mparams)
+
+[0;31mFieldExtractionException[0m: Extracting field 'year' failed in model 'MovieDetails' for element:
+<span class="details">
+ <a class="title" href="">
+ </a>
+</span>
+
+FieldExtractionException: Extracting field 'year' failed in model 'MovieDetails' for element:
+<span class="details">
+ <a class="title" href="">
+ </a>
+</span>
+
+
