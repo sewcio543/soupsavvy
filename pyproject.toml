@@ -36,7 +36,8 @@ version = {attr = "soupsavvy.__version__"}
 dependencies = {file = ["requirements.txt"]}
 
 [project.optional-dependencies]
-xpath = ["lxml>=4.0"]
+xpath = ["lxml"]
+css = ["soupsieve"]
 
 [tool.setuptools]
 packages = ["soupsavvy"]

@@ -20,10 +20,10 @@ try:
     from lxml import html
     from lxml.etree import XPath, XPathSyntaxError
     from lxml.html.soupparser import _convert_tree as to_lxml
-except ImportError:
+except ImportError as e:
     raise ImportError(
-        "`soupsavvy.selectors.xpath` requires `lxml` package to be installed"
-    )
+        "`soupsavvy.selectors.xpath` requires `lxml` package to be installed."
+    ) from e
 
 import soupsavvy.exceptions as exc
 from soupsavvy.base import SoupSelector

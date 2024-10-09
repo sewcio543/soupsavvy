@@ -26,7 +26,12 @@ Classes
 from itertools import islice
 from typing import Optional
 
-import soupsieve as sv
+try:
+    import soupsieve as sv
+except ImportError as e:
+    raise ImportError(
+        "`soupsavvy.css` requires `soupsieve` package to be installed."
+    ) from e
 from bs4 import Tag
 
 import soupsavvy.exceptions as exc
