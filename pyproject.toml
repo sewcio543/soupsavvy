@@ -11,7 +11,7 @@ authors = [{name = "sewcio543"}]
 license = {file = "LICENSE"}
 requires-python = ">=3.9"
 
-keywords = ["web-scraping", "html", "soup", "bs4", "markup", "beautifulsoup"]
+keywords = ["web-scraping", "html", "soup", "bs4", "markup", "beautifulsoup", "css"]
 
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -29,11 +29,14 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
 ]
-dynamic = ["version", "dependencies", "optional-dependencies"]
+dynamic = ["version", "dependencies"]
 
 [tool.setuptools.dynamic]
 version = {attr = "soupsavvy.__version__"}
 dependencies = {file = ["requirements.txt"]}
+
+[project.optional-dependencies]
+xpath = ["lxml>=4.0"]
 
 [tool.setuptools]
 packages = ["soupsavvy"]
