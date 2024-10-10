@@ -25,6 +25,8 @@ except ImportError as e:
         "`soupsavvy.selectors.xpath` requires `lxml` package to be installed."
     ) from e
 
+import warnings
+
 import soupsavvy.exceptions as exc
 from soupsavvy.base import SoupSelector
 from soupsavvy.utils.selector_utils import TagIterator
@@ -46,13 +48,14 @@ class XPathSelector(SoupSelector):
     ... selector = XPathSelector(XPath("//p[@class='menu']", smart_strings=False))
     ... selector.find(soup)
 
-    Expressions targeting attributes or text content can be used,
-    but results are reduced to matching `bs4` elements.
+    Expressions must target elements, not attributes or text content,
+    otherwise, warning is raised and no results are found.
 
     Examples
     --------
     >>> selector = XPathSelector("//div//@href")
     ... selector.find(soup)
+    None
     """
 
     def __init__(self, xpath: Union[str, XPath]) -> None:
@@ -63,6 +66,7 @@ class XPathSelector(SoupSelector):
         ----------
         xpath : str | lxml.etree.XPath
             String representing of xpath expression or compiled `XPath` object.
+            It needs to target elements, not attributes or text content.
 
         Raises
         ------
@@ -86,6 +90,14 @@ class XPathSelector(SoupSelector):
         element: html.HtmlElement = to_lxml(tag, None)  # type: ignore
         matches = self.xpath(element)
 
+        if matches and all(
+            not isinstance(match, html.HtmlElement) for match in matches
+        ):
+            warnings.warn(
+                "XPath expression does not target elements, no results will be found.",
+                UserWarning,
+            )
+
         # this approach is possible due to DFS traversal
         # strongly based on assumption, that both iterators are in sync
         lxml_iterator = (
@@ -107,4 +119,8 @@ class XPathSelector(SoupSelector):
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, XPathSelector):
             return False
-        return self.xpath == other.xpath
+
+        return self.xpath.path == other.xpath.path
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.xpath!r})"
