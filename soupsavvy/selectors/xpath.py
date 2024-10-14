@@ -56,6 +56,11 @@ class XPathSelector(SoupSelector):
     >>> selector = XPathSelector("//div//@href")
     ... selector.find(soup)
     None
+
+    Notes
+    -----
+    Equality check includes only xpath expression, as lxml `XPath` object
+    does not implement more specific `__eq__` method.
     """
 
     def __init__(self, xpath: Union[str, XPath]) -> None:
@@ -88,7 +93,7 @@ class XPathSelector(SoupSelector):
         limit: Optional[int] = None,
     ) -> list[Tag]:
         element: html.HtmlElement = to_lxml(tag, None)  # type: ignore
-        matches = self.xpath(element)
+        matches: list = self.xpath(element)  # type: ignore
 
         if matches and all(
             not isinstance(match, html.HtmlElement) for match in matches
@@ -97,6 +102,7 @@ class XPathSelector(SoupSelector):
                 "XPath expression does not target elements, no results will be found.",
                 UserWarning,
             )
+            return []
 
         # this approach is possible due to DFS traversal
         # strongly based on assumption, that both iterators are in sync

@@ -334,6 +334,8 @@ class TestXPathSelector:
         argvalues=[
             (XPathSelector("//a"), XPathSelector("//a")),
             (XPathSelector("//a"), XPathSelector(XPath("//a"))),
+            # only expression is compared
+            (XPathSelector("//a"), XPathSelector(XPath("//a", smart_strings=False))),
         ],
     )
     def test_two_tag_selectors_are_equal(self, selectors: tuple):
