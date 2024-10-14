@@ -64,6 +64,18 @@ class InvalidCSSSelector(SoupsavvyException):
     """
 
 
+class InvalidXPathSelector(SoupsavvyException):
+    """
+    Raised when the parsing provided XPath selector in `XPathSelector`
+    failed due to invalid syntax.
+
+    Example
+    -------
+    >>> XPathSelector("2x + 1")
+    InvalidXPathSelector
+    """
+
+
 #! GENERATORS
 
 
