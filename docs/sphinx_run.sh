@@ -1,24 +1,31 @@
 #!/bin/bash
 
 # Set directories
-demo_source="demos"
-demo_cp="docs/source/demos"
-
 docs="docs"
-docs_source="docs/source"
+source="source"
+demo_source="demos"
+scripts="scripts"
+
+source_dir="$docs/$source"
+demo_cp="$source_dir/$demo_source"
+scripts_dir="$docs/$scripts"
 
 package="soupsavvy"
+
+cp CONTRIBUTING.md $source_dir/contributing.md
 
 # Copy demos to source/demos
 rm -rf $demo_cp
 cp -rf $demo_source $demo_cp
 
-python $docs/update_index.py
+python $scripts_dir/update_index.py
 
-sphinx-apidoc -o $docs_source $package --separate --force
+sphinx-apidoc -o $source_dir $package --separate --force
 
-python $docs/renaming.py $docs_source
-python $docs/update_demos.py
+python $scripts_dir/renaming.py $source_dir
+python $scripts_dir/update_demos.py
 
 cd docs
 make clean && make html
+
+rm $source/contributing.md

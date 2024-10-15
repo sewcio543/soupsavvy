@@ -1,4 +1,4 @@
-# Contributing to `soupsavvy`
+# Contributing
 
 Thank you for your interest in contributing to `soupsavvy`! We welcome contributions from the community to improve and expand the functionality of this project. To ensure a smooth contribution process, please follow these guidelines:
 

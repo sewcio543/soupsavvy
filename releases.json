@@ -1,0 +1,22 @@
+[
+  {
+    "body": "<!-- Release notes generated using configuration in .github/release.yml at v0.3.0 -->\r\n\r\n## What's Changed\r\n### Breaking Changes 💥\r\n* `SkipNone` and `Suppress` moved to `operations`\r\n* Base `operation` and `selectors` classes moved to new `base` module\r\n### New Features 🎉\r\n* Conditional Operations (`IfElse`, `Break`, `Continue`)\r\n* Model post-processors (`post`)\r\n* Model field customization (`Field`)\r\n### Documentation 📚\r\n* Documentation and demos update\r\n### Improvements 🚀\r\n* Extended model migration\r\n* Frozen model\r\n### Other\r\n* `api` module deprecated and renamed to `operators`\r\n* `base` module with base classes\r\n\r\n**Full Changelog**: https://github.com/sewcio543/soupsavvy/compare/v0.2.3...v0.3.0",
+    "tagName": "v0.3.0"
+  },
+  {
+    "body": "<!-- Release notes generated using configuration in .github/release.yml at v0.2.3 -->\r\n\r\n## What's Changed\r\n### New Features 🎉\r\n* Model Migrations\r\n* `SelfSelector` selector\r\n* `Parent` selector/operation\r\n### Improvements 🚀\r\n* Improved deprecation in package\r\n* Allowing Operations as model fields\r\n* `Suppress` optionally accepts exception category\r\n### Other Changes\r\n* Replacing some attributes with read-only properties \r\n\r\n**Full Changelog**: https://github.com/sewcio543/soupsavvy/compare/v0.2.2...v0.2.3",
+    "tagName": "v0.2.3"
+  },
+  {
+    "body": "<!-- Release notes generated using configuration in .github/release.yml at v0.2.2 -->\r\n\r\n## What's Changed\r\n### New Features 🎉\r\n* `Operations` subpackage\r\n* `Models` subpackage\r\n\r\n### Documentation 📚\r\n* Docstrings in package init file\r\n* `Model` tutorial\r\n\r\n\r\n**Full Changelog**: https://github.com/sewcio543/soupsavvy/compare/v0.2.1...v0.2.2",
+    "tagName": "v0.2.2"
+  },
+  {
+    "body": "<!-- Release notes generated using configuration in .github/release.yml at v0.2.1 -->\r\n\r\n## What's Changed\r\n### New Features 🎉\r\n* `AncestorCombinator` and `ParentCombinator` \r\n* `RelativeParent` and `RelativeAncestor` in `selectors.relative`\r\n### Fixes 🐛 \r\n* Equality in `CompisiteSoupSelector` \r\n### Improvements 🚀\r\n* Docs - improvements\r\n* `check_selector` function decoupled from `SoupSelector`  in `selectors.base`\r\n\r\n**Full Changelog**: https://github.com/sewcio543/soupsavvy/compare/v0.2.0...v0.2.1",
+    "tagName": "v0.2.1"
+  },
+  {
+    "body": "<!-- Release notes generated using configuration in .github/release.yml at v0.2.0 -->\r\n\r\n## What's Changed\r\n### Breaking Changes 💥\r\n* Renaming `tags` subpackage to `selectors`\r\n* Moving `nth` package from  `selectors.css` to `selectors`\r\n* Renaming `TagSelector` to `TypeSelector` and removing `attributes` parameter\r\n* Renaming ` AnyTagSelector` to `UniversalSelector` \r\n* Moving `HasSelector` to `relative.py` module\r\n* Moving all logical selctors to `soupsavvy.selectors.logical.py`  module\r\n* Removing `tag` parameter from `soupsavvy.selectors.css` module selectors.\r\n\r\n### New Features 🎉\r\n* `XORSelector` in https://github.com/sewcio543/soupsavvy/pull/130\r\n\r\n### Improvements 🚀\r\n* Alias for `SelectorList`  -> `OrSelector`\r\n* `IdSelector` and `ClassSelector` to package init\r\n* Moving documentation to [ReadTheDocs](https://soupsavvy.readthedocs.io/en/latest/)\r\n* New tutorials in documentation\r\n\r\nThis minor release introduces breaking changes as with this version development of `soupsavvy` is planned to be more stable with gradual changes from release to release. All this changes makes package more consistent and components more coherent.\r\n\r\n**Full Changelog**: https://github.com/sewcio543/soupsavvy/compare/v0.1.9...v0.2.0",
+    "tagName": "v0.2.0"
+  }
+]

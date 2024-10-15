@@ -10,7 +10,7 @@
 }
 
 /* Make TOC headers smaller */
-.rst-content .toctree-wrapper>p.caption {
+.rst-content .toctree-wrapper > p.caption {
   font-size: 100%;
 }
 
@@ -20,7 +20,7 @@
 }
 
 /* Hide the first cell, it's just a configuration not worth showing in the docs */
-.rst-content h1+.cell.docutils.container {
+.rst-content h1 + .cell.docutils.container {
   display: none;
 }
 
@@ -47,7 +47,8 @@
   border: none;
 }
 
-img[src*="https://img.shields.io/badge/docs"] {
+img[src*="https://img.shields.io/badge/docs"]
+{
   display: none;
 }
 
@@ -73,14 +74,14 @@ a[href$="md.txt"] {
 }
 
 /* Empty sections in documentation page and side-bar */
-li>a[href*="submodules"],
+li > a[href*="submodules"],
 #submodules,
 #subpackages {
   display: none !important;
 }
 
 /* Home page icon in the middle */
-li>.icon-home {
+li > .icon-home {
   color: var(--main-color) !important;
 }
 
@@ -98,13 +99,13 @@ h1:has(+ #subpackages, + #submodules),
 }
 
 /* First documentation components on the page */
-[id^="module"]> :not(dl.py)+dl.py {
+[id^="module"] > :not(dl.py) + dl.py {
   padding-top: 1em;
   border-top: 2px solid var(--main-color) !important;
 }
 
 /* component of documentation */
-section[id^="module"]>dl.py {
+section[id^="module"] > dl.py {
   border-bottom: 2px solid var(--main-color) !important;
 }
 
@@ -130,17 +131,17 @@ dt.sig .reference.internal[title] * {
 }
 
 /* everything in signature */
-:is(dl.py.class, dl.py.function)>dt.sig * {
+:is(dl.py.class, dl.py.function) > dt.sig * {
   color: #555;
 }
 
 /* name of the component in signature */
-:is(dl.py.class, dl.py.function)>dt.sig .descname>.pre {
+:is(dl.py.class, dl.py.function) > dt.sig .descname > .pre {
   color: black !important;
 }
 
 /* source link to the code */
-dt.sig .reference.internal>.viewcode-link>.pre {
+dt.sig .reference.internal > .viewcode-link > .pre {
   color: black !important;
 }
 
@@ -163,4 +164,20 @@ dt.sig .reference.internal>.viewcode-link>.pre {
 
 .property:has(+ .descname) * {
   color: var(--main-color) !important;
+}
+
+/* changelog page */
+
+#changelog > section {
+  border-bottom: 2px solid var(--main-color) !important;
+  padding-top: 2%;
+}
+
+#changelog > section > h2 {
+  color: var(--main-color) !important;
+}
+
+#changelog > h1 {
+  border-bottom: 2px solid var(--main-color) !important;
+  padding-bottom: 2%;
 }

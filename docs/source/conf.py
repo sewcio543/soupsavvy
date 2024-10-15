@@ -26,6 +26,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "m2r2",
     "myst_nb",
+    "sphinx_copybutton",
 ]
 
 exclude_patterns = [
