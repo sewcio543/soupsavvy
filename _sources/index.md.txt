@@ -25,5 +25,13 @@ demos/testing
 demos/models
 ```
 
+```{toctree}
+:caption: 'Other'
+:maxdepth: 1
+
+changelog
+contributing
+```
+
 ```{include} ../../README.md
 ```

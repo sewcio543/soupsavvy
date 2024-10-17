@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
@@ -6,20 +8,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>exceptions &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=acd973c5" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=eea9572f" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="_static/doctools.js?v=9a2dae69"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -61,6 +62,11 @@
 <li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/testing.html">Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demos/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 </ul>
 
         </div>
@@ -165,6 +171,21 @@ Usually raised when invalid formula was passed into ‘nth’ selector.</p>
 </dd></dl>
 
 <dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.exceptions.InvalidXPathSelector">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">InvalidXPathSelector</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#InvalidXPathSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.InvalidXPathSelector" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.SoupsavvyException" title="soupsavvy.exceptions.SoupsavvyException"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupsavvyException</span></code></a></p>
+<p>Raised when the parsing provided XPath selector in <cite>XPathSelector</cite>
+failed due to invalid syntax.</p>
+<section id="id2">
+<h2>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">XPathSelector</span><span class="p">(</span><span class="s2">&quot;2x + 1&quot;</span><span class="p">)</span>
+<span class="go">InvalidXPathSelector</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py exception">
 <dt class="sig sig-object py" id="soupsavvy.exceptions.HTMLGeneratorException">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HTMLGeneratorException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#HTMLGeneratorException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.HTMLGeneratorException" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.SoupsavvyException" title="soupsavvy.exceptions.SoupsavvyException"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupsavvyException</span></code></a></p>
@@ -177,8 +198,8 @@ Usually raised when invalid formula was passed into ‘nth’ selector.</p>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.HTMLGeneratorException" title="soupsavvy.exceptions.HTMLGeneratorException"><code class="xref py py-class docutils literal notranslate"><span class="pre">HTMLGeneratorException</span></code></a></p>
 <p>Exception raised by <cite>TagGenerator</cite> when input attributes have non-unique names.
 HTML tags cannot have multiple attributes with the same name.</p>
-<section id="id2">
-<h2>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<section id="id3">
+<h2>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;href&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;href&quot;</span><span class="p">,</span> <span class="s2">&quot;/endpoint&quot;</span><span class="p">)]</span>
 <span class="go">NotUniqueAttributesException</span>
 </pre></div>
@@ -192,8 +213,8 @@ HTML tags cannot have multiple attributes with the same name.</p>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.HTMLGeneratorException" title="soupsavvy.exceptions.HTMLGeneratorException"><code class="xref py py-class docutils literal notranslate"><span class="pre">HTMLGeneratorException</span></code></a></p>
 <p>Exception raised by <cite>TagGenerator</cite> when input name of the tag is a void html tag
 like &lt;img&gt; or &lt;br&gt; and children are specified, which is not an allowed operation.</p>
-<section id="id3">
-<h2>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="id4">
+<h2>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;img&quot;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="s2">&quot;span&quot;</span><span class="p">])</span>
 <span class="go">VoidTagWithChildrenException</span>
 </pre></div>
@@ -208,15 +229,15 @@ like &lt;img&gt; or &lt;br&gt; and children are specified, which is not an allow
 <p>Exception raised by <cite>TagGenerator</cite> when input name of the tag is empty.
 Exception raised by <cite>AttributeGenerator</cite> when input name of the attribute is empty.</p>
 <p>Empty string is not acceptable in these contexts.</p>
-<section id="id4">
-<h2>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<section id="id5">
+<h2>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 <span class="go">EmptyNamException</span>
 </pre></div>
 </div>
 </section>
-<section id="id5">
-<h2>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<section id="id6">
+<h2>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">AttributeGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 <span class="go">EmptyNamException</span>
 </pre></div>
@@ -231,15 +252,15 @@ Exception raised by <cite>AttributeGenerator</cite> when input name of the attri
 <p>Exception raised by <cite>AttributeGenerator</cite> when invalid template is passed as value
 or by <cite>TagGenerator</cite> when invalid template is passed as text.
 Allowed types are str, <cite>BaseTemplate</cite> and None. Passing other types is not acceptable.</p>
-<section id="id6">
-<h2>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<section id="id7">
+<h2>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">AttributeGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
 <span class="go">InvalidTemplateException</span>
 </pre></div>
 </div>
 </section>
-<section id="id7">
-<h2>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<section id="id8">
+<h2>Example<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="s2">&quot;world&quot;</span><span class="p">])</span>
 <span class="go">InvalidTemplateException</span>
 </pre></div>
@@ -255,22 +276,22 @@ Allowed types are str, <cite>BaseTemplate</cite> and None. Passing other types i
 contains element that couldn’t be parsed into <cite>AttributeGenerator</cite> object.
 Relevant only to elements in attributes iterable that
 are not already <cite>AttributeGenerator</cite> objects.</p>
-<section id="id8">
-<h2>Example<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">[</span><span class="mi">123</span><span class="p">])</span> <span class="c1"># not a string</span>
-<span class="go">AttributeParsingError</span>
-</pre></div>
-</div>
-</section>
 <section id="id9">
 <h2>Example<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">)])</span> <span class="c1"># empty name string</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">[</span><span class="mi">123</span><span class="p">])</span> <span class="c1"># not a string</span>
 <span class="go">AttributeParsingError</span>
 </pre></div>
 </div>
 </section>
 <section id="id10">
 <h2>Example<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">)])</span> <span class="c1"># empty name string</span>
+<span class="go">AttributeParsingError</span>
+</pre></div>
+</div>
+</section>
+<section id="id11">
+<h2>Example<a class="headerlink" href="#id11" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">TagGenerator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="s2">&quot;soupsavvy&quot;</span><span class="p">]])</span> <span class="c1"># invalid value template</span>
 <span class="go">AttributeParsingError</span>
 </pre></div>

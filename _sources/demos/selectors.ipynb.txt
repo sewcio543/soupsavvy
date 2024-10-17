@@ -27,7 +27,7 @@
    "source": [
     "Every `soupsavvy` selector follows a consistent interface, providing an API to:\n",
     "- Search for elements within `BeautifulSoup` objects.\n",
-    "- Check if selectors for equality.\n",
+    "- Check for selectors equality.\n",
     "- Combine selectors to create more complex queries."
    ]
   },
@@ -481,9 +481,9 @@
     "\n",
     "soup = BeautifulSoup(\n",
     "    \"\"\"\n",
-    "    <span class=\"title\">Animal Farm</span>\n",
-    "    <p class=\"price\">Price: $10</p>\n",
-    "    <span>Hello World</span>\n",
+    "        <span class=\"title\">Animal Farm</span>\n",
+    "        <p class=\"price\">Price: $10</p>\n",
+    "        <span>Hello World</span>\n",
     "    \"\"\",\n",
     "    features=\"lxml\",\n",
     ")\n",
@@ -607,6 +607,85 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
+    "## XPathSelector"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The `XPathSelector` enables the use of XPath expressions to select elements, a feature not natively supported by `BeautifulSoup`. It relies on the `lxml`, that needs to be installed. The XPath expression must target html elements in order to return valid results."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from bs4 import BeautifulSoup\n",
+    "\n",
+    "from soupsavvy.selectors.xpath import XPathSelector\n",
+    "\n",
+    "soup = BeautifulSoup(\n",
+    "    \"\"\"\n",
+    "        <span class=\"id\">1234</span>\n",
+    "        <span class=\"title\">Frankenstein</span>\n",
+    "        <p class=\"title\">Wild Animal</p>\n",
+    "        <span class=\"title\">Animal Farm</span>\n",
+    "    \"\"\",\n",
+    "    features=\"html.parser\",\n",
+    ")\n",
+    "selector = XPathSelector(\"//span[@class='title'][contains(text(),'Animal')]\")\n",
+    "selector.find(soup)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## ExpressionSelector"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The `ExpressionSelector` allows you to define your own custom logic for selecting elements by providing a predicate function. This function evaluates each element and decides whether it should be included in the result set.\n",
+    "\n",
+    "This works similarly to the `BeautifulSoup` API, where you can pass a predicate function to `find` methods:\n",
+    "\n",
+    "```python\n",
+    "soup.find(lambda tag: tag.name == 'div')\n",
+    "```"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from bs4 import BeautifulSoup\n",
+    "\n",
+    "from soupsavvy import ExpressionSelector\n",
+    "\n",
+    "soup = BeautifulSoup(\n",
+    "    \"\"\"\n",
+    "        <span class=\"id\">1234</span>\n",
+    "        <p class=\"title\">Animal Farm</p>\n",
+    "        <span class=\"title\">Frankenstein</span>\n",
+    "    \"\"\",\n",
+    "    features=\"html.parser\",\n",
+    ")\n",
+    "selector = ExpressionSelector(lambda tag: tag.name != \"p\" and \"title\" in tag[\"class\"])\n",
+    "selector.find(soup)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
     "## Conclusion"
    ]
   },
@@ -638,7 +717,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.11.9"
+   "version": "3.11.8"
   }
  },
  "nbformat": 4,

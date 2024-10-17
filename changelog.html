@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Changelog &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=eea9572f" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributing" href="contributing.html" />
+    <link rel="prev" title="Models" href="demos/models.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.selectors.html">selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="demos/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/showcase.html">Showcase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#v0-3-0">v0.3.0<!-- Release notes generated using configuration in .github/release.yml at v0.3.0 --></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#breaking-changes">Breaking Changes 💥</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#new-features">New Features 🎉</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#documentation">Documentation 📚</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#improvements">Improvements 🚀</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other">Other</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-2-3">v0.2.3<!-- Release notes generated using configuration in .github/release.yml at v0.2.3 --></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">New Features 🎉</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Improvements 🚀</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-changes">Other Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-2-2">v0.2.2<!-- Release notes generated using configuration in .github/release.yml at v0.2.2 --></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">New Features 🎉</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Documentation 📚</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-2-1">v0.2.1<!-- Release notes generated using configuration in .github/release.yml at v0.2.1 --></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">New Features 🎉</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fixes">Fixes 🐛</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Improvements 🚀</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-2-0">v0.2.0<!-- Release notes generated using configuration in .github/release.yml at v0.2.0 --></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Breaking Changes 💥</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">New Features 🎉</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">Improvements 🚀</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Changelog</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/changelog.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="changelog">
+<h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h1>
+<section id="v0-3-0">
+<h2>v0.3.0<!-- Release notes generated using configuration in .github/release.yml at v0.3.0 --><a class="headerlink" href="#v0-3-0" title="Link to this heading"></a></h2>
+<section id="breaking-changes">
+<h3>Breaking Changes 💥<a class="headerlink" href="#breaking-changes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SkipNone</span></code> and <code class="docutils literal notranslate"><span class="pre">Suppress</span></code> moved to <code class="docutils literal notranslate"><span class="pre">operations</span></code></p></li>
+<li><p>Base <code class="docutils literal notranslate"><span class="pre">operation</span></code> and <code class="docutils literal notranslate"><span class="pre">selectors</span></code> classes moved to new <code class="docutils literal notranslate"><span class="pre">base</span></code> module</p></li>
+</ul>
+</section>
+<section id="new-features">
+<h3>New Features 🎉<a class="headerlink" href="#new-features" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Conditional Operations (<code class="docutils literal notranslate"><span class="pre">IfElse</span></code>, <code class="docutils literal notranslate"><span class="pre">Break</span></code>, <code class="docutils literal notranslate"><span class="pre">Continue</span></code>)</p></li>
+<li><p>Model post-processors (<code class="docutils literal notranslate"><span class="pre">post</span></code>)</p></li>
+<li><p>Model field customization (<code class="docutils literal notranslate"><span class="pre">Field</span></code>)</p></li>
+</ul>
+</section>
+<section id="documentation">
+<h3>Documentation 📚<a class="headerlink" href="#documentation" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Documentation and demos update</p></li>
+</ul>
+</section>
+<section id="improvements">
+<h3>Improvements 🚀<a class="headerlink" href="#improvements" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Extended model migration</p></li>
+<li><p>Frozen model</p></li>
+</ul>
+</section>
+<section id="other">
+<h3>Other<a class="headerlink" href="#other" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">api</span></code> module deprecated and renamed to <code class="docutils literal notranslate"><span class="pre">operators</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">base</span></code> module with base classes</p></li>
+</ul>
+<p><strong>Full Changelog</strong>: https://github.com/sewcio543/soupsavvy/compare/v0.2.3…v0.3.0</p>
+</section>
+</section>
+<section id="v0-2-3">
+<h2>v0.2.3<!-- Release notes generated using configuration in .github/release.yml at v0.2.3 --><a class="headerlink" href="#v0-2-3" title="Link to this heading"></a></h2>
+<section id="id1">
+<h3>New Features 🎉<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Model Migrations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SelfSelector</span></code> selector</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Parent</span></code> selector/operation</p></li>
+</ul>
+</section>
+<section id="id2">
+<h3>Improvements 🚀<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Improved deprecation in package</p></li>
+<li><p>Allowing Operations as model fields</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Suppress</span></code> optionally accepts exception category</p></li>
+</ul>
+</section>
+<section id="other-changes">
+<h3>Other Changes<a class="headerlink" href="#other-changes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Replacing some attributes with read-only properties</p></li>
+</ul>
+<p><strong>Full Changelog</strong>: https://github.com/sewcio543/soupsavvy/compare/v0.2.2…v0.2.3</p>
+</section>
+</section>
+<section id="v0-2-2">
+<h2>v0.2.2<!-- Release notes generated using configuration in .github/release.yml at v0.2.2 --><a class="headerlink" href="#v0-2-2" title="Link to this heading"></a></h2>
+<section id="id3">
+<h3>New Features 🎉<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Operations</span></code> subpackage</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Models</span></code> subpackage</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3>Documentation 📚<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Docstrings in package init file</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Model</span></code> tutorial</p></li>
+</ul>
+<p><strong>Full Changelog</strong>: https://github.com/sewcio543/soupsavvy/compare/v0.2.1…v0.2.2</p>
+</section>
+</section>
+<section id="v0-2-1">
+<h2>v0.2.1<!-- Release notes generated using configuration in .github/release.yml at v0.2.1 --><a class="headerlink" href="#v0-2-1" title="Link to this heading"></a></h2>
+<section id="id5">
+<h3>New Features 🎉<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">AncestorCombinator</span></code> and <code class="docutils literal notranslate"><span class="pre">ParentCombinator</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RelativeParent</span></code> and <code class="docutils literal notranslate"><span class="pre">RelativeAncestor</span></code> in <code class="docutils literal notranslate"><span class="pre">selectors.relative</span></code></p></li>
+</ul>
+</section>
+<section id="fixes">
+<h3>Fixes 🐛<a class="headerlink" href="#fixes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Equality in <code class="docutils literal notranslate"><span class="pre">CompisiteSoupSelector</span></code></p></li>
+</ul>
+</section>
+<section id="id6">
+<h3>Improvements 🚀<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Docs - improvements</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">check_selector</span></code> function decoupled from <code class="docutils literal notranslate"><span class="pre">SoupSelector</span></code>  in <code class="docutils literal notranslate"><span class="pre">selectors.base</span></code></p></li>
+</ul>
+<p><strong>Full Changelog</strong>: https://github.com/sewcio543/soupsavvy/compare/v0.2.0…v0.2.1</p>
+</section>
+</section>
+<section id="v0-2-0">
+<h2>v0.2.0<!-- Release notes generated using configuration in .github/release.yml at v0.2.0 --><a class="headerlink" href="#v0-2-0" title="Link to this heading"></a></h2>
+<section id="id7">
+<h3>Breaking Changes 💥<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Renaming <code class="docutils literal notranslate"><span class="pre">tags</span></code> subpackage to <code class="docutils literal notranslate"><span class="pre">selectors</span></code></p></li>
+<li><p>Moving <code class="docutils literal notranslate"><span class="pre">nth</span></code> package from  <code class="docutils literal notranslate"><span class="pre">selectors.css</span></code> to <code class="docutils literal notranslate"><span class="pre">selectors</span></code></p></li>
+<li><p>Renaming <code class="docutils literal notranslate"><span class="pre">TagSelector</span></code> to <code class="docutils literal notranslate"><span class="pre">TypeSelector</span></code> and removing <code class="docutils literal notranslate"><span class="pre">attributes</span></code> parameter</p></li>
+<li><p>Renaming <code class="docutils literal notranslate"> <span class="pre">AnyTagSelector</span></code> to <code class="docutils literal notranslate"><span class="pre">UniversalSelector</span></code></p></li>
+<li><p>Moving <code class="docutils literal notranslate"><span class="pre">HasSelector</span></code> to <code class="docutils literal notranslate"><span class="pre">relative.py</span></code> module</p></li>
+<li><p>Moving all logical selctors to <code class="docutils literal notranslate"><span class="pre">soupsavvy.selectors.logical.py</span></code>  module</p></li>
+<li><p>Removing <code class="docutils literal notranslate"><span class="pre">tag</span></code> parameter from <code class="docutils literal notranslate"><span class="pre">soupsavvy.selectors.css</span></code> module selectors.</p></li>
+</ul>
+</section>
+<section id="id8">
+<h3>New Features 🎉<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">XORSelector</span></code> in https://github.com/sewcio543/soupsavvy/pull/130</p></li>
+</ul>
+</section>
+<section id="id9">
+<h3>Improvements 🚀<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Alias for <code class="docutils literal notranslate"><span class="pre">SelectorList</span></code>  -&gt; <code class="docutils literal notranslate"><span class="pre">OrSelector</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IdSelector</span></code> and <code class="docutils literal notranslate"><span class="pre">ClassSelector</span></code> to package init</p></li>
+<li><p>Moving documentation to <a class="reference external" href="https://soupsavvy.readthedocs.io/en/latest/">ReadTheDocs</a></p></li>
+<li><p>New tutorials in documentation</p></li>
+</ul>
+<p>This minor release introduces breaking changes as with this version development of <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> is planned to be more stable with gradual changes from release to release. All this changes makes package more consistent and components more coherent.</p>
+<p><strong>Full Changelog</strong>: https://github.com/sewcio543/soupsavvy/compare/v0.1.9…v0.2.0</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="demos/models.html" class="btn btn-neutral float-left" title="Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, soupsavvy.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,333 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contributing &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=eea9572f" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Changelog" href="changelog.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.selectors.html">selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="demos/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/showcase.html">Showcase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-contribute">How to Contribute</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#reporting-issues">Reporting Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pull-requests">Pull Requests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#code-style">Code Style</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#demos">Demos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ci">CI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#contact">Contact</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Contributing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/contributing.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Link to this heading"></a></h1>
+<p>Thank you for your interest in contributing to <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code>! We welcome contributions from the community to improve and expand the functionality of this project. To ensure a smooth contribution process, please follow these guidelines:</p>
+<section id="how-to-contribute">
+<h2>How to Contribute<a class="headerlink" href="#how-to-contribute" title="Link to this heading"></a></h2>
+<section id="reporting-issues">
+<h3>Reporting Issues<a class="headerlink" href="#reporting-issues" title="Link to this heading"></a></h3>
+<p>If you encounter a bug or have a feature request, please follow these steps:</p>
+<ol class="arabic simple">
+<li><p><strong>Check the Existing Issues</strong>: Before submitting a new issue, make sure to check the <a class="reference external" href="https://github.com/sewcio543/soupsavvy/issues">existing issues</a> to see if it has already been reported.</p></li>
+<li><p><strong>Create a New Issue</strong>: If the issue is not listed, open a new issue in the <a class="reference external" href="https://github.com/sewcio543/soupsavvy/issues">Issues</a> section of the repository.</p>
+<ul class="simple">
+<li><p>Provide a clear and descriptive title.</p></li>
+<li><p>Include a detailed description of the problem or feature request.</p></li>
+<li><p>If applicable, provide steps to reproduce the issue and any relevant screenshots or error messages.</p></li>
+</ul>
+</li>
+</ol>
+<p>Here’s the updated <code class="docutils literal notranslate"><span class="pre">Pull</span> <span class="pre">Requests</span></code> section incorporating pre-commit setup:</p>
+</section>
+<hr class="docutils" />
+<section id="pull-requests">
+<h3>Pull Requests<a class="headerlink" href="#pull-requests" title="Link to this heading"></a></h3>
+<p>We encourage you to submit pull requests (PRs) for bug fixes, enhancements, or documentation improvements. To ensure a smooth review process, please adhere to the following guidelines:</p>
+<ol class="arabic">
+<li><p><strong>Fork the Repository</strong>: Create a fork of the <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> repository on GitHub.</p></li>
+<li><p><strong>Clone Your Fork</strong>: Clone your fork to your local machine.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/yourusername/soupsavvy.git
+</pre></div>
+</div>
+</li>
+<li><p><strong>Setup Environment</strong>: Set up your environment by installing all necessary development dependencies.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>setup
+</pre></div>
+</div>
+</li>
+<li><p><strong>Install Pre-commit Hooks</strong>: Install pre-commit hooks to ensure code quality and consistency. They will be used on every commit to check for formatting, linting, and other issues.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pre-commit<span class="w"> </span>install
+</pre></div>
+</div>
+</li>
+<li><p><strong>Checkout Current Development Branch</strong>: Find the current development branch that follows semantic versioning and check out to it. It can look like: <code class="docutils literal notranslate"><span class="pre">dev/0.3.2</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>dev/0.3.2
+</pre></div>
+</div>
+</li>
+<li><p><strong>Create a Branch</strong>: Create a new branch from the development branch for your changes.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/your-feature-name
+</pre></div>
+</div>
+</li>
+<li><p><strong>Make Changes</strong>: Implement your changes or improvements.</p></li>
+<li><p><strong>Check your changes</strong>: Follow guidelines described below to ensure that your changes fulfill the requirements.</p></li>
+<li><p><strong>Commit Your Changes</strong>: Commit your changes with a descriptive message.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add a descriptive message about your changes&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Push Your Branch</strong>: Push your changes to your fork.</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>feature/your-feature-name
+</pre></div>
+</div>
+<ol class="arabic simple" start="11">
+<li><p><strong>Create a Pull Request</strong>: Open a pull request from your fork to the <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> repository with the development branch as the base.</p></li>
+</ol>
+<ul class="simple">
+<li><p>Provide a clear description of your changes and the motivation behind them.</p></li>
+<li><p>Reference any relevant issues by mentioning them in your PR description.</p></li>
+<li><p>Add any relevant labels to your PR (e.g., bugfix, enhancement, documentation, demos, feature).</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="code-style">
+<h3>Code Style<a class="headerlink" href="#code-style" title="Link to this heading"></a></h3>
+<ul>
+<li><p>Follow the existing code style and conventions used in the project. Use the <code class="docutils literal notranslate"><span class="pre">black</span></code> code formatter to ensure consistent formatting with version specified in <code class="docutils literal notranslate"><span class="pre">requirements-dev.txt</span></code>. To ensure the format is correct, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>format
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>black<span class="w"> </span>.<span class="w"> </span>--diff<span class="w"> </span>--check
+</pre></div>
+</div>
+</li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">flake8</span></code> to check for linting issues. To run the linter, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>lint
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>flake8<span class="w"> </span>--config<span class="w"> </span>tox.ini
+</pre></div>
+</div>
+</li>
+<li><p>Ensure that your code is well-formatted and follows Python’s PEP 8 guidelines.</p></li>
+<li><p>Use meaningful names for variables, functions, and classes.</p></li>
+</ul>
+</section>
+<section id="testing">
+<h3>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h3>
+<ul>
+<li><p>Run the test suite to ensure that your changes do not break existing functionality. You can run the tests using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span><span class="nb">test</span>
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pytest
+</pre></div>
+</div>
+</li>
+<li><p>Write new tests for any new features or bug fixes. Test are located in <code class="docutils literal notranslate"><span class="pre">tests</span></code> directory, that should mirror the structure of the <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> package.</p></li>
+<li><p>Make sure that all tests pass before submitting your pull request.</p></li>
+<li><p>Make sure every new line of code is covered by tests. Run <code class="docutils literal notranslate"><span class="pre">coverage</span></code> with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>coverage
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>coverage<span class="w"> </span>run<span class="w"> </span>-m<span class="w"> </span>pytest
+<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>coverage<span class="w"> </span>report
+<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>coverage<span class="w"> </span>html
+</pre></div>
+</div>
+</li>
+<li><p>Ensure that package is installed correctly after new changes:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>install
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>show<span class="w"> </span>soupsavvy
+</pre></div>
+</div>
+</li>
+<li><p>Check if type hints are defined correctly for your changes:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>typecheck
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>mypy<span class="w"> </span>.<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>mypy<span class="w"> </span>--install-types<span class="w"> </span>--non-interactive
+<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>mypy<span class="w"> </span>.<span class="w"> </span>--ignore-missing-imports
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="documentation">
+<h3>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h3>
+<ul>
+<li><p>Update the documentation to reflect any changes or new features introduced.</p></li>
+<li><p>Ensure that your documentation is clear and provides helpful information for users and other contributors.</p></li>
+<li><p>Ensure the documentation builds properly after applying any changes to code or documentation setup:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>docu
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash<span class="w"> </span>docs/sphinx_run.sh
+git<span class="w"> </span>clean<span class="w"> </span>-fd<span class="w"> </span>docs/source/*.rst
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="demos">
+<h3>Demos<a class="headerlink" href="#demos" title="Link to this heading"></a></h3>
+<ul>
+<li><p>Update any relevant demos to reflect any changes or new features introduced.</p></li>
+<li><p>Ensure that your demos include clear instructions and examples.</p></li>
+<li><p>Ensure that the demos execute without errors:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>run_demos
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>--nbmake<span class="w"> </span>-v<span class="w"> </span>demos/
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="ci">
+<h3>CI<a class="headerlink" href="#ci" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Ensure that all CI checks for your branch pass successfully.</p></li>
+<li><p>Wait for PR review and approval before merging your changes to development branch.</p></li>
+<li><p>Github Actions CI should cover all necessary checks described in this document, so every fault will be caught immediately.</p></li>
+</ul>
+</section>
+</section>
+<section id="contact">
+<h2>Contact<a class="headerlink" href="#contact" title="Link to this heading"></a></h2>
+<p>If you have any questions or need further assistance, feel free to reach out to the maintainers via GitHub issues.</p>
+<p>Thank you for contributing to <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code>!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="changelog.html" class="btn btn-neutral float-left" title="Changelog" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, soupsavvy.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
