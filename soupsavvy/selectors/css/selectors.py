@@ -2,9 +2,9 @@
 Module with classes for tag selection based on CSS selectors.
 
 Contains implementation of basic CSS pseudo-classes like
-:only-child, :empty, :nth-child().
+`:only-child`, `:empty`, `:nth-child()`.
 
-They can be used in combination with other SoupSelector objects
+They can be used in combination with other `SoupSelector` objects
 to create more complex search procedures.
 
 Classes
@@ -26,7 +26,12 @@ Classes
 from itertools import islice
 from typing import Optional
 
-import soupsieve as sv
+try:
+    import soupsieve as sv
+except ImportError as e:
+    raise ImportError(
+        "`soupsavvy.css` requires `soupsieve` package to be installed."
+    ) from e
 from bs4 import Tag
 
 import soupsavvy.exceptions as exc
@@ -422,7 +427,7 @@ class CSS(CSSSoupSelector):
 
     Notes
     --------
-    `CSS` component extends `bs4.Tag.select` implementatio
+    `CSS` component extends `bs4.Tag.select` implementation
     by adding non recursive search option.
     """
 

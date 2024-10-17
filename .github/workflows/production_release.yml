@@ -119,3 +119,47 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ env.tag }}
+
+  update_changelog:
+    name: Update changelog 📝
+    needs: github_release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }} # token for pushing to protected branch
+
+      - name: Set up Python and Upgrade pip
+        uses: ./.github/actions/setup_python
+        with:
+          python-version: "3.11"
+
+      - name: Download releases info
+        run: |
+          bash .github/scripts/download_releases.sh
+          cat releases.json
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+      - name: Update changelog
+        run: |
+          python .github/scripts/build_changelog.py
+
+      - name: Format changelog markdown
+        run: |
+          pip install mdformat
+          mdformat docs/source/changelog.md
+
+      - name: Configure git
+        run: |
+          git config --global user.name "gha[bot]"
+          git config --global user.email "username@users.noreply.github.com"
+
+      - name: Push changelog update
+        run: |
+          git add docs/source/changelog.md
+          git commit -m "Updating changelog documentation file [skip ci]"
+          git push origin HEAD

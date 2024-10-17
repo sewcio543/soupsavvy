@@ -20,6 +20,7 @@ from .selectors import (
     ChildCombinator,
     ClassSelector,
     DescendantCombinator,
+    ExpressionSelector,
     HasSelector,
     IdSelector,
     NextSiblingCombinator,
@@ -38,13 +39,14 @@ from .selectors import (
     XORSelector,
 )
 
-__version__ = "0.3.0"
+__version__ = "0.3.1-dev0"
 __author__ = "sewcio543"
 
 __all__ = [
     "UniversalSelector",
     "AttributeSelector",
     "TypeSelector",
+    "ExpressionSelector",
     "PatternSelector",
     "SelectorList",
     "DescendantCombinator",
