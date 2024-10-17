@@ -7,9 +7,11 @@ Classes
 - `PatternSelector` - matches elements based on text content and selector
 - `UniversalSelector` - universal selector (*)
 - `SelfSelector` - matches the element itself
+- `ExpressionSelector` - matches elements based on user-defined function
 """
 
 import itertools
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Optional, Pattern
 
@@ -138,7 +140,10 @@ class PatternSelector(SoupSelector):
         )
 
     def find_all(
-        self, tag: Tag, recursive: bool = True, limit: Optional[int] = None
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
     ) -> list[Tag]:
         iterator = TagIterator(tag, recursive=recursive)
         strainer = SoupStrainer(string=self._pattern)  # type: ignore
@@ -182,10 +187,7 @@ class UniversalSelector(SoupSelector, SelectableCSS):
     """
 
     def find_all(
-        self,
-        tag: Tag,
-        recursive: bool = True,
-        limit: Optional[int] = None,
+        self, tag: Tag, recursive: bool = True, limit: Optional[int] = None
     ) -> list[Tag]:
         return tag.find_all(recursive=recursive, limit=limit)
 
@@ -231,3 +233,47 @@ class SelfSelector(SoupSelector):
     def __eq__(self, other: object) -> bool:
         # needs to be the same type
         return isinstance(other, SelfSelector)
+
+
+@dataclass
+class ExpressionSelector(SoupSelector):
+    """
+    Selector that matches elements based on a user-defined function (predicate),
+    that is used as filter for `bs4` object.
+
+    Applies predicate to each element and returns those that satisfy the condition.
+
+    Parameters
+    ----------
+    f : Callable[[Tag], bool]
+        A user-defined function (predicate) that determines whether
+        the element should be selected.
+
+    Examples
+    --------
+    >>> selector = ExpressionSelector(lambda x: x.name not in {"a", "div"})
+    ... selector.find(soup)
+
+    Notes
+    -----
+    Any exceptions should be handled inside provided function.
+    If raised, it will be propagated to the caller.
+    """
+
+    f: Callable[[Tag], bool]
+
+    def find_all(
+        self,
+        tag: Tag,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Tag]:
+        iterator = TagIterator(tag, recursive=recursive)
+        filter_ = filter(self.f, iterator)
+        return list(itertools.islice(filter_, limit))
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, ExpressionSelector):
+            return False
+
+        return self.f is other.f

@@ -14,6 +14,7 @@ from .combinators import (
 )
 from .general import (
     AnyTagSelector,
+    ExpressionSelector,
     PatternSelector,
     SelfSelector,
     TypeSelector,
@@ -30,6 +31,7 @@ __all__ = [
     "IdSelector",
     "PatternSelector",
     "UniversalSelector",
+    "ExpressionSelector",
     "SelfSelector",
     "DescendantCombinator",
     "ChildCombinator",
