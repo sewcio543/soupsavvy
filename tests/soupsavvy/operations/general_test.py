@@ -26,7 +26,7 @@ class OperationTestInput:
     expected: Any
 
 
-def mock_operation_func(arg: Any):
+def mock_operation_func(arg: Any, *args, **kwargs) -> bool:
     """
     Mock operation function for testing. If arg is "+", returns True, otherwise False.
     If arg is None, raises ValueError.
@@ -35,6 +35,15 @@ def mock_operation_func(arg: Any):
         raise ValueError("Argument cannot be None.")
 
     return arg == "+"
+
+
+def mock_args_func(arg: Any, *args, **kwargs) -> tuple:
+    """
+    Mock operation function for testing.
+    Accepts any number of positional and keyword arguments,
+    which are returned in form on tuple with arg.
+    """
+    return (arg, args, kwargs)
 
 
 @pytest.mark.operation
@@ -55,6 +64,33 @@ class TestOperation:
         operation = Operation(setup.operation)
         result = operation.execute(setup.arg)
         assert result == setup.expected
+
+    def test_saves_init_arguments_and_passes_them_into_operation(self):
+        """
+        Tests if Operation saves provided arguments and passes them when executing
+        operation function.
+        """
+        operation = Operation(mock_args_func, 1, 2, param="param", string="string")
+
+        assert operation.args == (1, 2)
+        assert operation.kwargs == {"param": "param", "string": "string"}
+
+        result = operation.execute("arg")
+        assert result == ("arg", (1, 2), {"param": "param", "string": "string"})
+
+    def test_has_empty_parameter_attributes_when_not_provided(self):
+        """
+        Tests if Operation has empty args and kwargs attributes
+        when no arguments are provided.
+        Nothing except for arg is passed to operation function.
+        """
+        operation = Operation(mock_args_func)
+
+        assert operation.args == tuple()
+        assert operation.kwargs == {}
+
+        result = operation.execute("arg")
+        assert result == ("arg", (), {})
 
     def test_raises_error_if_operation_fails_to_execute(self):
         """
@@ -78,11 +114,28 @@ class TestOperation:
         with pytest.raises(FailedOperationExecution):
             operation.execute(None)
 
-    def test_eq_returns_true_if_same_operation(self):
+    @pytest.mark.parametrize(
+        argnames="operations",
+        argvalues=[
+            (Operation(mock_args_func), Operation(mock_args_func)),
+            (
+                Operation(mock_args_func, "param"),
+                Operation(mock_args_func, "param"),
+            ),
+            (
+                Operation(mock_args_func, param="param"),
+                Operation(mock_args_func, param="param"),
+            ),
+            (
+                Operation(mock_args_func, 3, 4, string="string", param="param"),
+                Operation(mock_args_func, 3, 4, string="string", param="param"),
+            ),
+        ],
+    )
+    def test_eq_returns_true_if_same_operation(self, operations: tuple):
         """Tests if __eq__ method returns True if objects are equal."""
-        assert (
-            Operation(mock_operation_func) == Operation(mock_operation_func)
-        ) is True
+        operation1, operation2 = operations
+        assert (operation1 == operation2) is True
 
     @pytest.mark.parametrize(
         argnames="operations",
@@ -90,6 +143,43 @@ class TestOperation:
             (Operation(str.upper), Operation(str.lower)),
             (Operation(lambda x: x), Operation(lambda x: x)),
             (Operation(lambda x: x), MockIntOperation()),
+            (Operation(mock_args_func, "param"), Operation(mock_args_func)),
+            (
+                Operation(mock_args_func, param="param"),
+                Operation(mock_args_func),
+            ),
+            (
+                Operation(mock_args_func, param="param"),
+                Operation(mock_args_func, "param"),
+            ),
+            (
+                Operation(mock_args_func, 1),
+                Operation(mock_args_func, 2),
+            ),
+            (
+                Operation(mock_args_func, 1, 2),
+                Operation(mock_args_func, 1),
+            ),
+            (
+                Operation(mock_args_func, param="param"),
+                Operation(mock_args_func, param="string"),
+            ),
+            (
+                Operation(mock_args_func, param="param"),
+                Operation(mock_args_func, string="param"),
+            ),
+            (
+                Operation(mock_args_func, param="param", string="string"),
+                Operation(mock_args_func, param="param"),
+            ),
+            (
+                Operation(mock_args_func, 1, param="param"),
+                Operation(mock_args_func, 1, param="string"),
+            ),
+            (
+                Operation(mock_args_func, 1, param="param"),
+                Operation(mock_args_func, 2, param="param"),
+            ),
         ],
     )
     def test_eq_returns_false_if_different_operation(self, operations: tuple):
