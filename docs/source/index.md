@@ -17,6 +17,7 @@ soupsavvy.operators
 :maxdepth: 1
 
 demos/about
+demos/features
 demos/showcase
 demos/selectors
 demos/combining

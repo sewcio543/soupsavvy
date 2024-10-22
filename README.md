@@ -1,7 +1,7 @@
 ![soupsavvy](https://github.com/sewcio543/soupsavvy/blob/main/resources/logo.png?raw=true)
 ========
 
-## Powerful and flexible engine for BeautifulSoup
+## Powerful and flexible search engine for BeautifulSoup
 
 [![PyPI](https://img.shields.io/pypi/v/soupsavvy?color=orange)](https://pypi.org/project/soupsavvy/) [![Python Versions](https://img.shields.io/pypi/pyversions/soupsavvy)](https://www.python.org/) [![Codecov](https://codecov.io/gh/sewcio543/soupsavvy/graph/badge.svg?token=RZ51VS3QLB)](https://codecov.io/gh/sewcio543/soupsavvy) [![Docs link](https://img.shields.io/badge/docs-read-blue)](https://soupsavvy.readthedocs.io)
 
