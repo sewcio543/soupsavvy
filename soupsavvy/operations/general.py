@@ -128,27 +128,38 @@ class Operation(OperationSearcherMixin):
     with `find` method, which would produce the same result.
     """
 
-    def __init__(self, func: Callable) -> None:
+    def __init__(self, func: Callable, *args, **kwargs) -> None:
         """
-        Initializes `Operation` with provided function.
+        Initializes `Operation` with provided function and optional arguments.
 
         Parameters
         ----------
         func : Callable
             Any callable object that can be called with one positional argument.
+        *args : Any
+            Additional positional arguments passed to the operation function.
+        **kwargs : Any
+            Additional keyword arguments passed to the operation function.
         """
         self.operation = func
+        self.args = args
+        self.kwargs = kwargs
 
     def _execute(self, arg: Any) -> Any:
         """Executes the custom operation."""
-        return self.operation(arg)
+        return self.operation(arg, *self.args, **self.kwargs)
 
     def __eq__(self, x: Any) -> bool:
         # functions used as operations need to be the same object
+        # and have the same function arguments if provided
         if not isinstance(x, Operation):
             return False
 
-        return self.operation is x.operation
+        return (
+            self.operation is x.operation
+            and self.args == x.args
+            and self.kwargs == x.kwargs
+        )
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self.operation})"
