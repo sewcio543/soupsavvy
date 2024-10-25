@@ -6,7 +6,7 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.attributes import IdSelector
-from tests.soupsavvy.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import find_body_element, strip, to_element
 
 #! in these tests there are examples where multiple elements have the same id
 #! this is not a valid html, but it is used for testing purposes
@@ -27,7 +27,7 @@ class TestIdSelector:
             <div id=""></div>
             <div id="dog"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = IdSelector()
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div id=""></div>""")
@@ -41,7 +41,7 @@ class TestIdSelector:
             <a id="widget"></a>
             <div id="widget"></d>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = IdSelector("widget")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a id="widget"></a>""")
@@ -58,7 +58,7 @@ class TestIdSelector:
             <div id="widget 123"></div>
             <div id="widget 45"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = IdSelector(value=re.compile(r"^widget.?\d{1,3}$"))
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div id="widget 123"></div>""")
@@ -74,7 +74,7 @@ class TestIdSelector:
             <div id="widget123"></div>
             <div id="menu"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = IdSelector(value="widget")
         result = selector.find(bs)
         assert result is None
@@ -90,7 +90,7 @@ class TestIdSelector:
             <div id="widget123"></div>
             <div id="menu"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = IdSelector(value="widget")
 
         with pytest.raises(TagNotFoundException):
@@ -111,7 +111,7 @@ class TestIdSelector:
             <div id="widget"><span>4</span></div>
             <div id="widget123"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = IdSelector(value="widget")
 
         result = selector.find_all(bs)
@@ -131,7 +131,7 @@ class TestIdSelector:
             <div id="menu"></div>
             <div id="widget123"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = IdSelector(value="widget")
         result = selector.find_all(bs)
         assert result == []
@@ -149,7 +149,7 @@ class TestIdSelector:
             <a id="widget"></a>
             <div id="widget"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = IdSelector("widget")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a id="widget"></a>""")
@@ -167,7 +167,7 @@ class TestIdSelector:
             <div id="widget123"></div>
             <div id="menu"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = IdSelector("widget")
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -185,7 +185,7 @@ class TestIdSelector:
             <div id="widget123"></div>
             <div id="menu"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = IdSelector("widget")
 
         with pytest.raises(TagNotFoundException):
@@ -206,7 +206,7 @@ class TestIdSelector:
             <div id="widget123"></div>
             <div id="menu"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = IdSelector("widget")
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -229,7 +229,7 @@ class TestIdSelector:
             <span class="widget"></span>
             <div id="widget"><span>4</span></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = IdSelector("widget")
         result = selector.find_all(bs, recursive=False)
 
@@ -255,7 +255,7 @@ class TestIdSelector:
             <div id="widget">3</div>
             <span id=""></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = IdSelector("widget")
         result = selector.find_all(bs, limit=2)
 
@@ -283,7 +283,7 @@ class TestIdSelector:
             <span id=""></span>
             <span id="widget">3</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = IdSelector("widget")
         result = selector.find_all(bs, recursive=False, limit=2)
 

@@ -4,7 +4,7 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.css.selectors import LastOfType
-from tests.soupsavvy.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import find_body_element, strip, to_element
 
 
 @pytest.mark.css
@@ -30,7 +30,7 @@ class TestLastOfType:
             <a href="widget">4</a>
             <span><a></a><a>56</a></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = LastOfType()
         result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -53,7 +53,7 @@ class TestLastOfType:
             <a class="widget">3</a>
             <div><p>45</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = LastOfType()
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a>1</a>""")
@@ -71,7 +71,7 @@ class TestLastOfType:
             <a class="widget">2</a>
             <div><p>3</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = LastOfType()
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<span>1</span>""")
@@ -90,7 +90,7 @@ class TestLastOfType:
             <a class="widget">2</a>
             <div><p>3</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = LastOfType()
         result = selector.find_all(bs, recursive=False)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -115,7 +115,7 @@ class TestLastOfType:
             <a href="widget">3</a>
             <span><a></a><a>45</a></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = LastOfType()
         result = selector.find_all(bs, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -140,7 +140,7 @@ class TestLastOfType:
             <a class="widget">2</a>
             <div><p>3</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = LastOfType()
         result = selector.find_all(bs, recursive=False, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [

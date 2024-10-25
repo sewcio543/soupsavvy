@@ -26,19 +26,10 @@ Classes
 from itertools import islice
 from typing import Optional
 
-from soupsavvy.elements import SoupElement
-from soupsavvy.interfaces import T
-
-try:
-    import soupsieve as sv
-except ImportError as e:
-    raise ImportError(
-        "`soupsavvy.css` requires `soupsieve` package to be installed."
-    ) from e
-
 import soupsavvy.exceptions as exc
 from soupsavvy.base import SelectableCSS, SoupSelector
-from soupsavvy.utils.selector_utils import TagIterator
+from soupsavvy.interfaces import T
+from soupsavvy.utils.selector_utils import TagIterator, TagResultSet
 
 
 #! TODO
@@ -59,14 +50,6 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
 
     def __init__(self) -> None:
         selector = self.__class__.SELECTOR.format(*self._formats)
-
-        try:
-            self._compiled = sv.compile(selector)
-        except sv.SelectorSyntaxError:
-            raise exc.InvalidCSSSelector(
-                "CSS selector constructed from provided parameters "
-                f"is not valid: {selector}"
-            )
         self._selector = selector
 
     @property
@@ -86,18 +69,10 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[T]:
-
-        #! TODO
-        if not isinstance(tag, SoupElement):
-            raise TypeError
-
+        func = tag.css(self._selector)
         iterator = TagIterator(tag, recursive=recursive)
-        return list(
-            islice(
-                (element for element in iterator if self._compiled.match(element.tag)),
-                limit,
-            )
-        )
+        result = TagResultSet(list(iterator)) & TagResultSet(func(tag))
+        return result.fetch(limit)
 
     def __eq__(self, other: object) -> bool:
         # we only care if selector is equal with current implementation

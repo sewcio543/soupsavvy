@@ -11,7 +11,7 @@ from tests.soupsavvy.conftest import (
     MockLinkSelector,
     find_body_element,
     strip,
-    to_bs,
+    to_element,
 )
 
 
@@ -42,7 +42,7 @@ class TestXORSelector:
             <div class="menu">2</div>
             <a class="widget">3</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = XORSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="link">1</a>""")
@@ -58,7 +58,7 @@ class TestXORSelector:
             <a class="menu widget"></a>
             <span>Hello</span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = XORSelector(MockLinkSelector(), MockClassMenuSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -75,7 +75,7 @@ class TestXORSelector:
             <a class="menu widget"></a>
             <span>Hello</span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = XORSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find(bs)
         assert result is None
@@ -96,7 +96,7 @@ class TestXORSelector:
             <div class="menu widget"></div>
             <a class="widget link">4</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
 
         selector = XORSelector(
             MockDivSelector(),
@@ -126,7 +126,7 @@ class TestXORSelector:
                 <a>3</a>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = XORSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs)
 
@@ -147,7 +147,7 @@ class TestXORSelector:
             <a class="menu widget"></a>
             <span>Hello</span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = XORSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs)
         assert result == []
@@ -169,7 +169,7 @@ class TestXORSelector:
             <div><p class="menu">Not child</p></div>
             <span class="menu">3</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XORSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a class="link">1</a>""")
@@ -189,7 +189,7 @@ class TestXORSelector:
             <span>Hello</span>
             <div><p class="menu">Not child</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XORSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -209,7 +209,7 @@ class TestXORSelector:
             <span>Hello</span>
             <div><p class="menu">Not child</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XORSelector(MockLinkSelector(), MockClassMenuSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -233,7 +233,7 @@ class TestXORSelector:
             <div><p class="menu">Not child</p></div>
             <span class="menu">3</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XORSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs, recursive=False)
 
@@ -260,7 +260,7 @@ class TestXORSelector:
             <span>Hello</span>
             <div><p class="menu">Not child</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XORSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -278,7 +278,7 @@ class TestXORSelector:
             <div class="menu"><span>2</span></div>
             <a>3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XORSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs, limit=2)
 
@@ -308,7 +308,7 @@ class TestXORSelector:
             <div><p class="menu">Not child</p></div>
             <span class="menu">3</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XORSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs, recursive=False, limit=2)
 

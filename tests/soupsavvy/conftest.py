@@ -3,12 +3,14 @@ Common fixtures and mocks for selectors and operations tests
 that are shared across multiple test modules.
 """
 
+from __future__ import annotations
+
 from typing import Any, Optional
 
 from bs4 import BeautifulSoup
 
 from soupsavvy.base import BaseOperation, SoupSelector
-from soupsavvy.elements import SoupElement
+from soupsavvy.elements.bs4 import SoupElement
 from soupsavvy.exceptions import BreakOperationException
 from soupsavvy.interfaces import IElement, T
 
@@ -16,8 +18,7 @@ from soupsavvy.interfaces import IElement, T
 PARSER = "lxml"
 
 
-def to_bs(html: str, parser: str = PARSER) -> IElement:
-    """Converts raw string html to BeautifulSoup object."""
+def to_element(html: str, parser: str = PARSER) -> IElement:
     return SoupElement(BeautifulSoup(html, parser))
 
 
@@ -26,7 +27,7 @@ def strip(markup: str) -> str:
     return markup.replace("  ", "").replace("\n", "")
 
 
-def find_body_element(bs: T) -> T:
+def find_body_element(bs: IElement) -> IElement:
     """Helper function to find body element in bs4.Tag object."""
     return bs.find_all("body")[0]
 

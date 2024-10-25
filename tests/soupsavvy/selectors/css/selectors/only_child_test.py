@@ -4,7 +4,7 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.css.selectors import OnlyChild
-from tests.soupsavvy.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import find_body_element, strip, to_element
 
 
 @pytest.mark.css
@@ -28,7 +28,7 @@ class TestOnlyChild:
                 <span></span>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyChild()
         result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -49,7 +49,7 @@ class TestOnlyChild:
                 <span></span>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyChild()
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<p>1</p>""")
@@ -67,7 +67,7 @@ class TestOnlyChild:
             </div>
             <span><p>Hello</p><a></a></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyChild()
         result = selector.find(bs)
         assert result is None
@@ -85,7 +85,7 @@ class TestOnlyChild:
             </div>
             <span><p>Hello</p><a></a></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyChild()
 
         with pytest.raises(TagNotFoundException):
@@ -101,7 +101,7 @@ class TestOnlyChild:
             </div>
             <span><p>Hello</p><a></a></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyChild()
         result = selector.find_all(bs)
         assert result == []
@@ -113,7 +113,7 @@ class TestOnlyChild:
         text = """
             <div><a>Not child</a></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyChild()
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<div><a>Not child</a></div>""")
@@ -127,7 +127,7 @@ class TestOnlyChild:
             <div><a>Not child</a></div>
             <div></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyChild()
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -141,7 +141,7 @@ class TestOnlyChild:
             <div><a>Not child</a></div>
             <div></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyChild()
 
         with pytest.raises(TagNotFoundException):
@@ -158,7 +158,7 @@ class TestOnlyChild:
             <div><a>Not child</a></div>
             <div></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyChild()
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -171,7 +171,7 @@ class TestOnlyChild:
         text = """
             <div><a>Not child</a></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyChild()
         result = selector.find_all(bs, recursive=False)
         # at most one element can be returned
@@ -194,7 +194,7 @@ class TestOnlyChild:
                 <span></span>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyChild()
         result = selector.find_all(bs, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [

@@ -7,7 +7,7 @@ import pytest
 
 from soupsavvy.exceptions import InvalidCSSSelector, TagNotFoundException
 from soupsavvy.selectors.css.selectors import CSS
-from tests.soupsavvy.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import find_body_element, strip, to_element
 
 
 @pytest.mark.css
@@ -36,11 +36,17 @@ class TestCSS:
 
     def test_raises_exception_when_invalid_css_selector(self):
         """
-        Tests if InvalidCSSSelector exception is raised in init
-        when invalid selector that can't be parsed is passed.
+        Tests if InvalidCSSSelector exception is raised in find methods,
+        when invalid css selector is passed.
         """
+        selector = CSS("div[1]")
+        bs = to_element("<div></div>")
+
         with pytest.raises(InvalidCSSSelector):
-            CSS("div[1]")
+            selector.find(bs)
+
+        with pytest.raises(InvalidCSSSelector):
+            selector.find_all(bs)
 
     def test_find_returns_first_tag_matching_selector(self):
         """Tests if find method returns first tag matching selector."""
@@ -55,7 +61,7 @@ class TestCSS:
             </span>
             <div class="widget"><p>3</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = CSS("div.widget")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div class="widget">1</div>""")
@@ -74,7 +80,7 @@ class TestCSS:
             </span>
             <span class="widget"></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = CSS("div.widget")
         result = selector.find(bs)
         assert result is None
@@ -93,7 +99,7 @@ class TestCSS:
             </span>
             <span class="widget"></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = CSS("div.widget")
 
         with pytest.raises(TagNotFoundException):
@@ -112,7 +118,7 @@ class TestCSS:
             </span>
             <div class="widget"><p>3</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = CSS("div.widget")
 
         result = selector.find_all(bs)
@@ -133,7 +139,7 @@ class TestCSS:
             </span>
             <span class="widget"></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = CSS("div.widget")
         result = selector.find_all(bs)
         assert result == []
@@ -154,7 +160,7 @@ class TestCSS:
             <div class="widget123"></div>
             <div class="widget" href="github">3</div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = CSS("div.widget")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<div class="widget">1</div>""")
@@ -173,7 +179,7 @@ class TestCSS:
             <a class="widget"></a>
             <div class="widget123"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = CSS("div.widget")
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -192,7 +198,7 @@ class TestCSS:
             <a class="widget"></a>
             <div class="widget123"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = CSS("div.widget")
 
         with pytest.raises(TagNotFoundException):
@@ -214,7 +220,7 @@ class TestCSS:
             <a class="widget"></a>
             <div class="widget123"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = CSS("div.widget")
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -236,7 +242,7 @@ class TestCSS:
             <div class="widget123"></div>
             <div class="widget" href="github">3</div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = CSS("div.widget")
         result = selector.find_all(bs, recursive=False)
 
@@ -262,7 +268,7 @@ class TestCSS:
             </span>
             <div class="widget"><p>3</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = CSS("div.widget")
         result = selector.find_all(bs, limit=2)
 
@@ -291,7 +297,7 @@ class TestCSS:
             <div class="widget123"></div>
             <div class="widget" href="github">3</div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = CSS("div.widget")
         result = selector.find_all(bs, recursive=False, limit=2)
 

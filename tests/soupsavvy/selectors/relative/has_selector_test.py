@@ -15,7 +15,7 @@ from tests.soupsavvy.conftest import (
     MockLinkSelector,
     find_body_element,
     strip,
-    to_bs,
+    to_element,
 )
 
 
@@ -55,7 +55,7 @@ class TestHasSelector:
             <a>Don't have</a>
             <div><a>2</a><span>Hello</span></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = HasSelector(MockLinkSelector())
         result = selector.find(bs, recursive=recursive)
         assert strip(str(result)) == strip("""<div><a>1</a></div>""")
@@ -79,7 +79,7 @@ class TestHasSelector:
             </div>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = HasSelector(MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -104,7 +104,7 @@ class TestHasSelector:
             </div>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = HasSelector(MockLinkSelector())
         result = selector.find(bs, recursive=recursive)
         assert result is None
@@ -125,7 +125,7 @@ class TestHasSelector:
             <div><a>3</a></div>
             <div><span><a>45</a></span></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
 
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, recursive=True)
@@ -153,7 +153,7 @@ class TestHasSelector:
             <div><a>2</a></div>
             <div><span><a>3</a></span></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
 
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, recursive=False)
@@ -183,7 +183,7 @@ class TestHasSelector:
             </div>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, recursive=recursive)
         assert result == []
@@ -203,7 +203,7 @@ class TestHasSelector:
             <div><a>2</a></div>
             <div><span><a>3</a></span></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
 
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, limit=2)
@@ -231,7 +231,7 @@ class TestHasSelector:
             <span><p></p><a>2</a></span>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
 
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, limit=2, recursive=False)
@@ -258,7 +258,7 @@ class TestHasSelector:
             <span><span><div>Have both</div><a></a></span></span>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
 
         selector = HasSelector(MockLinkSelector(), MockDivSelector())
         result = selector.find_all(bs)
@@ -291,7 +291,7 @@ class TestHasSelector:
             </span>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
 
         selector = HasSelector(RelativeChild(MockLinkSelector()))
         result = selector.find_all(bs)
@@ -317,7 +317,7 @@ class TestHasSelector:
             <div><span><a>2</a></span></div>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
 
         selector = HasSelector(RelativeDescendant(MockLinkSelector()))
         result = selector.find_all(bs)
@@ -343,7 +343,7 @@ class TestHasSelector:
             <span><a>2</a></span>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
 
         selector = HasSelector(RelativeNextSibling(MockLinkSelector()))
         result = selector.find_all(bs)
@@ -369,7 +369,7 @@ class TestHasSelector:
             <div><span>1</span><span>2</span><a>!!!</a></div>
             <span><a>2</a><span>After</span></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
 
         selector = HasSelector(RelativeSubsequentSibling(MockLinkSelector()))
         result = selector.find_all(bs)

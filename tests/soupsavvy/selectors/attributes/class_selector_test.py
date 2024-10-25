@@ -6,7 +6,7 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.attributes import ClassSelector
-from tests.soupsavvy.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import find_body_element, strip, to_element
 
 
 @pytest.mark.selector
@@ -32,7 +32,7 @@ class TestClassSelector:
             <div class="it has a long list of widget classes"></div>
             <div class="another list of widget classes"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ClassSelector("widget")
         result = selector.find(bs)
         assert strip(str(result)) == strip(
@@ -50,7 +50,7 @@ class TestClassSelector:
             <div class=""></div>
             <a class="menu"></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ClassSelector()
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div class=""></div>""")
@@ -64,7 +64,7 @@ class TestClassSelector:
             <a class="widget"></a>
             <div class="widget"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ClassSelector("widget")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget"></a>""")
@@ -80,7 +80,7 @@ class TestClassSelector:
             <div href="widget 12"></div>
             <div class="widget 123"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ClassSelector(value=re.compile(r"^widget.?\d{1,3}$"))
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div class="widget 123"></div>""")
@@ -96,7 +96,7 @@ class TestClassSelector:
             <div class="menu"></div>
             <div class="widget123"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ClassSelector("widget")
         result = selector.find(bs)
         assert result is None
@@ -112,7 +112,7 @@ class TestClassSelector:
             <div class="menu"></div>
             <div class="widget123"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ClassSelector("widget")
 
         with pytest.raises(TagNotFoundException):
@@ -133,7 +133,7 @@ class TestClassSelector:
             <div class="widget"><span>4</span></div>
             <a id="widget"></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ClassSelector("widget")
 
         result = selector.find_all(bs)
@@ -153,7 +153,7 @@ class TestClassSelector:
             <div class="menu"></div>
             <div class="widget123"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ClassSelector("widget")
         result = selector.find_all(bs)
         assert result == []
@@ -171,7 +171,7 @@ class TestClassSelector:
             <a class="widget"></a>
             <div class="widget"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ClassSelector("widget")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a class="widget"></a>""")
@@ -189,7 +189,7 @@ class TestClassSelector:
             <div class="menu"></div>
             <a class="widget123">Hello</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ClassSelector("widget")
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -207,7 +207,7 @@ class TestClassSelector:
             <div class="menu"></div>
             <a class="widget123">Hello</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ClassSelector("widget")
 
         with pytest.raises(TagNotFoundException):
@@ -228,7 +228,7 @@ class TestClassSelector:
             <div href="widget"></div>
             <div class="menu"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ClassSelector("widget")
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -250,7 +250,7 @@ class TestClassSelector:
             <span class=""></span>
             <div class="widget"><span>3</span></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ClassSelector("widget")
         result = selector.find_all(bs, recursive=False)
 
@@ -275,7 +275,7 @@ class TestClassSelector:
             <span class=""></span>
             <div class="widget"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ClassSelector("widget")
         result = selector.find_all(bs, limit=2)
 
@@ -303,7 +303,7 @@ class TestClassSelector:
             <span class=""></span>
             <span class="widget"></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ClassSelector("widget")
         result = selector.find_all(bs, recursive=False, limit=2)
 

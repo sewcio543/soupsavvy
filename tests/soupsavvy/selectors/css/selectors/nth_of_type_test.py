@@ -6,7 +6,7 @@ import pytest
 
 from soupsavvy.exceptions import InvalidCSSSelector, TagNotFoundException
 from soupsavvy.selectors.css.selectors import NthOfType
-from tests.soupsavvy.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import find_body_element, strip, to_element
 
 
 @pytest.mark.css
@@ -34,7 +34,7 @@ class TestNthOfType:
             <a>Hello</a>
             <a>5</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthOfType("2n")
         result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -61,7 +61,7 @@ class TestNthOfType:
             <a>Hello</a>
             <a>5</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthOfType("2n")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget">1</a>""")
@@ -79,7 +79,7 @@ class TestNthOfType:
             <p></p>
             <a></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthOfType("2n")
         result = selector.find(bs)
         assert result is None
@@ -97,7 +97,7 @@ class TestNthOfType:
             <p></p>
             <a></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthOfType("2n")
 
         with pytest.raises(TagNotFoundException):
@@ -113,7 +113,7 @@ class TestNthOfType:
             <p></p>
             <a></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthOfType("2n")
         result = selector.find_all(bs)
         assert result == []
@@ -136,7 +136,7 @@ class TestNthOfType:
             <a>Hello</a>
             <a><p>3</p></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthOfType("2n")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<div>1</div>""")
@@ -154,7 +154,7 @@ class TestNthOfType:
             <p></p>
             <a></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthOfType("2n")
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -172,7 +172,7 @@ class TestNthOfType:
             <p></p>
             <a></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthOfType("3n")
 
         with pytest.raises(TagNotFoundException):
@@ -193,7 +193,7 @@ class TestNthOfType:
             <p></p>
             <a></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthOfType("3n")
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -217,7 +217,7 @@ class TestNthOfType:
             <a>Hello</a>
             <a><p>3</p></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthOfType("2n")
         result = selector.find_all(bs, recursive=False)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -245,7 +245,7 @@ class TestNthOfType:
             <a>Hello</a>
             <a>5</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthOfType("2n")
         result = selector.find_all(bs, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -275,7 +275,7 @@ class TestNthOfType:
             <a>Hello</a>
             <a><p>3</p></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthOfType("2n")
         result = selector.find_all(bs, recursive=False, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -283,13 +283,19 @@ class TestNthOfType:
             strip("""<a class="widget">2</a>"""),
         ]
 
-    def test_init_raise_exception_with_invalid_selector(self):
+    def test_raises_exception_when_invalid_css_selector(self):
         """
-        Tests if init raise InvalidCSSSelector exception
-        if invalid n parameter is passed into the selector.
+        Tests if InvalidCSSSelector exception is raised in find methods,
+        when invalid css selector is passed.
         """
+        selector = NthOfType("2x+1")
+        bs = to_element("<div></div>")
+
         with pytest.raises(InvalidCSSSelector):
-            NthOfType("2x+1")
+            selector.find(bs)
+
+        with pytest.raises(InvalidCSSSelector):
+            selector.find_all(bs)
 
     @pytest.mark.parametrize(
         argnames="nth, expected",
@@ -327,7 +333,7 @@ class TestNthOfType:
             <p>text 6</p>
             <a>text 6</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthOfType(nth)
         results = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), results)) == list(

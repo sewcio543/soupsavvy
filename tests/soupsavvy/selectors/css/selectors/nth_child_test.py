@@ -4,7 +4,7 @@ import pytest
 
 from soupsavvy.exceptions import InvalidCSSSelector, TagNotFoundException
 from soupsavvy.selectors.css.selectors import NthChild
-from tests.soupsavvy.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import find_body_element, strip, to_element
 
 
 @pytest.mark.css
@@ -29,7 +29,7 @@ class TestNthChild:
             </div>
             <div>5</div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthChild("2n")
         result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -54,7 +54,7 @@ class TestNthChild:
             <a class="widget"></a>
             <div><a></a><p>45</p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthChild("2n")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div>1</div>""")
@@ -68,7 +68,7 @@ class TestNthChild:
             <div></div>
             <div><p></p><a></a></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthChild("3n")
         result = selector.find(bs)
         assert result is None
@@ -82,7 +82,7 @@ class TestNthChild:
             <div></div>
             <div><p></p><a></a></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthChild("3n")
 
         with pytest.raises(TagNotFoundException):
@@ -94,7 +94,7 @@ class TestNthChild:
             <div></div>
             <div><p></p><a></a></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthChild("3n")
         result = selector.find_all(bs)
         assert result == []
@@ -115,7 +115,7 @@ class TestNthChild:
             <a class="widget"></a>
             <div><a></a><p>34</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthChild("2n")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<div>1</div>""")
@@ -129,7 +129,7 @@ class TestNthChild:
             <div><p></p><a></a><p>Not child</p></div>
             <div></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthChild("3n")
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -143,7 +143,7 @@ class TestNthChild:
             <div><p></p><a></a><p>Not child</p></div>
             <div></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthChild("3n")
 
         with pytest.raises(TagNotFoundException):
@@ -160,7 +160,7 @@ class TestNthChild:
             <div><p></p><a></a><p>Not child</p></div>
             <div></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthChild("3n")
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -182,7 +182,7 @@ class TestNthChild:
             <a class="widget"></a>
             <div><a>3</a><p>Not child</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthChild("2n")
         result = selector.find_all(bs, recursive=False)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -207,7 +207,7 @@ class TestNthChild:
             </div>
             <div>5</div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthChild("2n")
         result = selector.find_all(bs, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -235,7 +235,7 @@ class TestNthChild:
             <a class="widget"></a>
             <div><a>3</a><p>Not child</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthChild("2n")
         result = selector.find_all(bs, recursive=False, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -243,13 +243,19 @@ class TestNthChild:
             strip("""<span>2</span>"""),
         ]
 
-    def test_init_raise_exception_with_invalid_selector(self):
+    def test_raises_exception_when_invalid_css_selector(self):
         """
-        Tests if init raise InvalidCSSSelector exception
-        if invalid n parameter is passed into the selector.
+        Tests if InvalidCSSSelector exception is raised in find methods,
+        when invalid css selector is passed.
         """
+        selector = NthChild("2x+1")
+        bs = to_element("<div></div>")
+
         with pytest.raises(InvalidCSSSelector):
-            NthChild("2x+1")
+            selector.find(bs)
+
+        with pytest.raises(InvalidCSSSelector):
+            selector.find_all(bs)
 
     @pytest.mark.parametrize(
         argnames="nth, expected",
@@ -278,7 +284,7 @@ class TestNthChild:
             <div class="widget">5</div>
             <a class="widget">6</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthChild(nth)
         results = selector.find_all(bs)
 

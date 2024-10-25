@@ -27,7 +27,7 @@ from tests.soupsavvy.conftest import (
     MockLinkSelector,
     find_body_element,
     strip,
-    to_bs,
+    to_element,
 )
 
 
@@ -227,7 +227,7 @@ class TestRelativeChild(BaseRelativeCombinatorTest):
             <a>2</a>
             <a>3</a>
         """
-        return find_body_element(to_bs(text))
+        return find_body_element(to_element(text))
 
     @property
     def no_match(self) -> IElement:
@@ -237,7 +237,7 @@ class TestRelativeChild(BaseRelativeCombinatorTest):
             </div>
             <span></span>
         """
-        return find_body_element(to_bs(text))
+        return find_body_element(to_element(text))
 
 
 class TestRelativeDescendant(BaseRelativeCombinatorTest):
@@ -256,7 +256,7 @@ class TestRelativeDescendant(BaseRelativeCombinatorTest):
             </span>
             <a>3</a>
         """
-        return find_body_element(to_bs(text))
+        return find_body_element(to_element(text))
 
     @property
     def no_match(self) -> IElement:
@@ -266,7 +266,7 @@ class TestRelativeDescendant(BaseRelativeCombinatorTest):
             </div>
             <span></span>
         """
-        return find_body_element(to_bs(text))
+        return find_body_element(to_element(text))
 
 
 class TestRelativeSubsequentSibling(BaseRelativeCombinatorTest):
@@ -287,7 +287,7 @@ class TestRelativeSubsequentSibling(BaseRelativeCombinatorTest):
             <p>Not a link</p>
             <a>3</a>
         """
-        return to_bs(text).find_all("div")[0]
+        return to_element(text).find_all("div")[0]
 
     @property
     def no_match(self) -> IElement:
@@ -299,7 +299,7 @@ class TestRelativeSubsequentSibling(BaseRelativeCombinatorTest):
             </span>
             <p>Not a link</p>
         """
-        return to_bs(text).find_all("div")[0]
+        return to_element(text).find_all("div")[0]
 
 
 class TestRelativeNextSibling(BaseRelativeCombinatorTest):
@@ -325,7 +325,7 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
             <a>Not next sibling</a>
             <p>Not a link</p>
         """
-        return to_bs(text).find_all("div")[0]
+        return to_element(text).find_all("div")[0]
 
     @property
     def no_match(self) -> IElement:
@@ -337,7 +337,7 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
                 <a>Not a sibling</a>
             </span>
         """
-        return to_bs(text).find_all("div")[0]
+        return to_element(text).find_all("div")[0]
 
     @pytest.mark.parametrize(
         argnames="recursive",
@@ -601,7 +601,7 @@ class TestRelativeParent:
         text = """
             <html><body><div class="anchor"></div></body></html>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         assert selector.find(bs) is None
         assert selector.find_all(bs) == []
 
@@ -618,7 +618,7 @@ class TestRelativeParent:
             <div><div><div class="anchor"><div></div></div></div></div>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find(bs, recursive=recursive)
         assert strip(str(result)) == strip(
             """<div><div class="anchor"><div></div></div></div>"""
@@ -640,7 +640,7 @@ class TestRelativeParent:
             <div><span><div class="anchor"><div></div></div></span></div>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find(bs, recursive=recursive)
         assert result is None
 
@@ -660,7 +660,7 @@ class TestRelativeParent:
             <div><span><div class="anchor"><div></div></div></span></div>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True, recursive=recursive)
@@ -678,7 +678,7 @@ class TestRelativeParent:
             <div><span><div class="anchor"><div></div></div></span></div>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find_all(bs, recursive=recursive)
         assert result == []
 
@@ -695,7 +695,7 @@ class TestRelativeParent:
             <div><div><div class="anchor"><div></div></div></div></div>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find_all(bs, recursive=recursive)
         # returns at most one element (parent)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -733,7 +733,7 @@ class TestRelativeAncestor:
         text = """
             <html><body><div class="anchor"></div></body></html>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         assert selector.find(bs) is None
         assert selector.find_all(bs) == []
 
@@ -750,7 +750,7 @@ class TestRelativeAncestor:
             <div><div><div class="anchor"><div><div></div></div></div></div></div>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find(bs, recursive=recursive)
         assert strip(str(result)) == strip(
             """<div><div class="anchor"><div><div></div></div></div></div>"""
@@ -772,7 +772,7 @@ class TestRelativeAncestor:
             <span><span><div class="anchor"><div><div></div></div></div></span></span>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find(bs, recursive=recursive)
         assert result is None
 
@@ -792,7 +792,7 @@ class TestRelativeAncestor:
             <span><span><div class="anchor"><div><div></div></div></div></span></span>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True, recursive=recursive)
@@ -810,7 +810,7 @@ class TestRelativeAncestor:
             <span><span><div class="anchor"><div><div></div></div></div></span></span>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find_all(bs, recursive=recursive)
         assert result == []
 
@@ -827,7 +827,7 @@ class TestRelativeAncestor:
             <div><span><div><a class="anchor"></a></div></span></div>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find_all(bs, recursive=recursive)
         assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<div><a class="anchor"></a></div>"""),
@@ -849,7 +849,7 @@ class TestRelativeAncestor:
         text = """
             <div><div><span><div><a class="anchor"></a></div></span></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find_all(bs, limit=2, recursive=recursive)
         assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<div><a class="anchor"></a></div>"""),

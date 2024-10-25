@@ -15,7 +15,7 @@ from tests.soupsavvy.conftest import (
     MockLinkSelector,
     MockTextOperation,
     find_body_element,
-    to_bs,
+    to_element,
 )
 
 
@@ -43,7 +43,7 @@ class TestSelectionPipeline:
             <a>1</a>
             <a>2</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         result = selector.find(bs)
         assert result == "1"
@@ -59,7 +59,7 @@ class TestSelectionPipeline:
             <a>1</a>
             <a>2</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SelectionPipeline(
             SelectionPipeline(MockLinkSelector(), MockTextOperation()),
             MockIntOperation(),
@@ -76,7 +76,7 @@ class TestSelectionPipeline:
             <div href="github"></div>
             <h1 class="widget">1</h1>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SelectionPipeline(
             MockLinkSelector(), MockTextOperation(skip_none=True)
         )
@@ -92,7 +92,7 @@ class TestSelectionPipeline:
             <div href="github"></div>
             <h1 class="widget">1</h1>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
 
         with pytest.raises(TagNotFoundException):
@@ -104,7 +104,7 @@ class TestSelectionPipeline:
             <div href="github"></div>
             <h1 class="widget">1</h1>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         result = selector.find_all(bs)
         assert result == []
@@ -119,7 +119,7 @@ class TestSelectionPipeline:
             <div><a>3</a></div>
             <a>Text Hello</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         result = selector.find_all(bs)
         assert result == ["1", "2", "3", "Text Hello"]
@@ -136,7 +136,7 @@ class TestSelectionPipeline:
             <a>2</a>
             <a>Text Hello</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         result = selector.find(bs, recursive=False)
         assert result == "1"
@@ -151,7 +151,7 @@ class TestSelectionPipeline:
             <div><a>Not child</a></div>
             <h1 class="widget">1</h1>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = SelectionPipeline(
             MockLinkSelector(), MockTextOperation(skip_none=True)
         )
@@ -168,7 +168,7 @@ class TestSelectionPipeline:
             <div><a>Not child</a></div>
             <h1 class="widget">1</h1>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
 
         with pytest.raises(TagNotFoundException):
@@ -187,7 +187,7 @@ class TestSelectionPipeline:
             <a>2</a>
             <a>Text Hello</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         result = selector.find_all(bs, recursive=False)
         assert result == ["1", "2", "Text Hello"]
@@ -204,7 +204,7 @@ class TestSelectionPipeline:
             <div><a>Not child</a></div>
             <h1 class="widget">1</h1>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -222,7 +222,7 @@ class TestSelectionPipeline:
             <div><a>3</a></div>
             <a>Text Hello</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         result = selector.find_all(bs, limit=2)
         assert result == ["1", "2"]
@@ -243,7 +243,7 @@ class TestSelectionPipeline:
             <a>2</a>
             <a>Text Hello</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         result = selector.find_all(bs, recursive=False, limit=2)
         assert result == ["1", "2"]

@@ -9,7 +9,7 @@ from tests.soupsavvy.conftest import (
     MockLinkSelector,
     find_body_element,
     strip,
-    to_bs,
+    to_element,
 )
 
 
@@ -43,7 +43,7 @@ class TestDescendantCombinator:
                 </div>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
 
         selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find(bs)
@@ -64,7 +64,7 @@ class TestDescendantCombinator:
                 <img src="image.jpg">
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find(bs)
         assert result is None
@@ -84,7 +84,7 @@ class TestDescendantCombinator:
                 <img src="image.jpg">
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -134,7 +134,7 @@ class TestDescendantCombinator:
                 </span>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = DescendantCombinator(
             MockDivSelector(),
             MockLinkSelector(),
@@ -168,7 +168,7 @@ class TestDescendantCombinator:
                 </span>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs)
 
@@ -194,7 +194,7 @@ class TestDescendantCombinator:
                 <img src="image.jpg">
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs)
         assert result == []
@@ -222,7 +222,7 @@ class TestDescendantCombinator:
                 <a href="github">3</a>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a href="github">1</a>""")
@@ -248,7 +248,7 @@ class TestDescendantCombinator:
                 <a href="github">Hello</a>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -274,7 +274,7 @@ class TestDescendantCombinator:
                 <a href="github">Hello</a>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -306,7 +306,7 @@ class TestDescendantCombinator:
                 </span>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs, recursive=False)
 
@@ -336,7 +336,7 @@ class TestDescendantCombinator:
                 <span>Hello</span>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -361,7 +361,7 @@ class TestDescendantCombinator:
                 <a class="widget"><span>3</span></a>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs, limit=2)
 
@@ -397,7 +397,7 @@ class TestDescendantCombinator:
                 <a href="github"><span>3</span></a>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs, recursive=False, limit=2)
 
@@ -412,7 +412,7 @@ class TestDescendantCombinator:
         Ensures that combinators don't break when first step does not match anything.
         """
         text = """<a>First element</a>"""
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = DescendantCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs)
         assert result == []

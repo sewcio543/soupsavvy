@@ -9,7 +9,7 @@ Module with `soupsavvy` interfaces used across the package.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from typing import Any, Generic, Optional, Pattern, TypeVar, Union
 
 import soupsavvy.exceptions as exc
@@ -178,6 +178,14 @@ class IElement(ABC, Generic[T]):
     def name(self) -> str:
         raise NotImplementedError("Method not implemented")
 
-    @abstractmethod
     def to_lxml(self) -> HtmlElement:
+        raise NotImplementedError("Method not implemented")
+
+    @property
+    @abstractmethod
+    def text(self) -> str:
+        raise NotImplementedError("Method not implemented")
+
+    @abstractmethod
+    def css(self, selector: str) -> Callable[[IElement], list[IElement]]:
         raise NotImplementedError("Method not implemented")

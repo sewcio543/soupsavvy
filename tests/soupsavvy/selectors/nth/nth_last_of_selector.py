@@ -9,7 +9,7 @@ from tests.soupsavvy.conftest import (
     MockDivSelector,
     find_body_element,
     strip,
-    to_bs,
+    to_element,
 )
 
 
@@ -43,7 +43,7 @@ class TestNthLastOfSelector:
             <p class="menu">2</p>
             <div class="menu">1</div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "2n")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div class="menu"><a>4</a></div>""")
@@ -66,7 +66,7 @@ class TestNthLastOfSelector:
             <div class="menu2"><a>2</a></div>
             <a>Don't have</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         # nothing would be matches because there is only one matching tag
         selector = NthLastOfSelector(MockClassMenuSelector(), "2n")
 
@@ -90,7 +90,7 @@ class TestNthLastOfSelector:
             <div class="menu2"><a>2</a></div>
             <a>Don't have</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "1")
 
         with pytest.raises(TagNotFoundException):
@@ -112,7 +112,7 @@ class TestNthLastOfSelector:
             <div class="menu"><a>2</a></div>
             <a>Don't have</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
 
         selector = NthLastOfSelector(MockClassMenuSelector(), "3n")
         result = selector.find(bs)
@@ -135,7 +135,7 @@ class TestNthLastOfSelector:
             <div class="menu2"><a>2</a></div>
             <a>Don't have</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "1")
 
         result = selector.find(bs)
@@ -159,7 +159,7 @@ class TestNthLastOfSelector:
             <a>Don't have</a>
             <p class="menu">1</p>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "-n+2")
 
         result = selector.find_all(bs)
@@ -182,7 +182,7 @@ class TestNthLastOfSelector:
             <div class="menu2"><a>2</a></div>
             <a>Don't have</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "1")
         result = selector.find_all(bs)
         assert result == []
@@ -200,7 +200,7 @@ class TestNthLastOfSelector:
             <div>Hi Hi Hello</div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthLastOfSelector(MockClassMenuSelector(), "2")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<div class="menu">1</div>""")
@@ -220,7 +220,7 @@ class TestNthLastOfSelector:
             <div>Hi Hi Hello</div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthLastOfSelector(MockClassMenuSelector(), "2")
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -240,7 +240,7 @@ class TestNthLastOfSelector:
             <div>Hi Hi Hello</div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthLastOfSelector(MockClassMenuSelector(), "2")
 
         with pytest.raises(TagNotFoundException):
@@ -268,7 +268,7 @@ class TestNthLastOfSelector:
             <p class="menu">1</p>
             <span id="menu">Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthLastOfSelector(MockClassMenuSelector(), "2n")
         results = selector.find_all(bs, recursive=False)
 
@@ -294,7 +294,7 @@ class TestNthLastOfSelector:
             <div>Hi Hi Hello</div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthLastOfSelector(MockClassMenuSelector(), "2")
 
         results = selector.find_all(bs, recursive=False)
@@ -322,7 +322,7 @@ class TestNthLastOfSelector:
             <p class="menu">1</p>
             <span id="menu">Hello</span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "2n")
         results = selector.find_all(bs, limit=3)
 
@@ -359,7 +359,7 @@ class TestNthLastOfSelector:
             <span id="menu">Hello</span>
         """
 
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthLastOfSelector(MockClassMenuSelector(), "2n+1")
         results = selector.find_all(bs, recursive=False, limit=2)
 
@@ -441,7 +441,7 @@ class TestNthLastOfSelector:
             <div class="widget"></div>
         """
 
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NthLastOfSelector(MockClassMenuSelector(), nth)
         results = selector.find_all(bs)
 

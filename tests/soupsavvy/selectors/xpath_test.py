@@ -5,7 +5,12 @@ from lxml.etree import XPath
 
 from soupsavvy.exceptions import InvalidXPathSelector, TagNotFoundException
 from soupsavvy.selectors.xpath import XPathSelector
-from tests.soupsavvy.conftest import MockLinkSelector, find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import (
+    MockLinkSelector,
+    find_body_element,
+    strip,
+    to_element,
+)
 
 
 @pytest.mark.selector
@@ -40,7 +45,7 @@ class TestXPathSelector:
             <div class="widget123"><a>3</a></div>
             <div class="widget"><p>Hello</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XPathSelector("//div/a")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a>1</a>""")
@@ -64,7 +69,7 @@ class TestXPathSelector:
             <div class="widget123"><a>3</a></div>
             <div class="widget"><p>Hello</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XPathSelector(XPath("//div/a"))
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a>1</a>""")
@@ -83,7 +88,7 @@ class TestXPathSelector:
             <span><a class="widget"></a></span>
             <div class="widget"><p>Hello</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XPathSelector("//div/a")
         result = selector.find(bs)
         assert result is None
@@ -102,7 +107,7 @@ class TestXPathSelector:
             <span><a class="widget"></a></span>
             <div class="widget"><p>Hello</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XPathSelector("//div/a")
 
         with pytest.raises(TagNotFoundException):
@@ -124,7 +129,7 @@ class TestXPathSelector:
             <div class="widget123"><a>3</a></div>
             <div class="widget"><p>Hello</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XPathSelector("//div/a")
 
         result = selector.find_all(bs)
@@ -145,7 +150,7 @@ class TestXPathSelector:
             <span><a class="widget"></a></span>
             <div class="widget"><p>Hello</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XPathSelector("//div/a")
         result = selector.find_all(bs)
         assert result == []
@@ -164,7 +169,7 @@ class TestXPathSelector:
             <div><a>Hello</a></div>
             <p>3</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XPathSelector("//p")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<p>1</p>""")
@@ -182,7 +187,7 @@ class TestXPathSelector:
             <span><p>2</p></span>
             <div><p>Not child</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XPathSelector("//p")
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -200,7 +205,7 @@ class TestXPathSelector:
             <span><p>2</p></span>
             <div><p>Not child</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XPathSelector("//p")
 
         with pytest.raises(TagNotFoundException):
@@ -221,7 +226,7 @@ class TestXPathSelector:
             <span><p>2</p></span>
             <div><p>Not child</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XPathSelector("//p")
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -241,7 +246,7 @@ class TestXPathSelector:
             <div><a>Hello</a></div>
             <p>3</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XPathSelector("//p")
         result = selector.find_all(bs, recursive=False)
 
@@ -270,7 +275,7 @@ class TestXPathSelector:
             <div class="widget123"><a>3</a></div>
             <div class="widget"><p>Hello</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XPathSelector("//div/a")
         result = selector.find_all(bs, limit=2)
 
@@ -297,7 +302,7 @@ class TestXPathSelector:
             <div><a>Hello</a></div>
             <p>3</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XPathSelector("//p")
         result = selector.find_all(bs, recursive=False, limit=2)
 
@@ -316,7 +321,7 @@ class TestXPathSelector:
         text = """
             <div><a href="www.example.com">Hello</a></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = XPathSelector("//div/a/@href")
 
         with pytest.warns(UserWarning):

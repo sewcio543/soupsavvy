@@ -6,7 +6,12 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.attributes import AttributeSelector, ClassSelector
-from tests.soupsavvy.conftest import MockDivSelector, find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import (
+    MockDivSelector,
+    find_body_element,
+    strip,
+    to_element,
+)
 
 
 @pytest.mark.selector
@@ -21,7 +26,7 @@ class TestAttributeSelector:
             <a class="widget"></a>
             <div class="menu"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="class")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget"></a>""")
@@ -37,7 +42,7 @@ class TestAttributeSelector:
             <a class="widget"></a>
             <div class="widget"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="class", value="widget")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget"></a>""")
@@ -52,7 +57,7 @@ class TestAttributeSelector:
             <span class="widget_123"></span>
             <span class="widget_45"></span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="class", value=re.compile("^widget"))
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<span class="widget_123"></span>""")
@@ -69,7 +74,7 @@ class TestAttributeSelector:
             <a class="super_widget"></a>
             <a class="widget_2"></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="class", value="widget")
         result = selector.find(bs)
         assert result is None
@@ -86,7 +91,7 @@ class TestAttributeSelector:
             <a class="super_widget"></a>
             <a class="widget_2"></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="class", value="widget")
 
         with pytest.raises(TagNotFoundException):
@@ -105,7 +110,7 @@ class TestAttributeSelector:
             <span awesomeness="5"></span>
             <div awesomeness="5"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="awesomeness", value="5")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<span awesomeness="5"></span>""")
@@ -122,7 +127,7 @@ class TestAttributeSelector:
             <a class="widget_2"></a>
             <div class="widget"><a>3</a></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="class", value="widget")
 
         result = selector.find_all(bs)
@@ -141,7 +146,7 @@ class TestAttributeSelector:
             <a class="super_widget"></a>
             <a class="widget_2"></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="class", value="widget")
         result = selector.find_all(bs)
         assert result == []
@@ -158,7 +163,7 @@ class TestAttributeSelector:
             <a href="github">Hello 2</a>
             <a href="github">Hello 3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = AttributeSelector(name="href", value="github")
         result = selector.find(bs, recursive=False)
 
@@ -176,7 +181,7 @@ class TestAttributeSelector:
             <div href="github_12">Hello 2</div>
             <a class="github">Hello 2</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = AttributeSelector(name="href", value="github")
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -193,7 +198,7 @@ class TestAttributeSelector:
             <div href="github_12">Hello 2</div>
             <a class="github">Hello 2</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = AttributeSelector(name="href", value="github")
 
         with pytest.raises(TagNotFoundException):
@@ -213,7 +218,7 @@ class TestAttributeSelector:
             <div href="github_12">Hello 2</div>
             <a class="github">Hello 2</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = AttributeSelector(name="href", value="github")
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -233,7 +238,7 @@ class TestAttributeSelector:
             <div class="menu"><span>3</span></div>
             <a></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = AttributeSelector(name="class")
         result = selector.find_all(bs, recursive=False)
 
@@ -257,7 +262,7 @@ class TestAttributeSelector:
             <div class="google"></div>
             <span class="menu"></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = AttributeSelector(name="class")
         result = selector.find_all(bs, limit=2)
 
@@ -287,7 +292,7 @@ class TestAttributeSelector:
             <div class="widget"></div>
             <p class="menu"></p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = AttributeSelector(name="class")
         result = selector.find_all(bs, recursive=False, limit=2)
 
@@ -391,7 +396,7 @@ class TestAttributeSelector:
             <div class="it has a long list of widget classes"></div>
             <div class="another list of widget classes"></div>
         """
-        bs = to_bs(markup)
+        bs = to_element(markup)
         selector = AttributeSelector("class", value="widget")
         result = selector.find(bs)
         assert strip(str(result)) == strip(
@@ -413,7 +418,7 @@ class TestAttributeSelector:
             <span name="github"></span>
             <div name="github"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="name", value="github")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<span name="github"></span>""")

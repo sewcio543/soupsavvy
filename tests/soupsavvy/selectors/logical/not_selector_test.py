@@ -9,7 +9,7 @@ from tests.soupsavvy.conftest import (
     MockLinkSelector,
     find_body_element,
     strip,
-    to_bs,
+    to_element,
 )
 
 
@@ -40,7 +40,7 @@ class TestNotSelector:
             <p>3</p>
             <div><a>4</a></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NotSelector(MockLinkSelector())
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div class="widget">1</div>""")
@@ -55,7 +55,7 @@ class TestNotSelector:
             <a></a>
             <a><a>Hello</a></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NotSelector(MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -71,7 +71,7 @@ class TestNotSelector:
             <a></a>
             <a><a>Hello</a></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NotSelector(MockLinkSelector())
         result = selector.find(bs)
         assert result is None
@@ -85,7 +85,7 @@ class TestNotSelector:
             <a><p>2</p><a>Hello</a></a>
             <div><p>34</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NotSelector(MockLinkSelector())
         result = selector.find_all(bs)
 
@@ -106,7 +106,7 @@ class TestNotSelector:
             <a></a>
             <a><a>Hello</a></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NotSelector(MockLinkSelector())
         result = selector.find_all(bs)
         assert result == []
@@ -124,7 +124,7 @@ class TestNotSelector:
             <div><span>2</span><a>Hello</a></div>
             <p>3</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
 
         selector = NotSelector(
             MockDivSelector(),
@@ -149,7 +149,7 @@ class TestNotSelector:
             <div class="widget">2</div>
             <p><a>3</a></p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NotSelector(MockLinkSelector())
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<div><p>1</p></div>""")
@@ -164,7 +164,7 @@ class TestNotSelector:
             <a><span>Not a child</span></a>
             <a><p>Not a child</p></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NotSelector(MockLinkSelector())
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -179,7 +179,7 @@ class TestNotSelector:
             <a><span>Not a child</span></a>
             <a><p>Not a child</p></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NotSelector(MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -197,7 +197,7 @@ class TestNotSelector:
             <div><p>23</p></div>
             <a><p>4</p></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NotSelector(MockLinkSelector())
         result = selector.find_all(bs, recursive=False)
 
@@ -218,7 +218,7 @@ class TestNotSelector:
             <a><span>Not a child</span></a>
             <a><p>Not a child</p></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NotSelector(MockLinkSelector())
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -237,7 +237,7 @@ class TestNotSelector:
             <a class="link"></a>
             <div>4</div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NotSelector(MockLinkSelector())
         result = selector.find_all(bs, limit=2)
 
@@ -264,7 +264,7 @@ class TestNotSelector:
             <a class="link"></a>
             <div>4</div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = NotSelector(MockLinkSelector())
         result = selector.find_all(bs, recursive=False, limit=2)
 

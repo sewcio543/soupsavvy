@@ -33,7 +33,7 @@ from tests.soupsavvy.conftest import (
     MockTextOperation,
     find_body_element,
     strip,
-    to_bs,
+    to_element,
 )
 
 SCOPE = MockDivSelector()
@@ -500,7 +500,7 @@ class TestBaseModel:
                 <p class="widget">20</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
 
@@ -522,7 +522,7 @@ class TestBaseModel:
             <a>Title2</a>
             <p class="widget">20</p>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
         assert result is None
@@ -541,7 +541,7 @@ class TestBaseModel:
             <a>Not in scope</a>
             <p class="widget">20</p>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
 
         with pytest.raises(exc.ModelNotFoundException):
@@ -564,7 +564,7 @@ class TestBaseModel:
             <a>Title</a>
             <p class="widget">20</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = MockModel
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -586,7 +586,7 @@ class TestBaseModel:
             <a>Not in scope</a>
             <p class="widget">20</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = MockModel
 
         with pytest.raises(exc.ModelNotFoundException):
@@ -611,7 +611,7 @@ class TestBaseModel:
                 <p class="widget">20</p>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = MockModel
         result = selector.find(bs, recursive=False)
         assert result == MockModel(title="Title", price=20)
@@ -639,7 +639,7 @@ class TestBaseModel:
                 </div>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=20)
@@ -668,7 +668,7 @@ class TestBaseModel:
                 </span>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = MockModel
         result = selector.find(bs, recursive=False)
         assert result == MockModel(title="Title", price=20)
@@ -697,7 +697,7 @@ class TestBaseModel:
                 <p class="widget">20</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
 
         # first scope price - <p class="widget">abc</p> is found, text is extracted,
@@ -726,7 +726,7 @@ class TestBaseModel:
                 <p class="widget">20</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
 
         with pytest.raises(exc.FieldExtractionException, match="title"):
@@ -753,7 +753,7 @@ class TestBaseModel:
                 <p class="widget">20</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockAllowEmptyTitle
         result = selector.find(bs, strict=strict)
         assert result == MockAllowEmptyTitle(title=None, price=10)
@@ -790,7 +790,7 @@ class TestBaseModel:
                 </span>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find_all(bs)
         assert result == [
@@ -812,7 +812,7 @@ class TestBaseModel:
                 <p class="widget">10</p>
             </span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find_all(bs)
         assert result == []
@@ -838,7 +838,7 @@ class TestBaseModel:
                 </div>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = MockModel
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -879,7 +879,7 @@ class TestBaseModel:
                 </span>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = MockModel
         result = selector.find_all(bs, recursive=False)
         assert result == [
@@ -914,7 +914,7 @@ class TestBaseModel:
                 <p class="widget">30</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find_all(bs, limit=2)
         assert result == [
@@ -954,7 +954,7 @@ class TestBaseModel:
                 <p class="widget">30</p>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = MockModel
         result = selector.find_all(bs, recursive=False, limit=2)
         assert result == [
@@ -977,7 +977,7 @@ class TestBaseModel:
                 <p class="widget">abc</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
 
         with pytest.raises(exc.FieldExtractionException, match="price"):
@@ -998,7 +998,7 @@ class TestBaseModel:
                 <p class="widget">20</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockAllowEmptyTitle
         result = selector.find_all(bs)
         assert result == [
@@ -1033,7 +1033,7 @@ class TestBaseModel:
                 <p class="widget">10</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(
@@ -1515,7 +1515,7 @@ class TestBaseModelIntegration:
                 <p class="widget">10</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
 
         with pytest.raises(exc.FieldExtractionException, match="title"):
@@ -1542,7 +1542,7 @@ class TestBaseModelIntegration:
                 <p class="widget">10</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(title="DefaultTitle", price=10)
@@ -1567,7 +1567,7 @@ class TestBaseModelIntegration:
                 <p class="widget">10</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
 
         with pytest.raises(exc.FieldExtractionException, match="title"):
@@ -1591,7 +1591,7 @@ class TestBaseModelIntegration:
                 <p class="widget">10</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=10)
@@ -1619,7 +1619,7 @@ class TestBaseModelIntegration:
                 <p class="widget">abc</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=None)
@@ -1648,7 +1648,7 @@ class TestBaseModelIntegration:
                 <p class="widget">abc</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=0)
@@ -1677,7 +1677,7 @@ class TestBaseModelIntegration:
                 <p class="widget">abc</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=None)
@@ -1704,7 +1704,7 @@ class TestBaseModelIntegration:
                 <p class="widget">10</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=10)
@@ -1728,7 +1728,7 @@ class TestBaseModelIntegration:
                 <p class="widget">30</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=[10, 20, 30])
@@ -1752,7 +1752,7 @@ class TestBaseModelIntegration:
                 <p>Hello</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=[])
@@ -1785,7 +1785,7 @@ class TestBaseModelIntegration:
                 <p class="widget">10</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(title="TITLE", price=30)
@@ -1826,7 +1826,7 @@ class TestBaseModelIntegration:
                 <p class="widget">10</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=5)
@@ -1867,7 +1867,7 @@ class TestBaseModelIntegration:
                 <p class="widget">10</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(title="Title!", price=40)
@@ -1979,7 +1979,7 @@ class TestBaseModelIntegration:
                 <p>Hello</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(
@@ -2112,7 +2112,7 @@ class TestBaseModelIntegration:
                 <p class="widget">20</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=10)
@@ -2144,7 +2144,7 @@ class TestField:
                 <a>3</a>
             </span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Field(MockLinkSelector())
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget">1</a>""")
@@ -2162,7 +2162,7 @@ class TestField:
                 <div>Hello</div>
             </span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Field(MockLinkSelector())
         result = selector.find(bs)
         assert result is None
@@ -2180,7 +2180,7 @@ class TestField:
                 <div>Hello</div>
             </span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Field(MockLinkSelector())
 
         with pytest.raises(exc.TagNotFoundException):
@@ -2196,7 +2196,7 @@ class TestField:
                 <div>Hello</div>
             </span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Field(MockLinkSelector())
         result = selector.find_all(bs)
         assert result == []
@@ -2211,7 +2211,7 @@ class TestField:
                 <a>3</a>
             </span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Field(MockLinkSelector())
         result = selector.find_all(bs)
 
@@ -2235,7 +2235,7 @@ class TestField:
             <span>Hello</span>
             <a>3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Field(MockLinkSelector())
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a href="github">1</a>""")
@@ -2252,7 +2252,7 @@ class TestField:
             <div><a>Not child</a></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Field(MockLinkSelector())
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -2269,7 +2269,7 @@ class TestField:
             <div><a>Not child</a></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Field(MockLinkSelector())
 
         with pytest.raises(exc.TagNotFoundException):
@@ -2290,7 +2290,7 @@ class TestField:
             <span>Hello</span>
             <a>3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Field(MockLinkSelector())
         result = selector.find_all(bs, recursive=False)
 
@@ -2314,7 +2314,7 @@ class TestField:
             <div><a>Not child</a></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Field(MockLinkSelector())
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -2332,7 +2332,7 @@ class TestField:
                 <a>3</a>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Field(MockLinkSelector())
         result = selector.find_all(bs, limit=2)
 
@@ -2359,7 +2359,7 @@ class TestField:
             <span>Hello</span>
             <a>3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Field(MockLinkSelector())
         result = selector.find_all(bs, recursive=False, limit=2)
 

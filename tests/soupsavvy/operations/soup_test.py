@@ -9,7 +9,12 @@ from soupsavvy.exceptions import FailedOperationExecution, NotOperationException
 from soupsavvy.operations.general import OperationPipeline
 from soupsavvy.operations.soup import Href, Parent, Text
 from soupsavvy.selectors.logical import SelectorList
-from tests.soupsavvy.conftest import MockIntOperation, MockLinkSelector, strip, to_bs
+from tests.soupsavvy.conftest import (
+    MockIntOperation,
+    MockLinkSelector,
+    strip,
+    to_element,
+)
 
 
 @pytest.mark.operation
@@ -37,7 +42,7 @@ class TestText:
         text = """
             <div href="github"></div>
         """
-        bs = to_bs(text).find_all("div")[0]
+        bs = to_element(text).find_all("div")[0]
         operation = Text()
         result = operation.execute(bs)
         assert result == ""
@@ -50,7 +55,7 @@ class TestText:
         text = """
             <div href="github"> Hello world\n</div>
         """
-        bs = to_bs(text).find_all("div")[0]
+        bs = to_element(text).find_all("div")[0]
         operation = Text()
         result = operation.execute(bs)
         assert result == " Hello world\n"
@@ -63,7 +68,7 @@ class TestText:
         text = """
             <div href="github"><a>Hello</a><a>world</a></div>
         """
-        bs = to_bs(text).find_all("div")[0]
+        bs = to_element(text).find_all("div")[0]
         operation = Text()
         result = operation.execute(bs)
         assert result == "Helloworld"
@@ -76,7 +81,7 @@ class TestText:
         text = """
             <div href="github"><a>Hello</a><a>world</a></div>
         """
-        bs = to_bs(text).find_all("div")[0]
+        bs = to_element(text).find_all("div")[0]
         operation = Text(separator="---")
         result = operation.execute(bs)
         assert result == "Hello---world"
@@ -89,7 +94,7 @@ class TestText:
         text = """
             <div href="github">\n\nHello world </div>
         """
-        bs = to_bs(text).find_all("div")[0]
+        bs = to_element(text).find_all("div")[0]
         operation = Text(strip=True)
         result = operation.execute(bs)
         assert result == "Hello world"
@@ -106,7 +111,7 @@ class TestText:
                 <a>world  </a>
             </div>
         """
-        bs = to_bs(text).find_all("div")[0]
+        bs = to_element(text).find_all("div")[0]
         operation = Text(strip=True)
         result = operation.execute(bs)
         assert result == "Helloworld"
@@ -122,7 +127,7 @@ class TestText:
                 <a>world  </a>
             </div>
         """
-        bs = to_bs(text).find_all("div")[0]
+        bs = to_element(text).find_all("div")[0]
         operation = Text(strip=True, separator=" ")
         result = operation.execute(bs)
         assert result == "Hello world"
@@ -181,7 +186,7 @@ class TestHref:
         text = """
             <div class="github"></div>
         """
-        bs = to_bs(text).find_all("div")[0]
+        bs = to_element(text).find_all("div")[0]
         operation = Href()
         result = operation.execute(bs)
         assert result is None
@@ -194,7 +199,7 @@ class TestHref:
         text = """
             <div href="github" class="menu">Hello world/div>
         """
-        bs = to_bs(text).find_all("div")[0]
+        bs = to_element(text).find_all("div")[0]
         operation = Href()
         result = operation.execute(bs)
         assert result == "github"
@@ -252,7 +257,7 @@ class TestParent:
             </div>
             <span>Hello</span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         operation = Parent()
         result = operation.execute(bs)
         assert result is None
@@ -267,7 +272,7 @@ class TestParent:
             </div>
             <span>Hello</span>
         """
-        bs = to_bs(text).find_all("a")[0]
+        bs = to_element(text).find_all("a")[0]
         operation = Parent()
         result = operation.execute(bs)
         assert strip(str(result)) == strip('<div href="github"><a>Hello</a></div>')
@@ -284,7 +289,7 @@ class TestParent:
             </div>
             <span>Hello</span>
         """
-        bs = to_bs(text).find_all("a")[0]
+        bs = to_element(text).find_all("a")[0]
         operation = Parent()
         result = operation.find(bs)  # type: ignore
         assert strip(str(result)) == strip('<div href="github"><a>Hello</a></div>')
@@ -301,7 +306,7 @@ class TestParent:
             </div>
             <span>Hello</span>
         """
-        bs = to_bs(text).find_all("a")[0]
+        bs = to_element(text).find_all("a")[0]
         operation = Parent()
         result = operation.find_all(bs)  # type: ignore
         assert list(map(lambda x: strip(str(x)), result)) == [

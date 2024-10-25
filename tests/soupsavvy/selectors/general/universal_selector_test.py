@@ -6,7 +6,12 @@ from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.interfaces import T
 from soupsavvy.selectors.general import UniversalSelector
 from soupsavvy.selectors.namespace import CSS_SELECTOR_WILDCARD
-from tests.soupsavvy.conftest import MockDivSelector, find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import (
+    MockDivSelector,
+    find_body_element,
+    strip,
+    to_element,
+)
 
 
 def find_tag(bs: T, name: str = "body") -> T:
@@ -44,7 +49,7 @@ class TestUniversalSelector:
             <div><a>23</a></div>
             <p>4</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget">1</a>""")
 
@@ -59,7 +64,7 @@ class TestUniversalSelector:
             <a class="widget"></a>
             <div><p></p></div>
         """
-        bs = find_tag(to_bs(text), name="a")
+        bs = find_tag(to_element(text), name="a")
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
@@ -75,7 +80,7 @@ class TestUniversalSelector:
             <a class="widget"></a>
             <div><p></p></div>
         """
-        bs = find_tag(to_bs(text), name="a")
+        bs = find_tag(to_element(text), name="a")
         result = selector.find(bs)
         assert result is None
 
@@ -86,7 +91,7 @@ class TestUniversalSelector:
             <div><a>23</a></div>
             <p>4</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         result = selector.find_all(bs)
 
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -107,7 +112,7 @@ class TestUniversalSelector:
             <a class="widget"></a>
             <div><p></p></div>
         """
-        bs = find_tag(to_bs(text), name="a")
+        bs = find_tag(to_element(text), name="a")
         assert selector.find_all(bs) == []
 
     def test_find_returns_first_matching_child_if_recursive_false(
@@ -123,7 +128,7 @@ class TestUniversalSelector:
             <div><a>23</a></div>
             <p>4</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a class="widget">1</a>""")
 
@@ -138,7 +143,7 @@ class TestUniversalSelector:
             <a class="widget"></a>
             <div><p></p></div>
         """
-        bs = find_tag(to_bs(text), name="a")
+        bs = find_tag(to_element(text), name="a")
         result = selector.find(bs, recursive=False)
         assert result is None
 
@@ -153,7 +158,7 @@ class TestUniversalSelector:
             <a class="widget"></a>
             <div><p></p></div>
         """
-        bs = find_tag(to_bs(text), name="a")
+        bs = find_tag(to_element(text), name="a")
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True, recursive=False)
@@ -170,7 +175,7 @@ class TestUniversalSelector:
             <a class="widget">2</a>
             <p>3</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         result = selector.find_all(bs, recursive=False)
 
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -190,7 +195,7 @@ class TestUniversalSelector:
             <a class="widget"></a>
             <div><p></p></div>
         """
-        bs = find_tag(to_bs(text), name="a")
+        bs = find_tag(to_element(text), name="a")
         result = selector.find_all(bs, recursive=False)
         assert result == []
 
@@ -206,7 +211,7 @@ class TestUniversalSelector:
             <div><a>23</a></div>
             <p>4</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         result = selector.find_all(bs, limit=2)
 
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -227,7 +232,7 @@ class TestUniversalSelector:
             <a class="widget">2</a>
             <p>3</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         result = selector.find_all(bs, recursive=False, limit=2)
 
         assert list(map(lambda x: strip(str(x)), result)) == [

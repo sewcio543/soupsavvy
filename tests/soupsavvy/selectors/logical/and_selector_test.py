@@ -11,7 +11,7 @@ from tests.soupsavvy.conftest import (
     MockLinkSelector,
     find_body_element,
     strip,
-    to_bs,
+    to_element,
 )
 
 
@@ -41,7 +41,7 @@ class TestAndSelector:
             <div class="menu"></div>
             <a class="menu">2</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="menu">1</a>""")
@@ -57,7 +57,7 @@ class TestAndSelector:
             <div class="menu"></div>
             <a class="menu123"></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -74,7 +74,7 @@ class TestAndSelector:
             <div class="widget"></div>
             <a class="menu123"></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find(bs)
         assert result is None
@@ -93,7 +93,7 @@ class TestAndSelector:
             <div class="link"></div>
             <div class="menu widget row">2</div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
 
         selector = AndSelector(
             MockDivSelector(),
@@ -124,7 +124,7 @@ class TestAndSelector:
             </div>
             <span class=""></span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs)
 
@@ -146,7 +146,7 @@ class TestAndSelector:
             <div class="widget"></div>
             <a class="menu123"></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs)
         assert result == []
@@ -169,7 +169,7 @@ class TestAndSelector:
             <a class="menu">2</a>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a class="menu">1</a>""")
@@ -191,7 +191,7 @@ class TestAndSelector:
             <span>Hello</span>
             <div class="menu"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -213,7 +213,7 @@ class TestAndSelector:
             <span>Hello</span>
             <div class="menu"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -239,7 +239,7 @@ class TestAndSelector:
             <span>Hello</span>
             <a class="menu widget">3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs, recursive=False)
 
@@ -268,7 +268,7 @@ class TestAndSelector:
             <div class="widget"></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -292,7 +292,7 @@ class TestAndSelector:
             </div>
             <span class=""></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs, limit=2)
 
@@ -323,7 +323,7 @@ class TestAndSelector:
             <div class="menu"></div>
             <span class=""></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs, recursive=False, limit=2)
 

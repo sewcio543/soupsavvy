@@ -10,7 +10,7 @@ from tests.soupsavvy.conftest import (
     MockLinkSelector,
     find_body_element,
     strip,
-    to_bs,
+    to_element,
 )
 
 
@@ -45,7 +45,7 @@ class TestSubsequentSiblingCombinator:
             </div>
             <a class="widget"><p>4</p></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
 
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find(bs)
@@ -68,7 +68,7 @@ class TestSubsequentSiblingCombinator:
             </div>
             <span class="widget">Hello</span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -91,7 +91,7 @@ class TestSubsequentSiblingCombinator:
             </div>
             <span class="widget">Hello</span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find(bs)
         assert result is None
@@ -112,7 +112,7 @@ class TestSubsequentSiblingCombinator:
             </div>
             <a class="widget"><p>4</p></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs)
 
@@ -140,7 +140,7 @@ class TestSubsequentSiblingCombinator:
             </div>
             <span class="widget">Hello</span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs)
         assert result == []
@@ -176,7 +176,7 @@ class TestSubsequentSiblingCombinator:
                 <div class="menu">3</div>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = SubsequentSiblingCombinator(
             MockDivSelector(),
             MockLinkSelector(),
@@ -207,7 +207,7 @@ class TestSubsequentSiblingCombinator:
             <span class="widget"><a>Not a sibling</a></span>
             <a class="widget"><p>2</p></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a class="link">1</a>""")
@@ -228,7 +228,7 @@ class TestSubsequentSiblingCombinator:
             <div><span>Hello</span></div>
             <span class="widget"><a>Not a sibling</a></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -249,7 +249,7 @@ class TestSubsequentSiblingCombinator:
             <div><span>Hello</span></div>
             <span class="widget"><a>Not a sibling</a></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -274,7 +274,7 @@ class TestSubsequentSiblingCombinator:
             <span class="widget"><a>Not a sibling</a></span>
             <a>3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs, recursive=False)
 
@@ -302,7 +302,7 @@ class TestSubsequentSiblingCombinator:
             <div><span>Hello</span></div>
             <span class="widget"><a>Not a sibling</a></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -326,7 +326,7 @@ class TestSubsequentSiblingCombinator:
             </div>
             <a class="widget"><p>4</p></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs, limit=2)
 
@@ -357,7 +357,7 @@ class TestSubsequentSiblingCombinator:
             <span class="widget"><a>Not a sibling</a></span>
             <a>3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs, recursive=False, limit=2)
 
@@ -372,7 +372,7 @@ class TestSubsequentSiblingCombinator:
         Ensures that combinators don't break when first step does not match anything.
         """
         text = """<a>First element</a>"""
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs)
         assert result == []

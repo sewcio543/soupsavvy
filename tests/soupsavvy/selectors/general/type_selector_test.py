@@ -4,7 +4,12 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.general import TypeSelector
-from tests.soupsavvy.conftest import MockLinkSelector, find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import (
+    MockLinkSelector,
+    find_body_element,
+    strip,
+    to_element,
+)
 
 
 @pytest.mark.selector
@@ -21,7 +26,7 @@ class TestTypeSelector:
                 <h1>3</h1>
             </span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = TypeSelector("h1")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<h1 class="widget">1</h1>""")
@@ -39,7 +44,7 @@ class TestTypeSelector:
                 <div>Hello</div>
             </span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = TypeSelector("a")
         result = selector.find(bs)
         assert result is None
@@ -57,7 +62,7 @@ class TestTypeSelector:
                 <div>Hello</div>
             </span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = TypeSelector("a")
 
         with pytest.raises(TagNotFoundException):
@@ -73,7 +78,7 @@ class TestTypeSelector:
                 <div>Hello</div>
             </span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = TypeSelector("a")
         result = selector.find_all(bs)
         assert result == []
@@ -88,7 +93,7 @@ class TestTypeSelector:
                 <a>3</a>
             </span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = TypeSelector("a")
         result = selector.find_all(bs)
 
@@ -112,7 +117,7 @@ class TestTypeSelector:
             <span>Hello</span>
             <a>3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = TypeSelector("a")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a href="github">1</a>""")
@@ -129,7 +134,7 @@ class TestTypeSelector:
             <div><a>Not child</a></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = TypeSelector("a")
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -146,7 +151,7 @@ class TestTypeSelector:
             <div><a>Not child</a></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = TypeSelector("a")
 
         with pytest.raises(TagNotFoundException):
@@ -167,7 +172,7 @@ class TestTypeSelector:
             <span>Hello</span>
             <a>3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = TypeSelector("a")
         result = selector.find_all(bs, recursive=False)
 
@@ -191,7 +196,7 @@ class TestTypeSelector:
             <div><a>Not child</a></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = TypeSelector("a")
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -209,7 +214,7 @@ class TestTypeSelector:
                 <a>3</a>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = TypeSelector("a")
         result = selector.find_all(bs, limit=2)
 
@@ -236,7 +241,7 @@ class TestTypeSelector:
             <span>Hello</span>
             <a>3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = TypeSelector("a")
         result = selector.find_all(bs, recursive=False, limit=2)
 

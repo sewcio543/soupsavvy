@@ -4,7 +4,7 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.css.selectors import OnlyOfType
-from tests.soupsavvy.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import find_body_element, strip, to_element
 
 
 @pytest.mark.css
@@ -28,7 +28,7 @@ class TestOnlyOfType:
                 <span></span>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfType()
         result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -50,7 +50,7 @@ class TestOnlyOfType:
                 <span></span>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfType()
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<p>1</p>""")
@@ -69,7 +69,7 @@ class TestOnlyOfType:
                 <span></span>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfType()
         result = selector.find(bs)
         assert result is None
@@ -88,7 +88,7 @@ class TestOnlyOfType:
                 <span></span>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfType()
 
         with pytest.raises(TagNotFoundException):
@@ -105,7 +105,7 @@ class TestOnlyOfType:
                 <span></span>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfType()
         result = selector.find_all(bs)
         assert result == []
@@ -122,7 +122,7 @@ class TestOnlyOfType:
             <div>Hello</div>
             <p>3</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfType()
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<span>1</span>""")
@@ -139,7 +139,7 @@ class TestOnlyOfType:
             <div>Hello</div>
             <span></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfType()
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -156,7 +156,7 @@ class TestOnlyOfType:
             <div>Hello</div>
             <span></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfType()
 
         with pytest.raises(TagNotFoundException):
@@ -176,7 +176,7 @@ class TestOnlyOfType:
             <div>Hello</div>
             <span></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfType()
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -194,7 +194,7 @@ class TestOnlyOfType:
             <div>Hello</div>
             <p>3</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfType()
         result = selector.find_all(bs, recursive=False)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -218,7 +218,7 @@ class TestOnlyOfType:
                 <span></span>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfType()
         result = selector.find_all(bs, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -242,7 +242,7 @@ class TestOnlyOfType:
             <div>Hello</div>
             <p>3</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfType()
         result = selector.find_all(bs, recursive=False, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [

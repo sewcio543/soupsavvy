@@ -47,7 +47,7 @@ from tests.soupsavvy.conftest import (
     MockLinkSelector,
     MockSelector,
     MockTextOperation,
-    to_bs,
+    to_element,
 )
 
 
@@ -620,7 +620,7 @@ class MockNameOperation(OperationSearcherMixin):
         return isinstance(x, MockNameOperation)
 
 
-div = to_bs("""<div></div>""").find_all("div")[0]
+div = to_element("""<div></div>""").find_all("div")[0]
 MOCK = MockNameOperation()
 
 

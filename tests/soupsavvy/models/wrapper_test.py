@@ -20,7 +20,7 @@ from tests.soupsavvy.conftest import (
     MockTextOperation,
     find_body_element,
     strip,
-    to_bs,
+    to_element,
 )
 
 DEFAULT = "default"
@@ -120,7 +120,7 @@ class BaseFieldWrapperTest:
             </span>
             <a><p>3</p></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = self.wrapper(MockLinkSelector(), **self.params)
         result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -138,7 +138,7 @@ class BaseFieldWrapperTest:
             <span class="widget"></span>
             <div><p>Hello</p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = self.wrapper(MockLinkSelector(), **self.params)
         result = selector.find_all(bs)
         assert result == []
@@ -158,7 +158,7 @@ class BaseFieldWrapperTest:
             </span>
             <a>3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = self.wrapper(MockLinkSelector(), **self.params)
         result = selector.find_all(bs, recursive=False)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -180,7 +180,7 @@ class BaseFieldWrapperTest:
                 <a>Not child</a>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = self.wrapper(MockLinkSelector(), **self.params)
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -199,7 +199,7 @@ class BaseFieldWrapperTest:
             </span>
             <a><p>3</p></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = self.wrapper(MockLinkSelector(), **self.params)
         result = selector.find_all(bs, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -225,7 +225,7 @@ class BaseFieldWrapperTest:
             </span>
             <a>3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = self.wrapper(MockLinkSelector(), **self.params)
         result = selector.find_all(bs, recursive=False, limit=2)
 
@@ -251,7 +251,7 @@ class TestAll(BaseFieldWrapperTest):
             </span>
             <a><p>3</p></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = All(MockLinkSelector())
         result = selector.find(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -271,7 +271,7 @@ class TestAll(BaseFieldWrapperTest):
             <span class="widget"></span>
             <div><p>Hello</p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = All(MockLinkSelector())
         result = selector.find(bs, strict=strict)
         assert result == []
@@ -290,7 +290,7 @@ class TestAll(BaseFieldWrapperTest):
             </span>
             <a>3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = All(MockLinkSelector())
         result = selector.find(bs, recursive=False)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -316,7 +316,7 @@ class TestAll(BaseFieldWrapperTest):
                 <a>Not child</a>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = All(MockLinkSelector())
         result = selector.find(bs, strict=strict, recursive=False)
         assert result == []
@@ -338,7 +338,7 @@ class TestRequired(BaseFieldWrapperTest):
             <h1><a>2</a></h1>
             <a><p>3</p></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Required(MockLinkSelector())
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a>1</a>""")
@@ -353,7 +353,7 @@ class TestRequired(BaseFieldWrapperTest):
             <span class="widget"></span>
             <div><p>Hello</p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Required(MockLinkSelector())
 
         with pytest.raises(RequiredConstraintException):
@@ -369,7 +369,7 @@ class TestRequired(BaseFieldWrapperTest):
             <span class="widget"></span>
             <div><p>Hello</p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Required(MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -389,7 +389,7 @@ class TestRequired(BaseFieldWrapperTest):
             <div href="github"></div>
             <a>2</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Required(MockLinkSelector())
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a>1</a>""")
@@ -409,7 +409,7 @@ class TestRequired(BaseFieldWrapperTest):
                 <a>Not child</a>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Required(MockLinkSelector())
 
         with pytest.raises(RequiredConstraintException):
@@ -430,7 +430,7 @@ class TestRequired(BaseFieldWrapperTest):
                 <a>Not child</a>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Required(MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -454,7 +454,7 @@ class TestDefault(BaseFieldWrapperTest):
             <h1><a>2</a></h1>
             <a><p>3</p></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Default(MockLinkSelector(), default=DEFAULT)
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a>1</a>""")
@@ -469,7 +469,7 @@ class TestDefault(BaseFieldWrapperTest):
             <span class="widget"></span>
             <div><p>Hello</p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Default(MockLinkSelector(), default=DEFAULT)
         result = selector.find(bs)
         assert result == DEFAULT
@@ -485,7 +485,7 @@ class TestDefault(BaseFieldWrapperTest):
             <span class="widget"></span>
             <div><p>Hello</p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Default(MockLinkSelector(), default=DEFAULT)
 
         with pytest.raises(TagNotFoundException):
@@ -505,7 +505,7 @@ class TestDefault(BaseFieldWrapperTest):
             <div href="github"></div>
             <a>2</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Default(MockLinkSelector(), default=DEFAULT)
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a>1</a>""")
@@ -525,7 +525,7 @@ class TestDefault(BaseFieldWrapperTest):
                 <a>Not child</a>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Default(MockLinkSelector(), default=DEFAULT)
         result = selector.find(bs, strict=False, recursive=False)
         assert result == DEFAULT
@@ -544,7 +544,7 @@ class TestDefault(BaseFieldWrapperTest):
                 <a>Not child</a>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Default(MockLinkSelector(), default=DEFAULT)
 
         with pytest.raises(TagNotFoundException):

@@ -9,7 +9,7 @@ from tests.soupsavvy.conftest import (
     MockDivSelector,
     find_body_element,
     strip,
-    to_bs,
+    to_element,
 )
 
 
@@ -43,7 +43,7 @@ class TestOnlyOfSelector:
             <p class="menu">4</p>
             <a>Don't have</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = OnlyOfSelector(MockClassMenuSelector())
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<span class="menu">3</span>""")
@@ -71,7 +71,7 @@ class TestOnlyOfSelector:
             </div>
             <a>Don't have</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         # nothing would be matches because there is only one matching tag
         selector = OnlyOfSelector(MockClassMenuSelector())
 
@@ -99,7 +99,7 @@ class TestOnlyOfSelector:
             </div>
             <a>Don't have</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
 
         selector = OnlyOfSelector(MockClassMenuSelector())
         result = selector.find(bs)
@@ -127,7 +127,7 @@ class TestOnlyOfSelector:
             </div>
             <a>Don't have</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = OnlyOfSelector(MockClassMenuSelector())
 
         result = selector.find_all(bs)
@@ -157,7 +157,7 @@ class TestOnlyOfSelector:
             </div>
             <a>Don't have</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = OnlyOfSelector(MockClassMenuSelector())
         result = selector.find_all(bs)
         assert result == []
@@ -184,7 +184,7 @@ class TestOnlyOfSelector:
             </div>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfSelector(MockClassMenuSelector())
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<p class="menu">4</p>""")
@@ -215,7 +215,7 @@ class TestOnlyOfSelector:
             </div>
             <p class="menu">7</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfSelector(MockClassMenuSelector())
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -245,7 +245,7 @@ class TestOnlyOfSelector:
             </div>
             <p class="menu">7</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfSelector(MockClassMenuSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -275,7 +275,7 @@ class TestOnlyOfSelector:
                 </div>
             </div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfSelector(MockClassMenuSelector())
         results = selector.find_all(bs, recursive=False)
 
@@ -311,7 +311,7 @@ class TestOnlyOfSelector:
             </div>
             <p class="menu">7</p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfSelector(MockClassMenuSelector())
 
         results = selector.find_all(bs, recursive=False)
@@ -341,7 +341,7 @@ class TestOnlyOfSelector:
                 </div>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = OnlyOfSelector(MockClassMenuSelector())
         results = selector.find_all(bs, limit=2)
 
@@ -379,7 +379,7 @@ class TestOnlyOfSelector:
             </div>
         """
 
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = OnlyOfSelector(MockClassMenuSelector())
         results = selector.find_all(bs, recursive=False, limit=2)
 

@@ -4,7 +4,7 @@ import pytest
 
 from soupsavvy.interfaces import IElement
 from soupsavvy.utils.selector_utils import TagIterator, TagResultSet, UniqueTag
-from tests.soupsavvy.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import find_body_element, strip, to_element
 
 
 @pytest.fixture(scope="module")
@@ -20,7 +20,7 @@ def mock_tag() -> IElement:
         </div>
         <span class="widget"></span>
     """
-    return to_bs(text)
+    return to_element(text)
 
 
 @pytest.mark.selector
@@ -54,8 +54,8 @@ class TestUniqueTag:
         have different hashes and can be stored in set as different objects.
         """
         text = """<div class="menu"></div>"""
-        tag1 = UniqueTag(to_bs(text))
-        tag2 = UniqueTag(to_bs(text))
+        tag1 = UniqueTag(to_element(text))
+        tag2 = UniqueTag(to_element(text))
 
         assert hash(tag1) != hash(tag2)
         assert len({tag1, tag2}) == 2
@@ -301,7 +301,7 @@ class TestTagResultSet:
             <a class="menu1"></a>
             <a class="menu2"></a>
         """
-        return to_bs(text).find_all("body")[0].find_all()
+        return to_element(text).find_all("body")[0].find_all()
 
     def test_result_set_can_be_initialized_with_empty_collection(self):
         """

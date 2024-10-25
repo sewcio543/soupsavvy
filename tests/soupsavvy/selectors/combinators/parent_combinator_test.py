@@ -10,7 +10,7 @@ from tests.soupsavvy.conftest import (
     MockLinkSelector,
     find_body_element,
     strip,
-    to_bs,
+    to_element,
 )
 
 
@@ -44,7 +44,7 @@ class TestParentCombinator:
             </span>
             <div><a>3</a></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ParentCombinator(MockLinkSelector(), MockDivSelector())
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div><a>1</a><a><p>Hello</p></a></div>""")
@@ -61,7 +61,7 @@ class TestParentCombinator:
             <div><span><a>Hello</a></span></div>
             <div><p></p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ParentCombinator(MockLinkSelector(), MockDivSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -79,7 +79,7 @@ class TestParentCombinator:
             <div><span><a>Hello</a></span></div>
             <div><p></p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ParentCombinator(MockLinkSelector(), MockDivSelector())
         result = selector.find(bs)
         assert result is None
@@ -99,7 +99,7 @@ class TestParentCombinator:
             </span>
             <div><a>3</a></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ParentCombinator(MockLinkSelector(), MockDivSelector())
         result = selector.find_all(bs)
 
@@ -121,7 +121,7 @@ class TestParentCombinator:
             <div><span><a>Hello</a></span></div>
             <div><p></p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ParentCombinator(MockLinkSelector(), MockDivSelector())
         result = selector.find_all(bs)
         assert result == []
@@ -141,7 +141,7 @@ class TestParentCombinator:
             <div><span><span class="menu"><a>Menu not child of div</a></span></span></div>
             <div><p class="menu"><a>2</a><a>Hello</a></p><a>Hello</a></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ParentCombinator(
             MockLinkSelector(),
             MockClassMenuSelector(),
@@ -174,7 +174,7 @@ class TestParentCombinator:
             <div>Hello</div>
             <div><a>3</a><p>Hello</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ParentCombinator(MockLinkSelector(), MockDivSelector())
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<div><a>1</a><a><p>Hello</p></a></div>""")
@@ -195,7 +195,7 @@ class TestParentCombinator:
             <div><span><a>Not child of div</a></span></div>
             <div>Hello</div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ParentCombinator(MockLinkSelector(), MockDivSelector())
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -216,7 +216,7 @@ class TestParentCombinator:
             <div><span><a>Not child of div</a></span></div>
             <div>Hello</div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ParentCombinator(MockLinkSelector(), MockDivSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -241,7 +241,7 @@ class TestParentCombinator:
             <div>Hello</div>
             <div><a>3</a><p>Hello</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ParentCombinator(MockLinkSelector(), MockDivSelector())
         result = selector.find_all(bs, recursive=False)
 
@@ -269,7 +269,7 @@ class TestParentCombinator:
             <div><span><a>Not child of div</a></span></div>
             <div>Hello</div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ParentCombinator(MockLinkSelector(), MockDivSelector())
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -292,7 +292,7 @@ class TestParentCombinator:
             </span>
             <div><a>3</a></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ParentCombinator(MockLinkSelector(), MockDivSelector())
         result = selector.find_all(bs, limit=2)
 
@@ -323,7 +323,7 @@ class TestParentCombinator:
             <div>Hello</div>
             <div><a>3</a><p>Hello</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = ParentCombinator(MockLinkSelector(), MockDivSelector())
         result = selector.find_all(bs, recursive=False, limit=2)
 
@@ -338,7 +338,7 @@ class TestParentCombinator:
         Ensures that combinators don't break when first step does not match anything.
         """
         text = """<span>First element</sp>"""
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ParentCombinator(MockLinkSelector(), MockDivSelector())
         result = selector.find_all(bs)
         assert result == []

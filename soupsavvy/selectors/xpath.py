@@ -17,8 +17,7 @@ from typing import Any, Optional, Union
 from soupsavvy.interfaces import T
 
 try:
-    from lxml import html
-    from lxml.etree import XPath, XPathSyntaxError
+    from lxml.etree import XPath, XPathSyntaxError, _Element
 except ImportError as e:
     raise ImportError(
         "`soupsavvy.selectors.xpath` requires `lxml` package to be installed."
@@ -94,11 +93,12 @@ class XPathSelector(SoupSelector):
         element = tag.to_lxml()
         matches: list = self.xpath(element)  # type: ignore
 
-        if matches and all(
-            not isinstance(match, html.HtmlElement) for match in matches
+        if not isinstance(matches, list) or (
+            matches and all(not isinstance(match, _Element) for match in matches)
         ):
             warnings.warn(
-                "XPath expression does not target elements, no results will be found.",
+                "XPath expression does not target elements, "
+                f"no results will be found: {matches}",
                 UserWarning,
             )
             return []

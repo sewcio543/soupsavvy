@@ -4,7 +4,7 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.css.selectors import Empty
-from tests.soupsavvy.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import find_body_element, strip, to_element
 
 
 @pytest.mark.css
@@ -30,7 +30,7 @@ class TestEmpty:
             <img src="picture.jpg"/>
             <br/>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Empty()
         result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -49,7 +49,7 @@ class TestEmpty:
             <a class="widget"></a>
             <br/>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Empty()
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div></div>""")
@@ -68,7 +68,7 @@ class TestEmpty:
                 <p>text 2</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Empty()
         result = selector.find(bs)
         assert result is None
@@ -87,7 +87,7 @@ class TestEmpty:
                 <p>text 2</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Empty()
 
         with pytest.raises(TagNotFoundException):
@@ -104,7 +104,7 @@ class TestEmpty:
                 <p>text 2</p>
             </div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Empty()
         result = selector.find_all(bs)
         assert result == []
@@ -124,7 +124,7 @@ class TestEmpty:
             <a class="widget"></a>
             <img src="picture.jpg"/>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Empty()
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<div></div>""")
@@ -143,7 +143,7 @@ class TestEmpty:
             </div>
             <span><a>Hello</a></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Empty()
         result = selector.find(bs, recursive=False)
         assert result is None
@@ -162,7 +162,7 @@ class TestEmpty:
             </div>
             <span><a>Hello</a></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Empty()
 
         with pytest.raises(TagNotFoundException):
@@ -184,7 +184,7 @@ class TestEmpty:
             </div>
             <span><a>Hello</a></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Empty()
         result = selector.find_all(bs, recursive=False)
         assert result == []
@@ -205,7 +205,7 @@ class TestEmpty:
             <a class="widget"></a>
             <img src="picture.jpg"/>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Empty()
         result = selector.find_all(bs, recursive=False)
 
@@ -232,7 +232,7 @@ class TestEmpty:
             <img src="picture.jpg"/>
             <br/>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Empty()
         result = selector.find_all(bs, limit=2)
 
@@ -260,7 +260,7 @@ class TestEmpty:
             <a class="widget"></a>
             <img src="picture.jpg"/>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = Empty()
         result = selector.find_all(bs, recursive=False, limit=2)
 

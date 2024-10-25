@@ -4,7 +4,7 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.css.selectors import LastChild
-from tests.soupsavvy.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import find_body_element, strip, to_element
 
 
 @pytest.mark.css
@@ -26,7 +26,7 @@ class TestLastChild:
             </div>
             <span><a class="menu">34</a></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = LastChild()
         result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -49,7 +49,7 @@ class TestLastChild:
             <div><a>Hello</a><p>3</p></div>
             <a class="widget">4</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = LastChild()
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a>1</a>""")
@@ -69,7 +69,7 @@ class TestLastChild:
             <a class="widget">Hello</a>
             <a>1</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = LastChild()
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a>1</a>""")
@@ -90,7 +90,7 @@ class TestLastChild:
             <a class="widget">Hello</a>
             <a>1</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = LastChild()
         result = selector.find_all(bs, recursive=False)
         # at most one element can be returned
@@ -112,7 +112,7 @@ class TestLastChild:
             <div><a>Hello</a><p>3</p></div>
             <a class="widget">4</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = find_body_element(to_element(text))
         selector = LastChild()
         result = selector.find_all(bs, limit=2)
 

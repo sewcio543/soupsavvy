@@ -76,9 +76,7 @@ class TestCSSSoupSelectorEquality:
             ),
         ],
     )
-    def test_two_selectors_are_equal(
-        self, selectors: tuple[CSSSoupSelector, CSSSoupSelector]
-    ):
+    def test_two_selectors_are_equal(self, selectors: tuple):
         """Tests if two multiple soup selectors are equal."""
         assert (selectors[0] == selectors[1]) is True
 
@@ -102,8 +100,6 @@ class TestCSSSoupSelectorEquality:
             ),
         ],
     )
-    def test_two_selectors_are_not_equal(
-        self, selectors: tuple[CSSSoupSelector, CSSSoupSelector]
-    ):
+    def test_two_selectors_are_not_equal(self, selectors: tuple):
         """Tests if two multiple soup selectors are not equal."""
         assert (selectors[0] == selectors[1]) is False

@@ -15,12 +15,10 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Optional, Pattern
 
-from bs4 import SoupStrainer
 from typing_extensions import deprecated
 
 import soupsavvy.selectors.namespace as ns
 from soupsavvy.base import SelectableCSS, SoupSelector
-from soupsavvy.elements import SoupElement
 from soupsavvy.interfaces import IElement, T
 from soupsavvy.utils.selector_utils import TagIterator
 
@@ -146,13 +144,15 @@ class PatternSelector(SoupSelector):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[T]:
-        if not isinstance(tag, SoupElement):
-            raise TypeError
-
         iterator = TagIterator(tag, recursive=recursive)
-        strainer = SoupStrainer(string=self._pattern)  # type: ignore
-        #! TODO
-        filter_ = filter(strainer.search_tag, (element.tag for element in iterator))
+        filter_ = filter(
+            lambda x: (
+                self._pattern.search(x.text)
+                if isinstance(self._pattern, Pattern)
+                else x.text == self._pattern
+            ),
+            iterator,
+        )
         return list(itertools.islice(filter_, limit))
 
     def __eq__(self, other: object) -> bool:
