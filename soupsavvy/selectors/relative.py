@@ -120,7 +120,7 @@ class BaseRelativeSibling(RelativeSelector):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[T]:
-        search = tag.find_parents()[0]
+        search = tag.find_ancestors()[0]
         # find all sibling tags that match the selector
         matching = TagResultSet(self.selector.find_all(search, recursive=False))
         siblings = TagResultSet(self._func(tag))
@@ -147,7 +147,7 @@ class BaseAncestorSelector(RelativeSelector):
     ) -> list[T]:
         limit = limit or self._limit
         # get max number of ancestors that can possibly be returned
-        ancestors = tag.find_parents(limit=self._limit)
+        ancestors = tag.find_ancestors(limit=self._limit)
 
         if not ancestors:
             # if no ancestors, make no sense to search

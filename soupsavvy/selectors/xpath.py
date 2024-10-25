@@ -11,22 +11,16 @@ Classes
 - XPathSelector
 """
 
+import warnings
 from itertools import islice
 from typing import Any, Optional, Union
 
-from soupsavvy.interfaces import T
-
-try:
-    from lxml.etree import XPath, XPathSyntaxError, _Element
-except ImportError as e:
-    raise ImportError(
-        "`soupsavvy.selectors.xpath` requires `lxml` package to be installed."
-    ) from e
-
-import warnings
+from lxml.etree import XPath, XPathSyntaxError
+from lxml.etree import _Element as HtmlElement
 
 import soupsavvy.exceptions as exc
 from soupsavvy.base import SoupSelector
+from soupsavvy.interfaces import T
 from soupsavvy.utils.selector_utils import TagIterator
 
 
@@ -94,7 +88,7 @@ class XPathSelector(SoupSelector):
         matches: list = self.xpath(element)  # type: ignore
 
         if not isinstance(matches, list) or (
-            matches and all(not isinstance(match, _Element) for match in matches)
+            matches and all(not isinstance(match, HtmlElement) for match in matches)
         ):
             warnings.warn(
                 "XPath expression does not target elements, "

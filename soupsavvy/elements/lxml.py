@@ -70,7 +70,7 @@ class LXMLElement(IElement):
             islice((LXMLElement(element) for element in iterator), limit),
         )
 
-    def find_parents(self, limit: Optional[int] = None) -> list[LXMLElement]:
+    def find_ancestors(self, limit: Optional[int] = None) -> list[LXMLElement]:
         iterator = self.tag.iterancestors(None)
         return list(
             islice((LXMLElement(element) for element in iterator), limit),

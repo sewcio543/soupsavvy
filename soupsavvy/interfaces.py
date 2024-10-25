@@ -15,7 +15,7 @@ from typing import Any, Generic, Optional, Pattern, TypeVar, Union
 import soupsavvy.exceptions as exc
 
 try:
-    from lxml.html import HtmlElement
+    from lxml.etree import _Element as HtmlElement
 except ImportError as e:
     pass
 
@@ -143,7 +143,7 @@ class IElement(ABC, Generic[T]):
         raise NotImplementedError("Method not implemented")
 
     @abstractmethod
-    def find_parents(self, limit: Optional[int] = None) -> list[T]:
+    def find_ancestors(self, limit: Optional[int] = None) -> list[T]:
         raise NotImplementedError("Method not implemented")
 
     @property
@@ -169,16 +169,9 @@ class IElement(ABC, Generic[T]):
     def get_attribute_list(self, name: str) -> list[str]:
         raise NotImplementedError("Method not implemented")
 
-    @abstractmethod
-    def prettify(self) -> str:
-        raise NotImplementedError("Method not implemented")
-
     @property
     @abstractmethod
     def name(self) -> str:
-        raise NotImplementedError("Method not implemented")
-
-    def to_lxml(self) -> HtmlElement:
         raise NotImplementedError("Method not implemented")
 
     @property
@@ -186,6 +179,11 @@ class IElement(ABC, Generic[T]):
     def text(self) -> str:
         raise NotImplementedError("Method not implemented")
 
-    @abstractmethod
+    def to_lxml(self) -> HtmlElement:
+        raise NotImplementedError("Method not implemented")
+
+    def prettify(self) -> str:
+        return str(self)
+
     def css(self, selector: str) -> Callable[[IElement], list[IElement]]:
         raise NotImplementedError("Method not implemented")

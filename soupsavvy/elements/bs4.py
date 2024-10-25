@@ -47,7 +47,7 @@ class SoupElement(IElement):
             SoupElement(element) for element in self.tag.find_next_siblings(limit=limit)  # type: ignore
         ]
 
-    def find_parents(self, limit: Optional[int] = None) -> list[SoupElement]:
+    def find_ancestors(self, limit: Optional[int] = None) -> list[SoupElement]:
         return [SoupElement(element) for element in self.tag.find_parents(limit=limit)]
 
     @property
@@ -92,7 +92,8 @@ class SoupElement(IElement):
         strings = list(self.tag.strings)
         return strings[0] if strings else ""
 
-    def css(self, selector: str) -> Callable[[SoupElement], list[SoupElement]]:
+    @staticmethod
+    def css(selector: str) -> Callable[[SoupElement], list[SoupElement]]:
         try:
             compiled = sv.compile(selector)
         except sv.SelectorSyntaxError:
