@@ -13,9 +13,8 @@ Classes
 
 from typing import Optional
 
-from bs4 import Tag
-
 from soupsavvy.base import SoupSelector, check_selector
+from soupsavvy.interfaces import T
 from soupsavvy.selectors.nth.nth_utils import parse_nth
 from soupsavvy.utils.selector_utils import TagIterator, TagResultSet
 
@@ -62,10 +61,10 @@ class BaseNthOfSelector(SoupSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
         # if recursive is False, check only children of tag itself
         tag_iterator = (
             TagIterator(tag, recursive=recursive, include_self=True)
@@ -209,7 +208,12 @@ class OnlyOfSelector(SoupSelector):
         """
         self.selector = check_selector(selector)
 
-    def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+    def find_all(
+        self,
+        tag: T,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[T]:
         tag_iterator = (
             TagIterator(tag, recursive=recursive, include_self=True)
             if recursive

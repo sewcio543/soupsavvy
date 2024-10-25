@@ -1,8 +1,8 @@
 """Module for testing CSSSoupSelector base class."""
 
 import pytest
-from bs4 import Tag
 
+from soupsavvy.interfaces import T
 from soupsavvy.selectors.css.selectors import CSSSoupSelector
 from tests.soupsavvy.conftest import MockSelector
 
@@ -58,7 +58,7 @@ class TestCSSSoupSelectorEquality:
         def selector(self) -> str:
             return self._selector
 
-        def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+        def find_all(self, tag: T, recursive: bool = True, limit=None) -> list[T]:
             return []
 
     @pytest.mark.parametrize(

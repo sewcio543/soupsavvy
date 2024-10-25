@@ -9,11 +9,15 @@ Module with `soupsavvy` interfaces used across the package.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional
-
-from bs4 import Tag
+from collections.abc import Iterable
+from typing import Any, Generic, Optional, Pattern, TypeVar, Union
 
 import soupsavvy.exceptions as exc
+
+try:
+    from lxml.html import HtmlElement
+except ImportError as e:
+    pass
 
 
 class Executable(ABC):
@@ -59,7 +63,7 @@ class TagSearcher(ABC):
     @abstractmethod
     def find(
         self,
-        tag: Tag,
+        tag: IElement,
         strict: bool = False,
         recursive: bool = True,
     ) -> Any:
@@ -90,7 +94,7 @@ class TagSearcher(ABC):
     @abstractmethod
     def find_all(
         self,
-        tag: Tag,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Any]:
@@ -118,3 +122,62 @@ class TagSearcher(ABC):
             f"{self.__class__.__name__} is an interface "
             "and does not implement this method."
         )
+
+
+T = TypeVar("T", bound="IElement")
+
+
+class IElement(ABC, Generic[T]):
+    @abstractmethod
+    def find_all(
+        self,
+        name: Optional[str] = None,
+        attrs: Optional[dict[str, Union[str, Pattern[str]]]] = None,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[T]:
+        raise NotImplementedError("Method not implemented")
+
+    @abstractmethod
+    def find_next_siblings(self, limit: Optional[int] = None) -> list[T]:
+        raise NotImplementedError("Method not implemented")
+
+    @abstractmethod
+    def find_parents(self, limit: Optional[int] = None) -> list[T]:
+        raise NotImplementedError("Method not implemented")
+
+    @property
+    @abstractmethod
+    def children(self) -> Iterable[T]:
+        raise NotImplementedError("Method not implemented")
+
+    @property
+    @abstractmethod
+    def descendants(self) -> Iterable[T]:
+        raise NotImplementedError("Method not implemented")
+
+    @property
+    @abstractmethod
+    def parent(self) -> Optional[T]:
+        raise NotImplementedError("Method not implemented")
+
+    @abstractmethod
+    def get_text(self, separator: str = "", strip: bool = False) -> str:
+        raise NotImplementedError("Method not implemented")
+
+    @abstractmethod
+    def get_attribute_list(self, name: str) -> list[str]:
+        raise NotImplementedError("Method not implemented")
+
+    @abstractmethod
+    def prettify(self) -> str:
+        raise NotImplementedError("Method not implemented")
+
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        raise NotImplementedError("Method not implemented")
+
+    @abstractmethod
+    def to_lxml(self) -> HtmlElement:
+        raise NotImplementedError("Method not implemented")

@@ -14,9 +14,8 @@ from collections import Counter
 from functools import reduce
 from typing import Optional
 
-from bs4 import Tag
-
 from soupsavvy.base import CompositeSoupSelector, SoupSelector
+from soupsavvy.interfaces import T
 from soupsavvy.utils.selector_utils import TagIterator, TagResultSet, UniqueTag
 
 
@@ -81,10 +80,10 @@ class SelectorList(CompositeSoupSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
         results = TagResultSet()
 
         for selector in self.selectors:
@@ -164,10 +163,10 @@ class NotSelector(CompositeSoupSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
         matching = reduce(
             TagResultSet.__or__,
             (
@@ -252,10 +251,10 @@ class AndSelector(CompositeSoupSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
         matching = reduce(
             TagResultSet.__and__,
             (
@@ -318,10 +317,10 @@ class XORSelector(CompositeSoupSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
         unique = (
             UniqueTag(element)
             for step in self.selectors

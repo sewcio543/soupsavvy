@@ -3,7 +3,6 @@
 from typing import Type
 
 import pytest
-from bs4 import Tag
 
 from soupsavvy.exceptions import (
     NotOperationException,
@@ -11,6 +10,7 @@ from soupsavvy.exceptions import (
     RequiredConstraintException,
     TagNotFoundException,
 )
+from soupsavvy.interfaces import IElement
 from soupsavvy.models.wrappers import All, Default, FieldWrapper, Required
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 from tests.soupsavvy.conftest import (
@@ -29,13 +29,13 @@ DEFAULT = "default"
 class MockFieldWrapper(FieldWrapper):
     """Mock class for testing FieldWrapper interface."""
 
-    def find(self, tag: Tag, strict: bool = False, recursive: bool = True): ...
+    def find(self, tag: IElement, strict: bool = False, recursive: bool = True): ...
 
 
 class MockFieldWrapper2(FieldWrapper):
     """Mock class for testing FieldWrapper interface."""
 
-    def find(self, tag: Tag, strict: bool = False, recursive: bool = True): ...
+    def find(self, tag: IElement, strict: bool = False, recursive: bool = True): ...
 
 
 @pytest.mark.selector

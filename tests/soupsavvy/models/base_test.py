@@ -1966,8 +1966,11 @@ class TestBaseModelIntegration:
 
             title = TITLE_SELECTOR
             link = Href()
-            id_ = Operation(lambda x: x.get("id"))
-            name = Operation(lambda x: x.get("name")) | Operation(lambda x: x.upper())
+            #! TODO
+            id_ = Operation(lambda x: x.get_attribute_list("id")[0])
+            name = Operation(lambda x: x.get_attribute_list("name")[0]) | Operation(
+                lambda x: x.upper()
+            )
             text = Text(strip=True, separator="--")
 
         text = """

@@ -14,12 +14,11 @@ Classes
 - `Anchor` - Anchor object for easily creating relative selectors
 """
 
-from collections.abc import Callable
+from abc import abstractmethod
 from typing import Optional
 
-from bs4 import Tag
-
 from soupsavvy.base import CompositeSoupSelector, SoupSelector, check_selector
+from soupsavvy.interfaces import T
 from soupsavvy.utils.selector_utils import TagIterator, TagResultSet
 
 
@@ -109,23 +108,22 @@ class BaseRelativeSibling(RelativeSelector):
     - '_func' - class attribute to specify which method to use for finding siblings.
     """
 
-    # limit of next siblings to check
-    _limit: Optional[int]
-    # function to use for finding siblings
-    _func: Callable[..., list]
+    @abstractmethod
+    def _func(self, tag: T) -> list[T]:
+        raise NotImplementedError(
+            "Method '_func' needs to be implemented in child class."
+        )
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
         search = tag.find_parents()[0]
         # find all sibling tags that match the selector
-        matching = TagResultSet(
-            self.selector.find_all(search, recursive=False),
-        )
-        siblings = TagResultSet(self.__class__._func(tag, limit=self._limit))
+        matching = TagResultSet(self.selector.find_all(search, recursive=False))
+        siblings = TagResultSet(self._func(tag))
         # find intersection between two sets
         matches = matching & siblings
         return matches.fetch(limit)
@@ -143,10 +141,10 @@ class BaseAncestorSelector(RelativeSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
         limit = limit or self._limit
         # get max number of ancestors that can possibly be returned
         ancestors = tag.find_parents(limit=self._limit)
@@ -193,10 +191,10 @@ class RelativeChild(RelativeSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
         return self.selector.find_all(tag, recursive=False, limit=limit)
 
 
@@ -232,10 +230,10 @@ class RelativeDescendant(RelativeSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
         return self.selector.find_all(tag, recursive=True, limit=limit)
 
 
@@ -262,8 +260,8 @@ class RelativeNextSibling(BaseRelativeSibling):
     >>> Anchor + TypeSelector("p")
     """
 
-    _limit = 1
-    _func = Tag.find_next_siblings
+    def _func(self, tag: T) -> list[T]:
+        return tag.find_next_siblings(limit=1)
 
 
 class RelativeSubsequentSibling(BaseRelativeSibling):
@@ -291,8 +289,8 @@ class RelativeSubsequentSibling(BaseRelativeSibling):
     >>> Anchor * TypeSelector("p")
     """
 
-    _limit = None
-    _func = Tag.find_next_siblings
+    def _func(self, tag: T) -> list[T]:
+        return tag.find_next_siblings(limit=None)
 
 
 class RelativeParent(BaseAncestorSelector):
@@ -581,13 +579,13 @@ class HasSelector(CompositeSoupSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
 
         elements = TagIterator(tag, recursive=recursive)
-        matching: list[Tag] = []
+        matching: list[T] = []
 
         for element in elements:
             # we only care if anything matching was found

@@ -14,12 +14,11 @@ Classes
 from itertools import islice
 from typing import Any, Optional, Union
 
-from bs4 import Tag
+from soupsavvy.interfaces import T
 
 try:
     from lxml import html
     from lxml.etree import XPath, XPathSyntaxError
-    from lxml.html.soupparser import _convert_tree as to_lxml
 except ImportError as e:
     raise ImportError(
         "`soupsavvy.selectors.xpath` requires `lxml` package to be installed."
@@ -88,11 +87,11 @@ class XPathSelector(SoupSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
-        element: html.HtmlElement = to_lxml(tag, None)  # type: ignore
+    ) -> list[T]:
+        element = tag.to_lxml()
         matches: list = self.xpath(element)  # type: ignore
 
         if matches and all(

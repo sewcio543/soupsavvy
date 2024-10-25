@@ -1,15 +1,15 @@
 """Testing module for UniversalSelector class."""
 
 import pytest
-from bs4 import Tag
 
 from soupsavvy.exceptions import TagNotFoundException
+from soupsavvy.interfaces import T
 from soupsavvy.selectors.general import UniversalSelector
 from soupsavvy.selectors.namespace import CSS_SELECTOR_WILDCARD
 from tests.soupsavvy.conftest import MockDivSelector, find_body_element, strip, to_bs
 
 
-def find_tag(bs: Tag, name: str = "body") -> Tag:
+def find_tag(bs: T, name: str = "body") -> T:
     """
     Helper function to find tag in bs4 object.
 
@@ -20,7 +20,7 @@ def find_tag(bs: Tag, name: str = "body") -> Tag:
     name : str
         Tag name to search for, default is "body".
     """
-    return bs.find(name)  # type: ignore
+    return bs.find_all(name)[0]
 
 
 @pytest.mark.selector

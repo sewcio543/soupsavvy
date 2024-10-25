@@ -15,11 +15,13 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Optional, Pattern
 
-from bs4 import SoupStrainer, Tag
+from bs4 import SoupStrainer
 from typing_extensions import deprecated
 
 import soupsavvy.selectors.namespace as ns
 from soupsavvy.base import SelectableCSS, SoupSelector
+from soupsavvy.elements import SoupElement
+from soupsavvy.interfaces import IElement, T
 from soupsavvy.utils.selector_utils import TagIterator
 
 
@@ -69,12 +71,11 @@ class TypeSelector(SoupSelector, SelectableCSS):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
-        params = {ns.NAME: self.name}
-        return tag.find_all(**params, recursive=recursive, limit=limit)
+    ) -> list[T]:
+        return tag.find_all(name=self.name, recursive=recursive, limit=limit)
 
     @property
     def css(self) -> str:
@@ -141,13 +142,17 @@ class PatternSelector(SoupSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
+        if not isinstance(tag, SoupElement):
+            raise TypeError
+
         iterator = TagIterator(tag, recursive=recursive)
         strainer = SoupStrainer(string=self._pattern)  # type: ignore
-        filter_ = filter(strainer.search_tag, iterator)
+        #! TODO
+        filter_ = filter(strainer.search_tag, (element.tag for element in iterator))
         return list(itertools.islice(filter_, limit))
 
     def __eq__(self, other: object) -> bool:
@@ -187,8 +192,11 @@ class UniversalSelector(SoupSelector, SelectableCSS):
     """
 
     def find_all(
-        self, tag: Tag, recursive: bool = True, limit: Optional[int] = None
-    ) -> list[Tag]:
+        self,
+        tag: T,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[T]:
         return tag.find_all(recursive=recursive, limit=limit)
 
     @property
@@ -224,10 +232,10 @@ class SelfSelector(SoupSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
         return [tag]
 
     def __eq__(self, other: object) -> bool:
@@ -260,14 +268,14 @@ class ExpressionSelector(SoupSelector):
     If raised, it will be propagated to the caller.
     """
 
-    f: Callable[[Tag], bool]
+    f: Callable[[IElement], bool]
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
         iterator = TagIterator(tag, recursive=recursive)
         filter_ = filter(self.f, iterator)
         return list(itertools.islice(filter_, limit))

@@ -17,13 +17,17 @@ from dataclasses import field as datafield
 from functools import reduce
 from typing import Any, Literal, Optional, Type, TypeVar, Union, overload
 
-from bs4 import Tag
 from typing_extensions import Self
 
 import soupsavvy.exceptions as exc
 import soupsavvy.models.constants as c
 from soupsavvy.base import SoupSelector, check_selector
-from soupsavvy.interfaces import Comparable, TagSearcher, TagSearcherExceptions
+from soupsavvy.interfaces import (
+    Comparable,
+    IElement,
+    TagSearcher,
+    TagSearcherExceptions,
+)
 
 # Generic type variable for model migration
 T = TypeVar("T")
@@ -117,11 +121,11 @@ class Field(TagSearcher, Comparable):
     migrate: bool = True
 
     def find_all(
-        self, tag: Tag, recursive: bool = True, limit: Optional[int] = None
+        self, tag: IElement, recursive: bool = True, limit: Optional[int] = None
     ) -> list[Any]:
         return self.selector.find_all(tag, recursive=recursive, limit=limit)
 
-    def find(self, tag: Tag, strict: bool = False, recursive: bool = True) -> Any:
+    def find(self, tag: IElement, strict: bool = False, recursive: bool = True) -> Any:
         return self.selector.find(tag, strict=strict, recursive=recursive)
 
     def __eq__(self, x: Any) -> bool:
@@ -363,7 +367,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
     @classmethod
     def find(
         cls,
-        tag: Tag,
+        tag: IElement,
         strict: Literal[True] = ...,
         recursive: bool = ...,
     ) -> Self: ...
@@ -372,7 +376,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
     @classmethod
     def find(
         cls,
-        tag: Tag,
+        tag: IElement,
         strict: Literal[False] = ...,
         recursive: bool = ...,
     ) -> Optional[Self]: ...
@@ -381,7 +385,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
     @classmethod
     def find(
         cls,
-        tag: Tag,
+        tag: IElement,
         strict: bool = ...,
         recursive: bool = ...,
     ) -> Optional[Self]: ...
@@ -389,7 +393,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
     @classmethod
     def find(
         cls,
-        tag: Tag,
+        tag: IElement,
         strict: bool = False,
         recursive: bool = True,
     ) -> Optional[Self]:
@@ -434,7 +438,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         return None
 
     @classmethod
-    def _find(cls, tag: Tag) -> Self:
+    def _find(cls, tag: IElement) -> Self:
         """
         Internal method to find and initialize a model instance from a given tag.
         By default, perform recursive, non-strict search for model fields.
@@ -463,6 +467,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
                     strict=c.DEFAULT_STRICT,
                     recursive=c.DEFAULT_RECURSIVE,
                 )
+            #! TODO
             except exc.RequiredConstraintException as e:
                 raise exc.FieldExtractionException(
                     f"Field '{key}' is required and was not found in model '{cls.__name__}' "
@@ -481,7 +486,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
     @classmethod
     def find_all(
         cls,
-        tag: Tag,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Self]:

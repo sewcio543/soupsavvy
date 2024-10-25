@@ -3,7 +3,6 @@
 from itertools import product
 
 import pytest
-from bs4 import Tag
 
 from soupsavvy.selectors.general import SelfSelector
 from tests.soupsavvy.conftest import MockLinkSelector, strip, to_bs
@@ -13,7 +12,7 @@ TEXT = """
     <div href="github"><a>Hello</a></div>
     <a class="widget">1</a>
 """
-BS: Tag = to_bs(TEXT).div  # type: ignore
+BS = to_bs(TEXT).find_all("div")[0]
 EXPECTED = strip("""<div href="github"><a>Hello</a></div>""")
 
 

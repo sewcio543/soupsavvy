@@ -12,10 +12,9 @@ import re
 from dataclasses import dataclass
 from typing import Optional, Pattern
 
-from bs4 import Tag
-
 import soupsavvy.selectors.namespace as ns
 from soupsavvy.base import SoupSelector
+from soupsavvy.interfaces import T
 from soupsavvy.selectors.namespace import PatternType
 
 
@@ -86,12 +85,12 @@ class AttributeSelector(SoupSelector):
 
     def find_all(
         self,
-        tag: ns.Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
-        params = {ns.ATTRS: {self.name: self._pattern}}
-        return tag.find_all(**params, recursive=recursive, limit=limit)
+    ) -> list[T]:
+        params = {self.name: self._pattern}
+        return tag.find_all(attrs=params, recursive=recursive, limit=limit)
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, AttributeSelector):

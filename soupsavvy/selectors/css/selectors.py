@@ -26,19 +26,22 @@ Classes
 from itertools import islice
 from typing import Optional
 
+from soupsavvy.elements import SoupElement
+from soupsavvy.interfaces import T
+
 try:
     import soupsieve as sv
 except ImportError as e:
     raise ImportError(
         "`soupsavvy.css` requires `soupsieve` package to be installed."
     ) from e
-from bs4 import Tag
 
 import soupsavvy.exceptions as exc
 from soupsavvy.base import SelectableCSS, SoupSelector
 from soupsavvy.utils.selector_utils import TagIterator
 
 
+#! TODO
 class CSSSoupSelector(SoupSelector, SelectableCSS):
     """
     Base class for selectors based on css selectors.
@@ -79,13 +82,22 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
+
+        #! TODO
+        if not isinstance(tag, SoupElement):
+            raise TypeError
 
         iterator = TagIterator(tag, recursive=recursive)
-        return list(islice(filter(self._compiled.match, iterator), limit))
+        return list(
+            islice(
+                (element for element in iterator if self._compiled.match(element.tag)),
+                limit,
+            )
+        )
 
     def __eq__(self, other: object) -> bool:
         # we only care if selector is equal with current implementation

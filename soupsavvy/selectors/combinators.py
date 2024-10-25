@@ -24,10 +24,10 @@ from abc import abstractmethod
 from functools import reduce
 from typing import Optional, Type
 
-from bs4 import Tag
 from typing_extensions import deprecated
 
 from soupsavvy.base import CompositeSoupSelector, SoupSelector
+from soupsavvy.interfaces import IElement, T
 from soupsavvy.selectors.logical import SelectorList as _SelectorList
 from soupsavvy.selectors.relative import (
     RelativeAncestor,
@@ -115,7 +115,7 @@ class BaseCombinator(CompositeSoupSelector):
         )
 
     def _find_first_step(
-        self, step: SoupSelector, tag: Tag, recursive: bool
+        self, step: SoupSelector, tag: IElement, recursive: bool
     ) -> TagResultSet:
         """
         Returns results of the first step in the combinator selector,
@@ -137,7 +137,7 @@ class BaseCombinator(CompositeSoupSelector):
         return TagResultSet(step.find_all(tag, recursive=recursive))
 
     def _order_results(
-        self, results: TagResultSet, tag: Tag, recursive: bool
+        self, results: TagResultSet, tag: IElement, recursive: bool
     ) -> TagResultSet:
         """
         Orders results of find_all method of the combinator selector, given
@@ -161,10 +161,10 @@ class BaseCombinator(CompositeSoupSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
         results = TagResultSet()
 
         for i, step in enumerate(self.selectors):
@@ -202,13 +202,13 @@ class BaseAncestorCombinator(BaseCombinator):
     """
 
     def _find_first_step(
-        self, step: SoupSelector, tag: Tag, recursive: bool
+        self, step: SoupSelector, tag: IElement, recursive: bool
     ) -> TagResultSet:
         # always look for all descendants in first step
         return TagResultSet(step.find_all(tag, recursive=True))
 
     def _order_results(
-        self, results: TagResultSet, tag: Tag, recursive: bool
+        self, results: TagResultSet, tag: IElement, recursive: bool
     ) -> TagResultSet:
         # respect recursive parameter while ordering results
         return TagResultSet(list(TagIterator(tag, recursive=recursive))) & results

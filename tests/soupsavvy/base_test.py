@@ -1,5 +1,5 @@
 """
-Testing module for testing basic functionality of soupsavvy base classes
+Testing module for testing basic functionality of `soupsavvy` base classes
 in `base` module. It contains operations and selector related tests.
 """
 
@@ -9,7 +9,6 @@ from itertools import product
 from typing import Any, Type
 
 import pytest
-from bs4 import Tag
 
 from soupsavvy.base import (
     CompositeSoupSelector,
@@ -20,10 +19,10 @@ from soupsavvy.base import (
 from soupsavvy.exceptions import (
     BreakOperationException,
     FailedOperationExecution,
-    NavigableStringException,
     NotOperationException,
     NotSoupSelectorException,
 )
+from soupsavvy.interfaces import IElement, T
 from soupsavvy.operations.general import OperationPipeline
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 from soupsavvy.selectors.combinators import (
@@ -287,37 +286,6 @@ class TestNOTOperator:
 
 
 @pytest.mark.selector
-@pytest.mark.edge_case
-def test_exception_is_raised_when_navigable_string_is_a_result():
-    """
-    Tests if NavigableStringException is raised when bs4.find returns NavigableString.
-    Child classes of SoupSelector should always always prevent that,
-    thus this is a hypothetical case that is covered anyway to ensure that it does
-    not break code downstream.
-    """
-    from bs4 import NavigableString
-
-    class NavigableStringSelector(MockSelector):
-        """
-        Mock selector that returns NavigableString in find method
-        to force NavigableStringException in SoupSelector base class.
-        """
-
-        def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
-            return []
-
-        def _find(self, tag: Tag, recursive: bool = True):
-            return NavigableString("Hello World")
-
-    markup = """<div class="widget">Hello World</div>"""
-    bs = to_bs(markup)
-    tag = NavigableStringSelector()
-
-    with pytest.raises(NavigableStringException):
-        tag.find(bs, strict=True)
-
-
-@pytest.mark.selector
 class TestCompositeSoupSelector:
     """
     Class for testing CompositeSoupSelector interface.
@@ -331,7 +299,7 @@ class TestCompositeSoupSelector:
         def __init__(self, *selectors):
             super().__init__(list(selectors))
 
-        def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+        def find_all(self, tag: T, recursive: bool = True, limit=None) -> list[T]:
             return []
 
     class MockUnordered(BaseCompositeSoupSelectorMock):
@@ -642,8 +610,8 @@ class MockNameOperation(OperationSearcherMixin):
     Extract name of provided tag from bs4.Tag object.
     """
 
-    def _execute(self, arg: Tag):
-        if not isinstance(arg, Tag):
+    def _execute(self, arg: IElement):
+        if not isinstance(arg, IElement):
             raise TypeError
 
         return arg.name
@@ -652,7 +620,7 @@ class MockNameOperation(OperationSearcherMixin):
         return isinstance(x, MockNameOperation)
 
 
-div: Tag = to_bs("""<div></div>""").div  # type: ignore
+div = to_bs("""<div></div>""").find_all("div")[0]
 MOCK = MockNameOperation()
 
 

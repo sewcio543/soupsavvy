@@ -8,11 +8,9 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from bs4 import Tag
-
 import soupsavvy.exceptions as exc
 from soupsavvy.base import BaseOperation, check_operation
-from soupsavvy.interfaces import Comparable, TagSearcher
+from soupsavvy.interfaces import Comparable, IElement, TagSearcher
 
 
 class SelectionPipeline(TagSearcher, Comparable):
@@ -78,7 +76,7 @@ class SelectionPipeline(TagSearcher, Comparable):
 
     def find(
         self,
-        tag: Tag,
+        tag: IElement,
         strict: bool = False,
         recursive: bool = True,
     ) -> Any:
@@ -112,7 +110,7 @@ class SelectionPipeline(TagSearcher, Comparable):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Any]:

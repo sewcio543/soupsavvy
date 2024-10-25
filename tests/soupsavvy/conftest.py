@@ -5,18 +5,20 @@ that are shared across multiple test modules.
 
 from typing import Any, Optional
 
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup
 
 from soupsavvy.base import BaseOperation, SoupSelector
+from soupsavvy.elements import SoupElement
 from soupsavvy.exceptions import BreakOperationException
+from soupsavvy.interfaces import IElement, T
 
 # default bs4 parser
 PARSER = "lxml"
 
 
-def to_bs(html: str, parser: str = PARSER) -> BeautifulSoup:
+def to_bs(html: str, parser: str = PARSER) -> IElement:
     """Converts raw string html to BeautifulSoup object."""
-    return BeautifulSoup(html, parser)
+    return SoupElement(BeautifulSoup(html, parser))
 
 
 def strip(markup: str) -> str:
@@ -24,9 +26,9 @@ def strip(markup: str) -> str:
     return markup.replace("  ", "").replace("\n", "")
 
 
-def find_body_element(bs: Tag) -> Tag:
+def find_body_element(bs: T) -> T:
     """Helper function to find body element in bs4.Tag object."""
-    return bs.find("body")  # type: ignore
+    return bs.find_all("body")[0]
 
 
 class MockSelector(SoupSelector):
@@ -38,7 +40,7 @@ class MockSelector(SoupSelector):
     def __hash__(self) -> int:
         return hash(id(self))
 
-    def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+    def find_all(self, tag: T, recursive: bool = True, limit=None) -> list[T]:
         return []
 
 
@@ -59,7 +61,7 @@ class MockLinkSelector(_MockSimpleComparable):
     Delegates the task to bs4.Tag.find_all method.
     """
 
-    def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+    def find_all(self, tag: T, recursive: bool = True, limit=None) -> list[T]:
         return tag.find_all("a", recursive=recursive, limit=limit)
 
 
@@ -70,7 +72,7 @@ class MockDivSelector(_MockSimpleComparable):
     Delegates the task to bs4.Tag.find_all method.
     """
 
-    def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+    def find_all(self, tag: T, recursive: bool = True, limit=None) -> list[T]:
         return tag.find_all("div", recursive=recursive, limit=limit)
 
 
@@ -80,7 +82,7 @@ class MockClassMenuSelector(_MockSimpleComparable):
     Find every element that has class attribute set to 'menu'.
     """
 
-    def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+    def find_all(self, tag: T, recursive: bool = True, limit=None) -> list[T]:
         return tag.find_all(attrs={"class": "menu"}, recursive=recursive, limit=limit)
 
 
@@ -90,7 +92,7 @@ class MockClassWidgetSelector(_MockSimpleComparable):
     Find every element that has class attribute set to 'widget'.
     """
 
-    def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+    def find_all(self, tag: T, recursive: bool = True, limit=None) -> list[T]:
         return tag.find_all(attrs={"class": "widget"}, recursive=recursive, limit=limit)
 
 
@@ -118,11 +120,11 @@ class MockTextOperation(BaseMockOperation):
         """
         self.skip_none = skip_none
 
-    def _execute(self, arg: Optional[Tag]) -> Optional[str]:
+    def _execute(self, arg: Optional[IElement]) -> Optional[str]:
         if arg is None and self.skip_none:
             return None
 
-        return arg.text  # type: ignore
+        return arg.get_text()  # type: ignore
 
 
 class MockIntOperation(BaseMockOperation):

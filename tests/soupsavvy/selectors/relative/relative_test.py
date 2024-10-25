@@ -9,9 +9,9 @@ from abc import ABC, abstractmethod
 from typing import Type
 
 import pytest
-from bs4 import Tag
 
 from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
+from soupsavvy.interfaces import IElement, T
 from soupsavvy.selectors.relative import (
     Anchor,
     RelativeAncestor,
@@ -52,7 +52,7 @@ class BaseRelativeCombinatorTest(ABC):
 
     @property
     @abstractmethod
-    def match(self) -> Tag:
+    def match(self) -> IElement:
         """
         Returns the bs4.Tag that is passed into find methods as an anchor element.
         It should have 3 matching link elements for base selector of the class.
@@ -77,7 +77,7 @@ class BaseRelativeCombinatorTest(ABC):
 
     @property
     @abstractmethod
-    def no_match(self) -> Tag:
+    def no_match(self) -> IElement:
         """
         Returns the bs4.Tag that is passed into find methods as an anchor element.
         It should have no matching link elements for base selector of the class.
@@ -215,7 +215,7 @@ class TestRelativeChild(BaseRelativeCombinatorTest):
     base = RelativeChild
 
     @property
-    def match(self) -> Tag:
+    def match(self) -> IElement:
         text = """
             <div class="link">
                 <a>Not child</a>
@@ -230,7 +230,7 @@ class TestRelativeChild(BaseRelativeCombinatorTest):
         return find_body_element(to_bs(text))
 
     @property
-    def no_match(self) -> Tag:
+    def no_match(self) -> IElement:
         text = """
             <div class="link">
                 <a>Not child</a>
@@ -246,7 +246,7 @@ class TestRelativeDescendant(BaseRelativeCombinatorTest):
     base = RelativeDescendant
 
     @property
-    def match(self) -> Tag:
+    def match(self) -> IElement:
         text = """
             <div class="link">
                 <a>1</a>
@@ -259,7 +259,7 @@ class TestRelativeDescendant(BaseRelativeCombinatorTest):
         return find_body_element(to_bs(text))
 
     @property
-    def no_match(self) -> Tag:
+    def no_match(self) -> IElement:
         text = """
             <div class="link">
                 <p>Not a link</p>
@@ -275,7 +275,7 @@ class TestRelativeSubsequentSibling(BaseRelativeCombinatorTest):
     base = RelativeSubsequentSibling
 
     @property
-    def match(self) -> Tag:
+    def match(self) -> IElement:
         text = """
             <a>Not next sibling</a>
             <div class="anchor"></div>
@@ -287,10 +287,10 @@ class TestRelativeSubsequentSibling(BaseRelativeCombinatorTest):
             <p>Not a link</p>
             <a>3</a>
         """
-        return to_bs(text).div  # type: ignore
+        return to_bs(text).find_all("div")[0]
 
     @property
-    def no_match(self) -> Tag:
+    def no_match(self) -> IElement:
         text = """
             <a>Not next sibling</a>
             <div class="anchor"></div>
@@ -299,7 +299,7 @@ class TestRelativeSubsequentSibling(BaseRelativeCombinatorTest):
             </span>
             <p>Not a link</p>
         """
-        return to_bs(text).div  # type: ignore
+        return to_bs(text).find_all("div")[0]
 
 
 class TestRelativeNextSibling(BaseRelativeCombinatorTest):
@@ -314,7 +314,7 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
     base = RelativeNextSibling
 
     @property
-    def match(self) -> Tag:
+    def match(self) -> IElement:
         text = """
             <a>Not next sibling</a>
             <div class="anchor"></div>
@@ -325,10 +325,10 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
             <a>Not next sibling</a>
             <p>Not a link</p>
         """
-        return to_bs(text).div  # type: ignore
+        return to_bs(text).find_all("div")[0]
 
     @property
-    def no_match(self) -> Tag:
+    def no_match(self) -> IElement:
         text = """
             <a>Not next sibling</a>
             <div class="anchor"></div>
@@ -337,7 +337,7 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
                 <a>Not a sibling</a>
             </span>
         """
-        return to_bs(text).div  # type: ignore
+        return to_bs(text).find_all("div")[0]
 
     @pytest.mark.parametrize(
         argnames="recursive",
@@ -508,7 +508,7 @@ class TestRelativeSelectorEquality:
         selector, they are equal.
         """
 
-        def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+        def find_all(self, tag: T, recursive: bool = True, limit=None) -> list[T]:
             return []
 
     class MockRelativeSelectorNotEqual(RelativeSelector):
@@ -518,7 +518,7 @@ class TestRelativeSelectorEquality:
         different type, they are not equal.
         """
 
-        def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+        def find_all(self, tag: T, recursive: bool = True, limit=None) -> list[T]:
             return []
 
     @pytest.mark.parametrize(
@@ -564,7 +564,7 @@ class TestRelativeSelectorEquality:
         assert (selectors[0] == selectors[1]) is False
 
 
-def _find_anchor(bs: Tag) -> Tag:
+def _find_anchor(bs: IElement) -> IElement:
     """
     Finds element with 'anchor' class in the bs4.Tag object,
     which is used as an anchor element in the test cases.

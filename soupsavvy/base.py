@@ -7,14 +7,12 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import TYPE_CHECKING, Any, Literal, Optional, Union, overload
+from typing import TYPE_CHECKING, Any, Generic, Literal, Optional, Union, overload
 
-from bs4 import NavigableString, Tag
 from typing_extensions import deprecated
 
 import soupsavvy.exceptions as exc
-import soupsavvy.selectors.namespace as ns
-from soupsavvy.interfaces import Comparable, Executable, TagSearcher
+from soupsavvy.interfaces import Comparable, Executable, T, TagSearcher
 
 if TYPE_CHECKING:
     from soupsavvy.operations.general import OperationPipeline
@@ -84,7 +82,7 @@ def check_operation(x: Any, message: Optional[str] = None) -> BaseOperation:
     return x
 
 
-class SoupSelector(TagSearcher, Comparable):
+class SoupSelector(TagSearcher, Comparable, Generic[T]):
     """
     Base class for all `soupsavvy` selectors, that define declarative search procedure
     of searching for elements in BeautifulSoup Tag.
@@ -94,14 +92,14 @@ class SoupSelector(TagSearcher, Comparable):
 
     Methods
     -------
-    - find(tag: Tag, strict: bool = False, recursive: bool = True) -> Optional[Tag]
+    - find(tag: T, strict: bool = False, recursive: bool = True) -> Optional[Tag]
 
         Finds first element matching selector in provided tag if found.
         If no element is found, returns None by default,
         or raises an exception if `strict` mode is enabled.
         Additionally `recursive` parameter can be set to search only direct children.
 
-    - find_all(tag: Tag, recursive: bool = True, limit: Optional[int] = None) -> list[Tag]
+    - find_all(tag: T, recursive: bool = True, limit: Optional[int] = None) -> list[Tag]
 
         Finds all elements matching selector in provided tag and returns them in a list.
         Additionally `limit` and `recursive` parameters can be set.
@@ -118,33 +116,33 @@ class SoupSelector(TagSearcher, Comparable):
     @overload
     def find(
         self,
-        tag: Tag,
+        tag: T,
         strict: Literal[False] = ...,
         recursive: bool = ...,
-    ) -> Optional[Tag]: ...
+    ) -> Optional[T]: ...
 
     @overload
     def find(
         self,
-        tag: Tag,
+        tag: T,
         strict: Literal[True] = ...,
         recursive: bool = ...,
-    ) -> Tag: ...
+    ) -> T: ...
 
     @overload
     def find(
         self,
-        tag: Tag,
+        tag: T,
         strict: bool = ...,
         recursive: bool = ...,
-    ) -> Optional[Tag]: ...
+    ) -> Optional[T]: ...
 
     def find(
         self,
-        tag: Tag,
+        tag: T,
         strict: bool = False,
         recursive: bool = True,
-    ) -> Optional[Tag]:
+    ) -> Optional[T]:
         """
         Finds the first matching element in provided `Tag`.
 
@@ -171,8 +169,6 @@ class SoupSelector(TagSearcher, Comparable):
         ------
         TagNotFoundException
             If strict parameter is set to `True` and none matching tag was found.
-        NavigableStringException
-            If `bs4.NavigableString` was returned by selector.
         """
         result = self._find(tag, recursive=recursive)
 
@@ -181,21 +177,15 @@ class SoupSelector(TagSearcher, Comparable):
                 raise exc.TagNotFoundException("Tag was not found in markup.")
             return None
 
-        if isinstance(result, NavigableString):
-            raise exc.NavigableStringException(
-                f"NavigableString was returned for {result} string search, "
-                "invalid operation for SoupSelector find."
-            )
-
         return result
 
     @abstractmethod
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
         """
         Finds all elements matching selector in provided `Tag`.
 
@@ -221,7 +211,7 @@ class SoupSelector(TagSearcher, Comparable):
             "and does not implement this method."
         )
 
-    def _find(self, tag: Tag, recursive: bool = True) -> ns.FindResult:
+    def _find(self, tag: T, recursive: bool = True) -> Optional[T]:
         """
         Returns an object that is a result of tag search.
 
@@ -877,7 +867,7 @@ class OperationSearcherMixin(BaseOperation, TagSearcher):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Any]:
@@ -902,7 +892,7 @@ class OperationSearcherMixin(BaseOperation, TagSearcher):
 
     def find(
         self,
-        tag: Tag,
+        tag: T,
         strict: bool = False,
         recursive: bool = True,
     ) -> Any:

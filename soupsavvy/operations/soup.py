@@ -15,9 +15,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Optional, Union, overload
 
-from bs4 import Tag
-
 from soupsavvy.base import BaseOperation, OperationSearcherMixin, SoupSelector
+from soupsavvy.interfaces import IElement, T
 
 if TYPE_CHECKING:
     from soupsavvy.operations.general import OperationPipeline
@@ -65,7 +64,7 @@ class Text(OperationSearcherMixin):
         self.separator = separator
         self.strip = strip
 
-    def _execute(self, arg: Tag) -> str:
+    def _execute(self, arg: IElement) -> str:
         """Extracts text from `bs4.Tag`."""
         return arg.get_text(separator=self.separator, strip=self.strip)
 
@@ -106,7 +105,7 @@ class Href(OperationSearcherMixin):
     "www.example.com"
     """
 
-    def _execute(self, arg: Tag) -> Optional[str]:
+    def _execute(self, arg: IElement) -> Optional[str]:
         """
         Extracts href attribute from a BeautifulSoup Tag.
         If attribute is not present, returns None.
@@ -157,16 +156,16 @@ class Parent(BaseOperation, SoupSelector):
     If element does not have parent, returns None.
     """
 
-    def _execute(self, arg: Tag) -> Optional[Tag]:
+    def _execute(self, arg: T) -> Optional[T]:
         """Extracts parent of `bs4.Tag`."""
         return arg.parent
 
     def find_all(
         self,
-        tag: Tag,
+        tag: T,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[T]:
         return [self.execute(tag)]
 
     def __eq__(self, x: Any) -> bool:
