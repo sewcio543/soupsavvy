@@ -11,6 +11,6 @@ Classes
 `OnlyOfSelector` - Selects only element matching given selector
 """
 
-from .nth_soup_selector import NthLastOfSelector, NthOfSelector, OnlyOfSelector
+from .selectors import NthLastOfSelector, NthOfSelector, OnlyOfSelector
 
 __all__ = ["NthLastOfSelector", "NthOfSelector", "OnlyOfSelector"]

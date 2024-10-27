@@ -9,15 +9,10 @@ Module with `soupsavvy` interfaces used across the package.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from collections.abc import Callable, Iterable
-from typing import Any, Generic, Optional, Pattern, Self, TypeVar, Union
+from collections.abc import Iterable
+from typing import Any, Optional, Pattern, Self, TypeVar, Union
 
 import soupsavvy.exceptions as exc
-
-try:
-    from lxml.etree import _Element as HtmlElement
-except ImportError as e:
-    pass
 
 
 class Executable(ABC):
@@ -187,9 +182,6 @@ class IElement(ABC):
     def text(self) -> str:
         raise NotImplementedError("Method not implemented")
 
-    def to_lxml(self) -> HtmlElement:
-        raise NotImplementedError("Method not implemented")
-
     def prettify(self) -> str:
         return str(self)
 
@@ -205,7 +197,7 @@ class SelectionApi(ABC):
         self.selector = selector
 
     @abstractmethod
-    def select(self, element: Element) -> list[Element]:
+    def select(self, element: IElement) -> list[IElement]:
         raise NotImplementedError("Method not implemented")
 
 

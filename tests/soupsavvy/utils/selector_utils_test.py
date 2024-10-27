@@ -389,7 +389,7 @@ class TestTagResultSet:
         Tests that | operator updates collection and returns new result set
         when one of the collections is empty, whether base or right.
         """
-        base: TagResultSet[IElement] = TagResultSet()
+        base = TagResultSet()
         right = TagResultSet(mock_tags)
 
         expected = [

@@ -1,14 +1,10 @@
 from __future__ import annotations
 
 import warnings
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import soupsavvy.exceptions as exc
-from soupsavvy.interfaces import SelectionApi
-
-if TYPE_CHECKING:
-    from soupsavvy.implementation.lxml import LXMLElement
-    from soupsavvy.implementation.selenium import SeleniumElement
+from soupsavvy.interfaces import IElement, SelectionApi
 
 
 class LXMLXpathApi(SelectionApi):
@@ -27,7 +23,7 @@ class LXMLXpathApi(SelectionApi):
 
         super().__init__(selector)
 
-    def select(self, element: LXMLElement) -> list[LXMLElement]:
+    def select(self, element: IElement) -> list[IElement]:
         from lxml.etree import _Element as HtmlElement
 
         selected = self.selector(element.node)
@@ -48,7 +44,7 @@ class LXMLXpathApi(SelectionApi):
 class SeleniumXPathApi(SelectionApi):
     """Interface for `selenium` xpath API for web elements."""
 
-    def select(self, element: SeleniumElement) -> list[SeleniumElement]:
+    def select(self, element: IElement) -> list[IElement]:
         from selenium.common.exceptions import InvalidSelectorException
         from selenium.webdriver.common.by import By
 

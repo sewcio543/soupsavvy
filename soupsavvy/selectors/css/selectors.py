@@ -26,7 +26,7 @@ Classes
 from typing import Optional
 
 from soupsavvy.base import SelectableCSS, SoupSelector
-from soupsavvy.interfaces import Element
+from soupsavvy.interfaces import IElement
 from soupsavvy.utils.selector_utils import TagIterator, TagResultSet
 
 
@@ -62,10 +62,10 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
 
     def find_all(
         self,
-        tag: Element,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Element]:
+    ) -> list[IElement]:
         api = tag.css(self._selector)
         selected = api.select(tag)
         iterator = TagIterator(tag, recursive=recursive)

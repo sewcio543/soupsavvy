@@ -14,7 +14,7 @@ Classes
 from typing import Any, Optional
 
 from soupsavvy.base import SoupSelector
-from soupsavvy.interfaces import Element
+from soupsavvy.interfaces import IElement
 from soupsavvy.utils.selector_utils import TagIterator, TagResultSet
 
 
@@ -68,10 +68,10 @@ class XPathSelector(SoupSelector):
 
     def find_all(
         self,
-        tag: Element,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Element]:
+    ) -> list[IElement]:
         api = tag.xpath(self.xpath)
         selected = api.select(tag)
         iterator = TagIterator(tag, recursive=recursive)

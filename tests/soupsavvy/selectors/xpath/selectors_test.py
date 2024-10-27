@@ -346,14 +346,14 @@ class TestXPathSelector:
         selector = XPathSelector("//div/a/@href")
 
         with pytest.warns(UserWarning):
-            result = selector.find(bs)
+            result_find = selector.find(bs)
 
-        assert result is None
+        assert result_find is None
 
         with pytest.warns(UserWarning):
-            result = selector.find_all(bs)
+            result_all = selector.find_all(bs)
 
-        assert result == []
+        assert result_all == []
 
     @pytest.mark.parametrize(
         argnames="selectors",

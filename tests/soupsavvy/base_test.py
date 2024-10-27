@@ -22,7 +22,7 @@ from soupsavvy.exceptions import (
     NotOperationException,
     NotSoupSelectorException,
 )
-from soupsavvy.interfaces import Element, IElement
+from soupsavvy.interfaces import IElement
 from soupsavvy.operations.general import OperationPipeline
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 from soupsavvy.selectors.combinators import (
@@ -300,8 +300,8 @@ class TestCompositeSoupSelector:
             super().__init__(list(selectors))
 
         def find_all(
-            self, tag: Element, recursive: bool = True, limit=None
-        ) -> list[Element]:
+            self, tag: IElement, recursive: bool = True, limit=None
+        ) -> list[IElement]:
             return []
 
     class MockUnordered(BaseCompositeSoupSelectorMock):

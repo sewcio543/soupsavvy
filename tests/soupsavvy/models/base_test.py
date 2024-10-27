@@ -2144,11 +2144,11 @@ class TestBaseModelIntegration:
         """
         bs = to_element(text)
         selector = MockModel
-        result = selector.find(bs)
-        assert result == MockModel(title="Title", price=10)
+        result_find = selector.find(bs)
+        assert result_find == MockModel(title="Title", price=10)
 
-        result = selector.find_all(bs)
-        assert result == [
+        result_all = selector.find_all(bs)
+        assert result_all == [
             MockModel(title="Title", price=10),
             MockModel(title="Title2", price=20),
         ]

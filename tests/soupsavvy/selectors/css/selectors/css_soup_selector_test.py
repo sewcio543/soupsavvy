@@ -2,7 +2,7 @@
 
 import pytest
 
-from soupsavvy.interfaces import Element
+from soupsavvy.interfaces import IElement
 from soupsavvy.selectors.css.selectors import CSSSoupSelector
 from tests.soupsavvy.conftest import MockSelector
 
@@ -59,8 +59,8 @@ class TestCSSSoupSelectorEquality:
             return self._selector
 
         def find_all(
-            self, tag: Element, recursive: bool = True, limit=None
-        ) -> list[Element]:
+            self, tag: IElement, recursive: bool = True, limit=None
+        ) -> list[IElement]:
             return []
 
     @pytest.mark.parametrize(

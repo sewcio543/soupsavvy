@@ -3,13 +3,13 @@
 import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
-from soupsavvy.interfaces import Element
+from soupsavvy.interfaces import IElement
 from soupsavvy.selectors.general import UniversalSelector
 from soupsavvy.selectors.namespace import CSS_SELECTOR_WILDCARD
 from tests.soupsavvy.conftest import MockDivSelector, ToElement, strip
 
 
-def find_tag(bs: Element, name: str = "body") -> Element:
+def find_tag(bs: IElement, name: str = "body") -> IElement:
     """
     Helper function to find tag in bs4 object.
 

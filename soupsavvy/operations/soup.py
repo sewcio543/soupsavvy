@@ -16,7 +16,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Optional, Union, overload
 
 from soupsavvy.base import BaseOperation, OperationSearcherMixin, SoupSelector
-from soupsavvy.interfaces import Element, IElement
+from soupsavvy.interfaces import IElement
 
 if TYPE_CHECKING:
     from soupsavvy.operations.general import OperationPipeline
@@ -156,16 +156,16 @@ class Parent(BaseOperation, SoupSelector):
     If element does not have parent, returns None.
     """
 
-    def _execute(self, arg: Element) -> Optional[Element]:
+    def _execute(self, arg: IElement) -> Optional[IElement]:
         """Extracts parent of `bs4.Tag`."""
         return arg.parent
 
     def find_all(
         self,
-        tag: Element,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Element]:
+    ) -> list[IElement]:
         return [self.execute(tag)]
 
     def __eq__(self, x: Any) -> bool:

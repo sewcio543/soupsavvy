@@ -11,7 +11,7 @@ from typing import Type
 import pytest
 
 from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
-from soupsavvy.interfaces import Element, IElement
+from soupsavvy.interfaces import IElement
 from soupsavvy.selectors.relative import (
     Anchor,
     RelativeAncestor,
@@ -509,8 +509,8 @@ class TestRelativeSelectorEquality:
         """
 
         def find_all(
-            self, tag: Element, recursive: bool = True, limit=None
-        ) -> list[Element]:
+            self, tag: IElement, recursive: bool = True, limit=None
+        ) -> list[IElement]:
             return []
 
     class MockRelativeSelectorNotEqual(RelativeSelector):
@@ -521,8 +521,8 @@ class TestRelativeSelectorEquality:
         """
 
         def find_all(
-            self, tag: Element, recursive: bool = True, limit=None
-        ) -> list[Element]:
+            self, tag: IElement, recursive: bool = True, limit=None
+        ) -> list[IElement]:
             return []
 
     @pytest.mark.parametrize(

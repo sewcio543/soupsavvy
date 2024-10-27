@@ -14,7 +14,6 @@ from bs4 import BeautifulSoup
 from lxml.etree import fromstring
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 
 from soupsavvy.base import BaseOperation, SoupSelector
@@ -107,8 +106,8 @@ class MockSelector(SoupSelector):
         return hash(id(self))
 
     def find_all(
-        self, tag: Element, recursive: bool = True, limit=None
-    ) -> list[Element]:
+        self, tag: IElement, recursive: bool = True, limit=None
+    ) -> list[IElement]:
         return []
 
 
@@ -130,8 +129,8 @@ class MockLinkSelector(_MockSimpleComparable):
     """
 
     def find_all(
-        self, tag: Element, recursive: bool = True, limit=None
-    ) -> list[Element]:
+        self, tag: IElement, recursive: bool = True, limit=None
+    ) -> list[IElement]:
         return tag.find_all("a", recursive=recursive, limit=limit)
 
 
@@ -143,8 +142,8 @@ class MockDivSelector(_MockSimpleComparable):
     """
 
     def find_all(
-        self, tag: Element, recursive: bool = True, limit=None
-    ) -> list[Element]:
+        self, tag: IElement, recursive: bool = True, limit=None
+    ) -> list[IElement]:
         return tag.find_all("div", recursive=recursive, limit=limit)
 
 
@@ -155,8 +154,8 @@ class MockClassMenuSelector(_MockSimpleComparable):
     """
 
     def find_all(
-        self, tag: Element, recursive: bool = True, limit=None
-    ) -> list[Element]:
+        self, tag: IElement, recursive: bool = True, limit=None
+    ) -> list[IElement]:
         return tag.find_all(attrs={"class": "menu"}, recursive=recursive, limit=limit)
 
 
@@ -167,8 +166,8 @@ class MockClassWidgetSelector(_MockSimpleComparable):
     """
 
     def find_all(
-        self, tag: Element, recursive: bool = True, limit=None
-    ) -> list[Element]:
+        self, tag: IElement, recursive: bool = True, limit=None
+    ) -> list[IElement]:
         return tag.find_all(attrs={"class": "widget"}, recursive=recursive, limit=limit)
 
 
