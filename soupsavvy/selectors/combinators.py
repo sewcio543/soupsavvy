@@ -27,7 +27,7 @@ from typing import Optional, Type
 from typing_extensions import deprecated
 
 from soupsavvy.base import CompositeSoupSelector, SoupSelector
-from soupsavvy.interfaces import IElement, T
+from soupsavvy.interfaces import Element, IElement
 from soupsavvy.selectors.logical import SelectorList as _SelectorList
 from soupsavvy.selectors.relative import (
     RelativeAncestor,
@@ -161,11 +161,11 @@ class BaseCombinator(CompositeSoupSelector):
 
     def find_all(
         self,
-        tag: T,
+        tag: Element,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[T]:
-        results = TagResultSet()
+    ) -> list[Element]:
+        results: TagResultSet[Element] = TagResultSet()
 
         for i, step in enumerate(self.selectors):
             if i == 0:

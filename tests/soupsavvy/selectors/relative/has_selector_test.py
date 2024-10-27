@@ -10,13 +10,7 @@ from soupsavvy.selectors.relative import (
     RelativeNextSibling,
     RelativeSubsequentSibling,
 )
-from tests.soupsavvy.conftest import (
-    MockDivSelector,
-    MockLinkSelector,
-    find_body_element,
-    strip,
-    to_element,
-)
+from tests.soupsavvy.conftest import MockDivSelector, MockLinkSelector, ToElement, strip
 
 
 @pytest.mark.selector
@@ -38,7 +32,7 @@ class TestHasSelector:
         ids=["recursive", "not_recursive"],
     )
     def test_find_returns_first_tag_that_has_element_matching_single_selector(
-        self, recursive: bool
+        self, to_element: ToElement, recursive: bool
     ):
         """
         Tests if find method returns the first tag that has a descendant element that
@@ -55,7 +49,7 @@ class TestHasSelector:
             <a>Don't have</a>
             <div><a>2</a><span>Hello</span></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = HasSelector(MockLinkSelector())
         result = selector.find(bs, recursive=recursive)
         assert strip(str(result)) == strip("""<div><a>1</a></div>""")
@@ -66,7 +60,7 @@ class TestHasSelector:
         ids=["recursive", "not_recursive"],
     )
     def test_find_raises_exception_when_no_tags_matches_single_selector_in_strict_mode(
-        self, recursive: bool
+        self, to_element: ToElement, recursive: bool
     ):
         """
         Tests if find method raises TagNotFoundException when no tag is found
@@ -79,7 +73,7 @@ class TestHasSelector:
             </div>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = HasSelector(MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -91,7 +85,7 @@ class TestHasSelector:
         ids=["recursive", "not_recursive"],
     )
     def test_find_returns_none_if_no_tags_matches_single_selector_in_not_strict_mode(
-        self, recursive: bool
+        self, to_element: ToElement, recursive: bool
     ):
         """
         Tests if find method returns None when no tag is found that has a descendant
@@ -104,12 +98,15 @@ class TestHasSelector:
             </div>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = HasSelector(MockLinkSelector())
         result = selector.find(bs, recursive=recursive)
         assert result is None
 
-    def test_finds_all_tags_matching_single_selector_when_recursive_true(self):
+    def test_finds_all_tags_matching_single_selector_when_recursive_true(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all method returns all descendant tags of the body element
         that have descendant elements matching a single selector.
@@ -125,7 +122,7 @@ class TestHasSelector:
             <div><a>3</a></div>
             <div><span><a>45</a></span></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
 
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, recursive=True)
@@ -138,7 +135,10 @@ class TestHasSelector:
             strip("""<span><a>45</a></span>"""),
         ]
 
-    def test_finds_all_tags_matching_single_selector_when_recursive_false(self):
+    def test_finds_all_tags_matching_single_selector_when_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all method returns all children tags of the body element
         that have descendant elements matching a single selector.
@@ -153,7 +153,7 @@ class TestHasSelector:
             <div><a>2</a></div>
             <div><span><a>3</a></span></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
 
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, recursive=False)
@@ -170,7 +170,7 @@ class TestHasSelector:
         ids=["recursive", "not_recursive"],
     )
     def test_find_all_returns_empty_list_if_no_tag_matches_single_selector(
-        self, recursive: bool
+        self, to_element: ToElement, recursive: bool
     ):
         """
         Tests if find_all method returns an empty list when no tag is found
@@ -183,12 +183,15 @@ class TestHasSelector:
             </div>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, recursive=recursive)
         assert result == []
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -203,7 +206,7 @@ class TestHasSelector:
             <div><a>2</a></div>
             <div><span><a>3</a></span></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
 
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, limit=2)
@@ -215,6 +218,7 @@ class TestHasSelector:
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -231,7 +235,7 @@ class TestHasSelector:
             <span><p></p><a>2</a></span>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
 
         selector = HasSelector(MockLinkSelector())
         result = selector.find_all(bs, limit=2, recursive=False)
@@ -241,9 +245,7 @@ class TestHasSelector:
             strip("""<div><a>2</a></div>"""),
         ]
 
-    def test_find_returns_match_with_multiple_selectors(
-        self,
-    ):
+    def test_find_returns_match_with_multiple_selectors(self, to_element: ToElement):
         """
         Tests if find method returns the first tag that matches selector
         if there are multiple selectors are provided.
@@ -258,7 +260,7 @@ class TestHasSelector:
             <span><span><div>Have both</div><a></a></span></span>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
 
         selector = HasSelector(MockLinkSelector(), MockDivSelector())
         result = selector.find_all(bs)
@@ -273,6 +275,7 @@ class TestHasSelector:
     @pytest.mark.integration
     def test_find_all_returns_all_tags_matching_relative_child(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all method returns all tags that anchored to relative selector
@@ -291,7 +294,7 @@ class TestHasSelector:
             </span>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
 
         selector = HasSelector(RelativeChild(MockLinkSelector()))
         result = selector.find_all(bs)
@@ -304,6 +307,7 @@ class TestHasSelector:
     @pytest.mark.integration
     def test_find_all_returns_all_tags_matching_relative_descendants(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all method returns all tags that anchored to relative selector
@@ -317,7 +321,7 @@ class TestHasSelector:
             <div><span><a>2</a></span></div>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
 
         selector = HasSelector(RelativeDescendant(MockLinkSelector()))
         result = selector.find_all(bs)
@@ -331,6 +335,7 @@ class TestHasSelector:
     @pytest.mark.integration
     def test_find_all_returns_all_tags_matching_relative_next_sibling(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all method returns all tags that anchored to relative selector
@@ -343,7 +348,7 @@ class TestHasSelector:
             <span><a>2</a></span>
             <a>Don't have</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
 
         selector = HasSelector(RelativeNextSibling(MockLinkSelector()))
         result = selector.find_all(bs)
@@ -356,6 +361,7 @@ class TestHasSelector:
     @pytest.mark.integration
     def test_find_all_returns_all_tags_matching_relative_subsequent_sibling(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all method returns all tags that anchored to relative selector
@@ -369,7 +375,7 @@ class TestHasSelector:
             <div><span>1</span><span>2</span><a>!!!</a></div>
             <span><a>2</a><span>After</span></span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
 
         selector = HasSelector(RelativeSubsequentSibling(MockLinkSelector()))
         result = selector.find_all(bs)

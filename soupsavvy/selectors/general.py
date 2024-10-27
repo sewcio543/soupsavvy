@@ -19,7 +19,7 @@ from typing_extensions import deprecated
 
 import soupsavvy.selectors.namespace as ns
 from soupsavvy.base import SelectableCSS, SoupSelector
-from soupsavvy.interfaces import IElement, T
+from soupsavvy.interfaces import Element, IElement
 from soupsavvy.utils.selector_utils import TagIterator
 
 
@@ -69,10 +69,10 @@ class TypeSelector(SoupSelector, SelectableCSS):
 
     def find_all(
         self,
-        tag: T,
+        tag: Element,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[T]:
+    ) -> list[Element]:
         return tag.find_all(name=self.name, recursive=recursive, limit=limit)
 
     @property
@@ -140,10 +140,10 @@ class PatternSelector(SoupSelector):
 
     def find_all(
         self,
-        tag: T,
+        tag: Element,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[T]:
+    ) -> list[Element]:
         iterator = TagIterator(tag, recursive=recursive)
         filter_ = filter(
             lambda x: (
@@ -193,10 +193,10 @@ class UniversalSelector(SoupSelector, SelectableCSS):
 
     def find_all(
         self,
-        tag: T,
+        tag: Element,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[T]:
+    ) -> list[Element]:
         return tag.find_all(recursive=recursive, limit=limit)
 
     @property
@@ -232,10 +232,10 @@ class SelfSelector(SoupSelector):
 
     def find_all(
         self,
-        tag: T,
+        tag: Element,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[T]:
+    ) -> list[Element]:
         return [tag]
 
     def __eq__(self, other: object) -> bool:
@@ -272,10 +272,10 @@ class ExpressionSelector(SoupSelector):
 
     def find_all(
         self,
-        tag: T,
+        tag: Element,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[T]:
+    ) -> list[Element]:
         iterator = TagIterator(tag, recursive=recursive)
         filter_ = filter(self.f, iterator)
         return list(itertools.islice(filter_, limit))

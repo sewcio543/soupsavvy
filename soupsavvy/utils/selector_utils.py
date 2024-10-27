@@ -16,11 +16,11 @@ from dataclasses import dataclass
 from itertools import chain
 from typing import Generic, Optional, Self
 
-from soupsavvy.interfaces import IElement, T
+from soupsavvy.interfaces import Element, IElement
 
 
 @dataclass
-class TagIterator(Generic[T]):
+class TagIterator(Generic[Element]):
     """
     Wrapper class for iterating over bs4.Tag.
 
@@ -35,7 +35,7 @@ class TagIterator(Generic[T]):
         If True, includes the tag itself in iteration, default is False.
     """
 
-    tag: T
+    tag: Element
     recursive: bool = True
     include_self: bool = False
 
@@ -52,7 +52,7 @@ class TagIterator(Generic[T]):
         self._iter = chain([self.tag], iter_) if self.include_self else iter_
         return self
 
-    def __next__(self) -> T:
+    def __next__(self) -> Element:
         """
         Iterates over bs4.Tag skipping all strings (not bs4.Tag).
         If recursive is set to True, iterates over all descendants,
@@ -63,10 +63,10 @@ class TagIterator(Generic[T]):
         while not isinstance(value, IElement):
             value = next(self._iter)
 
-        return value
+        return value  # type: ignore
 
 
-class UniqueTag(Generic[T]):
+class UniqueTag(Generic[Element]):
     """
     Wrapper class for bs4.Tag to make it hashable by id.
     Hashing in bs4.Tag is implemented through hash of string representation:
@@ -80,7 +80,7 @@ class UniqueTag(Generic[T]):
     Class is used in Selectors that use operations on sets of bs4.Tag instances.
     """
 
-    def __init__(self, tag: T) -> None:
+    def __init__(self, tag: Element) -> None:
         """
         Initializes UniqueTag instance.
 
@@ -110,7 +110,7 @@ class UniqueTag(Generic[T]):
         return f"{self.__class__.__name__}({id(self.tag)})"
 
 
-class TagResultSet(Generic[T]):
+class TagResultSet(Generic[Element]):
     """
     TagResultSet class is collection that stores and manages results of find_all
     method of selectors. Prerequisites for returned results are:
@@ -126,7 +126,7 @@ class TagResultSet(Generic[T]):
     _ORDER_ATTR = "_order"
     _IS_BASE = "_base"
 
-    def __init__(self, tags: Optional[list[T]] = None) -> None:
+    def __init__(self, tags: Optional[list[Element]] = None) -> None:
         """
         Initializes `TagResultSet` instance.
 
@@ -138,7 +138,7 @@ class TagResultSet(Generic[T]):
         """
         self._tags = tags or []
 
-    def fetch(self, n: Optional[int] = None) -> list[T]:
+    def fetch(self, n: Optional[int] = None) -> list[Element]:
         """
         Fetches n first unique bs4.Tag instances from collection.
         Ensures that the order of the initial list is preserved.
@@ -183,7 +183,7 @@ class TagResultSet(Generic[T]):
 
         return set(tags)
 
-    def _sort(self, it: Iterable[UniqueTag]) -> list[T]:
+    def _sort(self, it: Iterable[UniqueTag]) -> list[Element]:
         """
         Sorts an iterable of UniqueTag instances by order and base attributes.
 

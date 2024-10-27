@@ -7,12 +7,12 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import TYPE_CHECKING, Any, Generic, Literal, Optional, Union, overload
+from typing import TYPE_CHECKING, Any, Literal, Optional, Union, overload
 
 from typing_extensions import deprecated
 
 import soupsavvy.exceptions as exc
-from soupsavvy.interfaces import Comparable, Executable, T, TagSearcher
+from soupsavvy.interfaces import Comparable, Executable, IElement, TagSearcher
 
 if TYPE_CHECKING:
     from soupsavvy.operations.general import OperationPipeline
@@ -82,7 +82,7 @@ def check_operation(x: Any, message: Optional[str] = None) -> BaseOperation:
     return x
 
 
-class SoupSelector(TagSearcher, Comparable, Generic[T]):
+class SoupSelector(TagSearcher, Comparable):
     """
     Base class for all `soupsavvy` selectors, that define declarative search procedure
     of searching for elements in BeautifulSoup Tag.
@@ -116,33 +116,33 @@ class SoupSelector(TagSearcher, Comparable, Generic[T]):
     @overload
     def find(
         self,
-        tag: T,
+        tag: IElement,
         strict: Literal[False] = ...,
         recursive: bool = ...,
-    ) -> Optional[T]: ...
+    ) -> Optional[IElement]: ...
 
     @overload
     def find(
         self,
-        tag: T,
+        tag: IElement,
         strict: Literal[True] = ...,
         recursive: bool = ...,
-    ) -> T: ...
+    ) -> IElement: ...
 
     @overload
     def find(
         self,
-        tag: T,
+        tag: IElement,
         strict: bool = ...,
         recursive: bool = ...,
-    ) -> Optional[T]: ...
+    ) -> Optional[IElement]: ...
 
     def find(
         self,
-        tag: T,
+        tag: IElement,
         strict: bool = False,
         recursive: bool = True,
-    ) -> Optional[T]:
+    ) -> Optional[IElement]:
         """
         Finds the first matching element in provided `Tag`.
 
@@ -182,10 +182,10 @@ class SoupSelector(TagSearcher, Comparable, Generic[T]):
     @abstractmethod
     def find_all(
         self,
-        tag: T,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[T]:
+    ) -> list[IElement]:
         """
         Finds all elements matching selector in provided `Tag`.
 
@@ -211,7 +211,7 @@ class SoupSelector(TagSearcher, Comparable, Generic[T]):
             "and does not implement this method."
         )
 
-    def _find(self, tag: T, recursive: bool = True) -> Optional[T]:
+    def _find(self, tag: IElement, recursive: bool = True) -> Optional[IElement]:
         """
         Returns an object that is a result of tag search.
 
@@ -867,7 +867,7 @@ class OperationSearcherMixin(BaseOperation, TagSearcher):
 
     def find_all(
         self,
-        tag: T,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Any]:
@@ -892,7 +892,7 @@ class OperationSearcherMixin(BaseOperation, TagSearcher):
 
     def find(
         self,
-        tag: T,
+        tag: IElement,
         strict: bool = False,
         recursive: bool = True,
     ) -> Any:

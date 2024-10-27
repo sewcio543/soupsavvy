@@ -6,7 +6,7 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.attributes import IdSelector
-from tests.soupsavvy.conftest import find_body_element, strip, to_element
+from tests.soupsavvy.conftest import ToElement, strip
 
 #! in these tests there are examples where multiple elements have the same id
 #! this is not a valid html, but it is used for testing purposes
@@ -16,7 +16,7 @@ from tests.soupsavvy.conftest import find_body_element, strip, to_element
 class TestIdSelector:
     """Class for IdSelector unit test suite."""
 
-    def test_find_returns_first_match_with_any_value(self):
+    def test_find_returns_first_match_with_any_value(self, to_element: ToElement):
         """
         Tests if find returns first tag with id attribute,
         when no value is specified.
@@ -32,7 +32,7 @@ class TestIdSelector:
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div id=""></div>""")
 
-    def test_find_returns_first_match_with_specific_value(self):
+    def test_find_returns_first_match_with_specific_value(self, to_element: ToElement):
         """Tests if find returns first tag with id attribute with specific value."""
         # even though there should not be multiple elements with the same id
         text = """
@@ -46,7 +46,7 @@ class TestIdSelector:
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a id="widget"></a>""")
 
-    def test_find_returns_first_match_with_pattern(self):
+    def test_find_returns_first_match_with_pattern(self, to_element: ToElement):
         """
         Tests if find returns first tag with id attribute that matches
         specified regex pattern
@@ -63,7 +63,9 @@ class TestIdSelector:
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div id="widget 123"></div>""")
 
-    def test_find_returns_none_if_no_match_and_strict_false(self):
+    def test_find_returns_none_if_no_match_and_strict_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns None if no element matches the selector
         and strict is False.
@@ -79,7 +81,9 @@ class TestIdSelector:
         result = selector.find(bs)
         assert result is None
 
-    def test_find_raises_exception_if_no_match_and_strict_true(self):
+    def test_find_raises_exception_if_no_match_and_strict_true(
+        self, to_element: ToElement
+    ):
         """
         Tests find raises TagNotFoundException if no element matches the selector
         and strict is True.
@@ -96,7 +100,7 @@ class TestIdSelector:
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_all_returns_all_matching_elements(self):
+    def test_find_all_returns_all_matching_elements(self, to_element: ToElement):
         """Tests if find_all returns a list of all matching elements."""
         text = """
             <div href="widget"></div>
@@ -123,7 +127,7 @@ class TestIdSelector:
         ]
         assert list(map(lambda x: strip(str(x)), result)) == excepted
 
-    def test_find_all_returns_empty_list_when_no_match(self):
+    def test_find_all_returns_empty_list_when_no_match(self, to_element: ToElement):
         """Tests if find returns an empty list if no element matches the selector."""
         text = """
             <div href="widget"></div>
@@ -136,7 +140,9 @@ class TestIdSelector:
         result = selector.find_all(bs)
         assert result == []
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns first matching child element if recursive is False.
         """
@@ -149,12 +155,14 @@ class TestIdSelector:
             <a id="widget"></a>
             <div id="widget"></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = IdSelector("widget")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a id="widget"></a>""")
 
-    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns None if no child element matches the selector
         and recursive is False.
@@ -167,12 +175,14 @@ class TestIdSelector:
             <div id="widget123"></div>
             <div id="menu"></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = IdSelector("widget")
         result = selector.find(bs, recursive=False)
         assert result is None
 
-    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(
+        self, to_element: ToElement
+    ):
         """
         Tests if find raises TagNotFoundException if no child element
         matches the selector, when recursive is False and strict is True.
@@ -185,14 +195,14 @@ class TestIdSelector:
             <div id="widget123"></div>
             <div id="menu"></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = IdSelector("widget")
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True, recursive=False)
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
-        self,
+        self, to_element: ToElement
     ):
         """
         Tests if find_all returns an empty list if no child element
@@ -206,12 +216,14 @@ class TestIdSelector:
             <div id="widget123"></div>
             <div id="menu"></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = IdSelector("widget")
         result = selector.find_all(bs, recursive=False)
         assert result == []
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -229,7 +241,7 @@ class TestIdSelector:
             <span class="widget"></span>
             <div id="widget"><span>4</span></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = IdSelector("widget")
         result = selector.find_all(bs, recursive=False)
 
@@ -240,7 +252,9 @@ class TestIdSelector:
             strip("""<div id="widget"><span>4</span></div>"""),
         ]
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self, to_element: ToElement
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -255,7 +269,7 @@ class TestIdSelector:
             <div id="widget">3</div>
             <span id=""></span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = IdSelector("widget")
         result = selector.find_all(bs, limit=2)
 
@@ -265,7 +279,7 @@ class TestIdSelector:
         ]
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
-        self,
+        self, to_element: ToElement
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -283,7 +297,7 @@ class TestIdSelector:
             <span id=""></span>
             <span id="widget">3</span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = IdSelector("widget")
         result = selector.find_all(bs, recursive=False, limit=2)
 

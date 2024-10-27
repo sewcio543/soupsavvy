@@ -11,17 +11,11 @@ Classes
 - XPathSelector
 """
 
-import warnings
-from itertools import islice
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
-from lxml.etree import XPath, XPathSyntaxError
-from lxml.etree import _Element as HtmlElement
-
-import soupsavvy.exceptions as exc
 from soupsavvy.base import SoupSelector
-from soupsavvy.interfaces import T
-from soupsavvy.utils.selector_utils import TagIterator
+from soupsavvy.interfaces import Element
+from soupsavvy.utils.selector_utils import TagIterator, TagResultSet
 
 
 class XPathSelector(SoupSelector):
@@ -55,7 +49,7 @@ class XPathSelector(SoupSelector):
     does not implement more specific `__eq__` method.
     """
 
-    def __init__(self, xpath: Union[str, XPath]) -> None:
+    def __init__(self, xpath: Any) -> None:
         """
         Initializes `XPathSelector` with a given XPath expression.
 
@@ -70,56 +64,25 @@ class XPathSelector(SoupSelector):
         InvalidXPathSelector
             If the provided XPath string cannot be compiled into `XPath` object.
         """
-        if not isinstance(xpath, XPath):
-            try:
-                xpath = XPath(xpath)
-            except XPathSyntaxError as e:
-                raise exc.InvalidXPathSelector(f"Parsing XPath '{xpath}' failed") from e
-
         self.xpath = xpath
 
     def find_all(
         self,
-        tag: T,
+        tag: Element,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[T]:
-        element = tag.to_lxml()
-        matches: list = self.xpath(element)  # type: ignore
-
-        if not isinstance(matches, list) or (
-            matches and all(not isinstance(match, HtmlElement) for match in matches)
-        ):
-            warnings.warn(
-                "XPath expression does not target elements, "
-                f"no results will be found: {matches}",
-                UserWarning,
-            )
-            return []
-
-        # this approach is possible due to DFS traversal
-        # strongly based on assumption, that both iterators are in sync
-        lxml_iterator = (
-            element.iterdescendants(None) if recursive else element.iterchildren(None)
-        )
-        soup_iterator = TagIterator(tag, recursive=recursive)
-
-        return list(
-            islice(
-                (
-                    soup
-                    for soup, element in zip(soup_iterator, lxml_iterator)
-                    if element in matches
-                ),
-                limit,
-            )
-        )
+    ) -> list[Element]:
+        api = tag.xpath(self.xpath)
+        selected = api.select(tag)
+        iterator = TagIterator(tag, recursive=recursive)
+        result = TagResultSet(list(iterator)) & TagResultSet(selected)
+        return result.fetch(limit)
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, XPathSelector):
             return False
 
-        return self.xpath.path == other.xpath.path
+        return self.xpath == other.xpath
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self.xpath!r})"

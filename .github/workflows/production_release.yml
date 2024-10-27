@@ -160,6 +160,7 @@ jobs:
 
       - name: Push changelog update
         run: |
+          git pull
           git add docs/source/changelog.md
           git commit -m "Updating changelog documentation file [skip ci]"
           git push origin HEAD

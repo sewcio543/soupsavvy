@@ -8,9 +8,8 @@ from tests.soupsavvy.conftest import (
     MockClassMenuSelector,
     MockDivSelector,
     MockLinkSelector,
-    find_body_element,
+    ToElement,
     strip,
-    to_element,
 )
 
 
@@ -29,7 +28,7 @@ class TestSubsequentSiblingCombinator:
         with pytest.raises(NotSoupSelectorException):
             SubsequentSiblingCombinator("a", MockLinkSelector())  # type: ignore
 
-    def test_find_returns_first_tag_matching_selector(self):
+    def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
         """Tests if find method returns the first tag that matches selector."""
         text = """
             <a>Hello</a>
@@ -45,13 +44,16 @@ class TestSubsequentSiblingCombinator:
             </div>
             <a class="widget"><p>4</p></a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
 
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="link">1</a>""")
 
-    def test_find_raises_exception_when_no_tags_match_in_strict_mode(self):
+    def test_find_raises_exception_when_no_tags_match_in_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find method raises TagNotFoundException when no tag is found
         that matches selector in strict mode.
@@ -74,7 +76,10 @@ class TestSubsequentSiblingCombinator:
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_returns_none_if_no_tags_match_in_not_strict_mode(self):
+    def test_find_returns_none_if_no_tags_match_in_not_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find method returns None when no tag is found that
         matches selector in not strict mode.
@@ -96,7 +101,7 @@ class TestSubsequentSiblingCombinator:
         result = selector.find(bs)
         assert result is None
 
-    def test_finds_all_tags_matching_selectors(self):
+    def test_finds_all_tags_matching_selectors(self, to_element: ToElement):
         """Tests if find_all method returns all tags that match selector."""
         text = """
             <a>Hello</a>
@@ -112,7 +117,7 @@ class TestSubsequentSiblingCombinator:
             </div>
             <a class="widget"><p>4</p></a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs)
 
@@ -123,7 +128,7 @@ class TestSubsequentSiblingCombinator:
             strip("""<a class="widget"><p>4</p></a>"""),
         ]
 
-    def test_find_all_returns_empty_list_if_no_tag_matches(self):
+    def test_find_all_returns_empty_list_if_no_tag_matches(self, to_element: ToElement):
         """
         Tests if find_all method returns an empty list when no tag is found
         that matches selector.
@@ -145,7 +150,7 @@ class TestSubsequentSiblingCombinator:
         result = selector.find_all(bs)
         assert result == []
 
-    def test_find_returns_match_with_multiple_selectors(self):
+    def test_find_returns_match_with_multiple_selectors(self, to_element: ToElement):
         """
         Tests if find method returns the first tag that matches selector
         if there are multiple selectors are provided.
@@ -176,7 +181,7 @@ class TestSubsequentSiblingCombinator:
                 <div class="menu">3</div>
             </div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = SubsequentSiblingCombinator(
             MockDivSelector(),
             MockLinkSelector(),
@@ -190,7 +195,10 @@ class TestSubsequentSiblingCombinator:
             strip("""<div class="menu">3</div>"""),
         ]
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns first matching child element if recursive is False.
         """
@@ -207,12 +215,15 @@ class TestSubsequentSiblingCombinator:
             <span class="widget"><a>Not a sibling</a></span>
             <a class="widget"><p>2</p></a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a class="link">1</a>""")
 
-    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns None if no child element matches the selector
         and recursive is False.
@@ -228,12 +239,15 @@ class TestSubsequentSiblingCombinator:
             <div><span>Hello</span></div>
             <span class="widget"><a>Not a sibling</a></span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find(bs, recursive=False)
         assert result is None
 
-    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no child element
         matches the selector, when recursive is False and strict is True.
@@ -249,13 +263,16 @@ class TestSubsequentSiblingCombinator:
             <div><span>Hello</span></div>
             <span class="widget"><a>Not a sibling</a></span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True, recursive=False)
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -274,7 +291,7 @@ class TestSubsequentSiblingCombinator:
             <span class="widget"><a>Not a sibling</a></span>
             <a>3</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs, recursive=False)
 
@@ -286,6 +303,7 @@ class TestSubsequentSiblingCombinator:
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns an empty list if no child element matches the selector
@@ -302,12 +320,15 @@ class TestSubsequentSiblingCombinator:
             <div><span>Hello</span></div>
             <span class="widget"><a>Not a sibling</a></span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs, recursive=False)
         assert result == []
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -326,7 +347,7 @@ class TestSubsequentSiblingCombinator:
             </div>
             <a class="widget"><p>4</p></a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs, limit=2)
 
@@ -337,6 +358,7 @@ class TestSubsequentSiblingCombinator:
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -357,7 +379,7 @@ class TestSubsequentSiblingCombinator:
             <span class="widget"><a>Not a sibling</a></span>
             <a>3</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = SubsequentSiblingCombinator(MockDivSelector(), MockLinkSelector())
         result = selector.find_all(bs, recursive=False, limit=2)
 
@@ -366,7 +388,7 @@ class TestSubsequentSiblingCombinator:
             strip("""<a class="widget"><p>2</p></a>"""),
         ]
 
-    def test_find_returns_none_if_first_step_was_not_found(self):
+    def test_find_returns_none_if_first_step_was_not_found(self, to_element: ToElement):
         """
         Tests if find returns None if the first step was not found.
         Ensures that combinators don't break when first step does not match anything.

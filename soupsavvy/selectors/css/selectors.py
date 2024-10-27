@@ -23,16 +23,13 @@ Classes
 - CSS - wrapper for simple search with CSS selectors
 """
 
-from itertools import islice
 from typing import Optional
 
-import soupsavvy.exceptions as exc
 from soupsavvy.base import SelectableCSS, SoupSelector
-from soupsavvy.interfaces import T
+from soupsavvy.interfaces import Element
 from soupsavvy.utils.selector_utils import TagIterator, TagResultSet
 
 
-#! TODO
 class CSSSoupSelector(SoupSelector, SelectableCSS):
     """
     Base class for selectors based on css selectors.
@@ -65,13 +62,14 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
 
     def find_all(
         self,
-        tag: T,
+        tag: Element,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[T]:
-        func = tag.css(self._selector)
+    ) -> list[Element]:
+        api = tag.css(self._selector)
+        selected = api.select(tag)
         iterator = TagIterator(tag, recursive=recursive)
-        result = TagResultSet(list(iterator)) & TagResultSet(func(tag))
+        result = TagResultSet(list(iterator)) & TagResultSet(selected)
         return result.fetch(limit)
 
     def __eq__(self, other: object) -> bool:

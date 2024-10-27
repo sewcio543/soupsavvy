@@ -4,11 +4,12 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.css.selectors import FirstOfType
-from tests.soupsavvy.conftest import find_body_element, strip, to_element
+from tests.soupsavvy.conftest import ToElement, strip
 
 
 @pytest.mark.css
 @pytest.mark.selector
+@pytest.mark.skip_lxml
 class TestFirstOfType:
     """Class with unit tests for FirstOfType tag selector."""
 
@@ -16,7 +17,10 @@ class TestFirstOfType:
         """Tests if selector property returns correct value."""
         assert FirstOfType().css == ":first-of-type"
 
-    def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
+    def test_find_all_returns_all_tags_for_selector_without_tag_name(
+        self,
+        to_element: ToElement,
+    ):
         """Tests if find_all method returns all tags for selector without tag name."""
         text = """
             <div>1</div>
@@ -30,7 +34,7 @@ class TestFirstOfType:
             <a href="widget"></a>
             <span><a>56</a><a></a></span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = FirstOfType()
         result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -42,7 +46,7 @@ class TestFirstOfType:
             strip("""<a>56</a>"""),
         ]
 
-    def test_find_returns_first_tag_matching_selector(self):
+    def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
         """Tests if find method returns first tag matching selector."""
         text = """
             <div>1</div>
@@ -52,12 +56,15 @@ class TestFirstOfType:
             <span><a>4</a><a></a></span>
             <a>Hello</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = FirstOfType()
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div>1</div>""")
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns first matching child element if recursive is False.
         """
@@ -69,12 +76,15 @@ class TestFirstOfType:
             <a>3</a>
             <a class="widget"><p>Not child</p></a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = FirstOfType()
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<span>1</span>""")
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -87,7 +97,7 @@ class TestFirstOfType:
             <a>Hello</a>
             <div><p></p></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = FirstOfType()
         result = selector.find_all(bs, recursive=False)
 
@@ -97,7 +107,10 @@ class TestFirstOfType:
             strip("""<span><a>3</a></span>"""),
         ]
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -114,7 +127,7 @@ class TestFirstOfType:
             <a href="widget"></a>
             <span><a>56</a><a></a></span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = FirstOfType()
         result = selector.find_all(bs, limit=2)
 
@@ -125,6 +138,7 @@ class TestFirstOfType:
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -139,7 +153,7 @@ class TestFirstOfType:
             <a>Hello</a>
             <div><p></p></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = FirstOfType()
         result = selector.find_all(bs, recursive=False, limit=2)
 

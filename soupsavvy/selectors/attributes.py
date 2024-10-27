@@ -14,7 +14,7 @@ from typing import Optional, Pattern
 
 import soupsavvy.selectors.namespace as ns
 from soupsavvy.base import SoupSelector
-from soupsavvy.interfaces import T
+from soupsavvy.interfaces import Element
 from soupsavvy.selectors.namespace import PatternType
 
 
@@ -85,10 +85,10 @@ class AttributeSelector(SoupSelector):
 
     def find_all(
         self,
-        tag: T,
+        tag: Element,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[T]:
+    ) -> list[Element]:
         params = {self.name: self._pattern}
         return tag.find_all(attrs=params, recursive=recursive, limit=limit)
 

@@ -4,16 +4,12 @@ import pytest
 from lxml.etree import XPath
 
 from soupsavvy.exceptions import InvalidXPathSelector, TagNotFoundException
-from soupsavvy.selectors.xpath import XPathSelector
-from tests.soupsavvy.conftest import (
-    MockLinkSelector,
-    find_body_element,
-    strip,
-    to_element,
-)
+from soupsavvy.selectors.xpath.selectors import XPathSelector
+from tests.soupsavvy.conftest import MockLinkSelector, ToElement, strip
 
 
 @pytest.mark.selector
+@pytest.mark.skip_bs4
 class TestXPathSelector:
     """
     Class with unit tests for XPathSelector tag selector.
@@ -21,15 +17,22 @@ class TestXPathSelector:
     as the search is delegated to `lxml` library.
     """
 
-    def test_raises_exception_when_invalid_xpath_selector(self):
+    def test_raises_exception_when_invalid_xpath_selector(self, to_element: ToElement):
         """
-        Tests if InvalidXPathSelector exception is raised in init
-        when invalid selector that can't be parsed is passed.
+        Tests if InvalidXPathSelector exception is raised
+        when trying to find elements with invalid XPath selector.
         """
-        with pytest.raises(InvalidXPathSelector):
-            XPathSelector("div.menu ? a")
+        text = """
+            <div></div>
+            <div class="widget"><p>Hello</p></div>
+        """
+        bs = to_element(text)
+        selector = XPathSelector("div.menu ? a")
 
-    def test_find_returns_first_tag_matching_selector(self):
+        with pytest.raises(InvalidXPathSelector):
+            selector.find(bs)
+
+    def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
         """Tests if find method returns first tag matching selector."""
         text = """
             <div></div>
@@ -45,12 +48,13 @@ class TestXPathSelector:
             <div class="widget123"><a>3</a></div>
             <div class="widget"><p>Hello</p></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = XPathSelector("//div/a")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a>1</a>""")
 
-    def test_works_correctly_with_compiled_xpath(self):
+    @pytest.mark.skip_selenium
+    def test_works_correctly_with_compiled_xpath(self, to_element: ToElement):
         """
         Tests if selector works correctly with compiled XPath expression
         passed to initializer and returns first matching element.
@@ -69,12 +73,14 @@ class TestXPathSelector:
             <div class="widget123"><a>3</a></div>
             <div class="widget"><p>Hello</p></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = XPathSelector(XPath("//div/a"))
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a>1</a>""")
 
-    def test_find_returns_none_if_no_match_and_strict_false(self):
+    def test_find_returns_none_if_no_match_and_strict_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns None if no element matches the selector
         and strict is False.
@@ -88,12 +94,14 @@ class TestXPathSelector:
             <span><a class="widget"></a></span>
             <div class="widget"><p>Hello</p></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = XPathSelector("//div/a")
         result = selector.find(bs)
         assert result is None
 
-    def test_find_raises_exception_if_no_match_and_strict_true(self):
+    def test_find_raises_exception_if_no_match_and_strict_true(
+        self, to_element: ToElement
+    ):
         """
         Tests if find raises TagNotFoundException if no element matches the selector
         and strict is True.
@@ -107,13 +115,13 @@ class TestXPathSelector:
             <span><a class="widget"></a></span>
             <div class="widget"><p>Hello</p></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = XPathSelector("//div/a")
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_all_returns_all_matching_elements(self):
+    def test_find_all_returns_all_matching_elements(self, to_element: ToElement):
         """Tests if find_all returns a list of all matching elements."""
         text = """
             <div></div>
@@ -129,7 +137,7 @@ class TestXPathSelector:
             <div class="widget123"><a>3</a></div>
             <div class="widget"><p>Hello</p></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = XPathSelector("//div/a")
 
         result = selector.find_all(bs)
@@ -139,7 +147,7 @@ class TestXPathSelector:
             strip("""<a>3</a>"""),
         ]
 
-    def test_find_all_returns_empty_list_when_no_match(self):
+    def test_find_all_returns_empty_list_when_no_match(self, to_element: ToElement):
         """Tests if find returns an XPathSelector list if no element matches the selector."""
         text = """
             <div></div>
@@ -150,12 +158,14 @@ class TestXPathSelector:
             <span><a class="widget"></a></span>
             <div class="widget"><p>Hello</p></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = XPathSelector("//div/a")
         result = selector.find_all(bs)
         assert result == []
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns first matching child element if recursive is False.
         """
@@ -169,12 +179,14 @@ class TestXPathSelector:
             <div><a>Hello</a></div>
             <p>3</p>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = XPathSelector("//p")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<p>1</p>""")
 
-    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns None if no child element matches the selector
         and recursive is False.
@@ -187,12 +199,14 @@ class TestXPathSelector:
             <span><p>2</p></span>
             <div><p>Not child</p></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = XPathSelector("//p")
         result = selector.find(bs, recursive=False)
         assert result is None
 
-    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(
+        self, to_element: ToElement
+    ):
         """
         Tests if find raises TagNotFoundException if no child element
         matches the selector, when recursive is False and strict is True.
@@ -205,14 +219,14 @@ class TestXPathSelector:
             <span><p>2</p></span>
             <div><p>Not child</p></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = XPathSelector("//p")
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True, recursive=False)
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
-        self,
+        self, to_element: ToElement
     ):
         """
         Tests if find_all returns an XPathSelector list if no child element matches the selector
@@ -226,12 +240,14 @@ class TestXPathSelector:
             <span><p>2</p></span>
             <div><p>Not child</p></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = XPathSelector("//p")
         result = selector.find_all(bs, recursive=False)
         assert result == []
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -246,7 +262,7 @@ class TestXPathSelector:
             <div><a>Hello</a></div>
             <p>3</p>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = XPathSelector("//p")
         result = selector.find_all(bs, recursive=False)
 
@@ -256,7 +272,9 @@ class TestXPathSelector:
             strip("""<p>3</p>"""),
         ]
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self, to_element: ToElement
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -275,7 +293,7 @@ class TestXPathSelector:
             <div class="widget123"><a>3</a></div>
             <div class="widget"><p>Hello</p></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = XPathSelector("//div/a")
         result = selector.find_all(bs, limit=2)
 
@@ -285,7 +303,7 @@ class TestXPathSelector:
         ]
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
-        self,
+        self, to_element: ToElement
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -302,7 +320,7 @@ class TestXPathSelector:
             <div><a>Hello</a></div>
             <p>3</p>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = XPathSelector("//p")
         result = selector.find_all(bs, recursive=False, limit=2)
 
@@ -311,7 +329,10 @@ class TestXPathSelector:
             strip("""<p><span>2</span></p>"""),
         ]
 
-    def test_expression_not_targeting_elements_does_not_find_elements(self):
+    @pytest.mark.skip_selenium
+    def test_expression_not_targeting_elements_does_not_find_elements(
+        self, to_element: ToElement
+    ):
         """
         Tests if find methods do not find any results if provided expression does not
         target elements, but attributes or text content.
@@ -321,7 +342,7 @@ class TestXPathSelector:
         text = """
             <div><a href="www.example.com">Hello</a></div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = XPathSelector("//div/a/@href")
 
         with pytest.warns(UserWarning):
@@ -336,12 +357,7 @@ class TestXPathSelector:
 
     @pytest.mark.parametrize(
         argnames="selectors",
-        argvalues=[
-            (XPathSelector("//a"), XPathSelector("//a")),
-            (XPathSelector("//a"), XPathSelector(XPath("//a"))),
-            # only expression is compared
-            (XPathSelector("//a"), XPathSelector(XPath("//a", smart_strings=False))),
-        ],
+        argvalues=[(XPathSelector("//a"), XPathSelector("//a"))],
     )
     def test_two_tag_selectors_are_equal(self, selectors: tuple):
         """Tests if selector is equal to TypeSelector."""

@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Iterable
-from typing import Any, Generic, Optional, Pattern, TypeVar, Union
+from typing import Any, Generic, Optional, Pattern, Self, TypeVar, Union
 
 import soupsavvy.exceptions as exc
 
@@ -124,10 +124,7 @@ class TagSearcher(ABC):
         )
 
 
-T = TypeVar("T", bound="IElement")
-
-
-class IElement(ABC, Generic[T]):
+class IElement(ABC):
     @abstractmethod
     def find_all(
         self,
@@ -135,30 +132,41 @@ class IElement(ABC, Generic[T]):
         attrs: Optional[dict[str, Union[str, Pattern[str]]]] = None,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[T]:
+    ) -> list[Self]:
+        raise NotImplementedError("Method not implemented")
+
+    @classmethod
+    def from_node(cls, node: Any) -> Self:
+        raise NotImplementedError("Method not implemented")
+
+    @property
+    def node(self) -> Any:
+        return None
+
+    def get(self) -> Any:
+        return self.node
+
+    @abstractmethod
+    def find_next_siblings(self, limit: Optional[int] = None) -> list[Self]:
         raise NotImplementedError("Method not implemented")
 
     @abstractmethod
-    def find_next_siblings(self, limit: Optional[int] = None) -> list[T]:
-        raise NotImplementedError("Method not implemented")
-
-    @abstractmethod
-    def find_ancestors(self, limit: Optional[int] = None) -> list[T]:
+    def find_ancestors(self, limit: Optional[int] = None) -> list[Self]:
         raise NotImplementedError("Method not implemented")
 
     @property
     @abstractmethod
-    def children(self) -> Iterable[T]:
+    def children(self) -> Iterable[Self]:
         raise NotImplementedError("Method not implemented")
 
     @property
     @abstractmethod
-    def descendants(self) -> Iterable[T]:
+    def descendants(self) -> Iterable[Self]:
         raise NotImplementedError("Method not implemented")
 
     @property
     @abstractmethod
-    def parent(self) -> Optional[T]:
+    def parent(self) -> Optional[Self]:
         raise NotImplementedError("Method not implemented")
 
     @abstractmethod
@@ -185,5 +193,20 @@ class IElement(ABC, Generic[T]):
     def prettify(self) -> str:
         return str(self)
 
-    def css(self, selector: str) -> Callable[[IElement], list[IElement]]:
+    def css(self, selector) -> SelectionApi:
         raise NotImplementedError("Method not implemented")
+
+    def xpath(self, selector) -> SelectionApi:
+        raise NotImplementedError("Method not implemented")
+
+
+class SelectionApi(ABC):
+    def __init__(self, selector) -> None:
+        self.selector = selector
+
+    @abstractmethod
+    def select(self, element: Element) -> list[Element]:
+        raise NotImplementedError("Method not implemented")
+
+
+Element = TypeVar("Element", bound=IElement)

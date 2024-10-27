@@ -11,7 +11,7 @@ from typing import Type
 import pytest
 
 from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
-from soupsavvy.interfaces import IElement, T
+from soupsavvy.interfaces import Element, IElement
 from soupsavvy.selectors.relative import (
     Anchor,
     RelativeAncestor,
@@ -25,9 +25,9 @@ from soupsavvy.selectors.relative import (
 from tests.soupsavvy.conftest import (
     MockDivSelector,
     MockLinkSelector,
-    find_body_element,
+    ToElement,
     strip,
-    to_element,
+    to_soup,
 )
 
 
@@ -227,7 +227,7 @@ class TestRelativeChild(BaseRelativeCombinatorTest):
             <a>2</a>
             <a>3</a>
         """
-        return find_body_element(to_element(text))
+        return to_soup(text)
 
     @property
     def no_match(self) -> IElement:
@@ -237,7 +237,7 @@ class TestRelativeChild(BaseRelativeCombinatorTest):
             </div>
             <span></span>
         """
-        return find_body_element(to_element(text))
+        return to_soup(text)
 
 
 class TestRelativeDescendant(BaseRelativeCombinatorTest):
@@ -256,7 +256,7 @@ class TestRelativeDescendant(BaseRelativeCombinatorTest):
             </span>
             <a>3</a>
         """
-        return find_body_element(to_element(text))
+        return to_soup(text)
 
     @property
     def no_match(self) -> IElement:
@@ -266,7 +266,7 @@ class TestRelativeDescendant(BaseRelativeCombinatorTest):
             </div>
             <span></span>
         """
-        return find_body_element(to_element(text))
+        return to_soup(text)
 
 
 class TestRelativeSubsequentSibling(BaseRelativeCombinatorTest):
@@ -287,7 +287,7 @@ class TestRelativeSubsequentSibling(BaseRelativeCombinatorTest):
             <p>Not a link</p>
             <a>3</a>
         """
-        return to_element(text).find_all("div")[0]
+        return to_soup(text).find_all("div")[0]
 
     @property
     def no_match(self) -> IElement:
@@ -299,7 +299,7 @@ class TestRelativeSubsequentSibling(BaseRelativeCombinatorTest):
             </span>
             <p>Not a link</p>
         """
-        return to_element(text).find_all("div")[0]
+        return to_soup(text).find_all("div")[0]
 
 
 class TestRelativeNextSibling(BaseRelativeCombinatorTest):
@@ -325,7 +325,7 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
             <a>Not next sibling</a>
             <p>Not a link</p>
         """
-        return to_element(text).find_all("div")[0]
+        return to_soup(text).find_all("div")[0]
 
     @property
     def no_match(self) -> IElement:
@@ -337,7 +337,7 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
                 <a>Not a sibling</a>
             </span>
         """
-        return to_element(text).find_all("div")[0]
+        return to_soup(text).find_all("div")[0]
 
     @pytest.mark.parametrize(
         argnames="recursive",
@@ -508,7 +508,9 @@ class TestRelativeSelectorEquality:
         selector, they are equal.
         """
 
-        def find_all(self, tag: T, recursive: bool = True, limit=None) -> list[T]:
+        def find_all(
+            self, tag: Element, recursive: bool = True, limit=None
+        ) -> list[Element]:
             return []
 
     class MockRelativeSelectorNotEqual(RelativeSelector):
@@ -518,7 +520,9 @@ class TestRelativeSelectorEquality:
         different type, they are not equal.
         """
 
-        def find_all(self, tag: T, recursive: bool = True, limit=None) -> list[T]:
+        def find_all(
+            self, tag: Element, recursive: bool = True, limit=None
+        ) -> list[Element]:
             return []
 
     @pytest.mark.parametrize(
@@ -593,7 +597,9 @@ class TestRelativeParent:
         with pytest.raises(NotSoupSelectorException):
             RelativeParent("p")  # type: ignore
 
-    def test_returns_none_or_empty_list_if_no_ancestors(self, selector: RelativeParent):
+    def test_returns_none_or_empty_list_if_no_ancestors(
+        self, selector: RelativeParent, to_element: ToElement
+    ):
         """
         Tests if find method returns None if tag does not have any ancestors,
         in such case, it must be the root element (html).
@@ -611,7 +617,7 @@ class TestRelativeParent:
         ids=["recursive", "not_recursive"],
     )
     def test_find_returns_first_tag_matching_selector(
-        self, selector: RelativeParent, recursive: bool
+        self, selector: RelativeParent, recursive: bool, to_element: ToElement
     ):
         """Tests if find method returns first tag matching selector."""
         text = """
@@ -630,7 +636,7 @@ class TestRelativeParent:
         ids=["recursive", "not_recursive"],
     )
     def test_find_returns_none_if_no_match_and_strict_false(
-        self, selector: RelativeParent, recursive: bool
+        self, selector: RelativeParent, recursive: bool, to_element: ToElement
     ):
         """
         Tests if find returns None if no element matches the selector
@@ -650,7 +656,7 @@ class TestRelativeParent:
         ids=["recursive", "not_recursive"],
     )
     def test_find_raises_exception_if_no_match_and_strict_true(
-        self, selector: RelativeParent, recursive: bool
+        self, selector: RelativeParent, recursive: bool, to_element: ToElement
     ):
         """
         Tests if find raises TagNotFoundException if no element matches the selector
@@ -671,7 +677,7 @@ class TestRelativeParent:
         ids=["recursive", "not_recursive"],
     )
     def test_find_all_returns_empty_list_when_no_match(
-        self, selector: RelativeParent, recursive: bool
+        self, selector: RelativeParent, recursive: bool, to_element: ToElement
     ):
         """Tests if find returns an empty list if no element matches the selector."""
         text = """
@@ -688,7 +694,7 @@ class TestRelativeParent:
         ids=["recursive", "not_recursive"],
     )
     def test_find_all_returns_all_matching_elements(
-        self, selector: RelativeParent, recursive: bool
+        self, selector: RelativeParent, recursive: bool, to_element: ToElement
     ):
         """Tests if find_all returns a list of all matching elements."""
         text = """
@@ -724,7 +730,7 @@ class TestRelativeAncestor:
             RelativeAncestor("p")  # type: ignore
 
     def test_returns_none_or_empty_list_if_no_ancestors(
-        self, selector: RelativeAncestor
+        self, selector: RelativeAncestor, to_element: ToElement
     ):
         """
         Tests if find method returns None if tag does not have any ancestors,
@@ -743,7 +749,7 @@ class TestRelativeAncestor:
         ids=["recursive", "not_recursive"],
     )
     def test_find_returns_first_tag_matching_selector(
-        self, selector: RelativeAncestor, recursive: bool
+        self, selector: RelativeAncestor, recursive: bool, to_element: ToElement
     ):
         """Tests if find method returns first tag matching selector."""
         text = """
@@ -762,7 +768,7 @@ class TestRelativeAncestor:
         ids=["recursive", "not_recursive"],
     )
     def test_find_returns_none_if_no_match_and_strict_false(
-        self, selector: RelativeAncestor, recursive: bool
+        self, selector: RelativeAncestor, recursive: bool, to_element: ToElement
     ):
         """
         Tests if find returns None if no element matches the selector
@@ -782,7 +788,7 @@ class TestRelativeAncestor:
         ids=["recursive", "not_recursive"],
     )
     def test_find_raises_exception_if_no_match_and_strict_true(
-        self, selector: RelativeAncestor, recursive: bool
+        self, selector: RelativeAncestor, recursive: bool, to_element: ToElement
     ):
         """
         Tests if find raises TagNotFoundException if no element matches the selector
@@ -803,7 +809,7 @@ class TestRelativeAncestor:
         ids=["recursive", "not_recursive"],
     )
     def test_find_all_returns_empty_list_when_no_match(
-        self, selector: RelativeAncestor, recursive: bool
+        self, selector: RelativeAncestor, recursive: bool, to_element: ToElement
     ):
         """Tests if find returns an empty list if no element matches the selector."""
         text = """
@@ -820,7 +826,7 @@ class TestRelativeAncestor:
         ids=["recursive", "not_recursive"],
     )
     def test_find_all_returns_all_matching_elements(
-        self, selector: RelativeAncestor, recursive: bool
+        self, selector: RelativeAncestor, recursive: bool, to_element: ToElement
     ):
         """Tests if find_all returns a list of all matching elements."""
         text = """
@@ -840,7 +846,7 @@ class TestRelativeAncestor:
         ids=["recursive", "not_recursive"],
     )
     def test_find_all_returns_only_x_elements_when_limit_is_set(
-        self, selector: RelativeAncestor, recursive: bool
+        self, selector: RelativeAncestor, recursive: bool, to_element: ToElement
     ):
         """
         Tests if find_all returns only x elements when limit is set.

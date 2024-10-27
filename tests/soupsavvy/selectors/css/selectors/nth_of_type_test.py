@@ -6,11 +6,12 @@ import pytest
 
 from soupsavvy.exceptions import InvalidCSSSelector, TagNotFoundException
 from soupsavvy.selectors.css.selectors import NthOfType
-from tests.soupsavvy.conftest import find_body_element, strip, to_element
+from tests.soupsavvy.conftest import ToElement, strip
 
 
 @pytest.mark.css
 @pytest.mark.selector
+@pytest.mark.skip_lxml
 class TestNthOfType:
     """Class with unit tests for NthOfType tag selector."""
 
@@ -18,7 +19,10 @@ class TestNthOfType:
         """Tests if selector property returns correct value."""
         assert NthOfType("2n").css == ":nth-of-type(2n)"
 
-    def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
+    def test_find_all_returns_all_tags_for_selector_without_tag_name(
+        self,
+        to_element: ToElement,
+    ):
         """Tests if find_all method returns all tags for selector without tag name."""
         text = """
             <div></div>
@@ -34,7 +38,7 @@ class TestNthOfType:
             <a>Hello</a>
             <a>5</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = NthOfType("2n")
         result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -45,7 +49,7 @@ class TestNthOfType:
             strip("""<a>5</a>"""),
         ]
 
-    def test_find_returns_first_tag_matching_selector(self):
+    def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
         """Tests if find method returns first tag matching selector."""
         text = """
             <div></div>
@@ -66,7 +70,9 @@ class TestNthOfType:
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget">1</a>""")
 
-    def test_find_returns_none_if_no_match_and_strict_false(self):
+    def test_find_returns_none_if_no_match_and_strict_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns None if no element matches the selector
         and strict is False.
@@ -84,7 +90,10 @@ class TestNthOfType:
         result = selector.find(bs)
         assert result is None
 
-    def test_find_raises_exception_if_no_match_and_strict_true(self):
+    def test_find_raises_exception_if_no_match_and_strict_true(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no element matches the selector
         and strict is True.
@@ -103,7 +112,7 @@ class TestNthOfType:
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_all_returns_empty_list_when_no_match(self):
+    def test_find_all_returns_empty_list_when_no_match(self, to_element: ToElement):
         """Tests if find returns an empty list if no element matches the selector."""
         text = """
             <div>
@@ -118,7 +127,10 @@ class TestNthOfType:
         result = selector.find_all(bs)
         assert result == []
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns first matching child element if recursive is False.
         """
@@ -136,12 +148,15 @@ class TestNthOfType:
             <a>Hello</a>
             <a><p>3</p></a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = NthOfType("2n")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<div>1</div>""")
 
-    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns None if no child element matches the selector
         and recursive is False.
@@ -154,12 +169,15 @@ class TestNthOfType:
             <p></p>
             <a></a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = NthOfType("2n")
         result = selector.find(bs, recursive=False)
         assert result is None
 
-    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no child element
         matches the selector, when recursive is False and strict is True.
@@ -172,7 +190,7 @@ class TestNthOfType:
             <p></p>
             <a></a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = NthOfType("3n")
 
         with pytest.raises(TagNotFoundException):
@@ -180,6 +198,7 @@ class TestNthOfType:
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns an empty list if no child element matches the selector
@@ -193,12 +212,15 @@ class TestNthOfType:
             <p></p>
             <a></a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = NthOfType("3n")
         result = selector.find_all(bs, recursive=False)
         assert result == []
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -217,7 +239,7 @@ class TestNthOfType:
             <a>Hello</a>
             <a><p>3</p></a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = NthOfType("2n")
         result = selector.find_all(bs, recursive=False)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -226,7 +248,10 @@ class TestNthOfType:
             strip("""<a><p>3</p></a>"""),
         ]
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -255,6 +280,7 @@ class TestNthOfType:
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -275,7 +301,7 @@ class TestNthOfType:
             <a>Hello</a>
             <a><p>3</p></a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = NthOfType("2n")
         result = selector.find_all(bs, recursive=False, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -283,7 +309,7 @@ class TestNthOfType:
             strip("""<a class="widget">2</a>"""),
         ]
 
-    def test_raises_exception_when_invalid_css_selector(self):
+    def test_raises_exception_when_invalid_css_selector(self, to_element: ToElement):
         """
         Tests if InvalidCSSSelector exception is raised in find methods,
         when invalid css selector is passed.
@@ -313,7 +339,7 @@ class TestNthOfType:
         ],
     )
     def test_returns_elements_based_on_nth_selector(
-        self, nth: str, expected: list[int]
+        self, to_element: ToElement, nth: str, expected: list[int]
     ):
         """
         Tests if find_all returns all elements with specified tag name
@@ -333,7 +359,7 @@ class TestNthOfType:
             <p>text 6</p>
             <a>text 6</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = NthOfType(nth)
         results = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), results)) == list(

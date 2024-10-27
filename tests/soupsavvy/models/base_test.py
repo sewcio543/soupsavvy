@@ -31,9 +31,8 @@ from tests.soupsavvy.conftest import (
     MockLinkSelector,
     MockPlus10Operation,
     MockTextOperation,
-    find_body_element,
+    ToElement,
     strip,
-    to_element,
 )
 
 SCOPE = MockDivSelector()
@@ -482,7 +481,7 @@ class TestBaseModel:
         )
         assert str(model) == expected == repr(model)
 
-    def test_find_returns_first_found_model_instance(self):
+    def test_find_returns_first_found_model_instance(self, to_element: ToElement):
         """Tests if find method returns model instance within first found scope."""
         text = """
             <span>
@@ -509,7 +508,9 @@ class TestBaseModel:
         assert result.price == 10
         assert result.attributes == {"title": "Title", "price": 10}
 
-    def test_find_returns_none_if_no_scope_found_and_strict_false(self):
+    def test_find_returns_none_if_no_scope_found_and_strict_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find method returns None if no scope is found in provided bs object
         and strict is set to False. It should not raise any exception.
@@ -527,7 +528,9 @@ class TestBaseModel:
         result = selector.find(bs)
         assert result is None
 
-    def test_find_raises_error_when_no_scope_found_and_strict_true(self):
+    def test_find_raises_error_when_no_scope_found_and_strict_true(
+        self, to_element: ToElement
+    ):
         """
         Tests if ModelNotFoundException is raised when no scope is found
         in provided bs object and strict is set to True. Strict option works similar way
@@ -548,7 +551,7 @@ class TestBaseModel:
             selector.find(bs, strict=True)
 
     def test_find_returns_none_if_no_scope_found_with_recursive_false_and_strict_false(
-        self,
+        self, to_element: ToElement
     ):
         """
         Tests if find method returns None if no scope is found in provided bs object,
@@ -564,13 +567,13 @@ class TestBaseModel:
             <a>Title</a>
             <p class="widget">20</p>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs, recursive=False)
         assert result is None
 
     def test_find_raises_error_if_no_scope_found_with_recursive_false_and_strict_true(
-        self,
+        self, to_element: ToElement
     ):
         """
         Tests if ModelNotFoundException is raised when no scope is found
@@ -586,13 +589,15 @@ class TestBaseModel:
             <a>Not in scope</a>
             <p class="widget">20</p>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = MockModel
 
         with pytest.raises(exc.ModelNotFoundException):
             selector.find(bs, strict=True, recursive=False)
 
-    def test_find_returns_first_matched_instance_with_recursive_false(self):
+    def test_find_returns_first_matched_instance_with_recursive_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find method returns matched instance within first found scope
         when recursive is set to False.
@@ -611,12 +616,14 @@ class TestBaseModel:
                 <p class="widget">20</p>
             </div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs, recursive=False)
         assert result == MockModel(title="Title", price=20)
 
-    def test_find_uses_recursive_search_inside_scope_element_with_recursive_true(self):
+    def test_find_uses_recursive_search_inside_scope_element_with_recursive_true(
+        self, to_element: ToElement
+    ):
         """
         Tests if find method of model uses recursive search inside scope element.
         Recursive parameter only applies to search for scope element.
@@ -639,12 +646,14 @@ class TestBaseModel:
                 </div>
             </span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=20)
 
-    def test_find_uses_recursive_search_inside_scope_element_with_recursive_false(self):
+    def test_find_uses_recursive_search_inside_scope_element_with_recursive_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find method of model uses recursive search inside scope element.
         Recursive is set to False, so only direct children are match for scope,
@@ -668,14 +677,14 @@ class TestBaseModel:
                 </span>
             </div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = MockModel
         result = selector.find(bs, recursive=False)
         assert result == MockModel(title="Title", price=20)
 
     @pytest.mark.parametrize(argnames="strict", argvalues=[True, False])
     def test_find_raises_error_when_extraction_of_field_in_scope_failed(
-        self, strict: bool
+        self, strict: bool, to_element: ToElement
     ):
         """
         Tests if FieldExtractionException is raised when extraction of field in scope
@@ -707,7 +716,7 @@ class TestBaseModel:
 
     @pytest.mark.parametrize(argnames="strict", argvalues=[True, False])
     def test_find_raises_error_when_field_element_not_found_and_operation_failed(
-        self, strict: bool
+        self, strict: bool, to_element: ToElement
     ):
         """
         Tests if FieldExtractionException is raised when field element is not found
@@ -734,7 +743,7 @@ class TestBaseModel:
 
     @pytest.mark.parametrize(argnames="strict", argvalues=[True, False])
     def test_find_allows_empty_attributes_of_model_if_errors_handled_properly(
-        self, strict: bool
+        self, strict: bool, to_element: ToElement
     ):
         """
         Tests if find method allows empty attributes of model
@@ -758,7 +767,9 @@ class TestBaseModel:
         result = selector.find(bs, strict=strict)
         assert result == MockAllowEmptyTitle(title=None, price=10)
 
-    def test_find_all_returns_list_of_models_from_all_found_scopes(self):
+    def test_find_all_returns_list_of_models_from_all_found_scopes(
+        self, to_element: ToElement
+    ):
         """
         Tests if find_all method returns a list of models extracted
         from all found scopes.
@@ -799,7 +810,9 @@ class TestBaseModel:
             MockModel(title="Title3", price=30),
         ]
 
-    def test_find_all_returns_empty_list_if_no_scope_was_found(self):
+    def test_find_all_returns_empty_list_if_no_scope_was_found(
+        self, to_element: ToElement
+    ):
         """
         Tests if find_all method returns an empty list
         if no scope was found in provided bs object.
@@ -818,7 +831,7 @@ class TestBaseModel:
         assert result == []
 
     def test_find_all_returns_empty_list_if_no_scope_was_found_with_recursive_false(
-        self,
+        self, to_element: ToElement
     ):
         """
         Tests if find_all method returns an empty list
@@ -838,13 +851,13 @@ class TestBaseModel:
                 </div>
             </span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = MockModel
         result = selector.find_all(bs, recursive=False)
         assert result == []
 
     def test_find_all_returns_list_of_models_from_all_found_scopes_with_recursive_false(
-        self,
+        self, to_element: ToElement
     ):
         """
         Tests if find_all method returns a list of models
@@ -879,7 +892,7 @@ class TestBaseModel:
                 </span>
             </div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = MockModel
         result = selector.find_all(bs, recursive=False)
         assert result == [
@@ -887,7 +900,7 @@ class TestBaseModel:
             MockModel(title="Title2", price=20),
         ]
 
-    def test_find_all_returns_first_x_models_with_limit(self):
+    def test_find_all_returns_first_x_models_with_limit(self, to_element: ToElement):
         """
         Tests if find_all method returns first x models from found scopes when
         limit is specified.
@@ -922,7 +935,9 @@ class TestBaseModel:
             MockModel(title="Title2", price=20),
         ]
 
-    def test_find_all_returns_first_x_models_with_limit_and_recursive_false(self):
+    def test_find_all_returns_first_x_models_with_limit_and_recursive_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find_all method returns first x models from found scopes when
         limit is specified and recursive is set to False.
@@ -954,7 +969,7 @@ class TestBaseModel:
                 <p class="widget">30</p>
             </div>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = MockModel
         result = selector.find_all(bs, recursive=False, limit=2)
         assert result == [
@@ -962,7 +977,9 @@ class TestBaseModel:
             MockModel(title="Title2", price=20),
         ]
 
-    def test_find_all_raises_error_if_any_model_extraction_failed(self):
+    def test_find_all_raises_error_if_any_model_extraction_failed(
+        self, to_element: ToElement
+    ):
         """
         Tests if FieldExtractionException is raised when extraction of any model failed
         during find_all method.
@@ -983,7 +1000,9 @@ class TestBaseModel:
         with pytest.raises(exc.FieldExtractionException, match="price"):
             selector.find_all(bs)
 
-    def test_find_all_allows_empty_attribute_if_handled_properly(self):
+    def test_find_all_allows_empty_attribute_if_handled_properly(
+        self, to_element: ToElement
+    ):
         """
         Tests if find_all method allows empty attributes of model if fields are defined
         in a way, that it handles exceptions properly.
@@ -1006,7 +1025,7 @@ class TestBaseModel:
             MockAllowEmptyTitle(title=None, price=20),
         ]
 
-    def test_field_can_be_another_model_class(self):
+    def test_field_can_be_another_model_class(self, to_element: ToElement):
         """
         Tests if field can be another model class, that inherits from BaseModel.
         It is allowed, as model is TagSearcher and can be used as field.
@@ -1496,7 +1515,9 @@ class TestBaseModelIntegration:
     """
 
     @pytest.mark.parametrize(argnames="strict", argvalues=[True, False])
-    def test_raises_error_if_required_field_is_none(self, strict: bool):
+    def test_raises_error_if_required_field_is_none(
+        self, strict: bool, to_element: ToElement
+    ):
         """
         Tests if FieldExtractionException is raised when required field is None.
         Required field must be present in scope. It does not matter if strict was set
@@ -1521,7 +1542,7 @@ class TestBaseModelIntegration:
         with pytest.raises(exc.FieldExtractionException, match="title"):
             selector.find(bs, strict=strict)
 
-    def test_returns_default_if_extracted_field_is_none(self):
+    def test_returns_default_if_extracted_field_is_none(self, to_element: ToElement):
         """
         Tests if default value is returned if extracted field, which selector is wrapped
         with Default, is None. If any error was raised by selector,
@@ -1547,7 +1568,7 @@ class TestBaseModelIntegration:
         result = selector.find(bs)
         assert result == MockModel(title="DefaultTitle", price=10)
 
-    def test_default_propagates_errors_of_selector(self):
+    def test_default_propagates_errors_of_selector(self, to_element: ToElement):
         """
         Tests if Default propagates errors of selector, so if any exception was raised
         by selector, it raises FieldExtractionException. Default is only applied
@@ -1573,7 +1594,9 @@ class TestBaseModelIntegration:
         with pytest.raises(exc.FieldExtractionException, match="title"):
             selector.find(bs)
 
-    def test_default_does_not_overwrite_field_value_if_found(self):
+    def test_default_does_not_overwrite_field_value_if_found(
+        self, to_element: ToElement
+    ):
         """
         Tests if Default does not overwrite field value if it was found by selector.
         Default is applied only if selector returned None.
@@ -1596,7 +1619,9 @@ class TestBaseModelIntegration:
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=10)
 
-    def test_failing_operation_is_cancelled_with_suppress_and_none_returned(self):
+    def test_failing_operation_is_cancelled_with_suppress_and_none_returned(
+        self, to_element: ToElement
+    ):
         """
         Tests if failing operation is cancelled with Suppress and None is returned.
         Suppress cancels any operation error and returns None instead. In this case,
@@ -1624,7 +1649,7 @@ class TestBaseModelIntegration:
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=None)
 
-    def test_operation_is_cancelled_and_field_has_default(self):
+    def test_operation_is_cancelled_and_field_has_default(self, to_element: ToElement):
         """
         Tests if operation is cancelled with Suppress and field has default value,
         when selector is wrapped with Default. Suppress cancels MockIntOperation error,
@@ -1653,7 +1678,7 @@ class TestBaseModelIntegration:
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=0)
 
-    def test_skip_none_is_applied_to_skip_operation(self):
+    def test_skip_none_is_applied_to_skip_operation(self, to_element: ToElement):
         """
         Tests if SkipNone is applied to skip operation and None is returned.
         SkipNone is applied to MockPlus10Operation, which will raise error if previous
@@ -1682,7 +1707,7 @@ class TestBaseModelIntegration:
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=None)
 
-    def test_skip_none_propagates_value_if_not_none(self):
+    def test_skip_none_propagates_value_if_not_none(self, to_element: ToElement):
         """
         Tests if SkipNone propagates value, and executes operation if value is not None.
         This way, operation can be optionally executed, if previous step did not fail.
@@ -1709,7 +1734,9 @@ class TestBaseModelIntegration:
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=10)
 
-    def test_all_returns_multiple_elements_in_list_for_field(self):
+    def test_all_returns_multiple_elements_in_list_for_field(
+        self, to_element: ToElement
+    ):
         """Tests if All returns multiple elements in list for field."""
 
         class MockModel(BaseModel):
@@ -1733,7 +1760,9 @@ class TestBaseModelIntegration:
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=[10, 20, 30])
 
-    def test_all_returns_empty_list_if_nothing_found_for_field(self):
+    def test_all_returns_empty_list_if_nothing_found_for_field(
+        self, to_element: ToElement
+    ):
         """
         Tests if All returns empty list if nothing found for field
         without raising any exception, as it wraps find_all method.
@@ -1757,7 +1786,7 @@ class TestBaseModelIntegration:
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=[])
 
-    def test_ifelse_operation_evaluates_condition_properly(self):
+    def test_ifelse_operation_evaluates_condition_properly(self, to_element: ToElement):
         """
         Tests if IfElse operation evaluates condition properly and applies
         correct operation to field. In this case, for title field, condition
@@ -1790,7 +1819,9 @@ class TestBaseModelIntegration:
         result = selector.find(bs)
         assert result == MockModel(title="TITLE", price=30)
 
-    def test_ifelse_operation_conditionally_breaks_operation_pipeline(self):
+    def test_ifelse_operation_conditionally_breaks_operation_pipeline(
+        self, to_element: ToElement
+    ):
         """
         Tests if IfElse operation conditionally breaks operation pipeline
         if Break operation is used and executed. In this case, only
@@ -1831,7 +1862,7 @@ class TestBaseModelIntegration:
         result = selector.find(bs)
         assert result == MockModel(title="Title", price=5)
 
-    def test_ifelse_operation_conditionally_skip_operation(self):
+    def test_ifelse_operation_conditionally_skip_operation(self, to_element: ToElement):
         """
         Tests if IfElse operation conditionally skips operation if Continue
         operation is used. In this case, for title field, Continue is executed,
@@ -1954,7 +1985,7 @@ class TestBaseModelIntegration:
         assert migrated.title.name == "Title"  # type: ignore
         assert migrated.price == 10  # type: ignore
 
-    def test_works_with_soupsavvy_operations_as_fields(self):
+    def test_works_with_soupsavvy_operations_as_fields(self, to_element: ToElement):
         """
         Tests if model works with soupsavvy operations as fields.
         Operations are operation-searcher mixins and can be used as fields
@@ -1966,7 +1997,6 @@ class TestBaseModelIntegration:
 
             title = TITLE_SELECTOR
             link = Href()
-            #! TODO
             id_ = Operation(lambda x: x.get_attribute_list("id")[0])
             name = Operation(lambda x: x.get_attribute_list("name")[0]) | Operation(
                 lambda x: x.upper()
@@ -1974,7 +2004,7 @@ class TestBaseModelIntegration:
             text = Text(strip=True, separator="--")
 
         text = """
-            <div id="book1", href="www.book.com" name="Joe">
+            <div id="book1" href="www.book.com" name="Joe">
                 <a>Title</a>
                 <p>Hello</p>
             </div>
@@ -2090,7 +2120,7 @@ class TestBaseModelIntegration:
         assert isinstance(migrated, MockMigrationModel)
         assert migrated == MockMigrationModel()
 
-    def test_find_methods_work_properly_on_field(self):
+    def test_find_methods_work_properly_on_field(self, to_element: ToElement):
         """
         Tests if find and find_all methods work properly when model field
         is directly defined as Field.
@@ -2134,7 +2164,7 @@ class TestField:
     as well, but, it's worth to have unit tests as it can be used independently.
     """
 
-    def test_find_returns_first_tag_matching_selector(self):
+    def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
         """Tests if find method returns first tag matching selector."""
         text = """
             <div href="github"></div>
@@ -2149,7 +2179,9 @@ class TestField:
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget">1</a>""")
 
-    def test_find_returns_none_if_no_match_and_strict_false(self):
+    def test_find_returns_none_if_no_match_and_strict_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns None if no element matches the selector
         and strict is False.
@@ -2167,7 +2199,9 @@ class TestField:
         result = selector.find(bs)
         assert result is None
 
-    def test_find_raises_exception_if_no_match_and_strict_true(self):
+    def test_find_raises_exception_if_no_match_and_strict_true(
+        self, to_element: ToElement
+    ):
         """
         Tests if find raises TagNotFoundException if no element matches the selector
         and strict is True.
@@ -2186,7 +2220,7 @@ class TestField:
         with pytest.raises(exc.TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_all_returns_empty_list_when_no_match(self):
+    def test_find_all_returns_empty_list_when_no_match(self, to_element: ToElement):
         """Tests if find returns an empty list if no element matches the selector."""
         text = """
             <div href="github"></div>
@@ -2201,7 +2235,7 @@ class TestField:
         result = selector.find_all(bs)
         assert result == []
 
-    def test_find_all_returns_all_matching_elements(self):
+    def test_find_all_returns_all_matching_elements(self, to_element: ToElement):
         """Tests if find_all returns a list of all matching elements."""
         text = """
             <div href="github"></div>
@@ -2221,7 +2255,9 @@ class TestField:
             strip("""<a>3</a>"""),
         ]
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns first matching child element if recursive is False.
         """
@@ -2235,12 +2271,14 @@ class TestField:
             <span>Hello</span>
             <a>3</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = Field(MockLinkSelector())
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a href="github">1</a>""")
 
-    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns None if no child element matches the selector
         and recursive is False.
@@ -2252,12 +2290,14 @@ class TestField:
             <div><a>Not child</a></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = Field(MockLinkSelector())
         result = selector.find(bs, recursive=False)
         assert result is None
 
-    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(
+        self, to_element: ToElement
+    ):
         """
         Tests if find raises TagNotFoundException if no child element
         matches the selector, when recursive is False and strict is True.
@@ -2269,13 +2309,15 @@ class TestField:
             <div><a>Not child</a></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = Field(MockLinkSelector())
 
         with pytest.raises(exc.TagNotFoundException):
             selector.find(bs, strict=True, recursive=False)
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -2290,7 +2332,7 @@ class TestField:
             <span>Hello</span>
             <a>3</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = Field(MockLinkSelector())
         result = selector.find_all(bs, recursive=False)
 
@@ -2301,7 +2343,7 @@ class TestField:
         ]
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
-        self,
+        self, to_element: ToElement
     ):
         """
         Tests if find_all returns an empty list if no child element matches the selector
@@ -2314,12 +2356,14 @@ class TestField:
             <div><a>Not child</a></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = Field(MockLinkSelector())
         result = selector.find_all(bs, recursive=False)
         assert result == []
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self, to_element: ToElement
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -2332,7 +2376,7 @@ class TestField:
                 <a>3</a>
             </span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = Field(MockLinkSelector())
         result = selector.find_all(bs, limit=2)
 
@@ -2342,7 +2386,7 @@ class TestField:
         ]
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
-        self,
+        self, to_element: ToElement
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -2359,7 +2403,7 @@ class TestField:
             <span>Hello</span>
             <a>3</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = Field(MockLinkSelector())
         result = selector.find_all(bs, recursive=False, limit=2)
 

@@ -7,9 +7,8 @@ from soupsavvy.selectors.nth.nth_soup_selector import NthOfSelector
 from tests.soupsavvy.conftest import (
     MockClassMenuSelector,
     MockDivSelector,
-    find_body_element,
+    ToElement,
     strip,
-    to_element,
 )
 
 
@@ -26,7 +25,10 @@ class TestNthOfSelector:
         with pytest.raises(NotSoupSelectorException):
             NthOfSelector("selector", "2n")  # type: ignore
 
-    def test_find_returns_first_tag_that_has_element_matching_single_selector(self):
+    def test_find_returns_first_tag_that_has_element_matching_single_selector(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find method returns the first tag that matches
         both the soup selector and the nth selector.
@@ -50,6 +52,7 @@ class TestNthOfSelector:
 
     def test_find_raises_exception_when_no_match_nth_selector(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find method raises TagNotFoundException when no tag is found
@@ -75,6 +78,7 @@ class TestNthOfSelector:
 
     def test_find_raises_exception_when_no_match_soup_selector(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find method raises TagNotFoundException when no tag is found
@@ -96,7 +100,10 @@ class TestNthOfSelector:
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_returns_none_if_no_tags_matches_nth_selector_in_not_strict_mode(self):
+    def test_find_returns_none_if_no_tags_matches_nth_selector_in_not_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find method returns None when no tag is found that matches
         both the soup selector and the nth selector in not strict mode.
@@ -120,6 +127,7 @@ class TestNthOfSelector:
 
     def test_find_returns_none_if_no_tags_matches_soup_selector_in_not_strict_mode(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find method returns None when no tag is found that matches
@@ -141,7 +149,7 @@ class TestNthOfSelector:
         result = selector.find(bs)
         assert result is None
 
-    def test_find_all_returns_all_matching_elements(self):
+    def test_find_all_returns_all_matching_elements(self, to_element: ToElement):
         """Tests if find_all returns a list of all matching elements."""
         text = """
             <a>Don't have</a>
@@ -171,7 +179,7 @@ class TestNthOfSelector:
         ]
         assert list(map(lambda x: strip(str(x)), result)) == excepted
 
-    def test_find_all_returns_empty_list_when_no_match(self):
+    def test_find_all_returns_empty_list_when_no_match(self, to_element: ToElement):
         """Tests if find returns an empty list if no element matches the selector."""
         text = """
             <a>Don't have</a>
@@ -187,7 +195,10 @@ class TestNthOfSelector:
         result = selector.find_all(bs)
         assert result == []
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """Tests if find returns first matching child element if recursive is False."""
         text = """
             <div class="widget"></div>
@@ -200,12 +211,15 @@ class TestNthOfSelector:
             <div>Hi Hi Hello</div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = NthOfSelector(MockClassMenuSelector(), "2")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<div class="menu">2</div>""")
 
-    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns None if no child element matches the selector
         and recursive is False.
@@ -220,12 +234,15 @@ class TestNthOfSelector:
             <div>Hi Hi Hello</div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = NthOfSelector(MockClassMenuSelector(), "2")
         result = selector.find(bs, recursive=False)
         assert result is None
 
-    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no child element
         matches the selector, when recursive is False and strict is True.
@@ -240,13 +257,16 @@ class TestNthOfSelector:
             <div>Hi Hi Hello</div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = NthOfSelector(MockClassMenuSelector(), "2")
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True, recursive=False)
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -268,7 +288,7 @@ class TestNthOfSelector:
             <p class="menu">5</p>
             <span id="menu">Hello</span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = NthOfSelector(MockClassMenuSelector(), "2n")
         results = selector.find_all(bs, recursive=False)
 
@@ -279,6 +299,7 @@ class TestNthOfSelector:
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns an empty list if no child element matches the selector
@@ -294,13 +315,16 @@ class TestNthOfSelector:
             <div>Hi Hi Hello</div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = NthOfSelector(MockClassMenuSelector(), "2")
 
         results = selector.find_all(bs, recursive=False)
         assert results == []
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 3 first in order elements are returned.
@@ -335,6 +359,7 @@ class TestNthOfSelector:
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -359,7 +384,7 @@ class TestNthOfSelector:
             <span id="menu">Hello</span>
         """
 
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = NthOfSelector(MockClassMenuSelector(), "2n+1")
         results = selector.find_all(bs, recursive=False, limit=2)
 
@@ -425,7 +450,7 @@ class TestNthOfSelector:
         ],
     )
     def test_returns_elements_based_on_nth_selector(
-        self, nth: str, expected: list[int]
+        self, to_element: ToElement, nth: str, expected: list[int]
     ):
         """Tests if find_all returns all elements matching various nth selectors."""
         text = """
@@ -441,7 +466,7 @@ class TestNthOfSelector:
             <div class="widget"></div>
         """
 
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = NthOfSelector(MockClassMenuSelector(), nth)
         results = selector.find_all(bs)
 

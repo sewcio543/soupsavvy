@@ -2,9 +2,8 @@
 
 import pytest
 
-from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.css.selectors import LastChild
-from tests.soupsavvy.conftest import find_body_element, strip, to_element
+from tests.soupsavvy.conftest import ToElement, strip
 
 
 @pytest.mark.css
@@ -16,7 +15,10 @@ class TestLastChild:
         """Tests if selector property returns correct value."""
         assert LastChild().css == ":last-child"
 
-    def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
+    def test_find_all_returns_all_tags_for_selector_without_tag_name(
+        self,
+        to_element: ToElement,
+    ):
         """Tests if find_all method returns all tags for selector without tag name."""
         text = """
             <div></div>
@@ -26,7 +28,7 @@ class TestLastChild:
             </div>
             <span><a class="menu">34</a></span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = LastChild()
         result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -36,7 +38,7 @@ class TestLastChild:
             strip("""<a class="menu">34</a>"""),
         ]
 
-    def test_find_returns_first_tag_matching_selector(self):
+    def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
         """Tests if find method returns first tag matching selector."""
         text = """
             <div>Hello</div>
@@ -49,12 +51,15 @@ class TestLastChild:
             <div><a>Hello</a><p>3</p></div>
             <a class="widget">4</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = LastChild()
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a>1</a>""")
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns first matching child element if recursive is False.
         """
@@ -69,12 +74,15 @@ class TestLastChild:
             <a class="widget">Hello</a>
             <a>1</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = LastChild()
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a>1</a>""")
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -90,13 +98,16 @@ class TestLastChild:
             <a class="widget">Hello</a>
             <a>1</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = LastChild()
         result = selector.find_all(bs, recursive=False)
         # at most one element can be returned
         assert list(map(lambda x: strip(str(x)), result)) == [strip("""<a>1</a>""")]
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -112,7 +123,7 @@ class TestLastChild:
             <div><a>Hello</a><p>3</p></div>
             <a class="widget">4</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = LastChild()
         result = selector.find_all(bs, limit=2)
 

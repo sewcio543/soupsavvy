@@ -22,7 +22,7 @@ from soupsavvy.exceptions import (
     NotOperationException,
     NotSoupSelectorException,
 )
-from soupsavvy.interfaces import IElement, T
+from soupsavvy.interfaces import Element, IElement
 from soupsavvy.operations.general import OperationPipeline
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 from soupsavvy.selectors.combinators import (
@@ -47,7 +47,7 @@ from tests.soupsavvy.conftest import (
     MockLinkSelector,
     MockSelector,
     MockTextOperation,
-    to_element,
+    to_soup,
 )
 
 
@@ -299,7 +299,9 @@ class TestCompositeSoupSelector:
         def __init__(self, *selectors):
             super().__init__(list(selectors))
 
-        def find_all(self, tag: T, recursive: bool = True, limit=None) -> list[T]:
+        def find_all(
+            self, tag: Element, recursive: bool = True, limit=None
+        ) -> list[Element]:
             return []
 
     class MockUnordered(BaseCompositeSoupSelectorMock):
@@ -620,7 +622,7 @@ class MockNameOperation(OperationSearcherMixin):
         return isinstance(x, MockNameOperation)
 
 
-div = to_element("""<div></div>""").find_all("div")[0]
+div = to_soup("""<div></div>""").find_all("div")[0]
 MOCK = MockNameOperation()
 
 

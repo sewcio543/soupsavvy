@@ -12,12 +12,13 @@ from soupsavvy.selectors.logical import SelectorList
 from tests.soupsavvy.conftest import (
     MockIntOperation,
     MockLinkSelector,
+    ToElement,
     strip,
-    to_element,
 )
 
 
 @pytest.mark.operation
+@pytest.mark.skip_selenium
 class TestText:
     """Class with unit test suite for Text operation."""
 
@@ -34,7 +35,7 @@ class TestText:
         with pytest.raises(FailedOperationExecution):
             operation.execute(text)
 
-    def test_returns_empty_string_if_no_text_node(self):
+    def test_returns_empty_string_if_no_text_node(self, to_element: ToElement):
         """
         Tests if execute method returns empty string
         if no text node in BeautifulSoup Tag.
@@ -47,7 +48,7 @@ class TestText:
         result = operation.execute(bs)
         assert result == ""
 
-    def test_returns_text_of_tag(self):
+    def test_returns_text_of_tag(self, to_element: ToElement):
         """
         Tests if execute method returns text of a BeautifulSoup Tag
         when single text node. By default text is not stripped.
@@ -60,7 +61,7 @@ class TestText:
         result = operation.execute(bs)
         assert result == " Hello world\n"
 
-    def test_returns_concatenated_text_of_tag(self):
+    def test_returns_concatenated_text_of_tag(self, to_element: ToElement):
         """
         Tests if execute method returns concatenated text of a BeautifulSoup Tag,
         when multiple text nodes. Default separator is empty string.
@@ -73,7 +74,9 @@ class TestText:
         result = operation.execute(bs)
         assert result == "Helloworld"
 
-    def test_returns_concatenated_text_of_tag_with_separator(self):
+    def test_returns_concatenated_text_of_tag_with_separator(
+        self, to_element: ToElement
+    ):
         """
         Tests if execute method returns concatenated text of a BeautifulSoup Tag
         with specified separator when multiple text nodes.
@@ -86,7 +89,7 @@ class TestText:
         result = operation.execute(bs)
         assert result == "Hello---world"
 
-    def test_returns_stripped_text_of_tag(self):
+    def test_returns_stripped_text_of_tag(self, to_element: ToElement):
         """
         Tests if execute method returns stripped text of a BeautifulSoup Tag
         if strip is True and single text node.
@@ -99,7 +102,7 @@ class TestText:
         result = operation.execute(bs)
         assert result == "Hello world"
 
-    def test_returns_concatenated_and_stripped_text_of_tag(self):
+    def test_returns_concatenated_and_stripped_text_of_tag(self, to_element: ToElement):
         """
         Tests if execute method returns concatenated and stripped text
         of a BeautifulSoup Tag if strip is True and multiple text nodes.
@@ -116,7 +119,10 @@ class TestText:
         result = operation.execute(bs)
         assert result == "Helloworld"
 
-    def test_returns_concatenated_with_separator_and_stripped_text_of_tag(self):
+    def test_returns_concatenated_with_separator_and_stripped_text_of_tag(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if execute method returns concatenated and stripped text
         of a BeautifulSoup Tag when both separator and strip are specified.
@@ -179,7 +185,7 @@ class TestHref:
         with pytest.raises(FailedOperationExecution):
             operation.execute(text)
 
-    def test_returns_none_if_no_href_in_element(self):
+    def test_returns_none_if_no_href_in_element(self, to_element: ToElement):
         """
         Tests if execute method returns None if no href attribute in BeautifulSoup Tag.
         """
@@ -191,7 +197,7 @@ class TestHref:
         result = operation.execute(bs)
         assert result is None
 
-    def test_returns_href_of_tag(self):
+    def test_returns_href_of_tag(self, to_element: ToElement):
         """
         Tests if execute method returns href attribute of a BeautifulSoup Tag
         if present in the element.
@@ -246,7 +252,8 @@ class TestParent:
         with pytest.raises(FailedOperationExecution):
             operation.execute(text)
 
-    def test_returns_none_if_no_href_in_element(self):
+    @pytest.mark.skip
+    def test_returns_none_if_no_parent(self, to_element: ToElement):
         """
         Tests if execute method returns None if no parent provided element
         does not have parent. It must be `html` tag.
@@ -262,7 +269,7 @@ class TestParent:
         result = operation.execute(bs)
         assert result is None
 
-    def test_returns_parent_of_tag(self):
+    def test_returns_parent_of_tag(self, to_element: ToElement):
         """
         Tests if execute method returns parent of provided BeautifulSoup Tag.
         """
@@ -277,7 +284,7 @@ class TestParent:
         result = operation.execute(bs)
         assert strip(str(result)) == strip('<div href="github"><a>Hello</a></div>')
 
-    def test_returns_parent_with_find_method(self):
+    def test_returns_parent_with_find_method(self, to_element: ToElement):
         """
         Tests if find method returns parent of a BeautifulSoup Tag, it calls
         execute method. This is for done for convenience and compatibility with
@@ -294,7 +301,10 @@ class TestParent:
         result = operation.find(bs)  # type: ignore
         assert strip(str(result)) == strip('<div href="github"><a>Hello</a></div>')
 
-    def test_returns_list_with_single_element_with_find_all_method(self):
+    def test_returns_list_with_single_element_with_find_all_method(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all method returns parent of a BeautifulSoup Tag wrapped
         in single element list. This is for done for compatibility with

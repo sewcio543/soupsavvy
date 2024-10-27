@@ -4,11 +4,11 @@ import pytest
 
 from soupsavvy.interfaces import IElement
 from soupsavvy.utils.selector_utils import TagIterator, TagResultSet, UniqueTag
-from tests.soupsavvy.conftest import find_body_element, strip, to_element
+from tests.soupsavvy.conftest import ToElement, strip
 
 
-@pytest.fixture(scope="module")
-def mock_tag() -> IElement:
+@pytest.fixture
+def mock_tag(to_element) -> IElement:
     """Fixture for creating a mock bs4.Tag."""
     text = """
         <div>
@@ -48,7 +48,10 @@ class TestUniqueTag:
         tag1 = UniqueTag(mock_tag)
         assert tag1 != mock_tag
 
-    def test_different_tags_with_same_content_have_different_hash(self):
+    def test_different_tags_with_same_content_have_different_hash(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests that two bs4.Tag objects with the same content wrapped by UniqueTag
         have different hashes and can be stored in set as different objects.
@@ -91,7 +94,7 @@ class TestTagIterator:
         Tests that TagIterator iterates over descendants by default
         and returns all tags in order of appearance.
         """
-        tag = find_body_element(mock_tag)
+        tag = mock_tag
         tag_iterator = TagIterator(tag)
         expected = [
             strip(
@@ -126,7 +129,7 @@ class TestTagIterator:
         """
         Tests that TagIterator iterates over children if recursive is set to False.
         """
-        tag = find_body_element(mock_tag)
+        tag = mock_tag
         tag_iterator = TagIterator(tag, recursive=False)
         expected = [
             strip(
@@ -149,7 +152,7 @@ class TestTagIterator:
         Tests that iterator resets when called again.
         Calling __iter__ method of TagIterator resets the iterator to the beginning.
         """
-        tag = find_body_element(mock_tag)
+        tag = mock_tag
         tag_iterator = TagIterator(tag)
 
         iter_ = iter(tag_iterator)
@@ -207,7 +210,7 @@ class TestTagIterator:
         Tests that TagIterator iterates over descendants and includes the tag itself
         at the beginning if include_self is set to True.
         """
-        tag = find_body_element(mock_tag)
+        tag = mock_tag
         tag_iterator = TagIterator(tag, include_self=True)
         expected = [
             strip(
@@ -257,7 +260,7 @@ class TestTagIterator:
         Tests that TagIterator iterates over children and includes the tag itself
         at the beginning if include_self is set to True and recursive is False.
         """
-        tag = find_body_element(mock_tag)
+        tag = mock_tag
         tag_iterator = TagIterator(tag, recursive=False, include_self=True)
         expected = [
             strip(
@@ -293,15 +296,16 @@ class TestTagIterator:
 class TestTagResultSet:
     """Class with unit tests for TagResultSet class."""
 
-    @pytest.fixture(scope="class")
-    def mock_tags(self) -> list[IElement]:
+    @pytest.fixture
+    def mock_tags(self, to_element: ToElement) -> list[IElement]:
         text = """
             <a class="menu"></a>
             <a class="menu"></a>
             <a class="menu1"></a>
             <a class="menu2"></a>
         """
-        return to_element(text).find_all("body")[0].find_all()
+        # all descendants of body tag
+        return to_element(text).find_all()
 
     def test_result_set_can_be_initialized_with_empty_collection(self):
         """
@@ -385,7 +389,7 @@ class TestTagResultSet:
         Tests that | operator updates collection and returns new result set
         when one of the collections is empty, whether base or right.
         """
-        base = TagResultSet()
+        base: TagResultSet[IElement] = TagResultSet()
         right = TagResultSet(mock_tags)
 
         expected = [

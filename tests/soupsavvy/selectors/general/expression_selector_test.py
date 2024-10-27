@@ -4,12 +4,7 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.general import ExpressionSelector
-from tests.soupsavvy.conftest import (
-    MockLinkSelector,
-    find_body_element,
-    strip,
-    to_element,
-)
+from tests.soupsavvy.conftest import MockLinkSelector, ToElement, strip
 
 
 def mock_predicate(x) -> bool:
@@ -26,7 +21,7 @@ def mock_raise_error(x) -> bool:
 class TestExpressionSelector:
     """Class for ExpressionSelector unit test suite."""
 
-    def test_find_returns_first_tag_matching_selector(self):
+    def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
         """Tests if find method returns first tag matching selector."""
         text = """
             <div href="github"></div>
@@ -41,7 +36,9 @@ class TestExpressionSelector:
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<h1 class="widget">1</h1>""")
 
-    def test_find_returns_none_if_no_match_and_strict_false(self):
+    def test_find_returns_none_if_no_match_and_strict_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns None if no element matches the selector
         and strict is False.
@@ -59,7 +56,10 @@ class TestExpressionSelector:
         result = selector.find(bs)
         assert result is None
 
-    def test_find_raises_exception_if_no_match_and_strict_true(self):
+    def test_find_raises_exception_if_no_match_and_strict_true(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no element matches the selector
         and strict is True.
@@ -78,7 +78,7 @@ class TestExpressionSelector:
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_all_returns_empty_list_when_no_match(self):
+    def test_find_all_returns_empty_list_when_no_match(self, to_element: ToElement):
         """Tests if find returns an empty list if no element matches the selector."""
         text = """
             <div href="github"></div>
@@ -93,7 +93,7 @@ class TestExpressionSelector:
         result = selector.find_all(bs)
         assert result == []
 
-    def test_find_all_returns_all_matching_elements(self):
+    def test_find_all_returns_all_matching_elements(self, to_element: ToElement):
         """Tests if find_all returns a list of all matching elements."""
         text = """
             <div href="github"></div>
@@ -113,7 +113,10 @@ class TestExpressionSelector:
             strip("""<a>3</a>"""),
         ]
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns first matching child element if recursive is False.
         """
@@ -127,12 +130,15 @@ class TestExpressionSelector:
             <span>Hello</span>
             <a>3</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = ExpressionSelector(mock_predicate)
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a href="github">1</a>""")
 
-    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns None if no child element matches the selector
         and recursive is False.
@@ -144,12 +150,15 @@ class TestExpressionSelector:
             <div><a>Not child</a></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = ExpressionSelector(mock_predicate)
         result = selector.find(bs, recursive=False)
         assert result is None
 
-    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no child element
         matches the selector, when recursive is False and strict is True.
@@ -161,13 +170,16 @@ class TestExpressionSelector:
             <div><a>Not child</a></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = ExpressionSelector(mock_predicate)
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True, recursive=False)
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -182,7 +194,7 @@ class TestExpressionSelector:
             <span>Hello</span>
             <a>3</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = ExpressionSelector(mock_predicate)
         result = selector.find_all(bs, recursive=False)
 
@@ -194,6 +206,7 @@ class TestExpressionSelector:
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns an empty list if no child element matches the selector
@@ -206,12 +219,15 @@ class TestExpressionSelector:
             <div><a>Not child</a></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = ExpressionSelector(mock_predicate)
         result = selector.find_all(bs, recursive=False)
         assert result == []
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -224,7 +240,7 @@ class TestExpressionSelector:
                 <a>3</a>
             </span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = ExpressionSelector(mock_predicate)
         result = selector.find_all(bs, limit=2)
 
@@ -235,6 +251,7 @@ class TestExpressionSelector:
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -251,7 +268,7 @@ class TestExpressionSelector:
             <span>Hello</span>
             <a>3</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = ExpressionSelector(mock_predicate)
         result = selector.find_all(bs, recursive=False, limit=2)
 
@@ -284,7 +301,7 @@ class TestExpressionSelector:
         """Tests if selector is not equal to ExpressionSelector."""
         assert (selectors[0] == selectors[1]) is False
 
-    def test_propagates_exception_raised_inside_predicate(self):
+    def test_propagates_exception_raised_inside_predicate(self, to_element: ToElement):
         """Tests if exception raised inside predicate is propagated to the caller."""
         text = """
             <div href="github"></div>
@@ -305,7 +322,9 @@ class TestExpressionSelector:
         argvalues=[lambda x, y: True, lambda: True],
         ids=["more_than_two_args", "no_args"],
     )
-    def test_raises_type_error_if_function_does_not_take_one_argument(self, f):
+    def test_raises_type_error_if_function_does_not_take_one_argument(
+        self, to_element: ToElement, f
+    ):
         """
         Tests if TypeError is raised if provided function
         does not take exactly one argument.

@@ -4,19 +4,14 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.general import TypeSelector
-from tests.soupsavvy.conftest import (
-    MockLinkSelector,
-    find_body_element,
-    strip,
-    to_element,
-)
+from tests.soupsavvy.conftest import MockLinkSelector, ToElement, strip
 
 
 @pytest.mark.selector
 class TestTypeSelector:
     """Class for TypeSelector unit test suite."""
 
-    def test_find_returns_first_tag_matching_selector(self):
+    def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
         """Tests if find method returns first tag matching selector."""
         text = """
             <div href="github"></div>
@@ -31,7 +26,9 @@ class TestTypeSelector:
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<h1 class="widget">1</h1>""")
 
-    def test_find_returns_none_if_no_match_and_strict_false(self):
+    def test_find_returns_none_if_no_match_and_strict_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns None if no element matches the selector
         and strict is False.
@@ -49,7 +46,10 @@ class TestTypeSelector:
         result = selector.find(bs)
         assert result is None
 
-    def test_find_raises_exception_if_no_match_and_strict_true(self):
+    def test_find_raises_exception_if_no_match_and_strict_true(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no element matches the selector
         and strict is True.
@@ -68,7 +68,7 @@ class TestTypeSelector:
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_all_returns_empty_list_when_no_match(self):
+    def test_find_all_returns_empty_list_when_no_match(self, to_element: ToElement):
         """Tests if find returns an empty list if no element matches the selector."""
         text = """
             <div href="github"></div>
@@ -83,7 +83,7 @@ class TestTypeSelector:
         result = selector.find_all(bs)
         assert result == []
 
-    def test_find_all_returns_all_matching_elements(self):
+    def test_find_all_returns_all_matching_elements(self, to_element: ToElement):
         """Tests if find_all returns a list of all matching elements."""
         text = """
             <div href="github"></div>
@@ -103,7 +103,10 @@ class TestTypeSelector:
             strip("""<a>3</a>"""),
         ]
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns first matching child element if recursive is False.
         """
@@ -117,12 +120,15 @@ class TestTypeSelector:
             <span>Hello</span>
             <a>3</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = TypeSelector("a")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a href="github">1</a>""")
 
-    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns None if no child element matches the selector
         and recursive is False.
@@ -134,12 +140,15 @@ class TestTypeSelector:
             <div><a>Not child</a></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = TypeSelector("a")
         result = selector.find(bs, recursive=False)
         assert result is None
 
-    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no child element
         matches the selector, when recursive is False and strict is True.
@@ -151,13 +160,16 @@ class TestTypeSelector:
             <div><a>Not child</a></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = TypeSelector("a")
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True, recursive=False)
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -172,7 +184,7 @@ class TestTypeSelector:
             <span>Hello</span>
             <a>3</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = TypeSelector("a")
         result = selector.find_all(bs, recursive=False)
 
@@ -184,6 +196,7 @@ class TestTypeSelector:
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns an empty list if no child element matches the selector
@@ -196,12 +209,15 @@ class TestTypeSelector:
             <div><a>Not child</a></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = TypeSelector("a")
         result = selector.find_all(bs, recursive=False)
         assert result == []
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -214,7 +230,7 @@ class TestTypeSelector:
                 <a>3</a>
             </span>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = TypeSelector("a")
         result = selector.find_all(bs, limit=2)
 
@@ -225,6 +241,7 @@ class TestTypeSelector:
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -241,7 +258,7 @@ class TestTypeSelector:
             <span>Hello</span>
             <a>3</a>
         """
-        bs = find_body_element(to_element(text))
+        bs = to_element(text)
         selector = TypeSelector("a")
         result = selector.find_all(bs, recursive=False, limit=2)
 
