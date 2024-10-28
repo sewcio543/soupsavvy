@@ -14,7 +14,7 @@ from __future__ import annotations
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from itertools import chain
-from typing import Generic, Optional, Self
+from typing import Optional, Self
 
 from soupsavvy.interfaces import IElement
 

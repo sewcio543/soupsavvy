@@ -18,7 +18,6 @@ from tests.soupsavvy.conftest import (
 
 
 @pytest.mark.operation
-@pytest.mark.skip_selenium
 class TestText:
     """Class with unit test suite for Text operation."""
 
@@ -48,6 +47,7 @@ class TestText:
         result = operation.execute(bs)
         assert result == ""
 
+    @pytest.mark.skip_selenium
     def test_returns_text_of_tag(self, to_element: ToElement):
         """
         Tests if execute method returns text of a BeautifulSoup Tag
@@ -67,7 +67,7 @@ class TestText:
         when multiple text nodes. Default separator is empty string.
         """
         text = """
-            <div href="github"><a>Hello</a><a>world</a></div>
+            <div href="github"><a>Hello</a><p>world</p></div>
         """
         bs = to_element(text).find_all("div")[0]
         operation = Text()
@@ -82,7 +82,7 @@ class TestText:
         with specified separator when multiple text nodes.
         """
         text = """
-            <div href="github"><a>Hello</a><a>world</a></div>
+            <div href="github"><a>Hello</a><p>world</p></div>
         """
         bs = to_element(text).find_all("div")[0]
         operation = Text(separator="---")
@@ -109,8 +109,11 @@ class TestText:
         """
         text = """
             <div href="github">
-                \nHell  \n
-                <span>  o  \n\n</span>
+                Hell
+
+                <p>  o
+
+                </p>
                 <a>world  </a>
             </div>
         """

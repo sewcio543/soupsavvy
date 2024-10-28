@@ -108,12 +108,21 @@ class SeleniumElement(IElement):
         return SeleniumElement(element)
 
     def get_text(self, separator: str = "", strip: bool = False) -> str:
-        text = self._node.text
+        text = self.node.get_attribute("innerText")
+
+        if text is None:
+            return ""
+
+        strings = [
+            string
+            for string in text.split("\n")
+            if string.replace(" ", "").replace("\n", "")
+        ]
 
         if strip:
-            text = text.strip()
+            strings = [string.strip() for string in strings if string]
 
-        return text.replace("\n", separator)
+        return separator.join(strings)
 
     def _get_attribute_list(self, name: str, element: WebElement) -> list:
         value = element.get_dom_attribute(name)
