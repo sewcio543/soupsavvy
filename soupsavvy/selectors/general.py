@@ -13,7 +13,7 @@ Classes
 import itertools
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Optional, Pattern
+from typing import Any, Optional, Pattern
 
 from typing_extensions import deprecated
 
@@ -253,7 +253,7 @@ class ExpressionSelector(SoupSelector):
 
     Parameters
     ----------
-    f : Callable[[Tag], bool]
+    f : Callable[[Any], bool]
         A user-defined function (predicate) that determines whether
         the element should be selected.
 
@@ -268,7 +268,7 @@ class ExpressionSelector(SoupSelector):
     If raised, it will be propagated to the caller.
     """
 
-    f: Callable[[IElement], bool]
+    f: Callable[[Any], bool]
 
     def find_all(
         self,
@@ -277,7 +277,7 @@ class ExpressionSelector(SoupSelector):
         limit: Optional[int] = None,
     ) -> list[IElement]:
         iterator = TagIterator(tag, recursive=recursive)
-        filter_ = filter(self.f, iterator)
+        filter_ = (element for element in iterator if self.f(element.node))
         return list(itertools.islice(filter_, limit))
 
     def __eq__(self, other) -> bool:

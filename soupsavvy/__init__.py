@@ -11,6 +11,8 @@ The package offers various types of selectors that can be easily combined
 to perform more complex searches.
 """
 
+from soupsavvy.selectors.css import CSS
+
 from .implementation.element import to_soupsavvy
 from .selectors import (
     AncestorCombinator,
@@ -72,4 +74,5 @@ __all__ = [
     "NthLastOfSelector",
     "OnlyOfSelector",
     "to_soupsavvy",
+    "CSS",
 ]
