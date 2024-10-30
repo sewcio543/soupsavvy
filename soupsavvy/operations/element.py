@@ -1,11 +1,11 @@
 """
-Module for operations specific to BeautifulSoup tags.
+Module for operations specific to IElement interface.
 
 Classes
 -------
-- `Text` - Extracts text from `bs4.Tag` - most common operation.
-- `Href` - Extracts href attribute from `bs4.Tag`
-- `Parent` - Extracts parent of `bs4.Tag`
+- `Text` - Extracts text from element - most common operation.
+- `Href` - Extracts href attribute from element.
+- `Parent` - Extracts parent of element.
 
 These components are design to be used for processing html tags and extracting
 desired information. They can be used in combination with selectors.
@@ -49,36 +49,16 @@ class Text(OperationSearcherMixin):
     "Text"
     """
 
-    def __init__(self, separator: str = "", strip: bool = False) -> None:
-        """
-        Initializes `Text` operation with optional separator and strip options.
-
-        Parameters
-        ----------
-        separator : str, optional
-            Separator used to join strings from multiple text nodes, by default "".
-        strip : bool, optional
-            Flag to strip the text nodes from whitespaces and newline characters,
-            by default False.
-        """
-        self.separator = separator
-        self.strip = strip
-
     def _execute(self, arg: IElement) -> str:
         """Extracts text from `bs4.Tag`."""
-        return arg.get_text(separator=self.separator, strip=self.strip)
+        return arg.text
 
     def __eq__(self, x: Any) -> bool:
         # equal only if separator and strip are the same
-        if not isinstance(x, Text):
-            return False
-
-        return self.separator == x.separator and self.strip == x.strip
+        return isinstance(x, Text)
 
     def __repr__(self) -> str:
-        return (
-            f"{self.__class__.__name__}(separator={self.separator}, strip={self.strip})"
-        )
+        return f"{self.__class__.__name__}()"
 
 
 class Href(OperationSearcherMixin):

@@ -191,7 +191,8 @@ class TestOperation:
 class MockText(str):
     """Mock class that imitates bs4 Tag with text attribute."""
 
-    def get_text(self, *args, **kwargs):
+    @property
+    def text(self):
         return self
 
 

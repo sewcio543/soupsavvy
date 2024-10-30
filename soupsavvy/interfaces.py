@@ -165,10 +165,6 @@ class IElement(ABC):
         raise NotImplementedError("Method not implemented")
 
     @abstractmethod
-    def get_text(self, separator: str = "", strip: bool = False) -> str:
-        raise NotImplementedError("Method not implemented")
-
-    @abstractmethod
     def get_attribute_list(self, name: str) -> list[str]:
         raise NotImplementedError("Method not implemented")
 

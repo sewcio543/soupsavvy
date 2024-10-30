@@ -66,9 +66,6 @@ class SoupElement(IElement):
         parent = self._node.parent
         return SoupElement(parent) if parent is not None else None
 
-    def get_text(self, separator: str = "", strip: bool = False) -> str:
-        return self._node.get_text(separator=separator, strip=strip)
-
     def get_attribute_list(self, name: str) -> list[str]:
         return self._node.get_attribute_list(name)
 
@@ -81,8 +78,7 @@ class SoupElement(IElement):
 
     @property
     def text(self) -> str:
-        nodes = list(self._node.strings)
-        return nodes[0] if len(nodes) == 1 else ""
+        return self._node.text
 
     @staticmethod
     def css(selector: str) -> SelectionApi:

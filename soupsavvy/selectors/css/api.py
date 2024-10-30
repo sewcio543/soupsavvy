@@ -32,8 +32,7 @@ class CSSSelectApi(SelectionApi):
             compiled = CSSSelector(selector)
         except SelectorError as e:
             raise exc.InvalidCSSSelector(
-                "CSS selector constructed from provided parameters "
-                f"is not valid: {selector}"
+                f"Provided CSS selector is not valid: {selector}"
             ) from e
 
         super().__init__(compiled)

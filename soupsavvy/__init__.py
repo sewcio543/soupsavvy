@@ -38,6 +38,7 @@ from .selectors import (
     TypeSelector,
     UniversalSelector,
     XORSelector,
+    XPathSelector,
 )
 
 __version__ = "0.3.1"
@@ -49,6 +50,7 @@ __all__ = [
     "TypeSelector",
     "ExpressionSelector",
     "PatternSelector",
+    "XPathSelector",
     "SelectorList",
     "DescendantCombinator",
     "AndSelector",

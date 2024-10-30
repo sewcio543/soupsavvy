@@ -15,8 +15,8 @@ Classes
 """
 
 from .conditional import Break, Continue, IfElse
+from .element import Href, Parent, Text
 from .general import Operation
-from .soup import Href, Parent, Text
 from .wrappers import SkipNone, Suppress
 
 __all__ = [

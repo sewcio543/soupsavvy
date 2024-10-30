@@ -103,10 +103,6 @@ class LXMLElement(IElement):
 
     def get_text(self, separator: str = "", strip: bool = False) -> str:
         texts = (text for text in self._node.itertext() if text is not None)
-
-        if strip:
-            texts = (text.strip() for text in texts if text != "\n")
-
         return separator.join(texts)  # type: ignore
 
     def _get_attribute_list(self, name: str, element: HtmlElement) -> list:
@@ -131,7 +127,8 @@ class LXMLElement(IElement):
 
     @property
     def text(self) -> str:
-        return self._node.text or ""
+        texts = (text for text in self._node.itertext() if text is not None)
+        return "".join(texts)
 
     def css(self, selector: str) -> CSSSelectApi:
         return CSSSelectApi(selector)

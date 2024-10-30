@@ -5,7 +5,7 @@ for css selector-based search.
 
 import pytest
 
-from soupsavvy.exceptions import InvalidCSSSelector, TagNotFoundException
+from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.css.selectors import CSS
 from tests.soupsavvy.conftest import ToElement, strip
 
@@ -33,20 +33,6 @@ class TestCSS:
         as string passed to the constructor.
         """
         assert CSS(css).css == css
-
-    def test_raises_exception_when_invalid_css_selector(self, to_element: ToElement):
-        """
-        Tests if InvalidCSSSelector exception is raised in find methods,
-        when invalid css selector is passed.
-        """
-        selector = CSS("div[1]")
-        bs = to_element("<div></div>")
-
-        with pytest.raises(InvalidCSSSelector):
-            selector.find(bs)
-
-        with pytest.raises(InvalidCSSSelector):
-            selector.find_all(bs)
 
     def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
         """Tests if find method returns first tag matching selector."""

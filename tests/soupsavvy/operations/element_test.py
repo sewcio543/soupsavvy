@@ -1,13 +1,13 @@
 """
-Module with unit tests for operations.soup module
-with Operations specific to BeautifulSoup tags.
+Module with unit tests for operations.element module
+with Operations specific to IElement interface.
 """
 
 import pytest
 
 from soupsavvy.exceptions import FailedOperationExecution, NotOperationException
+from soupsavvy.operations.element import Href, Parent, Text
 from soupsavvy.operations.general import OperationPipeline
-from soupsavvy.operations.soup import Href, Parent, Text
 from soupsavvy.selectors.logical import SelectorList
 from tests.soupsavvy.conftest import (
     MockIntOperation,
@@ -21,10 +21,10 @@ from tests.soupsavvy.conftest import (
 class TestText:
     """Class with unit test suite for Text operation."""
 
-    def test_raises_error_when_input_not_bs4_tag(self):
+    def test_raises_error_when_input_does_not_have_text_attribute(self):
         """
         Tests if execute method raises FailedOperationExecution
-        if input is not bs4 tag.
+        if input does not have text attribute.
         """
         text = """
             <div href="github">Hello world</div>
@@ -47,12 +47,20 @@ class TestText:
         result = operation.execute(bs)
         assert result == ""
 
-    @pytest.mark.skip_selenium
-    def test_returns_text_of_tag(self, to_element: ToElement):
+    def test_returns_text_of_the_element_with_only_text_node(
+        self, to_element: ToElement
+    ):
+        """Tests if execute method returns text of the element with only text node."""
+        text = """
+            <div href="github">Hello</div>
         """
-        Tests if execute method returns text of a BeautifulSoup Tag
-        when single text node. By default text is not stripped.
-        """
+        bs = to_element(text).find_all("div")[0]
+        operation = Text()
+        result = operation.execute(bs)
+        assert result == "Hello"
+
+    def test_does_not_strip_text(self, to_element: ToElement):
+        """Tests if execute method returns raw string of text node without stripping."""
         text = """
             <div href="github"> Hello world\n</div>
         """
@@ -61,94 +69,22 @@ class TestText:
         result = operation.execute(bs)
         assert result == " Hello world\n"
 
-    def test_returns_concatenated_text_of_tag(self, to_element: ToElement):
+    def test_returns_concatenated_text_of_multiple_nodes(self, to_element: ToElement):
         """
-        Tests if execute method returns concatenated text of a BeautifulSoup Tag,
-        when multiple text nodes. Default separator is empty string.
+        Tests if execute method returns concatenated text of multiple text nodes
+        that are children of element.
         """
         text = """
-            <div href="github"><a>Hello</a><p>world</p></div>
+            <div href="github">He<a>ll</a>o<p>world</p></div>
         """
         bs = to_element(text).find_all("div")[0]
         operation = Text()
         result = operation.execute(bs)
         assert result == "Helloworld"
 
-    def test_returns_concatenated_text_of_tag_with_separator(
-        self, to_element: ToElement
-    ):
-        """
-        Tests if execute method returns concatenated text of a BeautifulSoup Tag
-        with specified separator when multiple text nodes.
-        """
-        text = """
-            <div href="github"><a>Hello</a><p>world</p></div>
-        """
-        bs = to_element(text).find_all("div")[0]
-        operation = Text(separator="---")
-        result = operation.execute(bs)
-        assert result == "Hello---world"
-
-    def test_returns_stripped_text_of_tag(self, to_element: ToElement):
-        """
-        Tests if execute method returns stripped text of a BeautifulSoup Tag
-        if strip is True and single text node.
-        """
-        text = """
-            <div href="github">\n\nHello world </div>
-        """
-        bs = to_element(text).find_all("div")[0]
-        operation = Text(strip=True)
-        result = operation.execute(bs)
-        assert result == "Hello world"
-
-    def test_returns_concatenated_and_stripped_text_of_tag(self, to_element: ToElement):
-        """
-        Tests if execute method returns concatenated and stripped text
-        of a BeautifulSoup Tag if strip is True and multiple text nodes.
-        """
-        text = """
-            <div href="github">
-                Hell
-
-                <p>  o
-
-                </p>
-                <a>world  </a>
-            </div>
-        """
-        bs = to_element(text).find_all("div")[0]
-        operation = Text(strip=True)
-        result = operation.execute(bs)
-        assert result == "Helloworld"
-
-    def test_returns_concatenated_with_separator_and_stripped_text_of_tag(
-        self,
-        to_element: ToElement,
-    ):
-        """
-        Tests if execute method returns concatenated and stripped text
-        of a BeautifulSoup Tag when both separator and strip are specified.
-        """
-        text = """
-            <div href="github">
-                \nHello  \n
-                <a>world  </a>
-            </div>
-        """
-        bs = to_element(text).find_all("div")[0]
-        operation = Text(strip=True, separator=" ")
-        result = operation.execute(bs)
-        assert result == "Hello world"
-
     @pytest.mark.parametrize(
         argnames="operations",
-        argvalues=[
-            (Text(), Text()),
-            (Text(strip=True), Text(strip=True)),
-            (Text(separator="---"), Text(separator="---")),
-            (Text(strip=True, separator="---"), Text(strip=True, separator="---")),
-        ],
+        argvalues=[(Text(), Text())],
     )
     def test_eq_returns_true_if_same_operation(self, operations: tuple):
         """Tests if __eq__ method returns True if objects are equal."""
@@ -157,13 +93,7 @@ class TestText:
 
     @pytest.mark.parametrize(
         argnames="operations",
-        argvalues=[
-            (Text(strip=False), Text(strip=True)),
-            (Text(separator="."), Text(separator="---")),
-            (Text(strip=True, separator="."), Text(strip=True, separator="-")),
-            (Text(strip=True, separator="."), Text(strip=False, separator=".")),
-            (Text(), MockIntOperation()),
-        ],
+        argvalues=[(Text(), MockIntOperation())],
     )
     def test_eq_returns_false_if_different_operation(self, operations: tuple):
         """Tests if __eq__ method returns False if objects are not equal."""
@@ -255,7 +185,6 @@ class TestParent:
         with pytest.raises(FailedOperationExecution):
             operation.execute(text)
 
-    @pytest.mark.skip
     def test_returns_none_if_no_parent(self, to_element: ToElement):
         """
         Tests if execute method returns None if no parent provided element
@@ -267,7 +196,7 @@ class TestParent:
             </div>
             <span>Hello</span>
         """
-        bs = to_element(text)
+        bs = to_element(text).find_ancestors()[-1]
         operation = Parent()
         result = operation.execute(bs)
         assert result is None

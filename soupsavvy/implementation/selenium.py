@@ -107,23 +107,6 @@ class SeleniumElement(IElement):
         element = driver.execute_script("return arguments[0].parentNode;", self.node)
         return SeleniumElement(element)
 
-    def get_text(self, separator: str = "", strip: bool = False) -> str:
-        text = self.node.get_attribute("innerText")
-
-        if text is None:
-            return ""
-
-        strings = [
-            string
-            for string in text.split("\n")
-            if string.replace(" ", "").replace("\n", "")
-        ]
-
-        if strip:
-            strings = [string.strip() for string in strings if string]
-
-        return separator.join(strings)
-
     def _get_attribute_list(self, name: str, element: WebElement) -> list:
         value = element.get_dom_attribute(name)
 
@@ -158,9 +141,6 @@ class SeleniumElement(IElement):
 
     @property
     def text(self) -> str:
-        if self.children:
-            return ""
-
         return self._node.text
 
     def css(self, selector: str) -> SeleniumCSSApi:

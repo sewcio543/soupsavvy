@@ -199,7 +199,7 @@ class MockTextOperation(BaseMockOperation):
         if arg is None and self.skip_none:
             return None
 
-        return arg.get_text()  # type: ignore
+        return arg.text  # type: ignore
 
 
 class MockIntOperation(BaseMockOperation):
