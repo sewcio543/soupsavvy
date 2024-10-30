@@ -85,12 +85,14 @@ class Href(OperationSearcherMixin):
     "www.example.com"
     """
 
+    _ATTRIBUTE_NAME = "href"
+
     def _execute(self, arg: IElement) -> Optional[str]:
         """
         Extracts href attribute from a BeautifulSoup Tag.
         If attribute is not present, returns None.
         """
-        return arg.get_attribute_list("href")[0]
+        return arg.get_attribute(self._ATTRIBUTE_NAME)
 
     def __eq__(self, x: Any) -> bool:
         # equal only if both are instances of Href

@@ -66,8 +66,13 @@ class SoupElement(IElement):
         parent = self._node.parent
         return SoupElement(parent) if parent is not None else None
 
-    def get_attribute_list(self, name: str) -> list[str]:
-        return self._node.get_attribute_list(name)
+    def get_attribute(self, name: str) -> Optional[str]:
+        attr = self._node.get(name)
+
+        if isinstance(attr, list):
+            attr = " ".join(attr)
+
+        return attr
 
     def prettify(self) -> str:
         return self._node.prettify()
@@ -91,15 +96,7 @@ class SoupElement(IElement):
         return f"{self.__class__.__name__}({self._node!r})"
 
     def __hash__(self):
-        """Hashes bs4.Tag instance by id."""
         return id(self._node)
 
     def __eq__(self, other):
-        """
-        Checks equality of itself with another object.
-
-        For object to be equal to UniqueTag, it should be an instance of UniqueTag
-        and have the same hash value, meaning it has to wrap the same bs4.Tag instance.
-        In any other case, returns False.
-        """
         return isinstance(other, SoupElement) and hash(self) == hash(other)

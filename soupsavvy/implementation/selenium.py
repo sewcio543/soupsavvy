@@ -41,16 +41,16 @@ class SeleniumElement(IElement):
                 return True
 
             for attr, value in attrs.items():
-                actual = self._get_attribute_list(attr, element=element)
+                actual = element.get_dom_attribute(attr)
 
-                if actual[0] is None:
+                if actual is None:
                     return False
 
                 if isinstance(value, Pattern):
-                    if not value.search(" ".join(actual)):
+                    if not value.search(actual):
                         return False
                 else:
-                    if value not in actual:
+                    if value not in actual.split():
                         return False
             return True
 
@@ -107,18 +107,8 @@ class SeleniumElement(IElement):
         element = driver.execute_script("return arguments[0].parentNode;", self.node)
         return SeleniumElement(element)
 
-    def _get_attribute_list(self, name: str, element: WebElement) -> list:
-        value = element.get_dom_attribute(name)
-
-        if value is None:
-            return [value]
-        elif value == "":
-            return [value]
-
-        return value.split()
-
-    def get_attribute_list(self, name: str) -> list[str]:
-        return self._get_attribute_list(name, element=self._node)
+    def get_attribute(self, name: str) -> Optional[str]:
+        return self.node.get_dom_attribute(name)
 
     def prettify(self) -> str:
         return self._node.get_attribute("outerHTML") or ""

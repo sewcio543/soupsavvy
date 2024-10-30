@@ -1997,16 +1997,15 @@ class TestBaseModelIntegration:
 
             title = TITLE_SELECTOR
             link = Href()
-            id_ = Operation(lambda x: x.get_attribute_list("id")[0])
-            name = Operation(lambda x: x.get_attribute_list("name")[0]) | Operation(
+            id_ = Operation(lambda x: x.get_attribute("id"))
+            name = Operation(lambda x: x.get_attribute("name")) | Operation(
                 lambda x: x.upper()
             )
-            text = Text(strip=True, separator="--")
+            text = Text() | Operation(str.strip)
 
         text = """
             <div id="book1" href="www.book.com" name="Joe">
-                <a>Title</a>
-                <p>Hello</p>
+                <a>Title</a><p>Hello</p>
             </div>
         """
         bs = to_element(text)
@@ -2017,7 +2016,7 @@ class TestBaseModelIntegration:
             link="www.book.com",
             id_="book1",
             name="JOE",
-            text="Title--Hello",
+            text="TitleHello",
         )
 
     def test_field_with_compare_false_is_not_compared(self):

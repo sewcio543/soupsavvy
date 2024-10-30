@@ -20,10 +20,6 @@ class LXMLElement(IElement):
     def node(self) -> HtmlElement:
         return self._node
 
-    @classmethod
-    def from_node(cls, node: HtmlElement) -> LXMLElement:
-        return LXMLElement(node)
-
     def find_all(
         self,
         name: Optional[str] = None,
@@ -55,20 +51,19 @@ class LXMLElement(IElement):
         attrs: dict[str, Union[str, Pattern[str]]],
     ) -> bool:
         for attr, value in attrs.items():
-            attributes = self._get_attribute_list(attr, element=element)
-            first = attributes[0]
+            attribute = element.attrib.get(attr)
 
-            if first is None:
+            if attribute is None:
                 return False
 
-            if value is None and first is not None:
+            if value is None and attribute is not None:
                 continue
 
             if isinstance(value, Pattern):
-                if not value.search(" ".join(attributes)):
+                if not value.search(attribute):
                     return False
             else:
-                if value not in attributes:
+                if value not in attribute.split():
                     return False
 
         if name is not None and element.tag != name:
@@ -105,18 +100,8 @@ class LXMLElement(IElement):
         texts = (text for text in self._node.itertext() if text is not None)
         return separator.join(texts)  # type: ignore
 
-    def _get_attribute_list(self, name: str, element: HtmlElement) -> list:
-        value = element.attrib.get(name)
-
-        if value is None:
-            return [value]
-        elif value == "":
-            return [value]
-
-        return value.split()
-
-    def get_attribute_list(self, name: str) -> list[str]:
-        return self._get_attribute_list(name, element=self._node)
+    def get_attribute(self, name: str) -> Optional[str]:
+        return self.node.attrib.get(name)
 
     def prettify(self) -> str:
         return ""

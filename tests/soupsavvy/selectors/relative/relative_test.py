@@ -708,6 +708,23 @@ class TestRelativeParent:
             strip("""<div><div class="anchor"><div></div></div></div>""")
         ]
 
+    @pytest.mark.parametrize(
+        argnames="recursive",
+        argvalues=[True, False],
+        ids=["recursive", "not_recursive"],
+    )
+    def test_find_all_returns_empty_list_if_element_is_root(
+        self, selector: RelativeParent, recursive: bool, to_element: ToElement
+    ):
+        """Tests if find_all returns an empty list if element is root element."""
+        text = """
+            <div><div><div class="anchor"><div></div></div></div></div>
+            <div><div><p></p></div></div>
+        """
+        bs = to_element(text).find_ancestors()[-1]
+        result = selector.find_all(bs, recursive=recursive)
+        assert result == []
+
 
 @pytest.mark.selector
 class TestRelativeAncestor:
@@ -861,3 +878,19 @@ class TestRelativeAncestor:
             strip("""<div><a class="anchor"></a></div>"""),
             strip("""<div><span><div><a class="anchor"></a></div></span></div>"""),
         ]
+
+    @pytest.mark.parametrize(
+        argnames="recursive",
+        argvalues=[True, False],
+        ids=["recursive", "not_recursive"],
+    )
+    def test_find_all_returns_empty_list_if_element_is_root(
+        self, selector: RelativeAncestor, recursive: bool, to_element: ToElement
+    ):
+        """Tests if find_all returns an empty list if element is root element."""
+        text = """
+            <div><div><span><div><a class="anchor"></a></div></span></div></div>
+        """
+        bs = to_element(text).find_ancestors()[-1]
+        result = selector.find_all(bs, recursive=recursive)
+        assert result == []

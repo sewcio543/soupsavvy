@@ -165,7 +165,7 @@ class IElement(ABC):
         raise NotImplementedError("Method not implemented")
 
     @abstractmethod
-    def get_attribute_list(self, name: str) -> list[str]:
+    def get_attribute(self, name: str) -> Optional[str]:
         raise NotImplementedError("Method not implemented")
 
     @property
