@@ -4,13 +4,15 @@ Module with `soupsavvy` interfaces used across the package.
 - `Executable` - Interface for operations that can be executed on single argument.
 - `Comparable` - Interface for objects that can be compared for equality.
 - `TagSearcher` - Interface for objects that can search within `bs4.Tag`.
+- `IElement` - Interface for any tree structure compatible with `soupsavvy`.
+- `SelectionApi` - Interface for selection of elements based on specific selector.
 """
 
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import Any, Optional, Pattern, Self, TypeVar, Union
+from typing import Any, NoReturn, Optional, Pattern, Self, TypeVar, Union
 
 import soupsavvy.exceptions as exc
 
@@ -120,6 +122,40 @@ class TagSearcher(ABC):
 
 
 class IElement(ABC):
+    """
+    Interface representing a general HTML node within a tree structure.
+    `IElement` defines methods for common DOM operations, such as searching for elements,
+    retrieving attributes, and navigating between nodes.
+
+    This interface enables consistent access to various HTML-parsing libraries or
+    custom tree structures. Any implementation should wrap a node-like structure
+    and allow `soupsavvy` components to operate on it seamlessly.
+
+    Current Implementations:
+    - `SoupElement`: Wraps a `BeautifulSoup` node.
+    - `LXMLElement`: Wraps an `lxml` node.
+    - `SeleniumElement`: Wraps a `Selenium WebElement`.
+    """
+
+    _NOT_IMPLEMENTED_MESSAGE = (
+        "IElement is an abstract interface and does not implement this method."
+    )
+
+    def __init__(self, node: Any, *args, **kwargs) -> None:
+        """
+        Initializes the implementation with the given node.
+
+        Parameters
+        ----------
+        node : Any
+            Node to wrap for specific implementation.
+        *args: Any
+            Additional positional arguments to pass to the constructor.
+        **kwargs: Any
+            Additional keyword arguments to pass to the constructor.
+        """
+        self._node = node
+
     @abstractmethod
     def find_all(
         self,
@@ -128,70 +164,241 @@ class IElement(ABC):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Self]:
-        raise NotImplementedError("Method not implemented")
+        """
+        Finds all elements that match specified tag name and attributes.
 
-    @classmethod
-    def from_node(cls, node: Any) -> Self:
-        raise NotImplementedError("Method not implemented")
+        Parameters
+        ----------
+        name : str, optional
+            Name of the tag to search for. If `None`, matches all tags.
+        attrs : dict[str, str | Pattern[str]], optional
+            Dictionary of attributes to match. Supports exact matches and regex patterns.
+        recursive : bool, optional
+            If `True`, searches recursively through all descendants.
+            If `False`, searches only direct children.
+        limit : int, optional
+            Maximum number of elements to return. If `None`, returns all matching elements.
+
+        Returns
+        -------
+        list[Self]
+            List of elements that match the criteria, in depth-first order.
+        """
+        self._raise_not_implemented()
 
     @property
     def node(self) -> Any:
-        return None
+        """Returns the underlying node wrapped by the instance."""
+        return self._node
 
     def get(self) -> Any:
+        """Returns the node wrapped by the instance."""
         return self.node
 
     @abstractmethod
     def find_subsequent_siblings(self, limit: Optional[int] = None) -> list[Self]:
-        raise NotImplementedError("Method not implemented")
+        """
+        Finds siblings that follow this node in the document structure.
+
+        Parameters
+        ----------
+        limit : int, optional
+            Maximum number of sibling nodes to return. If `None`, returns all siblings.
+
+        Returns
+        -------
+        list[Self]
+            List of subsequent sibling elements, in document order.
+        """
+        self._raise_not_implemented()
 
     @abstractmethod
     def find_ancestors(self, limit: Optional[int] = None) -> list[Self]:
-        raise NotImplementedError("Method not implemented")
+        """
+        Finds all ancestor nodes up to the root of the document.
+
+        Parameters
+        ----------
+        limit : int, optional
+            Maximum number of ancestors to return, starting from the closest ancestor.
+            If `None`, returns all ancestors.
+
+        Returns
+        -------
+        list[Self]
+            List of ancestor nodes, from nearest to root.
+        """
+        self._raise_not_implemented()
 
     @property
     @abstractmethod
     def children(self) -> Iterable[Self]:
-        raise NotImplementedError("Method not implemented")
+        """
+        Returns an iterable of the direct child elements of this node.
+
+        Notes
+        -----
+        Only tag elements are included; text and comment nodes are excluded.
+
+        Returns
+        -------
+        Iterable[Self]
+            Iterable of direct child nodes, in document order.
+        """
+        self._raise_not_implemented()
 
     @property
     @abstractmethod
     def descendants(self) -> Iterable[Self]:
-        raise NotImplementedError("Method not implemented")
+        """
+        Returns an iterable of all descendant nodes of this node.
+
+        Notes
+        -----
+        Only tag elements are included; text and comment nodes are excluded.
+        Nodes are returned in depth-first order.
+
+        Returns
+        -------
+        Iterable[Self]
+            Iterable of all descendant nodes.
+        """
+        self._raise_not_implemented()
 
     @property
     @abstractmethod
     def parent(self) -> Optional[Self]:
-        raise NotImplementedError("Method not implemented")
+        """
+        Returns the immediate parent node of this element, if it exists.
+
+        Returns
+        -------
+        Optional[Self]
+            The parent element, or `None` if this is the root node.
+        """
+        self._raise_not_implemented()
 
     @abstractmethod
     def get_attribute(self, name: str) -> Optional[str]:
-        raise NotImplementedError("Method not implemented")
+        """
+        Retrieves the value of a specified attribute for this node.
+
+        Parameters
+        ----------
+        name : str
+            Name of the attribute.
+
+        Returns
+        -------
+        Optional[str]
+            The attribute value as a string, or `None` if the attribute does not exist.
+        """
+        self._raise_not_implemented()
 
     @property
     @abstractmethod
     def name(self) -> str:
-        raise NotImplementedError("Method not implemented")
+        """Returns the tag name of this element."""
+        self._raise_not_implemented()
 
     @property
     @abstractmethod
     def text(self) -> str:
-        raise NotImplementedError("Method not implemented")
+        """
+                Gets the combined text content of this element.
 
-    def css(self, selector) -> SelectionApi:
-        raise NotImplementedError("Method not implemented")
+            def css(self, selector) -> SelectionApi:
+                raise NotImplementedError("Method not implemented")
+        =======
+                Notes
+                -----
+                Concatenates all text nodes within this element. The format may vary
+                slightly across implementations depending on handling of whitespace or
+                nested elements.
+
+                Returns
+                -------
+                str
+                    Text content of this element, or an empty string if none is found.
+        """
+        self._raise_not_implemented()
+
+    def css(self, selector: Any) -> SelectionApi:
+        """
+        Returns a `SelectionApi` for CSS-based selection.
+
+        Parameters
+        ----------
+        selector : Any
+            The CSS selector to apply.
+
+        Returns
+        -------
+        SelectionApi
+            Initialized `SelectionApi` instance for CSS selection.
+        """
+        self._raise_not_implemented()
 
     def xpath(self, selector) -> SelectionApi:
-        raise NotImplementedError("Method not implemented")
+        """
+        Returns a `SelectionApi` for XPath-based selection.
+
+        Parameters
+        ----------
+        selector : Any
+            The XPath selector to apply.
+
+        Returns
+        -------
+        SelectionApi
+            Initialized `SelectionApi` instance for XPath selection.
+        """
+        self._raise_not_implemented()
+
+    @classmethod
+    def _raise_not_implemented(cls) -> NoReturn:
+        """Raises a `NotImplementedError` indicating that this method is abstract."""
+        raise NotImplementedError(cls._NOT_IMPLEMENTED_MESSAGE)
 
 
 class SelectionApi(ABC):
-    def __init__(self, selector) -> None:
+    """
+    Interface for selecting elements based on a specific selector.
+
+    `SelectionApi` is designed to handle complex CSS or XPath selections,
+    simplifying element matching across various document structures.
+    Implementing classes should define `select` for element matching.
+    """
+
+    def __init__(self, selector: Any) -> None:
+        """
+        Initializes `SelectionApi` with given selector.
+
+        Parameters
+        ----------
+        selector : Any
+            The selector used for locating elements.
+        """
         self.selector = selector
 
     @abstractmethod
     def select(self, element: IElement) -> list[IElement]:
-        raise NotImplementedError("Method not implemented")
+        """
+        Selects elements within a given node that match the selector.
+
+        Parameters
+        ----------
+        element : IElement
+            The element to search within.
+
+        Returns
+        -------
+        list[IElement]
+            A list of elements matching the selector within the provided element.
+        """
+        raise NotImplementedError(
+            f"{self.__class__.__name__} is abstract and does not implement select method."
+        )
 
 
 Element = TypeVar("Element", bound=IElement)
