@@ -47,11 +47,11 @@ class SeleniumElement(IElement):
                     return False
 
                 if isinstance(value, Pattern):
-                    if not value.search(actual):
-                        return False
+                    if not value.search(actual):  #
+                        return False  #
                 else:
                     if value not in actual.split():
-                        return False
+                        return False  #
             return True
 
         # Filter elements based on attributes match and limit if specified
@@ -61,7 +61,9 @@ class SeleniumElement(IElement):
         ]
         return matched_elements[:limit] if limit else matched_elements
 
-    def find_next_siblings(self, limit: Optional[int] = None) -> list[SeleniumElement]:
+    def find_subsequent_siblings(
+        self, limit: Optional[int] = None
+    ) -> list[SeleniumElement]:
         sibling_elements = self._node.find_elements(By.XPATH, "following-sibling::*")
 
         if limit is not None:
@@ -110,15 +112,9 @@ class SeleniumElement(IElement):
     def get_attribute(self, name: str) -> Optional[str]:
         return self.node.get_dom_attribute(name)
 
-    def prettify(self) -> str:
-        return self._node.get_attribute("outerHTML") or ""
-
     @property
     def name(self) -> str:
         return self._node.tag_name
-
-    # def to_lxml(self) -> HtmlElement:
-    #     raise NotImplementedError("Conversion to lxml is not supported with Selenium.")
 
     def __hash__(self) -> int:
         return hash(self._node)
@@ -127,7 +123,10 @@ class SeleniumElement(IElement):
         return self._node.get_attribute("outerHTML") or ""
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({str(self)})"
+        return f"{self.__class__.__name__}({self._node!r})"
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, SeleniumElement) and self._node is other._node
 
     @property
     def text(self) -> str:

@@ -142,7 +142,7 @@ class IElement(ABC):
         return self.node
 
     @abstractmethod
-    def find_next_siblings(self, limit: Optional[int] = None) -> list[Self]:
+    def find_subsequent_siblings(self, limit: Optional[int] = None) -> list[Self]:
         raise NotImplementedError("Method not implemented")
 
     @abstractmethod
@@ -177,9 +177,6 @@ class IElement(ABC):
     @abstractmethod
     def text(self) -> str:
         raise NotImplementedError("Method not implemented")
-
-    def prettify(self) -> str:
-        return str(self)
 
     def css(self, selector) -> SelectionApi:
         raise NotImplementedError("Method not implemented")

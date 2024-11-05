@@ -13,7 +13,7 @@ Classes
 import itertools
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Optional, Pattern
+from typing import Optional, Pattern
 
 from typing_extensions import deprecated
 
@@ -134,7 +134,7 @@ class PatternSelector(SoupSelector):
 
     def __post_init__(self) -> None:
         """Sets up compiled regex pattern used for `SoupStrainer` in find methods."""
-        self._pattern = (
+        self.pattern = (
             str(self.pattern) if not isinstance(self.pattern, Pattern) else self.pattern
         )
 
@@ -147,9 +147,9 @@ class PatternSelector(SoupSelector):
         iterator = TagIterator(tag, recursive=recursive)
         filter_ = filter(
             lambda x: (
-                self._pattern.search(x.text)
-                if isinstance(self._pattern, Pattern)
-                else x.text == self._pattern
+                self.pattern.search(x.text)
+                if isinstance(self.pattern, Pattern)
+                else x.text == self.pattern
             ),
             iterator,
         )
@@ -159,7 +159,7 @@ class PatternSelector(SoupSelector):
         if not isinstance(other, PatternSelector):
             return False
 
-        return self._pattern == other._pattern
+        return self.pattern == other.pattern
 
 
 @dataclass
@@ -268,7 +268,7 @@ class ExpressionSelector(SoupSelector):
     If raised, it will be propagated to the caller.
     """
 
-    f: Callable[[Any], bool]
+    f: Callable[[IElement], bool]
 
     def find_all(
         self,
@@ -277,7 +277,7 @@ class ExpressionSelector(SoupSelector):
         limit: Optional[int] = None,
     ) -> list[IElement]:
         iterator = TagIterator(tag, recursive=recursive)
-        filter_ = (element for element in iterator if self.f(element.node))
+        filter_ = filter(self.f, iterator)
         return list(itertools.islice(filter_, limit))
 
     def __eq__(self, other) -> bool:

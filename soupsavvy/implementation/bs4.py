@@ -30,26 +30,26 @@ class SoupElement(IElement):
     ) -> list[SoupElement]:
         return [
             SoupElement(element)
-            for element in self._node.find_all(
+            for element in self.node.find_all(
                 name=name, attrs=attrs or {}, recursive=recursive, limit=limit
             )
         ]
 
-    def find_next_siblings(self, limit: Optional[int] = None) -> list[SoupElement]:
+    def find_subsequent_siblings(
+        self, limit: Optional[int] = None
+    ) -> list[SoupElement]:
         return [
-            SoupElement(element) for element in self._node.find_next_siblings(limit=limit)  # type: ignore
+            SoupElement(element) for element in self.node.find_next_siblings(limit=limit)  # type: ignore
         ]
 
     def find_ancestors(self, limit: Optional[int] = None) -> list[SoupElement]:
-        return [
-            SoupElement(element) for element in self._node.find_parents(limit=limit)
-        ]
+        return [SoupElement(element) for element in self.node.find_parents(limit=limit)]
 
     @property
     def children(self) -> Iterable[SoupElement]:
         return (
             SoupElement(element)
-            for element in self._node.children
+            for element in self.node.children
             if isinstance(element, Tag)
         )
 
@@ -57,33 +57,30 @@ class SoupElement(IElement):
     def descendants(self) -> Iterable[SoupElement]:
         return (
             SoupElement(element)
-            for element in self._node.descendants
+            for element in self.node.descendants
             if isinstance(element, Tag)
         )
 
     @property
     def parent(self) -> Optional[SoupElement]:
-        parent = self._node.parent
+        parent = self.node.parent
         return SoupElement(parent) if parent is not None else None
 
     def get_attribute(self, name: str) -> Optional[str]:
-        attr = self._node.get(name)
+        attr = self.node.get(name)
 
         if isinstance(attr, list):
             attr = " ".join(attr)
 
         return attr
 
-    def prettify(self) -> str:
-        return self._node.prettify()
-
     @property
     def name(self) -> str:
-        return self._node.name
+        return self.node.name
 
     @property
     def text(self) -> str:
-        return self._node.text
+        return self.node.text
 
     @staticmethod
     def css(selector: str) -> SelectionApi:
@@ -99,4 +96,4 @@ class SoupElement(IElement):
         return id(self._node)
 
     def __eq__(self, other):
-        return isinstance(other, SoupElement) and hash(self) == hash(other)
+        return isinstance(other, SoupElement) and self.node == other.node

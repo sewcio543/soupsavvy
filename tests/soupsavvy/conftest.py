@@ -38,11 +38,6 @@ def to_element(request, implementation: str) -> Callable[[str], IElement]:
     elif implementation == "lxml":
         return to_lxml
     elif implementation == "selenium":
-        global driver
-
-        if driver is None:
-            driver = get_driver()
-
         return to_selenium
     else:
         raise ValueError(f"Unknown implementation type: {implementation}")
@@ -79,7 +74,10 @@ def get_driver() -> webdriver.Chrome:
 
 def to_selenium(html: str) -> SeleniumElement:
     """Function to replace HTML content and get the root element."""
-    assert driver is not None, "Driver is not initialized"
+    global driver
+
+    if driver is None:
+        driver = get_driver()
 
     driver.execute_script("document.body.outerHTML = arguments[0];", html)
     body = driver.find_element(By.TAG_NAME, "body")

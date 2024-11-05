@@ -20,6 +20,10 @@ class LXMLElement(IElement):
     def node(self) -> HtmlElement:
         return self._node
 
+    @classmethod
+    def from_node(cls, node: HtmlElement) -> LXMLElement:
+        return LXMLElement(node)
+
     def find_all(
         self,
         name: Optional[str] = None,
@@ -56,9 +60,6 @@ class LXMLElement(IElement):
             if attribute is None:
                 return False
 
-            if value is None and attribute is not None:
-                continue
-
             if isinstance(value, Pattern):
                 if not value.search(attribute):
                     return False
@@ -71,7 +72,9 @@ class LXMLElement(IElement):
 
         return True
 
-    def find_next_siblings(self, limit: Optional[int] = None) -> list[LXMLElement]:
+    def find_subsequent_siblings(
+        self, limit: Optional[int] = None
+    ) -> list[LXMLElement]:
         iterator = self._node.itersiblings(None)
         return list(
             islice((LXMLElement(element) for element in iterator), limit),
@@ -96,15 +99,8 @@ class LXMLElement(IElement):
         parent = self._node.getparent()
         return LXMLElement(parent) if parent is not None else None
 
-    def get_text(self, separator: str = "", strip: bool = False) -> str:
-        texts = (text for text in self._node.itertext() if text is not None)
-        return separator.join(texts)  # type: ignore
-
     def get_attribute(self, name: str) -> Optional[str]:
         return self.node.attrib.get(name)
-
-    def prettify(self) -> str:
-        return ""
 
     @property
     def name(self) -> str:
@@ -113,7 +109,7 @@ class LXMLElement(IElement):
     @property
     def text(self) -> str:
         texts = (text for text in self._node.itertext() if text is not None)
-        return "".join(texts)
+        return "".join(texts)  # type: ignore
 
     def css(self, selector: str) -> CSSSelectApi:
         return CSSSelectApi(selector)
@@ -132,11 +128,4 @@ class LXMLElement(IElement):
         return hash(self._node)
 
     def __eq__(self, other):
-        """
-        Checks equality of itself with another object.
-
-        For object to be equal to UniqueTag, it should be an instance of UniqueTag
-        and have the same hash value, meaning it has to wrap the same bs4.Tag instance.
-        In any other case, returns False.
-        """
         return isinstance(other, LXMLElement) and self._node is other._node
