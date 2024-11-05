@@ -61,7 +61,9 @@ class SeleniumElement(IElement):
         ]
         return matched_elements[:limit] if limit else matched_elements
 
-    def find_next_siblings(self, limit: Optional[int] = None) -> list[SeleniumElement]:
+    def find_subsequent_siblings(
+        self, limit: Optional[int] = None
+    ) -> list[SeleniumElement]:
         sibling_elements = self._node.find_elements(By.XPATH, "following-sibling::*")
 
         if limit is not None:

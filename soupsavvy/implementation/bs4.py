@@ -35,7 +35,9 @@ class SoupElement(IElement):
             )
         ]
 
-    def find_next_siblings(self, limit: Optional[int] = None) -> list[SoupElement]:
+    def find_subsequent_siblings(
+        self, limit: Optional[int] = None
+    ) -> list[SoupElement]:
         return [
             SoupElement(element) for element in self._node.find_next_siblings(limit=limit)  # type: ignore
         ]

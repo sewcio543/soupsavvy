@@ -261,7 +261,7 @@ class RelativeNextSibling(BaseRelativeSibling):
     """
 
     def _func(self, tag: IElement) -> list[IElement]:
-        return tag.find_next_siblings(limit=1)
+        return tag.find_subsequent_siblings(limit=1)
 
 
 class RelativeSubsequentSibling(BaseRelativeSibling):
@@ -290,7 +290,7 @@ class RelativeSubsequentSibling(BaseRelativeSibling):
     """
 
     def _func(self, tag: IElement) -> list[IElement]:
-        return tag.find_next_siblings(limit=None)
+        return tag.find_subsequent_siblings(limit=None)
 
 
 class RelativeParent(BaseAncestorSelector):

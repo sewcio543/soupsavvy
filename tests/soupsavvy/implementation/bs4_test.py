@@ -239,7 +239,7 @@ class TestSoupElement:
         assert isinstance(bs, Tag)
 
         element = SoupElement(bs)
-        siblings = element.find_next_siblings()
+        siblings = element.find_subsequent_siblings()
 
         assert all(isinstance(element, SoupElement) for element in siblings)
         assert [strip(str(x)) for x in siblings] == [
@@ -260,7 +260,7 @@ class TestSoupElement:
         assert isinstance(bs, Tag)
 
         element = SoupElement(bs)
-        assert element.find_next_siblings() == []
+        assert element.find_subsequent_siblings() == []
 
     def test_node14(self):
         text = """
@@ -277,7 +277,7 @@ class TestSoupElement:
         assert isinstance(bs, Tag)
 
         element = SoupElement(bs)
-        siblings = element.find_next_siblings(limit=2)
+        siblings = element.find_subsequent_siblings(limit=2)
 
         assert all(isinstance(element, SoupElement) for element in siblings)
         assert [strip(str(x)) for x in siblings] == [

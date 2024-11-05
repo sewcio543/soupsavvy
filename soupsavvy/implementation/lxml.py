@@ -71,7 +71,9 @@ class LXMLElement(IElement):
 
         return True
 
-    def find_next_siblings(self, limit: Optional[int] = None) -> list[LXMLElement]:
+    def find_subsequent_siblings(
+        self, limit: Optional[int] = None
+    ) -> list[LXMLElement]:
         iterator = self._node.itersiblings(None)
         return list(
             islice((LXMLElement(element) for element in iterator), limit),
