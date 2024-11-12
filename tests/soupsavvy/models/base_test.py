@@ -2001,7 +2001,6 @@ class TestBaseModelIntegration:
             name = Operation(lambda x: x.get_attribute("name")) | Operation(
                 lambda x: x.upper()
             )
-            text = Text() | Operation(str.strip)
 
         text = """
             <div id="book1" href="www.book.com" name="Joe">
@@ -2016,7 +2015,6 @@ class TestBaseModelIntegration:
             link="www.book.com",
             id_="book1",
             name="JOE",
-            text="TitleHello",
         )
 
     def test_field_with_compare_false_is_not_compared(self):

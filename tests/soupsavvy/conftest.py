@@ -32,7 +32,7 @@ driver = None
 
 
 @pytest.fixture
-def to_element(request, implementation: str) -> Callable[[str], IElement]:
+def to_element(implementation: str) -> Callable[[str], IElement]:
     if implementation == "bs4":
         return to_soup
     elif implementation == "lxml":
@@ -79,7 +79,7 @@ def to_selenium(html: str) -> SeleniumElement:
     if driver is None:
         driver = get_driver()
 
-    driver.execute_script("document.body.outerHTML = arguments[0];", html)
+    driver.execute_script("document.body.innerHTML = arguments[0];", html)
     body = driver.find_element(By.TAG_NAME, "body")
     return SeleniumElement(body)
 

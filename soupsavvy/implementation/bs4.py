@@ -1,25 +1,34 @@
+"""
+Module with `bs4` implementation of `IElement`.
+`SoupElement` class is an adapter making `bs4` tree,
+compatible with `IElement` interface and usable across the library.
+"""
+
 from __future__ import annotations
 
 from collections.abc import Iterable
 from typing import Optional, Pattern, Union
 
-from bs4 import Tag
+import bs4
 
 from soupsavvy.interfaces import IElement, SelectionApi
 from soupsavvy.selectors.css.api import SoupsieveApi
 
 
 class SoupElement(IElement):
-    def __init__(self, node: Tag) -> None:
-        self._node = node
+    """
+    Implementation of `IElement` for `BeautifulSoup` tree.
+    Adapter for `bs4` objects, that makes them usable across the library.
 
-    @property
-    def node(self) -> Tag:
-        return self._node
+    Example
+    -------
+    >>> from soupsavvy.implementation.bs4 import SoupElement
+    ... from bs4 import BeautifulSoup
+    ... node = BeautifulSoup("<div>example</div>", "html.parser")
+    ... element = SoupElement(node)
+    """
 
-    @classmethod
-    def from_node(cls, node: Tag) -> SoupElement:
-        return SoupElement(node)
+    _NODE_TYPE = bs4.Tag
 
     def find_all(
         self,
@@ -45,27 +54,6 @@ class SoupElement(IElement):
     def find_ancestors(self, limit: Optional[int] = None) -> list[SoupElement]:
         return [SoupElement(element) for element in self.node.find_parents(limit=limit)]
 
-    @property
-    def children(self) -> Iterable[SoupElement]:
-        return (
-            SoupElement(element)
-            for element in self.node.children
-            if isinstance(element, Tag)
-        )
-
-    @property
-    def descendants(self) -> Iterable[SoupElement]:
-        return (
-            SoupElement(element)
-            for element in self.node.descendants
-            if isinstance(element, Tag)
-        )
-
-    @property
-    def parent(self) -> Optional[SoupElement]:
-        parent = self.node.parent
-        return SoupElement(parent) if parent is not None else None
-
     def get_attribute(self, name: str) -> Optional[str]:
         attr = self.node.get(name)
 
@@ -73,6 +61,31 @@ class SoupElement(IElement):
             attr = " ".join(attr)
 
         return attr
+
+    @staticmethod
+    def css(selector: str) -> SelectionApi:
+        return SoupsieveApi(selector)
+
+    @property
+    def children(self) -> Iterable[SoupElement]:
+        return (
+            SoupElement(element)
+            for element in self.node.children
+            if isinstance(element, bs4.Tag)
+        )
+
+    @property
+    def descendants(self) -> Iterable[SoupElement]:
+        return (
+            SoupElement(element)
+            for element in self.node.descendants
+            if isinstance(element, bs4.Tag)
+        )
+
+    @property
+    def parent(self) -> Optional[SoupElement]:
+        parent = self.node.parent
+        return SoupElement(parent) if parent is not None else None
 
     @property
     def name(self) -> str:
@@ -82,18 +95,5 @@ class SoupElement(IElement):
     def text(self) -> str:
         return self.node.text
 
-    @staticmethod
-    def css(selector: str) -> SelectionApi:
-        return SoupsieveApi(selector)
-
-    def __str__(self) -> str:
-        return str(self._node)
-
-    def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self._node!r})"
-
     def __hash__(self):
         return id(self._node)
-
-    def __eq__(self, other):
-        return isinstance(other, SoupElement) and self.node == other.node

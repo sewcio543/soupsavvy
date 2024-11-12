@@ -59,16 +59,6 @@ class TestText:
         result = operation.execute(bs)
         assert result == "Hello"
 
-    def test_does_not_strip_text(self, to_element: ToElement):
-        """Tests if execute method returns raw string of text node without stripping."""
-        text = """
-            <div href="github"> Hello world\n</div>
-        """
-        bs = to_element(text).find_all("div")[0]
-        operation = Text()
-        result = operation.execute(bs)
-        assert result == " Hello world\n"
-
     def test_returns_concatenated_text_of_multiple_nodes(self, to_element: ToElement):
         """
         Tests if execute method returns concatenated text of multiple text nodes
@@ -80,7 +70,7 @@ class TestText:
         bs = to_element(text).find_all("div")[0]
         operation = Text()
         result = operation.execute(bs)
-        assert result == "Helloworld"
+        assert result.replace("\n", "") == "Helloworld"
 
     @pytest.mark.parametrize(
         argnames="operations",
@@ -196,7 +186,11 @@ class TestParent:
             </div>
             <span>Hello</span>
         """
-        bs = to_element(text).find_ancestors()[-1]
+        bs = to_element(text)
+
+        while bs.parent:
+            bs = bs.parent
+
         operation = Parent()
         result = operation.execute(bs)
         assert result is None

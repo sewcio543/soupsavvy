@@ -48,6 +48,8 @@ class TestUniqueTag:
         tag1 = UniqueTag(mock_tag)
         assert tag1 != mock_tag
 
+    # for selenium only content is replaced, not object
+    @pytest.mark.skip_selenium
     def test_different_tags_with_same_content_have_different_hash(
         self,
         to_element: ToElement,

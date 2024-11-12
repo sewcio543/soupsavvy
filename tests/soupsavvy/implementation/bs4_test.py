@@ -18,6 +18,19 @@ from tests.soupsavvy.conftest import strip
 class TestSoupElement:
     """Class with unit tests for `SoupElement` component."""
 
+    def test_raises_exception_when_invalid_init_node(self):
+        """
+        Tests if TypeError is raised when object of invalid type
+        is passed to constructor.
+        """
+        text = """
+            <div>Hello</div>
+            <p>World</p>
+        """
+
+        with pytest.raises(TypeError):
+            SoupElement(text)
+
     def test_node_is_wrapped_by_element(self):
         """
         Tests if node passed to constructor is wrapped by element and can be accessed
@@ -35,7 +48,7 @@ class TestSoupElement:
 
     def test_can_be_constructed_with_from_node_class_method(self):
         """
-        Tests if SoupElement can be constructed with `from_node` class method.
+        Tests if element can be constructed with `from_node` class method.
         This achieves the same result as init method.
         """
         text = """
@@ -51,8 +64,8 @@ class TestSoupElement:
     def test_str_and_repr_are_correct(self):
         """
         Tests if `str` and `repr` methods return correct values.
-        str is supposed to be the same as wrapped bs4 element.
-        Repr should be a string with class name and wrapped bs4 element repr.
+        str is supposed to be the same as wrapped node element.
+        Repr should be a string with class name and wrapped node element repr.
         """
         text = """
             <div>Hello</div>
@@ -96,9 +109,7 @@ class TestSoupElement:
         assert element != bs
 
     def test_name_attribute_has_correct_value(self):
-        """
-        Tests if `name` attribute returns name of the tag of wrapped bs4 element.
-        """
+        """Tests if `name` attribute returns name of the node element."""
         text = """
             <div>Hello</div>
             <p>World</p>
@@ -129,7 +140,6 @@ class TestSoupElement:
 
         element = SoupElement(bs)
         assert element.text == expected
-        # assert element.prettify() == bs.prettify()
 
     def test_children_returns_iterator_of_child_elements_in_order(self):
         """
@@ -150,7 +160,7 @@ class TestSoupElement:
         children = list(element.children)
 
         assert all(isinstance(child, SoupElement) for child in children)
-        assert [strip(str(child.get())) for child in children] == [
+        assert [strip(str(child)) for child in children] == [
             "<p>Hello</p>",
             "<p>World</p>",
             "<span><p>Hi</p><a>Earth</a></span>",
@@ -191,7 +201,7 @@ class TestSoupElement:
         descendants = list(element.descendants)
 
         assert all(isinstance(child, SoupElement) for child in descendants)
-        assert [strip(str(child.get())) for child in descendants] == [
+        assert [strip(str(child)) for child in descendants] == [
             "<p>Hello</p>",
             "<p>World</p>",
             "<span><span><h1>Hi</h1><h2>Hi</h2></span><a>Earth</a></span>",
@@ -219,8 +229,8 @@ class TestSoupElement:
 
     def test_parent_return_element_wrapping_soup_parent(self):
         """
-        Tests if `parent` property returns new SoupElement
-        wrapping parent of the bs4 element.
+        Tests if `parent` property returns new element with parent node
+        as the wrapped node.
         """
         text = """
             <div>
@@ -237,13 +247,24 @@ class TestSoupElement:
 
         assert isinstance(parent, SoupElement)
         assert parent.get() is bs.parent
-        assert (
-            strip(str(parent.get()))
-            == "<div><p>Hello</p><p>World</p><span><p>Hi</p><a>Earth</a></span></div>"
-        )
+
+    def test_parent_return_none_when_root_node(self):
+        """Tests if `parent` property returns None if element is root node."""
+        text = """
+            <div>
+                <p>Hello</p>
+                <p>World</p>
+                <span><p>Hi</p><a>Earth</a></span>
+            </div>
+        """
+        bs = BeautifulSoup(text, features="lxml")
+        element = SoupElement(bs)
+        parent = element.parent
+
+        assert parent is None
 
     @pytest.mark.integration
-    def test_css_api_works_properly_for_soup_element(self):
+    def test_css_api_works_properly(self):
         """
         Tests if `css` method returns `SoupsieveApi` object correctly initialized
         which select elements properly returning list of `SoupElement` objects.
@@ -598,8 +619,8 @@ class TestSoupElement:
     def test_finds_all_elements_with_exact_attribute_match(self):
         """
         Tests if `find_all` method returns all descendant elements
-        with specific attribute and value. Additionally, following bs4 behavior,
-        if any of element classes == value, it is also returned.
+        with specific attribute and value.
+        Additionally, if any of element classes == value, it is also returned.
         """
         text = """
             <div>

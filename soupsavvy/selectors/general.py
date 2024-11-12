@@ -145,8 +145,18 @@ class PatternSelector(SoupSelector):
         limit: Optional[int] = None,
     ) -> list[IElement]:
         iterator = TagIterator(tag, recursive=recursive)
+
+        def _has_children(x: IElement) -> bool:
+            try:
+                next(iter(x.children))
+            except StopIteration:
+                return False
+
+            return True
+
         filter_ = filter(
-            lambda x: (
+            lambda x: not _has_children(x)
+            and (
                 self.pattern.search(x.text)
                 if isinstance(self.pattern, Pattern)
                 else x.text == self.pattern

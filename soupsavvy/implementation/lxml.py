@@ -1,11 +1,17 @@
+"""
+Module with `lxml` implementation of `IElement`.
+`LXMLElement` class is an adapter making `lxml` tree,
+compatible with `IElement` interface and usable across the library.
+"""
+
 from __future__ import annotations
 
 from collections.abc import Iterable
 from itertools import islice
 from typing import Optional, Pattern, Union
 
+import lxml.etree as etree
 from lxml.etree import _Element as HtmlElement
-from lxml.etree import tostring
 
 from soupsavvy.interfaces import IElement
 from soupsavvy.selectors.css.api import CSSSelectApi
@@ -13,16 +19,19 @@ from soupsavvy.selectors.xpath.api import LXMLXpathApi
 
 
 class LXMLElement(IElement):
-    def __init__(self, node: HtmlElement) -> None:
-        self._node = node
+    """
+    Implementation of `IElement` for `lxml` tree.
+    Adapter for `lxml` objects, that makes them usable across the library.
 
-    @property
-    def node(self) -> HtmlElement:
-        return self._node
+    Example
+    -------
+    >>> from soupsavvy.implementation.lxml import LXMLElement
+    ... from lxml.etree import fromstring
+    ... node = fromstring("<html><body><div>example</div></body></html>")
+    ... element = LXMLElement(node)
+    """
 
-    @classmethod
-    def from_node(cls, node: HtmlElement) -> LXMLElement:
-        return LXMLElement(node)
+    _NODE_TYPE = etree._Element
 
     def find_all(
         self,
@@ -86,6 +95,15 @@ class LXMLElement(IElement):
             islice((LXMLElement(element) for element in iterator), limit),
         )
 
+    def get_attribute(self, name: str) -> Optional[str]:
+        return self.node.attrib.get(name)
+
+    def css(self, selector: str) -> CSSSelectApi:
+        return CSSSelectApi(selector)
+
+    def xpath(self, selector) -> LXMLXpathApi:
+        return LXMLXpathApi(selector)
+
     @property
     def children(self) -> Iterable[LXMLElement]:
         return (LXMLElement(element) for element in self._node.iterchildren(None))
@@ -99,9 +117,6 @@ class LXMLElement(IElement):
         parent = self._node.getparent()
         return LXMLElement(parent) if parent is not None else None
 
-    def get_attribute(self, name: str) -> Optional[str]:
-        return self.node.attrib.get(name)
-
     @property
     def name(self) -> str:
         return self._node.tag
@@ -111,21 +126,7 @@ class LXMLElement(IElement):
         texts = (text for text in self._node.itertext() if text is not None)
         return "".join(texts)  # type: ignore
 
-    def css(self, selector: str) -> CSSSelectApi:
-        return CSSSelectApi(selector)
-
-    def xpath(self, selector) -> LXMLXpathApi:
-        return LXMLXpathApi(selector)
-
     def __str__(self) -> str:
-        return tostring(self._node, method="html", with_tail=False).decode("utf-8")
-
-    def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self._node!r})"
-
-    def __hash__(self):
-        """Hashes bs4.Tag instance by id."""
-        return hash(self._node)
-
-    def __eq__(self, other):
-        return isinstance(other, LXMLElement) and self._node is other._node
+        return etree.tostring(self._node, method="html", with_tail=False).decode(
+            "utf-8"
+        )

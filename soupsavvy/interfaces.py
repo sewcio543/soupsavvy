@@ -140,6 +140,7 @@ class IElement(ABC):
     _NOT_IMPLEMENTED_MESSAGE = (
         "IElement is an abstract interface and does not implement this method."
     )
+    _NODE_TYPE: type[Any] = object
 
     def __init__(self, node: Any, *args, **kwargs) -> None:
         """
@@ -154,7 +155,30 @@ class IElement(ABC):
         **kwargs: Any
             Additional keyword arguments to pass to the constructor.
         """
+        if not isinstance(node, self._NODE_TYPE):
+            raise TypeError(
+                f"Expected node to be of type {self._NODE_TYPE}, "
+                f"but got {type(node)} instead."
+            )
+
         self._node = node
+
+    @classmethod
+    def from_node(cls, node: Any) -> Self:
+        """
+        Creates a new instance of the implementation from a node.
+
+        Parameters
+        ----------
+        node : Any
+            Node to wrap for specific implementation.
+
+        Returns
+        -------
+        Self
+            New instance of the implementation with the given node.
+        """
+        return cls(node)
 
     @abstractmethod
     def find_all(
@@ -305,21 +329,18 @@ class IElement(ABC):
     @abstractmethod
     def text(self) -> str:
         """
-                Gets the combined text content of this element.
+        Gets the combined text content of this element.
 
-            def css(self, selector) -> SelectionApi:
-                raise NotImplementedError("Method not implemented")
-        =======
-                Notes
-                -----
-                Concatenates all text nodes within this element. The format may vary
-                slightly across implementations depending on handling of whitespace or
-                nested elements.
+        Notes
+        -----
+        Concatenates all text nodes within this element. The format may vary
+        slightly across implementations depending on handling of whitespace or
+        nested elements.
 
-                Returns
-                -------
-                str
-                    Text content of this element, or an empty string if none is found.
+        Returns
+        -------
+        str
+            Text content of this element, or an empty string if none is found.
         """
         self._raise_not_implemented()
 
@@ -359,6 +380,19 @@ class IElement(ABC):
     def _raise_not_implemented(cls) -> NoReturn:
         """Raises a `NotImplementedError` indicating that this method is abstract."""
         raise NotImplementedError(cls._NOT_IMPLEMENTED_MESSAGE)
+
+    def __hash__(self):
+        """Hashes element object using the wrapped node's hash."""
+        return hash(self._node)
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.node is other.node
+
+    def __str__(self) -> str:
+        return str(self._node)
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self._node!r})"
 
 
 class SelectionApi(ABC):
