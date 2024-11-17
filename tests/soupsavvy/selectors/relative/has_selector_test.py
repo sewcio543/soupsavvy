@@ -35,7 +35,7 @@ class TestHasSelector:
         self, to_element: ToElement, recursive: bool
     ):
         """
-        Tests if find method returns the first tag that has a descendant element that
+        Tests if find method returns the first element, that has a descendant element that
         matches a single selector. In this case, recursive parameter is not relevant,
         because by default HasSelector matches all descendants, if descendant 'has'
         element, its parent has it as well, and is first in order.
@@ -59,11 +59,11 @@ class TestHasSelector:
         argvalues=[True, False],
         ids=["recursive", "not_recursive"],
     )
-    def test_find_raises_exception_when_no_tags_matches_single_selector_in_strict_mode(
+    def test_find_raises_exception_when_no_element_matches_single_selector_in_strict_mode(
         self, to_element: ToElement, recursive: bool
     ):
         """
-        Tests if find method raises TagNotFoundException when no tag is found
+        Tests if find method raises TagNotFoundException when no element is found
         that has a descendant element matching a single selector in strict mode.
         """
         text = """
@@ -84,11 +84,11 @@ class TestHasSelector:
         argvalues=[True, False],
         ids=["recursive", "not_recursive"],
     )
-    def test_find_returns_none_if_no_tags_matches_single_selector_in_not_strict_mode(
+    def test_find_returns_none_if_no_elements_matches_single_selector_in_not_strict_mode(
         self, to_element: ToElement, recursive: bool
     ):
         """
-        Tests if find method returns None when no tag is found that has a descendant
+        Tests if find method returns None when no element is found that has a descendant
         element matching a single selector in not strict mode.
         """
         text = """
@@ -103,7 +103,7 @@ class TestHasSelector:
         result = selector.find(bs, recursive=recursive)
         assert result is None
 
-    def test_finds_all_tags_matching_single_selector_when_recursive_true(
+    def test_finds_all_elements_matching_single_selector_when_recursive_true(
         self,
         to_element: ToElement,
     ):
@@ -135,7 +135,7 @@ class TestHasSelector:
             strip("""<span><a>45</a></span>"""),
         ]
 
-    def test_finds_all_tags_matching_single_selector_when_recursive_false(
+    def test_finds_all_elements_matching_single_selector_when_recursive_false(
         self,
         to_element: ToElement,
     ):
@@ -169,11 +169,11 @@ class TestHasSelector:
         argvalues=[True, False],
         ids=["recursive", "not_recursive"],
     )
-    def test_find_all_returns_empty_list_if_no_tag_matches_single_selector(
+    def test_find_all_returns_empty_list_if_no_element_matches_single_selector(
         self, to_element: ToElement, recursive: bool
     ):
         """
-        Tests if find_all method returns an empty list when no tag is found
+        Tests if find_all method returns an empty list when no element is found
         that has a descendant element matching a single selector.
         """
         text = """
@@ -247,7 +247,7 @@ class TestHasSelector:
 
     def test_find_returns_match_with_multiple_selectors(self, to_element: ToElement):
         """
-        Tests if find method returns the first tag that matches selector
+        Tests if find method returns the first element, that matches selector
         if there are multiple selectors are provided.
         """
         text = """
@@ -273,14 +273,14 @@ class TestHasSelector:
         ]
 
     @pytest.mark.integration
-    def test_find_all_returns_all_tags_matching_relative_child(
+    def test_find_all_returns_all_elements_matching_relative_child(
         self,
         to_element: ToElement,
     ):
         """
-        Tests if find_all method returns all tags that anchored to relative selector
-        find at least one matching tag. In this case, only elements that have
-        a link tag as a child are returned.
+        Tests if find_all method returns all elements that anchored to relative selector
+        find at least one matching element. In this case, only elements that have
+        a link element as a child are returned.
         """
         text = """
             <p>Don't have</p>
@@ -305,14 +305,14 @@ class TestHasSelector:
         ]
 
     @pytest.mark.integration
-    def test_find_all_returns_all_tags_matching_relative_descendants(
+    def test_find_all_returns_all_elements_matching_relative_descendants(
         self,
         to_element: ToElement,
     ):
         """
-        Tests if find_all method returns all tags that anchored to relative selector
-        find at least one matching tag. In this case, all elements that have
-        a link tag as a descendant are returned, this is a default behavior,
+        Tests if find_all method returns all elements that anchored to relative selector
+        find at least one matching element. In this case, all elements that have
+        a link element as a descendant are returned, this is a default behavior,
         which is equivalent to just passing the link selector.
         """
         text = """
@@ -333,14 +333,14 @@ class TestHasSelector:
         ]
 
     @pytest.mark.integration
-    def test_find_all_returns_all_tags_matching_relative_next_sibling(
+    def test_find_all_returns_all_elements_matching_relative_next_sibling(
         self,
         to_element: ToElement,
     ):
         """
-        Tests if find_all method returns all tags that anchored to relative selector
-        find at least one matching tag. In this case, all elements that have
-        a link tag as a next sibling are returned.
+        Tests if find_all method returns all elements that anchored to relative selector
+        find at least one matching element. In this case, all elements that have
+        a link element as a next sibling are returned.
         """
         text = """
             <p>Don't have</p>
@@ -359,14 +359,14 @@ class TestHasSelector:
         ]
 
     @pytest.mark.integration
-    def test_find_all_returns_all_tags_matching_relative_subsequent_sibling(
+    def test_find_all_returns_all_elements_matching_relative_subsequent_sibling(
         self,
         to_element: ToElement,
     ):
         """
-        Tests if find_all method returns all tags that anchored to relative selector
-        find at least one matching tag. In this case, all elements that have
-        a link tag as a subsequent sibling are returned.
+        Tests if find_all method returns all elements that anchored to relative selector
+        find at least one matching element. In this case, all elements that have
+        a link element as a subsequent sibling are returned.
         """
         text = """
             <p>Don't have</p>

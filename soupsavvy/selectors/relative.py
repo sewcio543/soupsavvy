@@ -24,14 +24,14 @@ from soupsavvy.utils.selector_utils import TagIterator, TagResultSet
 
 class RelativeSelector(SoupSelector):
     """
-    Base class for relative selectors, that are used to find tags relative
-    to the tag that is being searched, which is considered an anchor.
+    Base class for relative selectors, that are used to find elements relative
+    to the element that is being searched, which is considered an anchor.
 
     CSS definition of relative selectors state, that it is a selector representing
     an element relative to one or more anchor elements preceded by a combinator.
 
-    In this use case, the anchor element is the tag that is being searched, and
-    the combinator is the logic of specific relative selector that is used.
+    In this use case, the anchor element is the element that is being searched,
+    and the combinator is the logic of specific relative selector that is used.
 
     Example
     -------
@@ -63,7 +63,7 @@ class RelativeSelector(SoupSelector):
         Parameters
         ----------
         selector : SoupSelector
-            Selector that is used to find tags relative to the anchor tag.
+            Selector that is used to find tags relative to the anchor element.
         """
         self._selector = check_selector(selector)
 
@@ -102,7 +102,7 @@ class RelativeSelector(SoupSelector):
 class BaseRelativeSibling(RelativeSelector):
     """
     Base class with implementation for relative sibling selectors,
-    searches for next sibling(s) of the anchor tag.
+    searches for next sibling(s) of the anchor element.
     Child class needs to define:
     - '_limit' - class attribute to specify how many next siblings to search for.
     - '_func' - class attribute to specify which method to use for finding siblings.
@@ -132,7 +132,7 @@ class BaseRelativeSibling(RelativeSelector):
 class BaseAncestorSelector(RelativeSelector):
     """
     Base class with implementation for ancestor selectors,
-    searches for ancestor(s) of the anchor tag.
+    searches for ancestor(s) of the anchor element.
     Child class needs to define:
     - '_limit' - class attribute to specify how many ancestors to search for.
     """

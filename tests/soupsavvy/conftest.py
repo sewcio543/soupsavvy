@@ -90,7 +90,7 @@ def strip(markup: str) -> str:
 
 
 def find_body_element(bs: Element) -> Element:
-    """Helper function to find body element in bs4.Tag object."""
+    """Helper function to find body element in IElement object."""
     return bs.find_all("body")[0]
 
 
@@ -122,8 +122,8 @@ class _MockSimpleComparable(MockSelector):
 class MockLinkSelector(_MockSimpleComparable):
     """
     Mock selector class for testing purposes.
-    Find every instance of link tag (with tag name 'a').
-    Delegates the task to bs4.Tag.find_all method.
+    Find every instance of link element (with tag name 'a').
+    Delegates the task to IElement.find_all method.
     """
 
     def find_all(
@@ -135,7 +135,7 @@ class MockLinkSelector(_MockSimpleComparable):
 class MockDivSelector(_MockSimpleComparable):
     """
     Mock selector class for testing purposes.
-    Find every instance of div tag (with tag name 'div').
+    Find every instance of div element (with tag name 'div').
     Delegates the task to bs4.Tag.find_all method.
     """
 
@@ -180,7 +180,7 @@ class BaseMockOperation(BaseOperation):
 
 
 class MockTextOperation(BaseMockOperation):
-    """Mock operation that returns text of the tag, using .text attribute."""
+    """Mock operation that returns text of the element, using .text attribute."""
 
     def __init__(self, skip_none: bool = False) -> None:
         """

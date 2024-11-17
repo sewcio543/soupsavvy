@@ -27,7 +27,7 @@ class TestSelfSelector:
         self, to_element: ToElement, strict: bool, recursive: bool
     ):
         """
-        Tests if find method always returns tag itself irrespective of
+        Tests if find method always returns element itself irrespective of
         any other parameters, testing for all strict and recursive values.
         """
         BS = to_element(TEXT).find_all("div")[0]
@@ -43,7 +43,7 @@ class TestSelfSelector:
     ):
         """
         Tests if find_all method always returns a single element list with
-        tag itself irrespective of any other parameters,
+        element itself irrespective of any other parameters,
         testing for all recursive values with and without limit.
         """
         BS = to_element(TEXT).find_all("div")[0]

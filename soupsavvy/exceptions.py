@@ -23,7 +23,7 @@ class TagNotFoundException(SoupSelectorException):
     """
     Exception to be raised when `SoupSelector` element was not found in the markup.
     Raised by `SoupSelector` find method when strict parameter is set to True
-    and target element was not found in provided `bs4.Tag` object.
+    and target element was not found in provided element object.
     """
 
 
@@ -197,7 +197,7 @@ class UnknownModelFieldException(BaseModelException):
 
 class ModelNotFoundException(BaseModelException):
     """
-    Exception raised by `BaseModel` when model scope was not found in provided tag
+    Exception raised by `BaseModel` when model scope was not found in provided element
     and strict parameter was set to True.
     """
 

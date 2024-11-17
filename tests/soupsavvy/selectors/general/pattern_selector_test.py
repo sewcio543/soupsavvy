@@ -47,7 +47,7 @@ class TestPatternSelector:
             <div>Hello Hello</div>
         """
         bs = to_element(text)
-        selector = PatternSelector(pattern=re.compile("Hello"))
+        selector = PatternSelector(re.compile("Hello"))
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div>Hi Hi Hello</div>""")
 
@@ -98,20 +98,20 @@ class TestPatternSelector:
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a>^Hello</a>""")
 
-    #! TODO
-    # def test_find_does_not_return_element_with_children_that_matches_text(self, to_element: ToElement):
-    #     """
-    #     Tests if find does not return element that has children, even though
-    #     its text content matches the selector. It's due to bs4 implementation
-    #     that does not match element on text if it has children.
-    #     """
-    #     text = """
-    #         <div>Hello<div></div></div>
-    #     """
-    #     bs = to_bs(text)
-    #     selector = PatternSelector(re.compile("Hello"))
-    #     result = selector.find(bs)
-    #     assert strip(str(result)) == strip(""" <div>Hello<div></div></div>""")
+    def test_find_does_not_return_element_with_children_that_matches_text(
+        self, to_element: ToElement
+    ):
+        """
+        Tests if find does not return element that has children, even though
+        its text content matches the selector. Selector only matches leaf nodes.
+        """
+        text = """
+            <div>Hello<div></div></div>
+        """
+        bs = to_element(text)
+        selector = PatternSelector(re.compile("Hello"))
+        result = selector.find(bs)
+        assert result is None
 
     def test_find_returns_none_if_no_match_and_strict_false(
         self, to_element: ToElement
@@ -163,7 +163,7 @@ class TestPatternSelector:
                 <div>Good morning</div>
                 <a>Hello</a>
             </div>
-            <p>Hello</p>
+            <div><p>Hello</p></div>
         """
         bs = to_element(text)
         selector = PatternSelector("Hello")

@@ -11,13 +11,13 @@ from tests.soupsavvy.conftest import MockLinkSelector, ToElement, strip
 @pytest.mark.skip_bs4
 class TestXPathSelector:
     """
-    Class with unit tests for XPathSelector tag selector.
+    Class with unit tests for XPathSelector selector.
     Idea for the tests is to check cases for simple selector, selection itself
     is delegates to appropriate api handled by implementation.
     """
 
-    def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
-        """Tests if find method returns first tag matching selector."""
+    def test_find_returns_first_element_matching_selector(self, to_element: ToElement):
+        """Tests if find method returns first element matching selector."""
         text = """
             <div></div>
             <div class="widget123">

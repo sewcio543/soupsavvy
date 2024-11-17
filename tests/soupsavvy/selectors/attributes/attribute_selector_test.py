@@ -13,11 +13,13 @@ from tests.soupsavvy.conftest import MockDivSelector, ToElement, strip
 class TestAttributeSelector:
     """Class for AttributeSelector unit test suite."""
 
-    def test_find_returns_first_matching_tag_with_specific_attribute(
+    def test_find_returns_first_matching_element_with_specific_attribute(
         self,
         to_element: ToElement,
     ):
-        """Tests if find method returns first matching tag with specific attribute."""
+        """
+        Tests if find method returns first matching element  with specific attribute.
+        """
         text = """
             <div href="github"></div>
             <a></a>
@@ -29,12 +31,12 @@ class TestAttributeSelector:
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget"></a>""")
 
-    def test_find_returns_first_matching_tag_with_exact_attribute_value(
+    def test_find_returns_first_matching_element_with_exact_attribute_value(
         self,
         to_element: ToElement,
     ):
         """
-        Tests if find method returns first matching tag with exact attribute value.
+        Tests if find method returns first matching element with exact attribute value.
         """
         text = """
             <div href="github" class="menu"></div>
@@ -48,8 +50,10 @@ class TestAttributeSelector:
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget"></a>""")
 
-    def test_find_returns_first_matching_tag_with_regex(self, to_element: ToElement):
-        """Tests if find method returns first matching tag with regex pattern."""
+    def test_find_returns_first_matching_element_with_regex(
+        self, to_element: ToElement
+    ):
+        """Tests if find method returns first matching element with regex pattern."""
         text = """
             <div href="github" class="menu"></div>
             <a></a>
@@ -409,7 +413,7 @@ class TestAttributeSelector:
         to_element: ToElement,
     ):
         """
-        Tests if find returns first tag with that has a list of values
+        Tests if find returns first element with that has a list of values
         of specific attribute, if one of the values matches the selector.
 
         Example
@@ -431,23 +435,3 @@ class TestAttributeSelector:
         assert strip(str(result)) == strip(
             """<div class="it has a long list of widget classes"></div>"""
         )
-
-    @pytest.mark.edge_case
-    def test_do_not_shadow_bs4_find_method_parameters(self, to_element: ToElement):
-        """
-        Tests that find method does not shadow bs4.selector find method parameters.
-        If attribute name is the same as bs4.selector find method parameter
-        like ex. 'string' or 'name' it should not cause any conflicts.
-        The way to avoid it is to pass attribute filters as a dictionary to 'attrs'
-        parameter in bs4.selector find method instead of as keyword arguments.
-        """
-        text = """
-            <div href="github" class="menu"></div>
-            <a class="github"></a>
-            <span name="github"></span>
-            <div name="github"></div>
-        """
-        bs = to_element(text)
-        selector = AttributeSelector(name="name", value="github")
-        result = selector.find(bs)
-        assert strip(str(result)) == strip("""<span name="github"></span>""")

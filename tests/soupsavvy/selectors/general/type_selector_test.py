@@ -11,8 +11,8 @@ from tests.soupsavvy.conftest import MockLinkSelector, ToElement, strip
 class TestTypeSelector:
     """Class for TypeSelector unit test suite."""
 
-    def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
-        """Tests if find method returns first tag matching selector."""
+    def test_find_returns_first_element_matching_selector(self, to_element: ToElement):
+        """Tests if find method returns first element matching selector."""
         text = """
             <div href="github"></div>
             <h1 class="widget">1</h1>

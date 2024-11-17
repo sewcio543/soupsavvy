@@ -65,7 +65,7 @@ class BaseNthOfSelector(SoupSelector):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[IElement]:
-        # if recursive is False, check only children of tag itself
+        # if recursive is False, check only children of element itself
         tag_iterator = (
             TagIterator(tag, recursive=recursive, include_self=True)
             if recursive

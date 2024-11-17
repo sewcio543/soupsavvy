@@ -9,18 +9,19 @@ from soupsavvy.selectors.namespace import CSS_SELECTOR_WILDCARD
 from tests.soupsavvy.conftest import MockDivSelector, ToElement, strip
 
 
-def find_tag(bs: IElement, name: str = "body") -> IElement:
+def find_element(node: IElement, name: str = "body") -> IElement:
     """
-    Helper function to find tag in bs4 object.
+    Helper function to find element in IElement object.
 
     Parameters
     ----------
-    bs : Tag
-        bs4 object to search for tag.
-    name : str
+    node : Tag
+        IElement object to search within.
+    name : str, optional
         Tag name to search for, default is "body".
+        By default it searches for body element.
     """
-    return bs.find_all(name)[0]
+    return node.find_all(name)[0]
 
 
 @pytest.mark.selector
@@ -35,10 +36,10 @@ class TestUniversalSelector:
         """
         return UniversalSelector()
 
-    def test_find_returns_first_tag_matching_selector(
+    def test_find_returns_first_element_matching_selector(
         self, selector: UniversalSelector, to_element: ToElement
     ):
-        """Tests if find method returns the first tag that matches selector."""
+        """Tests if find method returns the first element, that matches selector."""
         text = """
             <a class="widget">1</a>
             <div><a>23</a></div>
@@ -48,41 +49,41 @@ class TestUniversalSelector:
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget">1</a>""")
 
-    def test_find_raises_exception_when_no_tags_match_in_strict_mode(
+    def test_find_raises_exception_when_no_element_match_in_strict_mode(
         self, selector: UniversalSelector, to_element: ToElement
     ):
         """
-        Tests if find method raises TagNotFoundException when no tag is found
+        Tests if find method raises TagNotFoundException when no element is found
         that matches selector in strict mode.
         """
         text = """
             <a class="widget"></a>
             <div><p></p></div>
         """
-        bs = find_tag(to_element(text), name="a")
+        bs = find_element(to_element(text), name="a")
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_returns_none_if_no_tags_match_in_not_strict_mode(
+    def test_find_returns_none_if_no_elements_match_in_not_strict_mode(
         self, selector: UniversalSelector, to_element: ToElement
     ):
         """
-        Tests if find method returns None when no tag is found that
+        Tests if find method returns None when no element is found that
         matches selector in not strict mode.
         """
         text = """
             <a class="widget"></a>
             <div><p></p></div>
         """
-        bs = find_tag(to_element(text), name="a")
+        bs = find_element(to_element(text), name="a")
         result = selector.find(bs)
         assert result is None
 
-    def test_finds_all_tags_matching_selectors(
+    def test_finds_all_elements_matching_selectors(
         self, selector: UniversalSelector, to_element: ToElement
     ):
-        """Tests if find_all method returns all tags that match selector."""
+        """Tests if find_all method returns all elements that match selector."""
         text = """
             <a class="widget">1</a>
             <div><a>23</a></div>
@@ -98,18 +99,18 @@ class TestUniversalSelector:
             strip("""<p>4</p>"""),
         ]
 
-    def test_find_all_returns_empty_list_if_no_tag_matches(
+    def test_find_all_returns_empty_list_if_no_element_matches(
         self, selector: UniversalSelector, to_element: ToElement
     ):
         """
-        Tests if find_all method returns an empty list when no tag is found
+        Tests if find_all method returns an empty list when no element is found
         that matches selector.
         """
         text = """
             <a class="widget"></a>
             <div><p></p></div>
         """
-        bs = find_tag(to_element(text), name="a")
+        bs = find_element(to_element(text), name="a")
         assert selector.find_all(bs) == []
 
     def test_find_returns_first_matching_child_if_recursive_false(
@@ -140,7 +141,7 @@ class TestUniversalSelector:
             <a class="widget"></a>
             <div><p></p></div>
         """
-        bs = find_tag(to_element(text), name="a")
+        bs = find_element(to_element(text), name="a")
         result = selector.find(bs, recursive=False)
         assert result is None
 
@@ -155,7 +156,7 @@ class TestUniversalSelector:
             <a class="widget"></a>
             <div><p></p></div>
         """
-        bs = find_tag(to_element(text), name="a")
+        bs = find_element(to_element(text), name="a")
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True, recursive=False)
@@ -192,7 +193,7 @@ class TestUniversalSelector:
             <a class="widget"></a>
             <div><p></p></div>
         """
-        bs = find_tag(to_element(text), name="a")
+        bs = find_element(to_element(text), name="a")
         result = selector.find_all(bs, recursive=False)
         assert result == []
 

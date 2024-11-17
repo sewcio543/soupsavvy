@@ -54,7 +54,7 @@ class MigrationSchema:
 def post(field: str) -> Callable[[Callable], Callable]:
     """
     Decorator to mark a method as a post-processor for a model field.
-    The method will be called after the field is extracted from the tag
+    The method will be called after the field is extracted from the element
     in model instance initialization.
 
     Example
@@ -398,16 +398,16 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         recursive: bool = True,
     ) -> Optional[Self]:
         """
-        Searches for and returns an instance of the model within the provided tag.
+        Searches for and returns an instance of the model within the provided element.
         By default, perform recursive, non-strict search for model fields
         within the scope element.
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` object to search within for the model.
+        tag : IElement
+            Any `IElement` object to search within for the model.
         strict : bool, optional
-            If True, enforces model scope to be found in the tag.
+            If True, enforces model scope to be found in the element.
         recursive : bool, optional
             Whether the search for the model scope element should be recursive.
             Default is True.
@@ -440,13 +440,13 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
     @classmethod
     def _find(cls, tag: IElement) -> Self:
         """
-        Internal method to find and initialize a model instance from a given tag.
+        Internal method to find and initialize a model instance from a given element.
         By default, perform recursive, non-strict search for model fields.
 
         Parameters
         ----------
-        tag : Tag
-            The tag within which to search for model fields (scope element).
+        tag : IElement
+            The `IElement` within which to search for model fields (scope element).
 
         Returns
         -------
@@ -491,14 +491,14 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         limit: Optional[int] = None,
     ) -> list[Self]:
         """
-        Searches for and returns all instances of the model within the provided tag.
+        Searches for and returns all instances of the model within the provided element.
         By default, perform recursive, non-strict search for model fields
         just like in `find` method.
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` object to search within for the model.
+        tag : IElement
+            Any `IElement` object to search within for the model.
         recursive : bool, optional
             Whether the search for the model scope element should be recursive.
             Default is True.
@@ -509,7 +509,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         Returns
         -------
         list[Self]
-            A list of model instances found within the tag.
+            A list of model instances found within the element.
         """
         elements = cls.scope.find_all(tag=tag, recursive=recursive, limit=limit)
         return [cls._find(element) for element in elements]

@@ -16,7 +16,7 @@ from soupsavvy.interfaces import Comparable, IElement, TagSearcher
 class SelectionPipeline(TagSearcher, Comparable):
     """
     Class for chaining searcher and operation together.
-    Uses searcher to find information in tag and operation to process the data.
+    Uses searcher to find information in element and operation to process the data.
 
     Example
     -------
@@ -37,7 +37,7 @@ class SelectionPipeline(TagSearcher, Comparable):
         Parameters
         ----------
         selector : TagSearcher
-            Selector used for finding target information in the tag.
+            Selector used for finding target information in the element.
         operation : BaseOperation
             Operation used for processing the data.
         """
@@ -53,7 +53,7 @@ class SelectionPipeline(TagSearcher, Comparable):
     def selector(self) -> TagSearcher:
         """
         Returns `TagSearcher` object of this pipeline used for finding target
-        information in the tag.
+        information in the element.
 
         Returns
         -------
@@ -85,24 +85,24 @@ class SelectionPipeline(TagSearcher, Comparable):
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` object to process.
+        tag : IElement
+            Any `IElement` object to process.
         strict : bool, optional
-            If True, enforces results to be found in the tag, by default False.
+            If True, enforces results to be found in the element, by default False.
         recursive : bool, optional
             Specifies if search should be recursive.
-            If set to `False`, only direct children of the tag will be searched.
+            If set to `False`, only direct children of the element will be searched.
             By default `True`.
 
         Returns
         -------
         Any
-            Result of the operation applied to the found tag.
+            Result of the operation applied to the found element.
 
         Raises
         ------
         TagNotFoundException
-            If strict parameter is set to `True` and none matching tag was found.
+            If strict parameter is set to `True` and none matching element was found.
         """
         return self.operation.execute(
             self.selector.find(tag, strict=strict, recursive=recursive)
@@ -119,11 +119,11 @@ class SelectionPipeline(TagSearcher, Comparable):
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` object to process.
+        tag : IElement
+            Any `IElement` object to process.
         recursive : bool, optional
             Specifies if search should be recursive.
-            If set to `False`, only direct children of the tag will be searched.
+            If set to `False`, only direct children of the element will be searched.
             By default `True`.
         limit : int, optional
             Specifies maximum number of results to return in a list.

@@ -30,7 +30,7 @@ class TestNthLastOfSelector:
         to_element: ToElement,
     ):
         """
-        Tests if find method returns the first tag that matches
+        Tests if find method returns the first element, that matches
         both the soup selector and the nth selector.
         """
         text = """
@@ -55,7 +55,7 @@ class TestNthLastOfSelector:
         to_element: ToElement,
     ):
         """
-        Tests if find method raises TagNotFoundException when no tag is found
+        Tests if find method raises TagNotFoundException when no element is found
         that matches both the soup selector and the nth selector in strict mode.
         In this case tags that match soup selector are found, but none of them
         match the nth selector.
@@ -70,7 +70,7 @@ class TestNthLastOfSelector:
             <a>Don't have</a>
         """
         bs = to_element(text)
-        # nothing would be matches because there is only one matching tag
+        # nothing would be matches because there is only one matching element
         selector = NthLastOfSelector(MockClassMenuSelector(), "2n")
 
         with pytest.raises(TagNotFoundException):
@@ -81,7 +81,7 @@ class TestNthLastOfSelector:
         to_element: ToElement,
     ):
         """
-        Tests if find method raises TagNotFoundException when no tag is found
+        Tests if find method raises TagNotFoundException when no element is found
         that matches both the soup selector and the nth selector in strict mode.
         In this case no tags that match soup selector are found.
         """
@@ -100,12 +100,12 @@ class TestNthLastOfSelector:
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_returns_none_if_no_tags_matches_nth_selector_in_not_strict_mode(
+    def test_find_returns_none_if_no_elements_matches_nth_selector_in_not_strict_mode(
         self,
         to_element: ToElement,
     ):
         """
-        Tests if find method returns None when no tag is found that matches
+        Tests if find method returns None when no element is found that matches
         both the soup selector and the nth selector in not strict mode.
         In this case tags are found that match the soup selector, but
         there are no tags that match the nth selector.
@@ -125,12 +125,12 @@ class TestNthLastOfSelector:
         result = selector.find(bs)
         assert result is None
 
-    def test_find_returns_none_if_no_tags_matches_soup_selector_in_not_strict_mode(
+    def test_find_returns_none_if_no_elements_matches_soup_selector_in_not_strict_mode(
         self,
         to_element: ToElement,
     ):
         """
-        Tests if find method returns None when no tag is found that matches
+        Tests if find method returns None when no element is found that matches
         both the soup selector and the nth selector in not strict mode.
         In this case no tags are found that match the soup selector.
         """

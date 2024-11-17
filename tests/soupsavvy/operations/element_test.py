@@ -95,10 +95,10 @@ class TestText:
 class TestHref:
     """Class with unit test suite for Href operation."""
 
-    def test_raises_error_when_input_not_bs4_tag(self):
+    def test_raises_error_when_input_not_element(self):
         """
         Tests if execute method raises FailedOperationExecution
-        if input is not bs4 tag.
+        if input is not IElement.
         """
         text = """
             <div href="github">Hello world</div>
@@ -159,10 +159,10 @@ class TestHref:
 class TestParent:
     """Class with unit test suite for Parent operation."""
 
-    def test_raises_error_when_input_not_bs4_tag(self):
+    def test_raises_error_when_input_not_element(self):
         """
         Tests if execute method raises FailedOperationExecution
-        if input is not bs4 tag.
+        if input is not IElement.
         """
         text = """
             <div>
@@ -178,7 +178,7 @@ class TestParent:
     def test_returns_none_if_no_parent(self, to_element: ToElement):
         """
         Tests if execute method returns None if no parent provided element
-        does not have parent. It must be `html` tag.
+        does not have parent. It must be `html` root element.
         """
         text = """
             <div>
@@ -249,10 +249,10 @@ class TestParent:
             strip('<div href="github"><a>Hello</a></div>')
         ]
 
-    def test_raises_error_when_find_methods_get_not_tag(self):
+    def test_raises_error_when_find_methods_gets_invalid_input(self):
         """
         Tests if find and find_all methods raise FailedOperationExecution
-        if input is not bs4 tag.
+        if input is not IElement.
         """
         operation = Parent()
 

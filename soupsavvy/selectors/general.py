@@ -95,7 +95,7 @@ class PatternSelector(SoupSelector):
 
     Example
     -------
-    >>> PatternSelector(pattern="Hello World")
+    >>> PatternSelector("Hello World")
 
     matches all element with exact text content "Hello World".
 
@@ -109,7 +109,7 @@ class PatternSelector(SoupSelector):
 
     Example
     -------
-    >>> PatternSelector(pattern=re.compile(r"[0-9]+"))
+    >>> PatternSelector(re.compile(r"[0-9]+"))
 
     matches all elements with text content containing at least one digit.
 
@@ -126,14 +126,14 @@ class PatternSelector(SoupSelector):
 
     Notes
     -----
-    Due to `bs4` implementation, element does not match the pattern if it has any children.
+    Element does not match the pattern if it has any children.
     Only leaf nodes can be returned by `PatternSelector` find methods.
     """
 
     pattern: ns.PatternType
 
     def __post_init__(self) -> None:
-        """Sets up compiled regex pattern used for `SoupStrainer` in find methods."""
+        """Sets up compiled regex pattern used for find methods."""
         self.pattern = (
             str(self.pattern) if not isinstance(self.pattern, Pattern) else self.pattern
         )
@@ -147,6 +147,8 @@ class PatternSelector(SoupSelector):
         iterator = TagIterator(tag, recursive=recursive)
 
         def _has_children(x: IElement) -> bool:
+            #! As text of the element is concatenated string of all child text nodes,
+            #! it does not make sense to include elements with children in the result.
             try:
                 next(iter(x.children))
             except StopIteration:
@@ -175,7 +177,8 @@ class PatternSelector(SoupSelector):
 @dataclass
 class UniversalSelector(SoupSelector, SelectableCSS):
     """
-    Selector representing a wildcard pattern, that matches all elements in the html page.
+    Selector representing a wildcard pattern,
+    that matches all elements in the html page.
 
     Example
     -------
@@ -257,13 +260,13 @@ class SelfSelector(SoupSelector):
 class ExpressionSelector(SoupSelector):
     """
     Selector that matches elements based on a user-defined function (predicate),
-    that is used as filter for `bs4` object.
+    that is used as filter for element object.
 
     Applies predicate to each element and returns those that satisfy the condition.
 
     Parameters
     ----------
-    f : Callable[[Any], bool]
+    f : Callable[[IElement], bool]
         A user-defined function (predicate) that determines whether
         the element should be selected.
 
@@ -271,6 +274,15 @@ class ExpressionSelector(SoupSelector):
     --------
     >>> selector = ExpressionSelector(lambda x: x.name not in {"a", "div"})
     ... selector.find(soup)
+
+    To perform operations on underlying node, use `IElement.get()` method
+    or `IElement.node` attribute.
+
+    Example
+    -------
+    >>> selector = ExpressionSelector(lambda x: 'widget' in x.node['class'])
+
+    For `SoupElement` object, that wraps `bs4.Tag`.
 
     Notes
     -----

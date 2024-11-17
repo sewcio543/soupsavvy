@@ -1,4 +1,4 @@
-"""Module with unit tests for OnlyChild css tag selector."""
+"""Module with unit tests for OnlyChild css selector."""
 
 import pytest
 
@@ -10,17 +10,17 @@ from tests.soupsavvy.conftest import ToElement, strip
 @pytest.mark.css
 @pytest.mark.selector
 class TestOnlyChild:
-    """Class with unit tests for OnlyChild tag selector."""
+    """Class with unit tests for OnlyChild selector."""
 
     def test_css_selector_is_correct(self):
         """Tests if selector property returns correct value."""
         assert OnlyChild().css == ":only-child"
 
-    def test_find_all_returns_all_tags_for_selector_without_tag_name(
+    def test_find_all_returns_all_matching_elements(
         self,
         to_element: ToElement,
     ):
-        """Tests if find_all method returns all tags for selector without tag name."""
+        """Tests if find_all method returns all matching elements."""
         text = """
             <div></div>
             <div><p>1</p></div>
@@ -40,8 +40,8 @@ class TestOnlyChild:
             strip("""<a>3</a>"""),
         ]
 
-    def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
-        """Tests if find method returns first tag matching selector."""
+    def test_find_returns_first_element_matching_selector(self, to_element: ToElement):
+        """Tests if find method returns first element matching selector."""
         text = """
             <div></div>
             <div><p>1</p></div>

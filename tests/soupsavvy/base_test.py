@@ -254,7 +254,7 @@ class TestNOTOperator:
 
     def test_bitwise_not_operator_on_single_not_selector_returns_selector(self):
         """
-        Tests if bitwise NOT operator (__invert__) returns the original tag
+        Tests if bitwise NOT operator (__invert__) returns the original element
         when applied to NotSelector instance with single selector.
 
         It does not make sense to create NotSelector(NotSelector(...)), even
@@ -271,7 +271,7 @@ class TestNOTOperator:
         instance with the same selectors when applied to NotSelector instance
         with multiple selectors.
 
-        If NotSelector matches tag if it doesn't match at least one of the selectors,
+        If NotSelector matches element if it doesn't match at least one of the selectors,
         so negation would be to match at least one of the selectors, which is
         how SelectorList works.
         """
@@ -609,7 +609,7 @@ class TestCheckOperation:
 class MockNameOperation(OperationSearcherMixin):
     """
     Mock class for testing OperationSearcherMixin class.
-    Extract name of provided tag from bs4.Tag object.
+    Extract tag name from provided IElement object.
     """
 
     def _execute(self, arg: IElement):

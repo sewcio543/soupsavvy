@@ -3,7 +3,7 @@ Module with `soupsavvy` interfaces used across the package.
 
 - `Executable` - Interface for operations that can be executed on single argument.
 - `Comparable` - Interface for objects that can be compared for equality.
-- `TagSearcher` - Interface for objects that can search within `bs4.Tag`.
+- `TagSearcher` - Interface for objects that can search within `IElement`.
 - `IElement` - Interface for any tree structure compatible with `soupsavvy`.
 - `SelectionApi` - Interface for selection of elements based on specific selector.
 """
@@ -52,9 +52,9 @@ TagSearcherExceptions = (exc.FailedOperationExecution, exc.TagNotFoundException)
 
 class TagSearcher(ABC):
     """
-    Interface for objects that can search within `bs4.Tag`.
+    Interface for objects that can search within `IElement`.
     Derived classes must implement the `find` and `find_all` methods,
-    that process `bs4.Tag` object and return results.
+    that process `IElement` object and return results.
     """
 
     @abstractmethod
@@ -65,23 +65,23 @@ class TagSearcher(ABC):
         recursive: bool = True,
     ) -> Any:
         """
-        Processes `bs4.Tag` object and returns result.
+        Processes `IElement` object and returns result.
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` object to process.
+        tag : IElement
+            Any `IElement` object to process.
         strict : bool, optional
-            If True, enforces results to be found in the tag, by default False.
+            If True, enforces results to be found in the element, by default False.
         recursive : bool, optional
             Specifies if search should be recursive.
-            If set to `False`, only direct children of the tag will be searched.
+            If set to `False`, only direct children of the element will be searched.
             By default `True`.
 
         Returns
         -------
         Any
-            Processed result from the tag.
+            Processed result from the element.
         """
         raise NotImplementedError(
             f"{self.__class__.__name__} is an interface "
@@ -96,15 +96,15 @@ class TagSearcher(ABC):
         limit: Optional[int] = None,
     ) -> list[Any]:
         """
-        Processes `bs4.Tag` object and returns list of results.
+        Processes `IElement` object and returns list of results.
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` object to process.
+        tag : IElement
+            Any `IElement` object to process.
         recursive : bool, optional
             Specifies if search should be recursive.
-            If set to `False`, only direct children of the tag will be searched.
+            If set to `False`, only direct children of the element will be searched.
             By default `True`.
         limit : int, optional
             Specifies maximum number of results to return in a list.
@@ -113,7 +113,7 @@ class TagSearcher(ABC):
         Returns
         -------
         list[Any]
-            A list of results from processed tag.
+            A list of results from processed element.
         """
         raise NotImplementedError(
             f"{self.__class__.__name__} is an interface "
@@ -189,12 +189,12 @@ class IElement(ABC):
         limit: Optional[int] = None,
     ) -> list[Self]:
         """
-        Finds all elements that match specified tag name and attributes.
+        Finds all elements that match specified element name and attributes.
 
         Parameters
         ----------
         name : str, optional
-            Name of the tag to search for. If `None`, matches all tags.
+            Name of the element to search for. If `None`, matches all elements.
         attrs : dict[str, str | Pattern[str]], optional
             Dictionary of attributes to match. Supports exact matches and regex patterns.
         recursive : bool, optional

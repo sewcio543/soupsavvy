@@ -19,7 +19,7 @@ class TestClassSelector:
         to_element: ToElement,
     ):
         """
-        Tests if find returns first tag with that has a list of classes
+        Tests if find returns first element with that has a list of classes
         and one of them matches the value.
 
         Example
@@ -44,7 +44,7 @@ class TestClassSelector:
 
     def test_find_returns_first_match_with_any_value(self, to_element: ToElement):
         """
-        Tests if find returns first tag with class attribute,
+        Tests if find returns first element with class attribute,
         when no value is specified.
         """
         text = """
@@ -59,7 +59,9 @@ class TestClassSelector:
         assert strip(str(result)) == strip("""<div class=""></div>""")
 
     def test_find_returns_first_match_with_specific_value(self, to_element: ToElement):
-        """Tests if find returns first tag with class attribute with specific value."""
+        """
+        Tests if find returns first element with class attribute with specific value.
+        """
         text = """
             <div href="widget"></div>
             <span class=""></span>
@@ -74,7 +76,7 @@ class TestClassSelector:
 
     def test_find_returns_first_match_with_pattern(self, to_element: ToElement):
         """
-        Tests if find returns first tag with class attribute that matches
+        Tests if find returns first element with class attribute that matches
         specified regex pattern.
         """
         text = """

@@ -2161,8 +2161,8 @@ class TestField:
     as well, but, it's worth to have unit tests as it can be used independently.
     """
 
-    def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
-        """Tests if find method returns first tag matching selector."""
+    def test_find_returns_first_element_matching_selector(self, to_element: ToElement):
+        """Tests if find method returns first element matching selector."""
         text = """
             <div href="github"></div>
             <a class="widget">1</a>

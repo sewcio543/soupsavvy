@@ -1,4 +1,4 @@
-"""Module with unit tests for LastOfType css tag selector."""
+"""Module with unit tests for LastOfType css selector."""
 
 import pytest
 
@@ -10,17 +10,17 @@ from tests.soupsavvy.conftest import ToElement, strip
 @pytest.mark.selector
 @pytest.mark.skip_lxml
 class TestLastOfType:
-    """Class with unit tests for LastOfType tag selector."""
+    """Class with unit tests for LastOfType selector."""
 
     def test_css_selector_is_correct(self):
         """Tests if selector property returns correct value."""
         assert LastOfType().css == ":last-of-type"
 
-    def test_find_all_returns_all_tags_for_selector_without_tag_name(
+    def test_find_all_returns_all_matching_elements(
         self,
         to_element: ToElement,
     ):
-        """Tests if find_all method returns all tags for selector without tag name."""
+        """Tests if find_all method returns all matching elements."""
         text = """
             <div></div>
             <a class="widget"></a>
@@ -45,8 +45,8 @@ class TestLastOfType:
             strip("""<a>56</a>"""),
         ]
 
-    def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
-        """Tests if find method returns first tag matching selector."""
+    def test_find_returns_first_element_matching_selector(self, to_element: ToElement):
+        """Tests if find method returns first element matching selector."""
         text = """
             <div></div>
             <a>Hello</a>

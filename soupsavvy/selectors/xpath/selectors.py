@@ -1,10 +1,7 @@
 """
-Selector for finding elements based on XPath.
-`lxml` adapter, that allows any supported XPath expressions
+Selector for finding elements based on XPath,
+that allows any supported XPath expressions
 to be used with other `soupsavvy` components.
-
-XPath search is not natively supported by `bs4`, finding element is delegated
-to `lxml` library, and corresponding `bs4` elements are selected.
 
 Classes
 -------
@@ -20,8 +17,7 @@ from soupsavvy.utils.selector_utils import TagIterator, TagResultSet
 
 class XPathSelector(SoupSelector):
     """
-    Selector for finding elements based on XPath expressions
-    based on `lxml` implementation.
+    Selector for finding elements based on XPath expressions.
 
     Examples
     --------
@@ -34,8 +30,7 @@ class XPathSelector(SoupSelector):
     ... selector = XPathSelector(XPath("//p[@class='menu']", smart_strings=False))
     ... selector.find(soup)
 
-    Expressions must target elements, not attributes or text content,
-    otherwise, warning is raised and no results are found.
+    Expressions must target elements, not attributes or text content.
 
     Examples
     --------

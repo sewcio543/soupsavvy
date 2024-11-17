@@ -1,5 +1,5 @@
 """
-Module with classes for tag selection based on CSS selectors.
+Module with classes for element selection based on CSS selectors.
 
 Contains implementation of basic CSS pseudo-classes like
 `:only-child`, `:empty`, `:nth-child()`.
@@ -273,8 +273,8 @@ class FirstOfType(CSSSoupSelector):
 
     Notes
     --------
-    For this selector the first tag of any type is selected, which in
-    case of finding single tag is equivalent to `FirstChild` results.
+    For this selector the first element of any type is selected, which in
+    case of finding single element is equivalent to `FirstChild` results.
 
     For more information on the formula, see:
 
@@ -302,8 +302,8 @@ class LastOfType(CSSSoupSelector):
 
     Notes
     --------
-    For this selector the last tag of any type is selected, which in
-    case of finding single tag is the equivalent to `LastChild` results.
+    For this selector the last element of any type is selected, which in
+    case of finding single element is the equivalent to `LastChild` results.
 
     For more information on the formula, see:
 
@@ -412,8 +412,8 @@ class CSS(CSSSoupSelector):
 
     Notes
     --------
-    `CSS` component extends `bs4.Tag.select` implementation
-    by adding non recursive search option.
+    Implemented selectors may vary between implementations,
+    as each of them uses specific compatible libraries for css selection.
     """
 
     SELECTOR = "{}"

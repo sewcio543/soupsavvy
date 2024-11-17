@@ -27,7 +27,7 @@ class TestOnlyOfSelector:
 
     def test_find_returns_first_tag_that_matches_selector(self, to_element: ToElement):
         """
-        Tests if find method returns the first tag that matches the selector.
+        Tests if find method returns the first element, that matches the selector.
         """
         text = """
             <div>
@@ -52,7 +52,7 @@ class TestOnlyOfSelector:
         to_element: ToElement,
     ):
         """
-        Tests if find method raises TagNotFoundException when no tag is found
+        Tests if find method raises TagNotFoundException when no element is found
         that matches selector in strict mode.
         """
         text = """
@@ -72,18 +72,18 @@ class TestOnlyOfSelector:
             <a>Don't have</a>
         """
         bs = to_element(text)
-        # nothing would be matches because there is only one matching tag
+        # nothing would be matches because there is only one matching element
         selector = OnlyOfSelector(MockClassMenuSelector())
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_returns_none_if_no_tags_matches_selector_in_not_strict_mode(
+    def test_find_returns_none_if_no_elements_matches_selector_in_not_strict_mode(
         self,
         to_element: ToElement,
     ):
         """
-        Tests if find method returns None when no tag is found that matches
+        Tests if find method returns None when no element is found that matches
         selector in not strict mode.
         """
         text = """

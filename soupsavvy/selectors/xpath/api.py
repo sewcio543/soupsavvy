@@ -47,13 +47,14 @@ class SeleniumXPathApi(SelectionApi):
     def select(self, element: IElement) -> list[IElement]:
         from selenium.common.exceptions import InvalidSelectorException
         from selenium.webdriver.common.by import By
+        from selenium.webdriver.remote.webelement import WebElement
 
         try:
-            found = element.node.find_elements(By.XPATH, self.selector)
+            selected = element.node.find_elements(By.XPATH, self.selector)
         except InvalidSelectorException as e:
             raise exc.InvalidXPathSelector(
                 f"CSS selector constructed from provided parameters "
                 f"is not valid: {self.selector}"
             ) from e
 
-        return [element.from_node(node) for node in found]
+        return [element.from_node(node) for node in selected]

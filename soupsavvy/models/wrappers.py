@@ -65,14 +65,14 @@ class FieldWrapper(TagSearcher, Comparable):
         limit: Optional[int] = None,
     ) -> list[Any]:
         """
-        Find all matching tags using the wrapped selector.
+        Find all matching element using the wrapped selector.
         Used for compatibility with `TagSearcher` interface,
         delegates to wrapped selector.
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` to search within.
+        tag : IElement
+            Any `IElement` to search within.
         recursive : bool, optional
             Whether to search recursively, by default True.
         limit : int, optional
@@ -156,8 +156,8 @@ class All(FieldWrapper):
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` to search within.
+        tag : IElement
+            Any `IElement` to search within.
         strict : bool, optional
             Ignored, as this method always falls back to `find_all`.
         recursive : bool, optional
@@ -193,8 +193,8 @@ class Required(FieldWrapper):
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` to search within.
+        tag : IElement
+            Any `IElement` to search within.
         strict : bool, optional
             If True, raises an exception if no matches are found, by default False.
         recursive : bool, optional
@@ -252,8 +252,8 @@ class Default(FieldWrapper):
 
         Parameters
         ----------
-        tag : Tag
-            Any bs4.Tag` to search within.
+        tag : IElement
+            Any `IElement` to search within.
         strict : bool, optional
             If True, raises an exception if no matches are found, by default False.
         recursive : bool, optional

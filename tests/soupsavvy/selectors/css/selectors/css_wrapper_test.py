@@ -14,7 +14,7 @@ from tests.soupsavvy.conftest import ToElement, strip
 @pytest.mark.selector
 class TestCSS:
     """
-    Class with unit tests for CSS tag selector.
+    Class with unit tests for CSS selector.
     Idea for the tests is to check cases for simple selector, css search is delegated
     to `soupsieve` library.
     """
@@ -34,8 +34,8 @@ class TestCSS:
         """
         assert CSS(css).css == css
 
-    def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
-        """Tests if find method returns first tag matching selector."""
+    def test_find_returns_first_element_matching_selector(self, to_element: ToElement):
+        """Tests if find method returns first element matching selector."""
         text = """
             <div></div>
             <div class="widget123"></div>

@@ -1,4 +1,4 @@
-"""Namespace with constants and types for tag components."""
+"""Namespace with constants and types used by selectors"""
 
 from typing import Pattern, Union
 

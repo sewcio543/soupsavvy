@@ -18,7 +18,7 @@ class TestIdSelector:
 
     def test_find_returns_first_match_with_any_value(self, to_element: ToElement):
         """
-        Tests if find returns first tag with id attribute,
+        Tests if find returns first element with id attribute,
         when no value is specified.
         """
         text = """
@@ -33,7 +33,7 @@ class TestIdSelector:
         assert strip(str(result)) == strip("""<div id=""></div>""")
 
     def test_find_returns_first_match_with_specific_value(self, to_element: ToElement):
-        """Tests if find returns first tag with id attribute with specific value."""
+        """Tests if find returns first element with id attribute with specific value."""
         # even though there should not be multiple elements with the same id
         text = """
             <div class="widget"></div>
@@ -48,7 +48,7 @@ class TestIdSelector:
 
     def test_find_returns_first_match_with_pattern(self, to_element: ToElement):
         """
-        Tests if find returns first tag with id attribute that matches
+        Tests if find returns first element with id attribute that matches
         specified regex pattern
         """
         text = """

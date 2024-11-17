@@ -28,8 +28,8 @@ class TestNextSiblingCombinator:
         with pytest.raises(NotSoupSelectorException):
             NextSiblingCombinator("a", MockDivSelector())  # type: ignore
 
-    def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
-        """Tests if find method returns the first tag that matches selector."""
+    def test_find_returns_first_element_matching_selector(self, to_element: ToElement):
+        """Tests if find method returns the first element, that matches selector."""
         text = """
             <p>Hello</p>
             <div>Hello</div>
@@ -48,12 +48,12 @@ class TestNextSiblingCombinator:
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="link">1</a>""")
 
-    def test_find_raises_exception_when_no_tags_match_in_strict_mode(
+    def test_find_raises_exception_when_no_element_match_in_strict_mode(
         self,
         to_element: ToElement,
     ):
         """
-        Tests if find method raises TagNotFoundException when no tag is found
+        Tests if find method raises TagNotFoundException when no element is found
         that matches selector in strict mode.
         """
         text = """
@@ -71,12 +71,12 @@ class TestNextSiblingCombinator:
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_returns_none_if_no_tags_match_in_not_strict_mode(
+    def test_find_returns_none_if_no_elements_match_in_not_strict_mode(
         self,
         to_element: ToElement,
     ):
         """
-        Tests if find method returns None when no tag is found that
+        Tests if find method returns None when no element is found that
         matches selector in not strict mode.
         """
         text = """
@@ -93,8 +93,8 @@ class TestNextSiblingCombinator:
         result = selector.find(bs)
         assert result is None
 
-    def test_finds_all_tags_matching_selectors(self, to_element: ToElement):
-        """Tests if find_all method returns all tags that match selector."""
+    def test_finds_all_elements_matching_selectors(self, to_element: ToElement):
+        """Tests if find_all method returns all elements that match selector."""
         text = """
             <p>Hello</p>
             <div>Hello</div>
@@ -121,9 +121,11 @@ class TestNextSiblingCombinator:
             strip("""<a class="widget">3</a>"""),
         ]
 
-    def test_find_all_returns_empty_list_if_no_tag_matches(self, to_element: ToElement):
+    def test_find_all_returns_empty_list_if_no_element_matches(
+        self, to_element: ToElement
+    ):
         """
-        Tests if find_all method returns an empty list when no tag is found
+        Tests if find_all method returns an empty list when no element is found
         that matches selector.
         """
         text = """
@@ -142,7 +144,7 @@ class TestNextSiblingCombinator:
 
     def test_find_returns_match_with_multiple_selectors(self, to_element: ToElement):
         """
-        Tests if find method returns the first tag that matches selector
+        Tests if find method returns the first element, that matches selector
         if there are multiple selectors are provided.
         """
         text = """

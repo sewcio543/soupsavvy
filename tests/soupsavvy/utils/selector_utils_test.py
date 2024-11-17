@@ -3,13 +3,13 @@
 import pytest
 
 from soupsavvy.interfaces import IElement
-from soupsavvy.utils.selector_utils import TagIterator, TagResultSet, UniqueTag
+from soupsavvy.utils.selector_utils import ElementWrapper, TagIterator, TagResultSet
 from tests.soupsavvy.conftest import ToElement, strip
 
 
 @pytest.fixture
-def mock_tag(to_element) -> IElement:
-    """Fixture for creating a mock bs4.Tag."""
+def mock_element(to_element) -> IElement:
+    """Fixture for creating a mock IElement object."""
     text = """
         <div>
             <a class="link"></a>
@@ -24,53 +24,56 @@ def mock_tag(to_element) -> IElement:
 
 
 @pytest.mark.selector
-class TestUniqueTag:
-    """Class with unit tests for UniqueTag class."""
+class TestElementWrapper:
+    """Class with unit tests for ElementWrapper class."""
 
-    def test_hashes_tag_by_its_hash(self, mock_tag: IElement) -> None:
-        """Tests that UniqueTag hashes tag by its hash."""
-        tag = UniqueTag(mock_tag)
-        assert hash(tag) == hash(mock_tag)
+    def test_hashes_tag_by_its_hash(self, mock_element: IElement) -> None:
+        """Tests that ElementWrapper hashes tag by its hash."""
+        tag = ElementWrapper(mock_element)
+        assert hash(tag) == hash(mock_element)
 
-    def test_is_equal_to_unique_tag_with_the_same_tag(self, mock_tag: IElement) -> None:
+    def test_is_equal_to_unique_tag_with_the_same_tag(
+        self, mock_element: IElement
+    ) -> None:
         """
-        Tests that UniqueTag is equal to another UniqueTag object with the same bs4.Tag.
+        Tests that ElementWrapper is equal to another ElementWrapper
+        object with the same wrapped element.
         """
-        tag1 = UniqueTag(mock_tag)
-        tag2 = UniqueTag(mock_tag)
+        tag1 = ElementWrapper(mock_element)
+        tag2 = ElementWrapper(mock_element)
         assert tag1 == tag2
 
-    def test_is_not_equal_to_bs4_tag_it_wraps(self, mock_tag: IElement) -> None:
+    def test_is_not_equal_to_bs4_tag_it_wraps(self, mock_element: IElement) -> None:
         """
-        Tests that UniqueTag is not equal to bs4.Tag object it wraps
+        Tests that ElementWrapper is not equal to ElementWrapper object it wraps
         as they have different hashes.
         """
-        tag1 = UniqueTag(mock_tag)
-        assert tag1 != mock_tag
+        tag1 = ElementWrapper(mock_element)
+        assert tag1 != mock_element
 
-    # for selenium only content is replaced, not object
     @pytest.mark.skip_selenium
     def test_different_tags_with_same_content_have_different_hash(
         self,
         to_element: ToElement,
     ):
         """
-        Tests that two bs4.Tag objects with the same content wrapped by UniqueTag
+        Tests that two ElementWrapper objects
         have different hashes and can be stored in set as different objects.
         """
         text = """<div class="menu"></div>"""
-        tag1 = UniqueTag(to_element(text))
-        tag2 = UniqueTag(to_element(text))
+        tag1 = ElementWrapper(to_element(text))
+        tag2 = ElementWrapper(to_element(text))
 
         assert hash(tag1) != hash(tag2)
         assert len({tag1, tag2}) == 2
 
-    def test_is_not_equal_to_other_bs4_tag(self, mock_tag: IElement) -> None:
+    def test_is_not_equal_to_other_bs4_tag(self, mock_element: IElement) -> None:
         """
-        Tests that UniqueTag is not equal to other bs4.Tag then the one it wraps.
+        Tests that ElementWrapper is not equal to
+        other ElementWrapper then the one it wraps.
         """
-        tag1 = UniqueTag(mock_tag)
-        assert tag1 != mock_tag.find_all("div")[0]
+        tag1 = ElementWrapper(mock_element)
+        assert tag1 != mock_element.find_all("div")[0]
 
     @pytest.mark.parametrize(
         argnames="other",
@@ -78,25 +81,27 @@ class TestUniqueTag:
         ids=["int", "str"],
     )
     def test_is_not_equal_to_not_unique_tag_instance(
-        self, mock_tag: IElement, other
+        self, mock_element: IElement, other
     ) -> None:
         """
-        Tests that UniqueTag is not equal to other objects then UniqueTag.
+        Tests that ElementWrapper is not equal to other objects then ElementWrapper.
         Testing for int and str.
         """
-        tag1 = UniqueTag(mock_tag)
+        tag1 = ElementWrapper(mock_element)
         assert tag1 != other
 
 
 class TestTagIterator:
     """Class with unit tests for TagIterator class."""
 
-    def test_iterates_correctly_over_descendants_by_default(self, mock_tag: IElement):
+    def test_iterates_correctly_over_descendants_by_default(
+        self, mock_element: IElement
+    ):
         """
         Tests that TagIterator iterates over descendants by default
-        and returns all tags in order of appearance.
+        and returns all elements in order of appearance.
         """
-        tag = mock_tag
+        tag = mock_element
         tag_iterator = TagIterator(tag)
         expected = [
             strip(
@@ -126,12 +131,12 @@ class TestTagIterator:
         assert [strip(str(tag)) for tag in tag_iterator] == expected
 
     def test_iterates_correctly_over_children_if_recursive_set_to_false(
-        self, mock_tag: IElement
+        self, mock_element: IElement
     ):
         """
         Tests that TagIterator iterates over children if recursive is set to False.
         """
-        tag = mock_tag
+        tag = mock_element
         tag_iterator = TagIterator(tag, recursive=False)
         expected = [
             strip(
@@ -149,12 +154,12 @@ class TestTagIterator:
         ]
         assert [strip(str(tag)) for tag in tag_iterator] == expected
 
-    def test_iterator_resets_when_called_again(self, mock_tag: IElement):
+    def test_iterator_resets_when_called_again(self, mock_element: IElement):
         """
         Tests that iterator resets when called again.
         Calling __iter__ method of TagIterator resets the iterator to the beginning.
         """
-        tag = mock_tag
+        tag = mock_element
         tag_iterator = TagIterator(tag)
 
         iter_ = iter(tag_iterator)
@@ -175,44 +180,24 @@ class TestTagIterator:
         iter_ = iter(tag_iterator)
         assert strip(str(next(iter_))) == expected
 
-    def test_iterates_over_no_elements_iterable(self, mock_tag: IElement):
+    def test_iterates_over_no_elements_iterable(self, mock_element: IElement):
         """
-        Tests that TagIterator iterates over no elements if tag has no children.
+        Tests that TagIterator iterates over no elements if element has no children.
         In this case expected result is an empty list.
         """
         # span element has no children
-        tag = mock_tag.find_all("span")[0]
-        tag_iterator = TagIterator(tag)  # type: ignore
-        assert list(tag_iterator) == []
-
-    def test_skips_elements_that_are_not_tags(self, mock_tag: IElement):
-        """
-        Tests that TagIterator skips all elements that are not bs4.Tag.
-        Iterators over elements implemented in bs4.Tag contain strings, which need
-        to be skipped.
-        """
-
-        class TagWrapper:
-            def __init__(self, tag):
-                self._tag = tag
-
-            def __getattr__(self, attr):
-                if attr == "descendants":
-                    return iter(["string", "string2", 12])
-                return getattr(self._tag, attr)
-
-        tag = TagWrapper(mock_tag)
+        tag = mock_element.find_all("span")[0]
         tag_iterator = TagIterator(tag)  # type: ignore
         assert list(tag_iterator) == []
 
     def test_includes_provided_tag_and_descendants_if_include_self_true(
-        self, mock_tag: IElement
+        self, mock_element: IElement
     ):
         """
-        Tests that TagIterator iterates over descendants and includes the tag itself
+        Tests that TagIterator iterates over descendants and includes the element itself
         at the beginning if include_self is set to True.
         """
-        tag = mock_tag
+        tag = mock_element
         tag_iterator = TagIterator(tag, include_self=True)
         expected = [
             strip(
@@ -256,13 +241,13 @@ class TestTagIterator:
         assert [strip(str(tag)) for tag in tag_iterator] == expected
 
     def test_includes_provided_tag_and_children_if_include_self_true(
-        self, mock_tag: IElement
+        self, mock_element: IElement
     ):
         """
         Tests that TagIterator iterates over children and includes the tag itself
         at the beginning if include_self is set to True and recursive is False.
         """
-        tag = mock_tag
+        tag = mock_element
         tag_iterator = TagIterator(tag, recursive=False, include_self=True)
         expected = [
             strip(
@@ -306,7 +291,7 @@ class TestTagResultSet:
             <a class="menu1"></a>
             <a class="menu2"></a>
         """
-        # all descendants of body tag
+        # all descendants of body element
         return to_element(text).find_all()
 
     def test_result_set_can_be_initialized_with_empty_collection(self):
@@ -320,7 +305,7 @@ class TestTagResultSet:
 
     def test_fetch_returns_all_tags_if_they_are_unique(self, mock_tags: list[IElement]):
         """
-        Tests that fetch method returns all tags if they are unique.
+        Tests that fetch method returns all elements if they are unique.
         When all tags have unique id, there is no repetition and all tags are returned.
         """
         results_set = TagResultSet(mock_tags)

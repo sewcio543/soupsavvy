@@ -28,8 +28,8 @@ class TestDescendantCombinator:
         with pytest.raises(NotSoupSelectorException):
             DescendantCombinator("string", MockDivSelector())  # type: ignore
 
-    def test_find_returns_first_tag_matching_selector(self, to_element: ToElement):
-        """Tests if find method returns the first tag that matches selector."""
+    def test_find_returns_first_element_matching_selector(self, to_element: ToElement):
+        """Tests if find method returns the first element, that matches selector."""
         text = """
             <a>Hello</a>
             <div><span>Hello</span></div>
@@ -49,12 +49,12 @@ class TestDescendantCombinator:
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget">1</a>""")
 
-    def test_find_returns_none_if_no_tags_match_in_not_strict_mode(
+    def test_find_returns_none_if_no_elements_match_in_not_strict_mode(
         self,
         to_element: ToElement,
     ):
         """
-        Tests if find method returns None when no tag is found that
+        Tests if find method returns None when no element is found that
         matches selector in not strict mode.
         """
         text = """
@@ -72,12 +72,12 @@ class TestDescendantCombinator:
         result = selector.find(bs)
         assert result is None
 
-    def test_find_raises_exception_when_no_tags_match_in_strict_mode(
+    def test_find_raises_exception_when_no_element_match_in_strict_mode(
         self,
         to_element: ToElement,
     ):
         """
-        Tests if find method raises TagNotFoundException when no tag is found
+        Tests if find method raises TagNotFoundException when no element is found
         that matches selector in strict mode.
         """
         text = """
@@ -98,7 +98,7 @@ class TestDescendantCombinator:
 
     def test_find_returns_match_with_multiple_selectors(self, to_element: ToElement):
         """
-        Tests if find method returns the first tag that matches selector
+        Tests if find method returns the first element, that matches selector
         if there are multiple selectors are provided.
         """
         text = """
@@ -154,8 +154,8 @@ class TestDescendantCombinator:
             strip("""<p class="menu">3</p>"""),
         ]
 
-    def test_finds_all_tags_matching_selectors(self, to_element: ToElement):
-        """Tests if find_all method returns all tags that match selector."""
+    def test_finds_all_elements_matching_selectors(self, to_element: ToElement):
+        """Tests if find_all method returns all elements that match selector."""
         text = """
             <a>Hello</a>
             <a class="link"><div class="link"></div></a>
@@ -185,9 +185,11 @@ class TestDescendantCombinator:
             strip("""<a>4</a>"""),
         ]
 
-    def test_find_all_returns_empty_list_if_no_tag_matches(self, to_element: ToElement):
+    def test_find_all_returns_empty_list_if_no_element_matches(
+        self, to_element: ToElement
+    ):
         """
-        Tests if find_all method returns an empty list when no tag is found
+        Tests if find_all method returns an empty list when no element is found
         that matches selector.
         """
         text = """
