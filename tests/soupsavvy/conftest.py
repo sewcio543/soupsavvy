@@ -43,17 +43,17 @@ def to_element(implementation: str) -> Callable[[str], IElement]:
         raise ValueError(f"Unknown implementation type: {implementation}")
 
 
-def to_soup(html: str, parser: str = PARSER) -> SoupElement:
+def to_soup(html: str, parser: str = PARSER) -> IElement:
     return find_body_element(SoupElement(BeautifulSoup(html, parser)))
 
 
-def to_lxml(html: str, parser: str = PARSER) -> LXMLElement:
+def to_lxml(html: str, parser: str = PARSER) -> IElement:
     root = fromstring(str(BeautifulSoup(html, parser)))
     return find_body_element(LXMLElement(root))
 
 
 # HTML file path
-HTML_FILE_PATH = os.path.join(os.path.dirname(__file__), "files", "example.html")
+HTML_FILE_PATH = os.path.join(os.getcwd(), "tests", "files", "example.html")
 
 
 def get_driver() -> webdriver.Chrome:
