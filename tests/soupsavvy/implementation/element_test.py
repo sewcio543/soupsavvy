@@ -1,5 +1,3 @@
-from typing import cast
-
 import pytest
 from bs4 import BeautifulSoup
 from lxml.etree import fromstring
@@ -11,25 +9,7 @@ from soupsavvy.implementation.bs4 import SoupElement
 from soupsavvy.implementation.element import to_soupsavvy
 from soupsavvy.implementation.lxml import LXMLElement
 from soupsavvy.implementation.selenium import SeleniumElement
-from tests.soupsavvy.conftest import get_driver
-
-_driver = cast(WebDriver, None)
-
-
-@pytest.fixture(scope="module")
-def driver():
-    global _driver
-
-    if _driver is None:
-        _driver = get_driver()
-
-    yield _driver
-
-    _driver.quit()
-
-
-def insert(html):
-    _driver.execute_script("document.body.innerHTML = arguments[0];", html)
+from tests.soupsavvy.conftest import insert
 
 
 def mock_raise_import_error(name, *args, **kwargs):
@@ -53,7 +33,7 @@ class TestToSoupsavvy:
 
     def test_returns_if_input_is_selenium_element(self, driver: WebDriver):
         text = "<html><body><p>Test</p></body></html>"
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
         result = to_soupsavvy(element)
@@ -73,7 +53,7 @@ class TestToSoupsavvy:
 
     def test_converts_to_selenium_element(self, driver: WebDriver):
         text = "<html><body><p>Test</p></body></html>"
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
         element = to_soupsavvy(node)
         assert isinstance(element, SeleniumElement)
@@ -102,7 +82,7 @@ class TestToSoupsavvy:
         monkeypatch.setattr("importlib.import_module", mock_raise_import_error)
 
         text = "<html><body><p>Test</p></body></html>"
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
 
         with pytest.raises(TypeError):

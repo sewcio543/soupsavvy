@@ -4,7 +4,6 @@ Tests `SeleniumElement` component and the way it interacts with soupsavvy.
 """
 
 import re
-from typing import cast
 
 import pytest
 from selenium.webdriver.common.by import By
@@ -13,25 +12,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from soupsavvy.implementation.selenium import SeleniumElement
 from soupsavvy.selectors.css.api import SeleniumCSSApi
 from soupsavvy.selectors.xpath.api import SeleniumXPathApi
-from tests.soupsavvy.conftest import get_driver, strip
-
-_driver = cast(WebDriver, None)
-
-
-@pytest.fixture(scope="module")
-def driver():
-    global _driver
-
-    if _driver is None:
-        _driver = get_driver()
-
-    yield _driver
-
-    _driver.quit()
-
-
-def insert(html):
-    _driver.execute_script("document.body.innerHTML = arguments[0];", html)
+from tests.soupsavvy.conftest import insert, strip
 
 
 @pytest.mark.selenium
@@ -61,7 +42,7 @@ class TestSeleniumElement:
             <div>Hello</div>
             <p>World</p>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
 
@@ -77,7 +58,7 @@ class TestSeleniumElement:
             <div>Hello</div>
             <p>World</p>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
         element = SeleniumElement.from_node(node)
 
@@ -94,7 +75,7 @@ class TestSeleniumElement:
             <div>Hello</div>
             <p>World</p>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
 
@@ -109,7 +90,7 @@ class TestSeleniumElement:
             <div>Hello</div>
             <p>World</p>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
 
@@ -122,7 +103,7 @@ class TestSeleniumElement:
         text = """
             <div><p>Hello</p></div>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
 
@@ -136,7 +117,7 @@ class TestSeleniumElement:
             <div>Hello</div>
             <p>World</p>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "div")
         element = SeleniumElement(node)
 
@@ -161,7 +142,7 @@ class TestSeleniumElement:
         any leading or trailing whitespace.
         It can contain additional new line characters, which are removed for testing.
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "div")
         element = SeleniumElement(node)
 
@@ -181,7 +162,7 @@ class TestSeleniumElement:
                 <span><p>Hi</p><a>Earth</a></span>
             </div>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "div")
         element = SeleniumElement(node)
 
@@ -204,7 +185,7 @@ class TestSeleniumElement:
         text = """
             <div>Hello</div>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "div")
         element = SeleniumElement(node)
 
@@ -225,7 +206,7 @@ class TestSeleniumElement:
                 <span><span><h1>Hi</h1><h2>Hi</h2></span><a>Earth</a></span>
             </div>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "div")
         element = SeleniumElement(node)
 
@@ -252,7 +233,7 @@ class TestSeleniumElement:
         text = """
             <div>Hello</div>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "div")
         element = SeleniumElement(node)
 
@@ -271,7 +252,7 @@ class TestSeleniumElement:
                 <span><p>Hi</p><a>Earth</a></span>
             </div>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "div")
         element = SeleniumElement(node)
 
@@ -290,7 +271,7 @@ class TestSeleniumElement:
                 <span><p>Hi</p><a>Earth</a></span>
             </div>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.execute_script(
             "return arguments[0].parentNode;",
             driver.find_element(By.TAG_NAME, "html"),
@@ -314,7 +295,7 @@ class TestSeleniumElement:
             </div>
             <p class="widget">Hi</p>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
 
@@ -341,7 +322,7 @@ class TestSeleniumElement:
             </div>
             <p class="widget">Hi</p>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
 
@@ -366,7 +347,7 @@ class TestSeleniumElement:
                 <span><p><a>Hello</a></p></span>
             </div>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "a")
 
         element = SeleniumElement(node)
@@ -393,7 +374,7 @@ class TestSeleniumElement:
                 <span><p><a>Hello</a></p></span>
             </div>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "a")
 
         element = SeleniumElement(node)
@@ -413,7 +394,7 @@ class TestSeleniumElement:
                 <span><p><a>Hello</a></p></span>
             </div>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.CSS_SELECTOR, ":root")
 
         element = SeleniumElement(node)
@@ -433,7 +414,7 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "span")
 
         element = SeleniumElement(node)
@@ -460,7 +441,7 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "span")
 
         element = SeleniumElement(node)
@@ -481,7 +462,7 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "span")
 
         element = SeleniumElement(node)
@@ -505,7 +486,7 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "body")
 
         element = SeleniumElement(node)
@@ -534,7 +515,7 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "body")
 
         element = SeleniumElement(node)
@@ -559,7 +540,7 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "body")
 
         element = SeleniumElement(node)
@@ -585,7 +566,7 @@ class TestSeleniumElement:
             <span>Hi</span>
             <p>Earth</p>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "body")
 
         element = SeleniumElement(node)
@@ -608,7 +589,7 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
 
@@ -629,7 +610,7 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
 
@@ -647,7 +628,7 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
         result = element.find_all(name="p")
@@ -674,7 +655,7 @@ class TestSeleniumElement:
             </div>
             <span><p>World</p></span>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "body")
 
         element = SeleniumElement(node)
@@ -699,7 +680,7 @@ class TestSeleniumElement:
             </div>
             <span class="widget">Hi</span>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
         result = element.find_all(attrs={"class": "widget"})
@@ -724,7 +705,7 @@ class TestSeleniumElement:
             <h1 class="widge">Welcome</h1>
             <span class="menu your_widget">Hello</span>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
         result = element.find_all(attrs={"class": re.compile("widget")})
@@ -751,7 +732,7 @@ class TestSeleniumElement:
             <span class="widget" name="navbar">Hi</span>
             <h1 class="widget" name="menu">Welcome</h1>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
         result = element.find_all(attrs={"class": "widget", "name": "menu"})
@@ -777,7 +758,7 @@ class TestSeleniumElement:
             <h1 class="widge">Welcome</h1>
             <span class="widget">Hello</span>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
         result = element.find_all(name="span", attrs={"class": "widget"})
@@ -807,7 +788,7 @@ class TestSeleniumElement:
             <h1 class="widge">Welcome</h1>
             <span class="widget">Hello</span>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "body")
         assert node is not None
 
@@ -833,7 +814,7 @@ class TestSeleniumElement:
             </div>
             <span class="widget">Hi</span>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "div")
 
         element = SeleniumElement(node)
@@ -849,7 +830,7 @@ class TestSeleniumElement:
             </div>
             <span class="widget">Hi</span>
         """
-        insert(text)
+        insert(text, driver=driver)
         node = driver.find_element(By.TAG_NAME, "div")
 
         element = SeleniumElement(node)

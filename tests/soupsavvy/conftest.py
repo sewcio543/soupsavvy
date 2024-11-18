@@ -6,8 +6,11 @@ that are shared across multiple test modules.
 from __future__ import annotations
 
 import os
+import threading
 from collections.abc import Callable
-from typing import Any, Optional
+from http.server import HTTPServer, SimpleHTTPRequestHandler
+from pathlib import Path
+from typing import Any, Optional, cast
 
 import pytest
 from bs4 import BeautifulSoup
@@ -15,6 +18,7 @@ from lxml.etree import fromstring
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
 
 from soupsavvy.base import BaseOperation, SoupSelector
 from soupsavvy.exceptions import BreakOperationException
@@ -28,7 +32,7 @@ PARSER = "lxml"
 
 ToElement = Callable[[str], IElement]
 
-driver = None
+_driver = cast(WebDriver, None)
 
 
 @pytest.fixture
@@ -52,8 +56,34 @@ def to_lxml(html: str, parser: str = PARSER) -> IElement:
     return find_body_element(LXMLElement(root))
 
 
+@pytest.fixture(scope="session", autouse=True)
+def http_server():
+    """Set up a simple HTTP server to serve the HTML file."""
+    os.chdir(DIRECTORY)
+    handler = SimpleHTTPRequestHandler
+    httpd = HTTPServer(("localhost", PORT), handler)
+    thread = threading.Thread(target=httpd.serve_forever)
+    thread.daemon = True
+    thread.start()
+    yield
+    # httpd.shutdown()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def driver(http_server):
+    """Set up a simple HTTP server to serve the HTML file."""
+    global _driver
+
+    if _driver is None:
+        _driver = get_driver()
+
+    return _driver
+
+
 # HTML file path
-HTML_FILE_PATH = os.path.join(os.getcwd(), "tests", "files", "example.html")
+DIRECTORY = Path(os.getcwd(), "tests", "files")
+FILE_NAME = "example.html"
+PORT = 8000
 
 
 def get_driver() -> webdriver.Chrome:
@@ -68,19 +98,23 @@ def get_driver() -> webdriver.Chrome:
     options.add_argument("--silent")
 
     driver = webdriver.Chrome(options=options)
-    driver.get(HTML_FILE_PATH)
+    driver.get(f"http://localhost:{PORT}/{FILE_NAME}")
     return driver
+
+
+def insert(html: str, driver: WebDriver) -> None:
+    driver.execute_script("document.body.innerHTML = arguments[0];", html)
 
 
 def to_selenium(html: str) -> SeleniumElement:
     """Function to replace HTML content and get the root element."""
-    global driver
+    # global _driver
 
-    if driver is None:
-        driver = get_driver()
+    # if _driver is None:
+    #     _driver = get_driver()
 
-    driver.execute_script("document.body.innerHTML = arguments[0];", html)
-    body = driver.find_element(By.TAG_NAME, "body")
+    insert(html, driver=_driver)
+    body = _driver.find_element(By.TAG_NAME, "body")
     return SeleniumElement(body)
 
 
