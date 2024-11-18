@@ -21,7 +21,7 @@ from soupsavvy.exceptions import BreakOperationException
 from soupsavvy.implementation.bs4 import SoupElement
 from soupsavvy.implementation.lxml import LXMLElement
 from soupsavvy.implementation.selenium import SeleniumElement
-from soupsavvy.interfaces import Element, IElement
+from soupsavvy.interfaces import IElement
 
 # default bs4 parser
 PARSER = "lxml"
@@ -89,7 +89,7 @@ def strip(markup: str) -> str:
     return markup.replace("  ", "").replace("\n", "")
 
 
-def find_body_element(bs: Element) -> Element:
+def find_body_element(bs: IElement) -> IElement:
     """Helper function to find body element in IElement object."""
     return bs.find_all("body")[0]
 

@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import Any, NoReturn, Optional, Pattern, Self, TypeVar, Union
+from typing import Any, NoReturn, Optional, Pattern, TypeVar, Union
 
 import soupsavvy.exceptions as exc
 
@@ -164,7 +164,7 @@ class IElement(ABC):
         self._node = node
 
     @classmethod
-    def from_node(cls, node: Any) -> Self:
+    def from_node(cls, node: Any) -> IElement:
         """
         Creates a new instance of the implementation from a node.
 
@@ -175,7 +175,7 @@ class IElement(ABC):
 
         Returns
         -------
-        Self
+        IElement
             New instance of the implementation with the given node.
         """
         return cls(node)
@@ -187,7 +187,7 @@ class IElement(ABC):
         attrs: Optional[dict[str, Union[str, Pattern[str]]]] = None,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Self]:
+    ) -> list[IElement]:
         """
         Finds all elements that match specified element name and attributes.
 
@@ -205,7 +205,7 @@ class IElement(ABC):
 
         Returns
         -------
-        list[Self]
+        list[IElement]
             List of elements that match the criteria, in depth-first order.
         """
         self._raise_not_implemented()
@@ -220,7 +220,7 @@ class IElement(ABC):
         return self.node
 
     @abstractmethod
-    def find_subsequent_siblings(self, limit: Optional[int] = None) -> list[Self]:
+    def find_subsequent_siblings(self, limit: Optional[int] = None) -> list[IElement]:
         """
         Finds siblings that follow this node in the document structure.
 
@@ -231,13 +231,13 @@ class IElement(ABC):
 
         Returns
         -------
-        list[Self]
+        list[IElement]
             List of subsequent sibling elements, in document order.
         """
         self._raise_not_implemented()
 
     @abstractmethod
-    def find_ancestors(self, limit: Optional[int] = None) -> list[Self]:
+    def find_ancestors(self, limit: Optional[int] = None) -> list[IElement]:
         """
         Finds all ancestor nodes up to the root of the document.
 
@@ -249,14 +249,14 @@ class IElement(ABC):
 
         Returns
         -------
-        list[Self]
+        list[IElement]
             List of ancestor nodes, from nearest to root.
         """
         self._raise_not_implemented()
 
     @property
     @abstractmethod
-    def children(self) -> Iterable[Self]:
+    def children(self) -> Iterable[IElement]:
         """
         Returns an iterable of the direct child elements of this node.
 
@@ -266,14 +266,14 @@ class IElement(ABC):
 
         Returns
         -------
-        Iterable[Self]
+        Iterable[IElement]
             Iterable of direct child nodes, in document order.
         """
         self._raise_not_implemented()
 
     @property
     @abstractmethod
-    def descendants(self) -> Iterable[Self]:
+    def descendants(self) -> Iterable[IElement]:
         """
         Returns an iterable of all descendant nodes of this node.
 
@@ -284,20 +284,20 @@ class IElement(ABC):
 
         Returns
         -------
-        Iterable[Self]
+        Iterable[IElement]
             Iterable of all descendant nodes.
         """
         self._raise_not_implemented()
 
     @property
     @abstractmethod
-    def parent(self) -> Optional[Self]:
+    def parent(self) -> Optional[IElement]:
         """
         Returns the immediate parent node of this element, if it exists.
 
         Returns
         -------
-        Optional[Self]
+        Optional[IElement]
             The parent element, or `None` if this is the root node.
         """
         self._raise_not_implemented()
@@ -433,6 +433,3 @@ class SelectionApi(ABC):
         raise NotImplementedError(
             f"{self.__class__.__name__} is abstract and does not implement select method."
         )
-
-
-Element = TypeVar("Element", bound=IElement)
