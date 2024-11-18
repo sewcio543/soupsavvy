@@ -39,7 +39,7 @@ class LXMLElement(IElement):
         attrs: Optional[dict[str, Union[str, Pattern[str]]]] = None,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[IElement]:
+    ) -> list[LXMLElement]:
         iterator = (
             self._node.iterdescendants(None)
             if recursive
@@ -81,13 +81,15 @@ class LXMLElement(IElement):
 
         return True
 
-    def find_subsequent_siblings(self, limit: Optional[int] = None) -> list[IElement]:
+    def find_subsequent_siblings(
+        self, limit: Optional[int] = None
+    ) -> list[LXMLElement]:
         iterator = self._node.itersiblings(None)
         return list(
             islice((LXMLElement(element) for element in iterator), limit),
         )
 
-    def find_ancestors(self, limit: Optional[int] = None) -> list[IElement]:
+    def find_ancestors(self, limit: Optional[int] = None) -> list[LXMLElement]:
         iterator = self._node.iterancestors(None)
         return list(
             islice((LXMLElement(element) for element in iterator), limit),
@@ -103,15 +105,15 @@ class LXMLElement(IElement):
         return LXMLXpathApi(selector)
 
     @property
-    def children(self) -> Iterable[IElement]:
+    def children(self) -> Iterable[LXMLElement]:
         return (LXMLElement(element) for element in self._node.iterchildren(None))
 
     @property
-    def descendants(self) -> Iterable[IElement]:
+    def descendants(self) -> Iterable[LXMLElement]:
         return (LXMLElement(element) for element in self._node.iterdescendants(None))
 
     @property
-    def parent(self) -> Optional[IElement]:
+    def parent(self) -> Optional[LXMLElement]:
         parent = self._node.getparent()
         return LXMLElement(parent) if parent is not None else None
 

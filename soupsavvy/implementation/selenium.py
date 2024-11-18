@@ -59,7 +59,7 @@ class SeleniumElement(IElement):
         attrs: Optional[dict[str, Union[str, Pattern[str]]]] = None,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[IElement]:
+    ) -> list[SeleniumElement]:
         """Optimized method to find all elements matching tag name and attributes."""
         js_script = """
             function findMatchingElements(root, tagName, attrs, recursive, limit) {
@@ -115,7 +115,7 @@ class SeleniumElement(IElement):
         )
 
         # Filter regex attributes that JS could not process
-        final_elements: list[IElement] = []
+        final_elements = []
 
         for element in matched_elements:
             if all(
@@ -132,7 +132,9 @@ class SeleniumElement(IElement):
 
         return final_elements[:limit]
 
-    def find_subsequent_siblings(self, limit: Optional[int] = None) -> list[IElement]:
+    def find_subsequent_siblings(
+        self, limit: Optional[int] = None
+    ) -> list[SeleniumElement]:
         sibling_elements = self._node.find_elements(By.XPATH, "following-sibling::*")
 
         if limit is not None:
@@ -162,7 +164,7 @@ class SeleniumElement(IElement):
 
     #     return parents
 
-    def find_ancestors(self, limit: Optional[int] = None) -> list[IElement]:
+    def find_ancestors(self, limit: Optional[int] = None) -> list[SeleniumElement]:
         driver: WebDriver = self._node.parent
 
         # JavaScript function to collect ancestors up to a limit
@@ -186,17 +188,17 @@ class SeleniumElement(IElement):
         return [SeleniumElement(el) for el in matched_elements]
 
     @property
-    def children(self) -> Iterable[IElement]:
+    def children(self) -> Iterable[SeleniumElement]:
         return [SeleniumElement(e) for e in self._node.find_elements(By.XPATH, "./*")]
 
     @property
-    def descendants(self) -> Iterable[IElement]:
+    def descendants(self) -> Iterable[SeleniumElement]:
         return [
             SeleniumElement(e) for e in self._node.find_elements(By.CSS_SELECTOR, "*")
         ]
 
     @property
-    def parent(self) -> Optional[IElement]:
+    def parent(self) -> Optional[SeleniumElement]:
         driver: WebDriver = self._node.parent
         element = driver.execute_script("return arguments[0].parentNode;", self.node)
         return SeleniumElement(element) if element is not None else None

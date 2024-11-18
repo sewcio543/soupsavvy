@@ -36,7 +36,7 @@ class SoupElement(IElement):
         attrs: Optional[dict[str, Union[str, Pattern[str]]]] = None,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[IElement]:
+    ) -> list[SoupElement]:
         return [
             SoupElement(element)
             for element in self.node.find_all(
@@ -44,12 +44,14 @@ class SoupElement(IElement):
             )
         ]
 
-    def find_subsequent_siblings(self, limit: Optional[int] = None) -> list[IElement]:
+    def find_subsequent_siblings(
+        self, limit: Optional[int] = None
+    ) -> list[SoupElement]:
         return [
             SoupElement(element) for element in self.node.find_next_siblings(limit=limit)  # type: ignore
         ]
 
-    def find_ancestors(self, limit: Optional[int] = None) -> list[IElement]:
+    def find_ancestors(self, limit: Optional[int] = None) -> list[SoupElement]:
         return [SoupElement(element) for element in self.node.find_parents(limit=limit)]
 
     def get_attribute(self, name: str) -> Optional[str]:
@@ -65,7 +67,7 @@ class SoupElement(IElement):
         return SoupsieveApi(selector)
 
     @property
-    def children(self) -> Iterable[IElement]:
+    def children(self) -> Iterable[SoupElement]:
         return (
             SoupElement(element)
             for element in self.node.children
@@ -73,7 +75,7 @@ class SoupElement(IElement):
         )
 
     @property
-    def descendants(self) -> Iterable[IElement]:
+    def descendants(self) -> Iterable[SoupElement]:
         return (
             SoupElement(element)
             for element in self.node.descendants
@@ -81,7 +83,7 @@ class SoupElement(IElement):
         )
 
     @property
-    def parent(self) -> Optional[IElement]:
+    def parent(self) -> Optional[SoupElement]:
         parent = self.node.parent
         return SoupElement(parent) if parent is not None else None
 

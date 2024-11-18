@@ -14,7 +14,7 @@ from __future__ import annotations
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from itertools import chain
-from typing import Optional, Self
+from typing import Optional
 
 from soupsavvy.interfaces import IElement
 
@@ -46,7 +46,7 @@ class TagIterator:
         """
         return iter(self.tag.descendants if self.recursive else self.tag.children)
 
-    def __iter__(self) -> Self:
+    def __iter__(self) -> TagIterator:
         # Resetting iterator to the beginning.
         iter_ = self._get_iterator()
         self._iter = chain([self.tag], iter_) if self.include_self else iter_
