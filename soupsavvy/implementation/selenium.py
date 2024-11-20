@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-import re
+from importlib.resources import files
 from itertools import islice
-from pathlib import Path
 from typing import Iterable, Optional, Pattern, Union
 
 from selenium.webdriver.common.by import By
@@ -13,19 +12,9 @@ from soupsavvy.interfaces import IElement
 from soupsavvy.selectors.css.api import SeleniumCSSApi
 from soupsavvy.selectors.xpath.api import SeleniumXPathApi
 
-_FIND_ALL_SCRIPT = Path(
-    "soupsavvy",
-    "implementation",
-    "scripts",
-    "find_all.js",
-).read_text()
-
-_FIND_ANCESTORS_SCRIPT = Path(
-    "soupsavvy",
-    "implementation",
-    "scripts",
-    "find_ancestors.js",
-).read_text()
+_SCRIPTS_DIR = files("soupsavvy.implementation.scripts")
+_FIND_ALL_SCRIPT = _SCRIPTS_DIR.joinpath("find_all.js").read_text()
+_FIND_ANCESTORS_SCRIPT = _SCRIPTS_DIR.joinpath("find_ancestors.js").read_text()
 
 
 class SeleniumElement(IElement):
