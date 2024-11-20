@@ -74,10 +74,10 @@ def driver(http_server):
     """Set up a simple HTTP server to serve the HTML file."""
     global _driver
 
-    if _driver is None:
-        _driver = get_driver()
+    _driver = get_driver()
 
-    return _driver
+    yield _driver
+    _driver.quit()
 
 
 # HTML file path
@@ -108,11 +108,6 @@ def insert(html: str, driver: WebDriver) -> None:
 
 def to_selenium(html: str) -> SeleniumElement:
     """Function to replace HTML content and get the root element."""
-    # global _driver
-
-    # if _driver is None:
-    #     _driver = get_driver()
-
     insert(html, driver=_driver)
     body = _driver.find_element(By.TAG_NAME, "body")
     return SeleniumElement(body)
