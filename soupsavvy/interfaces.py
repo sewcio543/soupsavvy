@@ -383,6 +383,11 @@ class IElement(ABC):
         """Raises a `NotImplementedError` indicating that this method is abstract."""
         raise NotImplementedError(cls._NOT_IMPLEMENTED_MESSAGE)
 
+    @classmethod
+    def _map(cls, elements: Iterable[Any]) -> Iterable[Self]:
+        """Maps elements to the current implementation."""
+        return map(cls, elements)
+
     def __hash__(self):
         """Hashes element object using the wrapped node's hash."""
         return hash(self._node)

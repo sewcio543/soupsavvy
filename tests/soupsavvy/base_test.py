@@ -47,7 +47,7 @@ from tests.soupsavvy.conftest import (
     MockLinkSelector,
     MockSelector,
     MockTextOperation,
-    to_soup,
+    ToElement,
 )
 
 
@@ -622,7 +622,6 @@ class MockNameOperation(OperationSearcherMixin):
         return isinstance(x, MockNameOperation)
 
 
-div = to_soup("""<div></div>""").find_all("div")[0]
 MOCK = MockNameOperation()
 
 
@@ -634,7 +633,7 @@ class TestOperationSearcherMixin:
         argvalues=list(product([True, False], [True, False])),
     )
     def test_find_method_calls_execute_and_returns_its_result(
-        self, strict: bool, recursive: bool
+        self, strict: bool, recursive: bool, to_element: ToElement
     ):
         """
         Tests if find method calls execute and returns its result.
@@ -642,6 +641,7 @@ class TestOperationSearcherMixin:
         Other find parameters are ignored and operation
         is performed always in the same way.
         """
+        div = to_element("""<div></div>""").find_all("div")[0]
         assert (
             MOCK.find(div, strict=strict, recursive=recursive)
             == "div"
@@ -653,7 +653,7 @@ class TestOperationSearcherMixin:
         argvalues=list(product([None, 2], [True, False])),
     )
     def test_find_all_returns_list_with_single_element_from_execute_call(
-        self, limit, recursive: bool
+        self, limit, recursive: bool, to_element: ToElement
     ):
         """
         Tests if find_all method returns list with single element
@@ -661,6 +661,7 @@ class TestOperationSearcherMixin:
         Other find_all parameters are ignored and operation
         is performed always in the same way.
         """
+        div = to_element("""<div></div>""").find_all("div")[0]
         result = MOCK.find_all(div, recursive=recursive, limit=limit)
         assert result == ["div"]
 

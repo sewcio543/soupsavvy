@@ -1,12 +1,51 @@
+"""
+Module with a converter, to transform any supported node into
+an appropriate IElement instance.
+This enables node to be used across `soupsavvy` with all its features.
+"""
+
 import importlib
 from typing import Any
 
 from soupsavvy.interfaces import IElement
 
+SUPPORTED = ["bs4", "lxml", "selenium"]
 
-def to_soupsavvy(element: Any) -> IElement:
-    if isinstance(element, IElement):
-        return element
+
+def to_soupsavvy(node: Any) -> IElement:
+    """
+    Converts node of supported type into an appropriate IElement instance
+    making it usable across `soupsavvy` with all its features.
+
+    Parameters
+    ----------
+    node : Any
+        A node object of supported type, currently supported implementations are:
+        "beautifulsoup4", "lxml", "selenium".
+
+    Returns
+    -------
+    IElement
+        An instance of IElement, wrapping the node object.
+
+    Examples
+    --------
+    >>> from bs4 import BeautifulSoup
+    ... from soupsavvy import to_soupsavvy
+    ... soup = BeautifulSoup("<p>Hello, World!</p>", "html.parser")
+    ... element = to_soupsavvy(soup)
+
+    Raises
+    ------
+    TypeError
+        If the node object is of an unsupported type.
+
+    Notes
+    -----
+    If `IElement` is passed as an argument, it will be returned back.
+    """
+    if isinstance(node, IElement):
+        return node
 
     try:
         bs4 = importlib.import_module("bs4")
@@ -27,17 +66,19 @@ def to_soupsavvy(element: Any) -> IElement:
         WebElement = None
 
     # Check the type of the element
-    if Tag and isinstance(element, Tag):
+    if Tag and isinstance(node, Tag):
         from soupsavvy.implementation.bs4 import SoupElement
 
-        return SoupElement(element)
-    elif HtmlElement and isinstance(element, HtmlElement):
+        return SoupElement(node)
+
+    if HtmlElement and isinstance(node, HtmlElement):
         from soupsavvy.implementation.lxml import LXMLElement
 
-        return LXMLElement(element)
-    elif WebElement and isinstance(element, WebElement):
+        return LXMLElement(node)
+
+    if WebElement and isinstance(node, WebElement):
         from soupsavvy.implementation.selenium import SeleniumElement
 
-        return SeleniumElement(element)
-    else:
-        raise TypeError("Unsupported element type")
+        return SeleniumElement(node)
+
+    raise TypeError(f"Unsupported element type, expected one of {SUPPORTED}")
