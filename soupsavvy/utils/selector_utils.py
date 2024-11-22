@@ -4,8 +4,8 @@ to ensure consistent and reliable results.
 
 Classes
 -------
-- `TagIterator` - Wrapper class for iterating over bs4.Tag.
-- `UniqueTag` - Wrapper class for bs4.Tag to make it hashable by id.
+- `TagIterator` - Wrapper class for iterating over `IElement`.
+- `ElementWrapper` - Wrapper class for `IElement` instances.
 - `TagResultSet` - Collection that stores and manages results of selection.
 """
 
@@ -16,32 +16,32 @@ from dataclasses import dataclass
 from itertools import chain
 from typing import Optional
 
-from bs4 import Tag
+from soupsavvy.interfaces import IElement
 
 
 @dataclass
 class TagIterator:
     """
-    Wrapper class for iterating over bs4.Tag.
+    Wrapper class for iterating over `IElement` instances.
 
     Parameters
     ----------
-    tag : Tag
-        BeautifulSoup Tag to iterate over.
+    tag : IElement
+        `IElement` to iterate over.
     recursive : bool, optional
         If True, iterates over all descendants, otherwise only over direct children.
-        Default is True, similar to bs4 implementation.
+        Default is True.
     include_self : bool, optional
-        If True, includes the tag itself in iteration, default is False.
+        If True, includes the element itself in iteration, default is False.
     """
 
-    tag: Tag
+    tag: IElement
     recursive: bool = True
     include_self: bool = False
 
     def _get_iterator(self) -> Iterator:
         """
-        Returns iterator over bs4.Tag descendants or children
+        Returns iterator over `IElement` descendants or children
         based on recursive parameter value.
         """
         return iter(self.tag.descendants if self.recursive else self.tag.children)
@@ -52,73 +52,43 @@ class TagIterator:
         self._iter = chain([self.tag], iter_) if self.include_self else iter_
         return self
 
-    def __next__(self) -> Tag:
+    def __next__(self) -> IElement:
         """
-        Iterates over bs4.Tag skipping all strings (not bs4.Tag).
+        Iterates over `IElement` nodes.
         If recursive is set to True, iterates over all descendants,
         otherwise only over direct children.
         """
-        value = next(self._iter)
-
-        while not isinstance(value, Tag):
-            value = next(self._iter)
-
-        return value
+        return next(self._iter)
 
 
-class UniqueTag:
+@dataclass
+class ElementWrapper:
     """
-    Wrapper class for bs4.Tag to make it hashable by id.
-    Hashing in bs4.Tag is implemented through hash of string representation:
-    >>> str(self).__hash__()
-    Two different bs4.Tag instances with the same content have the same hash,
-    which is the root of the problem when operating with sets of bs4.Tag instances.
-
-    Class uses composition over inheritance which makes it responsible
-    only for hashing and equality check.
-
-    Class is used in Selectors that use operations on sets of bs4.Tag instances.
+    Wrapper class for `IElement` instances for operations applied in `TagResultSet`.
+    Operations such as setting attributes are performed on wrapper,
+    and original `IElement` instance is not modified.
     """
 
-    def __init__(self, tag: Tag):
-        """
-        Initializes UniqueTag instance.
-
-        Parameters
-        ----------
-        tag : bs4.Tag
-            BeautifulSoup Tag instance to wrap.
-        """
-        self.tag = tag
+    element: IElement
 
     def __hash__(self):
-        """Hashes bs4.Tag instance by id."""
-        return id(self.tag)
+        """Hashes instance by `IElement` instance hash value."""
+        return hash(self.element)
 
     def __eq__(self, other):
-        """
-        Checks equality of itself with another object.
-
-        For object to be equal to UniqueTag, it should be an instance of UniqueTag
-        and have the same hash value, meaning it has to wrap the same bs4.Tag instance.
-        In any other case, returns False.
-        """
-        return isinstance(other, UniqueTag) and hash(self) == hash(other)
-
-    def __str__(self):
-        """Returns string representation of UniqueTag instance."""
-        return f"{self.__class__.__name__}({id(self.tag)})"
+        """Checks equality based on hash value."""
+        return isinstance(other, ElementWrapper) and hash(self) == hash(other)
 
 
 class TagResultSet:
     """
-    TagResultSet class is collection that stores and manages results of find_all
+    `TagResultSet` class is collection that stores and manages results of find_all
     method of selectors. Prerequisites for returned results are:
-    - bs4.Tag instances are unique
+    - `IElement` instances are unique
     - the order of results == order of their appearance in html
 
-    This components consumes list of bs4.Tag instances and provides methods
-    for fetching unique results with preserved order.
+    This components consumes optional list of `IElement` instances
+    and provides methods for fetching unique results with preserved order.
     It provides operations on sets of results like intersection and union.
     """
 
@@ -126,79 +96,78 @@ class TagResultSet:
     _ORDER_ATTR = "_order"
     _IS_BASE = "_base"
 
-    def __init__(self, tags: Optional[list[Tag]] = None) -> None:
+    def __init__(self, elements: Optional[list[IElement]] = None) -> None:
         """
         Initializes `TagResultSet` instance.
 
         Parameters
         ----------
-        tags : list[Tag], optional
-            List of bs4.Tag instances to store in the collection.
+        elements : list[IElement], optional
+            List of `IElement` instances to store in the collection.
             Default is None, which initializes empty collection.
         """
-        self._tags = tags or []
+        self._elements = elements or []
 
-    def fetch(self, n: Optional[int] = None) -> list[Tag]:
+    def fetch(self, n: Optional[int] = None) -> list[IElement]:
         """
-        Fetches n first unique bs4.Tag instances from collection.
+        Fetches n first unique `IElement` instances from collection.
         Ensures that the order of the initial list is preserved.
 
         Parameters
         ----------
         n : int, optional
-            Number of bs4.Tag instances to fetch.
-            If default None, fetches all unique bs4.Tag instances.
+            Number of `IElement` instances to fetch.
+            If default None, fetches all unique instances.
 
         Returns
         -------
-        list[Tag]
-            List of bs4.Tag instances fetched from collection.
+        list[IElement]
+            List of `IElement` instances fetched from collection.
         """
         set_ = self._to_set(base=True)
         ordered = self._sort(set_)
         return ordered[:n]
 
-    def _to_set(self, base: bool) -> set[UniqueTag]:
+    def _to_set(self, base: bool) -> set[ElementWrapper]:
         """
-        Converts list of bs4.Tags from collection to set of UniqueTag instances.
+        Converts list of `IElement` from collection to set of UniqueTag instances.
 
         Parameters
         ----------
         base : bool
-            If True, sets the tag as base, otherwise as non-base.
+            If True, sets the element as base, otherwise as non-base.
             If TagResultSet is used in set operations as a base, it should be True.
 
         Returns
         -------
-        set[UniqueTag]
-            Set of UniqueTag instances with set helper attributes.
+        set[ElementWrapper]
+            Set of ElementWrapper instances with set helper attributes.
         """
-        # converting to UniqueTag instances due to known hashing issue
-        tags = [UniqueTag(tag) for tag in self._tags]
+        elements = [ElementWrapper(element) for element in self._elements]
 
-        for i, tag in enumerate(tags):
+        for i, element in enumerate(elements):
             # setting attributes used for restoring order
-            setattr(tag, self._ORDER_ATTR, i)
-            setattr(tag, self._IS_BASE, int(base))
+            setattr(element, self._ORDER_ATTR, i)
+            setattr(element, self._IS_BASE, int(base))
 
-        return set(tags)
+        return set(elements)
 
-    def _sort(self, it: Iterable[UniqueTag]) -> list[Tag]:
+    def _sort(self, it: Iterable[ElementWrapper]) -> list[IElement]:
         """
-        Sorts an iterable of UniqueTag instances by order and base attributes.
+        Sorts an iterable of `ElementWrapper` instances by order and base attributes.
 
         Parameters
         ----------
-        it : Iterable[UniqueTag]
-            Iterable of UniqueTag instances to sort.
+        it : Iterable[ElementWrapper]
+            Iterable of `ElementWrapper` instances to sort.
 
         Returns
         -------
-        list[Tag]
-            List of bs4.Tag instances sorted by order and base attributes.
+        list[IElement]
+            List of `IElement` instances sorted by order and base attributes.
         """
         return [
-            unique.tag
+            unique.element
             for unique in sorted(
                 it,
                 key=lambda x: (
@@ -212,14 +181,14 @@ class TagResultSet:
 
     def __and__(self, other: TagResultSet) -> TagResultSet:
         """
-        Performs an intersection operation on two TagResultSet instances
+        Performs an intersection operation on two `TagResultSet` instances
         with current instance as a base,
         preserving the order of tags from the base instance.
 
         Parameters
         ----------
         other : TagResultSet
-            TagResultSet instance to perform intersection with.
+            `TagResultSet` instance to perform intersection with.
 
         Example
         -------
@@ -231,7 +200,7 @@ class TagResultSet:
         Returns
         -------
         TagResultSet
-            New TagResultSet instance with results of intersection operation.
+            New `TagResultSet` instance with results of intersection operation.
         """
         base = self._to_set(base=True)
         right = other._to_set(base=False)
@@ -242,14 +211,14 @@ class TagResultSet:
 
     def __or__(self, other: TagResultSet) -> TagResultSet:
         """
-        Performs a union operation on two TagResultSet instances
+        Performs a union operation on two `TagResultSet` instances
         with current instance list of tags as a base, appending new tags
         from other instance at the end of the list.
 
         Parameters
         ----------
         other : TagResultSet
-            TagResultSet instance to perform union with.
+            `TagResultSet` instance to perform union with.
 
         Example
         -------
@@ -261,7 +230,7 @@ class TagResultSet:
         Returns
         -------
         TagResultSet
-            New TagResultSet instance with results of union operation.
+            New `TagResultSet` instance with results of union operation.
         """
         base = self._to_set(base=True)
         right = other._to_set(base=False)
@@ -271,14 +240,14 @@ class TagResultSet:
 
     def __sub__(self, other: TagResultSet) -> TagResultSet:
         """
-        Performs a difference operation on two TagResultSet instances
+        Performs a difference operation on two `TagResultSet` instances
         with current instance as a base,
         preserving the order of tags from the base instance.
 
         Parameters
         ----------
         other : TagResultSet
-            TagResultSet instance to perform difference with.
+            `TagResultSet` instance to perform difference with.
 
         Example
         -------
@@ -300,14 +269,14 @@ class TagResultSet:
 
     def symmetric_difference(self, other: TagResultSet) -> TagResultSet:
         """
-        Performs a symmetric difference operation on two TagResultSet instances
+        Performs a symmetric difference operation on two `TagResultSet` instances
         with current instance as a base,
         preserving the order of tags from the base instance.
 
         Parameters
         ----------
         other : TagResultSet
-            TagResultSet instance to perform symmetric difference with.
+            `TagResultSet` instance to perform symmetric difference with.
 
         Example
         -------
@@ -319,7 +288,7 @@ class TagResultSet:
         Returns
         -------
         TagResultSet
-            New TagResultSet instance with results of symmetric difference operation.
+            New `TagResultSet` instance with results of symmetric difference operation.
         """
         base = self._to_set(base=True)
         right = other._to_set(base=False)
@@ -328,8 +297,8 @@ class TagResultSet:
         return TagResultSet(ordered)
 
     def __len__(self) -> int:
-        """Returns the number of bs4.Tag instances in the collection."""
-        return len(self._tags)
+        """Returns the number of `IElement` instances in the collection."""
+        return len(self._elements)
 
     def __bool__(self) -> bool:
         """Returns True if collection is not empty, otherwise False."""

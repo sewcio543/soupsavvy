@@ -1,5 +1,5 @@
 """
-Testing module for testing basic functionality of soupsavvy base classes
+Testing module for testing basic functionality of `soupsavvy` base classes
 in `base` module. It contains operations and selector related tests.
 """
 
@@ -9,7 +9,6 @@ from itertools import product
 from typing import Any, Type
 
 import pytest
-from bs4 import Tag
 
 from soupsavvy.base import (
     CompositeSoupSelector,
@@ -20,10 +19,10 @@ from soupsavvy.base import (
 from soupsavvy.exceptions import (
     BreakOperationException,
     FailedOperationExecution,
-    NavigableStringException,
     NotOperationException,
     NotSoupSelectorException,
 )
+from soupsavvy.interfaces import IElement
 from soupsavvy.operations.general import OperationPipeline
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 from soupsavvy.selectors.combinators import (
@@ -48,7 +47,7 @@ from tests.soupsavvy.conftest import (
     MockLinkSelector,
     MockSelector,
     MockTextOperation,
-    to_bs,
+    ToElement,
 )
 
 
@@ -255,7 +254,7 @@ class TestNOTOperator:
 
     def test_bitwise_not_operator_on_single_not_selector_returns_selector(self):
         """
-        Tests if bitwise NOT operator (__invert__) returns the original tag
+        Tests if bitwise NOT operator (__invert__) returns the original element
         when applied to NotSelector instance with single selector.
 
         It does not make sense to create NotSelector(NotSelector(...)), even
@@ -272,7 +271,7 @@ class TestNOTOperator:
         instance with the same selectors when applied to NotSelector instance
         with multiple selectors.
 
-        If NotSelector matches tag if it doesn't match at least one of the selectors,
+        If NotSelector matches element if it doesn't match at least one of the selectors,
         so negation would be to match at least one of the selectors, which is
         how SelectorList works.
         """
@@ -284,37 +283,6 @@ class TestNOTOperator:
 
         assert isinstance(result, SelectorList)
         assert result.selectors == [selector1, selector2]
-
-
-@pytest.mark.selector
-@pytest.mark.edge_case
-def test_exception_is_raised_when_navigable_string_is_a_result():
-    """
-    Tests if NavigableStringException is raised when bs4.find returns NavigableString.
-    Child classes of SoupSelector should always always prevent that,
-    thus this is a hypothetical case that is covered anyway to ensure that it does
-    not break code downstream.
-    """
-    from bs4 import NavigableString
-
-    class NavigableStringSelector(MockSelector):
-        """
-        Mock selector that returns NavigableString in find method
-        to force NavigableStringException in SoupSelector base class.
-        """
-
-        def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
-            return []
-
-        def _find(self, tag: Tag, recursive: bool = True):
-            return NavigableString("Hello World")
-
-    markup = """<div class="widget">Hello World</div>"""
-    bs = to_bs(markup)
-    tag = NavigableStringSelector()
-
-    with pytest.raises(NavigableStringException):
-        tag.find(bs, strict=True)
 
 
 @pytest.mark.selector
@@ -331,7 +299,9 @@ class TestCompositeSoupSelector:
         def __init__(self, *selectors):
             super().__init__(list(selectors))
 
-        def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+        def find_all(
+            self, tag: IElement, recursive: bool = True, limit=None
+        ) -> list[IElement]:
             return []
 
     class MockUnordered(BaseCompositeSoupSelectorMock):
@@ -639,11 +609,11 @@ class TestCheckOperation:
 class MockNameOperation(OperationSearcherMixin):
     """
     Mock class for testing OperationSearcherMixin class.
-    Extract name of provided tag from bs4.Tag object.
+    Extract tag name from provided IElement object.
     """
 
-    def _execute(self, arg: Tag):
-        if not isinstance(arg, Tag):
+    def _execute(self, arg: IElement):
+        if not isinstance(arg, IElement):
             raise TypeError
 
         return arg.name
@@ -652,7 +622,6 @@ class MockNameOperation(OperationSearcherMixin):
         return isinstance(x, MockNameOperation)
 
 
-div: Tag = to_bs("""<div></div>""").div  # type: ignore
 MOCK = MockNameOperation()
 
 
@@ -664,7 +633,7 @@ class TestOperationSearcherMixin:
         argvalues=list(product([True, False], [True, False])),
     )
     def test_find_method_calls_execute_and_returns_its_result(
-        self, strict: bool, recursive: bool
+        self, strict: bool, recursive: bool, to_element: ToElement
     ):
         """
         Tests if find method calls execute and returns its result.
@@ -672,6 +641,7 @@ class TestOperationSearcherMixin:
         Other find parameters are ignored and operation
         is performed always in the same way.
         """
+        div = to_element("""<div></div>""").find_all("div")[0]
         assert (
             MOCK.find(div, strict=strict, recursive=recursive)
             == "div"
@@ -683,7 +653,7 @@ class TestOperationSearcherMixin:
         argvalues=list(product([None, 2], [True, False])),
     )
     def test_find_all_returns_list_with_single_element_from_execute_call(
-        self, limit, recursive: bool
+        self, limit, recursive: bool, to_element: ToElement
     ):
         """
         Tests if find_all method returns list with single element
@@ -691,6 +661,7 @@ class TestOperationSearcherMixin:
         Other find_all parameters are ignored and operation
         is performed always in the same way.
         """
+        div = to_element("""<div></div>""").find_all("div")[0]
         result = MOCK.find_all(div, recursive=recursive, limit=limit)
         assert result == ["div"]
 

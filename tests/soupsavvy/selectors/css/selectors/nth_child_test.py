@@ -1,23 +1,26 @@
-"""Module with unit tests for NthChild css tag selector."""
+"""Module with unit tests for NthChild css selector."""
 
 import pytest
 
 from soupsavvy.exceptions import InvalidCSSSelector, TagNotFoundException
 from soupsavvy.selectors.css.selectors import NthChild
-from tests.soupsavvy.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import ToElement, strip
 
 
 @pytest.mark.css
 @pytest.mark.selector
 class TestNthChild:
-    """Class with unit tests for NthChild tag selector."""
+    """Class with unit tests for NthChild selector."""
 
     def test_css_selector_is_correct(self):
         """Tests if selector property returns correct value."""
         assert NthChild("2n").css == ":nth-child(2n)"
 
-    def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
-        """Tests if find_all method returns all tags for selector without tag name."""
+    def test_find_all_returns_all_matching_elements(
+        self,
+        to_element: ToElement,
+    ):
+        """Tests if find_all method returns all matching elements."""
         text = """
             <div></div>
             <a class="widget">1</a>
@@ -29,7 +32,7 @@ class TestNthChild:
             </div>
             <div>5</div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = NthChild("2n")
         result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -40,8 +43,8 @@ class TestNthChild:
             strip("""<div>5</div>"""),
         ]
 
-    def test_find_returns_first_tag_matching_selector(self):
-        """Tests if find method returns first tag matching selector."""
+    def test_find_returns_first_element_matching_selector(self, to_element: ToElement):
+        """Tests if find method returns first element matching selector."""
         text = """
             <div></div>
             <div>1</div>
@@ -54,12 +57,14 @@ class TestNthChild:
             <a class="widget"></a>
             <div><a></a><p>45</p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthChild("2n")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div>1</div>""")
 
-    def test_find_returns_none_if_no_match_and_strict_false(self):
+    def test_find_returns_none_if_no_match_and_strict_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns None if no element matches the selector
         and strict is False.
@@ -68,12 +73,15 @@ class TestNthChild:
             <div></div>
             <div><p></p><a></a></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthChild("3n")
         result = selector.find(bs)
         assert result is None
 
-    def test_find_raises_exception_if_no_match_and_strict_true(self):
+    def test_find_raises_exception_if_no_match_and_strict_true(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no element matches the selector
         and strict is True.
@@ -82,24 +90,27 @@ class TestNthChild:
             <div></div>
             <div><p></p><a></a></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthChild("3n")
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_all_returns_empty_list_when_no_match(self):
+    def test_find_all_returns_empty_list_when_no_match(self, to_element: ToElement):
         """Tests if find returns an empty list if no element matches the selector."""
         text = """
             <div></div>
             <div><p></p><a></a></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthChild("3n")
         result = selector.find_all(bs)
         assert result == []
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns first matching child element if recursive is False.
         """
@@ -115,12 +126,15 @@ class TestNthChild:
             <a class="widget"></a>
             <div><a></a><p>34</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = NthChild("2n")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<div>1</div>""")
 
-    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns None if no child element matches the selector
         and recursive is False.
@@ -129,12 +143,15 @@ class TestNthChild:
             <div><p></p><a></a><p>Not child</p></div>
             <div></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = NthChild("3n")
         result = selector.find(bs, recursive=False)
         assert result is None
 
-    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no child element
         matches the selector, when recursive is False and strict is True.
@@ -143,7 +160,7 @@ class TestNthChild:
             <div><p></p><a></a><p>Not child</p></div>
             <div></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = NthChild("3n")
 
         with pytest.raises(TagNotFoundException):
@@ -151,6 +168,7 @@ class TestNthChild:
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns an empty list if no child element matches the selector
@@ -160,12 +178,15 @@ class TestNthChild:
             <div><p></p><a></a><p>Not child</p></div>
             <div></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = NthChild("3n")
         result = selector.find_all(bs, recursive=False)
         assert result == []
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -182,7 +203,7 @@ class TestNthChild:
             <a class="widget"></a>
             <div><a>3</a><p>Not child</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = NthChild("2n")
         result = selector.find_all(bs, recursive=False)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -191,7 +212,10 @@ class TestNthChild:
             strip("""<div><a>3</a><p>Not child</p></div>"""),
         ]
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -207,7 +231,7 @@ class TestNthChild:
             </div>
             <div>5</div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthChild("2n")
         result = selector.find_all(bs, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -217,6 +241,7 @@ class TestNthChild:
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -235,7 +260,7 @@ class TestNthChild:
             <a class="widget"></a>
             <div><a>3</a><p>Not child</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = NthChild("2n")
         result = selector.find_all(bs, recursive=False, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -243,13 +268,19 @@ class TestNthChild:
             strip("""<span>2</span>"""),
         ]
 
-    def test_init_raise_exception_with_invalid_selector(self):
+    def test_raises_exception_when_invalid_css_selector(self, to_element: ToElement):
         """
-        Tests if init raise InvalidCSSSelector exception
-        if invalid n parameter is passed into the selector.
+        Tests if InvalidCSSSelector exception is raised in find methods,
+        when invalid css selector is passed.
         """
+        selector = NthChild("2x+1")
+        bs = to_element("<div></div>")
+
         with pytest.raises(InvalidCSSSelector):
-            NthChild("2x+1")
+            selector.find(bs)
+
+        with pytest.raises(InvalidCSSSelector):
+            selector.find_all(bs)
 
     @pytest.mark.parametrize(
         argnames="nth, expected",
@@ -267,7 +298,7 @@ class TestNthChild:
         ],
     )
     def test_returns_elements_based_on_nth_selector(
-        self, nth: str, expected: list[int]
+        self, to_element: ToElement, nth: str, expected: list[int]
     ):
         """Tests if find_all returns all elements matching various nth selectors."""
         text = """
@@ -278,7 +309,7 @@ class TestNthChild:
             <div class="widget">5</div>
             <a class="widget">6</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = NthChild(nth)
         results = selector.find_all(bs)
 

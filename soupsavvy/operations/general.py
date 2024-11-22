@@ -32,7 +32,7 @@ class OperationPipeline(OperationSearcherMixin):
     on two operations.
 
     `OperationPipeline` is operation-searcher mixin, which means it can be used
-    to find information in `bs4.Tag` object directly with find methods.
+    to find information in `IElement` object directly with find methods.
     This way, it can be used as field in model or `execute` method can be replaced
     with `find` method, which would produce the same result.
     """
@@ -123,7 +123,7 @@ class Operation(OperationSearcherMixin):
     "text"
 
     `Operation` is operation-searcher mixin, which means it can be used
-    to find information in `bs4.Tag` directly with find methods.
+    to find information in `IElement` directly with find methods.
     This way, it can be used as field in model or `execute` method can be replaced
     with `find` method, which would produce the same result.
     """

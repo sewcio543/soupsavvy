@@ -11,11 +11,9 @@ Classes
 
 from typing import Any, Optional
 
-from bs4 import Tag
-
 import soupsavvy.exceptions as exc
 from soupsavvy.base import check_operation
-from soupsavvy.interfaces import Comparable, TagSearcher
+from soupsavvy.interfaces import Comparable, IElement, TagSearcher
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 
 
@@ -62,19 +60,19 @@ class FieldWrapper(TagSearcher, Comparable):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Any]:
         """
-        Find all matching tags using the wrapped selector.
+        Find all matching element using the wrapped selector.
         Used for compatibility with `TagSearcher` interface,
         delegates to wrapped selector.
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` to search within.
+        tag : IElement
+            Any `IElement` to search within.
         recursive : bool, optional
             Whether to search recursively, by default True.
         limit : int, optional
@@ -149,15 +147,17 @@ class All(FieldWrapper):
     [element1, element2, element3]
     """
 
-    def find(self, tag: Tag, strict: bool = False, recursive: bool = True) -> list[Any]:
+    def find(
+        self, tag: IElement, strict: bool = False, recursive: bool = True
+    ) -> list[Any]:
         """
         Find all matching tags using the wrapped selector,
         enforcing the use of find_all method.
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` to search within.
+        tag : IElement
+            Any `IElement` to search within.
         strict : bool, optional
             Ignored, as this method always falls back to `find_all`.
         recursive : bool, optional
@@ -185,7 +185,7 @@ class Required(FieldWrapper):
     RequiredConstraintException
     """
 
-    def find(self, tag: Tag, strict: bool = False, recursive: bool = True) -> Any:
+    def find(self, tag: IElement, strict: bool = False, recursive: bool = True) -> Any:
         """
         Finds a required element using the wrapped selector,
         enforcing matched element not to be None.
@@ -193,8 +193,8 @@ class Required(FieldWrapper):
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` to search within.
+        tag : IElement
+            Any `IElement` to search within.
         strict : bool, optional
             If True, raises an exception if no matches are found, by default False.
         recursive : bool, optional
@@ -245,15 +245,15 @@ class Default(FieldWrapper):
         super().__init__(selector)
         self.default = default
 
-    def find(self, tag: Tag, strict: bool = False, recursive: bool = True):
+    def find(self, tag: IElement, strict: bool = False, recursive: bool = True):
         """
         Finds an element, returning a default value if None was returned
         by wrapped selector. Any exception raised during the search is propagated.
 
         Parameters
         ----------
-        tag : Tag
-            Any bs4.Tag` to search within.
+        tag : IElement
+            Any `IElement` to search within.
         strict : bool, optional
             If True, raises an exception if no matches are found, by default False.
         recursive : bool, optional

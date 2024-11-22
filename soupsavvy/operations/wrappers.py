@@ -115,8 +115,8 @@ class Suppress(OperationWrapper):
     None
 
     Operations in example can be used to try to convert string to integer
-    from text of tag, that can potentially be empty. In such case, if it's not required,
-    default can be set to None or known value.
+    from text of element, that can potentially be empty.
+    In such case, if it's not required, default can be set to None or known value.
 
     Suppress also accepts category of exceptions to suppress, by default it suppresses
     all exceptions that inherit from Exception.

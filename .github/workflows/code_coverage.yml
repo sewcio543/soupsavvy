@@ -33,7 +33,9 @@ jobs:
 
       - name: Test with coverage
         run: |
-          python -m coverage run -m pytest
+          python -m coverage run -a -m pytest --impl=bs4
+          python -m coverage run -a -m pytest --impl=lxml
+          python -m coverage run -a -m pytest --impl=selenium
 
       - name: Report coverage
         run: |

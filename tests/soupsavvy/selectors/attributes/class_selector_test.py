@@ -6,7 +6,7 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.attributes import ClassSelector
-from tests.soupsavvy.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import ToElement, strip
 
 
 @pytest.mark.selector
@@ -14,9 +14,12 @@ class TestClassSelector:
     """Class for ClassSelector unit test suite."""
 
     @pytest.mark.edge_case
-    def test_find_matches_element_with_list_of_classes_if_one_matches(self):
+    def test_find_matches_element_with_list_of_classes_if_one_matches(
+        self,
+        to_element: ToElement,
+    ):
         """
-        Tests if find returns first tag with that has a list of classes
+        Tests if find returns first element with that has a list of classes
         and one of them matches the value.
 
         Example
@@ -32,16 +35,16 @@ class TestClassSelector:
             <div class="it has a long list of widget classes"></div>
             <div class="another list of widget classes"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ClassSelector("widget")
         result = selector.find(bs)
         assert strip(str(result)) == strip(
             """<div class="it has a long list of widget classes"></div>"""
         )
 
-    def test_find_returns_first_match_with_any_value(self):
+    def test_find_returns_first_match_with_any_value(self, to_element: ToElement):
         """
-        Tests if find returns first tag with class attribute,
+        Tests if find returns first element with class attribute,
         when no value is specified.
         """
         text = """
@@ -50,13 +53,15 @@ class TestClassSelector:
             <div class=""></div>
             <a class="menu"></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ClassSelector()
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div class=""></div>""")
 
-    def test_find_returns_first_match_with_specific_value(self):
-        """Tests if find returns first tag with class attribute with specific value."""
+    def test_find_returns_first_match_with_specific_value(self, to_element: ToElement):
+        """
+        Tests if find returns first element with class attribute with specific value.
+        """
         text = """
             <div href="widget"></div>
             <span class=""></span>
@@ -64,14 +69,14 @@ class TestClassSelector:
             <a class="widget"></a>
             <div class="widget"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ClassSelector("widget")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget"></a>""")
 
-    def test_find_returns_first_match_with_pattern(self):
+    def test_find_returns_first_match_with_pattern(self, to_element: ToElement):
         """
-        Tests if find returns first tag with class attribute that matches
+        Tests if find returns first element with class attribute that matches
         specified regex pattern.
         """
         text = """
@@ -80,12 +85,14 @@ class TestClassSelector:
             <div href="widget 12"></div>
             <div class="widget 123"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ClassSelector(value=re.compile(r"^widget.?\d{1,3}$"))
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div class="widget 123"></div>""")
 
-    def test_find_returns_none_if_no_match_and_strict_false(self):
+    def test_find_returns_none_if_no_match_and_strict_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns None if no element matches the selector
         and strict is False.
@@ -96,12 +103,15 @@ class TestClassSelector:
             <div class="menu"></div>
             <div class="widget123"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ClassSelector("widget")
         result = selector.find(bs)
         assert result is None
 
-    def test_find_raises_exception_if_no_match_and_strict_true(self):
+    def test_find_raises_exception_if_no_match_and_strict_true(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests find raises TagNotFoundException if no element matches the selector
         and strict is True.
@@ -112,13 +122,13 @@ class TestClassSelector:
             <div class="menu"></div>
             <div class="widget123"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ClassSelector("widget")
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_all_returns_all_matching_elements(self):
+    def test_find_all_returns_all_matching_elements(self, to_element: ToElement):
         """Tests if find_all returns a list of all matching elements."""
         text = """
             <div href="widget"></div>
@@ -133,7 +143,7 @@ class TestClassSelector:
             <div class="widget"><span>4</span></div>
             <a id="widget"></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ClassSelector("widget")
 
         result = selector.find_all(bs)
@@ -145,7 +155,7 @@ class TestClassSelector:
         ]
         assert list(map(lambda x: strip(str(x)), result)) == excepted
 
-    def test_find_all_returns_empty_list_when_no_match(self):
+    def test_find_all_returns_empty_list_when_no_match(self, to_element: ToElement):
         """Tests if find returns an empty list if no element matches the selector."""
         text = """
             <div href="widget"></div>
@@ -153,12 +163,15 @@ class TestClassSelector:
             <div class="menu"></div>
             <div class="widget123"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = ClassSelector("widget")
         result = selector.find_all(bs)
         assert result == []
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns first matching child element if recursive is False.
         """
@@ -171,12 +184,15 @@ class TestClassSelector:
             <a class="widget"></a>
             <div class="widget"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = ClassSelector("widget")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a class="widget"></a>""")
 
-    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns None if no child element matches the selector
         and recursive is False.
@@ -189,12 +205,15 @@ class TestClassSelector:
             <div class="menu"></div>
             <a class="widget123">Hello</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = ClassSelector("widget")
         result = selector.find(bs, recursive=False)
         assert result is None
 
-    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no child element
         matches the selector, when recursive is False and strict is True.
@@ -207,7 +226,7 @@ class TestClassSelector:
             <div class="menu"></div>
             <a class="widget123">Hello</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = ClassSelector("widget")
 
         with pytest.raises(TagNotFoundException):
@@ -215,6 +234,7 @@ class TestClassSelector:
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns an empty list if no child element
@@ -228,12 +248,15 @@ class TestClassSelector:
             <div href="widget"></div>
             <div class="menu"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = ClassSelector("widget")
         result = selector.find_all(bs, recursive=False)
         assert result == []
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -250,7 +273,7 @@ class TestClassSelector:
             <span class=""></span>
             <div class="widget"><span>3</span></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = ClassSelector("widget")
         result = selector.find_all(bs, recursive=False)
 
@@ -260,7 +283,10 @@ class TestClassSelector:
             strip("""<div class="widget"><span>3</span></div>"""),
         ]
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -275,7 +301,7 @@ class TestClassSelector:
             <span class=""></span>
             <div class="widget"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = ClassSelector("widget")
         result = selector.find_all(bs, limit=2)
 
@@ -286,6 +312,7 @@ class TestClassSelector:
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -303,7 +330,7 @@ class TestClassSelector:
             <span class=""></span>
             <span class="widget"></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = ClassSelector("widget")
         result = selector.find_all(bs, recursive=False, limit=2)
 

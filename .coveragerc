@@ -20,6 +20,7 @@ exclude_lines =
     pass
     \.\.\.
     deprecated
+    _raise_not_implemented
 
 sort = cover
 show_missing = true

@@ -14,8 +14,7 @@ from tests.soupsavvy.conftest import (
     MockIntOperation,
     MockLinkSelector,
     MockTextOperation,
-    find_body_element,
-    to_bs,
+    ToElement,
 )
 
 
@@ -35,20 +34,20 @@ class TestSelectionPipeline:
                 MockIntOperation(),
             )
 
-    def test_find_returns_first_tag_matching_selector(self):
-        """Tests if find method returns first tag matching selector."""
+    def test_find_returns_first_element_matching_selector(self, to_element: ToElement):
+        """Tests if find method returns first element matching selector."""
         text = """
             <div href="github"></div>
             <h1 class="widget">1</h1>
             <a>1</a>
             <a>2</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         result = selector.find(bs)
         assert result == "1"
 
-    def test_selector_can_be_any_tag_searcher(self):
+    def test_selector_can_be_any_tag_searcher(self, to_element: ToElement):
         """
         Tests if selector passed to SelectionPipeline can be any TagSearcher,
         not necessarily a selector. In this case, SelectionPipeline.
@@ -59,7 +58,7 @@ class TestSelectionPipeline:
             <a>1</a>
             <a>2</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SelectionPipeline(
             SelectionPipeline(MockLinkSelector(), MockTextOperation()),
             MockIntOperation(),
@@ -67,7 +66,9 @@ class TestSelectionPipeline:
         result = selector.find(bs)
         assert result == 1
 
-    def test_find_returns_none_if_no_match_and_strict_false(self):
+    def test_find_returns_none_if_no_match_and_strict_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns None if no element matches the selector
         and strict is False.
@@ -76,14 +77,17 @@ class TestSelectionPipeline:
             <div href="github"></div>
             <h1 class="widget">1</h1>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SelectionPipeline(
             MockLinkSelector(), MockTextOperation(skip_none=True)
         )
         result = selector.find(bs)
         assert result is None
 
-    def test_find_raises_exception_if_no_match_and_strict_true(self):
+    def test_find_raises_exception_if_no_match_and_strict_true(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no element matches the selector
         and strict is True.
@@ -92,24 +96,24 @@ class TestSelectionPipeline:
             <div href="github"></div>
             <h1 class="widget">1</h1>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_all_returns_empty_list_when_no_match(self):
+    def test_find_all_returns_empty_list_when_no_match(self, to_element: ToElement):
         """Tests if find returns an empty list if no element matches the selector."""
         text = """
             <div href="github"></div>
             <h1 class="widget">1</h1>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         result = selector.find_all(bs)
         assert result == []
 
-    def test_find_all_returns_all_matching_elements(self):
+    def test_find_all_returns_all_matching_elements(self, to_element: ToElement):
         """Tests if find_all returns a list of all matching elements."""
         text = """
             <div href="github"></div>
@@ -119,12 +123,15 @@ class TestSelectionPipeline:
             <div><a>3</a></div>
             <a>Text Hello</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         result = selector.find_all(bs)
         assert result == ["1", "2", "3", "Text Hello"]
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns first matching child element if recursive is False.
         """
@@ -136,12 +143,15 @@ class TestSelectionPipeline:
             <a>2</a>
             <a>Text Hello</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         result = selector.find(bs, recursive=False)
         assert result == "1"
 
-    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns None if no child element matches the selector
         and recursive is False.
@@ -151,14 +161,17 @@ class TestSelectionPipeline:
             <div><a>Not child</a></div>
             <h1 class="widget">1</h1>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = SelectionPipeline(
             MockLinkSelector(), MockTextOperation(skip_none=True)
         )
         result = selector.find(bs, recursive=False)
         assert result is None
 
-    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no child element
         matches the selector, when recursive is False and strict is True.
@@ -168,13 +181,16 @@ class TestSelectionPipeline:
             <div><a>Not child</a></div>
             <h1 class="widget">1</h1>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True, recursive=False)
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -187,13 +203,14 @@ class TestSelectionPipeline:
             <a>2</a>
             <a>Text Hello</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         result = selector.find_all(bs, recursive=False)
         assert result == ["1", "2", "Text Hello"]
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns an empty list if no child element matches the selector
@@ -204,12 +221,15 @@ class TestSelectionPipeline:
             <div><a>Not child</a></div>
             <h1 class="widget">1</h1>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         result = selector.find_all(bs, recursive=False)
         assert result == []
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -222,13 +242,14 @@ class TestSelectionPipeline:
             <div><a>3</a></div>
             <a>Text Hello</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         result = selector.find_all(bs, limit=2)
         assert result == ["1", "2"]
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -243,7 +264,7 @@ class TestSelectionPipeline:
             <a>2</a>
             <a>Text Hello</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         result = selector.find_all(bs, recursive=False, limit=2)
         assert result == ["1", "2"]

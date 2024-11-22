@@ -1,8 +1,8 @@
 """Module for testing CSSSoupSelector base class."""
 
 import pytest
-from bs4 import Tag
 
+from soupsavvy.interfaces import IElement
 from soupsavvy.selectors.css.selectors import CSSSoupSelector
 from tests.soupsavvy.conftest import MockSelector
 
@@ -58,7 +58,9 @@ class TestCSSSoupSelectorEquality:
         def selector(self) -> str:
             return self._selector
 
-        def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+        def find_all(
+            self, tag: IElement, recursive: bool = True, limit=None
+        ) -> list[IElement]:
             return []
 
     @pytest.mark.parametrize(
@@ -76,9 +78,7 @@ class TestCSSSoupSelectorEquality:
             ),
         ],
     )
-    def test_two_selectors_are_equal(
-        self, selectors: tuple[CSSSoupSelector, CSSSoupSelector]
-    ):
+    def test_two_selectors_are_equal(self, selectors: tuple):
         """Tests if two multiple soup selectors are equal."""
         assert (selectors[0] == selectors[1]) is True
 
@@ -102,8 +102,6 @@ class TestCSSSoupSelectorEquality:
             ),
         ],
     )
-    def test_two_selectors_are_not_equal(
-        self, selectors: tuple[CSSSoupSelector, CSSSoupSelector]
-    ):
+    def test_two_selectors_are_not_equal(self, selectors: tuple):
         """Tests if two multiple soup selectors are not equal."""
         assert (selectors[0] == selectors[1]) is False

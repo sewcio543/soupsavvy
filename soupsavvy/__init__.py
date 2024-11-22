@@ -11,6 +11,9 @@ The package offers various types of selectors that can be easily combined
 to perform more complex searches.
 """
 
+from soupsavvy.selectors.css import CSS
+
+from .implementation.element import to_soupsavvy
 from .selectors import (
     AncestorCombinator,
     Anchor,
@@ -37,6 +40,7 @@ from .selectors import (
     TypeSelector,
     UniversalSelector,
     XORSelector,
+    XPathSelector,
 )
 
 __version__ = "1.0.0-dev0"
@@ -48,6 +52,7 @@ __all__ = [
     "TypeSelector",
     "ExpressionSelector",
     "PatternSelector",
+    "XPathSelector",
     "SelectorList",
     "DescendantCombinator",
     "AndSelector",
@@ -68,4 +73,6 @@ __all__ = [
     "NthOfSelector",
     "NthLastOfSelector",
     "OnlyOfSelector",
+    "to_soupsavvy",
+    "CSS",
 ]

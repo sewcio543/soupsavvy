@@ -1,13 +1,13 @@
 """
-Module for operations specific to BeautifulSoup tags.
+Module for operations specific to `IElement` interface.
 
 Classes
 -------
-- `Text` - Extracts text from `bs4.Tag` - most common operation.
-- `Href` - Extracts href attribute from `bs4.Tag`
-- `Parent` - Extracts parent of `bs4.Tag`
+- `Text` - Extracts text from element - most common operation.
+- `Href` - Extracts href attribute from element.
+- `Parent` - Extracts parent of element.
 
-These components are design to be used for processing html tags and extracting
+These components are design to be used for processing `IElement` and extracting
 desired information. They can be used in combination with selectors.
 """
 
@@ -15,9 +15,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Optional, Union, overload
 
-from bs4 import Tag
-
 from soupsavvy.base import BaseOperation, OperationSearcherMixin, SoupSelector
+from soupsavvy.interfaces import IElement
 
 if TYPE_CHECKING:
     from soupsavvy.operations.general import OperationPipeline
@@ -26,7 +25,7 @@ if TYPE_CHECKING:
 
 class Text(OperationSearcherMixin):
     """
-    Operation to extract text from `bs4.Tag`.
+    Operation to extract text from `IElement`.
     Wrapper of most common operation used in web scraping.
 
     Example
@@ -36,11 +35,8 @@ class Text(OperationSearcherMixin):
     ... operation.execute(tag)
     "Extracted text from the tag"
 
-    Wrapper for `bs4.Tag.get_text` method, that exposes all its options,
-    and imitates its default behavior.
-
     Implements `TagSearcher` interface for convenience. It has find methods
-    that can be used to extract text from provided tag.
+    that can be used to extract text from provided element.
 
     Example
     -------
@@ -48,43 +44,28 @@ class Text(OperationSearcherMixin):
     ... operation = Text()
     ... operation.find(tag)
     "Text"
+
+    Notes
+    -----
+    Results of this operation may vary between implementations of `IElement`,
+    as each of them extracts text differently.
     """
 
-    def __init__(self, separator: str = "", strip: bool = False) -> None:
-        """
-        Initializes `Text` operation with optional separator and strip options.
-
-        Parameters
-        ----------
-        separator : str, optional
-            Separator used to join strings from multiple text nodes, by default "".
-        strip : bool, optional
-            Flag to strip the text nodes from whitespaces and newline characters,
-            by default False.
-        """
-        self.separator = separator
-        self.strip = strip
-
-    def _execute(self, arg: Tag) -> str:
-        """Extracts text from `bs4.Tag`."""
-        return arg.get_text(separator=self.separator, strip=self.strip)
+    def _execute(self, arg: IElement) -> str:
+        """Extracts text from `IElement`."""
+        return arg.text
 
     def __eq__(self, x: Any) -> bool:
         # equal only if separator and strip are the same
-        if not isinstance(x, Text):
-            return False
-
-        return self.separator == x.separator and self.strip == x.strip
+        return isinstance(x, Text)
 
     def __repr__(self) -> str:
-        return (
-            f"{self.__class__.__name__}(separator={self.separator}, strip={self.strip})"
-        )
+        return f"{self.__class__.__name__}()"
 
 
 class Href(OperationSearcherMixin):
     """
-    Operation to extract href attribute from `bs4.Tag`.
+    Operation to extract href attribute from `IElement`.
     Wrapper of one of the common operation used in web scraping.
     If href attribute is not present, returns None.
 
@@ -96,7 +77,7 @@ class Href(OperationSearcherMixin):
     "www.example.com"
 
     Implements `TagSearcher` interface for convenience. It has find methods
-    that can be used to extract href from provided tag.
+    that can be used to extract href from provided element.
 
     Example
     -------
@@ -106,12 +87,14 @@ class Href(OperationSearcherMixin):
     "www.example.com"
     """
 
-    def _execute(self, arg: Tag) -> Optional[str]:
+    _ATTRIBUTE_NAME = "href"
+
+    def _execute(self, arg: IElement) -> Optional[str]:
         """
-        Extracts href attribute from a BeautifulSoup Tag.
+        Extracts href attribute from `IElement` object.
         If attribute is not present, returns None.
         """
-        return arg.get_attribute_list("href")[0]
+        return arg.get_attribute(self._ATTRIBUTE_NAME)
 
     def __eq__(self, x: Any) -> bool:
         # equal only if both are instances of Href
@@ -123,7 +106,7 @@ class Href(OperationSearcherMixin):
 
 class Parent(BaseOperation, SoupSelector):
     """
-    Operation to extract parent of `bs4.Tag`.
+    Operation to extract parent of `IElement`.
 
     Example
     -------
@@ -157,16 +140,16 @@ class Parent(BaseOperation, SoupSelector):
     If element does not have parent, returns None.
     """
 
-    def _execute(self, arg: Tag) -> Optional[Tag]:
-        """Extracts parent of `bs4.Tag`."""
+    def _execute(self, arg: IElement) -> Optional[IElement]:
+        """Extracts parent of `IElement`."""
         return arg.parent
 
     def find_all(
         self,
-        tag: Tag,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[IElement]:
         return [self.execute(tag)]
 
     def __eq__(self, x: Any) -> bool:

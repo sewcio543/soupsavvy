@@ -3,20 +3,113 @@ Common fixtures and mocks for selectors and operations tests
 that are shared across multiple test modules.
 """
 
-from typing import Any, Optional
+from __future__ import annotations
 
-from bs4 import BeautifulSoup, Tag
+import os
+import threading
+from collections.abc import Callable
+from http.server import HTTPServer, SimpleHTTPRequestHandler
+from pathlib import Path
+from typing import Any, Optional, cast
+
+import pytest
+from bs4 import BeautifulSoup
+from lxml.etree import fromstring
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
 
 from soupsavvy.base import BaseOperation, SoupSelector
 from soupsavvy.exceptions import BreakOperationException
+from soupsavvy.implementation.bs4 import SoupElement
+from soupsavvy.implementation.lxml import LXMLElement
+from soupsavvy.implementation.selenium import SeleniumElement
+from soupsavvy.interfaces import IElement
 
 # default bs4 parser
 PARSER = "lxml"
 
+ToElement = Callable[[str], IElement]
 
-def to_bs(html: str, parser: str = PARSER) -> BeautifulSoup:
-    """Converts raw string html to BeautifulSoup object."""
-    return BeautifulSoup(html, parser)
+_driver = cast(WebDriver, None)
+
+
+@pytest.fixture
+def to_element(implementation: str) -> Callable[[str], IElement]:
+    if implementation == "bs4":
+        return to_soup
+    elif implementation == "lxml":
+        return to_lxml
+    elif implementation == "selenium":
+        return to_selenium
+    else:
+        raise ValueError(f"Unknown implementation type: {implementation}")
+
+
+def to_soup(html: str, parser: str = PARSER) -> IElement:
+    return find_body_element(SoupElement(BeautifulSoup(html, parser)))
+
+
+def to_lxml(html: str, parser: str = PARSER) -> IElement:
+    root = fromstring(str(BeautifulSoup(html, parser)))
+    return find_body_element(LXMLElement(root))
+
+
+@pytest.fixture(scope="session", autouse=True)
+def http_server():
+    """Set up a simple HTTP server to serve the HTML file."""
+    os.chdir(DIRECTORY)
+    handler = SimpleHTTPRequestHandler
+    httpd = HTTPServer(("localhost", PORT), handler)
+    thread = threading.Thread(target=httpd.serve_forever)
+    thread.daemon = True
+    thread.start()
+    yield
+
+
+@pytest.fixture(scope="session", autouse=True)
+def driver(http_server):
+    """Set up a simple HTTP server to serve the HTML file."""
+    global _driver
+
+    _driver = get_driver()
+
+    yield _driver
+    _driver.quit()
+
+
+# HTML file path
+DIRECTORY = Path(os.getcwd(), "tests", "files")
+FILE_NAME = "example.html"
+PORT = 8000
+
+
+def get_driver() -> webdriver.Chrome:
+    """Set up a single Chrome driver for the entire session."""
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-extensions")
+    options.add_argument("--disable-logging")
+    options.add_argument("--silent")
+
+    driver = webdriver.Chrome(options=options)
+    driver.get(f"http://localhost:{PORT}/{FILE_NAME}")
+    return driver
+
+
+def insert(html: str, driver: WebDriver) -> None:
+    driver.execute_script("document.body.innerHTML = arguments[0];", html)
+
+
+def to_selenium(html: str) -> SeleniumElement:
+    """Function to replace HTML content and get the root element."""
+    insert(html, driver=_driver)
+    body = _driver.find_element(By.TAG_NAME, "body")
+    return SeleniumElement(body)
 
 
 def strip(markup: str) -> str:
@@ -24,9 +117,9 @@ def strip(markup: str) -> str:
     return markup.replace("  ", "").replace("\n", "")
 
 
-def find_body_element(bs: Tag) -> Tag:
-    """Helper function to find body element in bs4.Tag object."""
-    return bs.find("body")  # type: ignore
+def find_body_element(bs: IElement) -> IElement:
+    """Helper function to find body element in IElement object."""
+    return bs.find_all("body")[0]
 
 
 class MockSelector(SoupSelector):
@@ -38,7 +131,9 @@ class MockSelector(SoupSelector):
     def __hash__(self) -> int:
         return hash(id(self))
 
-    def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+    def find_all(
+        self, tag: IElement, recursive: bool = True, limit=None
+    ) -> list[IElement]:
         return []
 
 
@@ -55,22 +150,26 @@ class _MockSimpleComparable(MockSelector):
 class MockLinkSelector(_MockSimpleComparable):
     """
     Mock selector class for testing purposes.
-    Find every instance of link tag (with tag name 'a').
-    Delegates the task to bs4.Tag.find_all method.
+    Find every instance of link element (with tag name 'a').
+    Delegates the task to IElement.find_all method.
     """
 
-    def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+    def find_all(
+        self, tag: IElement, recursive: bool = True, limit=None
+    ) -> list[IElement]:
         return tag.find_all("a", recursive=recursive, limit=limit)
 
 
 class MockDivSelector(_MockSimpleComparable):
     """
     Mock selector class for testing purposes.
-    Find every instance of div tag (with tag name 'div').
+    Find every instance of div element (with tag name 'div').
     Delegates the task to bs4.Tag.find_all method.
     """
 
-    def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+    def find_all(
+        self, tag: IElement, recursive: bool = True, limit=None
+    ) -> list[IElement]:
         return tag.find_all("div", recursive=recursive, limit=limit)
 
 
@@ -80,7 +179,9 @@ class MockClassMenuSelector(_MockSimpleComparable):
     Find every element that has class attribute set to 'menu'.
     """
 
-    def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+    def find_all(
+        self, tag: IElement, recursive: bool = True, limit=None
+    ) -> list[IElement]:
         return tag.find_all(attrs={"class": "menu"}, recursive=recursive, limit=limit)
 
 
@@ -90,7 +191,9 @@ class MockClassWidgetSelector(_MockSimpleComparable):
     Find every element that has class attribute set to 'widget'.
     """
 
-    def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+    def find_all(
+        self, tag: IElement, recursive: bool = True, limit=None
+    ) -> list[IElement]:
         return tag.find_all(attrs={"class": "widget"}, recursive=recursive, limit=limit)
 
 
@@ -105,7 +208,7 @@ class BaseMockOperation(BaseOperation):
 
 
 class MockTextOperation(BaseMockOperation):
-    """Mock operation that returns text of the tag, using .text attribute."""
+    """Mock operation that returns text of the element, using .text attribute."""
 
     def __init__(self, skip_none: bool = False) -> None:
         """
@@ -118,7 +221,7 @@ class MockTextOperation(BaseMockOperation):
         """
         self.skip_none = skip_none
 
-    def _execute(self, arg: Optional[Tag]) -> Optional[str]:
+    def _execute(self, arg: Optional[IElement]) -> Optional[str]:
         if arg is None and self.skip_none:
             return None
 
