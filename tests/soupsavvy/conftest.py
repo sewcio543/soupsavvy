@@ -56,21 +56,20 @@ def to_lxml(html: str, parser: str = PARSER) -> IElement:
     return find_body_element(LXMLElement(root))
 
 
-# @pytest.fixture(scope="session", autouse=True)
-# def http_server():
-#     """Set up a simple HTTP server to serve the HTML file."""
-#     os.chdir(DIRECTORY)
-#     handler = SimpleHTTPRequestHandler
-#     httpd = HTTPServer(("localhost", PORT), handler)
-#     thread = threading.Thread(target=httpd.serve_forever)
-#     thread.daemon = True
-#     thread.start()
-#     yield
-#     # httpd.shutdown()
+@pytest.fixture(scope="session", autouse=True)
+def http_server():
+    """Set up a simple HTTP server to serve the HTML file."""
+    os.chdir(DIRECTORY)
+    handler = SimpleHTTPRequestHandler
+    httpd = HTTPServer(("localhost", PORT), handler)
+    thread = threading.Thread(target=httpd.serve_forever)
+    thread.daemon = True
+    thread.start()
+    yield
 
 
-@pytest.fixture(scope="session")
-def driver():
+@pytest.fixture(scope="session", autouse=True)
+def driver(http_server):
     """Set up a simple HTTP server to serve the HTML file."""
     global _driver
 
