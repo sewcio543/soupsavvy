@@ -43,7 +43,7 @@ from .selectors import (
     XPathSelector,
 )
 
-__version__ = "1.0.0-dev0"
+__version__ = "1.0.0-dev1"
 __author__ = "sewcio543"
 
 __all__ = [
