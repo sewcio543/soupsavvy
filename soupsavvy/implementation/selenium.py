@@ -1,3 +1,9 @@
+"""
+Module with `selenium` implementation of `IElement`.
+`SeleniumElement` class is an adapter making `selenium` tree,
+compatible with `IElement` interface and usable across the library.
+"""
+
 from __future__ import annotations
 
 from itertools import islice
@@ -72,6 +78,18 @@ return findAncestors(arguments[0], arguments[1]);
 
 
 class SeleniumElement(IElement):
+    """
+    Implementation of `IElement` for `selenium` tree.
+    Adapter for `selenium` objects, that makes them usable across the library.
+
+    Example
+    -------
+    >>> from soupsavvy.implementation.selenium import SeleniumElement
+    ... from selenium.webdriver.common.by import By
+    ... node = driver.find_element(By.TAG_NAME, "div")
+    ... element = SeleniumElement(node)
+    """
+
     _NODE_TYPE = WebElement
 
     def find_all(
@@ -100,38 +118,32 @@ class SeleniumElement(IElement):
                 if isinstance(value, Pattern)
             )
 
-        return list(
-            islice(map(SeleniumElement, filter(match, matched_elements)), limit)
-        )
+        return list(islice(self._map(filter(match, matched_elements)), limit))
 
     def find_subsequent_siblings(
         self, limit: Optional[int] = None
     ) -> list[SeleniumElement]:
-        sibling_elements = self._node.find_elements(By.XPATH, "following-sibling::*")
-
-        if limit is not None:
-            sibling_elements = sibling_elements[:limit]
-
-        return [SeleniumElement(e) for e in sibling_elements]
+        iterator = self._node.find_elements(By.XPATH, "following-sibling::*")
+        return list(islice(self._map(iterator), limit))
 
     def find_ancestors(self, limit: Optional[int] = None) -> list[SeleniumElement]:
         driver: WebDriver = self._node.parent
-        matched_elements = driver.execute_script(
+        iterator = driver.execute_script(
             _FIND_ANCESTORS_SCRIPT,
             self._node,
             limit,
         )
-        return [SeleniumElement(el) for el in matched_elements]
+        return list(self._map(iterator))
 
     @property
     def children(self) -> Iterable[SeleniumElement]:
-        return [SeleniumElement(e) for e in self._node.find_elements(By.XPATH, "./*")]
+        iterator = self._node.find_elements(By.XPATH, "./*")
+        return self._map(iterator)
 
     @property
     def descendants(self) -> Iterable[SeleniumElement]:
-        return [
-            SeleniumElement(e) for e in self._node.find_elements(By.CSS_SELECTOR, "*")
-        ]
+        iterator = self._node.find_elements(By.CSS_SELECTOR, "*")
+        return self._map(iterator)
 
     @property
     def parent(self) -> Optional[SeleniumElement]:

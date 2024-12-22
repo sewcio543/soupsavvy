@@ -120,9 +120,13 @@ class BaseRelativeSibling(RelativeSelector):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[IElement]:
-        search = tag.find_ancestors()[0]
+        parent = tag.parent
+
+        if parent is None:
+            return []
+
         # find all sibling tags that match the selector
-        matching = TagResultSet(self.selector.find_all(search, recursive=False))
+        matching = TagResultSet(self.selector.find_all(parent, recursive=False))
         siblings = TagResultSet(self._func(tag))
         # find intersection between two sets
         matches = matching & siblings

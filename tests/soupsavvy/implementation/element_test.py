@@ -16,7 +16,9 @@ def mock_raise_import_error(name, *args, **kwargs):
     raise ImportError
 
 
+@pytest.mark.implementation
 class TestToSoupsavvy:
+    @pytest.mark.bs4
     def test_returns_if_input_is_soup_element(self):
         text = "<html><body><p>Test</p></body></html>"
         soup = BeautifulSoup(text, parser="lxml")
@@ -24,6 +26,7 @@ class TestToSoupsavvy:
         result = to_soupsavvy(element)
         assert result is element
 
+    @pytest.mark.lxml
     def test_returns_if_input_is_lxml_element(self):
         text = "<html><body><p>Test</p></body></html>"
         node = fromstring(text)
@@ -31,6 +34,7 @@ class TestToSoupsavvy:
         result = to_soupsavvy(element)
         assert result is element
 
+    @pytest.mark.selenium
     def test_returns_if_input_is_selenium_element(self, driver: WebDriver):
         text = "<html><body><p>Test</p></body></html>"
         insert(text, driver=driver)
@@ -39,18 +43,21 @@ class TestToSoupsavvy:
         result = to_soupsavvy(element)
         assert result is element
 
+    @pytest.mark.bs4
     def test_converts_to_soup_element(self):
         text = "<html><body><p>Test</p></body></html>"
         soup = BeautifulSoup(text, parser="lxml")
         element = to_soupsavvy(soup)
         assert isinstance(element, SoupElement)
 
+    @pytest.mark.lxml
     def test_converts_to_lxml_element(self):
         text = "<html><body><p>Test</p></body></html>"
         node = fromstring(text)
         element = to_soupsavvy(node)
         assert isinstance(element, LXMLElement)
 
+    @pytest.mark.selenium
     def test_converts_to_selenium_element(self, driver: WebDriver):
         text = "<html><body><p>Test</p></body></html>"
         insert(text, driver=driver)
@@ -58,6 +65,7 @@ class TestToSoupsavvy:
         element = to_soupsavvy(node)
         assert isinstance(element, SeleniumElement)
 
+    @pytest.mark.bs4
     def test_raises_error_if_no_bs4_dependency(self, monkeypatch: MonkeyPatch):
         monkeypatch.setattr("importlib.import_module", mock_raise_import_error)
 
@@ -67,6 +75,7 @@ class TestToSoupsavvy:
         with pytest.raises(TypeError):
             to_soupsavvy(soup)
 
+    @pytest.mark.lxml
     def test_raises_error_if_no_lxml_dependency(self, monkeypatch: MonkeyPatch):
         monkeypatch.setattr("importlib.import_module", mock_raise_import_error)
 
@@ -76,6 +85,7 @@ class TestToSoupsavvy:
         with pytest.raises(TypeError):
             to_soupsavvy(node)
 
+    @pytest.mark.selenium
     def test_raises_error_if_no_selenium_dependency(
         self, driver: WebDriver, monkeypatch: MonkeyPatch
     ):

@@ -66,7 +66,6 @@ def http_server():
     thread.daemon = True
     thread.start()
     yield
-    # httpd.shutdown()
 
 
 @pytest.fixture(scope="session", autouse=True)

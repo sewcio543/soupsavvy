@@ -1,6 +1,7 @@
 """
-Module with functionality to convert user-provided objects to `soupsavvy`
-compatible elements.
+Module with a converter, to transform any supported node into
+an appropriate IElement instance.
+This enables node to be used across `soupsavvy` with all its features.
 """
 
 import importlib
@@ -8,47 +9,43 @@ from typing import Any
 
 from soupsavvy.interfaces import IElement
 
+SUPPORTED = ["bs4", "lxml", "selenium"]
 
-def to_soupsavvy(element: Any) -> IElement:
+
+def to_soupsavvy(node: Any) -> IElement:
     """
-    Converts a given element to a `soupsavvy` compatible componment.
-
-    Type of the input element it detected by the function and wraped it in a
-    corresponding `soupsavvy` element implementation. It supports the following
-    element types:
-
-    - `BeautifulSoup` Tag
-    - `lxml` HtmlElement
-    - `Selenium` WebElement
-
-    If the element is already a `soupsavvy` Element, it is returned as is.
+    Converts node of supported type into an appropriate IElement instance
+    making it usable across `soupsavvy` with all its features.
 
     Parameters
     ----------
-    element : Any
-        The element to be converted to a `soupsavvy` element.
-        Must be one of the supported element types.
+    node : Any
+        A node object of supported type, currently supported implementations are:
+        "beautifulsoup4", "lxml", "selenium".
 
     Returns
     -------
     IElement
-        A `soupsavvy` element corresponding to the input element. The returned
-        element will be compatible with the `soupsavvy` selector system.
+        An instance of IElement, wrapping the node object.
+
+    Examples
+    --------
+    >>> from bs4 import BeautifulSoup
+    ... from soupsavvy import to_soupsavvy
+    ... soup = BeautifulSoup("<p>Hello, World!</p>", "html.parser")
+    ... element = to_soupsavvy(soup)
 
     Raises
     ------
     TypeError
-        If the provided element type is not supported.
+        If the node object is of an unsupported type.
 
-    Example
-    -------
-    >>> from bs4 import BeautifulSoup
-    ... from soupsavvy import to_soupsavvy
-    ... soup = BeautifulSoup("<div>Example</div>", "html.parser")
-    ... element = to_soupsavvy(soup)
+    Notes
+    -----
+    If `IElement` is passed as an argument, it will be returned back.
     """
-    if isinstance(element, IElement):
-        return element
+    if isinstance(node, IElement):
+        return node
 
     try:
         bs4 = importlib.import_module("bs4")
@@ -69,17 +66,19 @@ def to_soupsavvy(element: Any) -> IElement:
         WebElement = None
 
     # Check the type of the element
-    if Tag and isinstance(element, Tag):
+    if Tag and isinstance(node, Tag):
         from soupsavvy.implementation.bs4 import SoupElement
 
-        return SoupElement(element)
-    elif HtmlElement and isinstance(element, HtmlElement):
+        return SoupElement(node)
+
+    if HtmlElement and isinstance(node, HtmlElement):
         from soupsavvy.implementation.lxml import LXMLElement
 
-        return LXMLElement(element)
-    elif WebElement and isinstance(element, WebElement):
+        return LXMLElement(node)
+
+    if WebElement and isinstance(node, WebElement):
         from soupsavvy.implementation.selenium import SeleniumElement
 
-        return SeleniumElement(element)
-    else:
-        raise TypeError("Unsupported element type")
+        return SeleniumElement(node)
+
+    raise TypeError(f"Unsupported element type, expected one of {SUPPORTED}")

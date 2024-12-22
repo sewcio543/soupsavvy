@@ -37,22 +37,19 @@ class SoupElement(IElement):
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[SoupElement]:
-        return [
-            SoupElement(element)
-            for element in self.node.find_all(
-                name=name, attrs=attrs or {}, recursive=recursive, limit=limit
-            )
-        ]
+        attrs = attrs or {}
+        iterable = self.node.find_all(
+            name=name, attrs=attrs, recursive=recursive, limit=limit
+        )
+        return list(self._map(iterable))
 
     def find_subsequent_siblings(
         self, limit: Optional[int] = None
     ) -> list[SoupElement]:
-        return [
-            SoupElement(element) for element in self.node.find_next_siblings(limit=limit)  # type: ignore
-        ]
+        return list(self._map(self.node.find_next_siblings(limit=limit)))
 
     def find_ancestors(self, limit: Optional[int] = None) -> list[SoupElement]:
-        return [SoupElement(element) for element in self.node.find_parents(limit=limit)]
+        return list(self._map(self.node.find_parents(limit=limit)))
 
     def get_attribute(self, name: str) -> Optional[str]:
         attr = self.node.get(name)
@@ -68,19 +65,21 @@ class SoupElement(IElement):
 
     @property
     def children(self) -> Iterable[SoupElement]:
-        return (
-            SoupElement(element)
+        generator = (
+            element
             for element in self.node.children
-            if isinstance(element, bs4.Tag)
+            if isinstance(element, self._NODE_TYPE)
         )
+        return self._map(generator)
 
     @property
     def descendants(self) -> Iterable[SoupElement]:
-        return (
-            SoupElement(element)
+        generator = (
+            element
             for element in self.node.descendants
-            if isinstance(element, bs4.Tag)
+            if isinstance(element, self._NODE_TYPE)
         )
+        return self._map(generator)
 
     @property
     def parent(self) -> Optional[SoupElement]:

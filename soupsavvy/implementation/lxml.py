@@ -45,17 +45,12 @@ class LXMLElement(IElement):
             if recursive
             else self._node.iterchildren(None)
         )
-
-        return list(
-            islice(
-                (
-                    LXMLElement(element)
-                    for element in iterator
-                    if self._match(element, name=name, attrs=attrs or {})
-                ),
-                limit,
-            ),
+        generator = (
+            element
+            for element in iterator
+            if self._match(element, name=name, attrs=attrs or {})
         )
+        return list(islice(self._map(generator), limit))
 
     def _match(
         self,
@@ -85,15 +80,11 @@ class LXMLElement(IElement):
         self, limit: Optional[int] = None
     ) -> list[LXMLElement]:
         iterator = self._node.itersiblings(None)
-        return list(
-            islice((LXMLElement(element) for element in iterator), limit),
-        )
+        return list(islice(self._map(iterator), limit))
 
     def find_ancestors(self, limit: Optional[int] = None) -> list[LXMLElement]:
         iterator = self._node.iterancestors(None)
-        return list(
-            islice((LXMLElement(element) for element in iterator), limit),
-        )
+        return list(islice(self._map(iterator), limit))
 
     def get_attribute(self, name: str) -> Optional[str]:
         return self.node.attrib.get(name)
@@ -106,11 +97,13 @@ class LXMLElement(IElement):
 
     @property
     def children(self) -> Iterable[LXMLElement]:
-        return (LXMLElement(element) for element in self._node.iterchildren(None))
+        iterator = self._node.iterchildren(None)
+        return self._map(iterator)
 
     @property
     def descendants(self) -> Iterable[LXMLElement]:
-        return (LXMLElement(element) for element in self._node.iterdescendants(None))
+        iterator = self._node.iterdescendants(None)
+        return self._map(iterator)
 
     @property
     def parent(self) -> Optional[LXMLElement]:
@@ -124,7 +117,7 @@ class LXMLElement(IElement):
     @property
     def text(self) -> str:
         texts = (text for text in self._node.itertext() if text is not None)
-        return "".join(texts)  # type: ignore
+        return "".join(texts)
 
     def __str__(self) -> str:
         return etree.tostring(self._node, method="html", with_tail=False).decode(
