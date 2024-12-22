@@ -1,8 +1,10 @@
+beautifulsoup4==4.12.2
 black==24.4.2
 build==1.2.1
 bump2version==1.0.1
 codecov==2.1.13
 coverage==7.5.3
+cssselect==1.2.0
 flake8==7.1.0
 lxml==5.3.0
 mypy==1.10.0
@@ -11,6 +13,7 @@ pre-commit==3.6.1
 pydantic==2.8.2
 pytest==8.2.1
 requests==2.32.2
+selenium==4.26.0
 soupsieve==2.3.1
 sqlalchemy==2.0.31
 twine==5.1.0

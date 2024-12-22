@@ -1,23 +1,26 @@
-"""Module with unit tests for LastOfType css tag selector."""
+"""Module with unit tests for LastOfType css selector."""
 
 import pytest
 
-from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.css.selectors import LastOfType
-from tests.soupsavvy.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import ToElement, strip
 
 
 @pytest.mark.css
 @pytest.mark.selector
+@pytest.mark.skip_lxml
 class TestLastOfType:
-    """Class with unit tests for LastOfType tag selector."""
+    """Class with unit tests for LastOfType selector."""
 
     def test_css_selector_is_correct(self):
         """Tests if selector property returns correct value."""
         assert LastOfType().css == ":last-of-type"
 
-    def test_find_all_returns_all_tags_for_selector_without_tag_name(self):
-        """Tests if find_all method returns all tags for selector without tag name."""
+    def test_find_all_returns_all_matching_elements(
+        self,
+        to_element: ToElement,
+    ):
+        """Tests if find_all method returns all matching elements."""
         text = """
             <div></div>
             <a class="widget"></a>
@@ -30,7 +33,7 @@ class TestLastOfType:
             <a href="widget">4</a>
             <span><a></a><a>56</a></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = LastOfType()
         result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -42,8 +45,8 @@ class TestLastOfType:
             strip("""<a>56</a>"""),
         ]
 
-    def test_find_returns_first_tag_matching_selector(self):
-        """Tests if find method returns first tag matching selector."""
+    def test_find_returns_first_element_matching_selector(self, to_element: ToElement):
+        """Tests if find method returns first element matching selector."""
         text = """
             <div></div>
             <a>Hello</a>
@@ -53,12 +56,15 @@ class TestLastOfType:
             <a class="widget">3</a>
             <div><p>45</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = LastOfType()
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a>1</a>""")
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns first matching child element if recursive is False.
         """
@@ -71,12 +77,15 @@ class TestLastOfType:
             <a class="widget">2</a>
             <div><p>3</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = LastOfType()
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<span>1</span>""")
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -90,7 +99,7 @@ class TestLastOfType:
             <a class="widget">2</a>
             <div><p>3</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = LastOfType()
         result = selector.find_all(bs, recursive=False)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -99,7 +108,10 @@ class TestLastOfType:
             strip("""<div><p>3</p></div>"""),
         ]
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -115,7 +127,7 @@ class TestLastOfType:
             <a href="widget">3</a>
             <span><a></a><a>45</a></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = LastOfType()
         result = selector.find_all(bs, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -125,6 +137,7 @@ class TestLastOfType:
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -140,7 +153,7 @@ class TestLastOfType:
             <a class="widget">2</a>
             <div><p>3</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = LastOfType()
         result = selector.find_all(bs, recursive=False, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [

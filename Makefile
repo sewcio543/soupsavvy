@@ -18,8 +18,11 @@ format:
 test:
 	python -m pytest
 coverage:
-	python -m coverage run -m pytest
-	python -m coverage report
+	python -m coverage erase
+	python -m coverage run -a -m pytest --impl=bs4
+	python -m coverage run -a -m pytest --impl=lxml
+	python -m coverage run -a -m pytest --impl=selenium
+	python -m coverage report || true
 	python -m coverage html
 typecheck:
 	python -m mypy . || true

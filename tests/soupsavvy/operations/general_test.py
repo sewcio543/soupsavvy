@@ -189,7 +189,7 @@ class TestOperation:
 
 
 class MockText(str):
-    """Mock class that imitates bs4 Tag with text attribute."""
+    """Mock class that imitates IElement with text attribute."""
 
     @property
     def text(self):

@@ -1,5 +1,5 @@
 """
-Module with classes for tag selection based on CSS selectors.
+Module with classes for element selection based on CSS selectors.
 
 Contains implementation of basic CSS pseudo-classes like
 `:only-child`, `:empty`, `:nth-child()`.
@@ -23,20 +23,11 @@ Classes
 - CSS - wrapper for simple search with CSS selectors
 """
 
-from itertools import islice
 from typing import Optional
 
-try:
-    import soupsieve as sv
-except ImportError as e:
-    raise ImportError(
-        "`soupsavvy.css` requires `soupsieve` package to be installed."
-    ) from e
-from bs4 import Tag
-
-import soupsavvy.exceptions as exc
 from soupsavvy.base import SelectableCSS, SoupSelector
-from soupsavvy.utils.selector_utils import TagIterator
+from soupsavvy.interfaces import IElement
+from soupsavvy.utils.selector_utils import TagIterator, TagResultSet
 
 
 class CSSSoupSelector(SoupSelector, SelectableCSS):
@@ -56,14 +47,6 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
 
     def __init__(self) -> None:
         selector = self.__class__.SELECTOR.format(*self._formats)
-
-        try:
-            self._compiled = sv.compile(selector)
-        except sv.SelectorSyntaxError:
-            raise exc.InvalidCSSSelector(
-                "CSS selector constructed from provided parameters "
-                f"is not valid: {selector}"
-            )
         self._selector = selector
 
     @property
@@ -79,13 +62,15 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
-
+    ) -> list[IElement]:
+        api = tag.css(self._selector)
+        selected = api.select(tag)
         iterator = TagIterator(tag, recursive=recursive)
-        return list(islice(filter(self._compiled.match, iterator), limit))
+        result = TagResultSet(list(iterator)) & TagResultSet(selected)
+        return result.fetch(limit)
 
     def __eq__(self, other: object) -> bool:
         # we only care if selector is equal with current implementation
@@ -288,8 +273,8 @@ class FirstOfType(CSSSoupSelector):
 
     Notes
     --------
-    For this selector the first tag of any type is selected, which in
-    case of finding single tag is equivalent to `FirstChild` results.
+    For this selector the first element of any type is selected, which in
+    case of finding single element is equivalent to `FirstChild` results.
 
     For more information on the formula, see:
 
@@ -317,8 +302,8 @@ class LastOfType(CSSSoupSelector):
 
     Notes
     --------
-    For this selector the last tag of any type is selected, which in
-    case of finding single tag is the equivalent to `LastChild` results.
+    For this selector the last element of any type is selected, which in
+    case of finding single element is the equivalent to `LastChild` results.
 
     For more information on the formula, see:
 
@@ -427,8 +412,8 @@ class CSS(CSSSoupSelector):
 
     Notes
     --------
-    `CSS` component extends `bs4.Tag.select` implementation
-    by adding non recursive search option.
+    Implemented selectors may vary between implementations,
+    as each of them uses specific compatible libraries for css selection.
     """
 
     SELECTOR = "{}"

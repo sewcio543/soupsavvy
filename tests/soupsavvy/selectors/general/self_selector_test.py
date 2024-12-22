@@ -3,17 +3,15 @@
 from itertools import product
 
 import pytest
-from bs4 import Tag
 
 from soupsavvy.selectors.general import SelfSelector
-from tests.soupsavvy.conftest import MockLinkSelector, strip, to_bs
+from tests.soupsavvy.conftest import MockLinkSelector, ToElement, strip
 
 SELECTOR = SelfSelector()
 TEXT = """
     <div href="github"><a>Hello</a></div>
     <a class="widget">1</a>
 """
-BS: Tag = to_bs(TEXT).div  # type: ignore
 EXPECTED = strip("""<div href="github"><a>Hello</a></div>""")
 
 
@@ -25,11 +23,14 @@ class TestSelfSelector:
         argnames="strict, recursive",
         argvalues=list(product([True, False], [True, False])),
     )
-    def test_find_returns_first_tag_itself(self, strict: bool, recursive: bool):
+    def test_find_returns_first_tag_itself(
+        self, to_element: ToElement, strict: bool, recursive: bool
+    ):
         """
-        Tests if find method always returns tag itself irrespective of
+        Tests if find method always returns element itself irrespective of
         any other parameters, testing for all strict and recursive values.
         """
+        BS = to_element(TEXT).find_all("div")[0]
         result = SELECTOR.find(BS, strict=strict, recursive=recursive)
         assert strip(str(result)) == EXPECTED
 
@@ -37,12 +38,15 @@ class TestSelfSelector:
         argnames="limit, recursive",
         argvalues=list(product([None, 2], [True, False])),
     )
-    def test_find_all_returns_all_matching_elements(self, limit, recursive: bool):
+    def test_find_all_returns_all_matching_elements(
+        self, to_element: ToElement, limit, recursive: bool
+    ):
         """
         Tests if find_all method always returns a single element list with
-        tag itself irrespective of any other parameters,
+        element itself irrespective of any other parameters,
         testing for all recursive values with and without limit.
         """
+        BS = to_element(TEXT).find_all("div")[0]
         result = SELECTOR.find_all(BS, limit=limit, recursive=recursive)
         assert list(map(lambda x: strip(str(x)), result)) == [EXPECTED]
 

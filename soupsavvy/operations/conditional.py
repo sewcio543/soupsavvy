@@ -36,7 +36,7 @@ class IfElse(OperationSearcherMixin):
     1
 
     Implements `TagSearcher` interface for convenience. It can conditionally
-    apply operations to the tag and can be used as model field.
+    apply operations to the element and can be used as model field.
 
     Example
     -------
@@ -46,9 +46,9 @@ class IfElse(OperationSearcherMixin):
     ...     Text(),
     ...     Href(),
     ... )
-    ... operation.find(user_tag)
+    ... operation.find(user_element)
     username
-    ... operation.find(other_tag)
+    ... operation.find(other_element)
     www.example.com
     """
 

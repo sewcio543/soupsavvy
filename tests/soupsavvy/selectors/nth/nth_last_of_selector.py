@@ -3,13 +3,12 @@
 import pytest
 
 from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
-from soupsavvy.selectors.nth.nth_soup_selector import NthLastOfSelector
+from soupsavvy.selectors.nth.selectors import NthLastOfSelector
 from tests.soupsavvy.conftest import (
     MockClassMenuSelector,
     MockDivSelector,
-    find_body_element,
+    ToElement,
     strip,
-    to_bs,
 )
 
 
@@ -26,9 +25,12 @@ class TestNthLastOfSelector:
         with pytest.raises(NotSoupSelectorException):
             NthLastOfSelector("selector", "2n")  # type: ignore
 
-    def test_find_returns_first_tag_that_has_element_matching_single_selector(self):
+    def test_find_returns_first_tag_that_has_element_matching_single_selector(
+        self,
+        to_element: ToElement,
+    ):
         """
-        Tests if find method returns the first tag that matches
+        Tests if find method returns the first element, that matches
         both the soup selector and the nth selector.
         """
         text = """
@@ -43,16 +45,17 @@ class TestNthLastOfSelector:
             <p class="menu">2</p>
             <div class="menu">1</div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "2n")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div class="menu"><a>4</a></div>""")
 
     def test_find_raises_exception_when_no_match_nth_selector(
         self,
+        to_element: ToElement,
     ):
         """
-        Tests if find method raises TagNotFoundException when no tag is found
+        Tests if find method raises TagNotFoundException when no element is found
         that matches both the soup selector and the nth selector in strict mode.
         In this case tags that match soup selector are found, but none of them
         match the nth selector.
@@ -66,8 +69,8 @@ class TestNthLastOfSelector:
             <div class="menu2"><a>2</a></div>
             <a>Don't have</a>
         """
-        bs = to_bs(text)
-        # nothing would be matches because there is only one matching tag
+        bs = to_element(text)
+        # nothing would be matches because there is only one matching element
         selector = NthLastOfSelector(MockClassMenuSelector(), "2n")
 
         with pytest.raises(TagNotFoundException):
@@ -75,9 +78,10 @@ class TestNthLastOfSelector:
 
     def test_find_raises_exception_when_no_match_soup_selector(
         self,
+        to_element: ToElement,
     ):
         """
-        Tests if find method raises TagNotFoundException when no tag is found
+        Tests if find method raises TagNotFoundException when no element is found
         that matches both the soup selector and the nth selector in strict mode.
         In this case no tags that match soup selector are found.
         """
@@ -90,15 +94,18 @@ class TestNthLastOfSelector:
             <div class="menu2"><a>2</a></div>
             <a>Don't have</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "1")
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_returns_none_if_no_tags_matches_nth_selector_in_not_strict_mode(self):
+    def test_find_returns_none_if_no_elements_matches_nth_selector_in_not_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
-        Tests if find method returns None when no tag is found that matches
+        Tests if find method returns None when no element is found that matches
         both the soup selector and the nth selector in not strict mode.
         In this case tags are found that match the soup selector, but
         there are no tags that match the nth selector.
@@ -112,17 +119,18 @@ class TestNthLastOfSelector:
             <div class="menu"><a>2</a></div>
             <a>Don't have</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
 
         selector = NthLastOfSelector(MockClassMenuSelector(), "3n")
         result = selector.find(bs)
         assert result is None
 
-    def test_find_returns_none_if_no_tags_matches_soup_selector_in_not_strict_mode(
+    def test_find_returns_none_if_no_elements_matches_soup_selector_in_not_strict_mode(
         self,
+        to_element: ToElement,
     ):
         """
-        Tests if find method returns None when no tag is found that matches
+        Tests if find method returns None when no element is found that matches
         both the soup selector and the nth selector in not strict mode.
         In this case no tags are found that match the soup selector.
         """
@@ -135,13 +143,13 @@ class TestNthLastOfSelector:
             <div class="menu2"><a>2</a></div>
             <a>Don't have</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "1")
 
         result = selector.find(bs)
         assert result is None
 
-    def test_find_all_returns_all_matching_elements(self):
+    def test_find_all_returns_all_matching_elements(self, to_element: ToElement):
         """Tests if find_all returns a list of all matching elements."""
         text = """
             <a>Don't have</a>
@@ -159,7 +167,7 @@ class TestNthLastOfSelector:
             <a>Don't have</a>
             <p class="menu">1</p>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "-n+2")
 
         result = selector.find_all(bs)
@@ -171,7 +179,7 @@ class TestNthLastOfSelector:
         ]
         assert list(map(lambda x: strip(str(x)), result)) == excepted
 
-    def test_find_all_returns_empty_list_when_no_match(self):
+    def test_find_all_returns_empty_list_when_no_match(self, to_element: ToElement):
         """Tests if find returns an empty list if no element matches the selector."""
         text = """
             <a>Don't have</a>
@@ -182,12 +190,15 @@ class TestNthLastOfSelector:
             <div class="menu2"><a>2</a></div>
             <a>Don't have</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "1")
         result = selector.find_all(bs)
         assert result == []
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """Tests if find returns first matching child element if recursive is False."""
         text = """
             <div class="widget"></div>
@@ -200,12 +211,15 @@ class TestNthLastOfSelector:
             <div>Hi Hi Hello</div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "2")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<div class="menu">1</div>""")
 
-    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns None if no child element matches the selector
         and recursive is False.
@@ -220,12 +234,15 @@ class TestNthLastOfSelector:
             <div>Hi Hi Hello</div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "2")
         result = selector.find(bs, recursive=False)
         assert result is None
 
-    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no child element
         matches the selector, when recursive is False and strict is True.
@@ -240,13 +257,16 @@ class TestNthLastOfSelector:
             <div>Hi Hi Hello</div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "2")
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True, recursive=False)
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -268,7 +288,7 @@ class TestNthLastOfSelector:
             <p class="menu">1</p>
             <span id="menu">Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "2n")
         results = selector.find_all(bs, recursive=False)
 
@@ -279,6 +299,7 @@ class TestNthLastOfSelector:
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns an empty list if no child element matches the selector
@@ -294,13 +315,16 @@ class TestNthLastOfSelector:
             <div>Hi Hi Hello</div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "2")
 
         results = selector.find_all(bs, recursive=False)
         assert results == []
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 3 first in order elements are returned.
@@ -322,7 +346,7 @@ class TestNthLastOfSelector:
             <p class="menu">1</p>
             <span id="menu">Hello</span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "2n")
         results = selector.find_all(bs, limit=3)
 
@@ -335,6 +359,7 @@ class TestNthLastOfSelector:
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -359,7 +384,7 @@ class TestNthLastOfSelector:
             <span id="menu">Hello</span>
         """
 
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), "2n+1")
         results = selector.find_all(bs, recursive=False, limit=2)
 
@@ -425,7 +450,7 @@ class TestNthLastOfSelector:
         ],
     )
     def test_returns_elements_based_on_nth_selector(
-        self, nth: str, expected: list[int]
+        self, to_element: ToElement, nth: str, expected: list[int]
     ):
         """Tests if find_all returns all elements matching various nth selectors."""
         text = """
@@ -441,7 +466,7 @@ class TestNthLastOfSelector:
             <div class="widget"></div>
         """
 
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = NthLastOfSelector(MockClassMenuSelector(), nth)
         results = selector.find_all(bs)
 

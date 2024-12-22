@@ -9,12 +9,10 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from typing import TYPE_CHECKING, Any, Literal, Optional, Union, overload
 
-from bs4 import NavigableString, Tag
 from typing_extensions import deprecated
 
 import soupsavvy.exceptions as exc
-import soupsavvy.selectors.namespace as ns
-from soupsavvy.interfaces import Comparable, Executable, TagSearcher
+from soupsavvy.interfaces import Comparable, Executable, IElement, TagSearcher
 
 if TYPE_CHECKING:
     from soupsavvy.operations.general import OperationPipeline
@@ -87,29 +85,30 @@ def check_operation(x: Any, message: Optional[str] = None) -> BaseOperation:
 class SoupSelector(TagSearcher, Comparable):
     """
     Base class for all `soupsavvy` selectors, that define declarative search procedure
-    of searching for elements in BeautifulSoup Tag.
+    of searching for matching nodes in the html element.
 
     Selectors can be combined with other selectors to create search procedures.
     They can be chained with operations to extract and transform the data.
 
     Methods
     -------
-    - find(tag: Tag, strict: bool = False, recursive: bool = True) -> Optional[Tag]
+    - find
 
-        Finds first element matching selector in provided tag if found.
+        Finds first element matching selector in provided element.
         If no element is found, returns None by default,
         or raises an exception if `strict` mode is enabled.
         Additionally `recursive` parameter can be set to search only direct children.
 
-    - find_all(tag: Tag, recursive: bool = True, limit: Optional[int] = None) -> list[Tag]
+    - find_all
 
-        Finds all elements matching selector in provided tag and returns them in a list.
+        Finds all elements matching selector in provided element
+        and returns them in a list.
         Additionally `limit` and `recursive` parameters can be set.
 
     Notes
     -----
     - Specific selector inheriting from this class, need to implement:
-        - `find_all` method that returns a list of matching elements in bs4.Tag.
+        - `find_all` method that returns a list of matching elements.
         - `__eq__` method to compare two selectors for equality.
     - Optionally `find` method can be implemented to return first matching element,
     but, by default, it uses `find_all` under the hood.
@@ -118,61 +117,59 @@ class SoupSelector(TagSearcher, Comparable):
     @overload
     def find(
         self,
-        tag: Tag,
+        tag: IElement,
         strict: Literal[False] = ...,
         recursive: bool = ...,
-    ) -> Optional[Tag]: ...
+    ) -> Optional[IElement]: ...
 
     @overload
     def find(
         self,
-        tag: Tag,
+        tag: IElement,
         strict: Literal[True] = ...,
         recursive: bool = ...,
-    ) -> Tag: ...
+    ) -> IElement: ...
 
     @overload
     def find(
         self,
-        tag: Tag,
+        tag: IElement,
         strict: bool = ...,
         recursive: bool = ...,
-    ) -> Optional[Tag]: ...
+    ) -> Optional[IElement]: ...
 
     def find(
         self,
-        tag: Tag,
+        tag: IElement,
         strict: bool = False,
         recursive: bool = True,
-    ) -> Optional[Tag]:
+    ) -> Optional[IElement]:
         """
-        Finds the first matching element in provided `Tag`.
+        Finds the first matching element in provided `IElement`.
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` object to search within.
+        tag : IElement
+            Any `IElement` object to search within.
         strict : bool, optional
-            If `True`, raises an exception if tag was not found in markup,
-            if `False` and tag was not found, returns `None`.
+            If `True`, raises an exception if element was not found in markup,
+            if `False` and element was not found, returns `None`.
             Value of this parameter does not affect behavior if element
             was successfully found. By default `False`.
         recursive : bool, optional
             Specifies if search should be recursive.
-            If set to `False`, only direct children of the tag will be searched.
+            If set to `False`, only direct children of the element will be searched.
             By default `True`.
 
         Returns
         -------
-        Tag | None
-            First `bs4.Tag` object matching selector or `None` if none matching.
+        IElement | None
+            First IElement` object matching selector or `None` if none matching.
 
         Raises
         ------
         TagNotFoundException
-            If strict parameter is set to `True` and none matching tag was found.
-        NavigableStringException
-            If `bs4.NavigableString` was returned by selector.
+            If strict parameter is set to `True` and none matching element was found.
         """
         result = self._find(tag, recursive=recursive)
 
@@ -181,31 +178,25 @@ class SoupSelector(TagSearcher, Comparable):
                 raise exc.TagNotFoundException("Tag was not found in markup.")
             return None
 
-        if isinstance(result, NavigableString):
-            raise exc.NavigableStringException(
-                f"NavigableString was returned for {result} string search, "
-                "invalid operation for SoupSelector find."
-            )
-
         return result
 
     @abstractmethod
     def find_all(
         self,
-        tag: Tag,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[IElement]:
         """
-        Finds all elements matching selector in provided `Tag`.
+        Finds all elements matching selector in provided `IElement`.
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` object to search within.
+        tag : IElement
+            Any `IElement` object to search within.
         recursive : bool, optional
             Specifies if search should be recursive.
-            If set to `False`, only direct children of the tag will be searched.
+            If set to `False`, only direct children of the element will be searched.
             By default `True`.
         limit : int, optional
             Specifies maximum number of elements to return.
@@ -213,59 +204,35 @@ class SoupSelector(TagSearcher, Comparable):
 
         Returns
         -------
-        list[Tag]
-            List of `bs4.Tag` objects matching selector. If none found, the list is empty.
+        list[IElement]
+            List of `IElement` objects matching selector.
+            If none found, the list is empty.
         """
         raise NotImplementedError(
             f"{self.__class__.__name__} is an interface, "
             "and does not implement this method."
         )
 
-    def _find(self, tag: Tag, recursive: bool = True) -> ns.FindResult:
+    def _find(self, tag: IElement, recursive: bool = True) -> Optional[IElement]:
         """
-        Returns an object that is a result of tag search.
+        Returns an object that is a result of element search.
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` object to search within.
+        tag : IElement
+            Any `IElement` object to search within.
         recursive : bool, optional
             Specifies if search should be recursive.
-            If set to `False`, only direct children of the tag will be searched.
+            If set to `False`, only direct children of the element will be searched.
             By default `True`.
 
         Returns
         -------
-        NavigableString | Tag | None:
-            Result of selector search within provided `bs4.Tag`.
+        NavigableString | IElement | None:
+            Result of selector search within provided `IElement`.
         """
         elements = self.find_all(tag, recursive=recursive, limit=1)
         return elements[0] if elements else None
-
-    @abstractmethod
-    def __eq__(self, other: object) -> bool:
-        """
-        Checks self and other object for equality.
-
-        This method is abstract and must be implemented by all selectors.
-
-        Calling `find` or `find_all` methods on selectors that are equal
-        should return the same results, provided the same parameters.
-
-        Example
-        -------
-        >>> selector1 = TypeSelector("div")
-        ... selector2 = TypeSelector("div")
-        ... selector1 == selector2
-        True
-        ... selector1.find(tag) == selector2.find(tag)
-        True
-        """
-
-        raise NotImplementedError(
-            f"{self.__class__.__name__} is an interface, "
-            "and does not implement this method."
-        )
 
     @overload
     def __or__(self, x: SoupSelector) -> SelectorList: ...
@@ -334,7 +301,8 @@ class SoupSelector(TagSearcher, Comparable):
         Parameters
         ----------
         x : SoupSelector
-            `SoupSelector` object to be negated into new `NotSelector` as `NotSelector(this)`.
+            `SoupSelector` object to be negated
+            into new `NotSelector` as `NotSelector(this)`.
 
         Returns
         -------
@@ -428,7 +396,8 @@ class SoupSelector(TagSearcher, Comparable):
     def __lt__(self, x: SoupSelector) -> ParentCombinator:
         """
         Overrides `__lt__` method called also by less-than operator `<`.
-        Syntactical Sugar for less-than operator, that creates `ParentCombinator` instance.
+        Syntactical Sugar for less-than operator,
+        that creates `ParentCombinator` instance.
 
         Example
         -------
@@ -672,7 +641,7 @@ class SoupSelector(TagSearcher, Comparable):
 class SelectableCSS(ABC):
     """
     Interface for selectors, that can clearly and unambiguously defined css selector,
-    used to search for elements, that matches the same tags as find methods.
+    used to search for elements, that matches the same elements as find methods.
 
     Notes
     -----
@@ -877,7 +846,7 @@ class OperationSearcherMixin(BaseOperation, TagSearcher):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
     ) -> list[Any]:
@@ -886,8 +855,8 @@ class OperationSearcherMixin(BaseOperation, TagSearcher):
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` object to process.
+        tag : IElement
+            Any `IElement` object to process.
         recursive : bool, optional
             Ignored, for consistency with interface.
         limit : int, optional
@@ -902,7 +871,7 @@ class OperationSearcherMixin(BaseOperation, TagSearcher):
 
     def find(
         self,
-        tag: Tag,
+        tag: IElement,
         strict: bool = False,
         recursive: bool = True,
     ) -> Any:
@@ -911,8 +880,8 @@ class OperationSearcherMixin(BaseOperation, TagSearcher):
 
         Parameters
         ----------
-        tag : Tag
-            Any `bs4.Tag` object to process.
+        tag : IElement
+            Any `IElement` object to process.
         strict : bool, optional
             Ignored, for consistency with interface.
         limit : int, optional

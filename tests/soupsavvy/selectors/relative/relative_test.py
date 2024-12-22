@@ -5,13 +5,13 @@ should behave in the same way whether it is set to True or False, hence parametr
 and asserting the same result for both cases.
 """
 
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import Type
 
 import pytest
-from bs4 import Tag
 
 from soupsavvy.exceptions import NotSoupSelectorException, TagNotFoundException
+from soupsavvy.interfaces import IElement
 from soupsavvy.selectors.relative import (
     Anchor,
     RelativeAncestor,
@@ -22,20 +22,14 @@ from soupsavvy.selectors.relative import (
     RelativeSelector,
     RelativeSubsequentSibling,
 )
-from tests.soupsavvy.conftest import (
-    MockDivSelector,
-    MockLinkSelector,
-    find_body_element,
-    strip,
-    to_bs,
-)
+from tests.soupsavvy.conftest import MockDivSelector, MockLinkSelector, ToElement, strip
 
 
 @pytest.mark.selector
 class BaseRelativeCombinatorTest(ABC):
     """
     Base suite of tests for RelativeSelector classes.
-    Contains base cases that should be tested under assumption of input tag,
+    Contains base cases that should be tested under assumption of input element,
     that have or do not have matching elements.
     """
 
@@ -50,21 +44,20 @@ class BaseRelativeCombinatorTest(ABC):
         """
         return self.base(MockLinkSelector())
 
-    @property
-    @abstractmethod
-    def match(self) -> Tag:
+    @pytest.fixture
+    def match(self, to_element: ToElement) -> IElement:
         """
-        Returns the bs4.Tag that is passed into find methods as an anchor element.
+        Returns `IElement` that is passed into find methods as an anchor element.
         It should have 3 matching link elements for base selector of the class.
 
-        Calling find_all method on this tag should return:
+        Calling find_all method on this element should return:
 
         Example
         -------
         >>> selector.find_all(self.match)
         [<a>1</a>, <a>2</a>, <a>3</a>]
 
-        Calling find method on this tag should return:
+        Calling find method on this element should return:
 
         Example
         -------
@@ -75,21 +68,20 @@ class BaseRelativeCombinatorTest(ABC):
             f"Property 'match' not implemented in {self.__class__.__name__}"
         )
 
-    @property
-    @abstractmethod
-    def no_match(self) -> Tag:
+    @pytest.fixture
+    def no_match(self, to_element: ToElement) -> IElement:
         """
-        Returns the bs4.Tag that is passed into find methods as an anchor element.
+        Returns `IElement` that is passed into find methods as an anchor element.
         It should have no matching link elements for base selector of the class.
 
-        Calling find_all method on this tag should return:
+        Calling find_all method on this element should return:
 
         Example
         -------
         >>> selector.find_all(self.match)
         []
 
-        Calling find method on this tag should return:
+        Calling find method on this element should return:
 
         Example
         -------
@@ -115,14 +107,15 @@ class BaseRelativeCombinatorTest(ABC):
         argvalues=[True, False],
         ids=["recursive", "not_recursive"],
     )
-    def test_find_returns_first_matching_tag(
-        self, selector: RelativeChild, recursive: bool
+    def test_find_returns_first_matching_element(
+        self, selector: RelativeChild, recursive: bool, match: IElement
     ):
         """
-        Tests if find method returns the first tag that matches selector relative to
-        the anchor (tag passed as parameter to find method) element.
+        Tests if find method returns the first element,
+        that matches selector relative to the anchor
+        (element passed as parameter to find method) element.
         """
-        result = selector.find(self.match, recursive=recursive)
+        result = selector.find(match, recursive=recursive)
         assert strip(str(result)) == strip("""<a>1</a>""")
 
     @pytest.mark.parametrize(
@@ -130,8 +123,8 @@ class BaseRelativeCombinatorTest(ABC):
         argvalues=[True, False],
         ids=["recursive", "not_recursive"],
     )
-    def test_find_raises_exception_when_no_tags_match_in_strict_mode(
-        self, selector: RelativeChild, recursive: bool
+    def test_find_raises_exception_when_no_element_match_in_strict_mode(
+        self, selector: RelativeChild, recursive: bool, no_match: IElement
     ):
         """
         Tests if find method raises TagNotFoundException when no elements match the selector
@@ -139,21 +132,21 @@ class BaseRelativeCombinatorTest(ABC):
         """
 
         with pytest.raises(TagNotFoundException):
-            selector.find(self.no_match, strict=True, recursive=recursive)
+            selector.find(no_match, strict=True, recursive=recursive)
 
     @pytest.mark.parametrize(
         argnames="recursive",
         argvalues=[True, False],
         ids=["recursive", "not_recursive"],
     )
-    def test_find_returns_none_if_no_tags_match_in_not_strict_mode(
-        self, selector: RelativeChild, recursive: bool
+    def test_find_returns_none_if_no_elements_match_in_not_strict_mode(
+        self, selector: RelativeChild, recursive: bool, no_match: IElement
     ):
         """
         Tests if find method raises TagNotFoundException when no elements match the selector
         relative to the anchor element and strict is False.
         """
-        result = selector.find(self.no_match, recursive=recursive)
+        result = selector.find(no_match, recursive=recursive)
         assert result is None
 
     @pytest.mark.parametrize(
@@ -161,14 +154,14 @@ class BaseRelativeCombinatorTest(ABC):
         argvalues=[True, False],
         ids=["recursive", "not_recursive"],
     )
-    def test_finds_all_tags_matching_selectors(
-        self, selector: RelativeChild, recursive: bool
+    def test_finds_all_elements_matching_selectors(
+        self, selector: RelativeChild, recursive: bool, match: IElement
     ):
         """
         Tests if find_all method returns all elements that match the selector
         relative to the anchor element.
         """
-        result = selector.find_all(self.match, recursive=recursive)
+        result = selector.find_all(match, recursive=recursive)
         assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a>1</a>"""),
             strip("""<a>2</a>"""),
@@ -180,14 +173,14 @@ class BaseRelativeCombinatorTest(ABC):
         argvalues=[True, False],
         ids=["recursive", "not_recursive"],
     )
-    def test_find_all_returns_empty_list_if_no_tag_matches(
-        self, selector: RelativeChild, recursive: bool
+    def test_find_all_returns_empty_list_if_no_element_matches(
+        self, selector: RelativeChild, recursive: bool, no_match: IElement
     ):
         """
-        Tests if find_all method returns an empty list when no tag is found
+        Tests if find_all method returns an empty list when no element is found
         that matches selector relative to the anchor element.
         """
-        result = selector.find_all(self.no_match, recursive=recursive)
+        result = selector.find_all(no_match, recursive=recursive)
         assert result == []
 
     @pytest.mark.parametrize(
@@ -196,13 +189,13 @@ class BaseRelativeCombinatorTest(ABC):
         ids=["recursive", "not_recursive"],
     )
     def test_find_all_returns_only_x_elements_when_limit_is_set(
-        self, selector: RelativeChild, recursive: bool
+        self, selector: RelativeChild, recursive: bool, match: IElement
     ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
         """
-        result = selector.find_all(self.match, limit=2, recursive=recursive)
+        result = selector.find_all(match, limit=2, recursive=recursive)
         assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a>1</a>"""),
             strip("""<a>2</a>"""),
@@ -214,8 +207,8 @@ class TestRelativeChild(BaseRelativeCombinatorTest):
 
     base = RelativeChild
 
-    @property
-    def match(self) -> Tag:
+    @pytest.fixture
+    def match(self, to_element: ToElement) -> IElement:
         text = """
             <div class="link">
                 <a>Not child</a>
@@ -227,17 +220,17 @@ class TestRelativeChild(BaseRelativeCombinatorTest):
             <a>2</a>
             <a>3</a>
         """
-        return find_body_element(to_bs(text))
+        return to_element(text)
 
-    @property
-    def no_match(self) -> Tag:
+    @pytest.fixture
+    def no_match(self, to_element: ToElement) -> IElement:
         text = """
             <div class="link">
                 <a>Not child</a>
             </div>
             <span></span>
         """
-        return find_body_element(to_bs(text))
+        return to_element(text)
 
 
 class TestRelativeDescendant(BaseRelativeCombinatorTest):
@@ -245,8 +238,8 @@ class TestRelativeDescendant(BaseRelativeCombinatorTest):
 
     base = RelativeDescendant
 
-    @property
-    def match(self) -> Tag:
+    @pytest.fixture
+    def match(self, to_element: ToElement) -> IElement:
         text = """
             <div class="link">
                 <a>1</a>
@@ -256,17 +249,17 @@ class TestRelativeDescendant(BaseRelativeCombinatorTest):
             </span>
             <a>3</a>
         """
-        return find_body_element(to_bs(text))
+        return to_element(text)
 
-    @property
-    def no_match(self) -> Tag:
+    @pytest.fixture
+    def no_match(self, to_element: ToElement) -> IElement:
         text = """
             <div class="link">
                 <p>Not a link</p>
             </div>
             <span></span>
         """
-        return find_body_element(to_bs(text))
+        return to_element(text)
 
 
 class TestRelativeSubsequentSibling(BaseRelativeCombinatorTest):
@@ -274,8 +267,8 @@ class TestRelativeSubsequentSibling(BaseRelativeCombinatorTest):
 
     base = RelativeSubsequentSibling
 
-    @property
-    def match(self) -> Tag:
+    @pytest.fixture
+    def match(self, to_element: ToElement) -> IElement:
         text = """
             <a>Not next sibling</a>
             <div class="anchor"></div>
@@ -287,10 +280,10 @@ class TestRelativeSubsequentSibling(BaseRelativeCombinatorTest):
             <p>Not a link</p>
             <a>3</a>
         """
-        return to_bs(text).div  # type: ignore
+        return to_element(text).find_all("div")[0]
 
-    @property
-    def no_match(self) -> Tag:
+    @pytest.fixture
+    def no_match(self, to_element: ToElement) -> IElement:
         text = """
             <a>Not next sibling</a>
             <div class="anchor"></div>
@@ -299,7 +292,26 @@ class TestRelativeSubsequentSibling(BaseRelativeCombinatorTest):
             </span>
             <p>Not a link</p>
         """
-        return to_bs(text).div  # type: ignore
+        return to_element(text).find_all("div")[0]
+
+    def test_returns_none_or_empty_list_if_element_is_root(
+        self, to_element: ToElement, selector: RelativeSubsequentSibling
+    ):
+        """
+        Tests if find methods return None or empty list if element is root element,
+        which means it does not have any siblings.
+        """
+        text = """
+            <a>Hello</a>
+            <div>World</div>
+        """
+        root = to_element(text).find_ancestors()[-1]
+
+        findall_result = selector.find_all(root)
+        assert findall_result == []
+
+        find_result = selector.find(root)
+        assert find_result is None
 
 
 class TestRelativeNextSibling(BaseRelativeCombinatorTest):
@@ -313,8 +325,8 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
 
     base = RelativeNextSibling
 
-    @property
-    def match(self) -> Tag:
+    @pytest.fixture
+    def match(self, to_element: ToElement) -> IElement:
         text = """
             <a>Not next sibling</a>
             <div class="anchor"></div>
@@ -325,10 +337,10 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
             <a>Not next sibling</a>
             <p>Not a link</p>
         """
-        return to_bs(text).div  # type: ignore
+        return to_element(text).find_all("div")[0]
 
-    @property
-    def no_match(self) -> Tag:
+    @pytest.fixture
+    def no_match(self, to_element: ToElement) -> IElement:
         text = """
             <a>Not next sibling</a>
             <div class="anchor"></div>
@@ -337,21 +349,21 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
                 <a>Not a sibling</a>
             </span>
         """
-        return to_bs(text).div  # type: ignore
+        return to_element(text).find_all("div")[0]
 
     @pytest.mark.parametrize(
         argnames="recursive",
         argvalues=[True, False],
         ids=["recursive", "not_recursive"],
     )
-    def test_finds_all_tags_matching_selectors(
-        self, selector: RelativeChild, recursive: bool
+    def test_finds_all_elements_matching_selectors(
+        self, selector: RelativeChild, recursive: bool, match: IElement
     ):
         """
-        Tests if find_all method returns all children of tag that match the selector,
+        Tests if find_all method returns all children of element that match the selector,
         in case of RelativeNextSibling it should return only one element (next sibling).
         """
-        result = selector.find_all(self.match, recursive=recursive)
+        result = selector.find_all(match, recursive=recursive)
         assert list(map(lambda x: strip(str(x)), result)) == [strip("""<a>1</a>""")]
 
     @pytest.mark.parametrize(
@@ -360,7 +372,7 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
         ids=["recursive", "not_recursive"],
     )
     def test_find_all_returns_only_x_elements_when_limit_is_set(
-        self, selector: RelativeChild, recursive: bool
+        self, selector: RelativeChild, recursive: bool, match: IElement
     ):
         """
         Tests if find_all returns only x elements when limit is set.
@@ -368,8 +380,27 @@ class TestRelativeNextSibling(BaseRelativeCombinatorTest):
         but in case of RelativeNextSibling it should
         return only one element (next sibling).
         """
-        result = selector.find_all(self.match, limit=2, recursive=recursive)
+        result = selector.find_all(match, limit=2, recursive=recursive)
         assert list(map(lambda x: strip(str(x)), result)) == [strip("""<a>1</a>""")]
+
+    def test_returns_none_or_empty_list_if_element_is_root(
+        self, to_element: ToElement, selector: RelativeNextSibling
+    ):
+        """
+        Tests if find methods return None or empty list if element is root element,
+        which means it does not have any siblings.
+        """
+        text = """
+            <a>Hello</a>
+            <div>World</div>
+        """
+        root = to_element(text).find_ancestors()[-1]
+
+        findall_result = selector.find_all(root)
+        assert findall_result == []
+
+        find_result = selector.find(root)
+        assert find_result is None
 
 
 class TestAnchor:
@@ -508,7 +539,9 @@ class TestRelativeSelectorEquality:
         selector, they are equal.
         """
 
-        def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+        def find_all(
+            self, tag: IElement, recursive: bool = True, limit=None
+        ) -> list[IElement]:
             return []
 
     class MockRelativeSelectorNotEqual(RelativeSelector):
@@ -518,7 +551,9 @@ class TestRelativeSelectorEquality:
         different type, they are not equal.
         """
 
-        def find_all(self, tag: Tag, recursive: bool = True, limit=None) -> list[Tag]:
+        def find_all(
+            self, tag: IElement, recursive: bool = True, limit=None
+        ) -> list[IElement]:
             return []
 
     @pytest.mark.parametrize(
@@ -564,11 +599,11 @@ class TestRelativeSelectorEquality:
         assert (selectors[0] == selectors[1]) is False
 
 
-def _find_anchor(bs: Tag) -> Tag:
+def _find_anchor(bs: IElement) -> IElement:
     """
-    Finds element with 'anchor' class in the bs4.Tag object,
+    Finds element with 'anchor' class in the `IElement` object,
     which is used as an anchor element in the test cases.
-    It needs to be in the soup and is tag that's being searched.
+    It needs to be in the element that's being searched.
     """
     return bs.find_all(attrs={"class": "anchor"})[0]
 
@@ -577,7 +612,7 @@ def _find_anchor(bs: Tag) -> Tag:
 class TestRelativeParent:
     """Class with test suite for RelativeParent selector."""
 
-    @pytest.fixture
+    @pytest.fixture(scope="class")
     def selector(self) -> RelativeParent:
         """
         Mock of simple RelativeParent selector that matches parent div elements,
@@ -593,15 +628,17 @@ class TestRelativeParent:
         with pytest.raises(NotSoupSelectorException):
             RelativeParent("p")  # type: ignore
 
-    def test_returns_none_or_empty_list_if_no_ancestors(self, selector: RelativeParent):
+    def test_returns_none_or_empty_list_if_no_ancestors(
+        self, selector: RelativeParent, to_element: ToElement
+    ):
         """
-        Tests if find method returns None if tag does not have any ancestors,
+        Tests if find method returns None if element does not have any ancestors,
         in such case, it must be the root element (html).
         """
         text = """
             <html><body><div class="anchor"></div></body></html>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         assert selector.find(bs) is None
         assert selector.find_all(bs) == []
 
@@ -610,15 +647,15 @@ class TestRelativeParent:
         argvalues=[True, False],
         ids=["recursive", "not_recursive"],
     )
-    def test_find_returns_first_tag_matching_selector(
-        self, selector: RelativeParent, recursive: bool
+    def test_find_returns_first_element_matching_selector(
+        self, selector: RelativeParent, recursive: bool, to_element: ToElement
     ):
-        """Tests if find method returns first tag matching selector."""
+        """Tests if find method returns first element matching selector."""
         text = """
             <div><div><div class="anchor"><div></div></div></div></div>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find(bs, recursive=recursive)
         assert strip(str(result)) == strip(
             """<div><div class="anchor"><div></div></div></div>"""
@@ -630,7 +667,7 @@ class TestRelativeParent:
         ids=["recursive", "not_recursive"],
     )
     def test_find_returns_none_if_no_match_and_strict_false(
-        self, selector: RelativeParent, recursive: bool
+        self, selector: RelativeParent, recursive: bool, to_element: ToElement
     ):
         """
         Tests if find returns None if no element matches the selector
@@ -640,7 +677,7 @@ class TestRelativeParent:
             <div><span><div class="anchor"><div></div></div></span></div>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find(bs, recursive=recursive)
         assert result is None
 
@@ -650,7 +687,7 @@ class TestRelativeParent:
         ids=["recursive", "not_recursive"],
     )
     def test_find_raises_exception_if_no_match_and_strict_true(
-        self, selector: RelativeParent, recursive: bool
+        self, selector: RelativeParent, recursive: bool, to_element: ToElement
     ):
         """
         Tests if find raises TagNotFoundException if no element matches the selector
@@ -660,7 +697,7 @@ class TestRelativeParent:
             <div><span><div class="anchor"><div></div></div></span></div>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True, recursive=recursive)
@@ -671,14 +708,14 @@ class TestRelativeParent:
         ids=["recursive", "not_recursive"],
     )
     def test_find_all_returns_empty_list_when_no_match(
-        self, selector: RelativeParent, recursive: bool
+        self, selector: RelativeParent, recursive: bool, to_element: ToElement
     ):
         """Tests if find returns an empty list if no element matches the selector."""
         text = """
             <div><span><div class="anchor"><div></div></div></span></div>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find_all(bs, recursive=recursive)
         assert result == []
 
@@ -688,19 +725,36 @@ class TestRelativeParent:
         ids=["recursive", "not_recursive"],
     )
     def test_find_all_returns_all_matching_elements(
-        self, selector: RelativeParent, recursive: bool
+        self, selector: RelativeParent, recursive: bool, to_element: ToElement
     ):
         """Tests if find_all returns a list of all matching elements."""
         text = """
             <div><div><div class="anchor"><div></div></div></div></div>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find_all(bs, recursive=recursive)
         # returns at most one element (parent)
         assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<div><div class="anchor"><div></div></div></div>""")
         ]
+
+    @pytest.mark.parametrize(
+        argnames="recursive",
+        argvalues=[True, False],
+        ids=["recursive", "not_recursive"],
+    )
+    def test_find_all_returns_empty_list_if_element_is_root(
+        self, selector: RelativeParent, recursive: bool, to_element: ToElement
+    ):
+        """Tests if find_all returns an empty list if element is root element."""
+        text = """
+            <div><div><div class="anchor"><div></div></div></div></div>
+            <div><div><p></p></div></div>
+        """
+        bs = to_element(text).find_ancestors()[-1]
+        result = selector.find_all(bs, recursive=recursive)
+        assert result == []
 
 
 @pytest.mark.selector
@@ -724,16 +778,16 @@ class TestRelativeAncestor:
             RelativeAncestor("p")  # type: ignore
 
     def test_returns_none_or_empty_list_if_no_ancestors(
-        self, selector: RelativeAncestor
+        self, selector: RelativeAncestor, to_element: ToElement
     ):
         """
-        Tests if find method returns None if tag does not have any ancestors,
+        Tests if find method returns None if element does not have any ancestors,
         in such case, it must be the root element (html).
         """
         text = """
             <html><body><div class="anchor"></div></body></html>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         assert selector.find(bs) is None
         assert selector.find_all(bs) == []
 
@@ -742,15 +796,15 @@ class TestRelativeAncestor:
         argvalues=[True, False],
         ids=["recursive", "not_recursive"],
     )
-    def test_find_returns_first_tag_matching_selector(
-        self, selector: RelativeAncestor, recursive: bool
+    def test_find_returns_first_element_matching_selector(
+        self, selector: RelativeAncestor, recursive: bool, to_element: ToElement
     ):
-        """Tests if find method returns first tag matching selector."""
+        """Tests if find method returns first element matching selector."""
         text = """
             <div><div><div class="anchor"><div><div></div></div></div></div></div>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find(bs, recursive=recursive)
         assert strip(str(result)) == strip(
             """<div><div class="anchor"><div><div></div></div></div></div>"""
@@ -762,7 +816,7 @@ class TestRelativeAncestor:
         ids=["recursive", "not_recursive"],
     )
     def test_find_returns_none_if_no_match_and_strict_false(
-        self, selector: RelativeAncestor, recursive: bool
+        self, selector: RelativeAncestor, recursive: bool, to_element: ToElement
     ):
         """
         Tests if find returns None if no element matches the selector
@@ -772,7 +826,7 @@ class TestRelativeAncestor:
             <span><span><div class="anchor"><div><div></div></div></div></span></span>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find(bs, recursive=recursive)
         assert result is None
 
@@ -782,7 +836,7 @@ class TestRelativeAncestor:
         ids=["recursive", "not_recursive"],
     )
     def test_find_raises_exception_if_no_match_and_strict_true(
-        self, selector: RelativeAncestor, recursive: bool
+        self, selector: RelativeAncestor, recursive: bool, to_element: ToElement
     ):
         """
         Tests if find raises TagNotFoundException if no element matches the selector
@@ -792,7 +846,7 @@ class TestRelativeAncestor:
             <span><span><div class="anchor"><div><div></div></div></div></span></span>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True, recursive=recursive)
@@ -803,14 +857,14 @@ class TestRelativeAncestor:
         ids=["recursive", "not_recursive"],
     )
     def test_find_all_returns_empty_list_when_no_match(
-        self, selector: RelativeAncestor, recursive: bool
+        self, selector: RelativeAncestor, recursive: bool, to_element: ToElement
     ):
         """Tests if find returns an empty list if no element matches the selector."""
         text = """
             <span><span><div class="anchor"><div><div></div></div></div></span></span>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find_all(bs, recursive=recursive)
         assert result == []
 
@@ -820,14 +874,14 @@ class TestRelativeAncestor:
         ids=["recursive", "not_recursive"],
     )
     def test_find_all_returns_all_matching_elements(
-        self, selector: RelativeAncestor, recursive: bool
+        self, selector: RelativeAncestor, recursive: bool, to_element: ToElement
     ):
         """Tests if find_all returns a list of all matching elements."""
         text = """
             <div><span><div><a class="anchor"></a></div></span></div>
             <div><div><p></p></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find_all(bs, recursive=recursive)
         assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<div><a class="anchor"></a></div>"""),
@@ -840,7 +894,7 @@ class TestRelativeAncestor:
         ids=["recursive", "not_recursive"],
     )
     def test_find_all_returns_only_x_elements_when_limit_is_set(
-        self, selector: RelativeAncestor, recursive: bool
+        self, selector: RelativeAncestor, recursive: bool, to_element: ToElement
     ):
         """
         Tests if find_all returns only x elements when limit is set.
@@ -849,9 +903,25 @@ class TestRelativeAncestor:
         text = """
             <div><div><span><div><a class="anchor"></a></div></span></div></div>
         """
-        bs = _find_anchor(to_bs(text))
+        bs = _find_anchor(to_element(text))
         result = selector.find_all(bs, limit=2, recursive=recursive)
         assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<div><a class="anchor"></a></div>"""),
             strip("""<div><span><div><a class="anchor"></a></div></span></div>"""),
         ]
+
+    @pytest.mark.parametrize(
+        argnames="recursive",
+        argvalues=[True, False],
+        ids=["recursive", "not_recursive"],
+    )
+    def test_find_all_returns_empty_list_if_element_is_root(
+        self, selector: RelativeAncestor, recursive: bool, to_element: ToElement
+    ):
+        """Tests if find_all returns an empty list if element is root element."""
+        text = """
+            <div><div><span><div><a class="anchor"></a></div></span></div></div>
+        """
+        bs = to_element(text).find_ancestors()[-1]
+        result = selector.find_all(bs, recursive=recursive)
+        assert result == []

@@ -5,16 +5,16 @@ for css selector-based search.
 
 import pytest
 
-from soupsavvy.exceptions import InvalidCSSSelector, TagNotFoundException
+from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.css.selectors import CSS
-from tests.soupsavvy.conftest import find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import ToElement, strip
 
 
 @pytest.mark.css
 @pytest.mark.selector
 class TestCSS:
     """
-    Class with unit tests for CSS tag selector.
+    Class with unit tests for CSS selector.
     Idea for the tests is to check cases for simple selector, css search is delegated
     to `soupsieve` library.
     """
@@ -34,16 +34,8 @@ class TestCSS:
         """
         assert CSS(css).css == css
 
-    def test_raises_exception_when_invalid_css_selector(self):
-        """
-        Tests if InvalidCSSSelector exception is raised in init
-        when invalid selector that can't be parsed is passed.
-        """
-        with pytest.raises(InvalidCSSSelector):
-            CSS("div[1]")
-
-    def test_find_returns_first_tag_matching_selector(self):
-        """Tests if find method returns first tag matching selector."""
+    def test_find_returns_first_element_matching_selector(self, to_element: ToElement):
+        """Tests if find method returns first element matching selector."""
         text = """
             <div></div>
             <div class="widget123"></div>
@@ -55,12 +47,14 @@ class TestCSS:
             </span>
             <div class="widget"><p>3</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = CSS("div.widget")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<div class="widget">1</div>""")
 
-    def test_find_returns_none_if_no_match_and_strict_false(self):
+    def test_find_returns_none_if_no_match_and_strict_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns None if no element matches the selector
         and strict is False.
@@ -74,12 +68,15 @@ class TestCSS:
             </span>
             <span class="widget"></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = CSS("div.widget")
         result = selector.find(bs)
         assert result is None
 
-    def test_find_raises_exception_if_no_match_and_strict_true(self):
+    def test_find_raises_exception_if_no_match_and_strict_true(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no element matches the selector
         and strict is True.
@@ -93,13 +90,13 @@ class TestCSS:
             </span>
             <span class="widget"></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = CSS("div.widget")
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_all_returns_all_matching_elements(self):
+    def test_find_all_returns_all_matching_elements(self, to_element: ToElement):
         """Tests if find_all returns a list of all matching elements."""
         text = """
             <div></div>
@@ -112,7 +109,7 @@ class TestCSS:
             </span>
             <div class="widget"><p>3</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = CSS("div.widget")
 
         result = selector.find_all(bs)
@@ -122,7 +119,7 @@ class TestCSS:
             strip("""<div class="widget"><p>3</p></div>"""),
         ]
 
-    def test_find_all_returns_empty_list_when_no_match(self):
+    def test_find_all_returns_empty_list_when_no_match(self, to_element: ToElement):
         """Tests if find returns an CSS list if no element matches the selector."""
         text = """
             <div></div>
@@ -133,12 +130,15 @@ class TestCSS:
             </span>
             <span class="widget"></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = CSS("div.widget")
         result = selector.find_all(bs)
         assert result == []
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns first matching child element if recursive is False.
         """
@@ -154,12 +154,15 @@ class TestCSS:
             <div class="widget123"></div>
             <div class="widget" href="github">3</div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = CSS("div.widget")
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<div class="widget">1</div>""")
 
-    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns None if no child element matches the selector
         and recursive is False.
@@ -173,12 +176,15 @@ class TestCSS:
             <a class="widget"></a>
             <div class="widget123"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = CSS("div.widget")
         result = selector.find(bs, recursive=False)
         assert result is None
 
-    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no child element
         matches the selector, when recursive is False and strict is True.
@@ -192,7 +198,7 @@ class TestCSS:
             <a class="widget"></a>
             <div class="widget123"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = CSS("div.widget")
 
         with pytest.raises(TagNotFoundException):
@@ -200,6 +206,7 @@ class TestCSS:
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns an CSS list if no child element matches the selector
@@ -214,12 +221,15 @@ class TestCSS:
             <a class="widget"></a>
             <div class="widget123"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = CSS("div.widget")
         result = selector.find_all(bs, recursive=False)
         assert result == []
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -236,7 +246,7 @@ class TestCSS:
             <div class="widget123"></div>
             <div class="widget" href="github">3</div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = CSS("div.widget")
         result = selector.find_all(bs, recursive=False)
 
@@ -246,7 +256,10 @@ class TestCSS:
             strip("""<div class="widget" href="github">3</div>"""),
         ]
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -262,7 +275,7 @@ class TestCSS:
             </span>
             <div class="widget"><p>3</p></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = CSS("div.widget")
         result = selector.find_all(bs, limit=2)
 
@@ -273,6 +286,7 @@ class TestCSS:
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -291,7 +305,7 @@ class TestCSS:
             <div class="widget123"></div>
             <div class="widget" href="github">3</div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = CSS("div.widget")
         result = selector.find_all(bs, recursive=False, limit=2)
 

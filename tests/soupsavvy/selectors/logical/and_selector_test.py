@@ -9,9 +9,8 @@ from tests.soupsavvy.conftest import (
     MockClassWidgetSelector,
     MockDivSelector,
     MockLinkSelector,
-    find_body_element,
+    ToElement,
     strip,
-    to_bs,
 )
 
 
@@ -30,9 +29,9 @@ class TestAndSelector:
         with pytest.raises(NotSoupSelectorException):
             AndSelector(MockClassMenuSelector(), MockLinkSelector(), "div")  # type: ignore
 
-    def test_find_returns_first_tag_matching_selector(self):
+    def test_find_returns_first_element_matching_selector(self, to_element: ToElement):
         """
-        Tests if find method returns the first tag that matches all the selectors.
+        Tests if find method returns the first element, that matches all the selectors.
         """
         text = """
             <a class="link"></a>
@@ -41,14 +40,17 @@ class TestAndSelector:
             <div class="menu"></div>
             <a class="menu">2</a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="menu">1</a>""")
 
-    def test_find_raises_exception_when_no_tags_match_in_strict_mode(self):
+    def test_find_raises_exception_when_no_element_match_in_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
-        Tests if find method raises TagNotFoundException when no tag is found
+        Tests if find method raises TagNotFoundException when no element is found
         that matches all the selectors in strict mode.
         """
         text = """
@@ -57,15 +59,18 @@ class TestAndSelector:
             <div class="menu"></div>
             <a class="menu123"></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_returns_none_if_no_tags_match_in_not_strict_mode(self):
+    def test_find_returns_none_if_no_elements_match_in_not_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
-        Tests if find method returns None when no tag is found that
+        Tests if find method returns None when no element is found that
         matches all the selectors in not strict mode.
         """
         text = """
@@ -74,14 +79,14 @@ class TestAndSelector:
             <div class="widget"></div>
             <a class="menu123"></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find(bs)
         assert result is None
 
-    def test_find_returns_match_with_multiple_selectors(self):
+    def test_find_returns_match_with_multiple_selectors(self, to_element: ToElement):
         """
-        Tests if find method returns the first tag that matches selector
+        Tests if find method returns the first element, that matches selector
         if there are multiple selectors are provided.
         """
         text = """
@@ -93,7 +98,7 @@ class TestAndSelector:
             <div class="link"></div>
             <div class="menu widget row">2</div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
 
         selector = AndSelector(
             MockDivSelector(),
@@ -106,9 +111,9 @@ class TestAndSelector:
             strip("""<div class="menu widget row">2</div>"""),
         ]
 
-    def test_finds_all_tags_matching_selectors(self):
+    def test_finds_all_elements_matching_selectors(self, to_element: ToElement):
         """
-        Tests if find_all method returns all tags that match all the selectors.
+        Tests if find_all method returns all elements that match all the selectors.
         """
         text = """
             <a class="link"></a>
@@ -124,7 +129,7 @@ class TestAndSelector:
             </div>
             <span class=""></span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs)
 
@@ -135,9 +140,11 @@ class TestAndSelector:
             strip("""<a class="menu">4</a>"""),
         ]
 
-    def test_find_all_returns_empty_list_if_no_tag_matches(self):
+    def test_find_all_returns_empty_list_if_no_element_matches(
+        self, to_element: ToElement
+    ):
         """
-        Tests if find_all method returns an empty list when no tag is found
+        Tests if find_all method returns an empty list when no element is found
         that matches all the selectors.
         """
         text = """
@@ -146,12 +153,15 @@ class TestAndSelector:
             <div class="widget"></div>
             <a class="menu123"></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs)
         assert result == []
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns first matching child element if recursive is False.
         """
@@ -169,12 +179,15 @@ class TestAndSelector:
             <a class="menu">2</a>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a class="menu">1</a>""")
 
-    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns None if no child element matches the selector
         and recursive is False.
@@ -191,12 +204,15 @@ class TestAndSelector:
             <span>Hello</span>
             <div class="menu"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find(bs, recursive=False)
         assert result is None
 
-    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no child element
         matches the selector, when recursive is False and strict is True.
@@ -213,13 +229,16 @@ class TestAndSelector:
             <span>Hello</span>
             <div class="menu"></div>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True, recursive=False)
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -239,7 +258,7 @@ class TestAndSelector:
             <span>Hello</span>
             <a class="menu widget">3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs, recursive=False)
 
@@ -251,6 +270,7 @@ class TestAndSelector:
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns an empty list if no child element matches the selector
@@ -268,12 +288,15 @@ class TestAndSelector:
             <div class="widget"></div>
             <span>Hello</span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs, recursive=False)
         assert result == []
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -292,7 +315,7 @@ class TestAndSelector:
             </div>
             <span class=""></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs, limit=2)
 
@@ -303,6 +326,7 @@ class TestAndSelector:
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -323,7 +347,7 @@ class TestAndSelector:
             <div class="menu"></div>
             <span class=""></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = AndSelector(MockLinkSelector(), MockClassMenuSelector())
         result = selector.find_all(bs, recursive=False, limit=2)
 

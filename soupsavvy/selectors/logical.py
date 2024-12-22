@@ -14,10 +14,9 @@ from collections import Counter
 from functools import reduce
 from typing import Optional
 
-from bs4 import Tag
-
 from soupsavvy.base import CompositeSoupSelector, SoupSelector
-from soupsavvy.utils.selector_utils import TagIterator, TagResultSet, UniqueTag
+from soupsavvy.interfaces import IElement
+from soupsavvy.utils.selector_utils import ElementWrapper, TagIterator, TagResultSet
 
 
 class SelectorList(CompositeSoupSelector):
@@ -81,10 +80,10 @@ class SelectorList(CompositeSoupSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[IElement]:
         results = TagResultSet()
 
         for selector in self.selectors:
@@ -164,10 +163,10 @@ class NotSelector(CompositeSoupSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[IElement]:
         matching = reduce(
             TagResultSet.__or__,
             (
@@ -182,7 +181,7 @@ class NotSelector(CompositeSoupSelector):
     def __invert__(self) -> SoupSelector:
         """
         Overrides __invert__ method to cancel out negation by returning
-        the tag in case of single selector, or `SelectorList` in case of multiple.
+        the element in case of single selector, or `SelectorList` in case of multiple.
         """
         if not self._multiple:
             return self.selectors[0]
@@ -252,10 +251,10 @@ class AndSelector(CompositeSoupSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[IElement]:
         matching = reduce(
             TagResultSet.__and__,
             (
@@ -318,17 +317,21 @@ class XORSelector(CompositeSoupSelector):
 
     def find_all(
         self,
-        tag: Tag,
+        tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Tag]:
+    ) -> list[IElement]:
         unique = (
-            UniqueTag(element)
+            ElementWrapper(element)
             for step in self.selectors
             for element in step.find_all(tag, recursive=recursive)
         )
         results = TagResultSet(
-            [element.tag for element, count in Counter(unique).items() if count == 1]
+            [
+                element.element
+                for element, count in Counter(unique).items()
+                if count == 1
+            ]
         )
         # keep order of tags and limit
         results = TagResultSet(list(TagIterator(tag, recursive=recursive))) & results

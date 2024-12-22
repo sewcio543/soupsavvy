@@ -6,29 +6,37 @@ import pytest
 
 from soupsavvy.exceptions import TagNotFoundException
 from soupsavvy.selectors.attributes import AttributeSelector, ClassSelector
-from tests.soupsavvy.conftest import MockDivSelector, find_body_element, strip, to_bs
+from tests.soupsavvy.conftest import MockDivSelector, ToElement, strip
 
 
 @pytest.mark.selector
 class TestAttributeSelector:
     """Class for AttributeSelector unit test suite."""
 
-    def test_find_returns_first_matching_tag_with_specific_attribute(self):
-        """Tests if find method returns first matching tag with specific attribute."""
+    def test_find_returns_first_matching_element_with_specific_attribute(
+        self,
+        to_element: ToElement,
+    ):
+        """
+        Tests if find method returns first matching element  with specific attribute.
+        """
         text = """
             <div href="github"></div>
             <a></a>
             <a class="widget"></a>
             <div class="menu"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="class")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget"></a>""")
 
-    def test_find_returns_first_matching_tag_with_exact_attribute_value(self):
+    def test_find_returns_first_matching_element_with_exact_attribute_value(
+        self,
+        to_element: ToElement,
+    ):
         """
-        Tests if find method returns first matching tag with exact attribute value.
+        Tests if find method returns first matching element with exact attribute value.
         """
         text = """
             <div href="github" class="menu"></div>
@@ -37,13 +45,15 @@ class TestAttributeSelector:
             <a class="widget"></a>
             <div class="widget"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="class", value="widget")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a class="widget"></a>""")
 
-    def test_find_returns_first_matching_tag_with_regex(self):
-        """Tests if find method returns first matching tag with regex pattern."""
+    def test_find_returns_first_matching_element_with_regex(
+        self, to_element: ToElement
+    ):
+        """Tests if find method returns first matching element with regex pattern."""
         text = """
             <div href="github" class="menu"></div>
             <a></a>
@@ -52,12 +62,14 @@ class TestAttributeSelector:
             <span class="widget_123"></span>
             <span class="widget_45"></span>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="class", value=re.compile("^widget"))
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<span class="widget_123"></span>""")
 
-    def test_find_returns_none_if_no_match_and_strict_false(self):
+    def test_find_returns_none_if_no_match_and_strict_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find returns None if no element matches the selector
         and strict is False.
@@ -69,12 +81,15 @@ class TestAttributeSelector:
             <a class="super_widget"></a>
             <a class="widget_2"></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="class", value="widget")
         result = selector.find(bs)
         assert result is None
 
-    def test_find_raises_exception_if_no_match_and_strict_true(self):
+    def test_find_raises_exception_if_no_match_and_strict_true(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no element matches the selector
         and strict is True.
@@ -86,13 +101,16 @@ class TestAttributeSelector:
             <a class="super_widget"></a>
             <a class="widget_2"></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="class", value="widget")
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_returns_tag_that_matches_custom_attribute_name(self):
+    def test_find_returns_tag_that_matches_custom_attribute_name(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests find returns first matching element with custom attribute name
         matching the selector value.
@@ -105,12 +123,12 @@ class TestAttributeSelector:
             <span awesomeness="5"></span>
             <div awesomeness="5"></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="awesomeness", value="5")
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<span awesomeness="5"></span>""")
 
-    def test_find_all_returns_all_matching_elements(self):
+    def test_find_all_returns_all_matching_elements(self, to_element: ToElement):
         """Tests if find_all returns a list of all matching elements."""
         text = """
             <div href="github" class="menu"></div>
@@ -122,7 +140,7 @@ class TestAttributeSelector:
             <a class="widget_2"></a>
             <div class="widget"><a>3</a></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="class", value="widget")
 
         result = selector.find_all(bs)
@@ -132,7 +150,7 @@ class TestAttributeSelector:
             strip("""<div class="widget"><a>3</a></div>"""),
         ]
 
-    def test_find_all_returns_empty_list_when_no_match(self):
+    def test_find_all_returns_empty_list_when_no_match(self, to_element: ToElement):
         """Tests if find returns an empty list if no element matches the selector."""
         text = """
             <div href="github" class="menu"></div>
@@ -141,12 +159,15 @@ class TestAttributeSelector:
             <a class="super_widget"></a>
             <a class="widget_2"></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = AttributeSelector(name="class", value="widget")
         result = selector.find_all(bs)
         assert result == []
 
-    def test_find_returns_first_matching_child_if_recursive_false(self):
+    def test_find_returns_first_matching_child_if_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns first matching child element if recursive is False.
         """
@@ -158,13 +179,16 @@ class TestAttributeSelector:
             <a href="github">Hello 2</a>
             <a href="github">Hello 3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = AttributeSelector(name="href", value="github")
         result = selector.find(bs, recursive=False)
 
         assert strip(str(result)) == strip("""<a href="github">Hello 2</a>""")
 
-    def test_find_returns_none_if_recursive_false_and_no_matching_child(self):
+    def test_find_returns_none_if_recursive_false_and_no_matching_child(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find returns None if no child element matches the selector
         and recursive is False.
@@ -176,12 +200,15 @@ class TestAttributeSelector:
             <div href="github_12">Hello 2</div>
             <a class="github">Hello 2</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = AttributeSelector(name="href", value="github")
         result = selector.find(bs, recursive=False)
         assert result is None
 
-    def test_find_raises_exception_with_recursive_false_and_strict_mode(self):
+    def test_find_raises_exception_with_recursive_false_and_strict_mode(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find raises TagNotFoundException if no child element
         matches the selector, when recursive is False and strict is True.
@@ -193,7 +220,7 @@ class TestAttributeSelector:
             <div href="github_12">Hello 2</div>
             <a class="github">Hello 2</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = AttributeSelector(name="href", value="github")
 
         with pytest.raises(TagNotFoundException):
@@ -201,6 +228,7 @@ class TestAttributeSelector:
 
     def test_find_all_returns_empty_list_if_none_matching_children_when_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns an empty list if no child element matches the selector
@@ -213,12 +241,15 @@ class TestAttributeSelector:
             <div href="github_12">Hello 2</div>
             <a class="github">Hello 2</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = AttributeSelector(name="href", value="github")
         result = selector.find_all(bs, recursive=False)
         assert result == []
 
-    def test_find_all_returns_all_matching_children_when_recursive_false(self):
+    def test_find_all_returns_all_matching_children_when_recursive_false(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns all matching children if recursive is False.
         It returns only matching children of the body element.
@@ -233,7 +264,7 @@ class TestAttributeSelector:
             <div class="menu"><span>3</span></div>
             <a></a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = AttributeSelector(name="class")
         result = selector.find_all(bs, recursive=False)
 
@@ -243,7 +274,10 @@ class TestAttributeSelector:
             strip("""<div class="menu"><span>3</span></div>"""),
         ]
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self,
+        to_element: ToElement,
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -257,7 +291,7 @@ class TestAttributeSelector:
             <div class="google"></div>
             <span class="menu"></span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = AttributeSelector(name="class")
         result = selector.find_all(bs, limit=2)
 
@@ -268,6 +302,7 @@ class TestAttributeSelector:
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
         self,
+        to_element: ToElement,
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -287,7 +322,7 @@ class TestAttributeSelector:
             <div class="widget"></div>
             <p class="menu"></p>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = AttributeSelector(name="class")
         result = selector.find_all(bs, recursive=False, limit=2)
 
@@ -373,9 +408,12 @@ class TestAttributeSelector:
         assert (selectors[0] == selectors[1]) is False
 
     @pytest.mark.edge_case
-    def test_find_matches_element_with_list_of_values_if_one_matches(self):
+    def test_find_matches_element_with_list_of_values_if_one_matches(
+        self,
+        to_element: ToElement,
+    ):
         """
-        Tests if find returns first tag with that has a list of values
+        Tests if find returns first element with that has a list of values
         of specific attribute, if one of the values matches the selector.
 
         Example
@@ -391,29 +429,9 @@ class TestAttributeSelector:
             <div class="it has a long list of widget classes"></div>
             <div class="another list of widget classes"></div>
         """
-        bs = to_bs(markup)
+        bs = to_element(markup)
         selector = AttributeSelector("class", value="widget")
         result = selector.find(bs)
         assert strip(str(result)) == strip(
             """<div class="it has a long list of widget classes"></div>"""
         )
-
-    @pytest.mark.edge_case
-    def test_do_not_shadow_bs4_find_method_parameters(self):
-        """
-        Tests that find method does not shadow bs4.selector find method parameters.
-        If attribute name is the same as bs4.selector find method parameter
-        like ex. 'string' or 'name' it should not cause any conflicts.
-        The way to avoid it is to pass attribute filters as a dictionary to 'attrs'
-        parameter in bs4.selector find method instead of as keyword arguments.
-        """
-        text = """
-            <div href="github" class="menu"></div>
-            <a class="github"></a>
-            <span name="github"></span>
-            <div name="github"></div>
-        """
-        bs = to_bs(text)
-        selector = AttributeSelector(name="name", value="github")
-        result = selector.find(bs)
-        assert strip(str(result)) == strip("""<span name="github"></span>""")

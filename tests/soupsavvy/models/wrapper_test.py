@@ -3,7 +3,6 @@
 from typing import Type
 
 import pytest
-from bs4 import Tag
 
 from soupsavvy.exceptions import (
     NotOperationException,
@@ -11,6 +10,7 @@ from soupsavvy.exceptions import (
     RequiredConstraintException,
     TagNotFoundException,
 )
+from soupsavvy.interfaces import IElement
 from soupsavvy.models.wrappers import All, Default, FieldWrapper, Required
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 from tests.soupsavvy.conftest import (
@@ -18,9 +18,8 @@ from tests.soupsavvy.conftest import (
     MockIntOperation,
     MockLinkSelector,
     MockTextOperation,
-    find_body_element,
+    ToElement,
     strip,
-    to_bs,
 )
 
 DEFAULT = "default"
@@ -29,13 +28,13 @@ DEFAULT = "default"
 class MockFieldWrapper(FieldWrapper):
     """Mock class for testing FieldWrapper interface."""
 
-    def find(self, tag: Tag, strict: bool = False, recursive: bool = True): ...
+    def find(self, tag: IElement, strict: bool = False, recursive: bool = True): ...
 
 
 class MockFieldWrapper2(FieldWrapper):
     """Mock class for testing FieldWrapper interface."""
 
-    def find(self, tag: Tag, strict: bool = False, recursive: bool = True): ...
+    def find(self, tag: IElement, strict: bool = False, recursive: bool = True): ...
 
 
 @pytest.mark.selector
@@ -109,7 +108,9 @@ class BaseFieldWrapperTest:
         with pytest.raises(NotTagSearcherException):
             self.wrapper(MockTextOperation(), **self.params)  # type: ignore
 
-    def test_find_all_return_all_elements_matched_by_selector(self):
+    def test_find_all_return_all_elements_matched_by_selector(
+        self, to_element: ToElement
+    ):
         """Tests if find_all method returns all elements matched by selector."""
         text = """
             <div href="github"></div>
@@ -120,7 +121,7 @@ class BaseFieldWrapperTest:
             </span>
             <a><p>3</p></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = self.wrapper(MockLinkSelector(), **self.params)
         result = selector.find_all(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -129,7 +130,7 @@ class BaseFieldWrapperTest:
             strip("""<a><p>3</p></a>"""),
         ]
 
-    def test_find_all_returns_empty_list_if_no_matches(self):
+    def test_find_all_returns_empty_list_if_no_matches(self, to_element: ToElement):
         """
         Tests if find_all returns empty list if no element matches the selector.
         """
@@ -138,12 +139,14 @@ class BaseFieldWrapperTest:
             <span class="widget"></span>
             <div><p>Hello</p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = self.wrapper(MockLinkSelector(), **self.params)
         result = selector.find_all(bs)
         assert result == []
 
-    def test_find_all_returns_list_of_matching_elements_with_recursive_false(self):
+    def test_find_all_returns_list_of_matching_elements_with_recursive_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find_all method returns list of matching elements
         when recursive is False.
@@ -158,7 +161,7 @@ class BaseFieldWrapperTest:
             </span>
             <a>3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = self.wrapper(MockLinkSelector(), **self.params)
         result = selector.find_all(bs, recursive=False)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -167,7 +170,9 @@ class BaseFieldWrapperTest:
             strip("""<a>3</a>"""),
         ]
 
-    def test_find_all_returns_empty_list_if_no_matches_with_recursive_false(self):
+    def test_find_all_returns_empty_list_if_no_matches_with_recursive_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find_all method returns an empty list
         if no element matches the selector with recursive set to False.
@@ -180,12 +185,14 @@ class BaseFieldWrapperTest:
                 <a>Not child</a>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = self.wrapper(MockLinkSelector(), **self.params)
         result = selector.find_all(bs, recursive=False)
         assert result == []
 
-    def test_find_all_returns_only_x_elements_when_limit_is_set(self):
+    def test_find_all_returns_only_x_elements_when_limit_is_set(
+        self, to_element: ToElement
+    ):
         """
         Tests if find_all returns only x elements when limit is set.
         In this case only 2 first in order elements are returned.
@@ -199,7 +206,7 @@ class BaseFieldWrapperTest:
             </span>
             <a><p>3</p></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = self.wrapper(MockLinkSelector(), **self.params)
         result = selector.find_all(bs, limit=2)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -208,7 +215,7 @@ class BaseFieldWrapperTest:
         ]
 
     def test_find_all_returns_only_x_elements_when_limit_is_set_and_recursive_false(
-        self,
+        self, to_element: ToElement
     ):
         """
         Tests if find_all returns only x elements when limit is set and recursive
@@ -225,7 +232,7 @@ class BaseFieldWrapperTest:
             </span>
             <a>3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = self.wrapper(MockLinkSelector(), **self.params)
         result = selector.find_all(bs, recursive=False, limit=2)
 
@@ -240,7 +247,7 @@ class TestAll(BaseFieldWrapperTest):
 
     wrapper = All
 
-    def test_find_returns_all_elements_matched_by_selector(self):
+    def test_find_returns_all_elements_matched_by_selector(self, to_element: ToElement):
         """Tests if find method returns all elements matched by selector."""
         text = """
             <div href="github"></div>
@@ -251,7 +258,7 @@ class TestAll(BaseFieldWrapperTest):
             </span>
             <a><p>3</p></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = All(MockLinkSelector())
         result = selector.find(bs)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -261,7 +268,9 @@ class TestAll(BaseFieldWrapperTest):
         ]
 
     @pytest.mark.parametrize(argnames="strict", argvalues=[True, False])
-    def test_find_returns_empty_list_if_no_matches(self, strict: bool):
+    def test_find_returns_empty_list_if_no_matches(
+        self, strict: bool, to_element: ToElement
+    ):
         """
         Tests if find returns an empty list if no element matches the selector.
         This behavior is the same for both strict and non-strict mode.
@@ -271,12 +280,14 @@ class TestAll(BaseFieldWrapperTest):
             <span class="widget"></span>
             <div><p>Hello</p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = All(MockLinkSelector())
         result = selector.find(bs, strict=strict)
         assert result == []
 
-    def test_find_returns_list_of_matching_elements_with_recursive_false(self):
+    def test_find_returns_list_of_matching_elements_with_recursive_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find method returns list of matching elements when recursive is False.
         """
@@ -290,7 +301,7 @@ class TestAll(BaseFieldWrapperTest):
             </span>
             <a>3</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = All(MockLinkSelector())
         result = selector.find(bs, recursive=False)
         assert list(map(lambda x: strip(str(x)), result)) == [
@@ -301,7 +312,7 @@ class TestAll(BaseFieldWrapperTest):
 
     @pytest.mark.parametrize(argnames="strict", argvalues=[True, False])
     def test_find_returns_empty_list_if_no_matches_with_recursive_false(
-        self, strict: bool
+        self, strict: bool, to_element: ToElement
     ):
         """
         Tests if find method returns an empty list if no element matches the selector
@@ -316,7 +327,7 @@ class TestAll(BaseFieldWrapperTest):
                 <a>Not child</a>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = All(MockLinkSelector())
         result = selector.find(bs, strict=strict, recursive=False)
         assert result == []
@@ -327,7 +338,7 @@ class TestRequired(BaseFieldWrapperTest):
 
     wrapper = Required
 
-    def test_find_first_element_matched_by_selector(self):
+    def test_find_first_element_matched_by_selector(self, to_element: ToElement):
         """Tests if find method returns first element matched by selector."""
         text = """
             <div href="github"></div>
@@ -338,12 +349,14 @@ class TestRequired(BaseFieldWrapperTest):
             <h1><a>2</a></h1>
             <a><p>3</p></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Required(MockLinkSelector())
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a>1</a>""")
 
-    def test_find_raises_error_if_no_matches_in_not_strict_mode(self):
+    def test_find_raises_error_if_no_matches_in_not_strict_mode(
+        self, to_element: ToElement
+    ):
         """
         Tests if find raises RequiredConstraintException if no element
         matches the selector in non-strict mode.
@@ -353,13 +366,15 @@ class TestRequired(BaseFieldWrapperTest):
             <span class="widget"></span>
             <div><p>Hello</p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Required(MockLinkSelector())
 
         with pytest.raises(RequiredConstraintException):
             selector.find(bs)
 
-    def test_find_propagates_error_if_no_matches_in_strict_mode(self):
+    def test_find_propagates_error_if_no_matches_in_strict_mode(
+        self, to_element: ToElement
+    ):
         """
         Tests if find propagates TagNotFoundException if no element
         matches the selector in strict mode.
@@ -369,13 +384,15 @@ class TestRequired(BaseFieldWrapperTest):
             <span class="widget"></span>
             <div><p>Hello</p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Required(MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_returns_first_matching_element_with_recursive_false(self):
+    def test_find_returns_first_matching_element_with_recursive_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find method returns first matching element if recursive is False.
         """
@@ -389,13 +406,13 @@ class TestRequired(BaseFieldWrapperTest):
             <div href="github"></div>
             <a>2</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = Required(MockLinkSelector())
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a>1</a>""")
 
     def test_find_raises_error_if_no_matches_with_recursive_false_and_not_strict_mode(
-        self,
+        self, to_element: ToElement
     ):
         """
         Tests if find method raises RequiredConstraintException if no element
@@ -409,14 +426,14 @@ class TestRequired(BaseFieldWrapperTest):
                 <a>Not child</a>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = Required(MockLinkSelector())
 
         with pytest.raises(RequiredConstraintException):
             selector.find(bs, recursive=False)
 
     def test_find_propagates_error_if_no_matches_with_recursive_false_and_strict_mode(
-        self,
+        self, to_element: ToElement
     ):
         """
         Tests if find method propagates TagNotFoundException if no element
@@ -430,7 +447,7 @@ class TestRequired(BaseFieldWrapperTest):
                 <a>Not child</a>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = Required(MockLinkSelector())
 
         with pytest.raises(TagNotFoundException):
@@ -443,7 +460,7 @@ class TestDefault(BaseFieldWrapperTest):
     wrapper = Default
     params = {"default": DEFAULT}
 
-    def test_find_first_element_matched_by_selector(self):
+    def test_find_first_element_matched_by_selector(self, to_element: ToElement):
         """Tests if find method returns first element matched by selector."""
         text = """
             <div href="github"></div>
@@ -454,12 +471,14 @@ class TestDefault(BaseFieldWrapperTest):
             <h1><a>2</a></h1>
             <a><p>3</p></a>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Default(MockLinkSelector(), default=DEFAULT)
         result = selector.find(bs)
         assert strip(str(result)) == strip("""<a>1</a>""")
 
-    def test_find_returns_default_if_no_match_in_no_strict_mode(self):
+    def test_find_returns_default_if_no_match_in_no_strict_mode(
+        self, to_element: ToElement
+    ):
         """
         Tests if find method returns default value if no element matches the selector
         and strict mode is False.
@@ -469,12 +488,14 @@ class TestDefault(BaseFieldWrapperTest):
             <span class="widget"></span>
             <div><p>Hello</p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Default(MockLinkSelector(), default=DEFAULT)
         result = selector.find(bs)
         assert result == DEFAULT
 
-    def test_find_propagates_error_if_no_match_in_strict_mode(self):
+    def test_find_propagates_error_if_no_match_in_strict_mode(
+        self, to_element: ToElement
+    ):
         """
         Tests if find method propagates TagNotFoundException if no element
         matches the selector and strict mode is True. Default propagates
@@ -485,13 +506,15 @@ class TestDefault(BaseFieldWrapperTest):
             <span class="widget"></span>
             <div><p>Hello</p></div>
         """
-        bs = to_bs(text)
+        bs = to_element(text)
         selector = Default(MockLinkSelector(), default=DEFAULT)
 
         with pytest.raises(TagNotFoundException):
             selector.find(bs, strict=True)
 
-    def test_find_returns_first_matching_element_with_recursive_false(self):
+    def test_find_returns_first_matching_element_with_recursive_false(
+        self, to_element: ToElement
+    ):
         """
         Tests if find method returns first matching element if recursive is False.
         """
@@ -505,13 +528,13 @@ class TestDefault(BaseFieldWrapperTest):
             <div href="github"></div>
             <a>2</a>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = Default(MockLinkSelector(), default=DEFAULT)
         result = selector.find(bs, recursive=False)
         assert strip(str(result)) == strip("""<a>1</a>""")
 
     def test_find_returns_default_if_no_matches_with_recursive_false_and_not_strict(
-        self,
+        self, to_element: ToElement
     ):
         """
         Tests if find method returns default value if no element matches the selector
@@ -525,12 +548,14 @@ class TestDefault(BaseFieldWrapperTest):
                 <a>Not child</a>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = Default(MockLinkSelector(), default=DEFAULT)
         result = selector.find(bs, strict=False, recursive=False)
         assert result == DEFAULT
 
-    def test_find_propagates_error_if_no_matches_with_recursive_false_and_strict(self):
+    def test_find_propagates_error_if_no_matches_with_recursive_false_and_strict(
+        self, to_element: ToElement
+    ):
         """
         Tests if find method propagates TagNotFoundException if no element
         matches the selector and recursive is False. Default propagates
@@ -544,7 +569,7 @@ class TestDefault(BaseFieldWrapperTest):
                 <a>Not child</a>
             </span>
         """
-        bs = find_body_element(to_bs(text))
+        bs = to_element(text)
         selector = Default(MockLinkSelector(), default=DEFAULT)
 
         with pytest.raises(TagNotFoundException):

@@ -23,6 +23,7 @@ from .general import (
 from .logical import AndSelector, NotSelector, OrSelector, SelectorList, XORSelector
 from .nth import NthLastOfSelector, NthOfSelector, OnlyOfSelector
 from .relative import Anchor, HasSelector
+from .xpath.selectors import XPathSelector
 
 __all__ = [
     "TypeSelector",
@@ -30,6 +31,7 @@ __all__ = [
     "ClassSelector",
     "IdSelector",
     "PatternSelector",
+    "XPathSelector",
     "UniversalSelector",
     "ExpressionSelector",
     "SelfSelector",
