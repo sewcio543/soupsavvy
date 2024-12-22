@@ -7,7 +7,6 @@ compatible with `IElement` interface and usable across the library.
 from __future__ import annotations
 
 from itertools import islice
-from pathlib import Path
 from typing import Iterable, Optional, Pattern, Union
 
 from selenium.webdriver.common.by import By
@@ -18,13 +17,64 @@ from soupsavvy.interfaces import IElement
 from soupsavvy.selectors.css.api import SeleniumCSSApi
 from soupsavvy.selectors.xpath.api import SeleniumXPathApi
 
-_SCRIPTS_DIR = Path(
-    "soupsavvy",
-    "implementation",
-    "scripts",
-)
-_FIND_ALL_SCRIPT = Path(_SCRIPTS_DIR, "find_all.js").read_text()
-_FIND_ANCESTORS_SCRIPT = Path(_SCRIPTS_DIR, "find_ancestors.js").read_text()
+# js scripts
+# ----------
+
+_FIND_ALL_SCRIPT = """
+function findMatchingElements(root, tagName, attrs, recursive) {
+  function matchesAttributes(element, attrs) {
+    for (let [key, val] of Object.entries(attrs)) {
+      let attrVal = element.getAttribute(key);
+
+      if (attrVal === null) {
+        return false;
+      }
+
+      if (typeof val === "string" && !attrVal.split(" ").includes(val)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function collectElements(element, recursive) {
+    let matches = [];
+    let elements = recursive ? element.querySelectorAll("*") : element.children;
+
+    for (let el of elements) {
+      if (
+        (!tagName || el.tagName.toLowerCase() === tagName.toLowerCase()) &&
+        matchesAttributes(el, attrs)
+      ) {
+        matches.push(el);
+      }
+    }
+    return matches;
+  }
+  return collectElements(root, recursive);
+}
+
+return findMatchingElements(
+  arguments[0],
+  arguments[1],
+  arguments[2],
+  arguments[3]
+);
+"""
+
+_FIND_ANCESTORS_SCRIPT = """
+function findAncestors(element, limit) {
+  let ancestors = [];
+  let parent = element.parentNode;
+  while (parent && parent.nodeType === 1) {
+    ancestors.push(parent);
+    if (limit && ancestors.length >= limit) break;
+    parent = parent.parentNode;
+  }
+  return ancestors;
+}
+return findAncestors(arguments[0], arguments[1]);
+"""
 
 
 class SeleniumElement(IElement):

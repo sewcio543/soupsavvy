@@ -1,7 +1,7 @@
 ![soupsavvy](https://github.com/sewcio543/soupsavvy/blob/main/resources/logo.png?raw=true)
 ========
 
-## Powerful and flexible search engine for BeautifulSoup
+## Powerful and flexible web scraping **Search Engine**
 
 [![PyPI](https://img.shields.io/pypi/v/soupsavvy?color=orange)](https://pypi.org/project/soupsavvy/) [![Python Versions](https://img.shields.io/pypi/pyversions/soupsavvy)](https://www.python.org/) [![Codecov](https://codecov.io/gh/sewcio543/soupsavvy/graph/badge.svg?token=RZ51VS3QLB)](https://codecov.io/gh/sewcio543/soupsavvy) [![Docs link](https://img.shields.io/badge/docs-read-blue)](https://soupsavvy.readthedocs.io)
 
@@ -18,11 +18,17 @@
 
 ## About
 
-**soupsavvy** is flexible search engine for [`BeautifulSoup`](https://pypi.org/project/beautifulsoup4/), designed to provide more powerful capabilities, making more complex searches simple and web scraping tasks more efficient and manageable.
+With many web scraping libraries available, each with unique interfaces and conventions, `soupsavvy` provides conistent and easy way of building selection workflows.
+
+With `soupsavvy`, developers can focus on data extraction workflows instead of wrestling with library-specific quirks and inconsistencies. Eliminate complexity and introduce scalability and maintainability to your web scraping projects.
 
 ## Key Features
 
-`soupsavvy` introduces the concept of `Selector`, a declarative search procedure designed with simple and readable syntax. It encapsulates search logic, making it reusable across different scenarios. The package offers various types of selectors that can be easily combined to perform more complex searches.
+`soupsavvy` introduces the concept of `Selector`, a declarative, consistent, and reusable search procedure that is based on following principles:
+
+- **Decoupling**: Selection logic is abstracted away from DOM node and traversal implementations.
+- **Framework-Agnostic**: Operates consistently with any supported library.
+- **Flexibile & Extensibile**: Lightweight, reusable components used to build complex selection workflows.
 
 ## Installation
 
@@ -47,10 +53,6 @@ If you'd like to contribute to soupsavvy, feel free to check out the [GitHub rep
 ## License
 
 `soupsavvy` is licensed under ![MIT License](https://img.shields.io/badge/license-MIT-green?style=plastic), allowing for both personal and commercial use. See the `LICENSE` file for more information.
-
-## Acknowledgements
-
-`soupsavvy` is built upon the foundation of excellent `BeautifulSoup`. We extend our gratitude to the developers of this projects for their invaluable contributions to the Python community and making our life a lot easier!
 
 -----------------
 
