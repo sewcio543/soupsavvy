@@ -25,7 +25,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Why soupsavvy?" href="features.html" />
-    <link rel="prev" title="operators" href="../soupsavvy.operators.html" /> 
+    <link rel="prev" title="implementation.selenium" href="../soupsavvy.implementation.selenium.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -54,12 +54,28 @@
 <li class="toctree-l1"><a class="reference internal" href="../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">About</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#motivation">Motivation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#selector-concept">Selector concept</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#portability">Portability</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-beautifulsoup">Using <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-selenium">Using <code class="docutils literal notranslate"><span class="pre">selenium</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-soupsavvy">Using <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#for-selenium">For <code class="docutils literal notranslate"><span class="pre">selenium</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#for-beautifulsoup">For <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#maintainability">Maintainability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scalability">Scalability</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Using <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Using <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
 </ul>
 </li>
@@ -103,126 +119,321 @@
              
   <section id="about">
 <h1>About<a class="headerlink" href="#about" title="Link to this heading"></a></h1>
-<section id="motivation">
-<h2>Motivation<a class="headerlink" href="#motivation" title="Link to this heading"></a></h2>
-<p>While <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> is great for parsing HTML, its search engine is limited and struggles with complex queries. The <code class="docutils literal notranslate"><span class="pre">Tag</span></code> component, couples node representation with search logic, making it difficult to extend or customize.
-<code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> addresses these limitations by introducing a flexible, reusable selector system that integrates seamlessly with <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> and can be tailored to user needs.</p>
+<p>With many web scraping libraries available, each with unique interfaces and conventions, building workflows and maintaining consistency in DOM traversal and selection often becomes tedious, resulting in complexity and boilerplate code.</p>
+<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> solves this with a unified, consistent approach to selection, based on these principles:</p>
+<ul class="simple">
+<li><p><strong>Decoupling</strong>: Selection logic is abstracted away from DOM node and traversal implementations.</p></li>
+<li><p><strong>Framework-Agnostic</strong>: Operates consistently with any supported library.</p></li>
+<li><p><strong>Flexibile &amp; Extensibile</strong>: Lightweight, reusable components used to build complex selection workflows.</p></li>
+</ul>
+<p>Unlike traditional libraries that require various methods and parameters for different tasks, <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> uses a simple, consistent selector interface:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Selectors can encapsulate advanced logic, such as XPath queries, logical relationships, sequences and more:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">selector</span> <span class="o">=</span> <span class="n">XPathSelector</span><span class="p">(</span><span class="s2">&quot;//div/a&quot;</span><span class="p">)</span>
+<span class="n">elements</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code>, developers can focus on data extraction workflows instead of wrestling with library-specific quirks and inconsistencies. Boost your web-scraping workflows by eliminating complexity and introducing:</p>
+<ul class="simple">
+<li><p><strong>Portability</strong></p></li>
+<li><p><strong>Maintainability</strong></p></li>
+<li><p><strong>Scalability</strong></p></li>
+</ul>
+<section id="portability">
+<h2>Portability<a class="headerlink" href="#portability" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> provides a slim, consistent selector interface, allowing DOM elements from any supported library to be wrapped and used interchangeably.</p>
+<p>Instead of rewriting workflows when switching between libraries like <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> and <code class="docutils literal notranslate"><span class="pre">selenium</span></code>, <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> abstracts selection logic, ensuring the same selectors work seamlessly across different frameworks by eliminating any library-specific logic.</p>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<p>This simple workflow extracts text of the header from <code class="docutils literal notranslate"><span class="pre">www.example.com</span></code>. Both <code class="docutils literal notranslate"><span class="pre">selenium</span></code> and <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code> have a different way of executing this operation.</p>
 </section>
-<section id="selector-concept">
-<h2>Selector concept<a class="headerlink" href="#selector-concept" title="Link to this heading"></a></h2>
-<p>With <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>, dictionary of parameters can be used to imitate the concept of selector, but this approach is limited to simple queries like text, attributes, and name matching.</p>
+<section id="using-beautifulsoup">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code><a class="headerlink" href="#using-beautifulsoup" title="Link to this heading"></a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="n">PRICE_SELECTOR</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="s2">&quot;attrs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;price&quot;</span><span class="p">}}</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://www.example.com&quot;</span><span class="p">)</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;html.parser&quot;</span><span class="p">)</span>
 
-<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="o">**</span><span class="n">PRICE_SELECTOR</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Element not found&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Example Domain
 </pre></div>
 </div>
 </div>
 </div>
-<p>Alternatively, function can be used to implement more complex search logic.</p>
+</section>
+<section id="using-selenium">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">selenium</span></code><a class="headerlink" href="#using-selenium" title="Link to this heading"></a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.chrome.options</span> <span class="kn">import</span> <span class="n">Options</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="kn">import</span> <span class="n">By</span>
+
+<span class="n">options</span> <span class="o">=</span> <span class="n">Options</span><span class="p">()</span>
+<span class="n">options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--headless&quot;</span><span class="p">)</span>
+<span class="n">options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--no-sandbox&quot;</span><span class="p">)</span>
+<span class="n">options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--disable-dev-shm-usage&quot;</span><span class="p">)</span>
+
+<span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+<span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://www.example.com&quot;</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">TAG_NAME</span><span class="p">,</span> <span class="s2">&quot;h1&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Example Domain
+</pre></div>
+</div>
+</div>
+</div>
+<p>Switching between these requires rewriting the logic, as the libraries have different interfaces and conventions.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code>, selectors are independent of the underlying library, allowing you to use the same workflow across different libraries. Once you know how to use selectors, you can apply them to any supported implementation.</p>
+</section>
+<section id="using-soupsavvy">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code><a class="headerlink" href="#using-soupsavvy" title="Link to this heading"></a></h3>
+<section id="for-selenium">
+<h4>For <code class="docutils literal notranslate"><span class="pre">selenium</span></code><a class="headerlink" href="#for-selenium" title="Link to this heading"></a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.chrome.options</span> <span class="kn">import</span> <span class="n">Options</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="kn">import</span> <span class="n">By</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
+
+<span class="n">options</span> <span class="o">=</span> <span class="n">Options</span><span class="p">()</span>
+<span class="n">options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--headless&quot;</span><span class="p">)</span>
+<span class="n">options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--no-sandbox&quot;</span><span class="p">)</span>
+<span class="n">options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--disable-dev-shm-usage&quot;</span><span class="p">)</span>
+
+<span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+<span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://www.example.com&quot;</span><span class="p">)</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">TAG_NAME</span><span class="p">,</span> <span class="s2">&quot;html&quot;</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Example Domain
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="for-beautifulsoup">
+<h4>For <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code><a class="headerlink" href="#for-beautifulsoup" title="Link to this heading"></a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://www.example.com&quot;</span><span class="p">)</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;html.parser&quot;</span><span class="p">)</span>
+
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Example Domain
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="maintainability">
+<h2>Maintainability<a class="headerlink" href="#maintainability" title="Link to this heading"></a></h2>
+<p>Maintaining complex scraping workflows becomes challenging as projects grow. Adding new selectors, modifying existing ones, or adapting to changes in target websites often requires updating multiple parts of the codebase.</p>
+<p>With traditional libraries, even seemingly simple workflows can lead to verbose code. For example, finding and handling a specific element’s text with <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span><span class="p">,</span> <span class="n">Tag</span>
 
-<span class="c1"># CSS Selector equivalent: p.price &gt; span ~ a.link</span>
-
-
-<span class="k">def</span> <span class="nf">select_sth</span><span class="p">(</span><span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">):</span>
-    <span class="c1"># Find the first &lt;p&gt; tag with class &quot;price&quot;</span>
-    <span class="n">tag1</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;price&quot;</span><span class="p">})</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tag1</span><span class="p">,</span> <span class="n">Tag</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">None</span>
-
-    <span class="c1"># Find the first &lt;span&gt; tag within the &lt;p&gt; tag</span>
-    <span class="n">tag2</span> <span class="o">=</span> <span class="n">tag1</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tag2</span><span class="p">,</span> <span class="n">Tag</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">None</span>
-
-    <span class="c1"># Find the next sibling &lt;a&gt; tag with class &quot;link&quot;</span>
-    <span class="k">return</span> <span class="n">tag2</span><span class="o">.</span><span class="n">find_next_sibling</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;link&quot;</span><span class="p">})</span>
-
-
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    &lt;p class=&quot;price&quot;&gt;</span>
-<span class="sd">        &lt;span&gt;Price: $10&lt;/span&gt;</span>
-<span class="sd">        &lt;a class=&quot;link&quot;&gt;&lt;/a&gt;</span>
-<span class="sd">    &lt;/p&gt;</span>
-<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
-    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;span class=&quot;price&quot;&gt;&lt;a&gt;Click here&lt;/a&gt;&lt;p&gt;Price: $10&lt;/p&gt;&lt;/span&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span>
 <span class="p">)</span>
-<span class="n">select_sth</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">span</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;price&quot;</span><span class="p">})</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">span</span><span class="p">,</span> <span class="n">Tag</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Element not found&quot;</span><span class="p">)</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">span</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Element not found&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;a class=&quot;link&quot;&gt;&lt;/a&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Price: $10
 </pre></div>
 </div>
 </div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> encapsulates search logic and offers a more structured, declarative approach to defining selectors, including composite ones, that can handle intricate, layered criteria. Selectors in <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> are designed to be intuitive and feature API similar to <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>.</p>
+<p>Switching to <code class="docutils literal notranslate"><span class="pre">lxml</span></code> or <code class="docutils literal notranslate"><span class="pre">selenium</span></code> introduces different methods, parameters, and error handling, adding to the complexity.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code>, selectors ensures consistency by providing a unified interface, that encapsulates entire logic, however complex defined relationships are, eliminating a lot of boilerplate code.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
-
-<span class="n">PRICE_SELECTOR</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="s2">&quot;attrs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;price&quot;</span><span class="p">}}</span>
-
-<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
-
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    &lt;p class=&quot;price&quot;&gt;</span>
-<span class="sd">        &lt;span&gt;Price: $10&lt;/span&gt;</span>
-<span class="sd">        &lt;a class=&quot;link&quot;&gt;&lt;/a&gt;</span>
-<span class="sd">    &lt;/p&gt;</span>
-<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
-    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;span class=&quot;price&quot;&gt;&lt;a&gt;Click here&lt;/a&gt;&lt;p&gt;Price: $10&lt;/p&gt;&lt;/span&gt;&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span>
 <span class="p">)</span>
-<span class="n">selector</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;link&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">))</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+<span class="n">found</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;a class=&quot;link&quot;&gt;&lt;/a&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Price: $10
 </pre></div>
 </div>
 </div>
 </div>
 </section>
+<section id="scalability">
+<h2>Scalability<a class="headerlink" href="#scalability" title="Link to this heading"></a></h2>
+<p>When building complex scraping workflows, you might need to manage various relationships between elements, handle multiple matches, or apply different selection criteria. Traditional libraries force developers to write extensive boilerplate code to manage lists, sets, and operations on multiple elements, leading to tangled and error-prone logic.</p>
+<section id="id1">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code><a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>Finding all sibling elements with a specific class after an <code class="docutils literal notranslate"><span class="pre">&lt;h2&gt;</span></code> tag using <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $25&lt;/p&gt;</span>
+<span class="sd">        &lt;h2&gt;Discounted&lt;/h2&gt;</span>
+<span class="sd">        &lt;span&gt;Bargain!!!&lt;/span&gt;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $15&lt;/p&gt;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">h2</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">)</span>
+<span class="n">matches</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">h2</span><span class="p">:</span>
+    <span class="n">matches</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tag</span><span class="o">.</span><span class="n">find_next_siblings</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;price&quot;</span><span class="p">}))</span>
+
+<span class="nb">print</span><span class="p">([</span><span class="n">match</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;Price: $15&#39;, &#39;Price: $10&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>This approach requires manually handling sibling relationships and merging results, which becomes increasingly complex in larger workflows.</p>
+</section>
+<section id="id2">
+<h3>Using <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code><a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>With <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code>, selectors encapsulate the logic for element relationships, providing a concise and reusable workflow:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $25&lt;/p&gt;</span>
+<span class="sd">        &lt;h2&gt;Discounted&lt;/h2&gt;</span>
+<span class="sd">        &lt;span&gt;Bargain!!!&lt;/span&gt;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $15&lt;/p&gt;</span>
+<span class="sd">        &lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">selector</span> <span class="o">=</span> <span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">))</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;Price: $15&#39;, &#39;Price: $10&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Even thinking about implementing a workflow like the one below in common web scraping libraries can be overwhelming.
+With <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code>, selectors act as modular building blocks, encapsulating both selection logic and element relationships. These selectors are reusable and can be easily combined to create complex workflows without the usual overhead.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.selectors.nth</span> <span class="kn">import</span> <span class="n">NthOfSelector</span>
+
+<span class="c1"># Define selectors for the workflow</span>
+<span class="n">pattern_selector</span> <span class="o">=</span> <span class="n">PatternSelector</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;price&quot;</span><span class="p">))</span>
+<span class="n">type_selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)</span>
+
+<span class="c1"># Combine selectors using XOR (matches one or the other but not both)</span>
+<span class="n">xor_selector</span> <span class="o">=</span> <span class="n">pattern_selector</span> <span class="o">^</span> <span class="n">type_selector</span>
+
+<span class="c1"># Select every second match of the XOR selector</span>
+<span class="n">nth_selector</span> <span class="o">=</span> <span class="n">NthOfSelector</span><span class="p">(</span><span class="n">xor_selector</span><span class="p">,</span> <span class="n">nth</span><span class="o">=</span><span class="s2">&quot;2n+1&quot;</span><span class="p">)</span>
+
+<span class="c1"># Combine selectors to find specific children inside elements with a class</span>
+<span class="n">child_selector</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;container&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">nth_selector</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
 <section id="conclusion">
 <h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading"></a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> introduces declarative selectors that address the limitations of <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>, offering custom solutions for even the most complex queries. Read more about selectors in the following sections.</p>
+<p>In conclusion, <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> revolutionizes web scraping by introducing declarative selectors that simplify and unify the selection process across various libraries. Its flexible and consistent approach eliminates the complexity of managing different APIs, allowing you to focus on the task at hand.</p>
+<p>Although the examples and tutorials provided are focused on <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>, the concepts and workflows are applicable to all supported libraries. Dive deeper into the documentation to explore more examples and see how <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> can streamline your web scraping projects, no matter the framework you’re using.</p>
 <p><strong>Enjoy <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> and leave us feedback!</strong><br />
 <strong>Happy scraping!</strong></p>
 </section>
@@ -232,7 +443,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../soupsavvy.operators.html" class="btn btn-neutral float-left" title="operators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../soupsavvy.implementation.selenium.html" class="btn btn-neutral float-left" title="implementation.selenium" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="features.html" class="btn btn-neutral float-right" title="Why soupsavvy?" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

@@ -1,0 +1,216 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>soupsavvy.selectors.xpath.selectors &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=eea9572f" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.selectors.html">selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.operations.html">operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.implementation.html">implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/features.html">Why soupsavvy?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/showcase.html">Showcase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/combining.html">Composite Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/css.html">CSS Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../demos/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">soupsavvy.selectors.xpath.selectors</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for soupsavvy.selectors.xpath.selectors</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Selector for finding elements based on XPath,</span>
+<span class="sd">that allows any supported XPath expressions</span>
+<span class="sd">to be used with other `soupsavvy` components.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">-------</span>
+<span class="sd">- XPathSelector</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">IElement</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.utils.selector_utils</span> <span class="kn">import</span> <span class="n">TagIterator</span><span class="p">,</span> <span class="n">TagResultSet</span>
+
+
+<div class="viewcode-block" id="XPathSelector">
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.xpath.selectors.html#soupsavvy.XPathSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">XPathSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Selector for finding elements based on XPath expressions.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; selector = XPathSelector(&quot;//p[@class=&#39;menu&#39;]&quot;)</span>
+<span class="sd">    ... selector.find(soup)</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from lxml.etree import XPath</span>
+<span class="sd">    ... selector = XPathSelector(XPath(&quot;//p[@class=&#39;menu&#39;]&quot;, smart_strings=False))</span>
+<span class="sd">    ... selector.find(soup)</span>
+
+<span class="sd">    Expressions must target elements, not attributes or text content.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; selector = XPathSelector(&quot;//div//@href&quot;)</span>
+<span class="sd">    ... selector.find(soup)</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Equality check includes only xpath expression, as lxml `XPath` object</span>
+<span class="sd">    does not implement more specific `__eq__` method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="XPathSelector.__init__">
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.xpath.selectors.html#soupsavvy.XPathSelector.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xpath</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes `XPathSelector` with a given XPath expression.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xpath : str | lxml.etree.XPath</span>
+<span class="sd">            String representing of xpath expression or compiled `XPath` object.</span>
+<span class="sd">            It needs to target elements, not attributes or text content.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        InvalidXPathSelector</span>
+<span class="sd">            If the provided XPath string cannot be compiled into `XPath` object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xpath</span> <span class="o">=</span> <span class="n">xpath</span></div>
+
+
+<div class="viewcode-block" id="XPathSelector.find_all">
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.xpath.selectors.html#soupsavvy.XPathSelector.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
+        <span class="n">api</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xpath</span><span class="p">)</span>
+        <span class="n">selected</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+        <span class="n">iterator</span> <span class="o">=</span> <span class="n">TagIterator</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">TagResultSet</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">iterator</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">TagResultSet</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">XPathSelector</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">xpath</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">xpath</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">xpath</span><span class="si">!r}</span><span class="s2">)&quot;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, soupsavvy.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

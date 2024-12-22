@@ -54,6 +54,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul class="current">
@@ -168,7 +169,7 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -182,14 +183,15 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SoupElement(&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;)
 </pre></div>
 </div>
 </div>
@@ -204,7 +206,7 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">DescendantCombinator</span><span class="p">,</span> <span class="n">IdSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">DescendantCombinator</span><span class="p">,</span> <span class="n">IdSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -224,18 +226,19 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">DescendantCombinator</span><span class="p">(</span>
     <span class="n">IdSelector</span><span class="p">(</span><span class="s2">&quot;available&quot;</span><span class="p">),</span>
     <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">),</span>
     <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">),</span>
 <span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SoupElement(&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;)
 </pre></div>
 </div>
 </div>
@@ -276,7 +279,7 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -298,14 +301,15 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SoupElement(&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;)
 </pre></div>
 </div>
 </div>
@@ -353,7 +357,7 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">IdSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">IdSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -375,14 +379,15 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="p">(</span><span class="n">IdSelector</span><span class="p">(</span><span class="s2">&quot;available&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span> <span class="o">&gt;&gt;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $15&lt;/p&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SoupElement(&lt;p class=&quot;price&quot;&gt;Price: $15&lt;/p&gt;)
 </pre></div>
 </div>
 </div>
@@ -409,7 +414,7 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -423,14 +428,15 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SoupElement(&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;)
 </pre></div>
 </div>
 </div>
@@ -449,7 +455,7 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -465,14 +471,15 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SoupElement(&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;)
 </pre></div>
 </div>
 </div>
@@ -491,7 +498,7 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">PatternSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -503,14 +510,15 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">PatternSelector</span><span class="p">(</span><span class="s2">&quot;Discounted&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SoupElement(&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;)
 </pre></div>
 </div>
 </div>
@@ -529,7 +537,7 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">SubsequentSiblingCombinator</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -541,14 +549,16 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p class=&quot;price&quot;&gt;Price: $15&lt;/p&gt;, &lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[SoupElement(&lt;p class=&quot;price&quot;&gt;Price: $15&lt;/p&gt;),
+ SoupElement(&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;)]
 </pre></div>
 </div>
 </div>
@@ -566,7 +576,7 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -586,18 +596,17 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;discount&quot;</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">prettify</span><span class="p">())</span>  <span class="c1"># type: ignore</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;discount&quot;&gt;
- &lt;p class=&quot;price&quot;&gt;
-  Price: $10
- &lt;/p&gt;
+&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;
 &lt;/span&gt;
 </pre></div>
 </div>
@@ -616,7 +625,7 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -634,25 +643,20 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;discount&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">element</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;span class=&quot;discount&quot;&gt;
- &lt;div&gt;
-  &lt;p class=&quot;price&quot;&gt;
-   Price: $35
-  &lt;/p&gt;
- &lt;/div&gt;
+&lt;div&gt;&lt;p class=&quot;price&quot;&gt;Price: $35&lt;/p&gt;&lt;/div&gt;
 &lt;/span&gt;
 
 &lt;span class=&quot;discount&quot;&gt;
- &lt;p class=&quot;price&quot;&gt;
-  Price: $10
- &lt;/p&gt;
+&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;
 &lt;/span&gt;
 </pre></div>
 </div>
@@ -725,7 +729,7 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -735,14 +739,15 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
 </pre></div>
 </div>
 </div>
@@ -762,7 +767,7 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -773,14 +778,15 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;h2&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;h1&gt;Hello World&lt;/h1&gt;, &lt;h2&gt;Goodbye World&lt;/h2&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[SoupElement(&lt;h1&gt;Hello World&lt;/h1&gt;), SoupElement(&lt;h2&gt;Goodbye World&lt;/h2&gt;)]
 </pre></div>
 </div>
 </div>
@@ -802,7 +808,7 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -811,14 +817,15 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="o">~</span><span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;discount&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SoupElement(&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;)
 </pre></div>
 </div>
 </div>
@@ -836,7 +843,7 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">NotSelector</span><span class="p">,</span> <span class="n">PatternSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">NotSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -846,16 +853,17 @@ For more information on CSS combinators, you can refer to <a class="reference ex
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">discount_selector</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;discount&quot;</span><span class="p">)</span>
 <span class="n">dollars_selector</span> <span class="o">=</span> <span class="n">PatternSelector</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\$\d+&quot;</span><span class="p">))</span>
 <span class="n">selector</span> <span class="o">=</span> <span class="n">NotSelector</span><span class="p">(</span><span class="n">discount_selector</span><span class="p">,</span> <span class="n">dollars_selector</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: €15&lt;/p&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SoupElement(&lt;p class=&quot;price&quot;&gt;Price: €15&lt;/p&gt;)
 </pre></div>
 </div>
 </div>
@@ -874,7 +882,7 @@ While CSS does not have a direct counterpart, you can achieve similar results us
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -885,14 +893,16 @@ While CSS does not have a direct counterpart, you can achieve similar results us
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;discount&quot;</span><span class="p">)</span> <span class="o">^</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;span class=&quot;price&quot;&gt;Price: $20&lt;/span&gt;, &lt;p class=&quot;discount&quot;&gt;Price: $30&lt;/p&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[SoupElement(&lt;span class=&quot;price&quot;&gt;Price: $20&lt;/span&gt;),
+ SoupElement(&lt;p class=&quot;discount&quot;&gt;Price: $30&lt;/p&gt;)]
 </pre></div>
 </div>
 </div>
@@ -928,7 +938,7 @@ While CSS does not have a direct counterpart, you can achieve similar results us
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">Anchor</span><span class="p">,</span> <span class="n">ClassSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">Anchor</span><span class="p">,</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -939,14 +949,16 @@ While CSS does not have a direct counterpart, you can achieve similar results us
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">div</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">Anchor</span> <span class="o">&gt;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">div</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">div</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SoupElement(&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;)
 </pre></div>
 </div>
 </div>
@@ -959,7 +971,7 @@ While CSS does not have a direct counterpart, you can achieve similar results us
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">Anchor</span><span class="p">,</span> <span class="n">ClassSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">Anchor</span><span class="p">,</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -971,14 +983,16 @@ While CSS does not have a direct counterpart, you can achieve similar results us
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">div</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">Anchor</span> <span class="o">+</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">div</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">div</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p class=&quot;price&quot;&gt;Price: $30&lt;/p&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[SoupElement(&lt;p class=&quot;price&quot;&gt;Price: $30&lt;/p&gt;)]
 </pre></div>
 </div>
 </div>
@@ -989,7 +1003,11 @@ While CSS does not have a direct counterpart, you can achieve similar results us
 <p>Relative selectors in <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> are not affected by the <code class="docutils literal notranslate"><span class="pre">recursive</span></code> parameter. They have their own independent behavior determined by relationship between anchor and relative elements. Below, <code class="docutils literal notranslate"><span class="pre">RelativeDescendant</span></code> relationship takes precedence over <code class="docutils literal notranslate"><span class="pre">recursive</span></code> parameter.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">Anchor</span><span class="p">,</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        &lt;div&gt;</span>
 <span class="sd">            &lt;span&gt;&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;&lt;/span&gt;</span>
@@ -998,14 +1016,16 @@ While CSS does not have a direct counterpart, you can achieve similar results us
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">div</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">Anchor</span> <span class="o">&gt;&gt;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">div</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">div</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SoupElement(&lt;p class=&quot;price&quot;&gt;Price: $10&lt;/p&gt;)
 </pre></div>
 </div>
 </div>
@@ -1027,7 +1047,7 @@ According to <a class="reference external" href="https://developer.mozilla.org/e
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">HasSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">HasSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1045,31 +1065,24 @@ According to <a class="reference external" href="https://developer.mozilla.org/e
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">HasSelector</span><span class="p">(</span><span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;discount&quot;</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">element</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div class=&quot;book&quot;&gt;
- &lt;span class=&quot;title&quot;&gt;
-  Animal Farm
- &lt;/span&gt;
- &lt;span&gt;
-  &lt;p class=&quot;price discount&quot;&gt;
-   Price: $15
-  &lt;/p&gt;
- &lt;/span&gt;
- &lt;p class=&quot;price&quot;&gt;
-  Price: $20
- &lt;/p&gt;
+&lt;span class=&quot;title&quot;&gt;Animal Farm&lt;/span&gt;
+&lt;span&gt;
+&lt;p class=&quot;price discount&quot;&gt;Price: $15&lt;/p&gt;
+&lt;/span&gt;
+&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;
 &lt;/div&gt;
 
 &lt;span&gt;
- &lt;p class=&quot;price discount&quot;&gt;
-  Price: $15
- &lt;/p&gt;
+&lt;p class=&quot;price discount&quot;&gt;Price: $15&lt;/p&gt;
 &lt;/span&gt;
 </pre></div>
 </div>
@@ -1083,7 +1096,7 @@ According to <a class="reference external" href="https://developer.mozilla.org/e
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">Anchor</span><span class="p">,</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">HasSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">Anchor</span><span class="p">,</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">HasSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1094,14 +1107,15 @@ According to <a class="reference external" href="https://developer.mozilla.org/e
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">HasSelector</span><span class="p">(</span><span class="n">Anchor</span> <span class="o">+</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">))</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div class=&quot;section&quot;&gt;Brave New World&lt;/div&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SoupElement(&lt;div class=&quot;section&quot;&gt;Brave New World&lt;/div&gt;)
 </pre></div>
 </div>
 </div>
@@ -1114,7 +1128,7 @@ According to <a class="reference external" href="https://developer.mozilla.org/e
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">Anchor</span><span class="p">,</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">HasSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">Anchor</span><span class="p">,</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">HasSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1127,16 +1141,18 @@ According to <a class="reference external" href="https://developer.mozilla.org/e
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
-<span class="n">span</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)</span>
+<span class="n">span</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">HasSelector</span><span class="p">(</span><span class="n">Anchor</span> <span class="o">&lt;&lt;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;breaking&quot;</span><span class="p">))</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">span</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">span</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;span class=&quot;info&quot;&gt;Important!&lt;/span&gt;, &lt;span&gt;Actual Information&lt;/span&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[SoupElement(&lt;span class=&quot;info&quot;&gt;Important!&lt;/span&gt;),
+ SoupElement(&lt;span&gt;Actual Information&lt;/span&gt;)]
 </pre></div>
 </div>
 </div>
@@ -1165,7 +1181,7 @@ According to <a class="reference external" href="https://developer.mozilla.org/e
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">NthOfSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">NthOfSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1179,14 +1195,16 @@ According to <a class="reference external" href="https://developer.mozilla.org/e
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">NthOfSelector</span><span class="p">(</span><span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">),</span> <span class="n">nth</span><span class="o">=</span><span class="s2">&quot;2n&quot;</span><span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p class=&quot;price&quot;&gt;Price: $2&lt;/p&gt;, &lt;p class=&quot;price&quot;&gt;Price: €4&lt;/p&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[SoupElement(&lt;p class=&quot;price&quot;&gt;Price: $2&lt;/p&gt;),
+ SoupElement(&lt;p class=&quot;price&quot;&gt;Price: €4&lt;/p&gt;)]
 </pre></div>
 </div>
 </div>
@@ -1201,7 +1219,7 @@ According to <a class="reference external" href="https://developer.mozilla.org/e
 
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">NthLastOfSelector</span><span class="p">,</span> <span class="n">PatternSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">NthLastOfSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1215,19 +1233,20 @@ According to <a class="reference external" href="https://developer.mozilla.org/e
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">NthLastOfSelector</span><span class="p">(</span>
     <span class="n">PatternSelector</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^price&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)),</span>
     <span class="n">nth</span><span class="o">=</span><span class="s2">&quot;odd&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;p class=&quot;price discount&quot;&gt;Price: €1&lt;/p&gt;,
- &lt;p class=&quot;price&quot;&gt;Price: €3&lt;/p&gt;,
- &lt;p class=&quot;price&quot;&gt;Price: €5&lt;/p&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[SoupElement(&lt;p class=&quot;price discount&quot;&gt;Price: €1&lt;/p&gt;),
+ SoupElement(&lt;p class=&quot;price&quot;&gt;Price: €3&lt;/p&gt;),
+ SoupElement(&lt;p class=&quot;price&quot;&gt;Price: €5&lt;/p&gt;)]
 </pre></div>
 </div>
 </div>
@@ -1241,7 +1260,7 @@ If more than one element matches the specified selector, none will be selected.<
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">OnlyOfSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">OnlyOfSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1257,14 +1276,15 @@ If more than one element matches the specified selector, none will be selected.<
 <span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
     <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="n">selector</span> <span class="o">=</span> <span class="n">OnlyOfSelector</span><span class="p">(</span><span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">))</span>
-<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;p class=&quot;price&quot;&gt;Price: $30&lt;/p&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SoupElement(&lt;p class=&quot;price&quot;&gt;Price: $30&lt;/p&gt;)
 </pre></div>
 </div>
 </div>

@@ -1,0 +1,7 @@
+implementation.element
+=======================================
+
+.. automodule:: soupsavvy.implementation.element
+   :members:
+   :undoc-members:
+   :show-inheritance:

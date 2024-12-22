@@ -9,6 +9,7 @@ Subpackages
 
    soupsavvy.selectors.css
    soupsavvy.selectors.nth
+   soupsavvy.selectors.xpath
 
 Submodules
 ----------
@@ -22,7 +23,6 @@ Submodules
    soupsavvy.selectors.logical
    soupsavvy.selectors.namespace
    soupsavvy.selectors.relative
-   soupsavvy.selectors.xpath
 
 Content
 ---------------

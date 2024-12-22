@@ -24,7 +24,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="selectors.xpath" href="soupsavvy.selectors.xpath.html" />
+    <link rel="next" title="models" href="soupsavvy.models.html" />
     <link rel="prev" title="selectors.logical" href="soupsavvy.selectors.logical.html" /> 
 </head>
 
@@ -71,7 +71,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.relative.HasSelector"><code class="docutils literal notranslate"><span class="pre">HasSelector</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.xpath.html">selectors.xpath</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.html#module-soupsavvy.selectors">Content</a></li>
@@ -81,6 +80,7 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -145,12 +145,12 @@ They are used for selecting elements based on their relation to the anchor eleme
 <dt class="sig sig-object py" id="soupsavvy.selectors.relative.RelativeSelector">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RelativeSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/relative.html#RelativeSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.relative.RelativeSelector" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupSelector</span></code></a></p>
-<p>Base class for relative selectors, that are used to find tags relative
-to the tag that is being searched, which is considered an anchor.</p>
+<p>Base class for relative selectors, that are used to find elements relative
+to the element that is being searched, which is considered an anchor.</p>
 <p>CSS definition of relative selectors state, that it is a selector representing
 an element relative to one or more anchor elements preceded by a combinator.</p>
-<p>In this use case, the anchor element is the tag that is being searched, and
-the combinator is the logic of specific relative selector that is used.</p>
+<p>In this use case, the anchor element is the element that is being searched,
+and the combinator is the logic of specific relative selector that is used.</p>
 <section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">selector</span> <span class="o">=</span> <span class="n">Anchor</span> <span class="o">&gt;</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
@@ -180,7 +180,7 @@ as they have their own logic of searching the document.</p>
 <section id="parameters">
 <h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>selector<span class="classifier">SoupSelector</span></dt><dd><p>Selector that is used to find tags relative to the anchor tag.</p>
+<dt>selector<span class="classifier">SoupSelector</span></dt><dd><p>Selector that is used to find tags relative to the anchor element.</p>
 </dd>
 </dl>
 </section>
@@ -208,21 +208,21 @@ in this relative selector.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseRelativeSibling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/relative.html#BaseRelativeSibling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.relative.BaseRelativeSibling" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.selectors.relative.RelativeSelector" title="soupsavvy.selectors.relative.RelativeSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">RelativeSelector</span></code></a></p>
 <p>Base class with implementation for relative sibling selectors,
-searches for next sibling(s) of the anchor tag.
+searches for next sibling(s) of the anchor element.
 Child class needs to define:
 - ‘_limit’ - class attribute to specify how many next siblings to search for.
 - ‘_func’ - class attribute to specify which method to use for finding siblings.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.selectors.relative.BaseRelativeSibling.find_all">
-<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/relative.html#BaseRelativeSibling.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.relative.BaseRelativeSibling.find_all" title="Link to this definition"></a></dt>
-<dd><p>Finds all elements matching selector in provided <cite>Tag</cite>.</p>
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/relative.html#BaseRelativeSibling.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.relative.BaseRelativeSibling.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all elements matching selector in provided <cite>IElement</cite>.</p>
 <section id="id2">
 <h2>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to search within.</p>
+<dt>tag<span class="classifier">IElement</span></dt><dd><p>Any <cite>IElement</cite> object to search within.</p>
 </dd>
 <dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
-If set to <cite>False</cite>, only direct children of the tag will be searched.
+If set to <cite>False</cite>, only direct children of the element will be searched.
 By default <cite>True</cite>.</p>
 </dd>
 <dt>limit<span class="classifier">int, optional</span></dt><dd><p>Specifies maximum number of elements to return.
@@ -233,7 +233,8 @@ By default <cite>None</cite>, all found elements are returned.</p>
 <section id="id3">
 <h2>Returns<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>list[Tag]</dt><dd><p>List of <cite>bs4.Tag</cite> objects matching selector. If none found, the list is empty.</p>
+<dt>list[IElement]</dt><dd><p>List of <cite>IElement</cite> objects matching selector.
+If none found, the list is empty.</p>
 </dd>
 </dl>
 </section>
@@ -246,20 +247,20 @@ By default <cite>None</cite>, all found elements are returned.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseAncestorSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/relative.html#BaseAncestorSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.relative.BaseAncestorSelector" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.selectors.relative.RelativeSelector" title="soupsavvy.selectors.relative.RelativeSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">RelativeSelector</span></code></a></p>
 <p>Base class with implementation for ancestor selectors,
-searches for ancestor(s) of the anchor tag.
+searches for ancestor(s) of the anchor element.
 Child class needs to define:
 - ‘_limit’ - class attribute to specify how many ancestors to search for.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.selectors.relative.BaseAncestorSelector.find_all">
-<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/relative.html#BaseAncestorSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.relative.BaseAncestorSelector.find_all" title="Link to this definition"></a></dt>
-<dd><p>Finds all elements matching selector in provided <cite>Tag</cite>.</p>
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/relative.html#BaseAncestorSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.relative.BaseAncestorSelector.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all elements matching selector in provided <cite>IElement</cite>.</p>
 <section id="id4">
 <h2>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to search within.</p>
+<dt>tag<span class="classifier">IElement</span></dt><dd><p>Any <cite>IElement</cite> object to search within.</p>
 </dd>
 <dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
-If set to <cite>False</cite>, only direct children of the tag will be searched.
+If set to <cite>False</cite>, only direct children of the element will be searched.
 By default <cite>True</cite>.</p>
 </dd>
 <dt>limit<span class="classifier">int, optional</span></dt><dd><p>Specifies maximum number of elements to return.
@@ -270,7 +271,8 @@ By default <cite>None</cite>, all found elements are returned.</p>
 <section id="id5">
 <h2>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>list[Tag]</dt><dd><p>List of <cite>bs4.Tag</cite> objects matching selector. If none found, the list is empty.</p>
+<dt>list[IElement]</dt><dd><p>List of <cite>IElement</cite> objects matching selector.
+If none found, the list is empty.</p>
 </dd>
 </dl>
 </section>
@@ -312,15 +314,15 @@ selector with <cite>recursive=False</cite> and is implemented to support ‘HasS
 and <cite>ChildCombinator</cite> selectors.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.selectors.relative.RelativeChild.find_all">
-<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/relative.html#RelativeChild.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.relative.RelativeChild.find_all" title="Link to this definition"></a></dt>
-<dd><p>Finds all elements matching selector in provided <cite>Tag</cite>.</p>
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/relative.html#RelativeChild.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.relative.RelativeChild.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all elements matching selector in provided <cite>IElement</cite>.</p>
 <section id="id10">
 <h3>Parameters<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to search within.</p>
+<dt>tag<span class="classifier">IElement</span></dt><dd><p>Any <cite>IElement</cite> object to search within.</p>
 </dd>
 <dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
-If set to <cite>False</cite>, only direct children of the tag will be searched.
+If set to <cite>False</cite>, only direct children of the element will be searched.
 By default <cite>True</cite>.</p>
 </dd>
 <dt>limit<span class="classifier">int, optional</span></dt><dd><p>Specifies maximum number of elements to return.
@@ -331,7 +333,8 @@ By default <cite>None</cite>, all found elements are returned.</p>
 <section id="id11">
 <h3>Returns<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>list[Tag]</dt><dd><p>List of <cite>bs4.Tag</cite> objects matching selector. If none found, the list is empty.</p>
+<dt>list[IElement]</dt><dd><p>List of <cite>IElement</cite> objects matching selector.
+If none found, the list is empty.</p>
 </dd>
 </dl>
 </section>
@@ -375,15 +378,15 @@ selector with default <cite>recursive=True</cite> and is implemented to support
 ‘HasSelector’ and <cite>DescendantCombinator</cite> selectors.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.selectors.relative.RelativeDescendant.find_all">
-<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/relative.html#RelativeDescendant.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.relative.RelativeDescendant.find_all" title="Link to this definition"></a></dt>
-<dd><p>Finds all elements matching selector in provided <cite>Tag</cite>.</p>
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/relative.html#RelativeDescendant.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.relative.RelativeDescendant.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all elements matching selector in provided <cite>IElement</cite>.</p>
 <section id="id16">
 <h3>Parameters<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to search within.</p>
+<dt>tag<span class="classifier">IElement</span></dt><dd><p>Any <cite>IElement</cite> object to search within.</p>
 </dd>
 <dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
-If set to <cite>False</cite>, only direct children of the tag will be searched.
+If set to <cite>False</cite>, only direct children of the element will be searched.
 By default <cite>True</cite>.</p>
 </dd>
 <dt>limit<span class="classifier">int, optional</span></dt><dd><p>Specifies maximum number of elements to return.
@@ -394,7 +397,8 @@ By default <cite>None</cite>, all found elements are returned.</p>
 <section id="id17">
 <h3>Returns<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>list[Tag]</dt><dd><p>List of <cite>bs4.Tag</cite> objects matching selector. If none found, the list is empty.</p>
+<dt>list[IElement]</dt><dd><p>List of <cite>IElement</cite> objects matching selector.
+If none found, the list is empty.</p>
 </dd>
 </dl>
 </section>
@@ -743,15 +747,15 @@ At least one selector is required to create <cite>HasSelector</cite>.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.selectors.relative.HasSelector.find_all">
-<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/relative.html#HasSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.relative.HasSelector.find_all" title="Link to this definition"></a></dt>
-<dd><p>Finds all elements matching selector in provided <cite>Tag</cite>.</p>
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/relative.html#HasSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.relative.HasSelector.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all elements matching selector in provided <cite>IElement</cite>.</p>
 <section id="id53">
 <h3>Parameters<a class="headerlink" href="#id53" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to search within.</p>
+<dt>tag<span class="classifier">IElement</span></dt><dd><p>Any <cite>IElement</cite> object to search within.</p>
 </dd>
 <dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
-If set to <cite>False</cite>, only direct children of the tag will be searched.
+If set to <cite>False</cite>, only direct children of the element will be searched.
 By default <cite>True</cite>.</p>
 </dd>
 <dt>limit<span class="classifier">int, optional</span></dt><dd><p>Specifies maximum number of elements to return.
@@ -762,7 +766,8 @@ By default <cite>None</cite>, all found elements are returned.</p>
 <section id="id54">
 <h3>Returns<a class="headerlink" href="#id54" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>list[Tag]</dt><dd><p>List of <cite>bs4.Tag</cite> objects matching selector. If none found, the list is empty.</p>
+<dt>list[IElement]</dt><dd><p>List of <cite>IElement</cite> objects matching selector.
+If none found, the list is empty.</p>
 </dd>
 </dl>
 </section>
@@ -778,7 +783,7 @@ By default <cite>None</cite>, all found elements are returned.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="soupsavvy.selectors.logical.html" class="btn btn-neutral float-left" title="selectors.logical" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="soupsavvy.selectors.xpath.html" class="btn btn-neutral float-right" title="selectors.xpath" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="soupsavvy.models.html" class="btn btn-neutral float-right" title="models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

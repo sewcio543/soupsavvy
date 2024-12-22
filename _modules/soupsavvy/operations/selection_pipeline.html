@@ -51,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -104,11 +105,9 @@
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">Tag</span>
-
 <span class="kn">import</span> <span class="nn">soupsavvy.exceptions</span> <span class="k">as</span> <span class="nn">exc</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">BaseOperation</span><span class="p">,</span> <span class="n">check_operation</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">Comparable</span><span class="p">,</span> <span class="n">TagSearcher</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">Comparable</span><span class="p">,</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">TagSearcher</span>
 
 
 <div class="viewcode-block" id="SelectionPipeline">
@@ -116,7 +115,7 @@
 <span class="k">class</span> <span class="nc">SelectionPipeline</span><span class="p">(</span><span class="n">TagSearcher</span><span class="p">,</span> <span class="n">Comparable</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class for chaining searcher and operation together.</span>
-<span class="sd">    Uses searcher to find information in tag and operation to process the data.</span>
+<span class="sd">    Uses searcher to find information in element and operation to process the data.</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -139,7 +138,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        selector : TagSearcher</span>
-<span class="sd">            Selector used for finding target information in the tag.</span>
+<span class="sd">            Selector used for finding target information in the element.</span>
 <span class="sd">        operation : BaseOperation</span>
 <span class="sd">            Operation used for processing the data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -156,7 +155,7 @@
     <span class="k">def</span> <span class="nf">selector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TagSearcher</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns `TagSearcher` object of this pipeline used for finding target</span>
-<span class="sd">        information in the tag.</span>
+<span class="sd">        information in the element.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -181,7 +180,7 @@
 <a class="viewcode-back" href="../../../soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.find">[docs]</a>
     <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
@@ -190,24 +189,24 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tag : Tag</span>
-<span class="sd">            Any `bs4.Tag` object to process.</span>
+<span class="sd">        tag : IElement</span>
+<span class="sd">            Any `IElement` object to process.</span>
 <span class="sd">        strict : bool, optional</span>
-<span class="sd">            If True, enforces results to be found in the tag, by default False.</span>
+<span class="sd">            If True, enforces results to be found in the element, by default False.</span>
 <span class="sd">        recursive : bool, optional</span>
 <span class="sd">            Specifies if search should be recursive.</span>
-<span class="sd">            If set to `False`, only direct children of the tag will be searched.</span>
+<span class="sd">            If set to `False`, only direct children of the element will be searched.</span>
 <span class="sd">            By default `True`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        Any</span>
-<span class="sd">            Result of the operation applied to the found tag.</span>
+<span class="sd">            Result of the operation applied to the found element.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        TagNotFoundException</span>
-<span class="sd">            If strict parameter is set to `True` and none matching tag was found.</span>
+<span class="sd">            If strict parameter is set to `True` and none matching element was found.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="n">strict</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
@@ -218,7 +217,7 @@
 <a class="viewcode-back" href="../../../soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.find_all">[docs]</a>
     <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
@@ -227,11 +226,11 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tag : Tag</span>
-<span class="sd">            Any `bs4.Tag` object to process.</span>
+<span class="sd">        tag : IElement</span>
+<span class="sd">            Any `IElement` object to process.</span>
 <span class="sd">        recursive : bool, optional</span>
 <span class="sd">            Specifies if search should be recursive.</span>
-<span class="sd">            If set to `False`, only direct children of the tag will be searched.</span>
+<span class="sd">            If set to `False`, only direct children of the element will be searched.</span>
 <span class="sd">            By default `True`.</span>
 <span class="sd">        limit : int, optional</span>
 <span class="sd">            Specifies maximum number of results to return in a list.</span>

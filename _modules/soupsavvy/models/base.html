@@ -51,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -113,13 +114,17 @@
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">overload</span>
 
-<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">Tag</span>
 <span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Self</span>
 
 <span class="kn">import</span> <span class="nn">soupsavvy.exceptions</span> <span class="k">as</span> <span class="nn">exc</span>
 <span class="kn">import</span> <span class="nn">soupsavvy.models.constants</span> <span class="k">as</span> <span class="nn">c</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span><span class="p">,</span> <span class="n">check_selector</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">Comparable</span><span class="p">,</span> <span class="n">TagSearcher</span><span class="p">,</span> <span class="n">TagSearcherExceptions</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Comparable</span><span class="p">,</span>
+    <span class="n">IElement</span><span class="p">,</span>
+    <span class="n">TagSearcher</span><span class="p">,</span>
+    <span class="n">TagSearcherExceptions</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="c1"># Generic type variable for model migration</span>
 <span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
@@ -151,7 +156,7 @@
 <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decorator to mark a method as a post-processor for a model field.</span>
-<span class="sd">    The method will be called after the field is extracted from the tag</span>
+<span class="sd">    The method will be called after the field is extracted from the element</span>
 <span class="sd">    in model instance initialization.</span>
 
 <span class="sd">    Example</span>
@@ -223,14 +228,14 @@
 <div class="viewcode-block" id="Field.find_all">
 <a class="viewcode-back" href="../../../soupsavvy.models.base.html#soupsavvy.models.Field.find_all">[docs]</a>
     <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Field.find">
 <a class="viewcode-back" href="../../../soupsavvy.models.base.html#soupsavvy.models.Field.find">[docs]</a>
-    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="n">strict</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span></div>
 
 
@@ -485,7 +490,7 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">strict</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span> <span class="o">...</span>
@@ -494,7 +499,7 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">strict</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span> <span class="o">...</span>
@@ -503,7 +508,7 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span> <span class="o">...</span>
@@ -513,21 +518,21 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Searches for and returns an instance of the model within the provided tag.</span>
+<span class="sd">        Searches for and returns an instance of the model within the provided element.</span>
 <span class="sd">        By default, perform recursive, non-strict search for model fields</span>
 <span class="sd">        within the scope element.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tag : Tag</span>
-<span class="sd">            Any `bs4.Tag` object to search within for the model.</span>
+<span class="sd">        tag : IElement</span>
+<span class="sd">            Any `IElement` object to search within for the model.</span>
 <span class="sd">        strict : bool, optional</span>
-<span class="sd">            If True, enforces model scope to be found in the tag.</span>
+<span class="sd">            If True, enforces model scope to be found in the element.</span>
 <span class="sd">        recursive : bool, optional</span>
 <span class="sd">            Whether the search for the model scope element should be recursive.</span>
 <span class="sd">            Default is True.</span>
@@ -559,15 +564,15 @@
 
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">_find</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_find</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Internal method to find and initialize a model instance from a given tag.</span>
+<span class="sd">        Internal method to find and initialize a model instance from a given element.</span>
 <span class="sd">        By default, perform recursive, non-strict search for model fields.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tag : Tag</span>
-<span class="sd">            The tag within which to search for model fields (scope element).</span>
+<span class="sd">        tag : IElement</span>
+<span class="sd">            The `IElement` within which to search for model fields (scope element).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -588,15 +593,16 @@
                     <span class="n">strict</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">DEFAULT_STRICT</span><span class="p">,</span>
                     <span class="n">recursive</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">DEFAULT_RECURSIVE</span><span class="p">,</span>
                 <span class="p">)</span>
+            <span class="c1">#! TODO</span>
             <span class="k">except</span> <span class="n">exc</span><span class="o">.</span><span class="n">RequiredConstraintException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">FieldExtractionException</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;Field &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; is required and was not found in model &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;for element:</span><span class="se">\n</span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;for element:</span><span class="se">\n</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">except</span> <span class="n">TagSearcherExceptions</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">FieldExtractionException</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;Extracting field &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; failed in model &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;for element:</span><span class="se">\n</span><span class="si">{</span><span class="n">tag</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;for element:</span><span class="se">\n</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
             <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
@@ -608,19 +614,19 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Searches for and returns all instances of the model within the provided tag.</span>
+<span class="sd">        Searches for and returns all instances of the model within the provided element.</span>
 <span class="sd">        By default, perform recursive, non-strict search for model fields</span>
 <span class="sd">        just like in `find` method.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tag : Tag</span>
-<span class="sd">            Any `bs4.Tag` object to search within for the model.</span>
+<span class="sd">        tag : IElement</span>
+<span class="sd">            Any `IElement` object to search within for the model.</span>
 <span class="sd">        recursive : bool, optional</span>
 <span class="sd">            Whether the search for the model scope element should be recursive.</span>
 <span class="sd">            Default is True.</span>
@@ -631,7 +637,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        list[Self]</span>
-<span class="sd">            A list of model instances found within the tag.</span>
+<span class="sd">            A list of model instances found within the element.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">elements</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">scope</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">_find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">]</span></div>

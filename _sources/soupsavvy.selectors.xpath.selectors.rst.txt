@@ -1,0 +1,7 @@
+selectors.xpath.selectors
+==========================================
+
+.. automodule:: soupsavvy.selectors.xpath.selectors
+   :members:
+   :undoc-members:
+   :show-inheritance:

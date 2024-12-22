@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>soupsavvy.selectors.nth.nth_soup_selector &mdash; soupsavvy  documentation</title>
+  <title>soupsavvy.selectors.nth.selectors &mdash; soupsavvy  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -51,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -84,7 +85,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">soupsavvy.selectors.nth.nth_soup_selector</li>
+      <li class="breadcrumb-item active">soupsavvy.selectors.nth.selectors</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -93,7 +94,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for soupsavvy.selectors.nth.nth_soup_selector</h1><div class="highlight"><pre>
+  <h1>Source code for soupsavvy.selectors.nth.selectors</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Module provides `nth-of-type` selector implementations for `SoupSelector`.</span>
 <span class="sd">It allows you to search for the nth occurrence of an element,</span>
@@ -109,15 +110,14 @@
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">Tag</span>
-
 <span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">SoupSelector</span><span class="p">,</span> <span class="n">check_selector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">IElement</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.selectors.nth.nth_utils</span> <span class="kn">import</span> <span class="n">parse_nth</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.utils.selector_utils</span> <span class="kn">import</span> <span class="n">TagIterator</span><span class="p">,</span> <span class="n">TagResultSet</span>
 
 
 <div class="viewcode-block" id="BaseNthOfSelector">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.BaseNthOfSelector">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.selectors.html#soupsavvy.BaseNthOfSelector">[docs]</a>
 <span class="k">class</span> <span class="nc">BaseNthOfSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for nth-of-selector and nth-last-of-selector</span>
@@ -128,7 +128,7 @@
     <span class="n">_slice</span><span class="p">:</span> <span class="nb">slice</span>
 
 <div class="viewcode-block" id="BaseNthOfSelector.__init__">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.BaseNthOfSelector.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.selectors.html#soupsavvy.BaseNthOfSelector.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span> <span class="n">nth</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes nth selector instance.</span>
@@ -162,14 +162,14 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_selector</span>
 
 <div class="viewcode-block" id="BaseNthOfSelector.find_all">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.BaseNthOfSelector.find_all">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.selectors.html#soupsavvy.BaseNthOfSelector.find_all">[docs]</a>
     <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
-        <span class="c1"># if recursive is False, check only children of tag itself</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
+        <span class="c1"># if recursive is False, check only children of element itself</span>
         <span class="n">tag_iterator</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">TagIterator</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">,</span> <span class="n">include_self</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">recursive</span>
@@ -211,7 +211,7 @@
 
 
 <div class="viewcode-block" id="NthOfSelector">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.NthOfSelector">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.selectors.html#soupsavvy.NthOfSelector">[docs]</a>
 <span class="k">class</span> <span class="nc">NthOfSelector</span><span class="p">(</span><span class="n">BaseNthOfSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding nth-of elements in the soup among elements that match</span>
@@ -245,7 +245,7 @@
 
 
 <div class="viewcode-block" id="NthLastOfSelector">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.NthLastOfSelector">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.selectors.html#soupsavvy.NthLastOfSelector">[docs]</a>
 <span class="k">class</span> <span class="nc">NthLastOfSelector</span><span class="p">(</span><span class="n">BaseNthOfSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding nth-last-of elements in the soup among elements that match</span>
@@ -279,7 +279,7 @@
 
 
 <div class="viewcode-block" id="OnlyOfSelector">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.OnlyOfSelector">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.selectors.html#soupsavvy.OnlyOfSelector">[docs]</a>
 <span class="k">class</span> <span class="nc">OnlyOfSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding the only element,</span>
@@ -307,7 +307,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="OnlyOfSelector.__init__">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.OnlyOfSelector.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.selectors.html#soupsavvy.OnlyOfSelector.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes `OnlyOfSelector` instance.</span>
@@ -326,8 +326,13 @@
 
 
 <div class="viewcode-block" id="OnlyOfSelector.find_all">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.OnlyOfSelector.find_all">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.nth.selectors.html#soupsavvy.OnlyOfSelector.find_all">[docs]</a>
+    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
         <span class="n">tag_iterator</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">TagIterator</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">,</span> <span class="n">include_self</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">recursive</span>

@@ -66,7 +66,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.logical.html">selectors.logical</a></li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html">selectors.relative</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.xpath.html">selectors.xpath</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.html#module-soupsavvy.selectors">Content</a></li>
@@ -76,6 +75,7 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -185,15 +185,15 @@ Counterpart of css type selectors.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.selectors.general.TypeSelector.find_all">
-<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/general.html#TypeSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.general.TypeSelector.find_all" title="Link to this definition"></a></dt>
-<dd><p>Finds all elements matching selector in provided <cite>Tag</cite>.</p>
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/general.html#TypeSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.general.TypeSelector.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all elements matching selector in provided <cite>IElement</cite>.</p>
 <section id="id4">
 <h3>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to search within.</p>
+<dt>tag<span class="classifier">IElement</span></dt><dd><p>Any <cite>IElement</cite> object to search within.</p>
 </dd>
 <dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
-If set to <cite>False</cite>, only direct children of the tag will be searched.
+If set to <cite>False</cite>, only direct children of the element will be searched.
 By default <cite>True</cite>.</p>
 </dd>
 <dt>limit<span class="classifier">int, optional</span></dt><dd><p>Specifies maximum number of elements to return.
@@ -204,7 +204,8 @@ By default <cite>None</cite>, all found elements are returned.</p>
 <section id="returns">
 <h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>list[Tag]</dt><dd><p>List of <cite>bs4.Tag</cite> objects matching selector. If none found, the list is empty.</p>
+<dt>list[IElement]</dt><dd><p>List of <cite>IElement</cite> objects matching selector.
+If none found, the list is empty.</p>
 </dd>
 </dl>
 </section>
@@ -231,7 +232,7 @@ By default <cite>None</cite>, all found elements are returned.</p>
 <p>Selector for finding elements based on text content pattern.</p>
 <section id="id5">
 <h2>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">PatternSelector</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;Hello World&quot;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">PatternSelector</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>matches all element with exact text content “Hello World”.</p>
@@ -247,7 +248,7 @@ By default <cite>None</cite>, all found elements are returned.</p>
 </section>
 <section id="id7">
 <h2>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">PatternSelector</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[0-9]+&quot;</span><span class="p">))</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">PatternSelector</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[0-9]+&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>matches all elements with text content containing at least one digit.</p>
@@ -269,7 +270,7 @@ or <cite>Pattern</cite> for any more complex regular expressions.</p>
 </section>
 <section id="id10">
 <h2>Notes<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
-<p>Due to <cite>bs4</cite> implementation, element does not match the pattern if it has any children.
+<p>Element does not match the pattern if it has any children.
 Only leaf nodes can be returned by <cite>PatternSelector</cite> find methods.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="soupsavvy.selectors.general.PatternSelector.pattern">
@@ -278,15 +279,15 @@ Only leaf nodes can be returned by <cite>PatternSelector</cite> find methods.</p
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.selectors.general.PatternSelector.find_all">
-<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/general.html#PatternSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.general.PatternSelector.find_all" title="Link to this definition"></a></dt>
-<dd><p>Finds all elements matching selector in provided <cite>Tag</cite>.</p>
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/general.html#PatternSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.general.PatternSelector.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all elements matching selector in provided <cite>IElement</cite>.</p>
 <section id="id11">
 <h3>Parameters<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to search within.</p>
+<dt>tag<span class="classifier">IElement</span></dt><dd><p>Any <cite>IElement</cite> object to search within.</p>
 </dd>
 <dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
-If set to <cite>False</cite>, only direct children of the tag will be searched.
+If set to <cite>False</cite>, only direct children of the element will be searched.
 By default <cite>True</cite>.</p>
 </dd>
 <dt>limit<span class="classifier">int, optional</span></dt><dd><p>Specifies maximum number of elements to return.
@@ -297,7 +298,8 @@ By default <cite>None</cite>, all found elements are returned.</p>
 <section id="id12">
 <h3>Returns<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>list[Tag]</dt><dd><p>List of <cite>bs4.Tag</cite> objects matching selector. If none found, the list is empty.</p>
+<dt>list[IElement]</dt><dd><p>List of <cite>IElement</cite> objects matching selector.
+If none found, the list is empty.</p>
 </dd>
 </dl>
 </section>
@@ -315,7 +317,8 @@ By default <cite>None</cite>, all found elements are returned.</p>
 <dt class="sig sig-object py" id="soupsavvy.selectors.general.UniversalSelector">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">UniversalSelector</span></span><a class="reference internal" href="_modules/soupsavvy/selectors/general.html#UniversalSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.general.UniversalSelector" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupSelector</span></code></a>, <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SelectableCSS" title="soupsavvy.base.SelectableCSS"><code class="xref py py-class docutils literal notranslate"><span class="pre">SelectableCSS</span></code></a></p>
-<p>Selector representing a wildcard pattern, that matches all elements in the html page.</p>
+<p>Selector representing a wildcard pattern,
+that matches all elements in the html page.</p>
 <section id="id13">
 <h2>Example<a class="headerlink" href="#id13" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">UniversalSelector</span><span class="p">()</span>
@@ -343,15 +346,15 @@ By default <cite>None</cite>, all found elements are returned.</p>
 <p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors">https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors</a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.selectors.general.UniversalSelector.find_all">
-<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/general.html#UniversalSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.general.UniversalSelector.find_all" title="Link to this definition"></a></dt>
-<dd><p>Finds all elements matching selector in provided <cite>Tag</cite>.</p>
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/general.html#UniversalSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.general.UniversalSelector.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all elements matching selector in provided <cite>IElement</cite>.</p>
 <section id="id17">
 <h3>Parameters<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to search within.</p>
+<dt>tag<span class="classifier">IElement</span></dt><dd><p>Any <cite>IElement</cite> object to search within.</p>
 </dd>
 <dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
-If set to <cite>False</cite>, only direct children of the tag will be searched.
+If set to <cite>False</cite>, only direct children of the element will be searched.
 By default <cite>True</cite>.</p>
 </dd>
 <dt>limit<span class="classifier">int, optional</span></dt><dd><p>Specifies maximum number of elements to return.
@@ -362,7 +365,8 @@ By default <cite>None</cite>, all found elements are returned.</p>
 <section id="id18">
 <h3>Returns<a class="headerlink" href="#id18" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>list[Tag]</dt><dd><p>List of <cite>bs4.Tag</cite> objects matching selector. If none found, the list is empty.</p>
+<dt>list[IElement]</dt><dd><p>List of <cite>IElement</cite> objects matching selector.
+If none found, the list is empty.</p>
 </dd>
 </dl>
 </section>
@@ -407,15 +411,15 @@ Convenience component that can be used for compatibility.</p>
 <p>Can be used in user-defined model for scope if element itself is the scope.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.selectors.general.SelfSelector.find_all">
-<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/general.html#SelfSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.general.SelfSelector.find_all" title="Link to this definition"></a></dt>
-<dd><p>Finds all elements matching selector in provided <cite>Tag</cite>.</p>
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/general.html#SelfSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.general.SelfSelector.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all elements matching selector in provided <cite>IElement</cite>.</p>
 <section id="id21">
 <h3>Parameters<a class="headerlink" href="#id21" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to search within.</p>
+<dt>tag<span class="classifier">IElement</span></dt><dd><p>Any <cite>IElement</cite> object to search within.</p>
 </dd>
 <dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
-If set to <cite>False</cite>, only direct children of the tag will be searched.
+If set to <cite>False</cite>, only direct children of the element will be searched.
 By default <cite>True</cite>.</p>
 </dd>
 <dt>limit<span class="classifier">int, optional</span></dt><dd><p>Specifies maximum number of elements to return.
@@ -426,7 +430,8 @@ By default <cite>None</cite>, all found elements are returned.</p>
 <section id="id22">
 <h3>Returns<a class="headerlink" href="#id22" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>list[Tag]</dt><dd><p>List of <cite>bs4.Tag</cite> objects matching selector. If none found, the list is empty.</p>
+<dt>list[IElement]</dt><dd><p>List of <cite>IElement</cite> objects matching selector.
+If none found, the list is empty.</p>
 </dd>
 </dl>
 </section>
@@ -437,15 +442,15 @@ By default <cite>None</cite>, all found elements are returned.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.selectors.general.ExpressionSelector">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ExpressionSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/general.html#ExpressionSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.general.ExpressionSelector" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ExpressionSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/general.html#ExpressionSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.general.ExpressionSelector" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupSelector</span></code></a></p>
 <p>Selector that matches elements based on a user-defined function (predicate),
-that is used as filter for <cite>bs4</cite> object.</p>
+that is used as filter for element object.</p>
 <p>Applies predicate to each element and returns those that satisfy the condition.</p>
 <section id="id23">
 <h2>Parameters<a class="headerlink" href="#id23" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>f<span class="classifier">Callable[[Tag], bool]</span></dt><dd><p>A user-defined function (predicate) that determines whether
+<dt>f<span class="classifier">Callable[[IElement], bool]</span></dt><dd><p>A user-defined function (predicate) that determines whether
 the element should be selected.</p>
 </dd>
 </dl>
@@ -456,27 +461,36 @@ the element should be selected.</p>
 <span class="gp">... </span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>To perform operations on underlying node, use <cite>IElement.get()</cite> method
+or <cite>IElement.node</cite> attribute.</p>
 </section>
 <section id="id24">
-<h2>Notes<a class="headerlink" href="#id24" title="Link to this heading"></a></h2>
+<h2>Example<a class="headerlink" href="#id24" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">selector</span> <span class="o">=</span> <span class="n">ExpressionSelector</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;widget&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>For <cite>SoupElement</cite> object, that wraps <cite>bs4.Tag</cite>.</p>
+</section>
+<section id="id25">
+<h2>Notes<a class="headerlink" href="#id25" title="Link to this heading"></a></h2>
 <p>Any exceptions should be handled inside provided function.
 If raised, it will be propagated to the caller.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="soupsavvy.selectors.general.ExpressionSelector.f">
-<span class="sig-name descname"><span class="pre">f</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.selectors.general.ExpressionSelector.f" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">f</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.selectors.general.ExpressionSelector.f" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.selectors.general.ExpressionSelector.find_all">
-<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/general.html#ExpressionSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.general.ExpressionSelector.find_all" title="Link to this definition"></a></dt>
-<dd><p>Finds all elements matching selector in provided <cite>Tag</cite>.</p>
-<section id="id25">
-<h3>Parameters<a class="headerlink" href="#id25" title="Link to this heading"></a></h3>
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/general.html#ExpressionSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.general.ExpressionSelector.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all elements matching selector in provided <cite>IElement</cite>.</p>
+<section id="id26">
+<h3>Parameters<a class="headerlink" href="#id26" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to search within.</p>
+<dt>tag<span class="classifier">IElement</span></dt><dd><p>Any <cite>IElement</cite> object to search within.</p>
 </dd>
 <dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
-If set to <cite>False</cite>, only direct children of the tag will be searched.
+If set to <cite>False</cite>, only direct children of the element will be searched.
 By default <cite>True</cite>.</p>
 </dd>
 <dt>limit<span class="classifier">int, optional</span></dt><dd><p>Specifies maximum number of elements to return.
@@ -484,10 +498,11 @@ By default <cite>None</cite>, all found elements are returned.</p>
 </dd>
 </dl>
 </section>
-<section id="id26">
-<h3>Returns<a class="headerlink" href="#id26" title="Link to this heading"></a></h3>
+<section id="id27">
+<h3>Returns<a class="headerlink" href="#id27" title="Link to this heading"></a></h3>
 <dl class="simple">
-<dt>list[Tag]</dt><dd><p>List of <cite>bs4.Tag</cite> objects matching selector. If none found, the list is empty.</p>
+<dt>list[IElement]</dt><dd><p>List of <cite>IElement</cite> objects matching selector.
+If none found, the list is empty.</p>
 </dd>
 </dl>
 </section>
@@ -495,7 +510,7 @@ By default <cite>None</cite>, all found elements are returned.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.selectors.general.ExpressionSelector.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#soupsavvy.selectors.general.ExpressionSelector.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#soupsavvy.selectors.general.ExpressionSelector.__init__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>

@@ -1,0 +1,7 @@
+implementation.selenium
+========================================
+
+.. automodule:: soupsavvy.implementation.selenium
+   :members:
+   :undoc-members:
+   :show-inheritance:

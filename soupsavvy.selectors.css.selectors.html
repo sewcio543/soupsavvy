@@ -25,7 +25,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="selectors.nth" href="soupsavvy.selectors.nth.html" />
-    <link rel="prev" title="selectors.css" href="soupsavvy.selectors.css.html" /> 
+    <link rel="prev" title="selectors.css.api" href="soupsavvy.selectors.css.api.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -57,6 +57,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.nth.html">selectors.nth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.xpath.html">selectors.xpath</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.html#submodules">Submodules</a></li>
@@ -67,6 +68,7 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -113,7 +115,7 @@
              
   <section id="module-soupsavvy.selectors.css.selectors">
 <span id="selectors-css-selectors"></span><h1>selectors.css.selectors<a class="headerlink" href="#module-soupsavvy.selectors.css.selectors" title="Link to this heading"></a></h1>
-<p>Module with classes for tag selection based on CSS selectors.</p>
+<p>Module with classes for element selection based on CSS selectors.</p>
 <p>Contains implementation of basic CSS pseudo-classes like
 <cite>:only-child</cite>, <cite>:empty</cite>, <cite>:nth-child()</cite>.</p>
 <p>They can be used in combination with other <cite>SoupSelector</cite> objects
@@ -164,15 +166,15 @@ in combination with other <cite>SoupSelector</cite> objects.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="soupsavvy.selectors.css.selectors.CSSSoupSelector.find_all">
-<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/css/selectors.html#CSSSoupSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.css.selectors.CSSSoupSelector.find_all" title="Link to this definition"></a></dt>
-<dd><p>Finds all elements matching selector in provided <cite>Tag</cite>.</p>
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/css/selectors.html#CSSSoupSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.css.selectors.CSSSoupSelector.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all elements matching selector in provided <cite>IElement</cite>.</p>
 <section id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to search within.</p>
+<dt>tag<span class="classifier">IElement</span></dt><dd><p>Any <cite>IElement</cite> object to search within.</p>
 </dd>
 <dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
-If set to <cite>False</cite>, only direct children of the tag will be searched.
+If set to <cite>False</cite>, only direct children of the element will be searched.
 By default <cite>True</cite>.</p>
 </dd>
 <dt>limit<span class="classifier">int, optional</span></dt><dd><p>Specifies maximum number of elements to return.
@@ -183,7 +185,8 @@ By default <cite>None</cite>, all found elements are returned.</p>
 <section id="returns">
 <h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
 <dl class="simple">
-<dt>list[Tag]</dt><dd><p>List of <cite>bs4.Tag</cite> objects matching selector. If none found, the list is empty.</p>
+<dt>list[IElement]</dt><dd><p>List of <cite>IElement</cite> objects matching selector.
+If none found, the list is empty.</p>
 </dd>
 </dl>
 </section>
@@ -423,8 +426,8 @@ Counterpart of the CSS selector <cite>:first-of-type</cite> pseudo-class.</p>
 </section>
 <section id="id14">
 <h2>Notes<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
-<p>For this selector the first tag of any type is selected, which in
-case of finding single tag is equivalent to <cite>FirstChild</cite> results.</p>
+<p>For this selector the first element of any type is selected, which in
+case of finding single element is equivalent to <cite>FirstChild</cite> results.</p>
 <p>For more information on the formula, see:</p>
 <p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:first-of-type">https://developer.mozilla.org/en-US/docs/Web/CSS/:first-of-type</a></p>
 <dl class="py attribute">
@@ -456,8 +459,8 @@ Counterpart of the CSS selector <cite>:last-of-type</cite> pseudo-class.</p>
 </section>
 <section id="id16">
 <h2>Notes<a class="headerlink" href="#id16" title="Link to this heading"></a></h2>
-<p>For this selector the last tag of any type is selected, which in
-case of finding single tag is the equivalent to <cite>LastChild</cite> results.</p>
+<p>For this selector the last element of any type is selected, which in
+case of finding single element is the equivalent to <cite>LastChild</cite> results.</p>
 <p>For more information on the formula, see:</p>
 <p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:last-of-type">https://developer.mozilla.org/en-US/docs/Web/CSS/:last-of-type</a></p>
 <dl class="py attribute">
@@ -586,8 +589,8 @@ to be used with other <cite>soupsavvy</cite> components.</p>
 </section>
 <section id="id25">
 <h2>Notes<a class="headerlink" href="#id25" title="Link to this heading"></a></h2>
-<p><cite>CSS</cite> component extends <cite>bs4.Tag.select</cite> implementation
-by adding non recursive search option.</p>
+<p>Implemented selectors may vary between implementations,
+as each of them uses specific compatible libraries for css selection.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="soupsavvy.selectors.css.selectors.CSS.SELECTOR">
 <span class="sig-name descname"><span class="pre">SELECTOR</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'{}'</span></em><a class="headerlink" href="#soupsavvy.selectors.css.selectors.CSS.SELECTOR" title="Link to this definition"></a></dt>
@@ -615,7 +618,7 @@ by adding non recursive search option.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="soupsavvy.selectors.css.html" class="btn btn-neutral float-left" title="selectors.css" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soupsavvy.selectors.css.api.html" class="btn btn-neutral float-left" title="selectors.css.api" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="soupsavvy.selectors.nth.html" class="btn btn-neutral float-right" title="selectors.nth" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

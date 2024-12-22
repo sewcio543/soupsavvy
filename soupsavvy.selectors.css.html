@@ -24,7 +24,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="selectors.css.selectors" href="soupsavvy.selectors.css.selectors.html" />
+    <link rel="next" title="selectors.css.api" href="soupsavvy.selectors.css.api.html" />
     <link rel="prev" title="selectors" href="soupsavvy.selectors.html" /> 
 </head>
 
@@ -57,6 +57,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.nth.html">selectors.nth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.xpath.html">selectors.xpath</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.html#submodules">Submodules</a></li>
@@ -67,6 +68,7 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -116,6 +118,23 @@
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.selectors.css.api.html">selectors.css.api</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SoupsieveApi"><code class="docutils literal notranslate"><span class="pre">SoupsieveApi</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SoupsieveApi.__init__"><code class="docutils literal notranslate"><span class="pre">SoupsieveApi.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SoupsieveApi.select"><code class="docutils literal notranslate"><span class="pre">SoupsieveApi.select()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.CSSSelectApi"><code class="docutils literal notranslate"><span class="pre">CSSSelectApi</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.CSSSelectApi.__init__"><code class="docutils literal notranslate"><span class="pre">CSSSelectApi.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.CSSSelectApi.select"><code class="docutils literal notranslate"><span class="pre">CSSSelectApi.select()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SeleniumCSSApi"><code class="docutils literal notranslate"><span class="pre">SeleniumCSSApi</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SeleniumCSSApi.select"><code class="docutils literal notranslate"><span class="pre">SeleniumCSSApi.select()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.selectors.css.selectors.html">selectors.css.selectors</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.css.selectors.html#classes">Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.CSSSoupSelector"><code class="docutils literal notranslate"><span class="pre">CSSSoupSelector</span></code></a><ul>
@@ -236,8 +255,8 @@ to be used with other <cite>soupsavvy</cite> components.</p>
 </section>
 <section id="notes">
 <h3>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h3>
-<p><cite>CSS</cite> component extends <cite>bs4.Tag.select</cite> implementation
-by adding non recursive search option.</p>
+<p>Implemented selectors may vary between implementations,
+as each of them uses specific compatible libraries for css selection.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="soupsavvy.selectors.css.CSS.SELECTOR">
 <span class="sig-name descname"><span class="pre">SELECTOR</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'{}'</span></em><a class="headerlink" href="#soupsavvy.selectors.css.CSS.SELECTOR" title="Link to this definition"></a></dt>
@@ -346,8 +365,8 @@ Counterpart of the CSS selector <cite>:first-of-type</cite> pseudo-class.</p>
 </section>
 <section id="id8">
 <h3>Notes<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
-<p>For this selector the first tag of any type is selected, which in
-case of finding single tag is equivalent to <cite>FirstChild</cite> results.</p>
+<p>For this selector the first element of any type is selected, which in
+case of finding single element is equivalent to <cite>FirstChild</cite> results.</p>
 <p>For more information on the formula, see:</p>
 <p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:first-of-type">https://developer.mozilla.org/en-US/docs/Web/CSS/:first-of-type</a></p>
 <dl class="py attribute">
@@ -411,8 +430,8 @@ Counterpart of the CSS selector <cite>:last-of-type</cite> pseudo-class.</p>
 </section>
 <section id="id12">
 <h3>Notes<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
-<p>For this selector the last tag of any type is selected, which in
-case of finding single tag is the equivalent to <cite>LastChild</cite> results.</p>
+<p>For this selector the last element of any type is selected, which in
+case of finding single element is the equivalent to <cite>LastChild</cite> results.</p>
 <p>For more information on the formula, see:</p>
 <p><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/:last-of-type">https://developer.mozilla.org/en-US/docs/Web/CSS/:last-of-type</a></p>
 <dl class="py attribute">
@@ -609,7 +628,7 @@ Counterpart of the CSS selector <cite>:only-of-type</cite> pseudo-class.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="soupsavvy.selectors.html" class="btn btn-neutral float-left" title="selectors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="soupsavvy.selectors.css.selectors.html" class="btn btn-neutral float-right" title="selectors.css.selectors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="soupsavvy.selectors.css.api.html" class="btn btn-neutral float-right" title="selectors.css.api" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

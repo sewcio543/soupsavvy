@@ -1,0 +1,21 @@
+implementation
+================================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.implementation.bs4
+   soupsavvy.implementation.element
+   soupsavvy.implementation.lxml
+   soupsavvy.implementation.selenium
+
+Content
+---------------
+
+.. automodule:: soupsavvy.implementation
+   :members:
+   :undoc-members:
+   :show-inheritance:

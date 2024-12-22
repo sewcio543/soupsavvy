@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   soupsavvy.implementation
    soupsavvy.models
    soupsavvy.operations
    soupsavvy.selectors

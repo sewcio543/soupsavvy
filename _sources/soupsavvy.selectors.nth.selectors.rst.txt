@@ -1,0 +1,7 @@
+selectors.nth.selectors
+========================================
+
+.. automodule:: soupsavvy.selectors.nth.selectors
+   :members:
+   :undoc-members:
+   :show-inheritance:

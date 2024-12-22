@@ -1,0 +1,7 @@
+implementation.bs4
+===================================
+
+.. automodule:: soupsavvy.implementation.bs4
+   :members:
+   :undoc-members:
+   :show-inheritance:

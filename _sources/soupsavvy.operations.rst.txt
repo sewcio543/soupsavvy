@@ -8,9 +8,9 @@ Submodules
    :maxdepth: 4
 
    soupsavvy.operations.conditional
+   soupsavvy.operations.element
    soupsavvy.operations.general
    soupsavvy.operations.selection_pipeline
-   soupsavvy.operations.soup
    soupsavvy.operations.wrappers
 
 Content

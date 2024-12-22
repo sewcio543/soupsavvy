@@ -51,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -134,7 +135,7 @@
 </li>
         <li><a href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.__init__">(BaseModel method)</a>, <a href="soupsavvy.models.html#soupsavvy.models.BaseModel.__init__">[1]</a>
 </li>
-        <li><a href="soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.nth_soup_selector.BaseNthOfSelector.__init__">(BaseNthOfSelector method)</a>
+        <li><a href="soupsavvy.selectors.nth.selectors.html#soupsavvy.selectors.nth.selectors.BaseNthOfSelector.__init__">(BaseNthOfSelector method)</a>
 </li>
         <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.BreakOperationException.__init__">(BreakOperationException method)</a>
 </li>
@@ -144,11 +145,15 @@
 </li>
         <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.ConstantTemplate.__init__">(ConstantTemplate method)</a>, <a href="soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.generators.templates.templates.ConstantTemplate.__init__">[1]</a>
 </li>
-        <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.CSS.__init__">(CSS method)</a>, <a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.CSS.__init__">[1]</a>
+        <li><a href="soupsavvy.html#soupsavvy.CSS.__init__">(CSS method)</a>, <a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.CSS.__init__">[1]</a>, <a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.CSS.__init__">[2]</a>
+</li>
+        <li><a href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.CSSSelectApi.__init__">(CSSSelectApi method)</a>
 </li>
         <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.CSSSoupSelector.__init__">(CSSSoupSelector method)</a>
 </li>
         <li><a href="soupsavvy.models.html#soupsavvy.models.Default.__init__">(Default method)</a>, <a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Default.__init__">[1]</a>
+</li>
+        <li><a href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.ElementWrapper.__init__">(ElementWrapper method)</a>
 </li>
         <li><a href="soupsavvy.html#soupsavvy.ExpressionSelector.__init__">(ExpressionSelector method)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.ExpressionSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.ExpressionSelector.__init__">[2]</a>
 </li>
@@ -158,7 +163,11 @@
 </li>
         <li><a href="soupsavvy.html#soupsavvy.HasSelector.__init__">(HasSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.HasSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.HasSelector.__init__">[2]</a>
 </li>
+        <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.__init__">(IElement method)</a>
+</li>
         <li><a href="soupsavvy.operations.conditional.html#soupsavvy.operations.conditional.IfElse.__init__">(IfElse method)</a>, <a href="soupsavvy.operations.html#soupsavvy.operations.IfElse.__init__">[1]</a>
+</li>
+        <li><a href="soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.LXMLXpathApi.__init__">(LXMLXpathApi method)</a>
 </li>
         <li><a href="soupsavvy.models.base.html#soupsavvy.models.base.MigrationSchema.__init__">(MigrationSchema method)</a>, <a href="soupsavvy.models.html#soupsavvy.models.MigrationSchema.__init__">[1]</a>
 </li>
@@ -168,7 +177,7 @@
 </li>
         <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.NthBaseSelector.__init__">(NthBaseSelector method)</a>
 </li>
-        <li><a href="soupsavvy.html#soupsavvy.OnlyOfSelector.__init__">(OnlyOfSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.OnlyOfSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.nth.html#soupsavvy.selectors.nth.OnlyOfSelector.__init__">[2]</a>, <a href="soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.nth_soup_selector.OnlyOfSelector.__init__">[3]</a>
+        <li><a href="soupsavvy.html#soupsavvy.OnlyOfSelector.__init__">(OnlyOfSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.OnlyOfSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.nth.html#soupsavvy.selectors.nth.OnlyOfSelector.__init__">[2]</a>, <a href="soupsavvy.selectors.nth.selectors.html#soupsavvy.selectors.nth.selectors.OnlyOfSelector.__init__">[3]</a>
 </li>
         <li><a href="soupsavvy.operations.general.html#soupsavvy.operations.general.Operation.__init__">(Operation method)</a>, <a href="soupsavvy.operations.html#soupsavvy.operations.Operation.__init__">[1]</a>
 </li>
@@ -182,9 +191,13 @@
 </li>
         <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.RelativeSelector.__init__">(RelativeSelector method)</a>
 </li>
+        <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.SelectionApi.__init__">(SelectionApi method)</a>
+</li>
         <li><a href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline.__init__">(SelectionPipeline method)</a>
 </li>
         <li><a href="soupsavvy.html#soupsavvy.SelectorList.__init__">(SelectorList method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.SelectorList.__init__">[1]</a>, <a href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.SelectorList.__init__">[2]</a>
+</li>
+        <li><a href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SoupsieveApi.__init__">(SoupsieveApi method)</a>
 </li>
         <li><a href="soupsavvy.selectors.attributes.html#soupsavvy.selectors.attributes.SpecificAttributeSelector.__init__">(SpecificAttributeSelector method)</a>
 </li>
@@ -196,17 +209,13 @@
 </li>
         <li><a href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagResultSet.__init__">(TagResultSet method)</a>
 </li>
-        <li><a href="soupsavvy.operations.html#soupsavvy.operations.Text.__init__">(Text method)</a>, <a href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Text.__init__">[1]</a>
-</li>
         <li><a href="soupsavvy.html#soupsavvy.TypeSelector.__init__">(TypeSelector method)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.TypeSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.TypeSelector.__init__">[2]</a>
-</li>
-        <li><a href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.UniqueTag.__init__">(UniqueTag method)</a>
 </li>
         <li><a href="soupsavvy.html#soupsavvy.UniversalSelector.__init__">(UniversalSelector method)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.UniversalSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.UniversalSelector.__init__">[2]</a>
 </li>
         <li><a href="soupsavvy.html#soupsavvy.XORSelector.__init__">(XORSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.XORSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.XORSelector.__init__">[2]</a>
 </li>
-        <li><a href="soupsavvy.selectors.xpath.html#soupsavvy.selectors.xpath.XPathSelector.__init__">(XPathSelector method)</a>
+        <li><a href="soupsavvy.html#soupsavvy.XPathSelector.__init__">(XPathSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.XPathSelector.__init__">[1]</a>, <a href="soupsavvy.selectors.xpath.selectors.html#soupsavvy.selectors.xpath.selectors.XPathSelector.__init__">[2]</a>
 </li>
       </ul></li>
   </ul></td>
@@ -299,7 +308,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.nth_soup_selector.BaseNthOfSelector">BaseNthOfSelector (class in soupsavvy.selectors.nth.nth_soup_selector)</a>
+      <li><a href="soupsavvy.selectors.nth.selectors.html#soupsavvy.selectors.nth.selectors.BaseNthOfSelector">BaseNthOfSelector (class in soupsavvy.selectors.nth.selectors)</a>
 </li>
       <li><a href="soupsavvy.base.html#soupsavvy.base.BaseOperation">BaseOperation (class in soupsavvy.base)</a>
 </li>
@@ -337,6 +346,16 @@
         <li><a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.ChildCombinator">(class in soupsavvy.selectors.combinators)</a>
 </li>
       </ul></li>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.children">children (IElement property)</a>
+
+      <ul>
+        <li><a href="soupsavvy.implementation.lxml.html#soupsavvy.implementation.lxml.LXMLElement.children">(LXMLElement property)</a>
+</li>
+        <li><a href="soupsavvy.implementation.selenium.html#soupsavvy.implementation.selenium.SeleniumElement.children">(SeleniumElement property)</a>
+</li>
+        <li><a href="soupsavvy.implementation.bs4.html#soupsavvy.implementation.bs4.SoupElement.children">(SoupElement property)</a>
+</li>
+      </ul></li>
       <li><a href="soupsavvy.testing.html#soupsavvy.testing.ChoiceTemplate">ChoiceTemplate (class in soupsavvy.testing)</a>
 
       <ul>
@@ -361,10 +380,10 @@
       </ul></li>
       <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.Comparable">Comparable (class in soupsavvy.interfaces)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="soupsavvy.models.base.html#soupsavvy.models.base.Field.compare">compare (Field attribute)</a>, <a href="soupsavvy.models.html#soupsavvy.models.Field.compare">[1]</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="soupsavvy.base.html#soupsavvy.base.CompositeSoupSelector">CompositeSoupSelector (class in soupsavvy.base)</a>
 </li>
       <li><a href="soupsavvy.testing.generators.templates.html#soupsavvy.testing.generators.templates.ConstantTemplate">ConstantTemplate (class in soupsavvy.testing.generators.templates)</a>
@@ -381,9 +400,11 @@
       </ul></li>
       <li><a href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.copy">copy() (BaseModel method)</a>, <a href="soupsavvy.models.html#soupsavvy.models.BaseModel.copy">[1]</a>
 </li>
-      <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.CSS">CSS (class in soupsavvy.selectors.css)</a>
+      <li><a href="soupsavvy.html#soupsavvy.CSS">CSS (class in soupsavvy)</a>
 
       <ul>
+        <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.CSS">(class in soupsavvy.selectors.css)</a>
+</li>
         <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.CSS">(class in soupsavvy.selectors.css.selectors)</a>
 </li>
       </ul></li>
@@ -397,6 +418,18 @@
         <li><a href="soupsavvy.html#soupsavvy.UniversalSelector.css">(UniversalSelector property)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.UniversalSelector.css">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.UniversalSelector.css">[2]</a>
 </li>
       </ul></li>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.css">css() (IElement method)</a>
+
+      <ul>
+        <li><a href="soupsavvy.implementation.lxml.html#soupsavvy.implementation.lxml.LXMLElement.css">(LXMLElement method)</a>
+</li>
+        <li><a href="soupsavvy.implementation.selenium.html#soupsavvy.implementation.selenium.SeleniumElement.css">(SeleniumElement method)</a>
+</li>
+        <li><a href="soupsavvy.implementation.bs4.html#soupsavvy.implementation.bs4.SoupElement.css">(SoupElement static method)</a>
+</li>
+      </ul></li>
+      <li><a href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.CSSSelectApi">CSSSelectApi (class in soupsavvy.selectors.css.api)</a>
+</li>
       <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.CSSSoupSelector">CSSSoupSelector (class in soupsavvy.selectors.css.selectors)</a>
 </li>
   </ul></td>
@@ -411,8 +444,6 @@
         <li><a href="soupsavvy.models.wrappers.html#soupsavvy.models.wrappers.Default">(class in soupsavvy.models.wrappers)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="soupsavvy.html#soupsavvy.DescendantCombinator">DescendantCombinator (class in soupsavvy)</a>
 
       <ul>
@@ -422,11 +453,27 @@
 </li>
       </ul></li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.descendants">descendants (IElement property)</a>
+
+      <ul>
+        <li><a href="soupsavvy.implementation.lxml.html#soupsavvy.implementation.lxml.LXMLElement.descendants">(LXMLElement property)</a>
+</li>
+        <li><a href="soupsavvy.implementation.selenium.html#soupsavvy.implementation.selenium.SeleniumElement.descendants">(SeleniumElement property)</a>
+</li>
+        <li><a href="soupsavvy.implementation.bs4.html#soupsavvy.implementation.bs4.SoupElement.descendants">(SoupElement property)</a>
+</li>
+      </ul></li>
+  </ul></td>
 </tr></table>
 
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.ElementWrapper.element">element (ElementWrapper attribute)</a>
+</li>
+      <li><a href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.ElementWrapper">ElementWrapper (class in soupsavvy.utils.selector_utils)</a>
+</li>
       <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.Empty">Empty (class in soupsavvy.selectors.css)</a>
 
       <ul>
@@ -516,7 +563,7 @@
 </li>
         <li><a href="soupsavvy.models.base.html#soupsavvy.models.base.BaseModel.find_all">(BaseModel class method)</a>, <a href="soupsavvy.models.html#soupsavvy.models.BaseModel.find_all">[1]</a>
 </li>
-        <li><a href="soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.nth_soup_selector.BaseNthOfSelector.find_all">(BaseNthOfSelector method)</a>
+        <li><a href="soupsavvy.selectors.nth.selectors.html#soupsavvy.selectors.nth.selectors.BaseNthOfSelector.find_all">(BaseNthOfSelector method)</a>
 </li>
         <li><a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.BaseRelativeSibling.find_all">(BaseRelativeSibling method)</a>
 </li>
@@ -530,13 +577,17 @@
 </li>
         <li><a href="soupsavvy.html#soupsavvy.HasSelector.find_all">(HasSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.HasSelector.find_all">[1]</a>, <a href="soupsavvy.selectors.relative.html#soupsavvy.selectors.relative.HasSelector.find_all">[2]</a>
 </li>
+        <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.find_all">(IElement method)</a>
+</li>
+        <li><a href="soupsavvy.implementation.lxml.html#soupsavvy.implementation.lxml.LXMLElement.find_all">(LXMLElement method)</a>
+</li>
         <li><a href="soupsavvy.html#soupsavvy.NotSelector.find_all">(NotSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.NotSelector.find_all">[1]</a>, <a href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.NotSelector.find_all">[2]</a>
 </li>
-        <li><a href="soupsavvy.html#soupsavvy.OnlyOfSelector.find_all">(OnlyOfSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.OnlyOfSelector.find_all">[1]</a>, <a href="soupsavvy.selectors.nth.html#soupsavvy.selectors.nth.OnlyOfSelector.find_all">[2]</a>, <a href="soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.nth_soup_selector.OnlyOfSelector.find_all">[3]</a>
+        <li><a href="soupsavvy.html#soupsavvy.OnlyOfSelector.find_all">(OnlyOfSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.OnlyOfSelector.find_all">[1]</a>, <a href="soupsavvy.selectors.nth.html#soupsavvy.selectors.nth.OnlyOfSelector.find_all">[2]</a>, <a href="soupsavvy.selectors.nth.selectors.html#soupsavvy.selectors.nth.selectors.OnlyOfSelector.find_all">[3]</a>
 </li>
         <li><a href="soupsavvy.base.html#soupsavvy.base.OperationSearcherMixin.find_all">(OperationSearcherMixin method)</a>
 </li>
-        <li><a href="soupsavvy.operations.html#soupsavvy.operations.Parent.find_all">(Parent method)</a>, <a href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Parent.find_all">[1]</a>
+        <li><a href="soupsavvy.operations.element.html#soupsavvy.operations.element.Parent.find_all">(Parent method)</a>, <a href="soupsavvy.operations.html#soupsavvy.operations.Parent.find_all">[1]</a>
 </li>
         <li><a href="soupsavvy.html#soupsavvy.PatternSelector.find_all">(PatternSelector method)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.PatternSelector.find_all">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.PatternSelector.find_all">[2]</a>
 </li>
@@ -548,7 +599,11 @@
 </li>
         <li><a href="soupsavvy.html#soupsavvy.SelectorList.find_all">(SelectorList method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.SelectorList.find_all">[1]</a>, <a href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.SelectorList.find_all">[2]</a>
 </li>
+        <li><a href="soupsavvy.implementation.selenium.html#soupsavvy.implementation.selenium.SeleniumElement.find_all">(SeleniumElement method)</a>
+</li>
         <li><a href="soupsavvy.html#soupsavvy.SelfSelector.find_all">(SelfSelector method)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.SelfSelector.find_all">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.SelfSelector.find_all">[2]</a>
+</li>
+        <li><a href="soupsavvy.implementation.bs4.html#soupsavvy.implementation.bs4.SoupElement.find_all">(SoupElement method)</a>
 </li>
         <li><a href="soupsavvy.base.html#soupsavvy.base.SoupSelector.find_all">(SoupSelector method)</a>
 </li>
@@ -560,11 +615,31 @@
 </li>
         <li><a href="soupsavvy.html#soupsavvy.XORSelector.find_all">(XORSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.XORSelector.find_all">[1]</a>, <a href="soupsavvy.selectors.logical.html#soupsavvy.selectors.logical.XORSelector.find_all">[2]</a>
 </li>
-        <li><a href="soupsavvy.selectors.xpath.html#soupsavvy.selectors.xpath.XPathSelector.find_all">(XPathSelector method)</a>
+        <li><a href="soupsavvy.html#soupsavvy.XPathSelector.find_all">(XPathSelector method)</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.XPathSelector.find_all">[1]</a>, <a href="soupsavvy.selectors.xpath.selectors.html#soupsavvy.selectors.xpath.selectors.XPathSelector.find_all">[2]</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.find_ancestors">find_ancestors() (IElement method)</a>
+
+      <ul>
+        <li><a href="soupsavvy.implementation.lxml.html#soupsavvy.implementation.lxml.LXMLElement.find_ancestors">(LXMLElement method)</a>
+</li>
+        <li><a href="soupsavvy.implementation.selenium.html#soupsavvy.implementation.selenium.SeleniumElement.find_ancestors">(SeleniumElement method)</a>
+</li>
+        <li><a href="soupsavvy.implementation.bs4.html#soupsavvy.implementation.bs4.SoupElement.find_ancestors">(SoupElement method)</a>
+</li>
+      </ul></li>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.find_subsequent_siblings">find_subsequent_siblings() (IElement method)</a>
+
+      <ul>
+        <li><a href="soupsavvy.implementation.lxml.html#soupsavvy.implementation.lxml.LXMLElement.find_subsequent_siblings">(LXMLElement method)</a>
+</li>
+        <li><a href="soupsavvy.implementation.selenium.html#soupsavvy.implementation.selenium.SeleniumElement.find_subsequent_siblings">(SeleniumElement method)</a>
+</li>
+        <li><a href="soupsavvy.implementation.bs4.html#soupsavvy.implementation.bs4.SoupElement.find_subsequent_siblings">(SoupElement method)</a>
+</li>
+      </ul></li>
       <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.FirstChild">FirstChild (class in soupsavvy.selectors.css)</a>
 
       <ul>
@@ -577,6 +652,8 @@
         <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.FirstOfType">(class in soupsavvy.selectors.css.selectors)</a>
 </li>
       </ul></li>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.from_node">from_node() (IElement class method)</a>
+</li>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.FrozenModelException">FrozenModelException</a>
 </li>
   </ul></td>
@@ -604,6 +681,20 @@
 </li>
       </ul></li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.get">get() (IElement method)</a>
+</li>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.get_attribute">get_attribute() (IElement method)</a>
+
+      <ul>
+        <li><a href="soupsavvy.implementation.lxml.html#soupsavvy.implementation.lxml.LXMLElement.get_attribute">(LXMLElement method)</a>
+</li>
+        <li><a href="soupsavvy.implementation.selenium.html#soupsavvy.implementation.selenium.SeleniumElement.get_attribute">(SeleniumElement method)</a>
+</li>
+        <li><a href="soupsavvy.implementation.bs4.html#soupsavvy.implementation.bs4.SoupElement.get_attribute">(SoupElement method)</a>
+</li>
+      </ul></li>
+  </ul></td>
 </tr></table>
 
 <h2 id="H">H</h2>
@@ -628,7 +719,7 @@
       <li><a href="soupsavvy.operations.html#soupsavvy.operations.Href">Href (class in soupsavvy.operations)</a>
 
       <ul>
-        <li><a href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Href">(class in soupsavvy.operations.soup)</a>
+        <li><a href="soupsavvy.operations.element.html#soupsavvy.operations.element.Href">(class in soupsavvy.operations.element)</a>
 </li>
       </ul></li>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.HTMLGeneratorException">HTMLGeneratorException</a>
@@ -647,6 +738,8 @@
         <li><a href="soupsavvy.selectors.attributes.html#soupsavvy.selectors.attributes.IdSelector">(class in soupsavvy.selectors.attributes)</a>
 </li>
       </ul></li>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement">IElement (class in soupsavvy.interfaces)</a>
+</li>
       <li><a href="soupsavvy.operations.html#soupsavvy.operations.IfElse">IfElse (class in soupsavvy.operations)</a>
 
       <ul>
@@ -681,14 +774,18 @@
         <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.LastChild">(class in soupsavvy.selectors.css.selectors)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.LastOfType">LastOfType (class in soupsavvy.selectors.css)</a>
 
       <ul>
         <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.LastOfType">(class in soupsavvy.selectors.css.selectors)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.implementation.lxml.html#soupsavvy.implementation.lxml.LXMLElement">LXMLElement (class in soupsavvy.implementation.lxml)</a>
+</li>
+      <li><a href="soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.LXMLXpathApi">LXMLXpathApi (class in soupsavvy.selectors.xpath.api)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -723,6 +820,16 @@
 </li>
         <li><a href="soupsavvy.exceptions.html#module-soupsavvy.exceptions">soupsavvy.exceptions</a>
 </li>
+        <li><a href="soupsavvy.implementation.html#module-soupsavvy.implementation">soupsavvy.implementation</a>
+</li>
+        <li><a href="soupsavvy.implementation.bs4.html#module-soupsavvy.implementation.bs4">soupsavvy.implementation.bs4</a>
+</li>
+        <li><a href="soupsavvy.implementation.element.html#module-soupsavvy.implementation.element">soupsavvy.implementation.element</a>
+</li>
+        <li><a href="soupsavvy.implementation.lxml.html#module-soupsavvy.implementation.lxml">soupsavvy.implementation.lxml</a>
+</li>
+        <li><a href="soupsavvy.implementation.selenium.html#module-soupsavvy.implementation.selenium">soupsavvy.implementation.selenium</a>
+</li>
         <li><a href="soupsavvy.interfaces.html#module-soupsavvy.interfaces">soupsavvy.interfaces</a>
 </li>
         <li><a href="soupsavvy.models.html#module-soupsavvy.models">soupsavvy.models</a>
@@ -735,11 +842,11 @@
 </li>
         <li><a href="soupsavvy.operations.conditional.html#module-soupsavvy.operations.conditional">soupsavvy.operations.conditional</a>
 </li>
+        <li><a href="soupsavvy.operations.element.html#module-soupsavvy.operations.element">soupsavvy.operations.element</a>
+</li>
         <li><a href="soupsavvy.operations.general.html#module-soupsavvy.operations.general">soupsavvy.operations.general</a>
 </li>
         <li><a href="soupsavvy.operations.selection_pipeline.html#module-soupsavvy.operations.selection_pipeline">soupsavvy.operations.selection_pipeline</a>
-</li>
-        <li><a href="soupsavvy.operations.soup.html#module-soupsavvy.operations.soup">soupsavvy.operations.soup</a>
 </li>
         <li><a href="soupsavvy.operations.wrappers.html#module-soupsavvy.operations.wrappers">soupsavvy.operations.wrappers</a>
 </li>
@@ -753,6 +860,8 @@
 </li>
         <li><a href="soupsavvy.selectors.css.html#module-soupsavvy.selectors.css">soupsavvy.selectors.css</a>
 </li>
+        <li><a href="soupsavvy.selectors.css.api.html#module-soupsavvy.selectors.css.api">soupsavvy.selectors.css.api</a>
+</li>
         <li><a href="soupsavvy.selectors.css.selectors.html#module-soupsavvy.selectors.css.selectors">soupsavvy.selectors.css.selectors</a>
 </li>
         <li><a href="soupsavvy.selectors.general.html#module-soupsavvy.selectors.general">soupsavvy.selectors.general</a>
@@ -761,11 +870,15 @@
 </li>
         <li><a href="soupsavvy.selectors.nth.html#module-soupsavvy.selectors.nth">soupsavvy.selectors.nth</a>
 </li>
-        <li><a href="soupsavvy.selectors.nth.nth_soup_selector.html#module-soupsavvy.selectors.nth.nth_soup_selector">soupsavvy.selectors.nth.nth_soup_selector</a>
+        <li><a href="soupsavvy.selectors.nth.selectors.html#module-soupsavvy.selectors.nth.selectors">soupsavvy.selectors.nth.selectors</a>
 </li>
         <li><a href="soupsavvy.selectors.relative.html#module-soupsavvy.selectors.relative">soupsavvy.selectors.relative</a>
 </li>
         <li><a href="soupsavvy.selectors.xpath.html#module-soupsavvy.selectors.xpath">soupsavvy.selectors.xpath</a>
+</li>
+        <li><a href="soupsavvy.selectors.xpath.api.html#module-soupsavvy.selectors.xpath.api">soupsavvy.selectors.xpath.api</a>
+</li>
+        <li><a href="soupsavvy.selectors.xpath.selectors.html#module-soupsavvy.selectors.xpath.selectors">soupsavvy.selectors.xpath.selectors</a>
 </li>
         <li><a href="soupsavvy.testing.html#module-soupsavvy.testing">soupsavvy.testing</a>
 </li>
@@ -799,11 +912,17 @@
       <li><a href="soupsavvy.html#soupsavvy.AttributeSelector.name">name (AttributeSelector attribute)</a>, <a href="soupsavvy.selectors.attributes.html#soupsavvy.selectors.attributes.AttributeSelector.name">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.AttributeSelector.name">[2]</a>
 
       <ul>
+        <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.name">(IElement property)</a>
+</li>
+        <li><a href="soupsavvy.implementation.lxml.html#soupsavvy.implementation.lxml.LXMLElement.name">(LXMLElement property)</a>
+</li>
+        <li><a href="soupsavvy.implementation.selenium.html#soupsavvy.implementation.selenium.SeleniumElement.name">(SeleniumElement property)</a>
+</li>
+        <li><a href="soupsavvy.implementation.bs4.html#soupsavvy.implementation.bs4.SoupElement.name">(SoupElement property)</a>
+</li>
         <li><a href="soupsavvy.html#soupsavvy.TypeSelector.name">(TypeSelector attribute)</a>, <a href="soupsavvy.selectors.general.html#soupsavvy.selectors.general.TypeSelector.name">[1]</a>, <a href="soupsavvy.selectors.html#soupsavvy.selectors.TypeSelector.name">[2]</a>
 </li>
       </ul></li>
-      <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.NavigableStringException">NavigableStringException</a>
-</li>
       <li><a href="soupsavvy.html#soupsavvy.NextSiblingCombinator">NextSiblingCombinator (class in soupsavvy)</a>
 
       <ul>
@@ -812,6 +931,8 @@
         <li><a href="soupsavvy.selectors.combinators.html#soupsavvy.selectors.combinators.NextSiblingCombinator">(class in soupsavvy.selectors.combinators)</a>
 </li>
       </ul></li>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.node">node (IElement property)</a>
+</li>
       <li><a href="soupsavvy.api.html#soupsavvy.api.not_">not_() (in module soupsavvy.api)</a>
 
       <ul>
@@ -832,12 +953,12 @@
 </li>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.NotTagSearcherException">NotTagSearcherException</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.NotUniqueAttributesException">NotUniqueAttributesException</a>
 </li>
       <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.NthBaseSelector">NthBaseSelector (class in soupsavvy.selectors.css.selectors)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.NthChild">NthChild (class in soupsavvy.selectors.css)</a>
 
       <ul>
@@ -857,7 +978,7 @@
 </li>
         <li><a href="soupsavvy.selectors.nth.html#soupsavvy.selectors.nth.NthLastOfSelector">(class in soupsavvy.selectors.nth)</a>
 </li>
-        <li><a href="soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.nth_soup_selector.NthLastOfSelector">(class in soupsavvy.selectors.nth.nth_soup_selector)</a>
+        <li><a href="soupsavvy.selectors.nth.selectors.html#soupsavvy.selectors.nth.selectors.NthLastOfSelector">(class in soupsavvy.selectors.nth.selectors)</a>
 </li>
       </ul></li>
       <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.NthLastOfType">NthLastOfType (class in soupsavvy.selectors.css)</a>
@@ -873,7 +994,7 @@
 </li>
         <li><a href="soupsavvy.selectors.nth.html#soupsavvy.selectors.nth.NthOfSelector">(class in soupsavvy.selectors.nth)</a>
 </li>
-        <li><a href="soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.nth_soup_selector.NthOfSelector">(class in soupsavvy.selectors.nth.nth_soup_selector)</a>
+        <li><a href="soupsavvy.selectors.nth.selectors.html#soupsavvy.selectors.nth.selectors.NthOfSelector">(class in soupsavvy.selectors.nth.selectors)</a>
 </li>
       </ul></li>
       <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.NthOfType">NthOfType (class in soupsavvy.selectors.css)</a>
@@ -901,7 +1022,7 @@
 </li>
         <li><a href="soupsavvy.selectors.nth.html#soupsavvy.selectors.nth.OnlyOfSelector">(class in soupsavvy.selectors.nth)</a>
 </li>
-        <li><a href="soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.nth_soup_selector.OnlyOfSelector">(class in soupsavvy.selectors.nth.nth_soup_selector)</a>
+        <li><a href="soupsavvy.selectors.nth.selectors.html#soupsavvy.selectors.nth.selectors.OnlyOfSelector">(class in soupsavvy.selectors.nth.selectors)</a>
 </li>
       </ul></li>
       <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.OnlyOfType">OnlyOfType (class in soupsavvy.selectors.css)</a>
@@ -953,7 +1074,17 @@
       <li><a href="soupsavvy.operations.html#soupsavvy.operations.Parent">Parent (class in soupsavvy.operations)</a>
 
       <ul>
-        <li><a href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Parent">(class in soupsavvy.operations.soup)</a>
+        <li><a href="soupsavvy.operations.element.html#soupsavvy.operations.element.Parent">(class in soupsavvy.operations.element)</a>
+</li>
+      </ul></li>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.parent">parent (IElement property)</a>
+
+      <ul>
+        <li><a href="soupsavvy.implementation.lxml.html#soupsavvy.implementation.lxml.LXMLElement.parent">(LXMLElement property)</a>
+</li>
+        <li><a href="soupsavvy.implementation.selenium.html#soupsavvy.implementation.selenium.SeleniumElement.parent">(SeleniumElement property)</a>
+</li>
+        <li><a href="soupsavvy.implementation.bs4.html#soupsavvy.implementation.bs4.SoupElement.parent">(SoupElement property)</a>
 </li>
       </ul></li>
       <li><a href="soupsavvy.html#soupsavvy.ParentCombinator">ParentCombinator (class in soupsavvy)</a>
@@ -1034,13 +1165,29 @@
 </li>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.ScopeNotDefinedException">ScopeNotDefinedException</a>
 </li>
+      <li><a href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.CSSSelectApi.select">select() (CSSSelectApi method)</a>
+
+      <ul>
+        <li><a href="soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.LXMLXpathApi.select">(LXMLXpathApi method)</a>
+</li>
+        <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.SelectionApi.select">(SelectionApi method)</a>
+</li>
+        <li><a href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SeleniumCSSApi.select">(SeleniumCSSApi method)</a>
+</li>
+        <li><a href="soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.SeleniumXPathApi.select">(SeleniumXPathApi method)</a>
+</li>
+        <li><a href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SoupsieveApi.select">(SoupsieveApi method)</a>
+</li>
+      </ul></li>
       <li><a href="soupsavvy.base.html#soupsavvy.base.SelectableCSS">SelectableCSS (class in soupsavvy.base)</a>
+</li>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.SelectionApi">SelectionApi (class in soupsavvy.interfaces)</a>
 </li>
       <li><a href="soupsavvy.operations.selection_pipeline.html#soupsavvy.operations.selection_pipeline.SelectionPipeline">SelectionPipeline (class in soupsavvy.operations.selection_pipeline)</a>
 </li>
-      <li><a href="soupsavvy.selectors.nth.nth_soup_selector.html#soupsavvy.selectors.nth.nth_soup_selector.BaseNthOfSelector.selector">selector (BaseNthOfSelector property)</a>
+      <li><a href="soupsavvy.selectors.nth.selectors.html#soupsavvy.selectors.nth.selectors.BaseNthOfSelector.selector">selector (BaseNthOfSelector property)</a>
 </li>
-      <li><a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.CSS.SELECTOR">SELECTOR (CSS attribute)</a>, <a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.CSS.SELECTOR">[1]</a>
+      <li><a href="soupsavvy.html#soupsavvy.CSS.SELECTOR">SELECTOR (CSS attribute)</a>, <a href="soupsavvy.selectors.css.html#soupsavvy.selectors.css.CSS.SELECTOR">[1]</a>, <a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.CSS.SELECTOR">[2]</a>
 
       <ul>
         <li><a href="soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.selectors.CSSSoupSelector.SELECTOR">(CSSSoupSelector attribute)</a>
@@ -1098,6 +1245,12 @@
       </ul></li>
       <li><a href="soupsavvy.base.html#soupsavvy.base.CompositeSoupSelector.selectors">selectors (CompositeSoupSelector property)</a>
 </li>
+      <li><a href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SeleniumCSSApi">SeleniumCSSApi (class in soupsavvy.selectors.css.api)</a>
+</li>
+      <li><a href="soupsavvy.implementation.selenium.html#soupsavvy.implementation.selenium.SeleniumElement">SeleniumElement (class in soupsavvy.implementation.selenium)</a>
+</li>
+      <li><a href="soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.SeleniumXPathApi">SeleniumXPathApi (class in soupsavvy.selectors.xpath.api)</a>
+</li>
       <li><a href="soupsavvy.html#soupsavvy.SelfSelector">SelfSelector (class in soupsavvy)</a>
 
       <ul>
@@ -1112,6 +1265,8 @@
         <li><a href="soupsavvy.operations.wrappers.html#soupsavvy.operations.wrappers.SkipNone">(class in soupsavvy.operations.wrappers)</a>
 </li>
       </ul></li>
+      <li><a href="soupsavvy.implementation.bs4.html#soupsavvy.implementation.bs4.SoupElement">SoupElement (class in soupsavvy.implementation.bs4)</a>
+</li>
       <li>
     soupsavvy
 
@@ -1138,6 +1293,41 @@
 
       <ul>
         <li><a href="soupsavvy.exceptions.html#module-soupsavvy.exceptions">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.implementation
+
+      <ul>
+        <li><a href="soupsavvy.implementation.html#module-soupsavvy.implementation">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.implementation.bs4
+
+      <ul>
+        <li><a href="soupsavvy.implementation.bs4.html#module-soupsavvy.implementation.bs4">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.implementation.element
+
+      <ul>
+        <li><a href="soupsavvy.implementation.element.html#module-soupsavvy.implementation.element">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.implementation.lxml
+
+      <ul>
+        <li><a href="soupsavvy.implementation.lxml.html#module-soupsavvy.implementation.lxml">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.implementation.selenium
+
+      <ul>
+        <li><a href="soupsavvy.implementation.selenium.html#module-soupsavvy.implementation.selenium">module</a>
 </li>
       </ul></li>
       <li>
@@ -1175,11 +1365,20 @@
         <li><a href="soupsavvy.operations.html#module-soupsavvy.operations">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     soupsavvy.operations.conditional
 
       <ul>
         <li><a href="soupsavvy.operations.conditional.html#module-soupsavvy.operations.conditional">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.operations.element
+
+      <ul>
+        <li><a href="soupsavvy.operations.element.html#module-soupsavvy.operations.element">module</a>
 </li>
       </ul></li>
       <li>
@@ -1196,15 +1395,6 @@
         <li><a href="soupsavvy.operations.selection_pipeline.html#module-soupsavvy.operations.selection_pipeline">module</a>
 </li>
       </ul></li>
-      <li>
-    soupsavvy.operations.soup
-
-      <ul>
-        <li><a href="soupsavvy.operations.soup.html#module-soupsavvy.operations.soup">module</a>
-</li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     soupsavvy.operations.wrappers
 
@@ -1248,6 +1438,13 @@
 </li>
       </ul></li>
       <li>
+    soupsavvy.selectors.css.api
+
+      <ul>
+        <li><a href="soupsavvy.selectors.css.api.html#module-soupsavvy.selectors.css.api">module</a>
+</li>
+      </ul></li>
+      <li>
     soupsavvy.selectors.css.selectors
 
       <ul>
@@ -1276,10 +1473,10 @@
 </li>
       </ul></li>
       <li>
-    soupsavvy.selectors.nth.nth_soup_selector
+    soupsavvy.selectors.nth.selectors
 
       <ul>
-        <li><a href="soupsavvy.selectors.nth.nth_soup_selector.html#module-soupsavvy.selectors.nth.nth_soup_selector">module</a>
+        <li><a href="soupsavvy.selectors.nth.selectors.html#module-soupsavvy.selectors.nth.selectors">module</a>
 </li>
       </ul></li>
       <li>
@@ -1294,6 +1491,20 @@
 
       <ul>
         <li><a href="soupsavvy.selectors.xpath.html#module-soupsavvy.selectors.xpath">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.selectors.xpath.api
+
+      <ul>
+        <li><a href="soupsavvy.selectors.xpath.api.html#module-soupsavvy.selectors.xpath.api">module</a>
+</li>
+      </ul></li>
+      <li>
+    soupsavvy.selectors.xpath.selectors
+
+      <ul>
+        <li><a href="soupsavvy.selectors.xpath.selectors.html#module-soupsavvy.selectors.xpath.selectors">module</a>
 </li>
       </ul></li>
       <li>
@@ -1379,6 +1590,8 @@
 </li>
       <li><a href="soupsavvy.exceptions.html#soupsavvy.exceptions.SoupSelectorException">SoupSelectorException</a>
 </li>
+      <li><a href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SoupsieveApi">SoupsieveApi (class in soupsavvy.selectors.css.api)</a>
+</li>
       <li><a href="soupsavvy.selectors.attributes.html#soupsavvy.selectors.attributes.SpecificAttributeSelector">SpecificAttributeSelector (class in soupsavvy.selectors.attributes)</a>
 </li>
       <li><a href="soupsavvy.html#soupsavvy.SubsequentSiblingCombinator">SubsequentSiblingCombinator (class in soupsavvy)</a>
@@ -1419,8 +1632,6 @@
 </li>
       <li><a href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.TagResultSet">TagResultSet (class in soupsavvy.utils.selector_utils)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher">TagSearcher (class in soupsavvy.interfaces)</a>
 </li>
       <li><a href="soupsavvy.models.base.html#soupsavvy.models.base.MigrationSchema.target">target (MigrationSchema attribute)</a>, <a href="soupsavvy.models.html#soupsavvy.models.MigrationSchema.target">[1]</a>
@@ -1428,7 +1639,25 @@
       <li><a href="soupsavvy.operations.html#soupsavvy.operations.Text">Text (class in soupsavvy.operations)</a>
 
       <ul>
-        <li><a href="soupsavvy.operations.soup.html#soupsavvy.operations.soup.Text">(class in soupsavvy.operations.soup)</a>
+        <li><a href="soupsavvy.operations.element.html#soupsavvy.operations.element.Text">(class in soupsavvy.operations.element)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.text">text (IElement property)</a>
+
+      <ul>
+        <li><a href="soupsavvy.implementation.lxml.html#soupsavvy.implementation.lxml.LXMLElement.text">(LXMLElement property)</a>
+</li>
+        <li><a href="soupsavvy.implementation.selenium.html#soupsavvy.implementation.selenium.SeleniumElement.text">(SeleniumElement property)</a>
+</li>
+        <li><a href="soupsavvy.implementation.bs4.html#soupsavvy.implementation.bs4.SoupElement.text">(SoupElement property)</a>
+</li>
+      </ul></li>
+      <li><a href="soupsavvy.html#soupsavvy.to_soupsavvy">to_soupsavvy() (in module soupsavvy)</a>
+
+      <ul>
+        <li><a href="soupsavvy.implementation.element.html#soupsavvy.implementation.element.to_soupsavvy">(in module soupsavvy.implementation.element)</a>
 </li>
       </ul></li>
       <li><a href="soupsavvy.html#soupsavvy.TypeSelector">TypeSelector (class in soupsavvy)</a>
@@ -1445,8 +1674,6 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.utils.selector_utils.html#soupsavvy.utils.selector_utils.UniqueTag">UniqueTag (class in soupsavvy.utils.selector_utils)</a>
-</li>
       <li><a href="soupsavvy.html#soupsavvy.UniversalSelector">UniversalSelector (class in soupsavvy)</a>
 
       <ul>
@@ -1505,8 +1732,22 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="soupsavvy.selectors.xpath.html#soupsavvy.selectors.xpath.XPathSelector">XPathSelector (class in soupsavvy.selectors.xpath)</a>
+      <li><a href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.xpath">xpath() (IElement method)</a>
+
+      <ul>
+        <li><a href="soupsavvy.implementation.lxml.html#soupsavvy.implementation.lxml.LXMLElement.xpath">(LXMLElement method)</a>
 </li>
+        <li><a href="soupsavvy.implementation.selenium.html#soupsavvy.implementation.selenium.SeleniumElement.xpath">(SeleniumElement method)</a>
+</li>
+      </ul></li>
+      <li><a href="soupsavvy.html#soupsavvy.XPathSelector">XPathSelector (class in soupsavvy)</a>
+
+      <ul>
+        <li><a href="soupsavvy.selectors.html#soupsavvy.selectors.XPathSelector">(class in soupsavvy.selectors)</a>
+</li>
+        <li><a href="soupsavvy.selectors.xpath.selectors.html#soupsavvy.selectors.xpath.selectors.XPathSelector">(class in soupsavvy.selectors.xpath.selectors)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 

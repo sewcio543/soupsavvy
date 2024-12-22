@@ -24,8 +24,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="models" href="soupsavvy.models.html" />
-    <link rel="prev" title="selectors.relative" href="soupsavvy.selectors.relative.html" /> 
+    <link rel="next" title="selectors.xpath.api" href="soupsavvy.selectors.xpath.api.html" />
+    <link rel="prev" title="selectors.nth.selectors" href="soupsavvy.selectors.nth.selectors.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -50,20 +50,17 @@
               <p class="caption" role="heading"><span class="caption-text">Components</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="soupsavvy.selectors.html">selectors</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.html#subpackages">Subpackages</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="soupsavvy.selectors.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.attributes.html">selectors.attributes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.combinators.html">selectors.combinators</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.general.html">selectors.general</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.logical.html">selectors.logical</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.relative.html">selectors.relative</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="soupsavvy.selectors.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.css.html">selectors.css</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.nth.html">selectors.nth</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">selectors.xpath</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#classes">Classes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.selectors.xpath.XPathSelector"><code class="docutils literal notranslate"><span class="pre">XPathSelector</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-soupsavvy.selectors.xpath">Content</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.html#module-soupsavvy.selectors">Content</a></li>
 </ul>
 </li>
@@ -71,6 +68,7 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -114,113 +112,47 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-soupsavvy.selectors.xpath">
-<span id="selectors-xpath"></span><h1>selectors.xpath<a class="headerlink" href="#module-soupsavvy.selectors.xpath" title="Link to this heading"></a></h1>
-<p>Selector for finding elements based on XPath.
-<cite>lxml</cite> adapter, that allows any supported XPath expressions
-to be used with other <cite>soupsavvy</cite> components.</p>
-<p>XPath search is not natively supported by <cite>bs4</cite>, finding element is delegated
-to <cite>lxml</cite> library, and corresponding <cite>bs4</cite> elements are selected.</p>
-<section id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p>XPathSelector</p></li>
+  <section id="selectors-xpath">
+<h1>selectors.xpath<a class="headerlink" href="#selectors-xpath" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.selectors.xpath.api.html">selectors.xpath.api</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.LXMLXpathApi"><code class="docutils literal notranslate"><span class="pre">LXMLXpathApi</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.LXMLXpathApi.__init__"><code class="docutils literal notranslate"><span class="pre">LXMLXpathApi.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.LXMLXpathApi.select"><code class="docutils literal notranslate"><span class="pre">LXMLXpathApi.select()</span></code></a></li>
 </ul>
-</section>
-<dl class="py class">
-<dt class="sig sig-object py" id="soupsavvy.selectors.xpath.XPathSelector">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">XPathSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">XPath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/selectors/xpath.html#XPathSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.xpath.XPathSelector" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupSelector</span></code></a></p>
-<p>Selector for finding elements based on XPath expressions
-based on <cite>lxml</cite> implementation.</p>
-<section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">selector</span> <span class="o">=</span> <span class="n">XPathSelector</span><span class="p">(</span><span class="s2">&quot;//p[@class=&#39;menu&#39;]&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
-</pre></div>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.SeleniumXPathApi"><code class="docutils literal notranslate"><span class="pre">SeleniumXPathApi</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.SeleniumXPathApi.select"><code class="docutils literal notranslate"><span class="pre">SeleniumXPathApi.select()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.selectors.xpath.selectors.html">selectors.xpath.selectors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.xpath.selectors.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.selectors.xpath.selectors.html#soupsavvy.selectors.xpath.selectors.XPathSelector"><code class="docutils literal notranslate"><span class="pre">XPathSelector</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.xpath.selectors.html#soupsavvy.selectors.xpath.selectors.XPathSelector.__init__"><code class="docutils literal notranslate"><span class="pre">XPathSelector.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.xpath.selectors.html#soupsavvy.selectors.xpath.selectors.XPathSelector.find_all"><code class="docutils literal notranslate"><span class="pre">XPathSelector.find_all()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 </div>
 </section>
-<section id="id1">
-<h2>Examples<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">lxml.etree</span> <span class="kn">import</span> <span class="n">XPath</span>
-<span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">XPathSelector</span><span class="p">(</span><span class="n">XPath</span><span class="p">(</span><span class="s2">&quot;//p[@class=&#39;menu&#39;]&quot;</span><span class="p">,</span> <span class="n">smart_strings</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-<span class="gp">... </span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Expressions must target elements, not attributes or text content,
-otherwise, warning is raised and no results are found.</p>
+<section id="module-soupsavvy.selectors.xpath">
+<span id="content"></span><h2>Content<a class="headerlink" href="#module-soupsavvy.selectors.xpath" title="Link to this heading"></a></h2>
 </section>
-<section id="id2">
-<h2>Examples<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">selector</span> <span class="o">=</span> <span class="n">XPathSelector</span><span class="p">(</span><span class="s2">&quot;//div//@href&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
-<span class="go">None</span>
-</pre></div>
-</div>
-</section>
-<section id="notes">
-<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
-<p>Equality check includes only xpath expression, as lxml <cite>XPath</cite> object
-does not implement more specific <cite>__eq__</cite> method.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.selectors.xpath.XPathSelector.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">XPath</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/xpath.html#XPathSelector.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.xpath.XPathSelector.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes <cite>XPathSelector</cite> with a given XPath expression.</p>
-<section id="parameters">
-<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>xpath<span class="classifier">str | lxml.etree.XPath</span></dt><dd><p>String representing of xpath expression or compiled <cite>XPath</cite> object.
-It needs to target elements, not attributes or text content.</p>
-</dd>
-</dl>
-</section>
-<section id="raises">
-<h3>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>InvalidXPathSelector</dt><dd><p>If the provided XPath string cannot be compiled into <cite>XPath</cite> object.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.selectors.xpath.XPathSelector.find_all">
-<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Tag</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/selectors/xpath.html#XPathSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.selectors.xpath.XPathSelector.find_all" title="Link to this definition"></a></dt>
-<dd><p>Finds all elements matching selector in provided <cite>Tag</cite>.</p>
-<section id="id3">
-<h3>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>tag<span class="classifier">Tag</span></dt><dd><p>Any <cite>bs4.Tag</cite> object to search within.</p>
-</dd>
-<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>Specifies if search should be recursive.
-If set to <cite>False</cite>, only direct children of the tag will be searched.
-By default <cite>True</cite>.</p>
-</dd>
-<dt>limit<span class="classifier">int, optional</span></dt><dd><p>Specifies maximum number of elements to return.
-By default <cite>None</cite>, all found elements are returned.</p>
-</dd>
-</dl>
-</section>
-<section id="returns">
-<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>list[Tag]</dt><dd><p>List of <cite>bs4.Tag</cite> objects matching selector. If none found, the list is empty.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-</section>
-</dd></dl>
-
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="soupsavvy.selectors.relative.html" class="btn btn-neutral float-left" title="selectors.relative" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="soupsavvy.models.html" class="btn btn-neutral float-right" title="models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="soupsavvy.selectors.nth.selectors.html" class="btn btn-neutral float-left" title="selectors.nth.selectors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soupsavvy.selectors.xpath.api.html" class="btn btn-neutral float-right" title="selectors.xpath.api" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -1,0 +1,7 @@
+operations.element
+===================================
+
+.. automodule:: soupsavvy.operations.element
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -51,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -105,12 +106,10 @@
 <span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">overload</span>
 
-<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">NavigableString</span><span class="p">,</span> <span class="n">Tag</span>
 <span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">deprecated</span>
 
 <span class="kn">import</span> <span class="nn">soupsavvy.exceptions</span> <span class="k">as</span> <span class="nn">exc</span>
-<span class="kn">import</span> <span class="nn">soupsavvy.selectors.namespace</span> <span class="k">as</span> <span class="nn">ns</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">Comparable</span><span class="p">,</span> <span class="n">Executable</span><span class="p">,</span> <span class="n">TagSearcher</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">Comparable</span><span class="p">,</span> <span class="n">Executable</span><span class="p">,</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">TagSearcher</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">soupsavvy.operations.general</span> <span class="kn">import</span> <span class="n">OperationPipeline</span>
@@ -191,29 +190,30 @@
 <span class="k">class</span> <span class="nc">SoupSelector</span><span class="p">(</span><span class="n">TagSearcher</span><span class="p">,</span> <span class="n">Comparable</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for all `soupsavvy` selectors, that define declarative search procedure</span>
-<span class="sd">    of searching for elements in BeautifulSoup Tag.</span>
+<span class="sd">    of searching for matching nodes in the html element.</span>
 
 <span class="sd">    Selectors can be combined with other selectors to create search procedures.</span>
 <span class="sd">    They can be chained with operations to extract and transform the data.</span>
 
 <span class="sd">    Methods</span>
 <span class="sd">    -------</span>
-<span class="sd">    - find(tag: Tag, strict: bool = False, recursive: bool = True) -&gt; Optional[Tag]</span>
+<span class="sd">    - find</span>
 
-<span class="sd">        Finds first element matching selector in provided tag if found.</span>
+<span class="sd">        Finds first element matching selector in provided element.</span>
 <span class="sd">        If no element is found, returns None by default,</span>
 <span class="sd">        or raises an exception if `strict` mode is enabled.</span>
 <span class="sd">        Additionally `recursive` parameter can be set to search only direct children.</span>
 
-<span class="sd">    - find_all(tag: Tag, recursive: bool = True, limit: Optional[int] = None) -&gt; list[Tag]</span>
+<span class="sd">    - find_all</span>
 
-<span class="sd">        Finds all elements matching selector in provided tag and returns them in a list.</span>
+<span class="sd">        Finds all elements matching selector in provided element</span>
+<span class="sd">        and returns them in a list.</span>
 <span class="sd">        Additionally `limit` and `recursive` parameters can be set.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    - Specific selector inheriting from this class, need to implement:</span>
-<span class="sd">        - `find_all` method that returns a list of matching elements in bs4.Tag.</span>
+<span class="sd">        - `find_all` method that returns a list of matching elements.</span>
 <span class="sd">        - `__eq__` method to compare two selectors for equality.</span>
 <span class="sd">    - Optionally `find` method can be implemented to return first matching element,</span>
 <span class="sd">    but, by default, it uses `find_all` under the hood.</span>
@@ -222,63 +222,61 @@
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">strict</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span> <span class="o">...</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">strict</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tag</span><span class="p">:</span> <span class="o">...</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IElement</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span> <span class="o">...</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span> <span class="o">...</span>
 
 <div class="viewcode-block" id="SoupSelector.find">
 <a class="viewcode-back" href="../../soupsavvy.base.html#soupsavvy.base.SoupSelector.find">[docs]</a>
     <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Finds the first matching element in provided `Tag`.</span>
+<span class="sd">        Finds the first matching element in provided `IElement`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tag : Tag</span>
-<span class="sd">            Any `bs4.Tag` object to search within.</span>
+<span class="sd">        tag : IElement</span>
+<span class="sd">            Any `IElement` object to search within.</span>
 <span class="sd">        strict : bool, optional</span>
-<span class="sd">            If `True`, raises an exception if tag was not found in markup,</span>
-<span class="sd">            if `False` and tag was not found, returns `None`.</span>
+<span class="sd">            If `True`, raises an exception if element was not found in markup,</span>
+<span class="sd">            if `False` and element was not found, returns `None`.</span>
 <span class="sd">            Value of this parameter does not affect behavior if element</span>
 <span class="sd">            was successfully found. By default `False`.</span>
 <span class="sd">        recursive : bool, optional</span>
 <span class="sd">            Specifies if search should be recursive.</span>
-<span class="sd">            If set to `False`, only direct children of the tag will be searched.</span>
+<span class="sd">            If set to `False`, only direct children of the element will be searched.</span>
 <span class="sd">            By default `True`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        Tag | None</span>
-<span class="sd">            First `bs4.Tag` object matching selector or `None` if none matching.</span>
+<span class="sd">        IElement | None</span>
+<span class="sd">            First IElement` object matching selector or `None` if none matching.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        TagNotFoundException</span>
-<span class="sd">            If strict parameter is set to `True` and none matching tag was found.</span>
-<span class="sd">        NavigableStringException</span>
-<span class="sd">            If `bs4.NavigableString` was returned by selector.</span>
+<span class="sd">            If strict parameter is set to `True` and none matching element was found.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
 
@@ -286,12 +284,6 @@
             <span class="k">if</span> <span class="n">strict</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">TagNotFoundException</span><span class="p">(</span><span class="s2">&quot;Tag was not found in markup.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
-
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">NavigableString</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">NavigableStringException</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;NavigableString was returned for </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2"> string search, &quot;</span>
-                <span class="s2">&quot;invalid operation for SoupSelector find.&quot;</span>
-            <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">result</span></div>
 
@@ -301,20 +293,20 @@
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Finds all elements matching selector in provided `Tag`.</span>
+<span class="sd">        Finds all elements matching selector in provided `IElement`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tag : Tag</span>
-<span class="sd">            Any `bs4.Tag` object to search within.</span>
+<span class="sd">        tag : IElement</span>
+<span class="sd">            Any `IElement` object to search within.</span>
 <span class="sd">        recursive : bool, optional</span>
 <span class="sd">            Specifies if search should be recursive.</span>
-<span class="sd">            If set to `False`, only direct children of the tag will be searched.</span>
+<span class="sd">            If set to `False`, only direct children of the element will be searched.</span>
 <span class="sd">            By default `True`.</span>
 <span class="sd">        limit : int, optional</span>
 <span class="sd">            Specifies maximum number of elements to return.</span>
@@ -322,8 +314,9 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        list[Tag]</span>
-<span class="sd">            List of `bs4.Tag` objects matching selector. If none found, the list is empty.</span>
+<span class="sd">        list[IElement]</span>
+<span class="sd">            List of `IElement` objects matching selector.</span>
+<span class="sd">            If none found, the list is empty.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an interface, &quot;</span>
@@ -331,51 +324,26 @@
         <span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ns</span><span class="o">.</span><span class="n">FindResult</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns an object that is a result of tag search.</span>
+<span class="sd">        Returns an object that is a result of element search.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tag : Tag</span>
-<span class="sd">            Any `bs4.Tag` object to search within.</span>
+<span class="sd">        tag : IElement</span>
+<span class="sd">            Any `IElement` object to search within.</span>
 <span class="sd">        recursive : bool, optional</span>
 <span class="sd">            Specifies if search should be recursive.</span>
-<span class="sd">            If set to `False`, only direct children of the tag will be searched.</span>
+<span class="sd">            If set to `False`, only direct children of the element will be searched.</span>
 <span class="sd">            By default `True`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        NavigableString | Tag | None:</span>
-<span class="sd">            Result of selector search within provided `bs4.Tag`.</span>
+<span class="sd">        NavigableString | IElement | None:</span>
+<span class="sd">            Result of selector search within provided `IElement`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">elements</span> <span class="k">else</span> <span class="kc">None</span>
-
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Checks self and other object for equality.</span>
-
-<span class="sd">        This method is abstract and must be implemented by all selectors.</span>
-
-<span class="sd">        Calling `find` or `find_all` methods on selectors that are equal</span>
-<span class="sd">        should return the same results, provided the same parameters.</span>
-
-<span class="sd">        Example</span>
-<span class="sd">        -------</span>
-<span class="sd">        &gt;&gt;&gt; selector1 = TypeSelector(&quot;div&quot;)</span>
-<span class="sd">        ... selector2 = TypeSelector(&quot;div&quot;)</span>
-<span class="sd">        ... selector1 == selector2</span>
-<span class="sd">        True</span>
-<span class="sd">        ... selector1.find(tag) == selector2.find(tag)</span>
-<span class="sd">        True</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an interface, &quot;</span>
-            <span class="s2">&quot;and does not implement this method.&quot;</span>
-        <span class="p">)</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SelectorList</span><span class="p">:</span> <span class="o">...</span>
@@ -444,7 +412,8 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        x : SoupSelector</span>
-<span class="sd">            `SoupSelector` object to be negated into new `NotSelector` as `NotSelector(this)`.</span>
+<span class="sd">            `SoupSelector` object to be negated</span>
+<span class="sd">            into new `NotSelector` as `NotSelector(this)`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -538,7 +507,8 @@
     <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ParentCombinator</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overrides `__lt__` method called also by less-than operator `&lt;`.</span>
-<span class="sd">        Syntactical Sugar for less-than operator, that creates `ParentCombinator` instance.</span>
+<span class="sd">        Syntactical Sugar for less-than operator,</span>
+<span class="sd">        that creates `ParentCombinator` instance.</span>
 
 <span class="sd">        Example</span>
 <span class="sd">        -------</span>
@@ -785,7 +755,7 @@
 <span class="k">class</span> <span class="nc">SelectableCSS</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Interface for selectors, that can clearly and unambiguously defined css selector,</span>
-<span class="sd">    used to search for elements, that matches the same tags as find methods.</span>
+<span class="sd">    used to search for elements, that matches the same elements as find methods.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -1007,7 +977,7 @@
 <a class="viewcode-back" href="../../soupsavvy.base.html#soupsavvy.base.OperationSearcherMixin.find_all">[docs]</a>
     <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
@@ -1016,8 +986,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tag : Tag</span>
-<span class="sd">            Any `bs4.Tag` object to process.</span>
+<span class="sd">        tag : IElement</span>
+<span class="sd">            Any `IElement` object to process.</span>
 <span class="sd">        recursive : bool, optional</span>
 <span class="sd">            Ignored, for consistency with interface.</span>
 <span class="sd">        limit : int, optional</span>
@@ -1035,7 +1005,7 @@
 <a class="viewcode-back" href="../../soupsavvy.base.html#soupsavvy.base.OperationSearcherMixin.find">[docs]</a>
     <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
@@ -1044,8 +1014,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tag : Tag</span>
-<span class="sd">            Any `bs4.Tag` object to process.</span>
+<span class="sd">        tag : IElement</span>
+<span class="sd">            Any `IElement` object to process.</span>
 <span class="sd">        strict : bool, optional</span>
 <span class="sd">            Ignored, for consistency with interface.</span>
 <span class="sd">        limit : int, optional</span>

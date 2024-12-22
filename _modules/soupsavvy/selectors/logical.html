@@ -51,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -110,10 +111,9 @@
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">Tag</span>
-
 <span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">CompositeSoupSelector</span><span class="p">,</span> <span class="n">SoupSelector</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.utils.selector_utils</span> <span class="kn">import</span> <span class="n">TagIterator</span><span class="p">,</span> <span class="n">TagResultSet</span><span class="p">,</span> <span class="n">UniqueTag</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">IElement</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.utils.selector_utils</span> <span class="kn">import</span> <span class="n">ElementWrapper</span><span class="p">,</span> <span class="n">TagIterator</span><span class="p">,</span> <span class="n">TagResultSet</span>
 
 
 <div class="viewcode-block" id="SelectorList">
@@ -184,10 +184,10 @@
 <a class="viewcode-back" href="../../../soupsavvy.selectors.logical.html#soupsavvy.SelectorList.find_all">[docs]</a>
     <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
         <span class="n">results</span> <span class="o">=</span> <span class="n">TagResultSet</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">selector</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectors</span><span class="p">:</span>
@@ -276,10 +276,10 @@
 <a class="viewcode-back" href="../../../soupsavvy.selectors.logical.html#soupsavvy.NotSelector.find_all">[docs]</a>
     <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
         <span class="n">matching</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span>
             <span class="n">TagResultSet</span><span class="o">.</span><span class="fm">__or__</span><span class="p">,</span>
             <span class="p">(</span>
@@ -295,7 +295,7 @@
     <span class="k">def</span> <span class="fm">__invert__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SoupSelector</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overrides __invert__ method to cancel out negation by returning</span>
-<span class="sd">        the tag in case of single selector, or `SelectorList` in case of multiple.</span>
+<span class="sd">        the element in case of single selector, or `SelectorList` in case of multiple.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multiple</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -373,10 +373,10 @@
 <a class="viewcode-back" href="../../../soupsavvy.selectors.logical.html#soupsavvy.AndSelector.find_all">[docs]</a>
     <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
         <span class="n">matching</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span>
             <span class="n">TagResultSet</span><span class="o">.</span><span class="fm">__and__</span><span class="p">,</span>
             <span class="p">(</span>
@@ -448,17 +448,21 @@
 <a class="viewcode-back" href="../../../soupsavvy.selectors.logical.html#soupsavvy.XORSelector.find_all">[docs]</a>
     <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
         <span class="n">unique</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">UniqueTag</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+            <span class="n">ElementWrapper</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectors</span>
             <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="n">results</span> <span class="o">=</span> <span class="n">TagResultSet</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">tag</span> <span class="k">for</span> <span class="n">element</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">Counter</span><span class="p">(</span><span class="n">unique</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="p">[</span>
+                <span class="n">element</span><span class="o">.</span><span class="n">element</span>
+                <span class="k">for</span> <span class="n">element</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">Counter</span><span class="p">(</span><span class="n">unique</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="p">]</span>
         <span class="p">)</span>
         <span class="c1"># keep order of tags and limit</span>
         <span class="n">results</span> <span class="o">=</span> <span class="n">TagResultSet</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">TagIterator</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)))</span> <span class="o">&amp;</span> <span class="n">results</span>

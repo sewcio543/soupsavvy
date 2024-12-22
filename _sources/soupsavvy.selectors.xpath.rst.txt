@@ -1,5 +1,17 @@
 selectors.xpath
-================================
+=================================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.selectors.xpath.api
+   soupsavvy.selectors.xpath.selectors
+
+Content
+---------------
 
 .. automodule:: soupsavvy.selectors.xpath
    :members:

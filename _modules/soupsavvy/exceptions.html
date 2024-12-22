@@ -51,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -130,28 +131,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Exception to be raised when `SoupSelector` element was not found in the markup.</span>
 <span class="sd">    Raised by `SoupSelector` find method when strict parameter is set to True</span>
-<span class="sd">    and target element was not found in provided `bs4.Tag` object.</span>
-<span class="sd">    &quot;&quot;&quot;</span></div>
-
-
-
-<div class="viewcode-block" id="NavigableStringException">
-<a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.NavigableStringException">[docs]</a>
-<span class="k">class</span> <span class="nc">NavigableStringException</span><span class="p">(</span><span class="n">SoupSelectorException</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception to be raised when `NavigableString` was returned in `_find` method.</span>
-<span class="sd">    When `bs4.Tag` find method was used with only &#39;string&#39; parameter and any tag</span>
-<span class="sd">    matched, `NavigableString` is returned, which does not have information about the tag.</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; nav_string = NavigableString(&quot;Hello World&quot;)</span>
-<span class="sd">    ... BeautifulSoup(nav_string)</span>
-<span class="sd">    &lt;html&gt;&lt;body&gt;&lt;p&gt;Hello World&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</span>
-
-<span class="sd">    `BeautifulSoup` constructor always wraps NavigableString in &lt;p&gt; element.</span>
-<span class="sd">    It is rather an unexpected behavior and should rather be avoided in `SoupSelector`</span>
-<span class="sd">    find method, thus this exception is raised.</span>
+<span class="sd">    and target element was not found in provided element object.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
@@ -376,7 +356,7 @@
 <a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.ModelNotFoundException">[docs]</a>
 <span class="k">class</span> <span class="nc">ModelNotFoundException</span><span class="p">(</span><span class="n">BaseModelException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exception raised by `BaseModel` when model scope was not found in provided tag</span>
+<span class="sd">    Exception raised by `BaseModel` when model scope was not found in provided element</span>
 <span class="sd">    and strict parameter was set to True.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 

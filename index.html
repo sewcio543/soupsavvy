@@ -53,6 +53,7 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -105,6 +106,7 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.implementation.html">implementation</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -130,8 +132,8 @@
 </section>
 <section id="id2">
 <h1><img alt="soupsavvy" src="https://github.com/sewcio543/soupsavvy/blob/main/resources/logo.png?raw=true" /><a class="headerlink" href="#id2" title="Link to this heading"></a></h1>
-<section id="powerful-and-flexible-search-engine-for-beautifulsoup">
-<h2>Powerful and flexible search engine for BeautifulSoup<a class="headerlink" href="#powerful-and-flexible-search-engine-for-beautifulsoup" title="Link to this heading"></a></h2>
+<section id="powerful-and-flexible-web-scraping-search-engine">
+<h2>Powerful and flexible web scraping <strong>Search Engine</strong><a class="headerlink" href="#powerful-and-flexible-web-scraping-search-engine" title="Link to this heading"></a></h2>
 <p><a class="reference external" href="https://pypi.org/project/soupsavvy/"><img alt="PyPI" src="https://img.shields.io/pypi/v/soupsavvy?color=orange" /></a> <a class="reference external" href="https://www.python.org/"><img alt="Python Versions" src="https://img.shields.io/pypi/pyversions/soupsavvy" /></a> <a class="reference external" href="https://codecov.io/gh/sewcio543/soupsavvy"><img alt="Codecov" src="https://codecov.io/gh/sewcio543/soupsavvy/graph/badge.svg?token=RZ51VS3QLB" /></a> <a class="reference external" href="https://soupsavvy.readthedocs.io"><img alt="Docs link" src="https://img.shields.io/badge/docs-read-blue" /></a></p>
 </section>
 <section id="table-of-contents">
@@ -149,11 +151,17 @@
 </section>
 <section id="about">
 <h2>About<a class="headerlink" href="#about" title="Link to this heading"></a></h2>
-<p><strong>soupsavvy</strong> is flexible search engine for <a class="reference external" href="https://pypi.org/project/beautifulsoup4/"><code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code></a>, designed to provide more powerful capabilities, making more complex searches simple and web scraping tasks more efficient and manageable.</p>
+<p>With many web scraping libraries available, each with unique interfaces and conventions, <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> provides conistent and easy way of building selection workflows.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code>, developers can focus on data extraction workflows instead of wrestling with library-specific quirks and inconsistencies. Eliminate complexity and introduce scalability and maintainability to your web scraping projects.</p>
 </section>
 <section id="key-features">
 <h2>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> introduces the concept of <code class="docutils literal notranslate"><span class="pre">Selector</span></code>, a declarative search procedure designed with simple and readable syntax. It encapsulates search logic, making it reusable across different scenarios. The package offers various types of selectors that can be easily combined to perform more complex searches.</p>
+<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> introduces the concept of <code class="docutils literal notranslate"><span class="pre">Selector</span></code>, a declarative, consistent, and reusable search procedure that is based on following principles:</p>
+<ul class="simple">
+<li><p><strong>Decoupling</strong>: Selection logic is abstracted away from DOM node and traversal implementations.</p></li>
+<li><p><strong>Framework-Agnostic</strong>: Operates consistently with any supported library.</p></li>
+<li><p><strong>Flexibile &amp; Extensibile</strong>: Lightweight, reusable components used to build complex selection workflows.</p></li>
+</ul>
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
@@ -177,10 +185,6 @@
 <section id="license">
 <h2>License<a class="headerlink" href="#license" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> is licensed under <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-green?style=plastic" />, allowing for both personal and commercial use. See the <code class="docutils literal notranslate"><span class="pre">LICENSE</span></code> file for more information.</p>
-</section>
-<section id="acknowledgements">
-<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Link to this heading"></a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">soupsavvy</span></code> is built upon the foundation of excellent <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>. We extend our gratitude to the developers of this projects for their invaluable contributions to the Python community and making our life a lot easier!</p>
 <hr class="docutils" />
 <p><strong>Happy scraping!</strong> ✨</p>
 </section>

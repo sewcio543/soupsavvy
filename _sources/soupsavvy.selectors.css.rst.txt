@@ -7,6 +7,7 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   soupsavvy.selectors.css.api
    soupsavvy.selectors.css.selectors
 
 Content

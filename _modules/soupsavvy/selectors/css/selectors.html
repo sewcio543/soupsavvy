@@ -51,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -95,7 +96,7 @@
              
   <h1>Source code for soupsavvy.selectors.css.selectors</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Module with classes for tag selection based on CSS selectors.</span>
+<span class="sd">Module with classes for element selection based on CSS selectors.</span>
 
 <span class="sd">Contains implementation of basic CSS pseudo-classes like</span>
 <span class="sd">`:only-child`, `:empty`, `:nth-child()`.</span>
@@ -119,24 +120,15 @@
 <span class="sd">- CSS - wrapper for simple search with CSS selectors</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">soupsieve</span> <span class="k">as</span> <span class="nn">sv</span>
-<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-        <span class="s2">&quot;`soupsavvy.css` requires `soupsieve` package to be installed.&quot;</span>
-    <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
-<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">Tag</span>
-
-<span class="kn">import</span> <span class="nn">soupsavvy.exceptions</span> <span class="k">as</span> <span class="nn">exc</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">SelectableCSS</span><span class="p">,</span> <span class="n">SoupSelector</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.utils.selector_utils</span> <span class="kn">import</span> <span class="n">TagIterator</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">IElement</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.utils.selector_utils</span> <span class="kn">import</span> <span class="n">TagIterator</span><span class="p">,</span> <span class="n">TagResultSet</span>
 
 
 <div class="viewcode-block" id="CSSSoupSelector">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.CSSSoupSelector">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.CSSSoupSelector">[docs]</a>
 <span class="k">class</span> <span class="nc">CSSSoupSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">,</span> <span class="n">SelectableCSS</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for selectors based on css selectors.</span>
@@ -153,17 +145,9 @@
     <span class="n">SELECTOR</span><span class="p">:</span> <span class="nb">str</span>
 
 <div class="viewcode-block" id="CSSSoupSelector.__init__">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.CSSSoupSelector.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.CSSSoupSelector.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">selector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">SELECTOR</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_formats</span><span class="p">)</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span> <span class="o">=</span> <span class="n">sv</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">sv</span><span class="o">.</span><span class="n">SelectorSyntaxError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">InvalidCSSSelector</span><span class="p">(</span>
-                <span class="s2">&quot;CSS selector constructed from provided parameters &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;is not valid: </span><span class="si">{</span><span class="n">selector</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_selector</span> <span class="o">=</span> <span class="n">selector</span></div>
 
 
@@ -179,16 +163,18 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_selector</span>
 
 <div class="viewcode-block" id="CSSSoupSelector.find_all">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.CSSSoupSelector.find_all">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.CSSSoupSelector.find_all">[docs]</a>
     <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Tag</span><span class="p">]:</span>
-
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
+        <span class="n">api</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_selector</span><span class="p">)</span>
+        <span class="n">selected</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
         <span class="n">iterator</span> <span class="o">=</span> <span class="n">TagIterator</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">islice</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_compiled</span><span class="o">.</span><span class="n">match</span><span class="p">,</span> <span class="n">iterator</span><span class="p">),</span> <span class="n">limit</span><span class="p">))</span></div>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">TagResultSet</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">iterator</span><span class="p">))</span> <span class="o">&amp;</span> <span class="n">TagResultSet</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span></div>
 
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -198,7 +184,7 @@
 
 
 <div class="viewcode-block" id="OnlyChild">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.OnlyChild">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.OnlyChild">[docs]</a>
 <span class="k">class</span> <span class="nc">OnlyChild</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding elements, that do not have any siblings.</span>
@@ -226,7 +212,7 @@
 
 
 <div class="viewcode-block" id="Empty">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.Empty">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.Empty">[docs]</a>
 <span class="k">class</span> <span class="nc">Empty</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding empty elements, i.e., that have no children.</span>
@@ -259,7 +245,7 @@
 
 
 <div class="viewcode-block" id="FirstChild">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.FirstChild">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.FirstChild">[docs]</a>
 <span class="k">class</span> <span class="nc">FirstChild</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding elements, that are the first child of their parent.</span>
@@ -289,7 +275,7 @@
 
 
 <div class="viewcode-block" id="LastChild">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.LastChild">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.LastChild">[docs]</a>
 <span class="k">class</span> <span class="nc">LastChild</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding elements, that are the last child of their parent.</span>
@@ -320,12 +306,12 @@
 
 
 <div class="viewcode-block" id="NthBaseSelector">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.NthBaseSelector">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.NthBaseSelector">[docs]</a>
 <span class="k">class</span> <span class="nc">NthBaseSelector</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for selectors based on nth formula.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="NthBaseSelector.__init__">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.NthBaseSelector.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.NthBaseSelector.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nth</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the selector with the nth formula.</span>
@@ -346,7 +332,7 @@
 
 
 <div class="viewcode-block" id="NthChild">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.NthChild">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.NthChild">[docs]</a>
 <span class="k">class</span> <span class="nc">NthChild</span><span class="p">(</span><span class="n">NthBaseSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding elements, that are the nth child of their parent.</span>
@@ -373,7 +359,7 @@
 
 
 <div class="viewcode-block" id="NthLastChild">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.NthLastChild">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.NthLastChild">[docs]</a>
 <span class="k">class</span> <span class="nc">NthLastChild</span><span class="p">(</span><span class="n">NthBaseSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding elements, that are the nth last child of their parent.</span>
@@ -400,7 +386,7 @@
 
 
 <div class="viewcode-block" id="FirstOfType">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.FirstOfType">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.FirstOfType">[docs]</a>
 <span class="k">class</span> <span class="nc">FirstOfType</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding elements, that are the first of their type in their parent.</span>
@@ -419,8 +405,8 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    --------</span>
-<span class="sd">    For this selector the first tag of any type is selected, which in</span>
-<span class="sd">    case of finding single tag is equivalent to `FirstChild` results.</span>
+<span class="sd">    For this selector the first element of any type is selected, which in</span>
+<span class="sd">    case of finding single element is equivalent to `FirstChild` results.</span>
 
 <span class="sd">    For more information on the formula, see:</span>
 
@@ -432,7 +418,7 @@
 
 
 <div class="viewcode-block" id="LastOfType">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.LastOfType">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.LastOfType">[docs]</a>
 <span class="k">class</span> <span class="nc">LastOfType</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding elements, that are the last of their type in their parent.</span>
@@ -451,8 +437,8 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    --------</span>
-<span class="sd">    For this selector the last tag of any type is selected, which in</span>
-<span class="sd">    case of finding single tag is the equivalent to `LastChild` results.</span>
+<span class="sd">    For this selector the last element of any type is selected, which in</span>
+<span class="sd">    case of finding single element is the equivalent to `LastChild` results.</span>
 
 <span class="sd">    For more information on the formula, see:</span>
 
@@ -464,7 +450,7 @@
 
 
 <div class="viewcode-block" id="NthOfType">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.NthOfType">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.NthOfType">[docs]</a>
 <span class="k">class</span> <span class="nc">NthOfType</span><span class="p">(</span><span class="n">NthBaseSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding elements, that are the nth of their type in their parent.</span>
@@ -491,7 +477,7 @@
 
 
 <div class="viewcode-block" id="NthLastOfType">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.NthLastOfType">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.NthLastOfType">[docs]</a>
 <span class="k">class</span> <span class="nc">NthLastOfType</span><span class="p">(</span><span class="n">NthBaseSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding elements, that are the nth last of their type in their parent.</span>
@@ -518,7 +504,7 @@
 
 
 <div class="viewcode-block" id="OnlyOfType">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.OnlyOfType">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.OnlyOfType">[docs]</a>
 <span class="k">class</span> <span class="nc">OnlyOfType</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding elements, that don&#39;t have siblings of the same type.</span>
@@ -548,7 +534,7 @@
 
 
 <div class="viewcode-block" id="CSS">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.CSS">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.CSS">[docs]</a>
 <span class="k">class</span> <span class="nc">CSS</span><span class="p">(</span><span class="n">CSSSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding elements based on any provided CSS selector.</span>
@@ -573,14 +559,14 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    --------</span>
-<span class="sd">    `CSS` component extends `bs4.Tag.select` implementation</span>
-<span class="sd">    by adding non recursive search option.</span>
+<span class="sd">    Implemented selectors may vary between implementations,</span>
+<span class="sd">    as each of them uses specific compatible libraries for css selection.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="CSS.__init__">
-<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.selectors.css.CSS.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.selectors.html#soupsavvy.CSS.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">css</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the selector with the provided css selector.</span>

@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -100,6 +101,11 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.html">soupsavvy package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="soupsavvy.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.implementation.html">implementation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="soupsavvy.implementation.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="soupsavvy.implementation.html#module-soupsavvy.implementation">Content</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.models.html">models</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.models.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.models.html#module-soupsavvy.models">Content</a></li>
@@ -154,7 +160,6 @@
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.exceptions.html#soupsavvy.exceptions.NotTagSearcherException"><code class="docutils literal notranslate"><span class="pre">NotTagSearcherException</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.exceptions.html#soupsavvy.exceptions.SoupSelectorException"><code class="docutils literal notranslate"><span class="pre">SoupSelectorException</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.exceptions.html#soupsavvy.exceptions.TagNotFoundException"><code class="docutils literal notranslate"><span class="pre">TagNotFoundException</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="soupsavvy.exceptions.html#soupsavvy.exceptions.NavigableStringException"><code class="docutils literal notranslate"><span class="pre">NavigableStringException</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.exceptions.html#soupsavvy.exceptions.NotSoupSelectorException"><code class="docutils literal notranslate"><span class="pre">NotSoupSelectorException</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.exceptions.html#soupsavvy.exceptions.InvalidCSSSelector"><code class="docutils literal notranslate"><span class="pre">InvalidCSSSelector</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.exceptions.html#soupsavvy.exceptions.InvalidXPathSelector"><code class="docutils literal notranslate"><span class="pre">InvalidXPathSelector</span></code></a></li>
@@ -183,6 +188,8 @@
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.Executable"><code class="docutils literal notranslate"><span class="pre">Executable</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.Comparable"><code class="docutils literal notranslate"><span class="pre">Comparable</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher"><code class="docutils literal notranslate"><span class="pre">TagSearcher</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement"><code class="docutils literal notranslate"><span class="pre">IElement</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.SelectionApi"><code class="docutils literal notranslate"><span class="pre">SelectionApi</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.operators.html">operators</a><ul>
@@ -231,6 +238,11 @@
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.html#soupsavvy.PatternSelector.__init__"><code class="docutils literal notranslate"><span class="pre">PatternSelector.__init__()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.html#soupsavvy.XPathSelector"><code class="docutils literal notranslate"><span class="pre">XPathSelector</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="soupsavvy.html#soupsavvy.XPathSelector.__init__"><code class="docutils literal notranslate"><span class="pre">XPathSelector.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="soupsavvy.html#soupsavvy.XPathSelector.find_all"><code class="docutils literal notranslate"><span class="pre">XPathSelector.find_all()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.html#soupsavvy.SelectorList"><code class="docutils literal notranslate"><span class="pre">SelectorList</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.html#soupsavvy.SelectorList.__init__"><code class="docutils literal notranslate"><span class="pre">SelectorList.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.html#soupsavvy.SelectorList.find_all"><code class="docutils literal notranslate"><span class="pre">SelectorList.find_all()</span></code></a></li>
@@ -275,6 +287,12 @@
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.html#soupsavvy.OnlyOfSelector"><code class="docutils literal notranslate"><span class="pre">OnlyOfSelector</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.html#soupsavvy.OnlyOfSelector.__init__"><code class="docutils literal notranslate"><span class="pre">OnlyOfSelector.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.html#soupsavvy.OnlyOfSelector.find_all"><code class="docutils literal notranslate"><span class="pre">OnlyOfSelector.find_all()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.html#soupsavvy.to_soupsavvy"><code class="docutils literal notranslate"><span class="pre">to_soupsavvy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.html#soupsavvy.CSS"><code class="docutils literal notranslate"><span class="pre">CSS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="soupsavvy.html#soupsavvy.CSS.SELECTOR"><code class="docutils literal notranslate"><span class="pre">CSS.SELECTOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="soupsavvy.html#soupsavvy.CSS.__init__"><code class="docutils literal notranslate"><span class="pre">CSS.__init__()</span></code></a></li>
 </ul>
 </li>
 </ul>

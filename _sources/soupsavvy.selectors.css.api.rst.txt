@@ -1,0 +1,7 @@
+selectors.css.api
+==================================
+
+.. automodule:: soupsavvy.selectors.css.api
+   :members:
+   :undoc-members:
+   :show-inheritance:

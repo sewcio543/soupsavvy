@@ -1,0 +1,211 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>soupsavvy.implementation.element &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=eea9572f" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.selectors.html">selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operations.html">operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.implementation.html">implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/features.html">Why soupsavvy?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/showcase.html">Showcase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/combining.html">Composite Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/css.html">CSS Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">soupsavvy.implementation.element</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for soupsavvy.implementation.element</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module with a converter, to transform any supported node into</span>
+<span class="sd">an appropriate IElement instance.</span>
+<span class="sd">This enables node to be used across `soupsavvy` with all its features.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">IElement</span>
+
+<span class="n">SUPPORTED</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;bs4&quot;</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">,</span> <span class="s2">&quot;selenium&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="to_soupsavvy">
+<a class="viewcode-back" href="../../../soupsavvy.implementation.element.html#soupsavvy.to_soupsavvy">[docs]</a>
+<span class="k">def</span> <span class="nf">to_soupsavvy</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IElement</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts node of supported type into an appropriate IElement instance</span>
+<span class="sd">    making it usable across `soupsavvy` with all its features.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    node : Any</span>
+<span class="sd">        A node object of supported type, currently supported implementations are:</span>
+<span class="sd">        &quot;beautifulsoup4&quot;, &quot;lxml&quot;, &quot;selenium&quot;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    IElement</span>
+<span class="sd">        An instance of IElement, wrapping the node object.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from bs4 import BeautifulSoup</span>
+<span class="sd">    ... from soupsavvy import to_soupsavvy</span>
+<span class="sd">    ... soup = BeautifulSoup(&quot;&lt;p&gt;Hello, World!&lt;/p&gt;&quot;, &quot;html.parser&quot;)</span>
+<span class="sd">    ... element = to_soupsavvy(soup)</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If the node object is of an unsupported type.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    If `IElement` is passed as an argument, it will be returned back.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">IElement</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">node</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">bs4</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;bs4&quot;</span><span class="p">)</span>
+        <span class="n">Tag</span> <span class="o">=</span> <span class="n">bs4</span><span class="o">.</span><span class="n">Tag</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="n">Tag</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">lxml</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;lxml.etree&quot;</span><span class="p">)</span>
+        <span class="n">HtmlElement</span> <span class="o">=</span> <span class="n">lxml</span><span class="o">.</span><span class="n">_Element</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="n">HtmlElement</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">selenium</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;selenium.webdriver.remote.webelement&quot;</span><span class="p">)</span>
+        <span class="n">WebElement</span> <span class="o">=</span> <span class="n">selenium</span><span class="o">.</span><span class="n">WebElement</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="n">WebElement</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Check the type of the element</span>
+    <span class="k">if</span> <span class="n">Tag</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">Tag</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">soupsavvy.implementation.bs4</span> <span class="kn">import</span> <span class="n">SoupElement</span>
+
+        <span class="k">return</span> <span class="n">SoupElement</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">HtmlElement</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">HtmlElement</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">soupsavvy.implementation.lxml</span> <span class="kn">import</span> <span class="n">LXMLElement</span>
+
+        <span class="k">return</span> <span class="n">LXMLElement</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">WebElement</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">WebElement</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">soupsavvy.implementation.selenium</span> <span class="kn">import</span> <span class="n">SeleniumElement</span>
+
+        <span class="k">return</span> <span class="n">SeleniumElement</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported element type, expected one of </span><span class="si">{</span><span class="n">SUPPORTED</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, soupsavvy.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

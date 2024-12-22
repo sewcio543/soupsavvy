@@ -24,7 +24,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="operations.general" href="soupsavvy.operations.general.html" />
+    <link rel="next" title="operations.element" href="soupsavvy.operations.element.html" />
     <link rel="prev" title="operations" href="soupsavvy.operations.html" /> 
 </head>
 
@@ -60,9 +60,9 @@
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.conditional.Continue"><code class="docutils literal notranslate"><span class="pre">Continue</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.element.html">operations.element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html">operations.general</a></li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html">operations.selection_pipeline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.soup.html">operations.soup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.wrappers.html">operations.wrappers</a></li>
 </ul>
 </li>
@@ -71,6 +71,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -146,7 +147,7 @@ Allows to execute different operations based on the condition.</p>
 </pre></div>
 </div>
 <p>Implements <cite>TagSearcher</cite> interface for convenience. It can conditionally
-apply operations to the tag and can be used as model field.</p>
+apply operations to the element and can be used as model field.</p>
 </section>
 <section id="id1">
 <h2>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
@@ -156,9 +157,9 @@ apply operations to the tag and can be used as model field.</p>
 <span class="gp">... </span>    <span class="n">Text</span><span class="p">(),</span>
 <span class="gp">... </span>    <span class="n">Href</span><span class="p">(),</span>
 <span class="gp">... </span><span class="p">)</span>
-<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">user_tag</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">user_element</span><span class="p">)</span>
 <span class="go">username</span>
-<span class="go">... operation.find(other_tag)</span>
+<span class="go">... operation.find(other_element)</span>
 <span class="go">www.example.com</span>
 </pre></div>
 </div>
@@ -242,7 +243,7 @@ operation is skipped and the next one is executed.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="soupsavvy.operations.html" class="btn btn-neutral float-left" title="operations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="soupsavvy.operations.general.html" class="btn btn-neutral float-right" title="operations.general" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="soupsavvy.operations.element.html" class="btn btn-neutral float-right" title="operations.element" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

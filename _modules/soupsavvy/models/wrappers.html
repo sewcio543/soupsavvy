@@ -51,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul>
@@ -107,11 +108,9 @@
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">Tag</span>
-
 <span class="kn">import</span> <span class="nn">soupsavvy.exceptions</span> <span class="k">as</span> <span class="nn">exc</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">check_operation</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">Comparable</span><span class="p">,</span> <span class="n">TagSearcher</span>
+<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">Comparable</span><span class="p">,</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">TagSearcher</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations.selection_pipeline</span> <span class="kn">import</span> <span class="n">SelectionPipeline</span>
 
 
@@ -165,19 +164,19 @@
 <a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.FieldWrapper.find_all">[docs]</a>
     <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Find all matching tags using the wrapped selector.</span>
+<span class="sd">        Find all matching element using the wrapped selector.</span>
 <span class="sd">        Used for compatibility with `TagSearcher` interface,</span>
 <span class="sd">        delegates to wrapped selector.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tag : Tag</span>
-<span class="sd">            Any `bs4.Tag` to search within.</span>
+<span class="sd">        tag : IElement</span>
+<span class="sd">            Any `IElement` to search within.</span>
 <span class="sd">        recursive : bool, optional</span>
 <span class="sd">            Whether to search recursively, by default True.</span>
 <span class="sd">        limit : int, optional</span>
@@ -258,15 +257,17 @@
 
 <div class="viewcode-block" id="All.find">
 <a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.All.find">[docs]</a>
-    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find all matching tags using the wrapped selector,</span>
 <span class="sd">        enforcing the use of find_all method.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tag : Tag</span>
-<span class="sd">            Any `bs4.Tag` to search within.</span>
+<span class="sd">        tag : IElement</span>
+<span class="sd">            Any `IElement` to search within.</span>
 <span class="sd">        strict : bool, optional</span>
 <span class="sd">            Ignored, as this method always falls back to `find_all`.</span>
 <span class="sd">        recursive : bool, optional</span>
@@ -300,7 +301,7 @@
 
 <div class="viewcode-block" id="Required.find">
 <a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.Required.find">[docs]</a>
-    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Finds a required element using the wrapped selector,</span>
 <span class="sd">        enforcing matched element not to be None.</span>
@@ -308,8 +309,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tag : Tag</span>
-<span class="sd">            Any `bs4.Tag` to search within.</span>
+<span class="sd">        tag : IElement</span>
+<span class="sd">            Any `IElement` to search within.</span>
 <span class="sd">        strict : bool, optional</span>
 <span class="sd">            If True, raises an exception if no matches are found, by default False.</span>
 <span class="sd">        recursive : bool, optional</span>
@@ -369,15 +370,15 @@
 
 <div class="viewcode-block" id="Default.find">
 <a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.Default.find">[docs]</a>
-    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">Tag</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Finds an element, returning a default value if None was returned</span>
 <span class="sd">        by wrapped selector. Any exception raised during the search is propagated.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tag : Tag</span>
-<span class="sd">            Any bs4.Tag` to search within.</span>
+<span class="sd">        tag : IElement</span>
+<span class="sd">            Any `IElement` to search within.</span>
 <span class="sd">        strict : bool, optional</span>
 <span class="sd">            If True, raises an exception if no matches are found, by default False.</span>
 <span class="sd">        recursive : bool, optional</span>

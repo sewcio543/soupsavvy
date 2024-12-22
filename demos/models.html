@@ -54,6 +54,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../soupsavvy.operations.html">operations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../soupsavvy.implementation.html">implementation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Demos</span></p>
 <ul class="current">
@@ -210,23 +211,20 @@
 <section id="text">
 <h3>Text<a class="headerlink" href="#text" title="Link to this heading"></a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Text</span></code> is a built-in operation that extracts the text content of an element. It’s very common and useful operation in web scraping.</p>
-<p>It wraps <code class="docutils literal notranslate"><span class="pre">BeautifulSoup.get_text</span></code> method, which exposes the following parameters:</p>
-<ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">separator</span></code> (str):</strong> - Default is <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code></p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">strip</span></code> (bool):</strong> - Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
-</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    &lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">operation</span> <span class="o">=</span> <span class="n">Text</span><span class="p">(</span><span class="n">strip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+<span class="n">operation</span> <span class="o">=</span> <span class="n">Text</span><span class="p">()</span>
+<span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -245,13 +243,15 @@
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Href</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    &lt;a href=&quot;www.book.com&quot;&gt;Animal Farm&lt;/a&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
 <span class="n">operation</span> <span class="o">=</span> <span class="n">Href</span><span class="p">()</span>
-<span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
+<span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -270,18 +270,20 @@
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Parent</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    &lt;div&gt;&lt;a href=&quot;www.book.com&quot;&gt;Animal Farm&lt;/a&gt;&lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
 <span class="n">operation</span> <span class="o">=</span> <span class="n">Parent</span><span class="p">()</span>
-<span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
+<span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;div&gt;&lt;a href=&quot;www.book.com&quot;&gt;Animal Farm&lt;/a&gt;&lt;/div&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SoupElement(&lt;div&gt;&lt;a href=&quot;www.book.com&quot;&gt;Animal Farm&lt;/a&gt;&lt;/div&gt;)
 </pre></div>
 </div>
 </div>
@@ -294,7 +296,7 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 
 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -305,11 +307,13 @@
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
 <span class="n">selector</span> <span class="o">=</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;book&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">ClassSelector</span><span class="p">(</span><span class="s2">&quot;price&quot;</span><span class="p">)</span>
 <span class="n">operation</span> <span class="o">=</span> <span class="n">Text</span><span class="p">()</span> <span class="o">|</span> <span class="n">Operation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">))</span> <span class="o">|</span> <span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
 <span class="n">pipeline</span> <span class="o">=</span> <span class="n">selector</span> <span class="o">|</span> <span class="n">operation</span>
-<span class="n">pipeline</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -352,7 +356,7 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -373,7 +377,8 @@
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -389,7 +394,7 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.exceptions</span> <span class="kn">import</span> <span class="n">ModelNotFoundException</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
@@ -411,11 +416,12 @@
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">ModelNotFoundException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 </pre></div>
@@ -433,7 +439,7 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.exceptions</span> <span class="kn">import</span> <span class="n">FieldExtractionException</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
@@ -454,9 +460,10 @@
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+    <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">FieldExtractionException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 </pre></div>
@@ -465,12 +472,8 @@
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Extracting field &#39;price&#39; failed in model &#39;Book&#39; for element:
 &lt;div class=&quot;book&quot; href=&quot;www.book.com&quot;&gt;
- &lt;p class=&quot;title&quot;&gt;
-  Animal Farm
- &lt;/p&gt;
- &lt;p&gt;
-  George Orwell
- &lt;/p&gt;
+&lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;
+&lt;p&gt;George Orwell&lt;/p&gt;
 &lt;/div&gt;
 </pre></div>
 </div>
@@ -484,7 +487,7 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Href</span>
 
@@ -493,7 +496,7 @@
 
     <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
 
-    <span class="nb">id</span> <span class="o">=</span> <span class="n">Operation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Operation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
     <span class="n">link</span> <span class="o">=</span> <span class="n">Href</span><span class="p">()</span>
 
 
@@ -505,7 +508,9 @@
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -527,7 +532,7 @@ They handle edge cases, like missing data, more gracefully in the model.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">SkipNone</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -547,7 +552,9 @@ They handle edge cases, like missing data, more gracefully in the model.</p>
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -566,7 +573,7 @@ It allows to specify category of exceptions to suppress by passing <code class="
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Suppress</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -589,7 +596,9 @@ It allows to specify category of exceptions to suppress by passing <code class="
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -604,7 +613,7 @@ It allows to specify category of exceptions to suppress by passing <code class="
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Default</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Suppress</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -625,7 +634,9 @@ It allows to specify category of exceptions to suppress by passing <code class="
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -649,7 +660,7 @@ It allows to specify category of exceptions to suppress by passing <code class="
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Href</span><span class="p">,</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -674,7 +685,9 @@ It allows to specify category of exceptions to suppress by passing <code class="
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -696,7 +709,7 @@ It allows to specify category of exceptions to suppress by passing <code class="
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Break</span><span class="p">,</span> <span class="n">Continue</span><span class="p">,</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -732,7 +745,9 @@ It allows to specify category of exceptions to suppress by passing <code class="
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -750,7 +765,7 @@ It allows to specify category of exceptions to suppress by passing <code class="
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.exceptions</span> <span class="kn">import</span> <span class="n">FieldExtractionException</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Required</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">SkipNone</span><span class="p">,</span> <span class="n">Text</span>
@@ -771,9 +786,10 @@ It allows to specify category of exceptions to suppress by passing <code class="
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+    <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">FieldExtractionException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 </pre></div>
@@ -782,12 +798,8 @@ It allows to specify category of exceptions to suppress by passing <code class="
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Field &#39;price&#39; is required and was not found in model &#39;Book&#39; for element:
 &lt;div class=&quot;book&quot; href=&quot;www.book.com&quot;&gt;
- &lt;p class=&quot;title&quot;&gt;
-  Animal Farm
- &lt;/p&gt;
- &lt;p&gt;
-  George Orwell
- &lt;/p&gt;
+&lt;p class=&quot;title&quot;&gt;Animal Farm&lt;/p&gt;
+&lt;p&gt;George Orwell&lt;/p&gt;
 &lt;/div&gt;
 </pre></div>
 </div>
@@ -802,7 +814,7 @@ This wrapper extracts all elements matching the field selector.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">All</span><span class="p">,</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -825,7 +837,9 @@ This wrapper extracts all elements matching the field selector.</p>
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -844,7 +858,7 @@ This wrapper extracts all elements matching the field selector.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">All</span><span class="p">,</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -870,7 +884,9 @@ This wrapper extracts all elements matching the field selector.</p>
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -886,7 +902,7 @@ This wrapper extracts all elements matching the field selector.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">post</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">LastOfType</span>
@@ -917,7 +933,9 @@ This wrapper extracts all elements matching the field selector.</p>
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -937,7 +955,7 @@ This wrapper extracts all elements matching the field selector.</p>
 
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Href</span><span class="p">,</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -966,7 +984,9 @@ This wrapper extracts all elements matching the field selector.</p>
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">eBook</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">eBook</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -984,7 +1004,7 @@ In this case, only the fields defined in the subclass will be extracted.</p>
 
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Href</span><span class="p">,</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -1013,7 +1033,9 @@ In this case, only the fields defined in the subclass will be extracted.</p>
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">eBook</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">eBook</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1032,7 +1054,7 @@ You can use <code class="docutils literal notranslate"><span class="pre">HasSele
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">HasSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">HasSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -1072,7 +1094,9 @@ You can use <code class="docutils literal notranslate"><span class="pre">HasSele
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1087,7 +1111,7 @@ You can use <code class="docutils literal notranslate"><span class="pre">HasSele
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">SelfSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">SelfSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
 
@@ -1106,7 +1130,10 @@ You can use <code class="docutils literal notranslate"><span class="pre">HasSele
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">div</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">div</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">div</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1124,7 +1151,7 @@ You can use <code class="docutils literal notranslate"><span class="pre">HasSele
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">LastOfType</span>
@@ -1157,7 +1184,9 @@ You can use <code class="docutils literal notranslate"><span class="pre">HasSele
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1176,7 +1205,7 @@ You can use <code class="docutils literal notranslate"><span class="pre">HasSele
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">LastOfType</span>
@@ -1208,7 +1237,9 @@ You can use <code class="docutils literal notranslate"><span class="pre">HasSele
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;html.parser&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1224,7 +1255,7 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">Anchor</span><span class="p">,</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">Anchor</span><span class="p">,</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -1250,7 +1281,9 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1271,7 +1304,7 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.selectors.css</span> <span class="kn">import</span> <span class="n">FirstChild</span>
@@ -1307,7 +1340,9 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1325,7 +1360,7 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.exceptions</span> <span class="kn">import</span> <span class="n">FrozenModelException</span>
@@ -1347,7 +1382,9 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">result</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="mi">200</span>  <span class="c1"># type: ignore</span>
@@ -1382,7 +1419,7 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
 
@@ -1408,7 +1445,9 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> == </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1430,7 +1469,7 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pydantic</span>
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -1455,7 +1494,9 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">book</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">book</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 <span class="n">book</span><span class="o">.</span><span class="n">migrate</span><span class="p">(</span><span class="n">PydanticBook</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1475,7 +1516,7 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">DeclarativeBase</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -1509,7 +1550,9 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">book</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">book</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 <span class="n">book</span><span class="o">.</span><span class="n">migrate</span><span class="p">(</span><span class="n">SABook</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1529,7 +1572,7 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pydantic</span>
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
 
@@ -1569,7 +1612,9 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">book</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">book</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 <span class="n">book</span><span class="o">.</span><span class="n">migrate</span><span class="p">(</span><span class="n">PydanticBook</span><span class="p">,</span> <span class="n">mapping</span><span class="o">=</span><span class="p">{</span><span class="n">Author</span><span class="p">:</span> <span class="n">PydanticAuthor</span><span class="p">})</span>
 </pre></div>
 </div>
@@ -1589,7 +1634,7 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">MigrationSchema</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
 
@@ -1638,7 +1683,9 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">book</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">book</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 <span class="n">book</span><span class="o">.</span><span class="n">migrate</span><span class="p">(</span>
     <span class="n">TargetBook</span><span class="p">,</span>
     <span class="n">mapping</span><span class="o">=</span><span class="p">{</span><span class="n">Author</span><span class="p">:</span> <span class="n">MigrationSchema</span><span class="p">(</span><span class="n">TargetAuthor</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;genre&quot;</span><span class="p">:</span> <span class="s2">&quot;Dystopia&quot;</span><span class="p">})},</span>
@@ -1661,7 +1708,7 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -1681,7 +1728,9 @@ To find out more, see <a class="reference external" href="https://soupsavvy.read
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">book</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">book</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 <span class="n">book_copy</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
 <span class="k">assert</span> <span class="n">book</span> <span class="o">==</span> <span class="n">book_copy</span>
@@ -1710,7 +1759,7 @@ You can use <code class="docutils literal notranslate"><span class="pre">HasSele
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">HasSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">HasSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -1749,7 +1798,9 @@ You can use <code class="docutils literal notranslate"><span class="pre">HasSele
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1764,7 +1815,7 @@ You can use <code class="docutils literal notranslate"><span class="pre">HasSele
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">SelfSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">SelfSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
 
@@ -1783,7 +1834,10 @@ You can use <code class="docutils literal notranslate"><span class="pre">HasSele
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">div</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">div</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">div</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1803,7 +1857,7 @@ You can use <code class="docutils literal notranslate"><span class="pre">HasSele
 
 <span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span>
+<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">SkipNone</span><span class="p">,</span> <span class="n">Text</span>
 
@@ -1825,7 +1879,9 @@ You can use <code class="docutils literal notranslate"><span class="pre">HasSele
 <span class="s2">    &lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
-<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">to_soupsavvy</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
+
+<span class="n">Book</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
