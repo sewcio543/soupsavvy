@@ -96,3 +96,10 @@ class SoupElement(IElement):
 
     def __hash__(self):
         return id(self._node)
+
+    @property
+    def node(self) -> bs4.Tag:
+        return self._node
+
+    def get(self) -> bs4.Tag:
+        return self.node

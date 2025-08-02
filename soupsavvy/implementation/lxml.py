@@ -123,3 +123,10 @@ class LXMLElement(IElement):
         return etree.tostring(self._node, method="html", with_tail=False).decode(
             "utf-8"
         )
+
+    @property
+    def node(self) -> LXMLElement:
+        return self._node
+
+    def get(self) -> LXMLElement:
+        return self.node

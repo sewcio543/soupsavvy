@@ -77,9 +77,10 @@ class TestSoupElement:
         assert str(element) == str(bs)
         assert repr(element) == f"SoupElement({bs!r})"
 
-    def test_hash_of_element_is_equal_to_hash_from_id_of_wrapped_element(self):
+    def test_hashes_of_two_elements_with_same_node_are_equal(self):
         """
-        Tests if hash of SoupElement is equal to id of wrapped element.
+        Tests if hashes of two elements with the same node are equal.
+        For bs4 it tests if hash of SoupElement is equal to id of wrapped element.
         Bs4 element is hashed by string representation, two elements with the same
         content will have the same hash.
         To prevent this, implementation uses hash of id.
@@ -91,6 +92,10 @@ class TestSoupElement:
         bs = BeautifulSoup(text, features="lxml")
         element = SoupElement(bs)
 
+        div = bs.find("div")
+        div2 = bs.find("div")
+
+        assert hash(SoupElement(div)) == hash(SoupElement(div2))
         assert hash(element) == hash(id(bs))
 
     def test_equality_is_implemented_correctly(self):

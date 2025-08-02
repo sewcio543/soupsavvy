@@ -88,8 +88,11 @@ class TestLXMLElement:
         )
         assert repr(element) == f"LXMLElement({node!r})"
 
-    def test_hash_of_element_is_equal_to_hash_of_wrapped_element(self):
-        """Tests if hash of element is the same as hash of wrapped node."""
+    def test_hashes_of_two_elements_with_same_node_are_equal(self):
+        """
+        Tests if hashes of two elements with the same node are equal.
+        In lxml, hash is equal to the hash of the wrapped node element.
+        """
         text = """
             <div>Hello</div>
             <p>World</p>
@@ -97,6 +100,10 @@ class TestLXMLElement:
         node = to_lxml(text)
         element = LXMLElement(node)
 
+        div = node.find(".//div")
+        div2 = node.find(".//div")
+
+        assert hash(LXMLElement(div)) == hash(LXMLElement(div2))
         assert hash(element) == hash(node)
 
     def test_equality_is_implemented_correctly(self):
