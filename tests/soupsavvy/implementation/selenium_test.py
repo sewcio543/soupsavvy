@@ -33,7 +33,7 @@ class TestSeleniumElement:
         with pytest.raises(TypeError):
             SeleniumElement(text)
 
-    def test_node_is_wrapped_by_element(self, driver: WebDriver):
+    def test_node_is_wrapped_by_element(self, driver_selenium: WebDriver):
         """
         Tests if node passed to constructor is wrapped by element and can be accessed
         with `node` attribute or `get` method. This should be the same object.
@@ -42,14 +42,16 @@ class TestSeleniumElement:
             <div>Hello</div>
             <p>World</p>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "html")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
 
         assert element.node is node
         assert element.get() is node
 
-    def test_can_be_constructed_with_from_node_class_method(self, driver: WebDriver):
+    def test_can_be_constructed_with_from_node_class_method(
+        self, driver_selenium: WebDriver
+    ):
         """
         Tests if element can be constructed with `from_node` class method.
         This achieves the same result as init method.
@@ -58,14 +60,14 @@ class TestSeleniumElement:
             <div>Hello</div>
             <p>World</p>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "html")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "html")
         element = SeleniumElement.from_node(node)
 
         assert element.node is node
         assert element.get() is node
 
-    def test_str_and_repr_are_correct(self, driver: WebDriver):
+    def test_str_and_repr_are_correct(self, driver_selenium: WebDriver):
         """
         Tests if `str` and `repr` methods return correct values.
         Repr should be a string with class name and wrapped node repr.
@@ -75,50 +77,57 @@ class TestSeleniumElement:
             <div>Hello</div>
             <p>World</p>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "html")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
 
         assert str(element) == node.get_attribute("outerHTML")
         assert repr(element) == f"SeleniumElement({node!r})"
 
-    def test_hash_of_element_is_equal_to_hash_of_wrapped_element(
-        self, driver: WebDriver
+    def test_hashes_of_two_elements_with_same_node_are_equal(
+        self, driver_selenium: WebDriver
     ):
-        """Tests if hash of element is the same as hash of wrapped node."""
+        """
+        Tests if hashes of two elements with the same node are equal.
+        In selenium, hash is equal to the hash of the wrapped node element.
+        """
         text = """
             <div>Hello</div>
             <p>World</p>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "html")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
 
+        div = node.find_element(By.TAG_NAME, "div")
+        div2 = node.find_element(By.TAG_NAME, "div")
+
+        assert hash(SeleniumElement(div)) == hash(SeleniumElement(div2))
         assert hash(element) == hash(node)
 
-    def test_equality_is_implemented_correctly(self, driver: WebDriver):
+    def test_equality_is_implemented_correctly(self, driver_selenium: WebDriver):
         """
         Tests if only two element objects with the same wrapped node element are equal.
         """
         text = """
             <div><p>Hello</p></div>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "html")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
 
         assert element == SeleniumElement(node)
         assert element != SeleniumElement(node.find_element(By.TAG_NAME, "div"))
         assert element != node
 
-    def test_name_attribute_has_correct_value(self, driver: WebDriver):
+    def test_name_attribute_has_correct_value(self, driver_selenium: WebDriver):
         """Tests if `name` attribute returns name of the node element."""
         text = """
             <div>Hello</div>
             <p>World</p>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "div")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "div")
         element = SeleniumElement(node)
 
         assert element.name == "div"
@@ -133,7 +142,7 @@ class TestSeleniumElement:
         ],
     )
     def test_text_return_expected_value(
-        self, text: str, expected: str, driver: WebDriver
+        self, text: str, expected: str, driver_selenium: WebDriver
     ):
         """
         Tests if `text` property returns expected value.
@@ -142,14 +151,14 @@ class TestSeleniumElement:
         any leading or trailing whitespace.
         It can contain additional new line characters, which are removed for testing.
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "div")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "div")
         element = SeleniumElement(node)
 
         assert element.text.replace("\n", "") == expected
 
     def test_children_returns_iterator_of_child_elements_in_order(
-        self, driver: WebDriver
+        self, driver_selenium: WebDriver
     ):
         """
         Tests if `children` property returns iterator of child elements
@@ -162,8 +171,8 @@ class TestSeleniumElement:
                 <span><p>Hi</p><a>Earth</a></span>
             </div>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "div")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "div")
         element = SeleniumElement(node)
 
         children = list(element.children)
@@ -176,7 +185,7 @@ class TestSeleniumElement:
         ]
 
     def test_children_returns_empty_iterator_if_no_children_of_element(
-        self, driver: WebDriver
+        self, driver_selenium: WebDriver
     ):
         """
         Tests if `children` property returns empty iterator if element has no children.
@@ -185,15 +194,15 @@ class TestSeleniumElement:
         text = """
             <div>Hello</div>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "div")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "div")
         element = SeleniumElement(node)
 
         children = list(element.children)
         assert children == []
 
     def test_descendants_returns_iterator_of_descendant_elements_in_order(
-        self, driver: WebDriver
+        self, driver_selenium: WebDriver
     ):
         """
         Tests if `descendants` property returns iterator of descendant elements
@@ -206,8 +215,8 @@ class TestSeleniumElement:
                 <span><span><h1>Hi</h1><h2>Hi</h2></span><a>Earth</a></span>
             </div>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "div")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "div")
         element = SeleniumElement(node)
 
         descendants = list(element.descendants)
@@ -224,7 +233,7 @@ class TestSeleniumElement:
         ]
 
     def test_descendants_returns_empty_iterator_if_no_descendants_of_element(
-        self, driver: WebDriver
+        self, driver_selenium: WebDriver
     ):
         """
         Tests if `descendants` property returns empty iterator
@@ -233,14 +242,16 @@ class TestSeleniumElement:
         text = """
             <div>Hello</div>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "div")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "div")
         element = SeleniumElement(node)
 
         descendants = list(element.descendants)
         assert descendants == []
 
-    def test_parent_return_element_wrapping_soup_parent(self, driver: WebDriver):
+    def test_parent_return_element_wrapping_soup_parent(
+        self, driver_selenium: WebDriver
+    ):
         """
         Tests if `parent` property returns new element with parent node
         as the wrapped node.
@@ -252,8 +263,8 @@ class TestSeleniumElement:
                 <span><p>Hi</p><a>Earth</a></span>
             </div>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "div")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "div")
         element = SeleniumElement(node)
 
         parent = element.parent
@@ -262,7 +273,7 @@ class TestSeleniumElement:
         parent_node = parent.get()
         assert parent_node.tag_name == "body"
 
-    def test_parent_return_none_when_root_node(self, driver: WebDriver):
+    def test_parent_return_none_when_root_node(self, driver_selenium: WebDriver):
         """Tests if `parent` property returns None if element is root node."""
         text = """
             <div>
@@ -271,10 +282,10 @@ class TestSeleniumElement:
                 <span><p>Hi</p><a>Earth</a></span>
             </div>
         """
-        insert(text, driver=driver)
-        node = driver.execute_script(
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.execute_script(
             "return arguments[0].parentNode;",
-            driver.find_element(By.TAG_NAME, "html"),
+            driver_selenium.find_element(By.TAG_NAME, "html"),
         )
         element = SeleniumElement(node)
 
@@ -282,7 +293,7 @@ class TestSeleniumElement:
         assert parent is None
 
     @pytest.mark.integration
-    def test_css_api_works_properly(self, driver: WebDriver):
+    def test_css_api_works_properly(self, driver_selenium: WebDriver):
         """
         Tests if `css` method returns `SeleniumCSSApi` object correctly initialized
         which select elements properly returning list of `SeleniumElement` objects.
@@ -295,8 +306,8 @@ class TestSeleniumElement:
             </div>
             <p class="widget">Hi</p>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "html")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
 
         api = element.css("p.widget")
@@ -310,7 +321,7 @@ class TestSeleniumElement:
         ]
 
     @pytest.mark.integration
-    def test_xpath_api_works_properly(self, driver: WebDriver):
+    def test_xpath_api_works_properly(self, driver_selenium: WebDriver):
         """
         Tests if `xpath` method returns `SeleniumXPathApi` object correctly initialized
         which select elements properly returning list of `SeleniumElement` objects.
@@ -322,8 +333,8 @@ class TestSeleniumElement:
             </div>
             <p class="widget">Hi</p>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "html")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
 
         api = element.xpath(".//p")
@@ -336,7 +347,7 @@ class TestSeleniumElement:
             """<p class="widget">Hi</p>""",
         ]
 
-    def test_finds_all_ancestors_of_element_in_order(self, driver: WebDriver):
+    def test_finds_all_ancestors_of_element_in_order(self, driver_selenium: WebDriver):
         """
         Tests if `find_ancestors` method returns list of ancestors of element
         starting from parent moving up to the root of the document.
@@ -347,8 +358,8 @@ class TestSeleniumElement:
                 <span><p><a>Hello</a></p></span>
             </div>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "a")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "a")
 
         element = SeleniumElement(node)
         ancestors = element.find_ancestors()
@@ -363,7 +374,7 @@ class TestSeleniumElement:
             """<html><body><div><p class="widget">Hello</p><span><p><a>Hello</a></p></span></div></body></html>""",
         ]
 
-    def test_finds_ancestors_with_limit(self, driver: WebDriver):
+    def test_finds_ancestors_with_limit(self, driver_selenium: WebDriver):
         """
         Tests if `find_ancestors` method returns ancestors up to the limit.
         No more than `limit` ancestors are returned.
@@ -374,8 +385,8 @@ class TestSeleniumElement:
                 <span><p><a>Hello</a></p></span>
             </div>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "a")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "a")
 
         element = SeleniumElement(node)
         ancestors = element.find_ancestors(limit=2)
@@ -386,7 +397,9 @@ class TestSeleniumElement:
             "<span><p><a>Hello</a></p></span>",
         ]
 
-    def test_find_ancestors_returns_empty_list_if_root_element(self, driver: WebDriver):
+    def test_find_ancestors_returns_empty_list_if_root_element(
+        self, driver_selenium: WebDriver
+    ):
         """Tests if `find_ancestors` method returns empty list if element is root."""
         text = """
             <div>
@@ -394,13 +407,13 @@ class TestSeleniumElement:
                 <span><p><a>Hello</a></p></span>
             </div>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.CSS_SELECTOR, ":root")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.CSS_SELECTOR, ":root")
 
         element = SeleniumElement(node)
         assert element.find_ancestors() == []
 
-    def test_finds_all_subsequent_siblings_of_element(self, driver: WebDriver):
+    def test_finds_all_subsequent_siblings_of_element(self, driver_selenium: WebDriver):
         """
         Tests if `find_subsequent_siblings` method returns all subsequent siblings.
         """
@@ -414,8 +427,8 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "span")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "span")
 
         element = SeleniumElement(node)
         siblings = element.find_subsequent_siblings()
@@ -428,7 +441,7 @@ class TestSeleniumElement:
         ]
 
     def test_finds_all_subsequent_returns_empty_list_if_last_child(
-        self, driver: WebDriver
+        self, driver_selenium: WebDriver
     ):
         """
         Tests if `find_subsequent_siblings` method returns empty list
@@ -441,13 +454,13 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "span")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "span")
 
         element = SeleniumElement(node)
         assert element.find_subsequent_siblings() == []
 
-    def test_finds_all_subsequent_with_limit(self, driver: WebDriver):
+    def test_finds_all_subsequent_with_limit(self, driver_selenium: WebDriver):
         """
         Tests if `find_subsequent_siblings` method returns
         all subsequent siblings up to the limit.
@@ -462,8 +475,8 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "span")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "span")
 
         element = SeleniumElement(node)
         siblings = element.find_subsequent_siblings(limit=2)
@@ -474,7 +487,9 @@ class TestSeleniumElement:
             "<span>Earth</span>",
         ]
 
-    def test_finds_all_elements_when_no_specifications(self, driver: WebDriver):
+    def test_finds_all_elements_when_no_specifications(
+        self, driver_selenium: WebDriver
+    ):
         """
         Tests if `find_all` method returns all descendant elements
         if no specifications are provided.
@@ -486,8 +501,8 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "body")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "body")
 
         element = SeleniumElement(node)
         result = element.find_all()
@@ -502,7 +517,7 @@ class TestSeleniumElement:
         ]
 
     def test_finds_all_returns_list_of_children_when_recursive_false(
-        self, driver: WebDriver
+        self, driver_selenium: WebDriver
     ):
         """
         Tests if `find_all` method returns all child elements
@@ -515,8 +530,8 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "body")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "body")
 
         element = SeleniumElement(node)
         result = element.find_all(recursive=False)
@@ -527,7 +542,7 @@ class TestSeleniumElement:
             """<span>Hi</span>""",
         ]
 
-    def test_finds_all_elements_with_limit(self, driver: WebDriver):
+    def test_finds_all_elements_with_limit(self, driver_selenium: WebDriver):
         """
         Tests if `find_all` method returns all descendant elements up to the limit.
         They appear in the order they are found in the document
@@ -540,8 +555,8 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "body")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "body")
 
         element = SeleniumElement(node)
         result = element.find_all(limit=3)
@@ -553,7 +568,9 @@ class TestSeleniumElement:
             """<p><a>World</a></p>""",
         ]
 
-    def test_finds_all_elements_with_limit_and_recursive_false(self, driver: WebDriver):
+    def test_finds_all_elements_with_limit_and_recursive_false(
+        self, driver_selenium: WebDriver
+    ):
         """
         Tests if `find_all` method returns child elements up to the limit
         if recursive is False and limit is set.
@@ -566,8 +583,8 @@ class TestSeleniumElement:
             <span>Hi</span>
             <p>Earth</p>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "body")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "body")
 
         element = SeleniumElement(node)
         result = element.find_all(limit=2, recursive=False)
@@ -578,7 +595,9 @@ class TestSeleniumElement:
             """<span>Hi</span>""",
         ]
 
-    def test_finds_all_returns_empty_list_if_nothing_matches(self, driver: WebDriver):
+    def test_finds_all_returns_empty_list_if_nothing_matches(
+        self, driver_selenium: WebDriver
+    ):
         """
         Tests if `find_all` method returns empty list if no elements match the criteria.
         """
@@ -589,15 +608,15 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "html")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
 
         result = element.find_all(name="h2")
         assert result == []
 
     def test_finds_all_returns_empty_list_if_nothing_matches_and_recursive_false(
-        self, driver: WebDriver
+        self, driver_selenium: WebDriver
     ):
         """
         Tests if `find_all` method returns empty list if no elements match the criteria
@@ -610,14 +629,14 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "html")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
 
         result = element.find_all(name="h2", recursive=False)
         assert result == []
 
-    def test_finds_all_elements_with_specific_name(self, driver: WebDriver):
+    def test_finds_all_elements_with_specific_name(self, driver_selenium: WebDriver):
         """
         Tests if `find_all` method returns all descendant elements with specific name.
         """
@@ -628,8 +647,8 @@ class TestSeleniumElement:
             </div>
             <span>Hi</span>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "html")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
         result = element.find_all(name="p")
 
@@ -640,7 +659,7 @@ class TestSeleniumElement:
         ]
 
     def test_finds_all_elements_with_specific_name_and_recursive_false(
-        self, driver: WebDriver
+        self, driver_selenium: WebDriver
     ):
         """
         Tests if `find_all` method returns all child elements with specific name
@@ -655,8 +674,8 @@ class TestSeleniumElement:
             </div>
             <span><p>World</p></span>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "body")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "body")
 
         element = SeleniumElement(node)
         result = element.find_all(name="span", recursive=False)
@@ -667,7 +686,9 @@ class TestSeleniumElement:
             """<span><p>World</p></span>""",
         ]
 
-    def test_finds_all_elements_with_exact_attribute_match(self, driver: WebDriver):
+    def test_finds_all_elements_with_exact_attribute_match(
+        self, driver_selenium: WebDriver
+    ):
         """
         Tests if `find_all` method returns all descendant elements
         with specific attribute and value.
@@ -680,8 +701,8 @@ class TestSeleniumElement:
             </div>
             <span class="widget">Hi</span>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "html")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
         result = element.find_all(attrs={"class": "widget"})
 
@@ -691,7 +712,9 @@ class TestSeleniumElement:
             """<span class="widget">Hi</span>""",
         ]
 
-    def test_finds_all_elements_with_regex_attribute_match(self, driver: WebDriver):
+    def test_finds_all_elements_with_regex_attribute_match(
+        self, driver_selenium: WebDriver
+    ):
         """
         Tests if `find_all` method returns all descendant elements
         with specific attribute matching regex pattern.
@@ -705,8 +728,8 @@ class TestSeleniumElement:
             <h1 class="widge">Welcome</h1>
             <span class="menu your_widget">Hello</span>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "html")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
         result = element.find_all(attrs={"class": re.compile("widget")})
 
@@ -718,7 +741,7 @@ class TestSeleniumElement:
         ]
 
     def test_finds_all_elements_with_matching_multiple_attributes(
-        self, driver: WebDriver
+        self, driver_selenium: WebDriver
     ):
         """
         Tests if `find_all` method returns all descendant elements
@@ -732,8 +755,8 @@ class TestSeleniumElement:
             <span class="widget" name="navbar">Hi</span>
             <h1 class="widget" name="menu">Welcome</h1>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "html")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
         result = element.find_all(attrs={"class": "widget", "name": "menu"})
 
@@ -743,7 +766,7 @@ class TestSeleniumElement:
         ]
 
     def test_finds_all_elements_with_matching_attributes_and_name(
-        self, driver: WebDriver
+        self, driver_selenium: WebDriver
     ):
         """
         Tests if `find_all` method returns all descendant elements
@@ -758,8 +781,8 @@ class TestSeleniumElement:
             <h1 class="widge">Welcome</h1>
             <span class="widget">Hello</span>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "html")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "html")
         element = SeleniumElement(node)
         result = element.find_all(name="span", attrs={"class": "widget"})
 
@@ -770,7 +793,7 @@ class TestSeleniumElement:
         ]
 
     def test_finds_all_elements_with_matching_attributes_and_name_with_limit_and_recursive_false(
-        self, driver: WebDriver
+        self, driver_selenium: WebDriver
     ):
         """
         Tests if `find_all` method returns all child elements, that match both provided
@@ -788,8 +811,8 @@ class TestSeleniumElement:
             <h1 class="widge">Welcome</h1>
             <span class="widget">Hello</span>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "body")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "body")
         assert node is not None
 
         element = SeleniumElement(node)
@@ -805,7 +828,9 @@ class TestSeleniumElement:
             """<span class="widget">Welcome</span>""",
         ]
 
-    def test_get_attribute_returns_specific_attribute_value(self, driver: WebDriver):
+    def test_get_attribute_returns_specific_attribute_value(
+        self, driver_selenium: WebDriver
+    ):
         """Tests if `get_attribute` method returns specific attribute value."""
         text = """
             <div name="menu">
@@ -814,14 +839,14 @@ class TestSeleniumElement:
             </div>
             <span class="widget">Hi</span>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "div")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "div")
 
         element = SeleniumElement(node)
         result = element.get_attribute("name")
         assert result == "menu"
 
-    def test_get_attribute_returns_string_for_class(self, driver: WebDriver):
+    def test_get_attribute_returns_string_for_class(self, driver_selenium: WebDriver):
         """Tests if `get_attribute` method returns string for class attribute."""
         text = """
             <div class="menu widget">
@@ -830,8 +855,8 @@ class TestSeleniumElement:
             </div>
             <span class="widget">Hi</span>
         """
-        insert(text, driver=driver)
-        node = driver.find_element(By.TAG_NAME, "div")
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "div")
 
         element = SeleniumElement(node)
         result = element.get_attribute("class")
