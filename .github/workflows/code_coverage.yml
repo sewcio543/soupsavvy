@@ -31,6 +31,9 @@ jobs:
           pip freeze
           pip check
 
+      - name: Ensure browsers are installed
+        run: python -m playwright install --with-deps
+
       - name: Test with coverage
         run: |
           python -m coverage run -a -m pytest --impl=bs4

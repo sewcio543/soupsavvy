@@ -40,6 +40,9 @@ jobs:
           pip freeze
           pip check
 
+      - name: Ensure browsers are installed
+        run: python -m playwright install --with-deps
+
       - name: Test with pytest
         run: |
           python -m pytest -v -ra
