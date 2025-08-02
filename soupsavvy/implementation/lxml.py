@@ -31,7 +31,7 @@ class LXMLElement(IElement):
     ... element = LXMLElement(node)
     """
 
-    _NODE_TYPE = etree._Element
+    _NODE_TYPE = HtmlElement
 
     def find_all(
         self,
@@ -125,8 +125,8 @@ class LXMLElement(IElement):
         )
 
     @property
-    def node(self) -> LXMLElement:
+    def node(self) -> HtmlElement:
         return self._node
 
-    def get(self) -> LXMLElement:
+    def get(self) -> HtmlElement:
         return self.node
