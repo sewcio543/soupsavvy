@@ -30,6 +30,14 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ matrix.python-version }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
       - name: Install dependencies
         run: |
           python -m pip install -r requirements.txt

@@ -3,9 +3,16 @@ from lxml.etree import XPath
 
 from soupsavvy.exceptions import InvalidXPathSelector
 from soupsavvy.implementation.lxml import LXMLElement
+from soupsavvy.implementation.playwright import PlaywrightElement
 from soupsavvy.implementation.selenium import SeleniumElement
-from soupsavvy.selectors.xpath.api import LXMLXpathApi, SeleniumXPathApi
+from soupsavvy.selectors.xpath.api import (
+    LXMLXpathApi,
+    PlaywrightXPathApi,
+    SeleniumXPathApi,
+)
 from tests.soupsavvy.conftest import ToElement, strip
+
+# TODO: clean up the reptitive code
 
 
 @pytest.mark.selenium
@@ -201,5 +208,72 @@ class TestLXMLXPathApi:
         """
         bs = to_element(text)
         api = LXMLXpathApi("//div/a")
+        result = api.select(bs)
+        assert result == []
+
+
+@pytest.mark.playwright
+class TestPlaywrightXPathApi:
+    """Class with unit tests for PlaywrightXPathApi."""
+
+    def test_raises_exception_when_invalid_selector(self, to_element: ToElement):
+        """
+        Tests if InvalidXPathSelector exception is raised when selecting
+        elements with invalid xpath selector.
+        """
+        text = """
+            <div><a href="www.example.com">Hello</a></div>
+        """
+        bs = to_element(text)
+        api = PlaywrightXPathApi("div.menu ? a")
+
+        with pytest.raises(InvalidXPathSelector):
+            api.select(bs)
+
+    def test_selects_all_elements_matching_selector(self, to_element: ToElement):
+        """Tests if all elements matching selector are selected."""
+        text = """
+            <div></div>
+            <div class="widget123">
+                <span><a>Not child</a></span>
+            </div>
+            <a class="widget"></a>
+            <div><a>1</a></div>
+            <span>
+                <a class="widget"></a>
+                <div><a><h1>2</h1></a><h1>Hello</h1></div>
+            </span>
+            <div class="widget123"><a>3</a></div>
+            <div class="widget"><p>Hello</p></div>
+        """
+        bs = to_element(text)
+        api = PlaywrightXPathApi("//div/a")
+        result = api.select(bs)
+
+        assert all(isinstance(x, PlaywrightElement) for x in result)
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a>1</a>"""),
+            strip("""<a><h1>2</h1></a>"""),
+            strip("""<a>3</a>"""),
+        ]
+
+    def test_returns_empty_list_if_no_element_matches_selector(
+        self, to_element: ToElement
+    ):
+        """Tests if empty list is returned when no element matches selector."""
+        text = """
+            <div></div>
+            <div class="widget123">
+                <span><a>Not child</a></span>
+            </div>
+            <a class="widget"></a>
+            <span>
+                <a class="widget"></a>
+                <div><h1></h1><h1>Hello</h1></div>
+            </span>
+            <div class="widget"><p>Hello</p></div>
+        """
+        bs = to_element(text)
+        api = PlaywrightXPathApi("//div/a")
         result = api.select(bs)
         assert result == []

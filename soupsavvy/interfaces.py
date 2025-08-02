@@ -215,11 +215,11 @@ class IElement(ABC):
     @property
     def node(self) -> Any:
         """Returns the underlying node wrapped by the instance."""
-        return self._node
+        return self._node  # pragma: no cover
 
     def get(self) -> Any:
         """Returns the node wrapped by the instance."""
-        return self.node
+        return self.node  # pragma: no cover
 
     @abstractmethod
     def find_subsequent_siblings(self, limit: Optional[int] = None) -> list[Self]:

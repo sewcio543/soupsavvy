@@ -1,6 +1,7 @@
 [run]
 source = soupsavvy
 branch = True
+concurrency = greenlet
 
 [report]
 omit =
@@ -21,6 +22,7 @@ exclude_lines =
     \.\.\.
     deprecated
     _raise_not_implemented
+    pragma: no cover
 
 sort = cover
 show_missing = true

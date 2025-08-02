@@ -3,9 +3,7 @@ Module with unit tests for playwright implementation of IElement.
 Tests `PlaywrightElement` component and the way it interacts with soupsavvy.
 """
 
-import asyncio
 import re
-import sys
 
 import pytest
 from playwright.sync_api import Page
