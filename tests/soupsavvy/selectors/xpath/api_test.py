@@ -12,7 +12,7 @@ from soupsavvy.selectors.xpath.api import (
 )
 from tests.soupsavvy.conftest import ToElement, strip
 
-# TODO: clean up the reptitive code
+# TODO: clean up the repetitive code
 
 
 @pytest.mark.selenium
