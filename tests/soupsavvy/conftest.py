@@ -41,7 +41,7 @@ PARSER = "lxml"
 ToElement = Callable[[str], IElement]
 
 _driver_selenium = cast(WebDriver, None)
-_playwrite_page = cast(Page, None)
+_playwright_page = cast(Page, None)
 
 
 @pytest.fixture
@@ -144,9 +144,9 @@ def playwright_context():
 
 def initialize_playwright_page(playwright_context: Browser) -> Page:
     """Initializes a Playwright page."""
-    global _playwrite_page
+    global _playwright_page
     page = playwright_context.new_page()
-    _playwrite_page = page
+    _playwright_page = page
     return page
 
 
@@ -164,8 +164,8 @@ def playwright_page(request, playwright_context: Browser):
 
 def to_playwright(html: str) -> PlaywrightElement:
     """Function to create a PlaywrightElement from HTML content."""
-    _playwrite_page.set_content(html)
-    body = _playwrite_page.query_selector("body")
+    _playwright_page.set_content(html)
+    body = _playwright_page.query_selector("body")
 
     if body is None:
         raise ValueError("No body element found in the provided HTML.")
