@@ -34,6 +34,7 @@ from soupsavvy.implementation.lxml import LXMLElement
 from soupsavvy.implementation.playwright import PlaywrightElement
 from soupsavvy.implementation.selenium import SeleniumElement
 from soupsavvy.interfaces import IElement
+from tests.conftest import BS4, LXML, PLAYWRIGHT, SELENIUM
 
 # default bs4 parser
 PARSER = "lxml"
@@ -46,13 +47,13 @@ _playwright_page = cast(Page, None)
 
 @pytest.fixture
 def to_element(implementation: str) -> Callable[[str], IElement]:
-    if implementation == "bs4":
+    if implementation == BS4:
         return to_soup
-    elif implementation == "lxml":
+    elif implementation == LXML:
         return to_lxml
-    elif implementation == "selenium":
+    elif implementation == SELENIUM:
         return to_selenium
-    elif implementation == "playwright":
+    elif implementation == PLAYWRIGHT:
         return to_playwright
     else:
         raise ValueError(f"Unknown implementation type: {implementation}")
@@ -70,7 +71,7 @@ def to_lxml(html: str, parser: str = PARSER) -> IElement:
 @pytest.fixture(scope="session", autouse=True)
 def http_server(request):
     """Set up a simple HTTP server to serve the HTML file."""
-    if request.config.getoption("--impl") != "selenium":
+    if request.config.getoption("--impl") != SELENIUM:
         yield
         return
 
@@ -86,7 +87,7 @@ def http_server(request):
 @pytest.fixture(scope="session", autouse=True)
 def driver_selenium(request, http_server):
     """Set up a single Chrome driver used by selenium for the entire session."""
-    if request.config.getoption("--impl") != "selenium":
+    if request.config.getoption("--impl") != SELENIUM:
         yield
         return
 
@@ -153,7 +154,7 @@ def initialize_playwright_page(playwright_context: Browser) -> Page:
 @pytest.fixture(scope="session", autouse=True)
 def playwright_page(request, playwright_context: Browser):
     """Set up a Playwright page for the entire session."""
-    if request.config.getoption("--impl") != "playwright":
+    if request.config.getoption("--impl") != PLAYWRIGHT:
         yield
         return
 

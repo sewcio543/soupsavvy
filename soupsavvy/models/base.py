@@ -315,7 +315,7 @@ class ModelMeta(type(ABC)):
                         # or BaseModel subclass
                         or (isinstance(value, type) and issubclass(value, BaseModel))
                     )
-                    and key not in c.SPECIAL_FIELDS
+                    and key not in c.SPECIAL_ATTRIBUTES
                 }
                 for class_ in classes
             ],

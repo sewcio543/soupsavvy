@@ -10,6 +10,7 @@ from collections.abc import Iterable
 from typing import Optional, Pattern, Union
 
 import bs4
+from typing_extensions import Self
 
 from soupsavvy.interfaces import IElement, SelectionApi
 from soupsavvy.selectors.css.api import SoupsieveApi
@@ -36,19 +37,17 @@ class SoupElement(IElement):
         attrs: Optional[dict[str, Union[str, Pattern[str]]]] = None,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[SoupElement]:
+    ) -> list[Self]:
         attrs = attrs or {}
         iterable = self.node.find_all(
             name=name, attrs=attrs, recursive=recursive, limit=limit
         )
         return list(self._map(iterable))
 
-    def find_subsequent_siblings(
-        self, limit: Optional[int] = None
-    ) -> list[SoupElement]:
+    def find_subsequent_siblings(self, limit: Optional[int] = None) -> list[Self]:
         return list(self._map(self.node.find_next_siblings(limit=limit)))
 
-    def find_ancestors(self, limit: Optional[int] = None) -> list[SoupElement]:
+    def find_ancestors(self, limit: Optional[int] = None) -> list[Self]:
         return list(self._map(self.node.find_parents(limit=limit)))
 
     def get_attribute(self, name: str) -> Optional[str]:
@@ -64,7 +63,7 @@ class SoupElement(IElement):
         return SoupsieveApi(selector)
 
     @property
-    def children(self) -> Iterable[SoupElement]:
+    def children(self) -> Iterable[Self]:
         generator = (
             element
             for element in self.node.children
@@ -73,7 +72,7 @@ class SoupElement(IElement):
         return self._map(generator)
 
     @property
-    def descendants(self) -> Iterable[SoupElement]:
+    def descendants(self) -> Iterable[Self]:
         generator = (
             element
             for element in self.node.descendants
@@ -82,9 +81,9 @@ class SoupElement(IElement):
         return self._map(generator)
 
     @property
-    def parent(self) -> Optional[SoupElement]:
+    def parent(self) -> Optional[Self]:
         parent = self.node.parent
-        return SoupElement(parent) if parent is not None else None
+        return self.from_node(parent) if parent is not None else None
 
     @property
     def name(self) -> str:

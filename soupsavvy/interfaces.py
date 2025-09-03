@@ -137,6 +137,7 @@ class IElement(ABC):
     - `SoupElement`: Wraps a `BeautifulSoup` node.
     - `LXMLElement`: Wraps an `lxml` node.
     - `SeleniumElement`: Wraps a `Selenium WebElement`.
+    - `PlaywrightElement`: Wraps a `Playwright ElementHandle`.
     """
 
     _NOT_IMPLEMENTED_MESSAGE = (
@@ -386,7 +387,7 @@ class IElement(ABC):
     @classmethod
     def _map(cls, elements: Iterable[Any]) -> Iterable[Self]:
         """Maps elements to the current implementation."""
-        return map(cls, elements)
+        return map(cls.from_node, elements)
 
     def __hash__(self):
         """Hashes element object using the wrapped node's hash."""
