@@ -1,6 +1,6 @@
 import pytest
 
-IMPLEMENTATIONS = ["bs4", "lxml", "selenium"]
+IMPLEMENTATIONS = ["bs4", "lxml", "selenium", "playwright"]
 
 
 def pytest_addoption(parser):

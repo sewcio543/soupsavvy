@@ -11,7 +11,7 @@ from itertools import islice
 from typing import Optional, Pattern, Union
 
 import lxml.etree as etree
-from lxml.etree import _Element as HtmlElement
+from lxml.etree import _Element as LXMLNode
 
 from soupsavvy.interfaces import IElement
 from soupsavvy.selectors.css.api import CSSSelectApi
@@ -31,7 +31,7 @@ class LXMLElement(IElement):
     ... element = LXMLElement(node)
     """
 
-    _NODE_TYPE = etree._Element
+    _NODE_TYPE = LXMLNode
 
     def find_all(
         self,
@@ -54,7 +54,7 @@ class LXMLElement(IElement):
 
     def _match(
         self,
-        element: HtmlElement,
+        element: LXMLNode,
         name: Optional[str],
         attrs: dict[str, Union[str, Pattern[str]]],
     ) -> bool:
@@ -123,3 +123,10 @@ class LXMLElement(IElement):
         return etree.tostring(self._node, method="html", with_tail=False).decode(
             "utf-8"
         )
+
+    @property
+    def node(self) -> LXMLNode:
+        return self._node
+
+    def get(self) -> LXMLNode:
+        return self.node

@@ -9,7 +9,7 @@ from typing import Any
 
 from soupsavvy.interfaces import IElement
 
-SUPPORTED = ["bs4", "lxml", "selenium"]
+SUPPORTED = ["bs4", "lxml", "selenium", "playwright"]
 
 
 def to_soupsavvy(node: Any) -> IElement:
@@ -21,7 +21,7 @@ def to_soupsavvy(node: Any) -> IElement:
     ----------
     node : Any
         A node object of supported type, currently supported implementations are:
-        "beautifulsoup4", "lxml", "selenium".
+        "beautifulsoup4", "lxml", "selenium" and "playwright".
 
     Returns
     -------
@@ -65,6 +65,12 @@ def to_soupsavvy(node: Any) -> IElement:
     except ImportError:
         WebElement = None
 
+    try:
+        playwright = importlib.import_module("playwright.sync_api")
+        ElementHandle = playwright.ElementHandle
+    except ImportError:
+        ElementHandle = None
+
     # Check the type of the element
     if Tag and isinstance(node, Tag):
         from soupsavvy.implementation.bs4 import SoupElement
@@ -80,5 +86,10 @@ def to_soupsavvy(node: Any) -> IElement:
         from soupsavvy.implementation.selenium import SeleniumElement
 
         return SeleniumElement(node)
+
+    if ElementHandle and isinstance(node, ElementHandle):
+        from soupsavvy.implementation.playwright import PlaywrightElement
+
+        return PlaywrightElement(node)
 
     raise TypeError(f"Unsupported element type, expected one of {SUPPORTED}")

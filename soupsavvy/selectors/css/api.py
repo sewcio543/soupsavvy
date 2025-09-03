@@ -57,3 +57,20 @@ class SeleniumCSSApi(SelectionApi):
             ) from e
 
         return [element.from_node(node) for node in found]
+
+
+class PlaywrightCSSApi(SelectionApi):
+    """Interface for `playwright` css API for web elements."""
+
+    def select(self, element: IElement) -> list[IElement]:
+        from playwright.sync_api import Error as PlaywrightError
+
+        try:
+            found = element.node.query_selector_all(self.selector)
+        except PlaywrightError as e:
+            raise exc.InvalidCSSSelector(
+                f"CSS selector constructed from provided parameters "
+                f"is not valid: {self.selector}"
+            ) from e
+
+        return [element.from_node(node) for node in found]

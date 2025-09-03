@@ -170,3 +170,10 @@ class SeleniumElement(IElement):
 
     def xpath(self, selector: str) -> SeleniumXPathApi:
         return SeleniumXPathApi(selector)
+
+    @property
+    def node(self) -> WebElement:
+        return self._node
+
+    def get(self) -> WebElement:
+        return self.node

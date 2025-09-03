@@ -58,3 +58,20 @@ class SeleniumXPathApi(SelectionApi):
             ) from e
 
         return [element.from_node(node) for node in selected]
+
+
+class PlaywrightXPathApi(SelectionApi):
+    """Interface for `playwright` xpath API for web elements."""
+
+    def select(self, element: IElement) -> list[IElement]:
+        from playwright.sync_api import Error as PlaywrightError
+
+        try:
+            selected = element.node.query_selector_all(f"xpath={self.selector}")
+        except PlaywrightError as e:
+            raise exc.InvalidXPathSelector(
+                f"XPath selector constructed from provided parameters "
+                f"is not valid: {self.selector}"
+            ) from e
+
+        return [element.from_node(node) for node in selected]
