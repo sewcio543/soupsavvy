@@ -47,7 +47,6 @@ class SeleniumXPathApi(SelectionApi):
     def select(self, element: IElement) -> list[IElement]:
         from selenium.common.exceptions import InvalidSelectorException
         from selenium.webdriver.common.by import By
-        from selenium.webdriver.remote.webelement import WebElement
 
         try:
             selected = element.node.find_elements(By.XPATH, self.selector)
