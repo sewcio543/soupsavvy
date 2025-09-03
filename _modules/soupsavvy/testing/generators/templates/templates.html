@@ -6,9 +6,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>soupsavvy.testing.generators.templates.templates &mdash; soupsavvy  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/custom.css?v=eea9572f" />
 
@@ -107,17 +107,17 @@
 <span class="sd">- `RandomTemplate` - Template for generating a random string of ASCII letters and digits.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">string</span>
-<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy.testing.generators.templates.base</span> <span class="kn">import</span> <span class="n">BaseTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.testing.generators.templates.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseTemplate</span>
 
 
 <div class="viewcode-block" id="EmptyTemplate">
 <a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.EmptyTemplate">[docs]</a>
-<span class="k">class</span> <span class="nc">EmptyTemplate</span><span class="p">(</span><span class="n">BaseTemplate</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">EmptyTemplate</span><span class="p">(</span><span class="n">BaseTemplate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Template for generating an empty string.</span>
 <span class="sd">    Convenience template for default generator behavior.</span>
@@ -131,7 +131,7 @@
 
 <div class="viewcode-block" id="EmptyTemplate.generate">
 <a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.EmptyTemplate.generate">[docs]</a>
-    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates an empty string.</span>
 
@@ -147,7 +147,7 @@
 
 <div class="viewcode-block" id="ConstantTemplate">
 <a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.ConstantTemplate">[docs]</a>
-<span class="k">class</span> <span class="nc">ConstantTemplate</span><span class="p">(</span><span class="n">BaseTemplate</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConstantTemplate</span><span class="p">(</span><span class="n">BaseTemplate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Template for generating a constant string.</span>
 <span class="sd">    Convenience template for always generating the same content.</span>
@@ -161,7 +161,7 @@
 
 <div class="viewcode-block" id="ConstantTemplate.__init__">
 <a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.ConstantTemplate.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes `ConstantTemplate` instance.</span>
 
@@ -175,7 +175,7 @@
 
 <div class="viewcode-block" id="ConstantTemplate.generate">
 <a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.ConstantTemplate.generate">[docs]</a>
-    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates the constant string.</span>
 
@@ -191,7 +191,7 @@
 
 <div class="viewcode-block" id="ChoiceTemplate">
 <a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.ChoiceTemplate">[docs]</a>
-<span class="k">class</span> <span class="nc">ChoiceTemplate</span><span class="p">(</span><span class="n">BaseTemplate</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ChoiceTemplate</span><span class="p">(</span><span class="n">BaseTemplate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Template for randomly selecting from a list of choices.</span>
 
@@ -204,7 +204,7 @@
 
 <div class="viewcode-block" id="ChoiceTemplate.__init__">
 <a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.ChoiceTemplate.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choices</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choices</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes `ChoiceTemplate` instance.</span>
 
@@ -221,7 +221,7 @@
 
 <div class="viewcode-block" id="ChoiceTemplate.generate">
 <a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.ChoiceTemplate.generate">[docs]</a>
-    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates a random choice from the list of choices.</span>
 
@@ -238,7 +238,7 @@
 
 <div class="viewcode-block" id="RandomTemplate">
 <a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.RandomTemplate">[docs]</a>
-<span class="k">class</span> <span class="nc">RandomTemplate</span><span class="p">(</span><span class="n">BaseTemplate</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RandomTemplate</span><span class="p">(</span><span class="n">BaseTemplate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Template for generating a random string of ASCII letters and digits.</span>
 
@@ -253,7 +253,7 @@
 
 <div class="viewcode-block" id="RandomTemplate.__init__">
 <a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.RandomTemplate.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes `RandomTemplate` instance.</span>
 
@@ -269,7 +269,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">randomizer</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_check_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if the input length is a valid value.</span>
 
@@ -293,7 +293,7 @@
 
 <div class="viewcode-block" id="RandomTemplate.generate">
 <a class="viewcode-back" href="../../../../../soupsavvy.testing.generators.templates.templates.html#soupsavvy.testing.RandomTemplate.generate">[docs]</a>
-    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates a random string from ASCII letters and digits.</span>
 
@@ -305,7 +305,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_unique_id</span><span class="p">()</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_generate_unique_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_unique_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generates a unique identifier string of the specified length.</span>
 

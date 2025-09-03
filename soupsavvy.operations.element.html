@@ -7,9 +7,9 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>operations.element &mdash; soupsavvy  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=eea9572f" />
 
@@ -136,7 +136,7 @@ desired information. They can be used in combination with selectors.</p>
 Wrapper of most common operation used in web scraping.</p>
 <section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Text</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Text</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">&quot;Extracted text from the tag&quot;</span>
@@ -147,7 +147,7 @@ that can be used to extract text from provided element.</p>
 </section>
 <section id="id1">
 <h2>Example<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Text</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Text</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">&quot;Text&quot;</span>
@@ -170,7 +170,7 @@ Wrapper of one of the common operation used in web scraping.
 If href attribute is not present, returns None.</p>
 <section id="id2">
 <h2>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Href</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Href</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Href</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">&quot;www.example.com&quot;</span>
@@ -181,7 +181,7 @@ that can be used to extract href from provided element.</p>
 </section>
 <section id="id3">
 <h2>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Href</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Href</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Href</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">&quot;www.example.com&quot;</span>
@@ -197,7 +197,7 @@ that can be used to extract href from provided element.</p>
 <p>Operation to extract parent of <cite>IElement</cite>.</p>
 <section id="id4">
 <h2>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Parent</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parent</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Parent</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">&quot;&lt;div&gt;...&lt;/div&gt;&quot;</span>
@@ -208,7 +208,7 @@ to extract parent of a provided tag without any conditions.</p>
 </section>
 <section id="id5">
 <h2>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Parent</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parent</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Parent</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">&quot;&lt;div&gt;--tag--&lt;/div&gt;&quot;</span>
@@ -219,7 +219,7 @@ operator <cite>|</cite> on <cite>Parent</cite> object will result in <cite>Opera
 </section>
 <section id="id6">
 <h2>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Parent</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parent</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Parent</span><span class="p">()</span> <span class="o">|</span> <span class="n">Parent</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">&quot;&lt;div&gt;&lt;div&gt;--tag--&lt;/div&gt;&lt;/div&gt;&quot;</span>

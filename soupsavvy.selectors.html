@@ -7,9 +7,9 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>selectors &mdash; soupsavvy  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=eea9572f" />
 
@@ -211,6 +211,7 @@
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SoupsieveApi"><code class="docutils literal notranslate"><span class="pre">SoupsieveApi</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.CSSSelectApi"><code class="docutils literal notranslate"><span class="pre">CSSSelectApi</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SeleniumCSSApi"><code class="docutils literal notranslate"><span class="pre">SeleniumCSSApi</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.PlaywrightCSSApi"><code class="docutils literal notranslate"><span class="pre">PlaywrightCSSApi</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.css.selectors.html">selectors.css.selectors</a><ul>
@@ -318,6 +319,7 @@
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.xpath.api.html">selectors.xpath.api</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.LXMLXpathApi"><code class="docutils literal notranslate"><span class="pre">LXMLXpathApi</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.SeleniumXPathApi"><code class="docutils literal notranslate"><span class="pre">SeleniumXPathApi</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.PlaywrightXPathApi"><code class="docutils literal notranslate"><span class="pre">PlaywrightXPathApi</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.selectors.xpath.selectors.html">selectors.xpath.selectors</a><ul>
@@ -856,7 +858,7 @@ If none found, the list is empty.</p>
 </section>
 <section id="id31">
 <h3>Examples<a class="headerlink" href="#id31" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">lxml.etree</span> <span class="kn">import</span> <span class="n">XPath</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">lxml.etree</span><span class="w"> </span><span class="kn">import</span> <span class="n">XPath</span>
 <span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">XPathSelector</span><span class="p">(</span><span class="n">XPath</span><span class="p">(</span><span class="s2">&quot;//p[@class=&#39;menu&#39;]&quot;</span><span class="p">,</span> <span class="n">smart_strings</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 <span class="gp">... </span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">soup</span><span class="p">)</span>
 </pre></div>

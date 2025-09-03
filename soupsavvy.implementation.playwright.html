@@ -1,0 +1,398 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>implementation.playwright &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=eea9572f" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="implementation.selenium" href="soupsavvy.implementation.selenium.html" />
+    <link rel="prev" title="implementation.lxml" href="soupsavvy.implementation.lxml.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.selectors.html">selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.html">models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operations.html">operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="soupsavvy.implementation.html">implementation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="soupsavvy.implementation.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.implementation.bs4.html">implementation.bs4</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.implementation.element.html">implementation.element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.implementation.lxml.html">implementation.lxml</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">implementation.playwright</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.implementation.playwright.PlaywrightElement"><code class="docutils literal notranslate"><span class="pre">PlaywrightElement</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.implementation.selenium.html">implementation.selenium</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.implementation.html#module-soupsavvy.implementation">Content</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="demos/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/features.html">Why soupsavvy?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/showcase.html">Showcase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="soupsavvy.implementation.html">implementation</a></li>
+      <li class="breadcrumb-item active">implementation.playwright</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/soupsavvy.implementation.playwright.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-soupsavvy.implementation.playwright">
+<span id="implementation-playwright"></span><h1>implementation.playwright<a class="headerlink" href="#module-soupsavvy.implementation.playwright" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.implementation.playwright.PlaywrightElement">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PlaywrightElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ElementHandle</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/implementation/playwright.html#PlaywrightElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.playwright.PlaywrightElement" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">IElement</span></code></a></p>
+<p>Implementation of <cite>IElement</cite> for <cite>playwright</cite> tree.
+Adapter for <cite>playwright</cite> handles, that makes them usable across the library.</p>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.implementation.playwright</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaywrightElement</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">playwright.sync_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">sync_playwright</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">sync_playwright</span><span class="p">()</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">browser</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">chromium</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">page</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">new_page</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="s2">&quot;https://example.com&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">element</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">query_selector</span><span class="p">(</span><span class="s2">&quot;h1&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">playwright_element</span> <span class="o">=</span> <span class="n">PlaywrightElement</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.implementation.playwright.PlaywrightElement.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ElementHandle</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/implementation/playwright.html#PlaywrightElement.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.playwright.PlaywrightElement.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the implementation with the given node.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>node<span class="classifier">Any</span></dt><dd><p>Node to wrap for specific implementation.</p>
+</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">*</span></a>args: Any</dt><dd><p>Additional positional arguments to pass to the constructor.</p>
+</dd>
+<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs: Any</dt><dd><p>Additional keyword arguments to pass to the constructor.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.implementation.playwright.PlaywrightElement.find_all">
+<span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Pattern</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soupsavvy.implementation.playwright.PlaywrightElement" title="soupsavvy.implementation.playwright.PlaywrightElement"><span class="pre">PlaywrightElement</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/playwright.html#PlaywrightElement.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.playwright.PlaywrightElement.find_all" title="Link to this definition"></a></dt>
+<dd><p>Finds all elements that match specified element name and attributes.</p>
+<section id="id5">
+<h3>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>name<span class="classifier">str, optional</span></dt><dd><p>Name of the element to search for. If <cite>None</cite>, matches all elements.</p>
+</dd>
+<dt>attrs<span class="classifier">dict[str, str | Pattern[str]], optional</span></dt><dd><p>Dictionary of attributes to match. Supports exact matches and regex patterns.</p>
+</dd>
+<dt>recursive<span class="classifier">bool, optional</span></dt><dd><p>If <cite>True</cite>, searches recursively through all descendants.
+If <cite>False</cite>, searches only direct children.</p>
+</dd>
+<dt>limit<span class="classifier">int, optional</span></dt><dd><p>Maximum number of elements to return. If <cite>None</cite>, returns all matching elements.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>list[Self]</dt><dd><p>List of elements that match the criteria, in depth-first order.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.implementation.playwright.PlaywrightElement.find_subsequent_siblings">
+<span class="sig-name descname"><span class="pre">find_subsequent_siblings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soupsavvy.implementation.playwright.PlaywrightElement" title="soupsavvy.implementation.playwright.PlaywrightElement"><span class="pre">PlaywrightElement</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/playwright.html#PlaywrightElement.find_subsequent_siblings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.playwright.PlaywrightElement.find_subsequent_siblings" title="Link to this definition"></a></dt>
+<dd><p>Finds siblings that follow this node in the document structure.</p>
+<section id="id6">
+<h3>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>limit<span class="classifier">int, optional</span></dt><dd><p>Maximum number of sibling nodes to return. If <cite>None</cite>, returns all siblings.</p>
+</dd>
+</dl>
+</section>
+<section id="id7">
+<h3>Returns<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>list[Self]</dt><dd><p>List of subsequent sibling elements, in document order.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.implementation.playwright.PlaywrightElement.node">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">node</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ElementHandle</span></em><a class="headerlink" href="#soupsavvy.implementation.playwright.PlaywrightElement.node" title="Link to this definition"></a></dt>
+<dd><p>Returns the underlying node wrapped by the instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.implementation.playwright.PlaywrightElement.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ElementHandle</span></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/playwright.html#PlaywrightElement.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.playwright.PlaywrightElement.get" title="Link to this definition"></a></dt>
+<dd><p>Returns the node wrapped by the instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.implementation.playwright.PlaywrightElement.find_ancestors">
+<span class="sig-name descname"><span class="pre">find_ancestors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soupsavvy.implementation.playwright.PlaywrightElement" title="soupsavvy.implementation.playwright.PlaywrightElement"><span class="pre">PlaywrightElement</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/playwright.html#PlaywrightElement.find_ancestors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.playwright.PlaywrightElement.find_ancestors" title="Link to this definition"></a></dt>
+<dd><p>Finds all ancestor nodes up to the root of the document.</p>
+<section id="id8">
+<h3>Parameters<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>limit<span class="classifier">int, optional</span></dt><dd><p>Maximum number of ancestors to return, starting from the closest ancestor.
+If <cite>None</cite>, returns all ancestors.</p>
+</dd>
+</dl>
+</section>
+<section id="id9">
+<h3>Returns<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>list[Self]</dt><dd><p>List of ancestor nodes, from nearest to root.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.implementation.playwright.PlaywrightElement.children">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">children</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soupsavvy.implementation.playwright.PlaywrightElement" title="soupsavvy.implementation.playwright.PlaywrightElement"><span class="pre">PlaywrightElement</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.implementation.playwright.PlaywrightElement.children" title="Link to this definition"></a></dt>
+<dd><p>Returns an iterable of the direct child elements of this node.</p>
+<section id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h3>
+<p>Only tag elements are included; text and comment nodes are excluded.</p>
+</section>
+<section id="id10">
+<h3>Returns<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Iterable[Self]</dt><dd><p>Iterable of direct child nodes, in document order.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.implementation.playwright.PlaywrightElement.descendants">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">descendants</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soupsavvy.implementation.playwright.PlaywrightElement" title="soupsavvy.implementation.playwright.PlaywrightElement"><span class="pre">PlaywrightElement</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.implementation.playwright.PlaywrightElement.descendants" title="Link to this definition"></a></dt>
+<dd><p>Returns an iterable of all descendant nodes of this node.</p>
+<section id="id11">
+<h3>Notes<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<p>Only tag elements are included; text and comment nodes are excluded.
+Nodes are returned in depth-first order.</p>
+</section>
+<section id="id12">
+<h3>Returns<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Iterable[Self]</dt><dd><p>Iterable of all descendant nodes.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.implementation.playwright.PlaywrightElement.parent">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#soupsavvy.implementation.playwright.PlaywrightElement" title="soupsavvy.implementation.playwright.PlaywrightElement"><span class="pre">PlaywrightElement</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#soupsavvy.implementation.playwright.PlaywrightElement.parent" title="Link to this definition"></a></dt>
+<dd><p>Returns the immediate parent node of this element, if it exists.</p>
+<section id="id13">
+<h3>Returns<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Optional[Self]</dt><dd><p>The parent element, or <cite>None</cite> if this is the root node.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.implementation.playwright.PlaywrightElement.get_attribute">
+<span class="sig-name descname"><span class="pre">get_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/playwright.html#PlaywrightElement.get_attribute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.playwright.PlaywrightElement.get_attribute" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the value of a specified attribute for this node.</p>
+<section id="id14">
+<h3>Parameters<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>name<span class="classifier">str</span></dt><dd><p>Name of the attribute.</p>
+</dd>
+</dl>
+</section>
+<section id="id15">
+<h3>Returns<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>Optional[str]</dt><dd><p>The attribute value as a string, or <cite>None</cite> if the attribute does not exist.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.implementation.playwright.PlaywrightElement.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#soupsavvy.implementation.playwright.PlaywrightElement.name" title="Link to this definition"></a></dt>
+<dd><p>Returns the tag name of this element.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.implementation.playwright.PlaywrightElement.text">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">text</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#soupsavvy.implementation.playwright.PlaywrightElement.text" title="Link to this definition"></a></dt>
+<dd><p>Gets the combined text content of this element.</p>
+<section id="id16">
+<h3>Notes<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
+<p>Concatenates all text nodes within this element. The format may vary
+slightly across implementations depending on handling of whitespace or
+nested elements.</p>
+</section>
+<section id="id17">
+<h3>Returns<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>str</dt><dd><p>Text content of this element, or an empty string if none is found.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.implementation.playwright.PlaywrightElement.css">
+<span class="sig-name descname"><span class="pre">css</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/implementation/playwright.html#PlaywrightElement.css"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.playwright.PlaywrightElement.css" title="Link to this definition"></a></dt>
+<dd><p>Returns a <cite>SelectionApi</cite> for CSS-based selection.</p>
+<section id="id18">
+<h3>Parameters<a class="headerlink" href="#id18" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>selector<span class="classifier">Any</span></dt><dd><p>The CSS selector to apply.</p>
+</dd>
+</dl>
+</section>
+<section id="id19">
+<h3>Returns<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>SelectionApi</dt><dd><p>Initialized <cite>SelectionApi</cite> instance for CSS selection.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.implementation.playwright.PlaywrightElement.xpath">
+<span class="sig-name descname"><span class="pre">xpath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/implementation/playwright.html#PlaywrightElement.xpath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.playwright.PlaywrightElement.xpath" title="Link to this definition"></a></dt>
+<dd><p>Returns a <cite>SelectionApi</cite> for XPath-based selection.</p>
+<section id="id20">
+<h3>Parameters<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>selector<span class="classifier">Any</span></dt><dd><p>The XPath selector to apply.</p>
+</dd>
+</dl>
+</section>
+<section id="id21">
+<h3>Returns<a class="headerlink" href="#id21" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>SelectionApi</dt><dd><p>Initialized <cite>SelectionApi</cite> instance for XPath selection.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="soupsavvy.implementation.lxml.html" class="btn btn-neutral float-left" title="implementation.lxml" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soupsavvy.implementation.selenium.html" class="btn btn-neutral float-right" title="implementation.selenium" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, soupsavvy.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

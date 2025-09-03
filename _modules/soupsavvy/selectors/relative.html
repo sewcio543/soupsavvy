@@ -6,9 +6,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>soupsavvy.selectors.relative &mdash; soupsavvy  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=eea9572f" />
 
@@ -111,17 +111,17 @@
 <span class="sd">- `Anchor` - Anchor object for easily creating relative selectors</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">CompositeSoupSelector</span><span class="p">,</span> <span class="n">SoupSelector</span><span class="p">,</span> <span class="n">check_selector</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">IElement</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.utils.selector_utils</span> <span class="kn">import</span> <span class="n">TagIterator</span><span class="p">,</span> <span class="n">TagResultSet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompositeSoupSelector</span><span class="p">,</span> <span class="n">SoupSelector</span><span class="p">,</span> <span class="n">check_selector</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IElement</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.utils.selector_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">TagIterator</span><span class="p">,</span> <span class="n">TagResultSet</span>
 
 
 <div class="viewcode-block" id="RelativeSelector">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.RelativeSelector">[docs]</a>
-<span class="k">class</span> <span class="nc">RelativeSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RelativeSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for relative selectors, that are used to find elements relative</span>
 <span class="sd">    to the element that is being searched, which is considered an anchor.</span>
@@ -157,7 +157,7 @@
 
 <div class="viewcode-block" id="RelativeSelector.__init__">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.RelativeSelector.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes RelativeSelector instance with specified selector.</span>
 
@@ -170,7 +170,7 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">selector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SoupSelector</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">selector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SoupSelector</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns selector used to find elements relative to the anchor element</span>
 <span class="sd">        in this relative selector.</span>
@@ -182,7 +182,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_selector</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="c1"># check for RelativeSelector type for type checking sake</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">RelativeSelector</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -194,17 +194,17 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">selector</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="si">}</span><span class="s2">)&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="BaseRelativeSibling">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.BaseRelativeSibling">[docs]</a>
-<span class="k">class</span> <span class="nc">BaseRelativeSibling</span><span class="p">(</span><span class="n">RelativeSelector</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseRelativeSibling</span><span class="p">(</span><span class="n">RelativeSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class with implementation for relative sibling selectors,</span>
 <span class="sd">    searches for next sibling(s) of the anchor element.</span>
@@ -214,14 +214,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
             <span class="s2">&quot;Method &#39;_func&#39; needs to be implemented in child class.&quot;</span>
         <span class="p">)</span>
 
 <div class="viewcode-block" id="BaseRelativeSibling.find_all">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.BaseRelativeSibling.find_all">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -244,7 +244,7 @@
 
 <div class="viewcode-block" id="BaseAncestorSelector">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.BaseAncestorSelector">[docs]</a>
-<span class="k">class</span> <span class="nc">BaseAncestorSelector</span><span class="p">(</span><span class="n">RelativeSelector</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseAncestorSelector</span><span class="p">(</span><span class="n">RelativeSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class with implementation for ancestor selectors,</span>
 <span class="sd">    searches for ancestor(s) of the anchor element.</span>
@@ -256,7 +256,7 @@
 
 <div class="viewcode-block" id="BaseAncestorSelector.find_all">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.BaseAncestorSelector.find_all">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -281,7 +281,7 @@
 
 <div class="viewcode-block" id="RelativeChild">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.RelativeChild">[docs]</a>
-<span class="k">class</span> <span class="nc">RelativeChild</span><span class="p">(</span><span class="n">RelativeSelector</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RelativeChild</span><span class="p">(</span><span class="n">RelativeSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding direct children of the anchor element.</span>
 
@@ -312,7 +312,7 @@
 
 <div class="viewcode-block" id="RelativeChild.find_all">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.RelativeChild.find_all">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -325,7 +325,7 @@
 
 <div class="viewcode-block" id="RelativeDescendant">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.RelativeDescendant">[docs]</a>
-<span class="k">class</span> <span class="nc">RelativeDescendant</span><span class="p">(</span><span class="n">RelativeSelector</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RelativeDescendant</span><span class="p">(</span><span class="n">RelativeSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding descendants of the anchor element.</span>
 
@@ -357,7 +357,7 @@
 
 <div class="viewcode-block" id="RelativeDescendant.find_all">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.RelativeDescendant.find_all">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -370,7 +370,7 @@
 
 <div class="viewcode-block" id="RelativeNextSibling">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.RelativeNextSibling">[docs]</a>
-<span class="k">class</span> <span class="nc">RelativeNextSibling</span><span class="p">(</span><span class="n">BaseRelativeSibling</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RelativeNextSibling</span><span class="p">(</span><span class="n">BaseRelativeSibling</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding next sibling of the anchor element.</span>
 
@@ -393,14 +393,14 @@
 <span class="sd">    &gt;&gt;&gt; Anchor + TypeSelector(&quot;p&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">tag</span><span class="o">.</span><span class="n">find_subsequent_siblings</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="RelativeSubsequentSibling">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.RelativeSubsequentSibling">[docs]</a>
-<span class="k">class</span> <span class="nc">RelativeSubsequentSibling</span><span class="p">(</span><span class="n">BaseRelativeSibling</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RelativeSubsequentSibling</span><span class="p">(</span><span class="n">BaseRelativeSibling</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding subsequent siblings of the anchor element.</span>
 
@@ -425,14 +425,14 @@
 <span class="sd">    &gt;&gt;&gt; Anchor * TypeSelector(&quot;p&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">tag</span><span class="o">.</span><span class="n">find_subsequent_siblings</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="RelativeParent">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.RelativeParent">[docs]</a>
-<span class="k">class</span> <span class="nc">RelativeParent</span><span class="p">(</span><span class="n">BaseAncestorSelector</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RelativeParent</span><span class="p">(</span><span class="n">BaseAncestorSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding parent of the anchor element.</span>
 
@@ -474,7 +474,7 @@
 
 <div class="viewcode-block" id="RelativeAncestor">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.RelativeAncestor">[docs]</a>
-<span class="k">class</span> <span class="nc">RelativeAncestor</span><span class="p">(</span><span class="n">BaseAncestorSelector</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RelativeAncestor</span><span class="p">(</span><span class="n">BaseAncestorSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding ancestors of the anchor element.</span>
 
@@ -517,7 +517,7 @@
 
 <div class="viewcode-block" id="Anchor_">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.Anchor_">[docs]</a>
-<span class="k">class</span> <span class="nc">Anchor_</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Anchor_</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Shortcut component used to create relative selectors</span>
 <span class="sd">    in a more readable way with use of operators.</span>
@@ -605,22 +605,22 @@
 <span class="sd">    https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_selectors/Selector_structure#relative_selector</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelativeChild</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelativeChild</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">RelativeChild</span><span class="p">(</span><span class="n">check_selector</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelativeDescendant</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelativeDescendant</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">RelativeDescendant</span><span class="p">(</span><span class="n">check_selector</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelativeParent</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelativeParent</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">RelativeParent</span><span class="p">(</span><span class="n">check_selector</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="fm">__lshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelativeAncestor</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__lshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelativeAncestor</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">RelativeAncestor</span><span class="p">(</span><span class="n">check_selector</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelativeSelector</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelativeSelector</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">RelativeNextSibling</span><span class="p">(</span><span class="n">check_selector</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelativeSelector</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RelativeSelector</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">RelativeSubsequentSibling</span><span class="p">(</span><span class="n">check_selector</span><span class="p">(</span><span class="n">x</span><span class="p">))</span></div>
 
 
@@ -631,7 +631,7 @@
 
 <div class="viewcode-block" id="HasSelector">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.HasSelector">[docs]</a>
-<span class="k">class</span> <span class="nc">HasSelector</span><span class="p">(</span><span class="n">CompositeSoupSelector</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">HasSelector</span><span class="p">(</span><span class="n">CompositeSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding elements based on matching reference elements.</span>
 
@@ -705,7 +705,7 @@
 
 <div class="viewcode-block" id="HasSelector.__init__">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.HasSelector.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">selector</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
         <span class="o">/</span><span class="p">,</span>
@@ -730,7 +730,7 @@
 
 <div class="viewcode-block" id="HasSelector.find_all">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.relative.html#soupsavvy.HasSelector.find_all">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>

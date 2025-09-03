@@ -7,9 +7,9 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>operations &mdash; soupsavvy  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=eea9572f" />
 
@@ -222,7 +222,7 @@
 to be used with other <cite>soupsavvy</cite> components.</p>
 <section id="example">
 <h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Operation</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Operation</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">)</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;TEXT&quot;</span><span class="p">)</span>
 <span class="go">&quot;text&quot;</span>
@@ -260,7 +260,7 @@ with <cite>find</cite> method, which would produce the same result.</p>
 Wrapper of most common operation used in web scraping.</p>
 <section id="id5">
 <h3>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Text</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Text</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">&quot;Extracted text from the tag&quot;</span>
@@ -271,7 +271,7 @@ that can be used to extract text from provided element.</p>
 </section>
 <section id="id6">
 <h3>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Text</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Text</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">&quot;Text&quot;</span>
@@ -294,7 +294,7 @@ Wrapper of one of the common operation used in web scraping.
 If href attribute is not present, returns None.</p>
 <section id="id7">
 <h3>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Href</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Href</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Href</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">&quot;www.example.com&quot;</span>
@@ -305,7 +305,7 @@ that can be used to extract href from provided element.</p>
 </section>
 <section id="id8">
 <h3>Example<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Href</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Href</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Href</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">&quot;www.example.com&quot;</span>
@@ -321,7 +321,7 @@ that can be used to extract href from provided element.</p>
 <p>Operation to extract parent of <cite>IElement</cite>.</p>
 <section id="id9">
 <h3>Example<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Parent</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parent</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Parent</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">&quot;&lt;div&gt;...&lt;/div&gt;&quot;</span>
@@ -332,7 +332,7 @@ to extract parent of a provided tag without any conditions.</p>
 </section>
 <section id="id10">
 <h3>Example<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Parent</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parent</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Parent</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">&quot;&lt;div&gt;--tag--&lt;/div&gt;&quot;</span>
@@ -343,7 +343,7 @@ operator <cite>|</cite> on <cite>Parent</cite> object will result in <cite>Opera
 </section>
 <section id="id11">
 <h3>Example<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Parent</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parent</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Parent</span><span class="p">()</span> <span class="o">|</span> <span class="n">Parent</span><span class="p">()</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">&quot;&lt;div&gt;&lt;div&gt;--tag--&lt;/div&gt;&lt;/div&gt;&quot;</span>
@@ -393,7 +393,7 @@ Can be used in selection/operation pipelines with <cite>IfElse</cite> operation
 to conditionally stop the execution.</p>
 <section id="id14">
 <h3>Example<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Break</span><span class="p">,</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Break</span><span class="p">,</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">IfElse</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">Break</span><span class="p">(),</span>
@@ -418,7 +418,7 @@ so next operation is not executed.</p>
 Allows to execute different operations based on the condition.</p>
 <section id="id15">
 <h3>Example<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">IfElse</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">Operation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span><span class="p">),</span>
@@ -435,7 +435,7 @@ apply operations to the element and can be used as model field.</p>
 </section>
 <section id="id16">
 <h3>Example<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">IfElse</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">Text</span><span class="p">(),</span>
@@ -477,7 +477,7 @@ Can be used in selection/operation pipelines with <cite>IfElse</cite> operation
 to conditionally skip the operation.</p>
 <section id="id20">
 <h3>Example<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Continue</span><span class="p">,</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Continue</span><span class="p">,</span> <span class="n">IfElse</span><span class="p">,</span> <span class="n">Operation</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">IfElse</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">Continue</span><span class="p">(),</span>
@@ -502,8 +502,8 @@ operation is skipped and the next one is executed.</p>
 Used to prevent exceptions where it’s safe and expected to skip the operation.</p>
 <section id="id21">
 <h3>Example<a class="headerlink" href="#id21" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Text</span>
-<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">SkipNone</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Text</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">SkipNone</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">SkipNone</span><span class="p">(</span><span class="n">Text</span><span class="p">())</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 <span class="go">None</span>
@@ -523,8 +523,8 @@ returning None instead. Used to catch exceptions where it’s expected
 this might happen.</p>
 <section id="id22">
 <h3>Example<a class="headerlink" href="#id22" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
-<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Suppress</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Operation</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Suppress</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 <span class="go">None</span>
@@ -535,8 +535,8 @@ when the operation fails.</p>
 </section>
 <section id="id23">
 <h3>Example<a class="headerlink" href="#id23" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
-<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Suppress</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Operation</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Suppress</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Default</span><span class="p">(</span><span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">)),</span> <span class="mi">0</span><span class="p">)</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 <span class="go">None</span>
@@ -550,8 +550,8 @@ all exceptions that inherit from Exception.</p>
 </section>
 <section id="id24">
 <h3>Example<a class="headerlink" href="#id24" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
-<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Suppress</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Operation</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Suppress</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">category</span><span class="o">=</span><span class="ne">ValueError</span><span class="p">)</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;not an integer&quot;</span><span class="p">)</span>
 <span class="go">None</span>
@@ -562,8 +562,8 @@ if the cause of exception is subclass of provided category.</p>
 </section>
 <section id="id25">
 <h3>Example<a class="headerlink" href="#id25" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.operations</span> <span class="kn">import</span> <span class="n">Operation</span>
-<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Suppress</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Operation</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Suppress</span>
 <span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Suppress</span><span class="p">(</span><span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">category</span><span class="o">=</span><span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">))</span>
 <span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;not an integer&quot;</span><span class="p">)</span>
 <span class="go">FailedOperationExecution</span>

@@ -7,9 +7,9 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Selectors &mdash; soupsavvy  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=eea9572f" />
 
@@ -139,9 +139,9 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">find</span></code> method searches for the first element that matches the selector.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -173,10 +173,10 @@
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.exceptions</span> <span class="kn">import</span> <span class="n">TagNotFoundException</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">TagNotFoundException</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -215,9 +215,9 @@ STRICT: Tag was not found in markup.
 <p>This parameter also applies to the <code class="docutils literal notranslate"><span class="pre">find_all</span></code> method.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -250,9 +250,9 @@ STRICT: Tag was not found in markup.
 The results list contains unique elements, maintaining the same order as they appear in the document.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -286,9 +286,9 @@ The results list contains unique elements, maintaining the same order as they ap
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -319,7 +319,7 @@ The results list contains unique elements, maintaining the same order as they ap
 <p>All selectors can be compared, if two selectors are equal, their search results will always be identical.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeSelector</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">TypeSelector</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">)</span><span class="w"> </span><span class="si">= }</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">TypeSelector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span><span class="w"> </span><span class="si">= }</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -339,9 +339,9 @@ TypeSelector(&#39;p&#39;) == TypeSelector(&#39;p&#39;) = True
 <p>Selectors can be combined in various ways to create composite selectors. Read about this in the following tutorial.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -373,9 +373,9 @@ For more information about the CSS counterpart, refer to <a class="reference ext
 <p>Find element with specific attribute, regardless of the attribute’s value.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">AttributeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">AttributeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -399,9 +399,9 @@ For more information about the CSS counterpart, refer to <a class="reference ext
 <p>Find element with an exact attribute value by passing string.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">AttributeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">AttributeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -426,11 +426,11 @@ For more information about the CSS counterpart, refer to <a class="reference ext
 <p>Find elements based on a regular expression pattern.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
-<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">AttributeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">AttributeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -462,9 +462,9 @@ For more information about the CSS counterpart, refer to <a class="reference ext
 <p>For more information about css counterparts refer to Mozilla for <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors">Class</a> and <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors">ID</a> selectors.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;span class=&quot;title&quot;&gt;Animal Farm&lt;/span&gt;&lt;p class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span>
@@ -484,11 +484,11 @@ For more information about the CSS counterpart, refer to <a class="reference ext
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
-<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">IdSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">IdSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;&lt;p id=&quot;12ghj8&quot;&gt;Book&lt;/p&gt;&lt;p id=&quot;13cji0&quot; class=&quot;price&quot;&gt;Price: $20&lt;/p&gt;&quot;&quot;&quot;</span><span class="p">,</span>
@@ -513,9 +513,9 @@ For more information about the CSS counterpart, refer to <a class="reference ext
 <p><code class="docutils literal notranslate"><span class="pre">TypeSelector</span></code> is used to select elements based on their tag name. For more information about css counterpart refer to <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors">Mozilla</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -544,9 +544,9 @@ For more information about the CSS counterpart, refer to <a class="reference ext
 Its css counterpart is <code class="docutils literal notranslate"><span class="pre">*</span></code>, for more information about css counterpart refer to <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors">Mozilla</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">UniversalSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">UniversalSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -576,9 +576,9 @@ While <code class="docutils literal notranslate"><span class="pre">BeautifulSoup
 <p>Find element with an exact attribute value by passing string.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -603,11 +603,11 @@ While <code class="docutils literal notranslate"><span class="pre">BeautifulSoup
 <p>Find elements based on a regular expression pattern.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
-<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">PatternSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -635,9 +635,9 @@ While <code class="docutils literal notranslate"><span class="pre">BeautifulSoup
 <p>The <code class="docutils literal notranslate"><span class="pre">XPathSelector</span></code> enables the use of XPath expressions to select elements, a feature not natively supported by <code class="docutils literal notranslate"><span class="pre">BeautifulSoup</span></code>. It relies on the <code class="docutils literal notranslate"><span class="pre">lxml</span></code>, that needs to be installed. The XPath expression must target html elements in order to return valid results.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">XPathSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">XPathSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -665,9 +665,9 @@ While <code class="docutils literal notranslate"><span class="pre">BeautifulSoup
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">ExpressionSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExpressionSelector</span><span class="p">,</span> <span class="n">to_soupsavvy</span>
 
 <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>

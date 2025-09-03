@@ -7,9 +7,9 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>models &mdash; soupsavvy  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=eea9572f" />
 
@@ -394,8 +394,8 @@ Only model fields defined in <cite>attributes</cite> are used to create new inst
 Forces find method to fall back to find_all method and return all matches.</p>
 <section id="example">
 <h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">All</span>
-<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">All</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeSelector</span>
 <span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">All</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
 <span class="gp">... </span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">[element1, element2, element3]</span>
@@ -436,8 +436,8 @@ enforcing the use of find_all method.</p>
 <p>Field wrapper for returning a default value if no match is found.</p>
 <section id="id11">
 <h3>Example<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Default</span>
-<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Default</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeSelector</span>
 <span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">Default</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;1234&quot;</span><span class="p">)</span>
 <span class="gp">... </span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">&quot;1234&quot;</span>
@@ -494,8 +494,8 @@ by wrapped selector. Any exception raised during the search is propagated.</p>
 Raises an exception if searcher does not find any matches.</p>
 <section id="id15">
 <h3>Example<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.models</span> <span class="kn">import</span> <span class="n">Required</span>
-<span class="gp">... </span><span class="kn">from</span> <span class="nn">soupsavvy</span> <span class="kn">import</span> <span class="n">TypeSelector</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Required</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeSelector</span>
 <span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">Required</span><span class="p">(</span><span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">))</span>
 <span class="gp">... </span><span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 <span class="go">RequiredConstraintException</span>
@@ -545,12 +545,12 @@ The method will be called after the field is extracted from the element
 in model instance initialization.</p>
 <section id="id19">
 <h3>Example<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="gp">... </span>   <span class="o">...</span>
 <span class="gp">... </span>   <span class="n">field</span> <span class="o">=</span> <span class="o">...</span>
 <span class="gp">...</span>
 <span class="gp">... </span>   <span class="nd">@post</span><span class="p">(</span><span class="s2">&quot;field&quot;</span><span class="p">)</span>
-<span class="gp">... </span>   <span class="k">def</span> <span class="nf">post_process_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="k">def</span><span class="w"> </span><span class="nf">post_process_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="gp">... </span>       <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -584,7 +584,7 @@ Default is True.</p>
 </section>
 <section id="id20">
 <h3>Example<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="gp">... </span>   <span class="n">__scope__</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="gp">... </span>   <span class="n">price</span> <span class="o">=</span> <span class="n">Text</span><span class="p">()</span> <span class="o">|</span> <span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>

@@ -6,9 +6,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>soupsavvy.selectors.logical &mdash; soupsavvy  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=eea9572f" />
 
@@ -107,18 +107,18 @@
 <span class="sd">- `OrSelector` - union of multiple selectors - alias of `SelectorList` (|)</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">reduce</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">CompositeSoupSelector</span><span class="p">,</span> <span class="n">SoupSelector</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">IElement</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.utils.selector_utils</span> <span class="kn">import</span> <span class="n">ElementWrapper</span><span class="p">,</span> <span class="n">TagIterator</span><span class="p">,</span> <span class="n">TagResultSet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompositeSoupSelector</span><span class="p">,</span> <span class="n">SoupSelector</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IElement</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.utils.selector_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElementWrapper</span><span class="p">,</span> <span class="n">TagIterator</span><span class="p">,</span> <span class="n">TagResultSet</span>
 
 
 <div class="viewcode-block" id="SelectorList">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.logical.html#soupsavvy.SelectorList">[docs]</a>
-<span class="k">class</span> <span class="nc">SelectorList</span><span class="p">(</span><span class="n">CompositeSoupSelector</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SelectorList</span><span class="p">(</span><span class="n">CompositeSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Counterpart of CSS selector list.</span>
 <span class="sd">    At least one selector from list must match the element to be included.</span>
@@ -157,7 +157,7 @@
 
 <div class="viewcode-block" id="SelectorList.__init__">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.logical.html#soupsavvy.SelectorList.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">selector1</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
         <span class="n">selector2</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
@@ -182,7 +182,7 @@
 
 <div class="viewcode-block" id="SelectorList.find_all">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.logical.html#soupsavvy.SelectorList.find_all">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -208,7 +208,7 @@
 
 <div class="viewcode-block" id="NotSelector">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.logical.html#soupsavvy.NotSelector">[docs]</a>
-<span class="k">class</span> <span class="nc">NotSelector</span><span class="p">(</span><span class="n">CompositeSoupSelector</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NotSelector</span><span class="p">(</span><span class="n">CompositeSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector for finding elements that do not match provided selector(s).</span>
 <span class="sd">    Counterpart of CSS :not() pseudo-class.</span>
@@ -248,7 +248,7 @@
 
 <div class="viewcode-block" id="NotSelector.__init__">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.logical.html#soupsavvy.NotSelector.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">selector</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
         <span class="o">/</span><span class="p">,</span>
@@ -274,7 +274,7 @@
 
 <div class="viewcode-block" id="NotSelector.find_all">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.logical.html#soupsavvy.NotSelector.find_all">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -292,7 +292,7 @@
         <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__invert__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SoupSelector</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__invert__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SoupSelector</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overrides __invert__ method to cancel out negation by returning</span>
 <span class="sd">        the element in case of single selector, or `SelectorList` in case of multiple.</span>
@@ -306,7 +306,7 @@
 
 <div class="viewcode-block" id="AndSelector">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.logical.html#soupsavvy.AndSelector">[docs]</a>
-<span class="k">class</span> <span class="nc">AndSelector</span><span class="p">(</span><span class="n">CompositeSoupSelector</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AndSelector</span><span class="p">(</span><span class="n">CompositeSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector representing an intersection of multiple selectors,</span>
 <span class="sd">    where element must be matched by all provided selectors.</span>
@@ -346,7 +346,7 @@
 
 <div class="viewcode-block" id="AndSelector.__init__">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.logical.html#soupsavvy.AndSelector.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">selector1</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
         <span class="n">selector2</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
@@ -371,7 +371,7 @@
 
 <div class="viewcode-block" id="AndSelector.find_all">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.logical.html#soupsavvy.AndSelector.find_all">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -391,7 +391,7 @@
 
 <div class="viewcode-block" id="XORSelector">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.logical.html#soupsavvy.XORSelector">[docs]</a>
-<span class="k">class</span> <span class="nc">XORSelector</span><span class="p">(</span><span class="n">CompositeSoupSelector</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">XORSelector</span><span class="p">(</span><span class="n">CompositeSoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selector representing an exclusive OR of multiple selectors,</span>
 <span class="sd">    where element must be matched by exactly one of them.</span>
@@ -421,7 +421,7 @@
 
 <div class="viewcode-block" id="XORSelector.__init__">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.logical.html#soupsavvy.XORSelector.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">selector1</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
         <span class="n">selector2</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">,</span>
@@ -446,7 +446,7 @@
 
 <div class="viewcode-block" id="XORSelector.find_all">
 <a class="viewcode-back" href="../../../soupsavvy.selectors.logical.html#soupsavvy.XORSelector.find_all">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>

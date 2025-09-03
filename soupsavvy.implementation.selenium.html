@@ -7,9 +7,9 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>implementation.selenium &mdash; soupsavvy  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=eea9572f" />
 
@@ -25,7 +25,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="About" href="demos/about.html" />
-    <link rel="prev" title="implementation.lxml" href="soupsavvy.implementation.lxml.html" /> 
+    <link rel="prev" title="implementation.playwright" href="soupsavvy.implementation.playwright.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -59,6 +59,7 @@
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.implementation.bs4.html">implementation.bs4</a></li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.implementation.element.html">implementation.element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.implementation.lxml.html">implementation.lxml</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.implementation.playwright.html">implementation.playwright</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">implementation.selenium</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.implementation.selenium.SeleniumElement"><code class="docutils literal notranslate"><span class="pre">SeleniumElement</span></code></a></li>
 </ul>
@@ -124,8 +125,8 @@ compatible with <cite>IElement</cite> interface and usable across the library.</
 Adapter for <cite>selenium</cite> objects, that makes them usable across the library.</p>
 <section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">soupsavvy.implementation.selenium</span> <span class="kn">import</span> <span class="n">SeleniumElement</span>
-<span class="gp">... </span><span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="kn">import</span> <span class="n">By</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.implementation.selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeleniumElement</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">selenium.webdriver.common.by</span><span class="w"> </span><span class="kn">import</span> <span class="n">By</span>
 <span class="gp">... </span><span class="n">node</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">TAG_NAME</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">)</span>
 <span class="gp">... </span><span class="n">element</span> <span class="o">=</span> <span class="n">SeleniumElement</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
 </pre></div>
@@ -331,6 +332,18 @@ nested elements.</p>
 </section>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="soupsavvy.implementation.selenium.SeleniumElement.node">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">node</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">WebElement</span></em><a class="headerlink" href="#soupsavvy.implementation.selenium.SeleniumElement.node" title="Link to this definition"></a></dt>
+<dd><p>Returns the underlying node wrapped by the instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.implementation.selenium.SeleniumElement.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">WebElement</span></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/selenium.html#SeleniumElement.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.selenium.SeleniumElement.get" title="Link to this definition"></a></dt>
+<dd><p>Returns the node wrapped by the instance.</p>
+</dd></dl>
+
 </section>
 </dd></dl>
 
@@ -340,7 +353,7 @@ nested elements.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="soupsavvy.implementation.lxml.html" class="btn btn-neutral float-left" title="implementation.lxml" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soupsavvy.implementation.playwright.html" class="btn btn-neutral float-left" title="implementation.playwright" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="demos/about.html" class="btn btn-neutral float-right" title="About" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

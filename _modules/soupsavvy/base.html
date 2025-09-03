@@ -6,9 +6,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>soupsavvy.base &mdash; soupsavvy  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=eea9572f" />
 
@@ -100,21 +100,21 @@
 <span class="sd">Introduces another layer of abstraction for operations and selectors.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">overload</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">overload</span>
 
-<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">deprecated</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">deprecated</span>
 
-<span class="kn">import</span> <span class="nn">soupsavvy.exceptions</span> <span class="k">as</span> <span class="nn">exc</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">Comparable</span><span class="p">,</span> <span class="n">Executable</span><span class="p">,</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">TagSearcher</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">soupsavvy.exceptions</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">Comparable</span><span class="p">,</span> <span class="n">Executable</span><span class="p">,</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">TagSearcher</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">soupsavvy.operations.general</span> <span class="kn">import</span> <span class="n">OperationPipeline</span>
-    <span class="kn">from</span> <span class="nn">soupsavvy.operations.selection_pipeline</span> <span class="kn">import</span> <span class="n">SelectionPipeline</span>
-    <span class="kn">from</span> <span class="nn">soupsavvy.selectors.combinators</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations.general</span><span class="w"> </span><span class="kn">import</span> <span class="n">OperationPipeline</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations.selection_pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">SelectionPipeline</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.selectors.combinators</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
         <span class="n">AncestorCombinator</span><span class="p">,</span>
         <span class="n">ChildCombinator</span><span class="p">,</span>
         <span class="n">DescendantCombinator</span><span class="p">,</span>
@@ -122,12 +122,12 @@
         <span class="n">ParentCombinator</span><span class="p">,</span>
         <span class="n">SubsequentSiblingCombinator</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="kn">from</span> <span class="nn">soupsavvy.selectors.logical</span> <span class="kn">import</span> <span class="n">AndSelector</span><span class="p">,</span> <span class="n">SelectorList</span><span class="p">,</span> <span class="n">XORSelector</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.selectors.logical</span><span class="w"> </span><span class="kn">import</span> <span class="n">AndSelector</span><span class="p">,</span> <span class="n">SelectorList</span><span class="p">,</span> <span class="n">XORSelector</span>
 
 
 <div class="viewcode-block" id="check_selector">
 <a class="viewcode-back" href="../../soupsavvy.base.html#soupsavvy.base.check_selector">[docs]</a>
-<span class="k">def</span> <span class="nf">check_selector</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SoupSelector</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_selector</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SoupSelector</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks if provided object is a valid `soupsavvy` selector.</span>
 <span class="sd">    Checks for instance of `SoupSelector` and raises an exception if not.</span>
@@ -157,7 +157,7 @@
 
 <div class="viewcode-block" id="check_operation">
 <a class="viewcode-back" href="../../soupsavvy.base.html#soupsavvy.base.check_operation">[docs]</a>
-<span class="k">def</span> <span class="nf">check_operation</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseOperation</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_operation</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseOperation</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks if provided object is a valid `soupsavvy` operation.</span>
 <span class="sd">    Checks for instance of `BaseOperation` and raises an exception if not.</span>
@@ -187,7 +187,7 @@
 
 <div class="viewcode-block" id="SoupSelector">
 <a class="viewcode-back" href="../../soupsavvy.base.html#soupsavvy.base.SoupSelector">[docs]</a>
-<span class="k">class</span> <span class="nc">SoupSelector</span><span class="p">(</span><span class="n">TagSearcher</span><span class="p">,</span> <span class="n">Comparable</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SoupSelector</span><span class="p">(</span><span class="n">TagSearcher</span><span class="p">,</span> <span class="n">Comparable</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for all `soupsavvy` selectors, that define declarative search procedure</span>
 <span class="sd">    of searching for matching nodes in the html element.</span>
@@ -220,7 +220,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">strict</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
@@ -228,7 +228,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">strict</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
@@ -236,7 +236,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IElement</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span>
@@ -245,7 +245,7 @@
 
 <div class="viewcode-block" id="SoupSelector.find">
 <a class="viewcode-back" href="../../soupsavvy.base.html#soupsavvy.base.SoupSelector.find">[docs]</a>
-    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -291,7 +291,7 @@
 <div class="viewcode-block" id="SoupSelector.find_all">
 <a class="viewcode-back" href="../../soupsavvy.base.html#soupsavvy.base.SoupSelector.find_all">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -324,7 +324,7 @@
         <span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns an object that is a result of element search.</span>
 
@@ -346,12 +346,12 @@
         <span class="k">return</span> <span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">elements</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SelectorList</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SelectorList</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">BaseOperation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SelectionPipeline</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">BaseOperation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SelectionPipeline</span><span class="p">:</span> <span class="o">...</span>
 
-    <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__or__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SoupSelector</span><span class="p">,</span> <span class="n">BaseOperation</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">SelectorList</span><span class="p">,</span> <span class="n">SelectionPipeline</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -383,9 +383,9 @@
 <span class="sd">            If provided object is not an instance of `SoupSelector`</span>
 <span class="sd">            or `BaseOperation`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">soupsavvy.base</span> <span class="kn">import</span> <span class="n">BaseOperation</span>
-        <span class="kn">from</span> <span class="nn">soupsavvy.operations.selection_pipeline</span> <span class="kn">import</span> <span class="n">SelectionPipeline</span>
-        <span class="kn">from</span> <span class="nn">soupsavvy.selectors.logical</span> <span class="kn">import</span> <span class="n">SelectorList</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseOperation</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations.selection_pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">SelectionPipeline</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.selectors.logical</span><span class="w"> </span><span class="kn">import</span> <span class="n">SelectorList</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">BaseOperation</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">SelectionPipeline</span><span class="p">(</span><span class="n">selector</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
@@ -403,7 +403,7 @@
 
         <span class="k">return</span> <span class="n">SelectorList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__invert__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SoupSelector</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__invert__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SoupSelector</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overrides `__invert__` method called also by tilde operator `~`.</span>
 <span class="sd">        Syntactical Sugar for bitwise NOT operator, that creates `NotSelector` instance</span>
@@ -428,11 +428,11 @@
 <span class="sd">        NotSoupSelectorException</span>
 <span class="sd">            If provided object is not an instance of `SoupSelector`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">soupsavvy.selectors.logical</span> <span class="kn">import</span> <span class="n">NotSelector</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.selectors.logical</span><span class="w"> </span><span class="kn">import</span> <span class="n">NotSelector</span>
 
         <span class="k">return</span> <span class="n">NotSelector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AndSelector</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AndSelector</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overrides `__and_`_ method called also by ampersand operator `&amp;`.</span>
 <span class="sd">        Syntactical Sugar for bitwise AND operator, that creates `AndSelector` instance</span>
@@ -454,7 +454,7 @@
 <span class="sd">        NotSoupSelectorException</span>
 <span class="sd">            If provided object is not an instance of `SoupSelector`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">soupsavvy.selectors.logical</span> <span class="kn">import</span> <span class="n">AndSelector</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.selectors.logical</span><span class="w"> </span><span class="kn">import</span> <span class="n">AndSelector</span>
 
         <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;Bitwise AND not supported for types </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
@@ -469,7 +469,7 @@
 
         <span class="k">return</span> <span class="n">AndSelector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChildCombinator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChildCombinator</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overrides `__gt__` method called also by greater-than operator `&gt;`.</span>
 <span class="sd">        Syntactical Sugar for greater-than operator, that creates `ChildCombinator`.</span>
@@ -489,7 +489,7 @@
 <span class="sd">        NotSoupSelectorException</span>
 <span class="sd">            If provided object is not an instance of `SoupSelector`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">soupsavvy.selectors.combinators</span> <span class="kn">import</span> <span class="n">ChildCombinator</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.selectors.combinators</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChildCombinator</span>
 
         <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;GT operator not supported for types </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
@@ -504,7 +504,7 @@
 
         <span class="k">return</span> <span class="n">ChildCombinator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ParentCombinator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ParentCombinator</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overrides `__lt__` method called also by less-than operator `&lt;`.</span>
 <span class="sd">        Syntactical Sugar for less-than operator,</span>
@@ -530,7 +530,7 @@
 <span class="sd">        NotSoupSelectorException</span>
 <span class="sd">            If provided object is not an instance of `SoupSelector`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">soupsavvy.selectors.combinators</span> <span class="kn">import</span> <span class="n">ParentCombinator</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.selectors.combinators</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParentCombinator</span>
 
         <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;LT operator not supported for types </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
@@ -545,7 +545,7 @@
 
         <span class="k">return</span> <span class="n">ParentCombinator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NextSiblingCombinator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NextSiblingCombinator</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overrides `__add__` method called also by plus operator `+`.</span>
 <span class="sd">        Syntactical Sugar for addition operator, that creates `NextSiblingCombinator`</span>
@@ -571,7 +571,7 @@
 <span class="sd">        NotSoupSelectorException</span>
 <span class="sd">            If provided object is not an instance of `SoupSelector`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">soupsavvy.selectors.combinators</span> <span class="kn">import</span> <span class="n">NextSiblingCombinator</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.selectors.combinators</span><span class="w"> </span><span class="kn">import</span> <span class="n">NextSiblingCombinator</span>
 
         <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;ADD operator not supported for types </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
@@ -586,7 +586,7 @@
 
         <span class="k">return</span> <span class="n">NextSiblingCombinator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SubsequentSiblingCombinator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SubsequentSiblingCombinator</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overrides `__mul__` method called also by multiplication operator `*`.</span>
 <span class="sd">        Syntactical Sugar for multiplication operator, that creates</span>
@@ -612,7 +612,7 @@
 <span class="sd">        NotSoupSelectorException</span>
 <span class="sd">            If provided object is not an instance of `SoupSelector`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">soupsavvy.selectors.combinators</span> <span class="kn">import</span> <span class="n">SubsequentSiblingCombinator</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.selectors.combinators</span><span class="w"> </span><span class="kn">import</span> <span class="n">SubsequentSiblingCombinator</span>
 
         <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;MUL operator not supported for types </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
@@ -627,7 +627,7 @@
 
         <span class="k">return</span> <span class="n">SubsequentSiblingCombinator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DescendantCombinator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DescendantCombinator</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overrides `__rshift__` method called also by right shift operator `&gt;&gt;`.</span>
 <span class="sd">        Syntactical Sugar for right shift operator,</span>
@@ -653,7 +653,7 @@
 <span class="sd">        NotSoupSelectorException</span>
 <span class="sd">            If provided object is not an instance of `SoupSelector`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">soupsavvy.selectors.combinators</span> <span class="kn">import</span> <span class="n">DescendantCombinator</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.selectors.combinators</span><span class="w"> </span><span class="kn">import</span> <span class="n">DescendantCombinator</span>
 
         <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;RIGHT SHIFT operator not supported for types </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
@@ -668,7 +668,7 @@
 
         <span class="k">return</span> <span class="n">DescendantCombinator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__lshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AncestorCombinator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__lshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AncestorCombinator</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overrides `__lshift__` method called also by left shift operator `&lt;&lt;`.</span>
 <span class="sd">        Syntactical Sugar for left-shift operator, that creates `AncestorCombinator` instance.</span>
@@ -693,7 +693,7 @@
 <span class="sd">        NotSoupSelectorException</span>
 <span class="sd">            If provided object is not an instance of `SoupSelector`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">soupsavvy.selectors.combinators</span> <span class="kn">import</span> <span class="n">AncestorCombinator</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.selectors.combinators</span><span class="w"> </span><span class="kn">import</span> <span class="n">AncestorCombinator</span>
 
         <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;LEFT SHIFT operator not supported for types </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
@@ -708,7 +708,7 @@
 
         <span class="k">return</span> <span class="n">AncestorCombinator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__xor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">XORSelector</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__xor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">SoupSelector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">XORSelector</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overrides `__xor__` method called also by `xor` (caret) operator `^`.</span>
 <span class="sd">        Syntactical Sugar `xor` operator, that creates `XORSelector` instance.</span>
@@ -733,7 +733,7 @@
 <span class="sd">        NotSoupSelectorException</span>
 <span class="sd">            If provided object is not an instance of `SoupSelector`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">soupsavvy.selectors.logical</span> <span class="kn">import</span> <span class="n">XORSelector</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.selectors.logical</span><span class="w"> </span><span class="kn">import</span> <span class="n">XORSelector</span>
 
         <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;XOR operator not supported for types </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
@@ -752,7 +752,7 @@
 
 <div class="viewcode-block" id="SelectableCSS">
 <a class="viewcode-back" href="../../soupsavvy.base.html#soupsavvy.base.SelectableCSS">[docs]</a>
-<span class="k">class</span> <span class="nc">SelectableCSS</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SelectableCSS</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Interface for selectors, that can clearly and unambiguously defined css selector,</span>
 <span class="sd">    used to search for elements, that matches the same elements as find methods.</span>
@@ -765,7 +765,7 @@
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">css</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">css</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns string representing element css selector.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an interface, &quot;</span>
@@ -774,7 +774,7 @@
 
     <span class="nd">@property</span>
     <span class="nd">@deprecated</span><span class="p">(</span><span class="s2">&quot;&#39;selector&#39; property is deprecated, use &#39;css&#39; instead.&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">selector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">selector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns string representing element css selector.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">css</span></div>
 
@@ -782,7 +782,7 @@
 
 <div class="viewcode-block" id="CompositeSoupSelector">
 <a class="viewcode-back" href="../../soupsavvy.base.html#soupsavvy.base.CompositeSoupSelector">[docs]</a>
-<span class="k">class</span> <span class="nc">CompositeSoupSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CompositeSoupSelector</span><span class="p">(</span><span class="n">SoupSelector</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Interface for selectors consisting of multiple selectors.</span>
 
@@ -802,7 +802,7 @@
 
 <div class="viewcode-block" id="CompositeSoupSelector.__init__">
 <a class="viewcode-back" href="../../soupsavvy.base.html#soupsavvy.base.CompositeSoupSelector.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selectors</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">SoupSelector</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selectors</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">SoupSelector</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes composite selector object with provided selectors.</span>
 <span class="sd">        Checks if all selectors are instances of `SoupSelector`.</span>
@@ -821,7 +821,7 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">selectors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SoupSelector</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">selectors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SoupSelector</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a list of selectors that composite selector consists of.</span>
 
@@ -832,7 +832,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_selectors</span>
 
-    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="c1"># check for CompositeSoupSelector type for type checking sake</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">CompositeSoupSelector</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -855,17 +855,17 @@
             <span class="k">for</span> <span class="n">other_selector</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">selectors</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">selectors</span><span class="p">))</span><span class="si">}</span><span class="s2">)&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="BaseOperation">
 <a class="viewcode-back" href="../../soupsavvy.base.html#soupsavvy.base.BaseOperation">[docs]</a>
-<span class="k">class</span> <span class="nc">BaseOperation</span><span class="p">(</span><span class="n">Executable</span><span class="p">,</span> <span class="n">Comparable</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseOperation</span><span class="p">(</span><span class="n">Executable</span><span class="p">,</span> <span class="n">Comparable</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for all `soupsavvy` operations.</span>
 <span class="sd">    Operations are used to process the selection results from the soup,</span>
@@ -897,7 +897,7 @@
 
 <div class="viewcode-block" id="BaseOperation.execute">
 <a class="viewcode-back" href="../../soupsavvy.base.html#soupsavvy.base.BaseOperation.execute">[docs]</a>
-    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute the operation on the given argument and return the result.</span>
 
@@ -919,11 +919,11 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">FailedOperationExecution</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Failed to execute operation: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
 
 
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Internal method for executing the operation.&quot;&quot;&quot;</span>
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
@@ -931,7 +931,7 @@
             <span class="s2">&quot;and does not implement this method.&quot;</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationPipeline</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperationPipeline</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overrides `__or__` method called also by pipe operator &#39;|&#39;.</span>
 <span class="sd">        Syntactical Sugar for logical disjunction, that creates `OperationPipeline` instance,</span>
@@ -953,7 +953,7 @@
 <span class="sd">        NotOperationException</span>
 <span class="sd">            If provided object is not an instance of `BaseOperation`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">soupsavvy.operations.general</span> <span class="kn">import</span> <span class="n">OperationPipeline</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations.general</span><span class="w"> </span><span class="kn">import</span> <span class="n">OperationPipeline</span>
 
         <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;Bitwise OR not supported for types </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
@@ -966,7 +966,7 @@
 
 <div class="viewcode-block" id="OperationSearcherMixin">
 <a class="viewcode-back" href="../../soupsavvy.base.html#soupsavvy.base.OperationSearcherMixin">[docs]</a>
-<span class="k">class</span> <span class="nc">OperationSearcherMixin</span><span class="p">(</span><span class="n">BaseOperation</span><span class="p">,</span> <span class="n">TagSearcher</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OperationSearcherMixin</span><span class="p">(</span><span class="n">BaseOperation</span><span class="p">,</span> <span class="n">TagSearcher</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Mixin of `BaseOperation` and `TagSearcher` interfaces.</span>
 <span class="sd">    Allows operations to be used as field searchers in model</span>
@@ -975,7 +975,7 @@
 
 <div class="viewcode-block" id="OperationSearcherMixin.find_all">
 <a class="viewcode-back" href="../../soupsavvy.base.html#soupsavvy.base.OperationSearcherMixin.find_all">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_all</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -1003,7 +1003,7 @@
 
 <div class="viewcode-block" id="OperationSearcherMixin.find">
 <a class="viewcode-back" href="../../soupsavvy.base.html#soupsavvy.base.OperationSearcherMixin.find">[docs]</a>
-    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
         <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>

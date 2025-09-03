@@ -6,9 +6,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>soupsavvy.implementation.element &mdash; soupsavvy  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=eea9572f" />
 
@@ -101,17 +101,17 @@
 <span class="sd">This enables node to be used across `soupsavvy` with all its features.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">importlib</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
-<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">IElement</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IElement</span>
 
-<span class="n">SUPPORTED</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;bs4&quot;</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">,</span> <span class="s2">&quot;selenium&quot;</span><span class="p">]</span>
+<span class="n">SUPPORTED</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;bs4&quot;</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">,</span> <span class="s2">&quot;selenium&quot;</span><span class="p">,</span> <span class="s2">&quot;playwright&quot;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="to_soupsavvy">
 <a class="viewcode-back" href="../../../soupsavvy.implementation.element.html#soupsavvy.to_soupsavvy">[docs]</a>
-<span class="k">def</span> <span class="nf">to_soupsavvy</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IElement</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_soupsavvy</span><span class="p">(</span><span class="n">node</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IElement</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts node of supported type into an appropriate IElement instance</span>
 <span class="sd">    making it usable across `soupsavvy` with all its features.</span>
@@ -120,7 +120,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    node : Any</span>
 <span class="sd">        A node object of supported type, currently supported implementations are:</span>
-<span class="sd">        &quot;beautifulsoup4&quot;, &quot;lxml&quot;, &quot;selenium&quot;.</span>
+<span class="sd">        &quot;beautifulsoup4&quot;, &quot;lxml&quot;, &quot;selenium&quot; and &quot;playwright&quot;.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -164,21 +164,32 @@
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
         <span class="n">WebElement</span> <span class="o">=</span> <span class="kc">None</span>
 
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">playwright</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;playwright.sync_api&quot;</span><span class="p">)</span>
+        <span class="n">ElementHandle</span> <span class="o">=</span> <span class="n">playwright</span><span class="o">.</span><span class="n">ElementHandle</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="n">ElementHandle</span> <span class="o">=</span> <span class="kc">None</span>
+
     <span class="c1"># Check the type of the element</span>
     <span class="k">if</span> <span class="n">Tag</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">Tag</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">soupsavvy.implementation.bs4</span> <span class="kn">import</span> <span class="n">SoupElement</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.implementation.bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">SoupElement</span>
 
         <span class="k">return</span> <span class="n">SoupElement</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">HtmlElement</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">HtmlElement</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">soupsavvy.implementation.lxml</span> <span class="kn">import</span> <span class="n">LXMLElement</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.implementation.lxml</span><span class="w"> </span><span class="kn">import</span> <span class="n">LXMLElement</span>
 
         <span class="k">return</span> <span class="n">LXMLElement</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">WebElement</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">WebElement</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">soupsavvy.implementation.selenium</span> <span class="kn">import</span> <span class="n">SeleniumElement</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.implementation.selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeleniumElement</span>
 
         <span class="k">return</span> <span class="n">SeleniumElement</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ElementHandle</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ElementHandle</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.implementation.playwright</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaywrightElement</span>
+
+        <span class="k">return</span> <span class="n">PlaywrightElement</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
 
     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported element type, expected one of </span><span class="si">{</span><span class="n">SUPPORTED</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 

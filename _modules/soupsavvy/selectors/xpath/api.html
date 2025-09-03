@@ -6,9 +6,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>soupsavvy.selectors.xpath.api &mdash; soupsavvy  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=eea9572f" />
 
@@ -95,24 +95,24 @@
            <div itemprop="articleBody">
              
   <h1>Source code for soupsavvy.selectors.xpath.api</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
-<span class="kn">import</span> <span class="nn">soupsavvy.exceptions</span> <span class="k">as</span> <span class="nn">exc</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">SelectionApi</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">soupsavvy.exceptions</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">SelectionApi</span>
 
 
 <div class="viewcode-block" id="LXMLXpathApi">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.LXMLXpathApi">[docs]</a>
-<span class="k">class</span> <span class="nc">LXMLXpathApi</span><span class="p">(</span><span class="n">SelectionApi</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LXMLXpathApi</span><span class="p">(</span><span class="n">SelectionApi</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface for `lxml` xpath API for html elements.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="LXMLXpathApi.__init__">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.LXMLXpathApi.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">lxml.etree</span> <span class="kn">import</span> <span class="n">XPath</span><span class="p">,</span> <span class="n">XPathSyntaxError</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">lxml.etree</span><span class="w"> </span><span class="kn">import</span> <span class="n">XPath</span><span class="p">,</span> <span class="n">XPathSyntaxError</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="n">XPath</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
@@ -120,15 +120,15 @@
             <span class="k">except</span> <span class="n">XPathSyntaxError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">InvalidXPathSelector</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;Parsing XPath &#39;</span><span class="si">{</span><span class="n">selector</span><span class="si">}</span><span class="s2">&#39; failed&quot;</span>
-                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LXMLXpathApi.select">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.LXMLXpathApi.select">[docs]</a>
-    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
-        <span class="kn">from</span> <span class="nn">lxml.etree</span> <span class="kn">import</span> <span class="n">_Element</span> <span class="k">as</span> <span class="n">HtmlElement</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">lxml.etree</span><span class="w"> </span><span class="kn">import</span> <span class="n">_Element</span> <span class="k">as</span> <span class="n">HtmlElement</span>
 
         <span class="n">selected</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">node</span><span class="p">)</span>
 
@@ -149,15 +149,15 @@
 
 <div class="viewcode-block" id="SeleniumXPathApi">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.SeleniumXPathApi">[docs]</a>
-<span class="k">class</span> <span class="nc">SeleniumXPathApi</span><span class="p">(</span><span class="n">SelectionApi</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SeleniumXPathApi</span><span class="p">(</span><span class="n">SelectionApi</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface for `selenium` xpath API for web elements.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SeleniumXPathApi.select">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.SeleniumXPathApi.select">[docs]</a>
-    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
-        <span class="kn">from</span> <span class="nn">selenium.common.exceptions</span> <span class="kn">import</span> <span class="n">InvalidSelectorException</span>
-        <span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="kn">import</span> <span class="n">By</span>
-        <span class="kn">from</span> <span class="nn">selenium.webdriver.remote.webelement</span> <span class="kn">import</span> <span class="n">WebElement</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">selenium.common.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidSelectorException</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">selenium.webdriver.common.by</span><span class="w"> </span><span class="kn">import</span> <span class="n">By</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">selenium.webdriver.remote.webelement</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebElement</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">selected</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">find_elements</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="p">)</span>
@@ -165,7 +165,30 @@
             <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">InvalidXPathSelector</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;CSS selector constructed from provided parameters &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;is not valid: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">from_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PlaywrightXPathApi">
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.PlaywrightXPathApi">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlaywrightXPathApi</span><span class="p">(</span><span class="n">SelectionApi</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface for `playwright` xpath API for web elements.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PlaywrightXPathApi.select">
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.PlaywrightXPathApi.select">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">playwright.sync_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Error</span> <span class="k">as</span> <span class="n">PlaywrightError</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">selected</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">query_selector_all</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;xpath=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">PlaywrightError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">InvalidXPathSelector</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;XPath selector constructed from provided parameters &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;is not valid: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
         <span class="k">return</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">from_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">]</span></div>
 </div>

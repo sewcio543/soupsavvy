@@ -6,9 +6,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>soupsavvy.selectors.css.api &mdash; soupsavvy  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=eea9572f" />
 
@@ -95,19 +95,19 @@
            <div itemprop="articleBody">
              
   <h1>Source code for soupsavvy.selectors.css.api</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">soupsavvy.exceptions</span> <span class="k">as</span> <span class="nn">exc</span>
-<span class="kn">from</span> <span class="nn">soupsavvy.interfaces</span> <span class="kn">import</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">SelectionApi</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">soupsavvy.exceptions</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">SelectionApi</span>
 
 
 <div class="viewcode-block" id="SoupsieveApi">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SoupsieveApi">[docs]</a>
-<span class="k">class</span> <span class="nc">SoupsieveApi</span><span class="p">(</span><span class="n">SelectionApi</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SoupsieveApi</span><span class="p">(</span><span class="n">SelectionApi</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface for `soupsieve` css API for soup.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SoupsieveApi.__init__">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SoupsieveApi.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">soupsieve</span> <span class="k">as</span> <span class="nn">sv</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">soupsieve</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sv</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">compiled</span> <span class="o">=</span> <span class="n">sv</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
@@ -121,7 +121,7 @@
 
 <div class="viewcode-block" id="SoupsieveApi.select">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SoupsieveApi.select">[docs]</a>
-    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">from_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">node</span><span class="p">)]</span></div>
 </div>
 
@@ -129,28 +129,28 @@
 
 <div class="viewcode-block" id="CSSSelectApi">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.CSSSelectApi">[docs]</a>
-<span class="k">class</span> <span class="nc">CSSSelectApi</span><span class="p">(</span><span class="n">SelectionApi</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CSSSelectApi</span><span class="p">(</span><span class="n">SelectionApi</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface for `cssselect` css API for lxml.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="CSSSelectApi.__init__">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.CSSSelectApi.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">cssselect.parser</span> <span class="kn">import</span> <span class="n">SelectorError</span>
-        <span class="kn">from</span> <span class="nn">lxml.cssselect</span> <span class="kn">import</span> <span class="n">CSSSelector</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">cssselect.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">SelectorError</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">lxml.cssselect</span><span class="w"> </span><span class="kn">import</span> <span class="n">CSSSelector</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">compiled</span> <span class="o">=</span> <span class="n">CSSSelector</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">SelectorError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">InvalidCSSSelector</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Provided CSS selector is not valid: </span><span class="si">{</span><span class="n">selector</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">compiled</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CSSSelectApi.select">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.CSSSelectApi.select">[docs]</a>
-    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">from_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">node</span><span class="p">)]</span></div>
 </div>
 
@@ -158,14 +158,14 @@
 
 <div class="viewcode-block" id="SeleniumCSSApi">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SeleniumCSSApi">[docs]</a>
-<span class="k">class</span> <span class="nc">SeleniumCSSApi</span><span class="p">(</span><span class="n">SelectionApi</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SeleniumCSSApi</span><span class="p">(</span><span class="n">SelectionApi</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface for `selenium` css API for web elements.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SeleniumCSSApi.select">
 <a class="viewcode-back" href="../../../../soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SeleniumCSSApi.select">[docs]</a>
-    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
-        <span class="kn">from</span> <span class="nn">selenium.common.exceptions</span> <span class="kn">import</span> <span class="n">InvalidSelectorException</span>
-        <span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="kn">import</span> <span class="n">By</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">selenium.common.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidSelectorException</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">selenium.webdriver.common.by</span><span class="w"> </span><span class="kn">import</span> <span class="n">By</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">found</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">find_elements</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">CSS_SELECTOR</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="p">)</span>
@@ -173,7 +173,30 @@
             <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">InvalidCSSSelector</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;CSS selector constructed from provided parameters &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;is not valid: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">from_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">found</span><span class="p">]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PlaywrightCSSApi">
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.PlaywrightCSSApi">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlaywrightCSSApi</span><span class="p">(</span><span class="n">SelectionApi</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface for `playwright` css API for web elements.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PlaywrightCSSApi.select">
+<a class="viewcode-back" href="../../../../soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.PlaywrightCSSApi.select">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">IElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IElement</span><span class="p">]:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">playwright.sync_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Error</span> <span class="k">as</span> <span class="n">PlaywrightError</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">found</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">query_selector_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">PlaywrightError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">InvalidCSSSelector</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;CSS selector constructed from provided parameters &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;is not valid: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
         <span class="k">return</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">from_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">found</span><span class="p">]</span></div>
 </div>

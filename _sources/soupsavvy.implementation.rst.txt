@@ -10,6 +10,7 @@ Submodules
    soupsavvy.implementation.bs4
    soupsavvy.implementation.element
    soupsavvy.implementation.lxml
+   soupsavvy.implementation.playwright
    soupsavvy.implementation.selenium
 
 Content
