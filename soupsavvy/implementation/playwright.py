@@ -5,6 +5,7 @@ from itertools import islice
 from typing import Iterable, Optional, Pattern, Union
 
 from playwright.sync_api import ElementHandle
+from typing_extensions import Self
 
 from soupsavvy.interfaces import IElement
 from soupsavvy.selectors.css.api import PlaywrightCSSApi
@@ -87,7 +88,7 @@ class PlaywrightElement(IElement):
     def __init__(self, node: ElementHandle, *args, **kwargs):
         super().__init__(node, *args, **kwargs)
 
-        # playwright does not guarantee the same identity for hadles
+        # playwright does not guarantee the same identity for handles
         # from different queries, it needs to be worked around
         self._id = self.node.evaluate(
             """
@@ -106,7 +107,7 @@ class PlaywrightElement(IElement):
         attrs: Optional[dict[str, Union[str, Pattern[str]]]] = None,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[PlaywrightElement]:
+    ) -> list[Self]:
         attrs = attrs or {}
         js_attrs = {k: None if isinstance(v, Pattern) else v for k, v in attrs.items()}
 
@@ -129,9 +130,7 @@ class PlaywrightElement(IElement):
 
         return list(islice(self._map(filter(match, matched_elements)), limit))
 
-    def find_subsequent_siblings(
-        self, limit: Optional[int] = None
-    ) -> list[PlaywrightElement]:
+    def find_subsequent_siblings(self, limit: Optional[int] = None) -> list[Self]:
         iterator = self.node.query_selector_all("xpath=following-sibling::*")
         return list(islice(self._map(iterator), limit))
 
@@ -142,7 +141,7 @@ class PlaywrightElement(IElement):
     def get(self) -> ElementHandle:
         return self.node
 
-    def find_ancestors(self, limit: Optional[int] = None) -> list[PlaywrightElement]:
+    def find_ancestors(self, limit: Optional[int] = None) -> list[Self]:
         js_handle = self.node.evaluate_handle(
             _FIND_ANCESTORS_SCRIPT,
             limit,
@@ -155,24 +154,24 @@ class PlaywrightElement(IElement):
         return list(self._map(ancestors))
 
     @property
-    def children(self) -> Iterable[PlaywrightElement]:
+    def children(self) -> Iterable[Self]:
         iterator = self.node.query_selector_all("xpath=./*")
         return self._map(iterator)
 
     @property
-    def descendants(self) -> Iterable[PlaywrightElement]:
+    def descendants(self) -> Iterable[Self]:
         iterator = self.node.query_selector_all("*")
         return self._map(iterator)
 
     @property
-    def parent(self) -> Optional[PlaywrightElement]:
+    def parent(self) -> Optional[Self]:
         handle = self.node.evaluate_handle("el => el.parentElement")
         element = handle.as_element()
 
         if element is None:
             return None
 
-        return PlaywrightElement(element)
+        return self.from_node(element)
 
     def get_attribute(self, name: str) -> Optional[str]:
         return self.node.get_attribute(name)

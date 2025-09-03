@@ -12,6 +12,7 @@ from typing import Optional, Pattern, Union
 
 import lxml.etree as etree
 from lxml.etree import _Element as LXMLNode
+from typing_extensions import Self
 
 from soupsavvy.interfaces import IElement
 from soupsavvy.selectors.css.api import CSSSelectApi
@@ -39,11 +40,11 @@ class LXMLElement(IElement):
         attrs: Optional[dict[str, Union[str, Pattern[str]]]] = None,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[LXMLElement]:
+    ) -> list[Self]:
         iterator = (
-            self._node.iterdescendants(None)
+            self.node.iterdescendants(None)
             if recursive
-            else self._node.iterchildren(None)
+            else self.node.iterchildren(None)
         )
         generator = (
             element
@@ -76,14 +77,12 @@ class LXMLElement(IElement):
 
         return True
 
-    def find_subsequent_siblings(
-        self, limit: Optional[int] = None
-    ) -> list[LXMLElement]:
-        iterator = self._node.itersiblings(None)
+    def find_subsequent_siblings(self, limit: Optional[int] = None) -> list[Self]:
+        iterator = self.node.itersiblings(None)
         return list(islice(self._map(iterator), limit))
 
-    def find_ancestors(self, limit: Optional[int] = None) -> list[LXMLElement]:
-        iterator = self._node.iterancestors(None)
+    def find_ancestors(self, limit: Optional[int] = None) -> list[Self]:
+        iterator = self.node.iterancestors(None)
         return list(islice(self._map(iterator), limit))
 
     def get_attribute(self, name: str) -> Optional[str]:
@@ -96,33 +95,31 @@ class LXMLElement(IElement):
         return LXMLXpathApi(selector)
 
     @property
-    def children(self) -> Iterable[LXMLElement]:
-        iterator = self._node.iterchildren(None)
+    def children(self) -> Iterable[Self]:
+        iterator = self.node.iterchildren(None)
         return self._map(iterator)
 
     @property
-    def descendants(self) -> Iterable[LXMLElement]:
-        iterator = self._node.iterdescendants(None)
+    def descendants(self) -> Iterable[Self]:
+        iterator = self.node.iterdescendants(None)
         return self._map(iterator)
 
     @property
-    def parent(self) -> Optional[LXMLElement]:
-        parent = self._node.getparent()
-        return LXMLElement(parent) if parent is not None else None
+    def parent(self) -> Optional[Self]:
+        parent = self.node.getparent()
+        return self.from_node(parent) if parent is not None else None
 
     @property
     def name(self) -> str:
-        return self._node.tag
+        return self.node.tag
 
     @property
     def text(self) -> str:
-        texts = (text for text in self._node.itertext() if text is not None)
-        return "".join(texts)
+        texts = (text for text in self.node.itertext() if text is not None)
+        return "".join(texts)  # type: ignore
 
     def __str__(self) -> str:
-        return etree.tostring(self._node, method="html", with_tail=False).decode(
-            "utf-8"
-        )
+        return etree.tostring(self.node, method="html", with_tail=False).decode("utf-8")
 
     @property
     def node(self) -> LXMLNode:

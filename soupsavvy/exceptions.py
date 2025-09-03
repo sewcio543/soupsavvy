@@ -242,3 +242,10 @@ class FrozenModelException(BaseModelException):
     Exception raised by `BaseModel` when trying to modify frozen model instance.
     Frozen model instances are read-only and cannot be modified.
     """
+
+
+class InvalidDecorationException(BaseModelException):
+    """
+    Exception raised by `BaseModel` when a method is decorated with an invalid
+    decorator.
+    """

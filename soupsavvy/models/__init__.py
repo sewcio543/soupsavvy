@@ -11,7 +11,7 @@ Classes
 - `Required` - Wrapper to enforce that information must be found.
 """
 
-from .base import BaseModel, Field, MigrationSchema, post
+from .base import BaseModel, Field, MigrationSchema, post, serializer
 from .wrappers import All, Default, Required
 
 __all__ = [
@@ -20,6 +20,7 @@ __all__ = [
     "Default",
     "Required",
     "post",
+    "serializer",
     "Field",
     "MigrationSchema",
 ]
