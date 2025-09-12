@@ -109,6 +109,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">selenium.webdriver.common.by</span><span class="w"> </span><span class="kn">import</span> <span class="n">By</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">selenium.webdriver.remote.webdriver</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebDriver</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">selenium.webdriver.remote.webelement</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebElement</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Self</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IElement</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.selectors.css.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeleniumCSSApi</span>
@@ -199,14 +200,14 @@
         <span class="n">attrs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SeleniumElement</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
         <span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="n">js_attrs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">attrs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
         <span class="n">driver</span><span class="p">:</span> <span class="n">WebDriver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">parent</span>
         <span class="n">matched_elements</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">WebElement</span><span class="p">]</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">execute_script</span><span class="p">(</span>
             <span class="n">_FIND_ALL_SCRIPT</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="p">,</span>
             <span class="n">name</span><span class="p">,</span>
             <span class="n">js_attrs</span><span class="p">,</span>
             <span class="n">recursive</span><span class="p">,</span>
@@ -224,40 +225,38 @@
 
 <div class="viewcode-block" id="SeleniumElement.find_subsequent_siblings">
 <a class="viewcode-back" href="../../../soupsavvy.implementation.selenium.html#soupsavvy.implementation.selenium.SeleniumElement.find_subsequent_siblings">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">find_subsequent_siblings</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SeleniumElement</span><span class="p">]:</span>
-        <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">find_elements</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s2">&quot;following-sibling::*&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_subsequent_siblings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
+        <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">find_elements</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s2">&quot;following-sibling::*&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">islice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="p">(</span><span class="n">iterator</span><span class="p">),</span> <span class="n">limit</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="SeleniumElement.find_ancestors">
 <a class="viewcode-back" href="../../../soupsavvy.implementation.selenium.html#soupsavvy.implementation.selenium.SeleniumElement.find_ancestors">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">find_ancestors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">SeleniumElement</span><span class="p">]:</span>
-        <span class="n">driver</span><span class="p">:</span> <span class="n">WebDriver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">parent</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_ancestors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
+        <span class="n">driver</span><span class="p">:</span> <span class="n">WebDriver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">parent</span>
         <span class="n">iterator</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">execute_script</span><span class="p">(</span>
             <span class="n">_FIND_ANCESTORS_SCRIPT</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="p">,</span>
             <span class="n">limit</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="p">(</span><span class="n">iterator</span><span class="p">))</span></div>
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">SeleniumElement</span><span class="p">]:</span>
-        <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">find_elements</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s2">&quot;./*&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
+        <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">find_elements</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s2">&quot;./*&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="p">(</span><span class="n">iterator</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">descendants</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">SeleniumElement</span><span class="p">]:</span>
-        <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">find_elements</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">CSS_SELECTOR</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">descendants</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
+        <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">find_elements</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">CSS_SELECTOR</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="p">(</span><span class="n">iterator</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SeleniumElement</span><span class="p">]:</span>
-        <span class="n">driver</span><span class="p">:</span> <span class="n">WebDriver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">parent</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
+        <span class="n">driver</span><span class="p">:</span> <span class="n">WebDriver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">parent</span>
         <span class="n">element</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">execute_script</span><span class="p">(</span><span class="s2">&quot;return arguments[0].parentNode;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">SeleniumElement</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_node</span><span class="p">(</span><span class="n">element</span><span class="p">)</span> <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="SeleniumElement.get_attribute">
 <a class="viewcode-back" href="../../../soupsavvy.implementation.selenium.html#soupsavvy.implementation.selenium.SeleniumElement.get_attribute">[docs]</a>
@@ -267,14 +266,14 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">tag_name</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">tag_name</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s2">&quot;outerHTML&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s2">&quot;outerHTML&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">text</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">text</span>
 
 <div class="viewcode-block" id="SeleniumElement.css">
 <a class="viewcode-back" href="../../../soupsavvy.implementation.selenium.html#soupsavvy.implementation.selenium.SeleniumElement.css">[docs]</a>

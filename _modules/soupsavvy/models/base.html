@@ -181,6 +181,37 @@
 
 
 
+<div class="viewcode-block" id="serializer">
+<a class="viewcode-back" href="../../../soupsavvy.models.base.html#soupsavvy.models.serializer">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">serializer</span><span class="p">(</span><span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">Callable</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator to mark a method as a serializer for a model field.</span>
+<span class="sd">    The method will be called to serialize the field value of the model</span>
+<span class="sd">    to json format in `json` method.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; class MyModel(BaseModel):</span>
+<span class="sd">    ...    ...</span>
+<span class="sd">    ...    field = ...</span>
+<span class="sd">    ...</span>
+<span class="sd">    ...    @serializer(&quot;field&quot;)</span>
+<span class="sd">    ...    def serialize_field(self, value):</span>
+
+<span class="sd">    ...        return json.dumps(value)</span>
+
+<span class="sd">    Methods of custom model class, that are decorated with `@serializer` decorator,</span>
+<span class="sd">    must accept only one argument, which is the value of the field to be serialized.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">SERIALIZER_ATTR</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">func</span>
+
+    <span class="k">return</span> <span class="n">decorator</span></div>
+
+
+
 <div class="viewcode-block" id="Field">
 <a class="viewcode-back" href="../../../soupsavvy.models.base.html#soupsavvy.models.Field">[docs]</a>
 <span class="nd">@dataclass</span>
@@ -298,11 +329,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">)</span>
 
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">POST_PROCESSORS</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="n">post_processors</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">POST_PROCESSORS</span><span class="p">)</span>
-
-        <span class="c1"># Inherit post-processors from base classes</span>
-        <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">bases</span><span class="p">:</span>
-            <span class="n">post_processors</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">POST_PROCESSORS</span><span class="p">,</span> <span class="p">{}))</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">SERIALIZERS</span><span class="p">,</span> <span class="p">{})</span>
 
         <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">BASE_MODELS</span><span class="p">:</span>
             <span class="k">return</span>
@@ -327,17 +354,33 @@
                 <span class="sa">f</span><span class="s2">&quot;Model &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; has no fields defined. At least one required.&quot;</span>
             <span class="p">)</span>
 
-        <span class="c1"># register post processors</span>
+        <span class="n">post_processors</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">POST_PROCESSORS</span><span class="p">)</span>
+        <span class="n">serializers</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">SERIALIZERS</span><span class="p">)</span>
+
+        <span class="c1"># register post processors and serializers</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-            <span class="n">obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>  <span class="c1"># some attributes might be injected by external libraries</span>
+                <span class="n">obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+                <span class="k">continue</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">):</span>
                 <span class="k">continue</span>
 
-            <span class="n">field</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">POST_ATTR</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">has_post</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">POST_ATTR</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">has_serializer</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">SERIALIZER_ATTR</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-            <span class="k">if</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
-                <span class="n">post_processors</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span></div>
+            <span class="k">if</span> <span class="n">has_post</span> <span class="ow">and</span> <span class="n">has_serializer</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">InvalidDecorationException</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Method &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; in model &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; cannot be both &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;a post-processor and a serializer.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">has_post</span><span class="p">:</span>
+                <span class="n">post_processors</span><span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">POST_ATTR</span><span class="p">)]</span> <span class="o">=</span> <span class="n">obj</span>
+
+            <span class="k">elif</span> <span class="n">has_serializer</span><span class="p">:</span>
+                <span class="n">serializers</span><span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">SERIALIZER_ATTR</span><span class="p">)]</span> <span class="o">=</span> <span class="n">obj</span></div>
 
 
     <span class="nd">@property</span>
@@ -358,8 +401,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">fields</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Field</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the fields of the model class with their</span>
-<span class="sd">        respective TagSearcher instances. The fields are aggregated based on</span>
-<span class="sd">        the `__inherit_fields__` setting.</span>
+<span class="sd">        respective TagSearcher instances.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -370,21 +412,16 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_fields</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Field</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the fields of the model with their respective `TagSearcher` instances</span>
-<span class="sd">        based on the `__inherit_fields__` setting.</span>
+<span class="sd">        Returns the fields of the model with their respective `TagSearcher` instances.</span>
 
 <span class="sd">        If searcher is already provided in form of Field object, it is used directly.</span>
 <span class="sd">        Otherwise, it is wrapped in `Field` object with default settings.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">classes</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="p">[</span>
-                <span class="n">base</span>
-                <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__mro__</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">)</span> <span class="ow">and</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">BaseModel</span>
-            <span class="p">]</span>
-            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">INHERIT_FIELDS</span><span class="p">)</span>
-            <span class="k">else</span> <span class="p">[</span><span class="bp">cls</span><span class="p">]</span>
-        <span class="p">)</span>
+        <span class="n">classes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">base</span>
+            <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__mro__</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">)</span> <span class="ow">and</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">BaseModel</span>
+        <span class="p">]</span>
 
         <span class="k">return</span> <span class="n">reduce</span><span class="p">(</span>
             <span class="nb">dict</span><span class="o">.</span><span class="fm">__or__</span><span class="p">,</span>
@@ -398,7 +435,7 @@
                         <span class="c1"># or BaseModel subclass</span>
                         <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">))</span>
                     <span class="p">)</span>
-                    <span class="ow">and</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">SPECIAL_FIELDS</span>
+                    <span class="ow">and</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">SPECIAL_ATTRIBUTES</span>
                 <span class="p">}</span>
                 <span class="k">for</span> <span class="n">class_</span> <span class="ow">in</span> <span class="n">classes</span>
             <span class="p">],</span>
@@ -412,10 +449,10 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all user-defined models in `soupsavvy`.&quot;&quot;&quot;</span>
 
     <span class="n">__scope__</span><span class="p">:</span> <span class="n">SoupSelector</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: ignore</span>
-    <span class="n">__inherit_fields__</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">__frozen__</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="n">__post_processors__</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">__serializers__</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
 <div class="viewcode-block" id="BaseModel.__init__">
 <a class="viewcode-back" href="../../../soupsavvy.models.base.html#soupsavvy.models.BaseModel.__init__">[docs]</a>
@@ -715,6 +752,33 @@
 <span class="sd">            A deep copy of the model instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">migrate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseModel.json">
+<a class="viewcode-back" href="../../../soupsavvy.models.base.html#soupsavvy.models.BaseModel.json">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the model instance to a JSON-serializable dictionary.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            A json-serializable representation of the model instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dictionary</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">attribute</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">serializer</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">SERIALIZERS</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="n">json_value</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">attribute</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">)</span>
+                <span class="k">else</span> <span class="n">serializer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribute</span><span class="p">)</span> <span class="k">if</span> <span class="n">serializer</span> <span class="k">else</span> <span class="n">attribute</span>
+            <span class="p">)</span>
+            <span class="n">dictionary</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">json_value</span>
+
+        <span class="k">return</span> <span class="n">dictionary</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>

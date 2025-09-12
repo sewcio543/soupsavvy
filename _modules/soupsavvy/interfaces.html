@@ -254,6 +254,7 @@
 <span class="sd">    - `SoupElement`: Wraps a `BeautifulSoup` node.</span>
 <span class="sd">    - `LXMLElement`: Wraps an `lxml` node.</span>
 <span class="sd">    - `SeleniumElement`: Wraps a `Selenium WebElement`.</span>
+<span class="sd">    - `PlaywrightElement`: Wraps a `Playwright ElementHandle`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_NOT_IMPLEMENTED_MESSAGE</span> <span class="o">=</span> <span class="p">(</span>
@@ -530,7 +531,7 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_map</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">elements</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Maps elements to the current implementation.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">elements</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">from_node</span><span class="p">,</span> <span class="n">elements</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Hashes element object using the wrapped node&#39;s hash.&quot;&quot;&quot;</span>
