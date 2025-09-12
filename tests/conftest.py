@@ -1,13 +1,18 @@
 import pytest
 
-IMPLEMENTATIONS = ["bs4", "lxml", "selenium", "playwright"]
+BS4 = "bs4"
+LXML = "lxml"
+SELENIUM = "selenium"
+PLAYWRIGHT = "playwright"
+
+IMPLEMENTATIONS = [BS4, LXML, SELENIUM, PLAYWRIGHT]
 
 
 def pytest_addoption(parser):
     parser.addoption(
         "--impl",
         action="store",
-        default="bs4",
+        default=BS4,
         choices=IMPLEMENTATIONS,
         help="Choose the IElement implementation to test with",
     )

@@ -12,6 +12,7 @@ from typing import Iterable, Optional, Pattern, Union
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
+from typing_extensions import Self
 
 from soupsavvy.interfaces import IElement
 from soupsavvy.selectors.css.api import SeleniumCSSApi
@@ -98,14 +99,14 @@ class SeleniumElement(IElement):
         attrs: Optional[dict[str, Union[str, Pattern[str]]]] = None,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[SeleniumElement]:
+    ) -> list[Self]:
         attrs = attrs or {}
         js_attrs = {k: None if isinstance(v, Pattern) else v for k, v in attrs.items()}
 
         driver: WebDriver = self.node.parent
         matched_elements: list[WebElement] = driver.execute_script(
             _FIND_ALL_SCRIPT,
-            self._node,
+            self.node,
             name,
             js_attrs,
             recursive,
@@ -120,50 +121,48 @@ class SeleniumElement(IElement):
 
         return list(islice(self._map(filter(match, matched_elements)), limit))
 
-    def find_subsequent_siblings(
-        self, limit: Optional[int] = None
-    ) -> list[SeleniumElement]:
-        iterator = self._node.find_elements(By.XPATH, "following-sibling::*")
+    def find_subsequent_siblings(self, limit: Optional[int] = None) -> list[Self]:
+        iterator = self.node.find_elements(By.XPATH, "following-sibling::*")
         return list(islice(self._map(iterator), limit))
 
-    def find_ancestors(self, limit: Optional[int] = None) -> list[SeleniumElement]:
-        driver: WebDriver = self._node.parent
+    def find_ancestors(self, limit: Optional[int] = None) -> list[Self]:
+        driver: WebDriver = self.node.parent
         iterator = driver.execute_script(
             _FIND_ANCESTORS_SCRIPT,
-            self._node,
+            self.node,
             limit,
         )
         return list(self._map(iterator))
 
     @property
-    def children(self) -> Iterable[SeleniumElement]:
-        iterator = self._node.find_elements(By.XPATH, "./*")
+    def children(self) -> Iterable[Self]:
+        iterator = self.node.find_elements(By.XPATH, "./*")
         return self._map(iterator)
 
     @property
-    def descendants(self) -> Iterable[SeleniumElement]:
-        iterator = self._node.find_elements(By.CSS_SELECTOR, "*")
+    def descendants(self) -> Iterable[Self]:
+        iterator = self.node.find_elements(By.CSS_SELECTOR, "*")
         return self._map(iterator)
 
     @property
-    def parent(self) -> Optional[SeleniumElement]:
-        driver: WebDriver = self._node.parent
+    def parent(self) -> Optional[Self]:
+        driver: WebDriver = self.node.parent
         element = driver.execute_script("return arguments[0].parentNode;", self.node)
-        return SeleniumElement(element) if element is not None else None
+        return self.from_node(element) if element is not None else None
 
     def get_attribute(self, name: str) -> Optional[str]:
         return self.node.get_dom_attribute(name)
 
     @property
     def name(self) -> str:
-        return self._node.tag_name
+        return self.node.tag_name
 
     def __str__(self) -> str:
-        return self._node.get_attribute("outerHTML") or ""
+        return self.node.get_attribute("outerHTML") or ""
 
     @property
     def text(self) -> str:
-        return self._node.text
+        return self.node.text
 
     def css(self, selector: str) -> SeleniumCSSApi:
         return SeleniumCSSApi(selector)

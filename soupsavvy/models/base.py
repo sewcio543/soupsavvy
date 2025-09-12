@@ -78,6 +78,34 @@ def post(field: str) -> Callable[[Callable], Callable]:
     return decorator
 
 
+def serializer(field: str) -> Callable[[Callable], Callable]:
+    """
+    Decorator to mark a method as a serializer for a model field.
+    The method will be called to serialize the field value of the model
+    to json format in `json` method.
+
+    Example
+    -------
+    >>> class MyModel(BaseModel):
+    ...    ...
+    ...    field = ...
+    ...
+    ...    @serializer("field")
+    ...    def serialize_field(self, value):
+
+    ...        return json.dumps(value)
+
+    Methods of custom model class, that are decorated with `@serializer` decorator,
+    must accept only one argument, which is the value of the field to be serialized.
+    """
+
+    def decorator(func: Callable) -> Callable:
+        setattr(func, c.SERIALIZER_ATTR, field)
+        return func
+
+    return decorator
+
+
 @dataclass
 class Field(TagSearcher, Comparable):
     """
@@ -182,11 +210,7 @@ class ModelMeta(type(ABC)):
         super().__init__(name, bases, class_dict)
 
         setattr(cls, c.POST_PROCESSORS, {})
-        post_processors = getattr(cls, c.POST_PROCESSORS)
-
-        # Inherit post-processors from base classes
-        for base in bases:
-            post_processors.update(getattr(base, c.POST_PROCESSORS, {}))
+        setattr(cls, c.SERIALIZERS, {})
 
         if name in c.BASE_MODELS:
             return
@@ -211,17 +235,33 @@ class ModelMeta(type(ABC)):
                 f"Model '{cls.__name__}' has no fields defined. At least one required."
             )
 
-        # register post processors
+        post_processors = getattr(cls, c.POST_PROCESSORS)
+        serializers = getattr(cls, c.SERIALIZERS)
+
+        # register post processors and serializers
         for name in dir(cls):
-            obj = getattr(cls, name)
+            try:  # some attributes might be injected by external libraries
+                obj = getattr(cls, name)
+            except AttributeError:  # pragma: no cover
+                continue
 
             if not callable(obj) or name.startswith("__"):
                 continue
 
-            field = getattr(obj, c.POST_ATTR, None)
+            has_post = getattr(obj, c.POST_ATTR, None) is not None
+            has_serializer = getattr(obj, c.SERIALIZER_ATTR, None) is not None
 
-            if field in fields:
-                post_processors[field] = obj
+            if has_post and has_serializer:
+                raise exc.InvalidDecorationException(
+                    f"Method '{name}' in model '{cls.__name__}' cannot be both "
+                    f"a post-processor and a serializer."
+                )
+
+            if has_post:
+                post_processors[getattr(obj, c.POST_ATTR)] = obj
+
+            elif has_serializer:
+                serializers[getattr(obj, c.SERIALIZER_ATTR)] = obj
 
     @property
     def scope(cls) -> SoupSelector:
@@ -241,8 +281,7 @@ class ModelMeta(type(ABC)):
     def fields(cls) -> dict[str, Field]:
         """
         Returns the fields of the model class with their
-        respective TagSearcher instances. The fields are aggregated based on
-        the `__inherit_fields__` setting.
+        respective TagSearcher instances.
 
         Returns
         -------
@@ -253,21 +292,16 @@ class ModelMeta(type(ABC)):
 
     def _get_fields(cls) -> dict[str, Field]:
         """
-        Returns the fields of the model with their respective `TagSearcher` instances
-        based on the `__inherit_fields__` setting.
+        Returns the fields of the model with their respective `TagSearcher` instances.
 
         If searcher is already provided in form of Field object, it is used directly.
         Otherwise, it is wrapped in `Field` object with default settings.
         """
-        classes = (
-            [
-                base
-                for base in reversed(cls.__mro__)
-                if issubclass(base, BaseModel) and base is not BaseModel
-            ]
-            if getattr(cls, c.INHERIT_FIELDS)
-            else [cls]
-        )
+        classes = [
+            base
+            for base in reversed(cls.__mro__)
+            if issubclass(base, BaseModel) and base is not BaseModel
+        ]
 
         return reduce(
             dict.__or__,
@@ -281,7 +315,7 @@ class ModelMeta(type(ABC)):
                         # or BaseModel subclass
                         or (isinstance(value, type) and issubclass(value, BaseModel))
                     )
-                    and key not in c.SPECIAL_FIELDS
+                    and key not in c.SPECIAL_ATTRIBUTES
                 }
                 for class_ in classes
             ],
@@ -292,10 +326,10 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
     """Base class for all user-defined models in `soupsavvy`."""
 
     __scope__: SoupSelector = None  # type: ignore
-    __inherit_fields__: bool = True
     __frozen__: bool = False
 
     __post_processors__: dict[str, Callable] = {}
+    __serializers__: dict[str, Callable] = {}
 
     def __init__(self, **kwargs) -> None:
         """
@@ -581,6 +615,30 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
             A deep copy of the model instance.
         """
         return self.migrate(self.__class__)
+
+    def json(self) -> dict:
+        """
+        Converts the model instance to a JSON-serializable dictionary.
+
+        Returns
+        -------
+        dict
+            A json-serializable representation of the model instance.
+        """
+        dictionary = {}
+
+        for name in self.__class__.fields.keys():
+            attribute = getattr(self, name)
+            serializer = getattr(self, c.SERIALIZERS).get(name)
+
+            json_value = (
+                attribute.json()
+                if isinstance(attribute, BaseModel)
+                else serializer(self, attribute) if serializer else attribute
+            )
+            dictionary[name] = json_value
+
+        return dictionary
 
     def __setattr__(self, key, value) -> None:
         initialized = getattr(self, c.INITIALIZED, False)

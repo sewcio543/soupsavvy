@@ -12,7 +12,7 @@ from sqlalchemy.orm import DeclarativeBase, relationship
 
 import soupsavvy.exceptions as exc
 from soupsavvy.models import All, Default, Required
-from soupsavvy.models.base import BaseModel, Field, MigrationSchema, post
+from soupsavvy.models.base import BaseModel, Field, MigrationSchema, post, serializer
 from soupsavvy.operations import (
     Break,
     Continue,
@@ -23,6 +23,7 @@ from soupsavvy.operations import (
     Suppress,
     Text,
 )
+from soupsavvy.selectors.general import SelfSelector
 from tests.soupsavvy.conftest import (
     MockClassMenuSelector,
     MockClassWidgetSelector,
@@ -273,8 +274,6 @@ class TestBaseModel:
         """
         Tests if class attribute fields contains both inherited fields
         from base class and fields defined in model.
-        Inheriting fields behavior is default,
-        but can be overridden by setting __inherit_fields__ to False.
         """
         name_selector = MockClassWidgetSelector() | MockTextOperation()
 
@@ -286,20 +285,6 @@ class TestBaseModel:
             "price": Field(PRICE_SELECTOR),
             "name": Field(name_selector),
         }
-
-    def test_fields_are_not_inherited_from_base_class_if_explicitly_set(self):
-        """
-        Tests if fields are not inherited from base class
-        if __inherit_fields__ is set to False.
-        """
-        name_selector = MockClassWidgetSelector() | MockTextOperation()
-
-        class ChildModel(MockModel):
-            __inherit_fields__ = False
-
-            name = name_selector
-
-        assert ChildModel.fields == {"name": Field(name_selector)}
 
     def test_custom_post_init_modifies_attributes(self):
         """
@@ -1059,6 +1044,159 @@ class TestBaseModel:
             info=MockInfoModel(title="Title", author="Author"), price=10
         )
 
+    def test_model_field_is_not_required_if_scope_not_found(
+        self, to_element: ToElement
+    ):
+        """
+        Tests if model as standard field is not required both in non and strict mode.
+        If scope defined in nested model is not found, then field will be None.
+        """
+
+        class MockInfoModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = Required(TITLE_SELECTOR)
+            author = MockClassMenuSelector() | MockTextOperation()
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            info = MockInfoModel
+            price = PRICE_SELECTOR
+
+        text = """
+            <div>
+                <span>
+                    <a>Title</a>
+                    <p class="menu">Author</p>
+                </span>
+                <p class="widget">10</p>
+            </div>
+        """
+        bs = to_element(text)
+        selector = MockModel
+
+        result = selector.find(bs)
+        assert result == MockModel(info=None, price=10)
+
+        result = selector.find(bs, strict=True)
+        assert result == MockModel(info=None, price=10)
+
+    def test_fields_of_nested_model_field_is_not_required(self, to_element: ToElement):
+        """
+        Tests if fields of nested model are not required both in non and strict mode.
+        If scope defined in nested model is found, but some field defined in submodel
+        cannot be found in subscope, then field will be None.
+        """
+
+        class MockInfoModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = TITLE_SELECTOR
+            author = MockClassMenuSelector()
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            info = MockInfoModel
+            price = PRICE_SELECTOR
+
+        text = """
+            <div>
+                <div>
+                    <a>Title</a>
+                </div>
+                <p class="widget">10</p>
+            </div>
+        """
+        bs = to_element(text)
+        selector = MockModel
+
+        result = selector.find(bs)
+        assert result == MockModel(
+            info=MockInfoModel(title="Title", author=None), price=10
+        )
+
+        result = selector.find(bs, strict=True)
+        assert result == MockModel(
+            info=MockInfoModel(title="Title", author=None), price=10
+        )
+
+    def test_missing_required_nested_model_field_raises_exception(
+        self, to_element: ToElement
+    ):
+        """
+        Tests if there is a missing field of nested model, which is required by its
+        definition, then FieldExtractionException exception will be raised in both
+        non and strict mode.
+        """
+
+        class MockInfoModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = TITLE_SELECTOR
+            author = Required(MockClassMenuSelector())
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            info = MockInfoModel
+            price = PRICE_SELECTOR
+
+        text = """
+            <div>
+                <div>
+                    <a>Title</a>
+                </div>
+                <p class="widget">10</p>
+            </div>
+        """
+        bs = to_element(text)
+        selector = MockModel
+
+        with pytest.raises(exc.FieldExtractionException):
+            selector.find(bs)
+
+        with pytest.raises(exc.FieldExtractionException):
+            selector.find(bs, strict=True)
+
+    def test_error_in_field_extraction_of_nested_model_is_propagated(
+        self, to_element: ToElement
+    ):
+        """
+        Tests if any error in extraction of fields of nested model is propagated
+        and instance of model is not created both in non and strict mode.
+        """
+
+        class MockInfoModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = TITLE_SELECTOR
+            author = MockClassMenuSelector() | MockTextOperation()
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            info = MockInfoModel
+            price = PRICE_SELECTOR
+
+        text = """
+            <div>
+                <div>
+                    <a>Title</a>
+                </div>
+                <p class="widget">10</p>
+            </div>
+        """
+        bs = to_element(text)
+        selector = MockModel
+
+        with pytest.raises(exc.FieldExtractionException):
+            selector.find(bs)
+
+        with pytest.raises(exc.FieldExtractionException):
+            selector.find(bs, strict=True)
+
     @pytest.mark.parametrize(
         "models",
         [
@@ -1505,6 +1643,160 @@ class TestBaseModel:
         assert lookup[MockFrozenModel(title="Title", price=10)] == 1
         assert lookup[MockFrozenModel(title="Title", price=20)] == 2
 
+    def test_json_serialization_on_basic_model(self):
+        """
+        Tests if `json` method serializes basic model properly.
+        This should only return the dictionary of object attributes - the same
+        output as in case of `attributes` property.
+        """
+        instance = MockModel(title="Title", price=10)
+        json_dict = instance.json()
+
+        assert json_dict == {"title": "Title", "price": 10} == instance.attributes
+
+    def test_json_serialization_on_nested_models(self):
+        """
+        Tests if `json` method serializes fields, that are instances of other models.
+        It should return a nested dictionary representation of the model.
+        """
+
+        class MockNestedModel(BaseModel):
+            __scope__ = SCOPE
+
+            title = MockTitle
+            price = PRICE_SELECTOR
+
+        title_instance = MockTitle(name="Title")
+        instance = MockNestedModel(title=title_instance, price=10)
+        json_dict = instance.json()
+        title_json = title_instance.json()
+
+        assert title_json == {"name": "Title"}
+        assert json_dict == {"title": title_json, "price": 10}
+
+    def test_serialize_decorator_changes_serialization(self):
+        """
+        Tests if the serialize decorator changes the serialization output
+        for particular field.
+        """
+
+        class ChildModel(MockModel):
+
+            @serializer("title")
+            def serialize_title(self, value: str):
+                return value.upper()
+
+        instance = ChildModel(title="Title", price=10)
+        json_dict = instance.json()
+
+        assert json_dict == {"title": "TITLE", "price": 10}
+
+    def test_method_decorated_with_serializer_with_invalid_field_name_is_ignored(self):
+        """
+        Tests if method decorated with serializer with argument,
+        that is not a field name is ignored and not applied to the model instance.
+        The same way, any method not decorated is ignored.
+        """
+
+        class ChildModel(MockModel):
+
+            @serializer("random")
+            def process_title(self, value: str) -> str:
+                return value + "!"
+
+            def serialize_price(self, value: int) -> int:
+                return value + 10
+
+        model = ChildModel(title="Title", price=10)
+        assert model.json() == {"title": "Title", "price": 10}
+
+    def test_serializers_of_the_same_field_are_overwritten(self):
+        """
+        Tests if serializers of the same field are overwritten by the last one.
+        Only last defined serializer is applied to the field.
+        """
+
+        class ChildModel(MockModel):
+
+            @serializer("title")
+            def serialize_title(self, value: str) -> str:
+                return value + "!"
+
+            @serializer("title")
+            def serialize_title2(self, value: str) -> str:
+                return value + "!?"
+
+        model = ChildModel(title="Title", price=10)
+        assert model.json() == {"title": "Title!?", "price": 10}
+
+    def test_custom_serializer_methods_are_inherited_and_overridden(self):
+        """
+        Tests if custom serializer methods are inherited from base class
+        and can be overridden in child class.
+        """
+
+        class ChildModel(MockModel):
+
+            @serializer("title")
+            def serialize_title(self, value: str) -> str:
+                return value + "!"
+
+            @serializer("price")
+            def serialize_price(self, value: int) -> int:
+                return value + 10
+
+        class GrandChildModel(ChildModel):
+
+            @serializer("title")
+            def serialize_title(self, value: str) -> str:
+                return value + "!!"
+
+        model = GrandChildModel(title="Title", price=10)
+        json_dict = model.json()
+
+        assert json_dict == {"title": "Title!!", "price": 20}
+
+    def test_errors_in_serializer_methods_are_propagated(self):
+        """
+        Tests if any error raised in serializer method is propagated and not handled.
+        """
+
+        class ChildModel(MockModel):
+
+            @serializer("title")
+            def serialize_title(self, value: str) -> str:
+                raise ValueError("Error")
+
+        instance = ChildModel(title="Title", price=10)
+
+        with pytest.raises(ValueError):
+            instance.json()
+
+    def test_raises_exception_when_method_is_both_postprocessor_and_serializer(self):
+        """
+        Tests if any error raised in serializer method is propagated and not handled,
+        even when one of them is invalid and would be otherwise ignored.
+        Class with this configuration is invalid and won't be created.
+        """
+
+        with pytest.raises(exc.InvalidDecorationException):
+
+            class ChildModel1(MockModel):
+
+                @serializer("title")
+                @post("title")
+                def method(self, value: str) -> str:
+                    return value
+
+        with pytest.raises(exc.InvalidDecorationException):
+
+            class ChildModel2(MockModel):
+
+                @serializer("title")
+                @post("random")
+                def method(self, value: str) -> str:
+                    return value
+
 
 @pytest.mark.integration
 @pytest.mark.model
@@ -1513,6 +1805,37 @@ class TestBaseModelIntegration:
     Class with integration tests for BaseModel component.
     It tests its behavior with various field and operation wrappers.
     """
+
+    def test_nested_models_work_with_self_selector_for_the_same_scope(
+        self, to_element: ToElement
+    ):
+        """
+        Tests if SelfSelector can be used as a scope selector in nested models
+        for cases where change of scope is not necessary.
+        """
+
+        class MockTitle(BaseModel):
+            __scope__ = SelfSelector()
+
+            name = MockLinkSelector() | MockTextOperation()
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = MockTitle
+            price = PRICE_SELECTOR
+
+        text = """
+            <div>
+                <a>Title</a>
+                <p class="widget">10</p>
+            </div>
+        """
+        bs = to_element(text)
+        selector = MockModel
+
+        result = selector.find(bs)
+        assert result == MockModel(title=MockTitle(name="Title"), price=10)
 
     @pytest.mark.parametrize(argnames="strict", argvalues=[True, False])
     def test_raises_error_if_required_field_is_none(
@@ -2425,6 +2748,14 @@ class TestField:
                 Field(MockLinkSelector(), repr=True, migrate=True, compare=True),
                 Field(MockLinkSelector(), repr=True, migrate=True, compare=True),
             ),
+            (
+                Field(MockTitle),
+                Field(MockTitle),
+            ),
+            (
+                Field(MockTitle, repr=True, migrate=True),
+                Field(MockTitle, repr=True, migrate=True),
+            ),
         ],
     )
     def test_two_tag_selectors_are_equal(self, selectors: tuple):
@@ -2448,6 +2779,12 @@ class TestField:
             ),
             # not field
             (Field(MockLinkSelector()), MockLinkSelector()),
+            # different models
+            (Field(MockTitle), Field(MockModel)),
+            # model and selector
+            (Field(MockTitle), Field(MockLinkSelector())),
+            # same model with different config
+            (Field(MockTitle, repr=False), Field(MockTitle, repr=True)),
         ],
     )
     def test_two_tag_selectors_are_not_equal(self, selectors: tuple):
