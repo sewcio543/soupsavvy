@@ -808,8 +808,8 @@ class BaseOperation(Executable, Comparable):
     def __or__(self, x: Any) -> OperationPipeline:
         """
         Overrides `__or__` method called also by pipe operator '|'.
-        Syntactical Sugar for logical disjunction, that creates `OperationPipeline` instance,
-        which chains two operations together.
+        Syntactical Sugar for logical disjunction, that creates `OperationPipeline`
+        instance, which chains two operations together.
 
         Parameters
         ----------

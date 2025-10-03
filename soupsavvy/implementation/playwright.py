@@ -7,66 +7,16 @@ from typing import Iterable, Optional, Pattern, Union
 from playwright.sync_api import ElementHandle
 from typing_extensions import Self
 
+import soupsavvy.implementation.snippets.js.playwright as js
+from soupsavvy.implementation.snippets import css, xpath
 from soupsavvy.interfaces import IElement
 from soupsavvy.selectors.css.api import PlaywrightCSSApi
 from soupsavvy.selectors.xpath.api import PlaywrightXPathApi
 
 _UID_REGEX = re.compile(r'\s*_uid="[^"]*"')
 
-_FIND_ANCESTORS_SCRIPT = """
-(element, limit) => {
-  function findAncestors(el, lim) {
-    const ancestors = [];
-    let parent = el.parentElement;
-    while (parent && parent.nodeType === 1) {
-      ancestors.push(parent);
-      if (lim && ancestors.length >= lim) break;
-      parent = parent.parentElement;
-    }
-    return ancestors;
-  }
-  return findAncestors(element, limit);
-}
-"""
 
-_FIND_ALL_SCRIPT = """
-(element, args) => {
-  const [tagName, attrs, recursive] = args;
-
-  function matchesAttributes(element, attrs) {
-    for (const [key, val] of Object.entries(attrs)) {
-      const attrVal = element.getAttribute(key);
-      if (attrVal === null) return false;
-
-      if (typeof val === "string" && !attrVal.split(" ").includes(val)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  function collectElements(element, recursive) {
-    const matches = [];
-    const elements = recursive ? element.querySelectorAll("*") : element.children;
-
-    for (const el of elements) {
-      if (
-        (!tagName || el.tagName.toLowerCase() === tagName.toLowerCase()) &&
-        matchesAttributes(el, attrs)
-      ) {
-        matches.push(el);
-      }
-    }
-
-    return matches;
-  }
-
-  return collectElements(element, recursive);
-}
-"""
-
-
-class PlaywrightElement(IElement):
+class PlaywrightElement(IElement[ElementHandle]):
     """
     Implementation of `IElement` for `playwright` tree.
     Adapter for `playwright` handles, that makes them usable across the library.
@@ -90,16 +40,7 @@ class PlaywrightElement(IElement):
 
         # playwright does not guarantee the same identity for handles
         # from different queries, it needs to be worked around
-        self._id = self.node.evaluate(
-            """
-            el => {
-                if (!el._uid) {
-                    el._uid = Math.random().toString(36).substr(2, 9);
-                }
-                return el._uid;
-            }
-            """
-        )
+        self._id = self.node.evaluate(js.ADD_IDENTIFIER_SCRIPT)
 
     def find_all(
         self,
@@ -112,7 +53,7 @@ class PlaywrightElement(IElement):
         js_attrs = {k: None if isinstance(v, Pattern) else v for k, v in attrs.items()}
 
         found = self.node.evaluate_handle(
-            _FIND_ALL_SCRIPT,
+            js.FILTER_NODES_SCRIPT,
             [name, js_attrs, recursive],
         )
         matched_elements = [
@@ -131,19 +72,14 @@ class PlaywrightElement(IElement):
         return list(islice(self._map(filter(match, matched_elements)), limit))
 
     def find_subsequent_siblings(self, limit: Optional[int] = None) -> list[Self]:
-        iterator = self.node.query_selector_all("xpath=following-sibling::*")
+        iterator = self.node.query_selector_all(
+            f"xpath={xpath.FIND_SUBSEQUENT_SIBLINGS_SELECTOR}"
+        )
         return list(islice(self._map(iterator), limit))
-
-    @property
-    def node(self) -> ElementHandle:
-        return self._node
-
-    def get(self) -> ElementHandle:
-        return self.node
 
     def find_ancestors(self, limit: Optional[int] = None) -> list[Self]:
         js_handle = self.node.evaluate_handle(
-            _FIND_ANCESTORS_SCRIPT,
+            js.FIND_ANCESTORS_SCRIPT,
             limit,
         )
         ancestors = [
@@ -155,17 +91,19 @@ class PlaywrightElement(IElement):
 
     @property
     def children(self) -> Iterable[Self]:
-        iterator = self.node.query_selector_all("xpath=./*")
+        iterator = self.node.query_selector_all(
+            f"xpath={xpath.FIND_ALL_CHILDREN_SELECTOR}"
+        )
         return self._map(iterator)
 
     @property
     def descendants(self) -> Iterable[Self]:
-        iterator = self.node.query_selector_all("*")
+        iterator = self.node.query_selector_all(css.FIND_ALL_DESCENDANTS_SELECTOR)
         return self._map(iterator)
 
     @property
     def parent(self) -> Optional[Self]:
-        handle = self.node.evaluate_handle("el => el.parentElement")
+        handle = self.node.evaluate_handle(js.PARENT_ELEMENT_HANDLE)
         element = handle.as_element()
 
         if element is None:
@@ -178,10 +116,10 @@ class PlaywrightElement(IElement):
 
     @property
     def name(self) -> str:
-        return self.node.evaluate("el => el.tagName").lower()
+        return self.node.evaluate(js.TAG_NAME_HANDLE).lower()
 
     def __str__(self) -> str:
-        html = self.node.evaluate("el => el.outerHTML")
+        html = self.node.evaluate(js.OUTER_HTML_HANDLE)
         return _UID_REGEX.sub("", html)
 
     @property

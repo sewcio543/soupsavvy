@@ -6,13 +6,14 @@ Module with `soupsavvy` interfaces used across the package.
 - `TagSearcher` - Interface for objects that can search within `IElement`.
 - `IElement` - Interface for any tree structure compatible with `soupsavvy`.
 - `SelectionApi` - Interface for selection of elements based on specific selector.
+- `IBrowser` - Interface for browser implementations compatible with `soupsavvy`.
 """
 
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import Any, NoReturn, Optional, Pattern, Union
+from typing import Any, Generic, NoReturn, Optional, Pattern, TypeVar, Union
 
 from typing_extensions import Self
 
@@ -123,7 +124,10 @@ class TagSearcher(ABC):
         )
 
 
-class IElement(ABC):
+N = TypeVar("N")
+
+
+class IElement(ABC, Generic[N]):
     """
     Interface representing a general HTML node within a tree structure.
     `IElement` defines methods for common DOM operations, such as searching for elements,
@@ -145,7 +149,7 @@ class IElement(ABC):
     )
     _NODE_TYPE: type[Any] = object
 
-    def __init__(self, node: Any, *args, **kwargs) -> None:
+    def __init__(self, node: N, *args, **kwargs) -> None:
         """
         Initializes the implementation with the given node.
 
@@ -167,7 +171,7 @@ class IElement(ABC):
         self._node = node
 
     @classmethod
-    def from_node(cls, node: Any) -> Self:
+    def from_node(cls, node: N) -> Self:
         """
         Creates a new instance of the implementation from a node.
 
@@ -214,11 +218,11 @@ class IElement(ABC):
         self._raise_not_implemented()
 
     @property
-    def node(self) -> Any:
+    def node(self) -> N:
         """Returns the underlying node wrapped by the instance."""
         return self._node  # pragma: no cover
 
-    def get(self) -> Any:
+    def get(self) -> N:
         """Returns the node wrapped by the instance."""
         return self.node  # pragma: no cover
 
@@ -319,6 +323,11 @@ class IElement(ABC):
         -------
         Optional[str]
             The attribute value as a string, or `None` if the attribute does not exist.
+
+        Notes
+        -----
+        For dynamic attributes (e.g., in browser contexts), the returned value
+        reflects the current state of the element.
         """
         self._raise_not_implemented()
 
@@ -441,3 +450,144 @@ class SelectionApi(ABC):
         raise NotImplementedError(
             f"{self.__class__.__name__} is abstract and does not implement select method."
         )
+
+
+E = TypeVar("E", bound=IElement)
+
+
+class IBrowser(ABC, Generic[E]):
+    """
+    Interface representing a general browser for web navigation and interaction.
+    `IBrowser` defines methods for common browser operations.
+
+    This interface enables consistent access to various browser implementations
+    like selenium or playwright for automation of web interactions.
+
+    Any implementation should wrap a browser object and allow `soupsavvy`
+    components to operate on it seamlessly.
+
+    Current Implementations:
+    - `SeleniumBrowser`: Wraps a `Selenium WebDriver` instance.
+    """
+
+    _NOT_IMPLEMENTED_MESSAGE = (
+        "IBrowser is an abstract interface and does not implement this method."
+    )
+
+    _BROWSER_TYPE: type[Any] = object
+    # element type compatible with the browser
+    _ELEMENT_TYPE: type[Any] = object
+
+    def __init__(self, browser: Any, *args, **kwargs) -> None:
+        """
+        Initializes the implementation with the given browser instance.
+
+        Parameters
+        ----------
+        browser : Any
+            Browser instance to wrap for specific implementation.
+        *args: Any
+            Additional positional arguments to pass to the constructor.
+        **kwargs: Any
+            Additional keyword arguments to pass to the constructor.
+        """
+        if not isinstance(browser, self._BROWSER_TYPE):
+            raise TypeError(
+                f"Expected browser to be of type {self._BROWSER_TYPE}, "
+                f"but got {type(browser)} instead."
+            )
+
+        self._browser = browser
+
+    @property
+    def browser(self) -> Any:
+        """Returns the underlying browser wrapped by the instance."""
+        return self._browser  # pragma: no cover
+
+    def get(self) -> Any:
+        """Returns the browser wrapped by the instance."""
+        return self.browser  # pragma: no cover
+
+    @abstractmethod
+    def navigate(self, url: str) -> None:
+        """
+        Navigates the browser to the specified URL.
+
+        Parameters
+        ----------
+        url : str
+            The URL to navigate to.
+        """
+        self._raise_not_implemented()
+
+    @abstractmethod
+    def click(self, element: E) -> None:
+        """
+        Performs a click action on the specified element.
+
+        Parameters
+        ----------
+        element : IElement
+            The target element of implementation compatible with browser
+            that will be clicked.
+        """
+        self._raise_not_implemented()
+
+    @abstractmethod
+    def send_keys(self, element: E, value: str, clear: bool = True) -> None:
+        """
+        Sends keystrokes to the specified element.
+
+        Parameters
+        ----------
+        element : IElement
+            The target element of implementation compatible with browser
+            to interact with.
+        value : str
+            The value to insert into the element.
+        clear : bool, optional
+            If `True`, clears existing content before sending keys.
+            Defaults to `True`.
+        """
+        self._raise_not_implemented()
+
+    @abstractmethod
+    def get_document(self) -> E:
+        """
+        Returns the html document of the current page as an `IElement`.
+
+        Returns
+        -------
+        IElement
+            The html document of the current page, soupsavvy implementation
+            compatible with the browser.
+        """
+        self._raise_not_implemented()
+
+    @abstractmethod
+    def close(self) -> None:
+        """Closes the browser and releases resources."""
+        self._raise_not_implemented()
+
+    @abstractmethod
+    def get_current_url(self) -> str:
+        """Returns the current URL of the browser."""
+        self._raise_not_implemented()
+
+    @classmethod
+    def _raise_not_implemented(cls) -> NoReturn:
+        """Raises a `NotImplementedError` indicating that this method is abstract."""
+        raise NotImplementedError(cls._NOT_IMPLEMENTED_MESSAGE)
+
+    def __hash__(self):
+        """Hashes element object using the wrapped browser's id."""
+        return hash(id(self.browser))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.browser is other.browser
+
+    def __str__(self) -> str:
+        return str(self._browser)
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self._browser!r})"
