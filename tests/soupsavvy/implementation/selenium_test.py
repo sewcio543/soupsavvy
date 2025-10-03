@@ -1,15 +1,20 @@
 """
-Module with unit tests for selenium implementation of IElement.
-Tests `SeleniumElement` component and the way it interacts with soupsavvy.
+Module with unit tests for selenium implementations of IElement and IBrowser.
+Tests `SeleniumElement` and `SeleniumBrowser` components
+and the way they interact with soupsavvy.
 """
 
 import re
 
 import pytest
+import selenium.common.exceptions as selenium_exceptions
+from pytest import MonkeyPatch
+from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 
-from soupsavvy.implementation.selenium import SeleniumElement
+from soupsavvy.implementation.selenium import SeleniumBrowser, SeleniumElement
 from soupsavvy.selectors.css.api import SeleniumCSSApi
 from soupsavvy.selectors.xpath.api import SeleniumXPathApi
 from tests.soupsavvy.conftest import insert, strip
@@ -861,3 +866,316 @@ class TestSeleniumElement:
         element = SeleniumElement(node)
         result = element.get_attribute("class")
         assert result == "menu widget"
+
+    def test_get_attribute_returns_changed_attribute(self, driver_selenium: WebDriver):
+        """
+        Tests if `get_attribute` method returns value after it is changed.
+        Asserts that internally element uses `get_attribute` method
+        and not `get_dom_attribute` which would not reflect changes.
+        """
+        text = """
+            <input id="editable" type="text" value="original" />
+        """
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.ID, "editable")
+        element = SeleniumElement(node)
+
+        assert element.get_attribute("value") == "original"
+
+        node.clear()
+        node.send_keys("changed")
+
+        assert element.get_attribute("value") == "changed"
+
+
+class FakeDriver:
+    """A fake WebDriver for simulating errors & redirects."""
+
+    def __init__(self):
+        self._url = None
+        self.closed = False
+
+    def get(self, url: str):
+        if url == "http://bad-url":
+            raise selenium_exceptions.WebDriverException("Failed to connect")
+        if url == "http://redirect":
+            self._url = "http://final-url"
+        else:
+            self._url = url
+
+    def quit(self):
+        self.closed = True
+
+    @property
+    def current_url(self):
+        return self._url
+
+
+@pytest.fixture
+def fake_driver(monkeypatch: MonkeyPatch) -> FakeDriver:
+    """Provides a fake WebDriver instance for testing."""
+    monkeypatch.setattr(SeleniumBrowser, "_BROWSER_TYPE", FakeDriver)
+    return FakeDriver()
+
+
+def get_driver() -> WebDriver:
+    """Creates a basic selenium webdriver instance for testing."""
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    driver = webdriver.Chrome(options=options)
+    return driver
+
+
+@pytest.mark.selenium
+@pytest.mark.implementation
+class TestSeleniumBrowser:
+
+    def test_initializes_with_driver(self, driver_selenium: WebDriver):
+        """Tests if `SeleniumBrowser` can be initialized with selenium webdriver."""
+        browser = SeleniumBrowser(driver_selenium)
+        assert browser.browser is driver_selenium
+        assert browser.get() is driver_selenium
+
+    def test_raises_exception_when_invalid_init_browser(self):
+        """
+        Tests if TypeError is raised when object of invalid type
+        is passed to constructor.
+        """
+        with pytest.raises(TypeError):
+            SeleniumBrowser("mouse")
+
+    def test_navigate_success(self, fake_driver: FakeDriver):
+        """Simulates navigation working normally."""
+
+        browser = SeleniumBrowser(fake_driver)
+        browser.navigate("http://ok")
+        assert browser.get_current_url() == "http://ok"
+
+    def test_navigate_redirect(self, fake_driver: FakeDriver):
+        """Simulates a redirect after navigation."""
+        browser = SeleniumBrowser(fake_driver)
+        browser.navigate("http://redirect")
+        assert browser.get_current_url() == "http://final-url"
+
+    def test_navigate_connection_error(self, fake_driver: FakeDriver):
+        """Simulates a connection error during navigation."""
+        browser = SeleniumBrowser(fake_driver)
+
+        with pytest.raises(selenium_exceptions.WebDriverException):
+            browser.navigate("http://bad-url")
+
+    def test_keys_are_send_properly(self, driver_selenium: WebDriver):
+        """
+        Tests if `send_keys` method sends keys properly to the element
+        and value of the element is changed accordingly.
+        """
+        to_insert = "Hello World"
+        text = """<input id="editable" type="text" />"""
+        insert(text, driver=driver_selenium)
+
+        browser = SeleniumBrowser(driver_selenium)
+        element = SeleniumElement(driver_selenium.find_element(By.ID, "editable"))
+
+        browser.send_keys(element=element, value=to_insert)
+        assert element.get_attribute("value") == to_insert
+
+    def test_keys_are_not_cleared_when_clear_false(self, driver_selenium: WebDriver):
+        """
+        Tests if `send_keys` method does not clear the element before sending keys
+        when `clear` parameter is set to False.
+        """
+        text = """<input id="editable" type="text" value="original" />"""
+        insert(text, driver=driver_selenium)
+
+        browser = SeleniumBrowser(driver_selenium)
+        element = SeleniumElement(driver_selenium.find_element(By.ID, "editable"))
+
+        browser.send_keys(element=element, value="Hello")
+        assert element.get_attribute("value") == "Hello"
+
+        browser.send_keys(element=element, value=" World", clear=False)
+        assert element.get_attribute("value") == "Hello World"
+
+    def test_can_send_special_keys(self, driver_selenium: WebDriver):
+        """
+        Tests if `send_keys` method can send special keys like ENTER.
+        """
+        text = """<input id="editable" type="text" value="original" />"""
+        insert(text, driver=driver_selenium)
+
+        browser = SeleniumBrowser(driver_selenium)
+        element = SeleniumElement(driver_selenium.find_element(By.ID, "editable"))
+
+        browser.send_keys(element, "Hello" + Keys.ENTER)
+        assert element.get_attribute("value") == "Hello"
+
+    def test_sends_key_only_to_specified_element(self, driver_selenium: WebDriver):
+        """
+        Tests if `send_keys` method sends keys only to the specified element.
+        Other elements are not affected.
+        """
+        text = """
+            <input id="one" type="text" />
+            <input id="two" type="text" />
+        """
+        insert(text, driver=driver_selenium)
+
+        el1 = SeleniumElement(driver_selenium.find_element(By.ID, "one"))
+        el2 = SeleniumElement(driver_selenium.find_element(By.ID, "two"))
+
+        browser = SeleniumBrowser(driver_selenium)
+        browser.send_keys(el1, "First")
+
+        assert el1.get_attribute("value") == "First"
+        assert el2.get_attribute("value") == ""
+
+    def test_raises_error_when_element_is_not_editable(
+        self, driver_selenium: WebDriver
+    ):
+        """
+        Tests if `send_keys` method raises an error when the element is not editable.
+        """
+        text = """
+            <div>Hello</div>
+            <p>World</p>
+        """
+        insert(text, driver=driver_selenium)
+
+        node = driver_selenium.find_element(By.TAG_NAME, "div")
+        element = SeleniumElement(node)
+        browser = SeleniumBrowser(driver_selenium)
+
+        with pytest.raises(selenium_exceptions.InvalidElementStateException):
+            browser.send_keys(element, "First")
+
+    def test_closes_browser_properly(self, fake_driver: FakeDriver):
+        """
+        Tests if `close` method calls `quit` on the webdriver.
+        Uses mock driver to avoid actually closing the browser during tests.
+        """
+        browser = SeleniumBrowser(fake_driver)
+        assert fake_driver.closed is False
+        browser.close()
+        assert fake_driver.closed is True
+
+    def test_clicks_element_properly(self, driver_selenium: WebDriver):
+        """
+        Tests if `click` method clicks the element properly
+        and the click event is reflected in the page.
+        """
+        text = """
+            <button id="myButton" onclick="this.innerText='Clicked'">Not clicked</button>
+        """
+        insert(text, driver=driver_selenium)
+        browser = SeleniumBrowser(driver_selenium)
+        element = SeleniumElement(driver_selenium.find_element(By.TAG_NAME, "button"))
+
+        assert element.text == "Not clicked"
+        browser.click(element)
+        assert element.text == "Clicked"
+
+    def test_click_element_covered_by_other(self, driver_selenium: WebDriver):
+        """
+        Tests that `click` method works even when the element
+        is visually covered by another element, hidden or off-screen.
+        It uses js script instead of click command.
+        """
+        html = """
+            <style>
+                #cover {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 200px;
+                    height: 200px;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: 10;
+                }
+            </style>
+            <button id="target" onclick="this.innerText='Clicked'">Not clicked</button>
+            <div id="cover"></div>
+        """
+        insert(html, driver=driver_selenium)
+
+        browser = SeleniumBrowser(driver_selenium)
+        node = driver_selenium.find_element(By.ID, "target")
+
+        element = SeleniumElement(node)
+        assert element.text == "Not clicked"
+
+        with pytest.raises(selenium_exceptions.ElementClickInterceptedException):
+            node.click()
+
+        # Your click method bypasses visibility
+        browser.click(element)
+        assert element.text == "Clicked"
+
+    def test_click_triggers_navigation(self, driver_selenium: WebDriver):
+        """Tests if `click` method triggers navigation when clicking a link."""
+        text = """<a id="myLink" href="about:blank">Go</a>"""
+        insert(text, driver=driver_selenium)
+
+        browser = SeleniumBrowser(driver_selenium)
+        element = SeleniumElement(driver_selenium.find_element(By.ID, "myLink"))
+
+        browser.click(element)
+        assert browser.get_current_url() == "about:blank"
+
+    def test_multiple_clicks_work_properly(self, driver_selenium: WebDriver):
+        """
+        Tests if `click` method can be called multiple times on the same element.
+        """
+        text = """<button id="counter" onclick="this.innerText=parseInt(this.innerText)+1">0</button>"""
+        insert(text, driver=driver_selenium)
+        browser = SeleniumBrowser(driver_selenium)
+        element = SeleniumElement(driver_selenium.find_element(By.ID, "counter"))
+
+        for _ in range(3):
+            browser.click(element)
+
+        assert element.text == "3"
+
+    def test_get_html_returns_html_element(self, driver_selenium: WebDriver):
+        """
+        Tests if `get_html` method returns html element of the page
+        wrapped in `SeleniumElement`.
+        """
+        text = """
+            <div>Hello</div>
+            <p>World</p>
+        """
+        insert(text, driver=driver_selenium)
+        browser = SeleniumBrowser(driver_selenium)
+        body = browser.get_document()
+
+        assert isinstance(body, SeleniumElement)
+        assert body.name == "html"
+
+    def test_hash_is_based_on_instance_id(self):
+        """
+        Tests if `__hash__` method returns hash based on instance id.
+        """
+        driver1 = get_driver()
+        driver2 = get_driver()
+        browser1 = SeleniumBrowser(driver1)
+        browser2 = SeleniumBrowser(driver1)
+        browser3 = SeleniumBrowser(driver2)
+
+        assert hash(browser1) == hash(browser2)
+        assert hash(browser1) != hash(browser3)
+
+    def test_instances_are_equal_if_they_have_the_same_driver(self):
+        """
+        Tests if `__eq__` method returns True if two instances
+        have the same webdriver instance.
+        """
+        driver1 = get_driver()
+        driver2 = get_driver()
+        browser1 = SeleniumBrowser(driver1)
+        browser2 = SeleniumBrowser(driver1)
+        browser3 = SeleniumBrowser(driver2)
+
+        assert browser1 == browser2
+        assert browser1 != browser3
