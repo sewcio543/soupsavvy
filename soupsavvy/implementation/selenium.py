@@ -23,7 +23,7 @@ from soupsavvy.selectors.css.api import SeleniumCSSApi
 from soupsavvy.selectors.xpath.api import SeleniumXPathApi
 
 
-class SeleniumElement(IElement):
+class SeleniumElement(IElement[WebElement]):
     """
     Implementation of `IElement` for `selenium` tree.
     Adapter for `selenium` objects, that makes them usable across the library.
@@ -119,15 +119,8 @@ class SeleniumElement(IElement):
     def xpath(self, selector: str) -> SeleniumXPathApi:
         return SeleniumXPathApi(selector)
 
-    @property
-    def node(self) -> WebElement:
-        return self._node
 
-    def get(self) -> WebElement:
-        return self.node
-
-
-class SeleniumBrowser(IBrowser):
+class SeleniumBrowser(IBrowser[SeleniumElement]):
     """
     Implementation of `IBrowser` for `selenium` WebDriver.
     Adapter for `selenium` WebDriver, that makes them usable across the library.
@@ -157,7 +150,7 @@ class SeleniumBrowser(IBrowser):
 
         element.node.send_keys(value)
 
-    def get_document(self) -> IElement:
+    def get_document(self) -> SeleniumElement:
         element = self.browser.find_element(By.TAG_NAME, "html")
         return SeleniumElement(element)
 

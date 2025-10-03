@@ -16,7 +16,7 @@ from soupsavvy.selectors.xpath.api import PlaywrightXPathApi
 _UID_REGEX = re.compile(r'\s*_uid="[^"]*"')
 
 
-class PlaywrightElement(IElement):
+class PlaywrightElement(IElement[ElementHandle]):
     """
     Implementation of `IElement` for `playwright` tree.
     Adapter for `playwright` handles, that makes them usable across the library.
@@ -76,13 +76,6 @@ class PlaywrightElement(IElement):
             f"xpath={xpath.FIND_SUBSEQUENT_SIBLINGS_SELECTOR}"
         )
         return list(islice(self._map(iterator), limit))
-
-    @property
-    def node(self) -> ElementHandle:
-        return self._node
-
-    def get(self) -> ElementHandle:
-        return self.node
 
     def find_ancestors(self, limit: Optional[int] = None) -> list[Self]:
         js_handle = self.node.evaluate_handle(

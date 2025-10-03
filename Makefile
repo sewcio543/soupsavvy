@@ -26,9 +26,7 @@ coverage:
 	python -m coverage report || true
 	python -m coverage html
 typecheck:
-	python -m mypy . || true
-	python -m mypy --install-types --non-interactive
-	python -m mypy . --ignore-missing-imports
+	python -m mypy . --ignore-missing-imports --no-incremental
 docu:
 	bash docs/sphinx_run.sh
 	git clean -fd docs/source/*.rst

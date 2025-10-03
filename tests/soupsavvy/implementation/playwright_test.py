@@ -62,6 +62,7 @@ class TestPlaywrightElement:
         """
         playwright_page.set_content(text)
         node = playwright_page.query_selector("body")
+        assert node is not None
         element = PlaywrightElement.from_node(node)
 
         assert element.node is node

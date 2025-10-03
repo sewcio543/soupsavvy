@@ -19,7 +19,7 @@ from soupsavvy.selectors.css.api import CSSSelectApi
 from soupsavvy.selectors.xpath.api import LXMLXpathApi
 
 
-class LXMLElement(IElement):
+class LXMLElement(IElement[LXMLNode]):
     """
     Implementation of `IElement` for `lxml` tree.
     Adapter for `lxml` objects, that makes them usable across the library.
@@ -120,10 +120,3 @@ class LXMLElement(IElement):
 
     def __str__(self) -> str:
         return etree.tostring(self.node, method="html", with_tail=False).decode("utf-8")
-
-    @property
-    def node(self) -> LXMLNode:
-        return self._node
-
-    def get(self) -> LXMLNode:
-        return self.node

@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import Any, NoReturn, Optional, Pattern, Union
+from typing import Any, Generic, NoReturn, Optional, Pattern, TypeVar, Union
 
 from typing_extensions import Self
 
@@ -124,7 +124,10 @@ class TagSearcher(ABC):
         )
 
 
-class IElement(ABC):
+N = TypeVar("N")
+
+
+class IElement(ABC, Generic[N]):
     """
     Interface representing a general HTML node within a tree structure.
     `IElement` defines methods for common DOM operations, such as searching for elements,
@@ -146,7 +149,7 @@ class IElement(ABC):
     )
     _NODE_TYPE: type[Any] = object
 
-    def __init__(self, node: Any, *args, **kwargs) -> None:
+    def __init__(self, node: N, *args, **kwargs) -> None:
         """
         Initializes the implementation with the given node.
 
@@ -168,7 +171,7 @@ class IElement(ABC):
         self._node = node
 
     @classmethod
-    def from_node(cls, node: Any) -> Self:
+    def from_node(cls, node: N) -> Self:
         """
         Creates a new instance of the implementation from a node.
 
@@ -215,11 +218,11 @@ class IElement(ABC):
         self._raise_not_implemented()
 
     @property
-    def node(self) -> Any:
+    def node(self) -> N:
         """Returns the underlying node wrapped by the instance."""
         return self._node  # pragma: no cover
 
-    def get(self) -> Any:
+    def get(self) -> N:
         """Returns the node wrapped by the instance."""
         return self.node  # pragma: no cover
 
@@ -449,7 +452,10 @@ class SelectionApi(ABC):
         )
 
 
-class IBrowser(ABC):
+E = TypeVar("E", bound=IElement)
+
+
+class IBrowser(ABC, Generic[E]):
     """
     Interface representing a general browser for web navigation and interaction.
     `IBrowser` defines methods for common browser operations.
@@ -515,7 +521,7 @@ class IBrowser(ABC):
         self._raise_not_implemented()
 
     @abstractmethod
-    def click(self, element: IElement) -> None:
+    def click(self, element: E) -> None:
         """
         Performs a click action on the specified element.
 
@@ -528,7 +534,7 @@ class IBrowser(ABC):
         self._raise_not_implemented()
 
     @abstractmethod
-    def send_keys(self, element: IElement, value: str, clear: bool = True) -> None:
+    def send_keys(self, element: E, value: str, clear: bool = True) -> None:
         """
         Sends keystrokes to the specified element.
 
@@ -546,7 +552,7 @@ class IBrowser(ABC):
         self._raise_not_implemented()
 
     @abstractmethod
-    def get_document(self) -> IElement:
+    def get_document(self) -> E:
         """
         Returns the html document of the current page as an `IElement`.
 
