@@ -955,7 +955,7 @@ def fake_driver() -> FakeDriver:
 class TestPlaywrightBrowser:
 
     def test_initializes_with_driver(self, playwright_page: Page):
-        """Tests if `PlaywrightBrowser` can be initialized with selenium Page."""
+        """Tests if `PlaywrightBrowser` can be initialized with playwright Page."""
         browser = PlaywrightBrowser(playwright_page)
         assert browser.browser is playwright_page
         assert browser.get() is playwright_page
@@ -1060,7 +1060,7 @@ class TestPlaywrightBrowser:
 
     def test_closes_browser_properly(self, fake_driver: FakeDriver):
         """
-        Tests if `close` method calls `quit` on the Page.
+        Tests if `close` method calls `close` on the Page.
         Uses mock driver to avoid actually closing the browser during tests.
         """
         browser = PlaywrightBrowser(fake_driver)  # type: ignore
