@@ -61,6 +61,8 @@ el => {
 }
 """
 
-PARENT_ELEMENT_HANDLE = "el => el.parentElement"
-TAG_NAME_HANDLE = "el => el.tagName"
-OUTER_HTML_HANDLE = "el => el.outerHTML"
+PARENT_ELEMENT_SCRIPT = "el => el.parentElement"
+TAG_NAME_SCRIPT = "el => el.tagName"
+OUTER_HTML_SCRIPT = "el => el.outerHTML"
+CLICK_ELEMENT_SCRIPT = "el => el.click()"
+GET_ATTRIBUTE_SCRIPT = "(el, name) => el[name]"

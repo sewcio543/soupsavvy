@@ -1,14 +1,16 @@
 """
-Module with unit tests for playwright implementation of IElement.
-Tests `PlaywrightElement` component and the way it interacts with soupsavvy.
+Module with unit tests for playwright implementation of IElement and IBrowser.
+Tests `PlaywrightElement` and `PlaywrightBrowser` components
+and the way they interact with soupsavvy.
 """
 
 import re
 
 import pytest
-from playwright.sync_api import Page
+from playwright.sync_api import Error, Page, TimeoutError
 
-from soupsavvy.implementation.playwright import PlaywrightElement
+import soupsavvy.exceptions as exc
+from soupsavvy.implementation.playwright import PlaywrightBrowser, PlaywrightElement
 from soupsavvy.selectors.css.api import PlaywrightCSSApi
 from soupsavvy.selectors.xpath.api import PlaywrightXPathApi
 from tests.soupsavvy.conftest import strip
@@ -869,3 +871,340 @@ class TestPlaywrightElement:
         element = PlaywrightElement(node)
         result = element.get_attribute("class")
         assert result == "menu widget"
+
+    def test_get_attribute_prefers_property_over_attribute(self, playwright_page: Page):
+        """
+        Tests that the property value returned by evaluate() - js live property
+        takes precedence over the static HTML attribute when both exist.
+        """
+        text = """<input type="text" value="attr_value">"""
+        playwright_page.set_content(text)
+
+        node = playwright_page.query_selector("input")
+        assert node is not None
+        element = PlaywrightElement(node)
+
+        # JS property should be same as attribute initially
+        assert element.get_attribute("value") == "attr_value"
+        # Change the value property dynamically
+        node.evaluate("el => el.value = 'property_value'")
+        assert element.get_attribute("value") == "property_value"
+
+    def test_get_attribute_returns_empty_string_for_empty_property(
+        self, playwright_page: Page
+    ):
+        """
+        Tests that an empty string property does not fallback to get_attribute()
+        and is returned as-is (not None).
+        """
+        text = """<input type="text" />"""
+        playwright_page.set_content(text)
+
+        node = playwright_page.query_selector("input")
+        assert node is not None
+        element = PlaywrightElement(node)
+
+        assert element.get_attribute("value") == ""
+
+    def test_get_attribute_returns_none_when_not_present(self, playwright_page: Page):
+        """Tests that a non-existent property/attribute returns None."""
+        text = """<div></div>"""
+        playwright_page.set_content(text)
+
+        node = playwright_page.query_selector("div")
+        assert node is not None
+        element = PlaywrightElement(node)
+
+        assert element.get_attribute("nonexistent") is None
+
+
+class FakeDriver:
+    """A fake Page for simulating errors & redirects."""
+
+    def __init__(self):
+        self._url = None
+        self.closed = False
+
+    def goto(self, url: str):
+        if url == "http://bad-url":
+            raise Error("Connection error")
+        if url == "http://redirect":
+            self._url = "http://final-url"
+        else:
+            self._url = url
+
+    def close(self):
+        self.closed = True
+
+    @property
+    def url(self):
+        return self._url
+
+    def query_selector(self, selector: str):
+        return None
+
+
+@pytest.fixture
+def fake_driver() -> FakeDriver:
+    """Provides a fake Page instance for testing."""
+    return FakeDriver()
+
+
+@pytest.mark.playwright
+@pytest.mark.implementation
+class TestPlaywrightBrowser:
+
+    def test_initializes_with_driver(self, playwright_page: Page):
+        """Tests if `PlaywrightBrowser` can be initialized with playwright Page."""
+        browser = PlaywrightBrowser(playwright_page)
+        assert browser.browser is playwright_page
+        assert browser.get() is playwright_page
+
+    def test_navigate_success(self, fake_driver: FakeDriver):
+        """Simulates navigation working normally."""
+
+        browser = PlaywrightBrowser(fake_driver)  # type: ignore
+        browser.navigate("http://ok")
+        assert browser.get_current_url() == "http://ok"
+
+    def test_navigate_redirect(self, fake_driver: FakeDriver):
+        """Simulates a redirect after navigation."""
+        browser = PlaywrightBrowser(fake_driver)  # type: ignore
+        browser.navigate("http://redirect")
+        assert browser.get_current_url() == "http://final-url"
+
+    def test_navigate_connection_error(self, fake_driver: FakeDriver):
+        """Simulates a connection error during navigation."""
+        browser = PlaywrightBrowser(fake_driver)  # type: ignore
+
+        with pytest.raises(Error):
+            browser.navigate("http://bad-url")
+
+    def test_keys_are_send_properly(self, playwright_page: Page):
+        """
+        Tests if `send_keys` method sends keys properly to the element
+        and value of the element is changed accordingly.
+        """
+        to_insert = "Hello World"
+        text = """<input id="editable" type="text" />"""
+        playwright_page.set_content(text)
+
+        browser = PlaywrightBrowser(playwright_page)
+        node = playwright_page.query_selector("#editable")
+        assert node is not None
+        element = PlaywrightElement(node)
+
+        browser.send_keys(element=element, value=to_insert)
+        assert element.get_attribute("value") == to_insert
+
+    def test_keys_are_not_cleared_when_clear_false(self, playwright_page: Page):
+        """
+        Tests if `send_keys` method does not clear the element before sending keys
+        when `clear` parameter is set to False.
+        """
+        text = """<input id="editable" type="text" value="original" />"""
+        playwright_page.set_content(text)
+
+        browser = PlaywrightBrowser(playwright_page)
+        node = playwright_page.query_selector("#editable")
+        assert node is not None
+        element = PlaywrightElement(node)
+
+        browser.send_keys(element=element, value="Hello")
+        assert element.get_attribute("value") == "Hello"
+
+        browser.send_keys(element=element, value=" World", clear=False)
+        assert element.get_attribute("value") == "Hello World"
+
+    def test_sends_key_only_to_specified_element(self, playwright_page: Page):
+        """
+        Tests if `send_keys` method sends keys only to the specified element.
+        Other elements are not affected.
+        """
+        text = """
+            <input id="one" type="text" />
+            <input id="two" type="text" />
+        """
+        playwright_page.set_content(text)
+
+        node1 = playwright_page.query_selector("#one")
+        node2 = playwright_page.query_selector("#two")
+        assert node1 and node2
+
+        el1 = PlaywrightElement(node1)
+        el2 = PlaywrightElement(node2)
+
+        browser = PlaywrightBrowser(playwright_page)
+        browser.send_keys(el1, "First")
+
+        assert el1.get_attribute("value") == "First"
+        assert el2.get_attribute("value") == ""
+
+    def test_raises_error_when_element_is_not_editable(self, playwright_page: Page):
+        """
+        Tests if `send_keys` method raises an error when the element is not editable.
+        """
+        text = """
+            <div>Hello</div>
+            <p>World</p>
+        """
+        playwright_page.set_content(text)
+
+        node = playwright_page.query_selector("div")
+        assert node is not None
+        element = PlaywrightElement(node)
+        browser = PlaywrightBrowser(playwright_page)
+
+        with pytest.raises(Error):
+            browser.send_keys(element, "First")
+
+    def test_closes_browser_properly(self, fake_driver: FakeDriver):
+        """
+        Tests if `close` method calls `close` on the Page.
+        Uses mock driver to avoid actually closing the browser during tests.
+        """
+        browser = PlaywrightBrowser(fake_driver)  # type: ignore
+        assert fake_driver.closed is False
+        browser.close()
+        assert fake_driver.closed is True
+
+    def test_clicks_element_properly(self, playwright_page: Page):
+        """
+        Tests if `click` method clicks the element properly
+        and the click event is reflected in the page.
+        """
+        text = """
+            <button id="myButton" onclick="this.innerText='Clicked'">Not clicked</button>
+        """
+        playwright_page.set_content(text)
+        browser = PlaywrightBrowser(playwright_page)
+
+        node = playwright_page.query_selector("#myButton")
+        assert node is not None
+        element = PlaywrightElement(node)
+
+        assert element.text == "Not clicked"
+        browser.click(element)
+        assert element.text == "Clicked"
+
+    def test_click_element_covered_by_other(self, playwright_page: Page):
+        """
+        Tests that `click` method works even when the element
+        is visually covered by another element, hidden or off-screen.
+        It uses js script instead of click command.
+        """
+        html = """
+            <style>
+                #cover {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 200px;
+                    height: 200px;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: 10;
+                }
+            </style>
+            <button id="target" onclick="this.innerText='Clicked'">Not clicked</button>
+            <div id="cover"></div>
+        """
+        playwright_page.set_content(html)
+
+        browser = PlaywrightBrowser(playwright_page)
+        node = playwright_page.query_selector("#target")
+        assert node is not None
+
+        element = PlaywrightElement(node)
+        assert element.text == "Not clicked"
+
+        with pytest.raises(TimeoutError):
+            node.click(timeout=10)
+
+        # Click method bypasses visibility
+        browser.click(element)
+        assert element.text == "Clicked"
+
+    def test_click_triggers_navigation(self, playwright_page: Page):
+        """Tests if `click` method triggers navigation when clicking a link."""
+        text = """<a id="myLink" href="about:blank">Go</a>"""
+        playwright_page.set_content(text)
+
+        browser = PlaywrightBrowser(playwright_page)
+        node = playwright_page.query_selector("#myLink")
+        assert node is not None
+        element = PlaywrightElement(node)
+
+        browser.click(element)
+        assert browser.get_current_url() == "about:blank"
+
+    def test_multiple_clicks_work_properly(self, playwright_page: Page):
+        """
+        Tests if `click` method can be called multiple times on the same element.
+        """
+        text = """<button id="counter" onclick="this.innerText=parseInt(this.innerText)+1">0</button>"""
+        playwright_page.set_content(text)
+
+        browser = PlaywrightBrowser(playwright_page)
+        node = playwright_page.query_selector("#counter")
+        assert node is not None
+        element = PlaywrightElement(node)
+
+        for _ in range(3):
+            browser.click(element)
+
+        assert element.text == "3"
+
+    def test_get_html_returns_html_element(self, playwright_page: Page):
+        """
+        Tests if `get_html` method returns html element of the page
+        wrapped in `PlaywrightElement`.
+        """
+        text = """
+            <div>Hello</div>
+            <p>World</p>
+        """
+        playwright_page.set_content(text)
+        browser = PlaywrightBrowser(playwright_page)
+        body = browser.get_document()
+
+        assert isinstance(body, PlaywrightElement)
+        assert body.name == "html"
+
+    def test_get_html_raises_error_if_not_found(self, fake_driver: FakeDriver):
+        """
+        Tests if `get_html` method raises `TagNotFoundException`
+        if <html> element is not found.
+        """
+        browser = PlaywrightBrowser(fake_driver)  # type: ignore
+
+        with pytest.raises(exc.TagNotFoundException):
+            browser.get_document()
+
+    def test_hash_is_based_on_instance_id(self):
+        """
+        Tests if `__hash__` method returns hash based on instance id.
+        """
+        driver1 = FakeDriver()
+        driver2 = FakeDriver()
+
+        browser1 = PlaywrightBrowser(driver1)  # type: ignore
+        browser2 = PlaywrightBrowser(driver1)  # type: ignore
+        browser3 = PlaywrightBrowser(driver2)  # type: ignore
+
+        assert hash(browser1) == hash(browser2)
+        assert hash(browser1) != hash(browser3)
+
+    def test_instances_are_equal_if_they_have_the_same_driver(self):
+        """
+        Tests if `__eq__` method returns True if two instances
+        have the same Page instance.
+        """
+        driver1 = FakeDriver()
+        driver2 = FakeDriver()
+
+        browser1 = PlaywrightBrowser(driver1)  # type: ignore
+        browser2 = PlaywrightBrowser(driver1)  # type: ignore
+        browser3 = PlaywrightBrowser(driver2)  # type: ignore
+
+        assert browser1 == browser2
+        assert browser1 != browser3

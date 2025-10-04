@@ -37,7 +37,7 @@ class TestLXMLElement:
         """
 
         with pytest.raises(TypeError):
-            LXMLElement(text)
+            LXMLElement(text)  # type: ignore
 
     def test_node_is_wrapped_by_element(self):
         """
@@ -102,6 +102,8 @@ class TestLXMLElement:
 
         div = node.find(".//div")
         div2 = node.find(".//div")
+        assert div is not None
+        assert div2 is not None
 
         assert hash(LXMLElement(div)) == hash(LXMLElement(div2))
         assert hash(element) == hash(node)
