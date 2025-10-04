@@ -4,12 +4,13 @@ import re
 from itertools import islice
 from typing import Iterable, Optional, Pattern, Union
 
-from playwright.sync_api import ElementHandle
+from playwright.sync_api import ElementHandle, Page
 from typing_extensions import Self
 
+import soupsavvy.exceptions as exc
 import soupsavvy.implementation.snippets.js.playwright as js
 from soupsavvy.implementation.snippets import css, xpath
-from soupsavvy.interfaces import IElement
+from soupsavvy.interfaces import IBrowser, IElement
 from soupsavvy.selectors.css.api import PlaywrightCSSApi
 from soupsavvy.selectors.xpath.api import PlaywrightXPathApi
 
@@ -103,7 +104,7 @@ class PlaywrightElement(IElement[ElementHandle]):
 
     @property
     def parent(self) -> Optional[Self]:
-        handle = self.node.evaluate_handle(js.PARENT_ELEMENT_HANDLE)
+        handle = self.node.evaluate_handle(js.PARENT_ELEMENT_SCRIPT)
         element = handle.as_element()
 
         if element is None:
@@ -112,14 +113,20 @@ class PlaywrightElement(IElement[ElementHandle]):
         return self.from_node(element)
 
     def get_attribute(self, name: str) -> Optional[str]:
+        # get live JS property first, then html attribute
+        property_ = self.node.evaluate(js.GET_ATTRIBUTE_SCRIPT, name)
+
+        if property_ is not None:
+            return property_
+
         return self.node.get_attribute(name)
 
     @property
     def name(self) -> str:
-        return self.node.evaluate(js.TAG_NAME_HANDLE).lower()
+        return self.node.evaluate(js.TAG_NAME_SCRIPT).lower()
 
     def __str__(self) -> str:
-        html = self.node.evaluate(js.OUTER_HTML_HANDLE)
+        html = self.node.evaluate(js.OUTER_HTML_SCRIPT)
         return _UID_REGEX.sub("", html)
 
     @property
@@ -134,3 +141,49 @@ class PlaywrightElement(IElement[ElementHandle]):
 
     def __hash__(self) -> int:
         return hash(self._id)
+
+
+class PlaywrightBrowser(IBrowser[Page, PlaywrightElement]):
+    """
+    Implementation of `IBrowser` for `playwright` Page.
+    Adapter for Playwright's `Page` object, allowing unified use across soupsavvy.
+
+    Example
+    -------
+    >>> from playwright.sync_api import sync_playwright
+    >>> from soupsavvy.implementation.playwright import PlaywrightBrowser
+    ...
+    >>> with sync_playwright() as p:
+    ...     browser = p.chromium.launch()
+    ...     page = browser.new_page()
+    ...     pw_browser = PlaywrightBrowser(page)
+    ...     pw_browser.navigate("https://example.com")
+    """
+
+    def navigate(self, url: str) -> None:
+        self.browser.goto(url)
+
+    def click(self, element: PlaywrightElement) -> None:
+        self.browser.evaluate(js.CLICK_ELEMENT_SCRIPT, element.node)
+
+    def send_keys(
+        self, element: PlaywrightElement, value: str, clear: bool = True
+    ) -> None:
+        if clear:
+            element.node.fill("")
+
+        element.node.type(value)
+
+    def get_document(self) -> PlaywrightElement:
+        element = self.browser.query_selector("html")
+
+        if element is None:
+            raise exc.TagNotFoundException("Could not find <html> element on the page.")
+
+        return PlaywrightElement(element)
+
+    def close(self) -> None:
+        self.browser.close()
+
+    def get_current_url(self) -> str:
+        return self.browser.url

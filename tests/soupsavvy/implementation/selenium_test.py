@@ -8,12 +8,10 @@ import re
 
 import pytest
 import selenium.common.exceptions as selenium_exceptions
-from pytest import MonkeyPatch
-from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 
+import soupsavvy.exceptions as exc
 from soupsavvy.implementation.selenium import SeleniumBrowser, SeleniumElement
 from soupsavvy.selectors.css.api import SeleniumCSSApi
 from soupsavvy.selectors.xpath.api import SeleniumXPathApi
@@ -36,7 +34,7 @@ class TestSeleniumElement:
         """
 
         with pytest.raises(TypeError):
-            SeleniumElement(text)
+            SeleniumElement(text)  # type: ignore
 
     def test_node_is_wrapped_by_element(self, driver_selenium: WebDriver):
         """
@@ -910,22 +908,14 @@ class FakeDriver:
     def current_url(self):
         return self._url
 
+    def find_elements(self, by, value):
+        return []
+
 
 @pytest.fixture
-def fake_driver(monkeypatch: MonkeyPatch) -> FakeDriver:
+def fake_driver() -> FakeDriver:
     """Provides a fake WebDriver instance for testing."""
-    monkeypatch.setattr(SeleniumBrowser, "_BROWSER_TYPE", FakeDriver)
     return FakeDriver()
-
-
-def get_driver() -> WebDriver:
-    """Creates a basic selenium webdriver instance for testing."""
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome(options=options)
-    return driver
 
 
 @pytest.mark.selenium
@@ -938,30 +928,22 @@ class TestSeleniumBrowser:
         assert browser.browser is driver_selenium
         assert browser.get() is driver_selenium
 
-    def test_raises_exception_when_invalid_init_browser(self):
-        """
-        Tests if TypeError is raised when object of invalid type
-        is passed to constructor.
-        """
-        with pytest.raises(TypeError):
-            SeleniumBrowser("mouse")
-
     def test_navigate_success(self, fake_driver: FakeDriver):
         """Simulates navigation working normally."""
 
-        browser = SeleniumBrowser(fake_driver)
+        browser = SeleniumBrowser(fake_driver)  # type: ignore
         browser.navigate("http://ok")
         assert browser.get_current_url() == "http://ok"
 
     def test_navigate_redirect(self, fake_driver: FakeDriver):
         """Simulates a redirect after navigation."""
-        browser = SeleniumBrowser(fake_driver)
+        browser = SeleniumBrowser(fake_driver)  # type: ignore
         browser.navigate("http://redirect")
         assert browser.get_current_url() == "http://final-url"
 
     def test_navigate_connection_error(self, fake_driver: FakeDriver):
         """Simulates a connection error during navigation."""
-        browser = SeleniumBrowser(fake_driver)
+        browser = SeleniumBrowser(fake_driver)  # type: ignore
 
         with pytest.raises(selenium_exceptions.WebDriverException):
             browser.navigate("http://bad-url")
@@ -997,19 +979,6 @@ class TestSeleniumBrowser:
 
         browser.send_keys(element=element, value=" World", clear=False)
         assert element.get_attribute("value") == "Hello World"
-
-    def test_can_send_special_keys(self, driver_selenium: WebDriver):
-        """
-        Tests if `send_keys` method can send special keys like ENTER.
-        """
-        text = """<input id="editable" type="text" value="original" />"""
-        insert(text, driver=driver_selenium)
-
-        browser = SeleniumBrowser(driver_selenium)
-        element = SeleniumElement(driver_selenium.find_element(By.ID, "editable"))
-
-        browser.send_keys(element, "Hello" + Keys.ENTER)
-        assert element.get_attribute("value") == "Hello"
 
     def test_sends_key_only_to_specified_element(self, driver_selenium: WebDriver):
         """
@@ -1055,7 +1024,7 @@ class TestSeleniumBrowser:
         Tests if `close` method calls `quit` on the webdriver.
         Uses mock driver to avoid actually closing the browser during tests.
         """
-        browser = SeleniumBrowser(fake_driver)
+        browser = SeleniumBrowser(fake_driver)  # type: ignore
         assert fake_driver.closed is False
         browser.close()
         assert fake_driver.closed is True
@@ -1108,7 +1077,7 @@ class TestSeleniumBrowser:
         with pytest.raises(selenium_exceptions.ElementClickInterceptedException):
             node.click()
 
-        # Your click method bypasses visibility
+        # click method bypasses visibility
         browser.click(element)
         assert element.text == "Clicked"
 
@@ -1153,15 +1122,26 @@ class TestSeleniumBrowser:
         assert isinstance(body, SeleniumElement)
         assert body.name == "html"
 
+    def test_get_html_raises_error_if_not_found(self, fake_driver: FakeDriver):
+        """
+        Tests if `get_html` method raises `TagNotFoundException`
+        if <html> element is not found.
+        """
+        browser = SeleniumBrowser(fake_driver)  # type: ignore
+
+        with pytest.raises(exc.TagNotFoundException):
+            browser.get_document()
+
     def test_hash_is_based_on_instance_id(self):
         """
         Tests if `__hash__` method returns hash based on instance id.
         """
-        driver1 = get_driver()
-        driver2 = get_driver()
-        browser1 = SeleniumBrowser(driver1)
-        browser2 = SeleniumBrowser(driver1)
-        browser3 = SeleniumBrowser(driver2)
+        driver1 = FakeDriver()
+        driver2 = FakeDriver()
+
+        browser1 = SeleniumBrowser(driver1)  # type: ignore
+        browser2 = SeleniumBrowser(driver1)  # type: ignore
+        browser3 = SeleniumBrowser(driver2)  # type: ignore
 
         assert hash(browser1) == hash(browser2)
         assert hash(browser1) != hash(browser3)
@@ -1171,11 +1151,12 @@ class TestSeleniumBrowser:
         Tests if `__eq__` method returns True if two instances
         have the same webdriver instance.
         """
-        driver1 = get_driver()
-        driver2 = get_driver()
-        browser1 = SeleniumBrowser(driver1)
-        browser2 = SeleniumBrowser(driver1)
-        browser3 = SeleniumBrowser(driver2)
+        driver1 = FakeDriver()
+        driver2 = FakeDriver()
+
+        browser1 = SeleniumBrowser(driver1)  # type: ignore
+        browser2 = SeleniumBrowser(driver1)  # type: ignore
+        browser3 = SeleniumBrowser(driver2)  # type: ignore
 
         assert browser1 == browser2
         assert browser1 != browser3

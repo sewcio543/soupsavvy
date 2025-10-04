@@ -453,9 +453,10 @@ class SelectionApi(ABC):
 
 
 E = TypeVar("E", bound=IElement)
+B = TypeVar("B")
 
 
-class IBrowser(ABC, Generic[E]):
+class IBrowser(ABC, Generic[B, E]):
     """
     Interface representing a general browser for web navigation and interaction.
     `IBrowser` defines methods for common browser operations.
@@ -474,11 +475,7 @@ class IBrowser(ABC, Generic[E]):
         "IBrowser is an abstract interface and does not implement this method."
     )
 
-    _BROWSER_TYPE: type[Any] = object
-    # element type compatible with the browser
-    _ELEMENT_TYPE: type[Any] = object
-
-    def __init__(self, browser: Any, *args, **kwargs) -> None:
+    def __init__(self, browser: B, *args, **kwargs) -> None:
         """
         Initializes the implementation with the given browser instance.
 
@@ -491,20 +488,14 @@ class IBrowser(ABC, Generic[E]):
         **kwargs: Any
             Additional keyword arguments to pass to the constructor.
         """
-        if not isinstance(browser, self._BROWSER_TYPE):
-            raise TypeError(
-                f"Expected browser to be of type {self._BROWSER_TYPE}, "
-                f"but got {type(browser)} instead."
-            )
-
         self._browser = browser
 
     @property
-    def browser(self) -> Any:
+    def browser(self) -> B:
         """Returns the underlying browser wrapped by the instance."""
         return self._browser  # pragma: no cover
 
-    def get(self) -> Any:
+    def get(self) -> B:
         """Returns the browser wrapped by the instance."""
         return self.browser  # pragma: no cover
 
@@ -561,6 +552,11 @@ class IBrowser(ABC, Generic[E]):
         IElement
             The html document of the current page, soupsavvy implementation
             compatible with the browser.
+
+        Raises
+        ------
+        TagNotFoundException
+            If the <html> element is not found on the page.
         """
         self._raise_not_implemented()
 

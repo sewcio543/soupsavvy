@@ -29,7 +29,7 @@ class TestSoupElement:
         """
 
         with pytest.raises(TypeError):
-            SoupElement(text)
+            SoupElement(text)  # type: ignore
 
     def test_node_is_wrapped_by_element(self):
         """
@@ -94,6 +94,8 @@ class TestSoupElement:
 
         div = bs.find("div")
         div2 = bs.find("div")
+        assert isinstance(div, Tag)
+        assert isinstance(div2, Tag)
 
         assert hash(SoupElement(div)) == hash(SoupElement(div2))
         assert hash(element) == hash(id(bs))

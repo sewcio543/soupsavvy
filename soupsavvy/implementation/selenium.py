@@ -16,6 +16,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from typing_extensions import Self
 
+import soupsavvy.exceptions as exc
 import soupsavvy.implementation.snippets.js.selenium as js
 from soupsavvy.implementation.snippets import css, xpath
 from soupsavvy.interfaces import IBrowser, IElement
@@ -120,7 +121,7 @@ class SeleniumElement(IElement[WebElement]):
         return SeleniumXPathApi(selector)
 
 
-class SeleniumBrowser(IBrowser[SeleniumElement]):
+class SeleniumBrowser(IBrowser[WebDriver, SeleniumElement]):
     """
     Implementation of `IBrowser` for `selenium` WebDriver.
     Adapter for `selenium` WebDriver, that makes them usable across the library.
@@ -132,9 +133,6 @@ class SeleniumBrowser(IBrowser[SeleniumElement]):
     ... driver = webdriver.Chrome()
     ... browser = SeleniumBrowser(driver)
     """
-
-    _BROWSER_TYPE = WebDriver
-    _ELEMENT_TYPE = SeleniumElement
 
     def navigate(self, url: str) -> None:
         self.browser.get(url)
@@ -151,18 +149,15 @@ class SeleniumBrowser(IBrowser[SeleniumElement]):
         element.node.send_keys(value)
 
     def get_document(self) -> SeleniumElement:
-        element = self.browser.find_element(By.TAG_NAME, "html")
-        return SeleniumElement(element)
+        elements = self.browser.find_elements(by=By.TAG_NAME, value="html")
+
+        if not elements:
+            raise exc.TagNotFoundException("Could not find <html> element on the page.")
+
+        return SeleniumElement(elements[0])
 
     def close(self) -> None:
         self.browser.quit()
 
     def get_current_url(self) -> str:
         return self.browser.current_url
-
-    @property
-    def browser(self) -> WebDriver:
-        return self._browser
-
-    def get(self) -> WebDriver:
-        return self.browser
