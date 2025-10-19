@@ -317,22 +317,3 @@ class MockBreakOperation(BaseMockOperation):
     def _execute(self, arg: Any) -> Any:
         result = self.operation.execute(arg)
         raise BreakOperationException(result)
-
-
-class MockBrowser(IBrowser[Any, Any]):
-    """
-    Mock browser class for testing purposes, implements IBrowser interface
-    with empty methods.
-    """
-
-    def navigate(self, url: str) -> None: ...
-
-    def click(self, element: IElement) -> None: ...
-
-    def send_keys(self, element: IElement, value: str, clear: bool = True) -> None: ...
-
-    def get_document(self) -> IElement: ...
-
-    def close(self) -> None: ...
-
-    def get_current_url(self) -> str: ...
