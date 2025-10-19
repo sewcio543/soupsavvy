@@ -984,6 +984,17 @@ class TestPlaywrightBrowser:
         assert browser.browser is playwright_page
         assert browser.get() is playwright_page
 
+    def test_str_and_repr_are_correct(self, playwright_page: Page):
+        """
+        Tests if `str` and `repr` methods return correct values.
+        Repr should be a string with class name and wrapped page representation.
+        str is constructed from the wrapped page's str.
+        """
+        browser = PlaywrightBrowser(playwright_page)
+
+        assert str(browser) == str(browser.browser)
+        assert repr(browser) == f"PlaywrightBrowser({browser.browser!r})"
+
     def test_navigate_success(self, fake_driver: FakeDriver):
         """Simulates navigation working normally."""
 
@@ -1215,6 +1226,7 @@ class TestPlaywrightBrowser:
         browser2 = PlaywrightBrowser(driver1)  # type: ignore
         browser3 = PlaywrightBrowser(driver2)  # type: ignore
 
+        assert hash(browser1) == hash(browser1)
         assert hash(browser1) == hash(browser2)
         assert hash(browser1) != hash(browser3)
 
@@ -1230,5 +1242,6 @@ class TestPlaywrightBrowser:
         browser2 = PlaywrightBrowser(driver1)  # type: ignore
         browser3 = PlaywrightBrowser(driver2)  # type: ignore
 
+        assert browser1 == browser1
         assert browser1 == browser2
         assert browser1 != browser3

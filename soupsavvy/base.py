@@ -923,7 +923,7 @@ class BrowserOperation(BaseOperation):
         if not isinstance(arg, IBrowser):
             raise exc.NotBrowserException(
                 f"{self.__class__} is a BrowserOperation, "
-                f"which requires {IBrowser.__name__} instance for as `execute` "
+                f"which requires {IBrowser.__name__} instance for `execute` argument."
                 f"method argument, got {type(arg)}"
             )
 

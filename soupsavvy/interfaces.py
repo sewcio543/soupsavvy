@@ -400,16 +400,16 @@ class IElement(ABC, Generic[N]):
 
     def __hash__(self):
         """Hashes element object using the wrapped node's hash."""
-        return hash((self._node, self.__class__))
+        return hash((self.node, self.__class__))
 
     def __eq__(self, other):
-        return hash(self) == hash(other)
+        return isinstance(other, self.__class__) and self.node == other.node
 
     def __str__(self) -> str:
-        return str(self._node)
+        return str(self.node)
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self._node!r})"
+        return f"{self.__class__.__name__}({self.node!r})"
 
 
 class SelectionApi(ABC):
@@ -581,10 +581,10 @@ class IBrowser(ABC, Generic[B, E]):
         return hash((id(self.browser), self.__class__))
 
     def __eq__(self, other):
-        return hash(self) == hash(other)
+        return isinstance(other, self.__class__) and self.browser == other.browser
 
     def __str__(self) -> str:
-        return str(self._browser)
+        return str(self.browser)
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self._browser!r})"
+        return f"{self.__class__.__name__}({self.browser!r})"

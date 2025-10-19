@@ -186,7 +186,7 @@ class BreakOperationException(OperationException):
 
 class NotBrowserException(OperationException, TypeError):
     """
-    Exception to be raised when function excepted `IBrowser` as input
+    Exception to be raised when function expected `IBrowser` as input
     and got argument of the different, invalid type.
     """
 

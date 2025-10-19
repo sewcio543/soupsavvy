@@ -101,8 +101,6 @@ class TestSeleniumElement:
         insert(text, driver=driver_selenium)
         node = driver_selenium.find_element(By.TAG_NAME, "html")
 
-        element = SeleniumElement(node)
-
         node1 = node.find_element(By.TAG_NAME, "div")
         node2 = node.find_element(By.TAG_NAME, "div")
         node3 = node.find_element(By.TAG_NAME, "p")
@@ -945,6 +943,17 @@ class TestSeleniumBrowser:
         assert browser.browser is driver_selenium
         assert browser.get() is driver_selenium
 
+    def test_str_and_repr_are_correct(self, driver_selenium: WebDriver):
+        """
+        Tests if `str` and `repr` methods return correct values.
+        Repr should be a string with class name and wrapped driver representation.
+        str is constructed from the wrapped driver's str.
+        """
+        browser = SeleniumBrowser(driver_selenium)
+
+        assert str(browser) == str(browser.browser)
+        assert repr(browser) == f"SeleniumBrowser({browser.browser!r})"
+
     def test_navigate_success(self, fake_driver: FakeDriver):
         """Simulates navigation working normally."""
 
@@ -1160,6 +1169,7 @@ class TestSeleniumBrowser:
         browser2 = SeleniumBrowser(driver1)  # type: ignore
         browser3 = SeleniumBrowser(driver2)  # type: ignore
 
+        assert hash(browser1) == hash(browser1)
         assert hash(browser1) == hash(browser2)
         assert hash(browser1) != hash(browser3)
 
@@ -1175,5 +1185,6 @@ class TestSeleniumBrowser:
         browser2 = SeleniumBrowser(driver1)  # type: ignore
         browser3 = SeleniumBrowser(driver2)  # type: ignore
 
+        assert browser1 == browser1
         assert browser1 == browser2
         assert browser1 != browser3
