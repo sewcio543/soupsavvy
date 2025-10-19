@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Any, Literal, Optional, Union, overload
 from typing_extensions import deprecated
 
 import soupsavvy.exceptions as exc
-from soupsavvy.interfaces import Comparable, Executable, IElement, TagSearcher
+from soupsavvy.interfaces import Comparable, Executable, IBrowser, IElement, TagSearcher
 
 if TYPE_CHECKING:
     from soupsavvy.operations.general import OperationPipeline
@@ -785,6 +785,13 @@ class BaseOperation(Executable, Comparable):
         -------
         Any
             Result of the operation.
+
+        Raises
+        ------
+        BreakOperationException
+            If operation execution should be interrupted and propagated to caller.
+        FailedOperationExecution
+            If operation execution fails for any other reason.
         """
         try:
             return self._execute(arg)
@@ -893,3 +900,80 @@ class OperationSearcherMixin(BaseOperation, TagSearcher):
             Result of applied operation on element.
         """
         return self.execute(tag)
+
+
+class BrowserOperation(BaseOperation):
+    """
+    Base class for operations that act on a `IBrowser` interface.
+
+    Browser operations are designed to perform actions with objects implementing
+    the `IBrowser` interface. It validates that input argument to `execute` method
+    is of this type.
+
+    As standard operations, browser operations can be chained together using
+    the pipe operator '|'.
+
+    Operations can be combined with selectors to extract and transform
+    target information. Chaining other types of operations might result in errors.
+
+    Each derived operation class needs to implement `__eq__` method.
+    """
+
+    def execute(self, arg: IBrowser) -> IBrowser:
+        if not isinstance(arg, IBrowser):
+            raise exc.NotBrowserException(
+                f"{self.__class__} is a BrowserOperation, "
+                f"which requires {IBrowser.__name__} instance for as `execute` "
+                f"method argument, got {type(arg)}"
+            )
+
+        super().execute(arg)
+        return arg
+
+
+class ElementAction(Comparable):
+    """
+    Abstract base class for actions that use browser to interact with an element.
+
+    Actions perform operation on element in dynamic context, it requires both
+    browser context (`IBrowser`) and the target element active
+    in browser context (`IElement`).
+
+    ElementActions are not typical operations, so they cannot be chained with other
+    `soupsavvy` operations. They are intended to be used within `ApplyTo` operation.
+
+    Example
+    -------
+    >>> from soupsavvy.browser.operations import ApplyTo, Click
+    ... from soupsavvy import TypeSelector
+    ... from soupsavvy.implementation.selenium import SeleniumBrowser
+    ... from selenium import webdriver
+    ...
+    ... browser = SeleniumBrowser(webdriver.Chrome())
+    ... action = Click()
+    ... selector = TypeSelector('button')
+    ... operation = ApplyTo(selector, action)
+    ... operation.execute(browser)
+
+
+    `ElementAction` inherits from `Comparable` interface,
+    `__eq__` method needs to be implemented in derived classes.
+    """
+
+    def execute(self, browser: IBrowser, element: IElement) -> None:
+        """
+        Execute the action on provided element within the browser context.
+
+        Parameters
+        ----------
+        browser : IBrowser
+            The browser instance within which the action is performed.
+        element : IElement
+            The element on which the action is performed using browser context.
+        """
+        self._execute(browser, element)
+
+    @abstractmethod
+    def _execute(self, browser: IBrowser, element: IElement) -> None:
+        """Executes the operation logic with browser on the given element."""
+        raise NotImplementedError(f"{self.__class__} must implement _execute method")

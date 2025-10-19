@@ -100,28 +100,44 @@ class TestSeleniumElement:
         """
         insert(text, driver=driver_selenium)
         node = driver_selenium.find_element(By.TAG_NAME, "html")
+
         element = SeleniumElement(node)
 
-        div = node.find_element(By.TAG_NAME, "div")
-        div2 = node.find_element(By.TAG_NAME, "div")
+        node1 = node.find_element(By.TAG_NAME, "div")
+        node2 = node.find_element(By.TAG_NAME, "div")
+        node3 = node.find_element(By.TAG_NAME, "p")
 
-        assert hash(SeleniumElement(div)) == hash(SeleniumElement(div2))
-        assert hash(element) == hash(node)
+        element1 = SeleniumElement(node1)
+        element2 = SeleniumElement(node2)
+        element3 = SeleniumElement(node3)
+
+        assert hash(element1) == hash(element1)
+        assert hash(element1) == hash(element2)
+        assert hash(element1) != hash(element3)
+        assert hash(element1) != hash(node1)
 
     def test_equality_is_implemented_correctly(self, driver_selenium: WebDriver):
         """
-        Tests if only two element objects with the same wrapped node element are equal.
+        Tests if only two element objects with the same wrapped node element are equal,
+        even when they are results of different searches.
         """
         text = """
             <div><p>Hello</p></div>
         """
         insert(text, driver=driver_selenium)
-        node = driver_selenium.find_element(By.TAG_NAME, "html")
-        element = SeleniumElement(node)
 
-        assert element == SeleniumElement(node)
-        assert element != SeleniumElement(node.find_element(By.TAG_NAME, "div"))
-        assert element != node
+        node1 = driver_selenium.find_element(By.TAG_NAME, "html")
+        node2 = driver_selenium.find_element(By.TAG_NAME, "html")
+        node3 = driver_selenium.find_element(By.TAG_NAME, "div")
+
+        element1 = SeleniumElement(node1)
+        element2 = SeleniumElement(node2)
+        element3 = SeleniumElement(node3)
+
+        assert element1 == element1
+        assert element1 == element2
+        assert element1 != element3
+        assert element1 != node1
 
     def test_name_attribute_has_correct_value(self, driver_selenium: WebDriver):
         """Tests if `name` attribute returns name of the node element."""
@@ -920,6 +936,7 @@ def fake_driver() -> FakeDriver:
 
 @pytest.mark.selenium
 @pytest.mark.implementation
+@pytest.mark.browser
 class TestSeleniumBrowser:
 
     def test_initializes_with_driver(self, driver_selenium: WebDriver):
