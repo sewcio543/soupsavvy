@@ -181,6 +181,16 @@ class BreakOperationException(OperationException):
         self.result = result
 
 
+#! BROWSER OPERATIONS
+
+
+class NotBrowserException(OperationException, TypeError):
+    """
+    Exception to be raised when function expected `IBrowser` as input
+    and got argument of the different, invalid type.
+    """
+
+
 #! MODELS
 
 

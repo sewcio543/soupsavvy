@@ -33,7 +33,7 @@ from soupsavvy.implementation.bs4 import SoupElement
 from soupsavvy.implementation.lxml import LXMLElement
 from soupsavvy.implementation.playwright import PlaywrightElement
 from soupsavvy.implementation.selenium import SeleniumElement
-from soupsavvy.interfaces import IElement
+from soupsavvy.interfaces import IBrowser, IElement
 from tests.conftest import BS4, LXML, PLAYWRIGHT, SELENIUM
 
 # default bs4 parser

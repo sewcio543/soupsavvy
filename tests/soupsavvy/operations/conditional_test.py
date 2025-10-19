@@ -19,6 +19,7 @@ def mock_condition(arg):
     return True
 
 
+@pytest.mark.operation
 class TestIfElse:
     """Class with unit test suite for IfElse operation."""
 
@@ -130,6 +131,7 @@ class TestIfElse:
         assert (operation1 == operation2) is False
 
 
+@pytest.mark.operation
 class TestBreak:
     """Class with unit test suite for Break operation."""
 
@@ -163,6 +165,7 @@ class TestBreak:
         assert (operation1 == operation2) is False
 
 
+@pytest.mark.operation
 class TestContinue:
     def test_execute_returns_value_back(self):
         """Tests if execute method returns the same value back."""

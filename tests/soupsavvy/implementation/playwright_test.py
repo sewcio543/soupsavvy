@@ -104,26 +104,49 @@ class TestPlaywrightElement:
         node = playwright_page.query_selector("html")
         assert node is not None
 
-        div = node.query_selector("div")
-        div2 = node.query_selector("div")
+        node1 = node.query_selector("div")
+        node2 = node.query_selector("div")
+        node3 = node.query_selector("p")
 
-        assert hash(PlaywrightElement(div)) == hash(PlaywrightElement(div2))  # type: ignore
+        assert node1 is not None
+        assert node2 is not None
+        assert node3 is not None
+
+        element1 = PlaywrightElement(node1)
+        element2 = PlaywrightElement(node2)
+        element3 = PlaywrightElement(node3)
+
+        assert hash(element1) == hash(element1)
+        assert hash(element1) == hash(element2)
+        assert hash(element1) != hash(element3)
+        assert hash(element1) != hash(node1)
 
     def test_equality_is_implemented_correctly(self, playwright_page: Page):
         """
-        Tests if only two element objects with the same wrapped node element are equal.
+        Tests if only two element objects with the same wrapped node element are equal,
+        even when they are results of different searches.
         """
         text = """
             <div><p>Hello</p></div>
         """
         playwright_page.set_content(text)
-        node = playwright_page.query_selector("html")
-        assert node is not None
-        element = PlaywrightElement(node)
 
-        assert element == PlaywrightElement(node)
-        assert element != PlaywrightElement(node.query_selector("div"))  # type: ignore
-        assert element != node
+        node1 = playwright_page.query_selector("html")
+        node2 = playwright_page.query_selector("html")
+        node3 = playwright_page.query_selector("div")
+
+        assert node1 is not None
+        assert node2 is not None
+        assert node3 is not None
+
+        element1 = PlaywrightElement(node1)
+        element2 = PlaywrightElement(node2)
+        element3 = PlaywrightElement(node3)
+
+        assert element1 == element1
+        assert element1 == element2
+        assert element1 != element3
+        assert element1 != node1
 
     def test_name_attribute_has_correct_value(self, playwright_page: Page):
         """Tests if `name` attribute returns name of the node element."""
@@ -952,6 +975,7 @@ def fake_driver() -> FakeDriver:
 
 @pytest.mark.playwright
 @pytest.mark.implementation
+@pytest.mark.browser
 class TestPlaywrightBrowser:
 
     def test_initializes_with_driver(self, playwright_page: Page):
@@ -959,6 +983,17 @@ class TestPlaywrightBrowser:
         browser = PlaywrightBrowser(playwright_page)
         assert browser.browser is playwright_page
         assert browser.get() is playwright_page
+
+    def test_str_and_repr_are_correct(self, playwright_page: Page):
+        """
+        Tests if `str` and `repr` methods return correct values.
+        Repr should be a string with class name and wrapped page representation.
+        str is constructed from the wrapped page's str.
+        """
+        browser = PlaywrightBrowser(playwright_page)
+
+        assert str(browser) == str(browser.browser)
+        assert repr(browser) == f"PlaywrightBrowser({browser.browser!r})"
 
     def test_navigate_success(self, fake_driver: FakeDriver):
         """Simulates navigation working normally."""
@@ -1191,6 +1226,7 @@ class TestPlaywrightBrowser:
         browser2 = PlaywrightBrowser(driver1)  # type: ignore
         browser3 = PlaywrightBrowser(driver2)  # type: ignore
 
+        assert hash(browser1) == hash(browser1)
         assert hash(browser1) == hash(browser2)
         assert hash(browser1) != hash(browser3)
 
@@ -1206,5 +1242,6 @@ class TestPlaywrightBrowser:
         browser2 = PlaywrightBrowser(driver1)  # type: ignore
         browser3 = PlaywrightBrowser(driver2)  # type: ignore
 
+        assert browser1 == browser1
         assert browser1 == browser2
         assert browser1 != browser3

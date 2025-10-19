@@ -140,7 +140,10 @@ class PlaywrightElement(IElement[ElementHandle]):
         return PlaywrightXPathApi(selector)
 
     def __hash__(self) -> int:
-        return hash(self._id)
+        return hash((self._id, self.__class__))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self._id == other._id
 
 
 class PlaywrightBrowser(IBrowser[Page, PlaywrightElement]):
