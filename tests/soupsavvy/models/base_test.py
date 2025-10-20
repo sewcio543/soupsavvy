@@ -23,6 +23,7 @@ from soupsavvy.operations import (
     Suppress,
 )
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
+from soupsavvy.operations.serialization import JSON
 from soupsavvy.selectors.general import SelfSelector
 from tests.soupsavvy.conftest import (
     BaseMockOperation,
@@ -32,6 +33,7 @@ from tests.soupsavvy.conftest import (
     MockIntOperation,
     MockLinkSelector,
     MockPlus10Operation,
+    MockSpanSelector,
     MockTextOperation,
     ToElement,
     strip,
@@ -2515,6 +2517,129 @@ class TestBaseModelIntegration:
         assert result_all == [
             MockModel(title="Title", price=10),
             MockModel(title="Title2", price=20),
+        ]
+
+    def test_json_serialization_when_model_found(self, to_element: ToElement):
+        """
+        Tests if model combined with JSON operation works properly with find methods
+        when models can be found in element.
+        """
+        text = """
+            <div>
+                <a>Title</a>
+                <p class="widget">10</p>
+            </div>
+            <div>
+                <a>Title2</a>
+                <p class="widget">20</p>
+            </div>
+        """
+        bs = to_element(text)
+        selector = MockModel
+
+        pipe = selector | JSON()
+        result = pipe.find(bs)
+        assert result == {"title": "Title", "price": 10}
+
+        result_all = pipe.find_all(bs)
+        assert result_all == [
+            {"title": "Title", "price": 10},
+            {"title": "Title2", "price": 20},
+        ]
+
+    def test_json_serialization_when_model_not_found(self, to_element: ToElement):
+        """
+        Tests if model combined with JSON operation hadles not found model as expected:
+        - when strict is False, FailedOperationExecution is raised, as None
+        object does not have `json` method.
+        - when strict is True, ModelNotFoundException is raised, selector raises
+        exception before operation is executed.
+        - when using find_all, empty list is returned.
+        """
+        text = """
+            <span>
+                <a>Title2</a>
+                <p class="widget">20</p>
+            </span>
+        """
+        bs = to_element(text)
+        selector = MockModel
+
+        pipe = selector | JSON()
+
+        with pytest.raises(exc.FailedOperationExecution):
+            pipe.find(bs)
+
+        with pytest.raises(exc.ModelNotFoundException):
+            pipe.find(bs, strict=True)
+
+        result_all = pipe.find_all(bs)
+        assert result_all == []
+
+    def test_json_serialization_for_nested_models(self, to_element: ToElement):
+        """
+        Tests if model combined with JSON operation works properly with nested models,
+        where multiple models are serialized into nested dictionary.
+        """
+
+        class MockInfoModel(BaseModel):
+            __scope__ = MockSpanSelector()
+
+            title = TITLE_SELECTOR
+            author = MockClassMenuSelector() | MockTextOperation()
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            info = MockInfoModel
+            price = PRICE_SELECTOR
+
+        text = """
+            <div>
+                <span>
+                    <a>Hello</a>
+                    <span class="menu">World</span>
+                </span>
+                <p class="widget">20</p>
+            </div>
+            <div>
+                <span>
+                    <a>Hello2</a>
+                    <span class="menu">World2</span>
+                </span>
+                <p class="widget">200</p>
+            </div>
+        """
+        bs = to_element(text)
+
+        selector = MockModel
+        pipe = selector | JSON()
+        result = pipe.find(bs)
+
+        assert result == {
+            "info": {
+                "title": "Hello",
+                "author": "World",
+            },
+            "price": 20,
+        }
+
+        result_all = pipe.find_all(bs)
+        assert result_all == [
+            {
+                "info": {
+                    "title": "Hello",
+                    "author": "World",
+                },
+                "price": 20,
+            },
+            {
+                "info": {
+                    "title": "Hello2",
+                    "author": "World2",
+                },
+                "price": 200,
+            },
         ]
 
 
