@@ -21,10 +21,11 @@ from soupsavvy.operations import (
     Operation,
     SkipNone,
     Suppress,
-    Text,
 )
+from soupsavvy.operations.selection_pipeline import SelectionPipeline
 from soupsavvy.selectors.general import SelfSelector
 from tests.soupsavvy.conftest import (
+    BaseMockOperation,
     MockClassMenuSelector,
     MockClassWidgetSelector,
     MockDivSelector,
@@ -188,6 +189,13 @@ class MockSABook(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=True)
     price = Column(Integer, nullable=True)
+
+
+class MockModelOperation(BaseMockOperation):
+    """Mock operation for testing operation on model."""
+
+    def _execute(self, model: MockModel) -> str:
+        return model.title.upper()  # type: ignore
 
 
 @pytest.mark.model
@@ -1796,6 +1804,42 @@ class TestBaseModel:
                 @post("random")
                 def method(self, value: str) -> str:
                     return value
+
+    def test_or_operation_on_model_class_returns_selection_pipeline(self):
+        """
+        Tests if or operation on model class returns SelectionPipeline.
+        Only valid argument is instance of BaseOperation.
+        """
+        operation = MockModelOperation()
+        pipe = MockModel | operation
+
+        assert isinstance(pipe, SelectionPipeline)
+        assert pipe.selector == MockModel
+        assert pipe.operation == operation
+
+    def test_or_raises_error_if_not_operation(self):
+        """
+        Tests if or operation raises NotOperationException
+        when argument is not an instance of BaseOperation.
+        """
+        operation = "invalid_operation"
+
+        with pytest.raises(exc.NotOperationException):
+            MockModel | operation  # type: ignore
+
+    def test_or_raises_type_error_if_done_on_instance(self):
+        """
+        Tests if or operation performed on model instance raises TypeError.
+        It does not make sense to used it this way and it's not implemented.
+        Instance of model can be passed directly to SelectionPipeline initializer
+        though as valid argument, which does not make much sense, since it works
+        exactly the same way as model class, but it's still valid TagSearcher instance
+        and can be used anywhere as standard TagSearcher.
+        """
+        instance = MockModel(title="Title", price=10)
+
+        with pytest.raises(TypeError):
+            instance | MockModelOperation()  # type: ignore
 
 
 @pytest.mark.integration

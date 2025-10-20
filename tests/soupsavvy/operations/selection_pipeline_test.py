@@ -2,20 +2,28 @@
 
 import pytest
 
-from soupsavvy.exceptions import (
-    NotOperationException,
-    NotTagSearcherException,
-    TagNotFoundException,
-)
+import soupsavvy.exceptions as exc
 from soupsavvy.operations.general import OperationPipeline
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 from tests.soupsavvy.conftest import (
+    BaseMockOperation,
     MockDivSelector,
     MockIntOperation,
     MockLinkSelector,
+    MockModel,
     MockTextOperation,
     ToElement,
 )
+
+
+class MockNameTransformOperation(BaseMockOperation):
+    """
+    Mock operation class for testing purposes.
+    Transforms the 'name' field of the model to uppercase.
+    """
+
+    def _execute(self, arg: MockModel) -> str:
+        return arg.name.upper()
 
 
 @pytest.mark.selector
@@ -28,11 +36,31 @@ class TestSelectionPipeline:
         Tests if raises NotTagSearcherException on init
         when invalid selector is passed.
         """
-        with pytest.raises(NotTagSearcherException):
+        with pytest.raises(exc.NotTagSearcherException):
             SelectionPipeline(
                 MockTextOperation(),  # type: ignore
                 MockIntOperation(),
             )
+
+    def test_raises_error_when_invalid_operation(self):
+        """
+        Tests if raises NotOperationException on init
+        when invalid operation is passed.
+        """
+        with pytest.raises(exc.NotOperationException):
+            SelectionPipeline(
+                MockDivSelector(),
+                operation=MockLinkSelector(),  # type: ignore
+            )
+
+    def test_searcher_and_operation_can_be_accessed_by_properties(self):
+        """Tests if searcher and operation can be accessed by properties."""
+        searcher = MockDivSelector()
+        operation = MockIntOperation()
+        pipe = SelectionPipeline(searcher, operation)
+
+        assert pipe.selector == searcher
+        assert pipe.operation == operation
 
     def test_find_returns_first_element_matching_selector(self, to_element: ToElement):
         """Tests if find method returns first element matching selector."""
@@ -99,7 +127,7 @@ class TestSelectionPipeline:
         bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
 
-        with pytest.raises(TagNotFoundException):
+        with pytest.raises(exc.TagNotFoundException):
             selector.find(bs, strict=True)
 
     def test_find_all_returns_empty_list_when_no_match(self, to_element: ToElement):
@@ -184,7 +212,7 @@ class TestSelectionPipeline:
         bs = to_element(text)
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
 
-        with pytest.raises(TagNotFoundException):
+        with pytest.raises(exc.TagNotFoundException):
             selector.find(bs, strict=True, recursive=False)
 
     def test_find_all_returns_all_matching_children_when_recursive_false(
@@ -327,5 +355,63 @@ class TestSelectionPipeline:
         selector = SelectionPipeline(MockLinkSelector(), MockTextOperation())
         next_operation = MockLinkSelector()
 
-        with pytest.raises(NotOperationException):
-            selector | next_operation
+        with pytest.raises(exc.NotOperationException):
+            _ = selector | next_operation
+
+    @pytest.mark.parametrize(
+        argnames="model",
+        argvalues=[MockModel, MockModel(name="test")],
+        ids=["Model class", "Model instance"],
+    )
+    def test_find_returns_first_element_matching_model(
+        self, to_element: ToElement, model: MockModel
+    ):
+        """Tests if find method returns first element matching model as selector."""
+        text = """
+            <div>
+                <a>Marcos</a>
+                <h1 class="widget">1</h1>
+            </div>
+            <div>
+                <a>Andy</a>
+            </div>
+        """
+        bs = to_element(text)
+        selector = SelectionPipeline(model, MockNameTransformOperation())
+        result = selector.find(bs)
+        assert result == "MARCOS"
+
+    def test_find_returns_all_elements_matching_model(self, to_element: ToElement):
+        """Tests if find method returns all elements matching model as selector."""
+        text = """
+            <div>
+                <a>Marcos</a>
+                <h1 class="widget">1</h1>
+            </div>
+            <div>
+                <a>Andy</a>
+            </div>
+            <span>
+                <a>Carlos</a>
+            </span>
+        """
+        bs = to_element(text)
+        selector = SelectionPipeline(MockModel, MockNameTransformOperation())
+        result = selector.find_all(bs)
+        assert result == ["MARCOS", "ANDY"]
+
+    def test_pipeline_is_equal_if_two_models_are_equal(self):
+        """
+        Tests if two SelectionPipelines with the same models class are equal.
+        It skips operation variations as they are checked in other tests.
+        """
+
+        class MockModel2(MockModel): ...
+
+        selector1 = SelectionPipeline(MockModel, MockNameTransformOperation())
+        selector2 = SelectionPipeline(MockModel, MockNameTransformOperation())
+        selector3 = SelectionPipeline(MockModel2, MockNameTransformOperation())
+
+        assert selector1 == selector1
+        assert selector1 == selector2
+        assert selector1 != selector3

@@ -121,22 +121,71 @@ class TagSearcher(ABC):
 
 
 class TagSearcherMeta(type(ABC)):
+    """
+    Defines the same interface as TagSearcher, but for metaclass level,
+    used by BaseModel mostly for typing purposes.
+    Subclasses should implement the `find` and `find_all` on metaclass level
+    or as classmethods, but it's not enforced by abstractmethod here and is taken
+    care of by BaseModel class.
+    """
 
     def find(
         cls,
         tag: IElement,
         strict: bool = False,
         recursive: bool = True,
-    ) -> Any: ...
+    ) -> Any:
+        """
+        Processes `IElement` object and returns result.
+
+        Parameters
+        ----------
+        tag : IElement
+            Any `IElement` object to process.
+        strict : bool, optional
+            If True, enforces results to be found in the element, by default False.
+        recursive : bool, optional
+            Specifies if search should be recursive.
+            If set to `False`, only direct children of the element will be searched.
+            By default `True`.
+
+        Returns
+        -------
+        Any
+            Processed result from the element.
+        """
+        ...
 
     def find_all(
         cls,
         tag: IElement,
         recursive: bool = True,
         limit: Optional[int] = None,
-    ) -> list[Any]: ...
+    ) -> list[Any]:
+        """
+        Processes `IElement` object and returns list of results.
+
+        Parameters
+        ----------
+        tag : IElement
+            Any `IElement` object to process.
+        recursive : bool, optional
+            Specifies if search should be recursive.
+            If set to `False`, only direct children of the element will be searched.
+            By default `True`.
+        limit : int, optional
+            Specifies maximum number of results to return in a list.
+            By default `None`, everything is returned.
+
+        Returns
+        -------
+        list[Any]
+            A list of results from processed element.
+        """
+        ...
 
 
+# valid TagSearcher types
 TagSearcherType = Union[TagSearcher, TagSearcherMeta]
 # possible exceptions raised when TagSearcher fails
 TagSearcherExceptions = (exc.FailedOperationExecution, exc.TagNotFoundException)

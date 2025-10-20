@@ -33,7 +33,8 @@ from soupsavvy.implementation.bs4 import SoupElement
 from soupsavvy.implementation.lxml import LXMLElement
 from soupsavvy.implementation.playwright import PlaywrightElement
 from soupsavvy.implementation.selenium import SeleniumElement
-from soupsavvy.interfaces import IBrowser, IElement
+from soupsavvy.interfaces import IElement
+from soupsavvy.models import BaseModel
 from tests.conftest import BS4, LXML, PLAYWRIGHT, SELENIUM
 
 # default bs4 parser
@@ -317,3 +318,11 @@ class MockBreakOperation(BaseMockOperation):
     def _execute(self, arg: Any) -> Any:
         result = self.operation.execute(arg)
         raise BreakOperationException(result)
+
+
+class MockModel(BaseModel):
+    """Mock model class for testing purposes."""
+
+    __scope__ = MockDivSelector()
+
+    name = cast(str, MockLinkSelector() | MockTextOperation())

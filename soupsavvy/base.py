@@ -90,7 +90,30 @@ def check_operation(x: Any, message: Optional[str] = None) -> BaseOperation:
 
 
 def check_tag_searcher(x: Any, message: Optional[str] = None) -> TagSearcher:
-    message = message or f"Object {x} is not an instance of {TagSearcher.__name__}."
+    """
+    Checks if provided object is a valid `soupsavvy` TagSearcher.
+    Checks for instance of `TagSearcher` or other compatible type like Model class.
+    Returns provided object if fulfills the condition for convenience.
+
+    Parameters
+    ----------
+    x : Any
+        Any object to be validated as correct operation.
+    message : str, optional
+        Custom message to be displayed in case of raising an exception.
+        By default None, which results in default message.
+
+    Raises
+    ------
+    NotTagSearcherException
+        If provided object is not an instance of `TagSearcher`
+        or any other compatible type.
+    """
+    message = (
+        message
+        or f"Object {x} is not an instance of {TagSearcher.__name__} "
+        "or any other compatible type."
+    )
 
     if not isinstance(x, TagSearcherType):  # type: ignore
         raise exc.NotTagSearcherException(message)

@@ -39,9 +39,16 @@ class SelectionPipeline(TagSearcher, Comparable):
             Selector used for finding target information in the element.
         operation : BaseOperation
             Operation used for processing the data.
+
+        Raises
+        ------
+        NotTagSearcherException
+            If provided selector is not a valid `TagSearcher` instance.
+        NotOperationException
+            If provided operation is not a valid `BaseOperation` instance.
         """
         self._selector = check_tag_searcher(selector)
-        self._operation = operation
+        self._operation = check_operation(operation)
 
     @property
     def selector(self) -> TagSearcher:
