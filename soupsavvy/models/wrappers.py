@@ -12,8 +12,8 @@ Classes
 from typing import Any, Optional
 
 import soupsavvy.exceptions as exc
-from soupsavvy.base import check_operation
-from soupsavvy.interfaces import Comparable, IElement, TagSearcher
+from soupsavvy.base import check_operation, check_tag_searcher
+from soupsavvy.interfaces import Comparable, IElement, TagSearcher, TagSearcherType
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 
 
@@ -24,7 +24,7 @@ class FieldWrapper(TagSearcher, Comparable):
     Used as field to defined model.
     """
 
-    def __init__(self, selector: TagSearcher) -> None:
+    def __init__(self, selector: TagSearcherType) -> None:
         """
         Initializes wrapper with a `TagSearcher` instance.
 
@@ -38,13 +38,7 @@ class FieldWrapper(TagSearcher, Comparable):
         NotTagSearcherException
             If provided object is not an instance of `TagSearcher`.
         """
-
-        if not isinstance(selector, TagSearcher):
-            raise exc.NotTagSearcherException(
-                f"Expected {TagSearcher.__name__}, got {type(selector)}."
-            )
-
-        self._selector = selector
+        self._selector = check_tag_searcher(selector)
 
     @property
     def selector(self) -> TagSearcher:

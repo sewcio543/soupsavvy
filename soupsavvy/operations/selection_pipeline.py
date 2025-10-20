@@ -8,9 +8,8 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-import soupsavvy.exceptions as exc
-from soupsavvy.base import BaseOperation, check_operation
-from soupsavvy.interfaces import Comparable, IElement, TagSearcher
+from soupsavvy.base import BaseOperation, check_operation, check_tag_searcher
+from soupsavvy.interfaces import Comparable, IElement, TagSearcher, TagSearcherType
 
 
 class SelectionPipeline(TagSearcher, Comparable):
@@ -30,7 +29,7 @@ class SelectionPipeline(TagSearcher, Comparable):
     on selector and operation.
     """
 
-    def __init__(self, selector: TagSearcher, operation: BaseOperation) -> None:
+    def __init__(self, selector: TagSearcherType, operation: BaseOperation) -> None:
         """
         Initializes `SelectionPipeline` with selector and operation.
 
@@ -41,12 +40,7 @@ class SelectionPipeline(TagSearcher, Comparable):
         operation : BaseOperation
             Operation used for processing the data.
         """
-        if not isinstance(selector, TagSearcher):
-            raise exc.NotTagSearcherException(
-                f"Expected {TagSearcher.__name__}, got {type(selector)}"
-            )
-
-        self._selector = selector
+        self._selector = check_tag_searcher(selector)
         self._operation = operation
 
     @property

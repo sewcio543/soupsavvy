@@ -49,10 +49,6 @@ class Comparable(ABC):
         )
 
 
-# possible exceptions raised when TagSearcher fails
-TagSearcherExceptions = (exc.FailedOperationExecution, exc.TagNotFoundException)
-
-
 class TagSearcher(ABC):
     """
     Interface for objects that can search within `IElement`.
@@ -122,6 +118,28 @@ class TagSearcher(ABC):
             f"{self.__class__.__name__} is an interface "
             "and does not implement this method."
         )
+
+
+class TagSearcherMeta(type(ABC)):
+
+    def find(
+        cls,
+        tag: IElement,
+        strict: bool = False,
+        recursive: bool = True,
+    ) -> Any: ...
+
+    def find_all(
+        cls,
+        tag: IElement,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Any]: ...
+
+
+TagSearcherType = Union[TagSearcher, TagSearcherMeta]
+# possible exceptions raised when TagSearcher fails
+TagSearcherExceptions = (exc.FailedOperationExecution, exc.TagNotFoundException)
 
 
 N = TypeVar("N")

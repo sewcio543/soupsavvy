@@ -7,12 +7,19 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import TYPE_CHECKING, Any, Literal, Optional, Union, overload
+from typing import TYPE_CHECKING, Any, Literal, Optional, Union, cast, overload
 
 from typing_extensions import deprecated
 
 import soupsavvy.exceptions as exc
-from soupsavvy.interfaces import Comparable, Executable, IBrowser, IElement, TagSearcher
+from soupsavvy.interfaces import (
+    Comparable,
+    Executable,
+    IBrowser,
+    IElement,
+    TagSearcher,
+    TagSearcherType,
+)
 
 if TYPE_CHECKING:
     from soupsavvy.operations.general import OperationPipeline
@@ -80,6 +87,15 @@ def check_operation(x: Any, message: Optional[str] = None) -> BaseOperation:
         raise exc.NotOperationException(message)
 
     return x
+
+
+def check_tag_searcher(x: Any, message: Optional[str] = None) -> TagSearcher:
+    message = message or f"Object {x} is not an instance of {TagSearcher.__name__}."
+
+    if not isinstance(x, TagSearcherType):  # type: ignore
+        raise exc.NotTagSearcherException(message)
+
+    return cast(TagSearcher, x)
 
 
 class SoupSelector(TagSearcher, Comparable):

@@ -2749,12 +2749,12 @@ class TestField:
                 Field(MockLinkSelector(), repr=True, migrate=True, compare=True),
             ),
             (
-                Field(MockTitle),
-                Field(MockTitle),
+                Field(MockTitle),  # type: ignore
+                Field(MockTitle),  # type: ignore
             ),
             (
-                Field(MockTitle, repr=True, migrate=True),
-                Field(MockTitle, repr=True, migrate=True),
+                Field(MockTitle, repr=True, migrate=True),  # type: ignore
+                Field(MockTitle, repr=True, migrate=True),  # type: ignore
             ),
         ],
     )
@@ -2762,7 +2762,7 @@ class TestField:
         """Tests if two field selectors are equal."""
         assert (selectors[0] == selectors[1]) is True
 
-    @pytest.mark.parametrize(
+    @pytest.mark.parametrize(  # type: ignore
         argnames="selectors",
         argvalues=[
             # different selectors
@@ -2780,11 +2780,11 @@ class TestField:
             # not field
             (Field(MockLinkSelector()), MockLinkSelector()),
             # different models
-            (Field(MockTitle), Field(MockModel)),
+            (Field(MockTitle), Field(MockModel)),  # type: ignore
             # model and selector
-            (Field(MockTitle), Field(MockLinkSelector())),
+            (Field(MockTitle), Field(MockLinkSelector())),  # type: ignore
             # same model with different config
-            (Field(MockTitle, repr=False), Field(MockTitle, repr=True)),
+            (Field(MockTitle, repr=False), Field(MockTitle, repr=True)),  # type: ignore
         ],
     )
     def test_two_tag_selectors_are_not_equal(self, selectors: tuple):

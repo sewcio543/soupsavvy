@@ -10,7 +10,6 @@ Classes
 
 from __future__ import annotations
 
-from abc import ABC
 from collections.abc import Callable
 from dataclasses import dataclass
 from dataclasses import field as datafield
@@ -21,13 +20,16 @@ from typing_extensions import Self
 
 import soupsavvy.exceptions as exc
 import soupsavvy.models.constants as c
-from soupsavvy.base import SoupSelector, check_selector
+from soupsavvy.base import BaseOperation, SoupSelector, check_operation, check_selector
 from soupsavvy.interfaces import (
     Comparable,
     IElement,
     TagSearcher,
     TagSearcherExceptions,
+    TagSearcherMeta,
+    TagSearcherType,
 )
+from soupsavvy.operations.selection_pipeline import SelectionPipeline
 
 # Generic type variable for model migration
 T = TypeVar("T")
@@ -143,7 +145,7 @@ class Field(TagSearcher, Comparable):
     is equivalent to default behavior.
     """
 
-    selector: Union[TagSearcher, type[BaseModel]]
+    selector: TagSearcherType
     repr: bool = True
     compare: bool = True
     migrate: bool = True
@@ -176,7 +178,7 @@ class Field(TagSearcher, Comparable):
         )
 
 
-class ModelMeta(type(ABC)):
+class ModelMeta(TagSearcherMeta):
     """
     Metaclass for all models derived from `BaseModel`. This metaclass ensures that
     certain attributes and methods are defined
@@ -309,17 +311,20 @@ class ModelMeta(type(ABC)):
                 {
                     key: value if isinstance(value, Field) else Field(value)
                     for key, value in class_.__dict__.items()
-                    if (
-                        # accepted field must be TagSearcher
-                        isinstance(value, TagSearcher)
-                        # or BaseModel subclass
-                        or (isinstance(value, type) and issubclass(value, BaseModel))
-                    )
+                    if (isinstance(value, TagSearcherType))  # type: ignore
                     and key not in c.SPECIAL_ATTRIBUTES
                 }
                 for class_ in classes
             ],
         )
+
+    def __or__(cls, x: BaseOperation) -> SelectionPipeline:
+        message = (
+            f"Bitwise OR not supported for types {cls} and {type(x)}, "
+            f"expected an instance of {BaseOperation.__name__}."
+        )
+        check_operation(x, message=message)
+        return SelectionPipeline(selector=cls, operation=x)
 
 
 class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
@@ -501,7 +506,6 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
                     strict=c.DEFAULT_STRICT,
                     recursive=c.DEFAULT_RECURSIVE,
                 )
-            #! TODO
             except exc.RequiredConstraintException as e:
                 raise exc.FieldExtractionException(
                     f"Field '{key}' is required and was not found in model '{cls.__name__}' "
