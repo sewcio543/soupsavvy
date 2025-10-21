@@ -104,6 +104,8 @@ class SelectionPipeline(TagSearcher, Comparable):
         ------
         TagNotFoundException
             If strict parameter is set to `True` and none matching element was found.
+        FailedOperationExecution
+            If operation execution failed on the found element.
         """
         return self.operation.execute(
             self.selector.find(tag, strict=strict, recursive=recursive)
@@ -134,6 +136,11 @@ class SelectionPipeline(TagSearcher, Comparable):
         -------
         list[Any]
             A list of results, if none found, the list is empty.
+
+        Raises
+        ------
+        FailedOperationExecution
+            If operation execution failed on any of the found elements.
         """
         return [
             self.operation.execute(element)
