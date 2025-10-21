@@ -403,7 +403,7 @@ class TestSelectionPipeline:
     def test_pipeline_is_equal_if_two_models_are_equal(self):
         """
         Tests if two SelectionPipelines with the same models class are equal.
-        It skips operation variations as they are checked in other tests.
+        It assumes operation variations are checked in other tests.
         """
 
         class MockModel2(MockModel): ...

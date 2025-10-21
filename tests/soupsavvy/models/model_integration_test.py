@@ -850,7 +850,7 @@ class TestBaseModelIntegration:
 
     def test_json_serialization_when_model_not_found(self, to_element: ToElement):
         """
-        Tests if model combined with JSON operation hadles not found model as expected:
+        Tests if model combined with JSON operation handles not found model as expected:
         - when strict is False, FailedOperationExecution is raised, as None
         object does not have `json` method.
         - when strict is True, ModelNotFoundException is raised, selector raises

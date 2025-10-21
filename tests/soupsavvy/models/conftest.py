@@ -1,4 +1,4 @@
-""" "Module with setup and mocks for testing BaseModel and its utilities."""
+"""Module with setup and mocks for testing BaseModel and its utilities."""
 
 import pydantic
 from sqlalchemy import Column, Integer, String

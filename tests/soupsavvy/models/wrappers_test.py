@@ -98,7 +98,7 @@ class TestFieldWrapper:
     def test_model_can_be_wrapped(self, selector):
         """
         Tests if Model class or instance can be wrapped by FieldWrapper.
-        It is accepted and exception is not raises as Model is valid tag searcher.
+        It is accepted and exception is not raised as Model is valid tag searcher.
         """
         wrapper = MockFieldWrapper(selector)
         assert wrapper.selector == selector
