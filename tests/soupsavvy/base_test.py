@@ -10,17 +10,13 @@ from typing import Any, Type
 
 import pytest
 
+import soupsavvy.exceptions as exc
 from soupsavvy.base import (
     CompositeSoupSelector,
     OperationSearcherMixin,
     check_operation,
     check_selector,
-)
-from soupsavvy.exceptions import (
-    BreakOperationException,
-    FailedOperationExecution,
-    NotOperationException,
-    NotSoupSelectorException,
+    check_tag_searcher,
 )
 from soupsavvy.interfaces import IElement
 from soupsavvy.operations.general import OperationPipeline
@@ -45,6 +41,7 @@ from tests.soupsavvy.conftest import (
     MockDivSelector,
     MockIntOperation,
     MockLinkSelector,
+    MockModel,
     MockSelector,
     MockTextOperation,
     ToElement,
@@ -100,7 +97,7 @@ class BaseOperatorTest:
         """
         selector = MockSelector()
 
-        with pytest.raises(NotSoupSelectorException):
+        with pytest.raises(exc.NotSoupSelectorException):
             self.OPERATOR(selector, "string")
 
 
@@ -484,8 +481,8 @@ class TestCheckSelector:
         Tests if check_selector raises NotSoupSelectorException if object is not
         instance of SoupSelector.
         """
-        with pytest.raises(NotSoupSelectorException):
-            check_selector("selector")
+        with pytest.raises(exc.NotSoupSelectorException):
+            check_selector(param)
 
     def test_raises_exception_with_custom_message_when_specified(self):
         """
@@ -494,7 +491,7 @@ class TestCheckSelector:
         """
         message = "Custom message"
 
-        with pytest.raises(NotSoupSelectorException, match=message):
+        with pytest.raises(exc.NotSoupSelectorException, match=message):
             check_selector("selector", message=message)
 
 
@@ -529,8 +526,8 @@ class TestBaseOperation:
         if not used with instance of BaseOperation.
         """
 
-        with pytest.raises(NotOperationException):
-            MockTextOperation() | value
+        with pytest.raises(exc.NotOperationException):
+            _ = MockTextOperation() | value
 
     def test_or_operator_returns_operation_pipeline_with_base_operation(self):
         """
@@ -550,7 +547,7 @@ class TestBaseOperation:
         """
         operation = MockBreakOperation(MockIntOperation())
 
-        with pytest.raises(BreakOperationException) as info:
+        with pytest.raises(exc.BreakOperationException) as info:
             operation.execute("10")
             assert info.value.result == 10
 
@@ -562,7 +559,7 @@ class TestBaseOperation:
         """
         operation = MockIntOperation()
 
-        with pytest.raises(FailedOperationExecution):
+        with pytest.raises(exc.FailedOperationExecution):
             operation.execute("abc")
 
 
@@ -592,8 +589,8 @@ class TestCheckOperation:
         Tests if check_operator raises NotOperationException
         if object is not instance of BaseOperation.
         """
-        with pytest.raises(NotOperationException):
-            check_operation("selector")
+        with pytest.raises(exc.NotOperationException):
+            check_operation(param)
 
     def test_raises_exception_with_custom_message_when_specified(self):
         """
@@ -602,7 +599,7 @@ class TestCheckOperation:
         """
         message = "Custom message"
 
-        with pytest.raises(NotOperationException, match=message):
+        with pytest.raises(exc.NotOperationException, match=message):
             check_operation("operation", message=message)
 
 
@@ -671,11 +668,59 @@ class TestOperationSearcherMixin:
         if operation failed.
         """
 
-        with pytest.raises(FailedOperationExecution):
+        with pytest.raises(exc.FailedOperationExecution):
             MOCK.execute("div")
 
-        with pytest.raises(FailedOperationExecution):
+        with pytest.raises(exc.FailedOperationExecution):
             MOCK.find("div")  # type: ignore
 
-        with pytest.raises(FailedOperationExecution):
+        with pytest.raises(exc.FailedOperationExecution):
             MOCK.find_all("div")  # type: ignore
+
+
+class TestCheckTagSearcher:
+    """
+    Class for testing `check_tag_searcher` function.
+    Ensures that provided object is a valid `soupsavvy` tag searcher.
+    """
+
+    @pytest.mark.parametrize(
+        argnames="searcher",
+        argvalues=[
+            MockModel,
+            MockModel(name="Test"),
+            MockLinkSelector(),
+            MockNameOperation(),
+        ],
+        ids=["model_class", "model_instance", "selector", "mixin"],
+    )
+    def test_passes_check_and_returns_the_same_object(self, searcher):
+        """
+        Tests if check_tag_searcher returns the same object if it passes
+        the check as valid tag searcher.
+        """
+        result = check_tag_searcher(searcher)
+        assert result is searcher
+
+    @pytest.mark.parametrize(
+        argnames="param",
+        argvalues=["searcher", str.lower, MockIntOperation()],
+        ids=["str", "function", "operation"],
+    )
+    def test_raises_exception_when_not_valid(self, param):
+        """
+        Tests if check_tag_searcher raises NotTagSearcherException
+        if object is not valid tag searcher.
+        """
+        with pytest.raises(exc.NotTagSearcherException):
+            check_tag_searcher(param)
+
+    def test_raises_exception_with_custom_message_when_specified(self):
+        """
+        Tests if check_tag_searcher raises NotTagSearcherException with custom message
+        if object is not valid tag searcher and message is specified.
+        """
+        message = "Custom message"
+
+        with pytest.raises(exc.NotTagSearcherException, match=message):
+            check_tag_searcher("searcher", message=message)

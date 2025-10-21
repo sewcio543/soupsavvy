@@ -12,39 +12,34 @@ Classes
 from typing import Any, Optional
 
 import soupsavvy.exceptions as exc
-from soupsavvy.base import check_operation
-from soupsavvy.interfaces import Comparable, IElement, TagSearcher
+from soupsavvy.base import check_operation, check_tag_searcher
+from soupsavvy.interfaces import Comparable, IElement, TagSearcher, TagSearcherType
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 
 
 class FieldWrapper(TagSearcher, Comparable):
     """
-    A wrapper for `TagSearcher` objects, that acts as a higher order searcher,
+    A wrapper for `TagSearcher` valid objects, that acts as a higher order searcher,
     which controls behavior of the wrapped searcher.
-    Used as field to defined model.
+    Used as field in defined model.
+    Subclasses must implement `find` method with their specific behavior.
     """
 
-    def __init__(self, selector: TagSearcher) -> None:
+    def __init__(self, selector: TagSearcherType) -> None:
         """
-        Initializes wrapper with a `TagSearcher` instance.
+        Initializes wrapper with a `TagSearcher` valid object.
 
         Parameters
         ----------
         selector : TagSearcher
-            The `TagSearcher` instance to be wrapped.
+            The `TagSearcher` valid object to be wrapped.
 
         Raises
         ------
         NotTagSearcherException
-            If provided object is not an instance of `TagSearcher`.
+            If provided object is not a valid `TagSearcher`.
         """
-
-        if not isinstance(selector, TagSearcher):
-            raise exc.NotTagSearcherException(
-                f"Expected {TagSearcher.__name__}, got {type(selector)}."
-            )
-
-        self._selector = selector
+        self._selector = check_tag_searcher(selector)
 
     @property
     def selector(self) -> TagSearcher:
@@ -231,14 +226,14 @@ class Default(FieldWrapper):
     "1234"
     """
 
-    def __init__(self, selector: TagSearcher, default: Any) -> None:
+    def __init__(self, selector: TagSearcherType, default: Any) -> None:
         """
         Initializes `Default` field wrapper.
 
         Parameters
         ----------
         selector : TagSearcher
-            The `TagSearcher` instance to be wrapped.
+            Object compatible with `TagSearcher` interface to be wrapped.
         default : Any
             The default value to return if no match is found.
         """

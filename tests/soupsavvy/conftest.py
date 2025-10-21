@@ -33,7 +33,8 @@ from soupsavvy.implementation.bs4 import SoupElement
 from soupsavvy.implementation.lxml import LXMLElement
 from soupsavvy.implementation.playwright import PlaywrightElement
 from soupsavvy.implementation.selenium import SeleniumElement
-from soupsavvy.interfaces import IBrowser, IElement
+from soupsavvy.interfaces import IElement
+from soupsavvy.models import BaseModel
 from tests.conftest import BS4, LXML, PLAYWRIGHT, SELENIUM
 
 # default bs4 parser
@@ -213,7 +214,6 @@ class MockLinkSelector(_MockSimpleComparable):
     """
     Mock selector class for testing purposes.
     Find every instance of link element (with tag name 'a').
-    Delegates the task to IElement.find_all method.
     """
 
     def find_all(
@@ -226,13 +226,24 @@ class MockDivSelector(_MockSimpleComparable):
     """
     Mock selector class for testing purposes.
     Find every instance of div element (with tag name 'div').
-    Delegates the task to bs4.Tag.find_all method.
     """
 
     def find_all(
         self, tag: IElement, recursive: bool = True, limit=None
     ) -> list[IElement]:
         return tag.find_all("div", recursive=recursive, limit=limit)
+
+
+class MockSpanSelector(_MockSimpleComparable):
+    """
+    Mock selector class for testing purposes.
+    Find every instance of span element (with tag name 'span').
+    """
+
+    def find_all(
+        self, tag: IElement, recursive: bool = True, limit=None
+    ) -> list[IElement]:
+        return tag.find_all("span", recursive=recursive, limit=limit)
 
 
 class MockClassMenuSelector(_MockSimpleComparable):
@@ -317,3 +328,11 @@ class MockBreakOperation(BaseMockOperation):
     def _execute(self, arg: Any) -> Any:
         result = self.operation.execute(arg)
         raise BreakOperationException(result)
+
+
+class MockModel(BaseModel):
+    """Mock model class for testing purposes."""
+
+    __scope__ = MockDivSelector()
+
+    name = cast(str, MockLinkSelector() | MockTextOperation())

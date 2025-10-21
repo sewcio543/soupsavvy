@@ -7,12 +7,19 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import TYPE_CHECKING, Any, Literal, Optional, Union, overload
+from typing import TYPE_CHECKING, Any, Literal, Optional, Union, cast, overload
 
 from typing_extensions import deprecated
 
 import soupsavvy.exceptions as exc
-from soupsavvy.interfaces import Comparable, Executable, IBrowser, IElement, TagSearcher
+from soupsavvy.interfaces import (
+    Comparable,
+    Executable,
+    IBrowser,
+    IElement,
+    TagSearcher,
+    TagSearcherMeta,
+)
 
 if TYPE_CHECKING:
     from soupsavvy.operations.general import OperationPipeline
@@ -80,6 +87,45 @@ def check_operation(x: Any, message: Optional[str] = None) -> BaseOperation:
         raise exc.NotOperationException(message)
 
     return x
+
+
+def check_tag_searcher(x: Any, message: Optional[str] = None) -> TagSearcher:
+    """
+    Checks if provided object is a valid `soupsavvy` TagSearcher.
+    Checks for instance of `TagSearcher` or other compatible type like Model class.
+    Returns provided object if fulfills the condition for convenience.
+
+    Parameters
+    ----------
+    x : Any
+        Any object to be validated as correct operation.
+    message : str, optional
+        Custom message to be displayed in case of raising an exception.
+        By default None, which results in default message.
+
+    Raises
+    ------
+    NotTagSearcherException
+        If provided object is not an instance of `TagSearcher`
+        or any other compatible type.
+    """
+    message = (
+        message
+        or f"Object {x} is not an instance of {TagSearcher.__name__} "
+        "or any other compatible type."
+    )
+
+    # in python 3.9
+    # TypeError: Subscripted generics cannot be used with class and instance checks
+    # TODO: consider dropping support for 3.9 in the nearest future
+
+    if not (
+        isinstance(x, TagSearcher)
+        or (isinstance(x, type) and isinstance(x, TagSearcherMeta))
+    ):
+        raise exc.NotTagSearcherException(message)
+
+    return cast(TagSearcher, x)
 
 
 class SoupSelector(TagSearcher, Comparable):
