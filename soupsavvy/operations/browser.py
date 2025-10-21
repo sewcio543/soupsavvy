@@ -4,10 +4,18 @@ Contains typical browser operations and actions on web elements.
 """
 
 import time
-from typing import Any
+from collections.abc import Callable
+from functools import partial
+from typing import Any, Optional
 
 import soupsavvy.exceptions as exc
-from soupsavvy.base import BaseOperation, BrowserOperation, ElementAction, SoupSelector
+from soupsavvy.base import (
+    BaseOperation,
+    BrowserOperation,
+    ElementAction,
+    SoupSelector,
+    check_tag_searcher,
+)
 from soupsavvy.interfaces import IBrowser, IElement, TagSearcher
 
 
@@ -238,7 +246,29 @@ class SendKeys(ElementAction):
         return self.value == x.value and self.clear == x.clear
 
 
-class Find(BrowserOperation):
+class _FindBase(BrowserOperation):
+    """
+    Base class for searching browser operations to share common functionality.
+    """
+
+    _PASSTHROUGH_BROWSER = False
+
+    def __init__(self, selector: TagSearcher, method: Callable, kwargs: dict) -> None:
+        self.selector = selector
+        self.method = partial(method, **kwargs)
+
+    def _execute(self, browser: IBrowser) -> Any:
+        body = browser.get_document()
+        return self.method(body)
+
+    def __eq__(self, x: Any) -> bool:
+        if not isinstance(x, self.__class__):
+            return NotImplemented
+
+        return self.selector == x.selector
+
+
+class Find(_FindBase):
     """
     Finds and returns an element from the browser document using a specified selector.
 
@@ -258,7 +288,7 @@ class Find(BrowserOperation):
     from web pages, for example: navigate -> click -> wait -> find.
     """
 
-    def __init__(self, selector: TagSearcher) -> None:
+    def __init__(self, selector: TagSearcher, strict: bool = False) -> None:
         """
         Initializes the Find operation with the specified selector.
 
@@ -266,15 +296,51 @@ class Find(BrowserOperation):
         ----------
         selector : TagSearcher
             Selector used to locate the target element in the document.
+        strict : bool, optional
+            Whether to enforce strict finding (raise exception if not found).
+            Default is False.
         """
-        self.selector = selector
+        super().__init__(
+            selector,
+            method=check_tag_searcher(selector).find,
+            kwargs={"strict": strict},
+        )
 
-    def _execute(self, browser: IBrowser) -> Any:
-        body = browser.get_document()
-        return self.selector.find(body)
 
-    def __eq__(self, x: Any) -> bool:
-        if not isinstance(x, Find):
-            return NotImplemented
+class FindAll(_FindBase):
+    """
+    Finds and returns elements from the browser document using a specified selector.
 
-        return self.selector == x.selector
+    Example
+    -------
+    >>> from soupsavvy.operations.browser import FindAll
+    ... from soupsavvy import TypeSelector
+    ... from soupsavvy.implementation.selenium import SeleniumBrowser
+    ... from selenium import webdriver
+    ...
+    ... browser = SeleniumBrowser(webdriver.Chrome())
+    ... selector = TypeSelector('div')
+    ... operation = FindAll(selector)
+    ... operation.execute(browser)
+    [...]
+
+    It can be used as an element of browser workflows to extract information
+    from web pages, for example: navigate -> click -> wait -> find_all.
+    """
+
+    def __init__(self, selector: TagSearcher, limit: Optional[int] = None) -> None:
+        """
+        Initializes the FindAll operation with the specified selector.
+
+        Parameters
+        ----------
+        selector : TagSearcher
+            Selector used to locate the target element in the document.
+        limit : int, optional
+            Maximum number of elements to find. Default is None (no limit).
+        """
+        super().__init__(
+            selector,
+            method=check_tag_searcher(selector).find_all,
+            kwargs={"limit": limit},
+        )

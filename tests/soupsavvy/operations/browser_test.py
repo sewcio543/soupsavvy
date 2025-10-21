@@ -11,12 +11,21 @@ from soupsavvy.interfaces import IBrowser, IElement
 from soupsavvy.operations.browser import (
     ApplyTo,
     Click,
+    Find,
+    FindAll,
     Navigate,
     SendKeys,
     WaitImplicitly,
 )
 from soupsavvy.operations.general import OperationPipeline
-from tests.soupsavvy.conftest import MockDivSelector, MockLinkSelector, ToElement
+from tests.soupsavvy.conftest import (
+    MockDivSelector,
+    MockIntOperation,
+    MockLinkSelector,
+    MockTextOperation,
+    ToElement,
+    strip,
+)
 
 FAIL = "fail"
 FAILED_ERROR = "Action failed"
@@ -465,6 +474,297 @@ class TestApplyTo:
 
 
 @pytest.mark.operation
+@pytest.mark.browser
+class TestFind:
+    """Tests suite for the Find operation."""
+
+    @pytest.mark.parametrize("strict", [False, True], ids=["non-strict", "strict"])
+    def test_returns_element_that_matches_selector(
+        self, mock_browser: MockBrowser, to_element: ToElement, strict: bool
+    ):
+        """
+        Test that Find execute method returns the element found by the selector,
+        both when strict is True and False.
+        """
+        op = Find(MockLinkSelector(), strict=strict)
+        assert op.selector == MockLinkSelector()
+
+        text = """
+            <div><a href="https://example.com">Example Link</a></div>
+        """
+        element = to_element(text)
+        mock_browser.body = element
+
+        result = op.execute(mock_browser)
+        assert strip(str(result)) == strip(
+            """<a href="https://example.com">Example Link</a>"""
+        )
+
+    def test_returns_none_if_element_not_found_in_non_strict_mode(
+        self, mock_browser: MockBrowser, to_element: ToElement
+    ):
+        """
+        Test that Find returns None when the selector does not find any element
+        and strict is set to False.
+        """
+        op = Find(MockLinkSelector())
+        assert op.selector == MockLinkSelector()
+
+        text = """
+            <div><span>Example Link</span></div>
+        """
+        element = to_element(text)
+        mock_browser.body = element
+
+        result = op.execute(mock_browser)
+        assert result is None
+
+    def test_raises_error_if_element_not_found_in_strict_mode(
+        self, mock_browser: MockBrowser, to_element: ToElement
+    ):
+        """
+        Test that Find raises FailedOperationExecution
+        when the selector does not find any element and strict is set to True.
+        It raises FailedOperationExecution instead of TagNotFoundException
+        which is intercepted, beacuse it's handled by BaseOperation execute method.
+        """
+        op = Find(MockLinkSelector(), strict=True)
+
+        text = """
+            <div><span>Example Link</span></div>
+        """
+        element = to_element(text)
+        mock_browser.body = element
+
+        with pytest.raises(exc.FailedOperationExecution):
+            op.execute(mock_browser)
+
+    def test_returns_transformed_value_when_pipeline_is_used(
+        self, mock_browser: MockBrowser, to_element: ToElement
+    ):
+        """
+        Test that Find returns the transformed value
+        when a selection pipeline was executed without errors.
+        """
+        sel = MockLinkSelector() | MockTextOperation() | MockIntOperation()
+        op = Find(sel)
+
+        text = """
+            <div><a href="https://example.com">123</a></div>
+        """
+        element = to_element(text)
+        mock_browser.body = element
+
+        result = op.execute(mock_browser)
+        assert result == 123
+
+    def test_raises_error_if_operation_failed(
+        self, mock_browser: MockBrowser, to_element: ToElement
+    ):
+        """
+        Test that Find raises FailedOperationExecution
+        when the operation in the selection pipeline fails on the found element.
+        """
+        sel = MockLinkSelector() | MockTextOperation() | MockIntOperation()
+        op = Find(sel)
+
+        text = """
+            <div><a href="https://example.com">Example Link</a></div>
+        """
+        element = to_element(text)
+        mock_browser.body = element
+
+        with pytest.raises(exc.FailedOperationExecution):
+            op.execute(mock_browser)
+
+    def test_find_raises_error_if_arg_not_selector(self):
+        """
+        Test that Find raises NotTagSearcherException
+        when initialized with invalid selector.
+        """
+        with pytest.raises(exc.NotTagSearcherException):
+            Find("string")  # type: ignore
+
+    def test_raises_error_when_arg_is_not_browser(self):
+        """
+        Test that Find raises NotBrowserException
+        when the argument is not an instance of IBrowser.
+        """
+        op = Find(MockLinkSelector())
+
+        with pytest.raises(exc.NotBrowserException):
+            op.execute("not a browser")  # type: ignore
+
+    def test_equality_true(self):
+        """Test equality for Find operations with the same selector."""
+        op1 = Find(MockLinkSelector())
+        op2 = Find(MockLinkSelector())
+        assert op1 == op2
+
+    def test_equality_false(self):
+        """Test inequality for Find operations with different selectors."""
+        op1 = Find(MockLinkSelector())
+        op2 = Find(MockDivSelector())
+        assert op1 != op2
+
+    def test_find_equality_with_different_type(self):
+        """Test comparison with a non-Find object."""
+        op = Find(MockLinkSelector())
+        assert op.__eq__("not a Find") is NotImplemented
+
+
+@pytest.mark.operation
+@pytest.mark.browser
+class TestFindAll:
+    """Tests suite for the FindAll operation."""
+
+    def test_returns_element_that_matches_selector(
+        self, mock_browser: MockBrowser, to_element: ToElement
+    ):
+        """
+        Test that FindAll execute method returns list of elements found by the selector.
+        """
+        op = FindAll(MockLinkSelector())
+        assert op.selector == MockLinkSelector()
+
+        text = """
+            <a href="https://example.com">Example Link</a>
+            <span>Other Element</span>
+            <a>Hello</a>
+        """
+        element = to_element(text)
+        mock_browser.body = element
+
+        result = op.execute(mock_browser)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a href="https://example.com">Example Link</a>"""),
+            strip("""<a>Hello</a>"""),
+        ]
+
+    def test_returns_empty_list_when_no_elements_found(
+        self, mock_browser: MockBrowser, to_element: ToElement
+    ):
+        """
+        Test that FindAll returns an empty list
+        when the selector does not find any element.
+        """
+        op = FindAll(MockLinkSelector())
+
+        text = """
+            <span>Other Element</span>
+            <div>No links here</div>
+        """
+        element = to_element(text)
+        mock_browser.body = element
+
+        result = op.execute(mock_browser)
+        assert result == []
+
+    def test_returns_up_to_limit_elements_when_specified(
+        self, mock_browser: MockBrowser, to_element: ToElement
+    ):
+        """
+        Test that FindAll returns up to 'limit' elements
+        when the limit parameter is specified.
+        """
+        op = FindAll(MockLinkSelector(), limit=2)
+
+        text = """
+            <a href="https://example.com">Example Link</a>
+            <span>Other Element</span>
+            <a>Hello</a>
+            <a>World</a>
+        """
+        element = to_element(text)
+        mock_browser.body = element
+
+        result = op.execute(mock_browser)
+
+        assert list(map(lambda x: strip(str(x)), result)) == [
+            strip("""<a href="https://example.com">Example Link</a>"""),
+            strip("""<a>Hello</a>"""),
+        ]
+
+    def test_returns_transformed_values_when_pipeline_is_used(
+        self, mock_browser: MockBrowser, to_element: ToElement
+    ):
+        """
+        Test that FindAll returns the transformed values
+        when a selection pipeline was executed without errors.
+        """
+        sel = MockLinkSelector() | MockTextOperation() | MockIntOperation()
+        op = FindAll(sel)
+
+        text = """
+            <a href="https://example.com">123</a>
+            <span>Other Element</span>
+            <a>67</a>
+        """
+        element = to_element(text)
+        mock_browser.body = element
+
+        result = op.execute(mock_browser)
+        assert result == [123, 67]
+
+    def test_raises_error_if_operation_failed(
+        self, mock_browser: MockBrowser, to_element: ToElement
+    ):
+        """
+        Test that FindAll raises FailedOperationExecution
+        when the operation in the selection pipeline fails on the found element.
+        """
+        sel = MockLinkSelector() | MockTextOperation() | MockIntOperation()
+        op = FindAll(sel)
+
+        text = """
+            <a href="https://example.com">123</a>
+            <span>Other Element</span>
+            <a>Not number</a>
+        """
+        element = to_element(text)
+        mock_browser.body = element
+
+        with pytest.raises(exc.FailedOperationExecution):
+            op.execute(mock_browser)
+
+    def test_find_raises_error_if_arg_not_selector(self):
+        """
+        Test that FindAll raises NotTagSearcherException
+        when initialized with invalid selector.
+        """
+        with pytest.raises(exc.NotTagSearcherException):
+            FindAll("string")  # type: ignore
+
+    def test_raises_error_when_arg_is_not_browser(self):
+        """
+        Test that FindAll raises NotBrowserException
+        when the argument is not an instance of IBrowser.
+        """
+        op = FindAll(MockLinkSelector())
+
+        with pytest.raises(exc.NotBrowserException):
+            op.execute("not a browser")  # type: ignore
+
+    def test_equality_true(self):
+        """Test equality for FindAll operations with the same selector."""
+        op1 = FindAll(MockLinkSelector())
+        op2 = FindAll(MockLinkSelector())
+        assert op1 == op2
+
+    def test_equality_false(self):
+        """Test inequality for FindAll operations with different selectors."""
+        op1 = FindAll(MockLinkSelector())
+        op2 = FindAll(MockDivSelector())
+        assert op1 != op2
+
+    def test_find_equality_with_different_type(self):
+        """Test comparison with a non-FindAll object."""
+        op = FindAll(MockLinkSelector())
+        assert op.__eq__("not a FindAll") is NotImplemented
+
+
+@pytest.mark.operation
 @pytest.mark.integration
 @pytest.mark.browser
 class TestBrowserIntegration:
@@ -512,6 +812,76 @@ class TestBrowserIntegration:
         assert result is mock_browser
         assert mock_browser.visited_urls == ["https://example.com"]
         assert action.interactions == [(mock_browser, link)]
+
+    def test_find_integrates_with_operations_and_pipe_returns_value(
+        self, to_element: ToElement, mock_browser: MockBrowser
+    ):
+        """
+        Test that Find operation integrates correctly in a pipeline
+        and returns the found element.
+        """
+        text = """
+            <div><a href="https://example.com">Example Link</a></div>
+        """
+        element = to_element(text)
+        mock_browser.body = element
+
+        op1 = Navigate("https://example.com")
+        op2 = Find(MockLinkSelector())
+        pipe = op1 | op2
+        result = pipe.execute(mock_browser)
+
+        assert strip(str(result)) == strip(
+            """<a href="https://example.com">Example Link</a>"""
+        )
+        assert mock_browser.visited_urls == ["https://example.com"]
+
+    def test_findall_integrates_with_operations_and_pipe_returns_list(
+        self, to_element: ToElement, mock_browser: MockBrowser
+    ):
+        """
+        Test that FindAll operation integrates correctly in a pipeline
+        and returns the found elements.
+        """
+        text = """
+            <a href="https://example.com">123</a>
+            <span>Other Element</span>
+            <a>67</a>
+        """
+        element = to_element(text)
+        mock_browser.body = element
+
+        op1 = Navigate("https://example.com")
+        op2 = FindAll(MockLinkSelector() | MockTextOperation() | MockIntOperation())
+        pipe = op1 | op2
+        result = pipe.execute(mock_browser)
+
+        assert result == [123, 67]
+        assert mock_browser.visited_urls == ["https://example.com"]
+
+    def test_pipe_raises_error_when_browser_operation_after_find(
+        self, to_element: ToElement, mock_browser: MockBrowser
+    ):
+        """
+        Test that OperationPipeline raises FailedOperationExecution
+        when a browser operation is chained after Find operation,
+        which is not passthrough operation(does not return browser instance)
+        and should be the last in the pipeline.
+        """
+        text = """
+            <a href="https://example.com">123</a>
+            <span>Other Element</span>
+            <a>67</a>
+        """
+        element = to_element(text)
+        mock_browser.body = element
+
+        op1 = Navigate("https://example.com")
+        op2 = FindAll(MockLinkSelector())
+        pipe = op1 | op2 | op1
+
+        with pytest.raises(exc.FailedOperationExecution):
+            pipe.execute(mock_browser)
 
     def test_raises_error_when_chained_with_non_operation(self):
         """

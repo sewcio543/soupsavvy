@@ -966,6 +966,8 @@ class BrowserOperation(BaseOperation):
     Each derived operation class needs to implement `__eq__` method.
     """
 
+    _PASSTHROUGH_BROWSER = True
+
     def execute(self, arg: IBrowser) -> Any:
         if not isinstance(arg, IBrowser):
             raise exc.NotBrowserException(
@@ -975,11 +977,7 @@ class BrowserOperation(BaseOperation):
             )
 
         result = super().execute(arg)
-
-        if result is not None:
-            return result
-
-        return arg
+        return arg if self._PASSTHROUGH_BROWSER else result
 
 
 class ElementAction(Comparable):
