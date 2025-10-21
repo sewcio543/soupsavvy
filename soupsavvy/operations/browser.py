@@ -8,7 +8,7 @@ from typing import Any
 
 import soupsavvy.exceptions as exc
 from soupsavvy.base import BaseOperation, BrowserOperation, ElementAction, SoupSelector
-from soupsavvy.interfaces import IBrowser, IElement
+from soupsavvy.interfaces import IBrowser, IElement, TagSearcher
 
 
 class ApplyTo(BrowserOperation):
@@ -236,3 +236,45 @@ class SendKeys(ElementAction):
             return NotImplemented
 
         return self.value == x.value and self.clear == x.clear
+
+
+class Find(BrowserOperation):
+    """
+    Finds and returns an element from the browser document using a specified selector.
+
+    Example
+    -------
+    >>> from soupsavvy.operations.browser import Find
+    ... from soupsavvy import TypeSelector
+    ... from soupsavvy.implementation.selenium import SeleniumBrowser
+    ... from selenium import webdriver
+    ...
+    ... browser = SeleniumBrowser(webdriver.Chrome())
+    ... selector = TypeSelector('div')
+    ... operation = Find(selector)
+    ... operation.execute(browser)
+
+    It can be used as an element of browser workflows to extract information
+    from web pages, for example: navigate -> click -> wait -> find.
+    """
+
+    def __init__(self, selector: TagSearcher) -> None:
+        """
+        Initializes the Find operation with the specified selector.
+
+        Parameters
+        ----------
+        selector : TagSearcher
+            Selector used to locate the target element in the document.
+        """
+        self.selector = selector
+
+    def _execute(self, browser: IBrowser) -> Any:
+        body = browser.get_document()
+        return self.selector.find(body)
+
+    def __eq__(self, x: Any) -> bool:
+        if not isinstance(x, Find):
+            return NotImplemented
+
+        return self.selector == x.selector

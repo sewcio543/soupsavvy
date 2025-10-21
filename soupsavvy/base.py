@@ -954,7 +954,8 @@ class BrowserOperation(BaseOperation):
 
     Browser operations are designed to perform actions with objects implementing
     the `IBrowser` interface. It validates that input argument to `execute` method
-    is of this type.
+    is of this type. If operation returns value, it is passed through, otherwise
+    the original `IBrowser` instance is returned.
 
     As standard operations, browser operations can be chained together using
     the pipe operator '|'.
@@ -965,7 +966,7 @@ class BrowserOperation(BaseOperation):
     Each derived operation class needs to implement `__eq__` method.
     """
 
-    def execute(self, arg: IBrowser) -> IBrowser:
+    def execute(self, arg: IBrowser) -> Any:
         if not isinstance(arg, IBrowser):
             raise exc.NotBrowserException(
                 f"{self.__class__} is a BrowserOperation, "
@@ -973,7 +974,11 @@ class BrowserOperation(BaseOperation):
                 f"method argument, got {type(arg)}"
             )
 
-        super().execute(arg)
+        result = super().execute(arg)
+
+        if result is not None:
+            return result
+
         return arg
 
 
