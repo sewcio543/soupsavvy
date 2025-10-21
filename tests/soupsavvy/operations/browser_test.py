@@ -526,7 +526,7 @@ class TestFind:
         Test that Find raises FailedOperationExecution
         when the selector does not find any element and strict is set to True.
         It raises FailedOperationExecution instead of TagNotFoundException
-        which is intercepted, beacuse it's handled by BaseOperation execute method.
+        which is intercepted, because it's handled by BaseOperation execute method.
         """
         op = Find(MockLinkSelector(), strict=True)
 
@@ -865,7 +865,7 @@ class TestBrowserIntegration:
         """
         Test that OperationPipeline raises FailedOperationExecution
         when a browser operation is chained after Find operation,
-        which is not passthrough operation(does not return browser instance)
+        which is not passthrough operation (does not return browser instance)
         and should be the last in the pipeline.
         """
         text = """
