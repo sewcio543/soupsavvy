@@ -1,5 +1,7 @@
 """Testing module for SelectionPipeline class."""
 
+# mypy: disable-error-code="arg-type"
+
 import pytest
 
 import soupsavvy.exceptions as exc

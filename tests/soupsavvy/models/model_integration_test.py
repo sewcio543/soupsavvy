@@ -3,6 +3,8 @@ Module with integration tests for BaseModel component.
 Tests various ways user is expected to interact with BaseModel.
 """
 
+# mypy: disable-error-code="attr-defined, arg-type"
+
 from dataclasses import dataclass
 
 import pydantic

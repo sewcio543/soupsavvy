@@ -18,7 +18,7 @@ from soupsavvy.interfaces import (
     IBrowser,
     IElement,
     TagSearcher,
-    TagSearcherType,
+    TagSearcherMeta,
 )
 
 if TYPE_CHECKING:
@@ -115,7 +115,14 @@ def check_tag_searcher(x: Any, message: Optional[str] = None) -> TagSearcher:
         "or any other compatible type."
     )
 
-    if not isinstance(x, TagSearcherType):  # type: ignore
+    # in python 3.9
+    # TypeError: Subscripted generics cannot be used with class and instance checks
+    # TODO: consider dropping support for 3.9 in the nearest future
+
+    if not (
+        isinstance(x, TagSearcher)
+        or (isinstance(x, type) and isinstance(x, TagSearcherMeta))
+    ):
         raise exc.NotTagSearcherException(message)
 
     return cast(TagSearcher, x)

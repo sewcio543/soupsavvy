@@ -4,6 +4,8 @@ which is parent class of all user-defined models
 and all its utilities, including Field and decorators.
 """
 
+# mypy: disable-error-code="arg-type"
+
 import pytest
 
 import soupsavvy.exceptions as exc
@@ -1956,12 +1958,12 @@ class TestField:
                 Field(MockLinkSelector(), repr=True, migrate=True, compare=True),
             ),
             (
-                Field(MockTitle),  # type: ignore
-                Field(MockTitle),  # type: ignore
+                Field(MockTitle),
+                Field(MockTitle),
             ),
             (
-                Field(MockTitle, repr=True, migrate=True),  # type: ignore
-                Field(MockTitle, repr=True, migrate=True),  # type: ignore
+                Field(MockTitle, repr=True, migrate=True),
+                Field(MockTitle, repr=True, migrate=True),
             ),
         ],
     )
@@ -1969,7 +1971,7 @@ class TestField:
         """Tests if two field selectors are equal."""
         assert (selectors[0] == selectors[1]) is True
 
-    @pytest.mark.parametrize(  # type: ignore
+    @pytest.mark.parametrize(
         argnames="selectors",
         argvalues=[
             # different selectors
@@ -1987,11 +1989,11 @@ class TestField:
             # not field
             (Field(MockLinkSelector()), MockLinkSelector()),
             # different models
-            (Field(MockTitle), Field(MockModel)),  # type: ignore
+            (Field(MockTitle), Field(MockModel)),
             # model and selector
-            (Field(MockTitle), Field(MockLinkSelector())),  # type: ignore
+            (Field(MockTitle), Field(MockLinkSelector())),
             # same model with different config
-            (Field(MockTitle, repr=False), Field(MockTitle, repr=True)),  # type: ignore
+            (Field(MockTitle, repr=False), Field(MockTitle, repr=True)),
         ],
     )
     def test_two_tag_selectors_are_not_equal(self, selectors: tuple):

@@ -1,5 +1,7 @@
 """Module with unit tests for wrappers in soupsavvy.models module."""
 
+# mypy: disable-error-code="arg-type"
+
 from typing import Type
 
 import pytest
