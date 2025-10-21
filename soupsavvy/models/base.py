@@ -311,7 +311,16 @@ class ModelMeta(TagSearcherMeta):
                 {
                     key: value if isinstance(value, Field) else Field(value)
                     for key, value in class_.__dict__.items()
-                    if (isinstance(value, TagSearcherType))  # type: ignore
+                    # in python 3.9
+                    # TypeError: Subscripted generics cannot be used with class and instance checks
+                    # TODO: consider dropping support for 3.9 in the nearest future
+                    if (
+                        isinstance(value, TagSearcher)
+                        or (
+                            isinstance(value, type)
+                            and isinstance(value, TagSearcherMeta)
+                        )
+                    )
                     and key not in c.SPECIAL_ATTRIBUTES
                 }
                 for class_ in classes
