@@ -226,14 +226,14 @@ class Default(FieldWrapper):
     "1234"
     """
 
-    def __init__(self, selector: TagSearcher, default: Any) -> None:
+    def __init__(self, selector: TagSearcherType, default: Any) -> None:
         """
         Initializes `Default` field wrapper.
 
         Parameters
         ----------
         selector : TagSearcher
-            The `TagSearcher` instance to be wrapped.
+            Object compatible with `TagSearcher` interface to be wrapped.
         default : Any
             The default value to return if no match is found.
         """
