@@ -759,14 +759,15 @@ class CompositeSoupSelector(SoupSelector):
         return self._selectors
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, CompositeSoupSelector):
+        # for compatibility with type checkers
+        if not isinstance(other, self.__class__):
             return NotImplemented
 
         elif type(self) is not type(other):
             # checking for exact type match - isinstance(other, self.__class__)
             # when other is subclass of self.__class__ would call other.__eq__(self)
             # which is not desired behavior, as it returns False
-            return False
+            return NotImplemented
 
         if not self.__class__.COMMUTATIVE:
             return self.selectors == other.selectors

@@ -407,6 +407,49 @@ class TestAttributeSelector:
         """Tests if two AttributeSelector instances are not equal."""
         assert (selectors[0] == selectors[1]) is False
 
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # if only name is provided, it must not be equal
+            (AttributeSelector("class"), AttributeSelector("id")),
+            # if value is provided, names or values must not match
+            (
+                AttributeSelector("class", value="widget"),
+                AttributeSelector("class", value="menu"),
+            ),
+            # values are the same, but names are different
+            (
+                AttributeSelector("class", value="widget"),
+                AttributeSelector("href", value="widget"),
+            ),
+            # different compiled patterns
+            (
+                AttributeSelector("class", value=re.compile("widget")),
+                AttributeSelector("class", value=re.compile("^widget")),
+            ),
+            # same compiled patterns, but different names
+            (
+                AttributeSelector("class", value=re.compile("widget")),
+                AttributeSelector("href", value=re.compile("widget")),
+            ),
+            # if not subclass of AttributeSelector, it is not equal
+            (
+                AttributeSelector("class", value="menu"),
+                MockDivSelector(),
+            ),
+            # if subclass with different parameters, it is not equal
+            (
+                AttributeSelector("id", value="widget"),
+                ClassSelector(value="widget"),
+            ),
+        ],
+    )
+    def test_two_attribute_selectors_are_not_equal(
+        self, selectors: tuple[AttributeSelector, AttributeSelector]
+    ):
+        """Tests if two AttributeSelector instances are not equal."""
+        assert (selectors[0] == selectors[1]) is False
+
     @pytest.mark.edge_case
     def test_find_matches_element_with_list_of_values_if_one_matches(
         self,

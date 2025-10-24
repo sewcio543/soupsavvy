@@ -1082,6 +1082,23 @@ class TestBaseModel:
         """
         assert (models[0] == models[1]) is False
 
+    @pytest.mark.parametrize(
+        "models",
+        [
+            # not BaseMode instance
+            (MockModel(title="Title", price=10), MockLinkSelector()),
+            # attributes the same, but different model type
+            (
+                MockModel(title="Title", price=10),
+                MockNotEqualModel(title="Title", price=10),
+            ),
+        ],
+    )
+    def test_equality_check_returns_not_implemented(self, models):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        result = models[0].__eq__(models[1])
+        assert result is NotImplemented
+
     def test_model_migration_to_other_class(self):
         """
         Tests if model can be migrated to other class, migrate calls constructor
@@ -1999,3 +2016,12 @@ class TestField:
     def test_two_tag_selectors_are_not_equal(self, selectors: tuple):
         """Tests if two field selectors are not equal."""
         assert (selectors[0] == selectors[1]) is False
+
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[(Field(MockLinkSelector()), MockLinkSelector())],
+    )
+    def test_equality_check_returns_not_implemented(self, selectors: tuple):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        result = selectors[0].__eq__(selectors[1])
+        assert result is NotImplemented
