@@ -56,7 +56,10 @@ class OperationWrapper(OperationSearcherMixin):
         bool
             True if the instances are equal, False otherwise.
         """
-        return isinstance(x, self.__class__) and self.operation == x.operation
+        if not isinstance(x, self.__class__):
+            return NotImplemented
+
+        return self.operation == x.operation
 
     def __str__(self) -> str:
         return f"{self.__class__.__name__}({self.operation})"

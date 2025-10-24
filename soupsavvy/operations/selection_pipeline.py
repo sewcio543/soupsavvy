@@ -173,8 +173,8 @@ class SelectionPipeline(TagSearcher, Comparable):
 
     def __eq__(self, x) -> bool:
         # equal only if both selector and operation are the same
-        if not isinstance(x, SelectionPipeline):
-            return False
+        if not isinstance(x, self.__class__):
+            return NotImplemented
 
         return self.selector == x.selector and self.operation == x.operation
 

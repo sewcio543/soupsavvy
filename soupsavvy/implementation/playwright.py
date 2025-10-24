@@ -143,7 +143,10 @@ class PlaywrightElement(IElement[ElementHandle]):
         return hash((self._id, self.__class__))
 
     def __eq__(self, other):
-        return isinstance(other, self.__class__) and self._id == other._id
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        return self._id == other._id
 
 
 class PlaywrightBrowser(IBrowser[Page, PlaywrightElement]):

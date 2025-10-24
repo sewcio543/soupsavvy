@@ -101,8 +101,8 @@ class OperationPipeline(OperationSearcherMixin):
 
     def __eq__(self, x: Any) -> bool:
         # equal only if operations are the same
-        if not isinstance(x, OperationPipeline):
-            return False
+        if not isinstance(x, self.__class__):
+            return NotImplemented
 
         return self.operations == x.operations
 
@@ -152,8 +152,8 @@ class Operation(OperationSearcherMixin):
     def __eq__(self, x: Any) -> bool:
         # functions used as operations need to be the same object
         # and have the same function arguments if provided
-        if not isinstance(x, Operation):
-            return False
+        if not isinstance(x, self.__class__):
+            return NotImplemented
 
         return (
             self.operation is x.operation

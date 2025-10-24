@@ -159,8 +159,8 @@ class Field(TagSearcher, Comparable):
         return self.selector.find(tag, strict=strict, recursive=recursive)
 
     def __eq__(self, x: Any) -> bool:
-        if not isinstance(x, Field):
-            return False
+        if not isinstance(x, self.__class__):
+            return NotImplemented
 
         return all(
             [
@@ -704,7 +704,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         They need to be of the same class and have the same field values.
         """
         if not isinstance(x, self.__class__):
-            return False
+            return NotImplemented
 
         include = {key for key, value in self.__class__.fields.items() if value.compare}
         fields = self.attributes.keys()

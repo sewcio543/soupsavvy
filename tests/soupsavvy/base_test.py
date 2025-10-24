@@ -616,7 +616,10 @@ class MockNameOperation(OperationSearcherMixin):
         return arg.name
 
     def __eq__(self, x: Any) -> bool:
-        return isinstance(x, MockNameOperation)
+        if not isinstance(x, MockNameOperation):
+            return NotImplemented
+
+        return True
 
 
 MOCK = MockNameOperation()

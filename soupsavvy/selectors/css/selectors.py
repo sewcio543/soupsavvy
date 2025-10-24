@@ -73,8 +73,11 @@ class CSSSoupSelector(SoupSelector, SelectableCSS):
         return result.fetch(limit)
 
     def __eq__(self, other: object) -> bool:
-        # we only care if selector is equal with current implementation
-        return isinstance(other, CSSSoupSelector) and self.css == other.css
+        # does not matter the subclass if selector is the same
+        if not isinstance(other, CSSSoupSelector):
+            return NotImplemented
+
+        return self.css == other.css
 
 
 class OnlyChild(CSSSoupSelector):
