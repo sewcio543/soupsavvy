@@ -71,6 +71,23 @@ class TestFieldWrapper:
         """Tests if selector are not equal."""
         assert (selectors[0] == selectors[1]) is False
 
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # different higher order field wrapper
+            (
+                MockFieldWrapper(MockLinkSelector()),
+                MockFieldWrapper2(MockLinkSelector()),
+            ),
+            # not tag searcher
+            (MockFieldWrapper(MockLinkSelector()), MockTextOperation()),
+        ],
+    )
+    def test_equality_check_returns_not_implemented(self, selectors: tuple):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        result = selectors[0].__eq__(selectors[1])
+        assert result is NotImplemented
+
     def test_or_operator_raises_exception_if_not_operation(self):
         """
         Tests if `|` operator raises NotOperationException

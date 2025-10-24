@@ -470,7 +470,10 @@ class IElement(ABC, Generic[N]):
         return hash((self.node, self.__class__))
 
     def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.node == other.node
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        return self.node == other.node
 
     def __str__(self) -> str:
         return str(self.node)
@@ -648,7 +651,10 @@ class IBrowser(ABC, Generic[B, E]):
         return hash((id(self.browser), self.__class__))
 
     def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.browser == other.browser
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        return self.browser == other.browser
 
     def __str__(self) -> str:
         return str(self.browser)

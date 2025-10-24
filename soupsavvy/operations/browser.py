@@ -57,7 +57,7 @@ class ApplyTo(BrowserOperation):
         return self.action.execute(browser=browser, element=element)
 
     def __eq__(self, x: Any) -> bool:
-        if not isinstance(x, ApplyTo):
+        if not isinstance(x, self.__class__):
             return NotImplemented
 
         return self.selector == x.selector and self.action == x.action
@@ -93,7 +93,7 @@ class Navigate(BrowserOperation):
         browser.navigate(self.url)
 
     def __eq__(self, x: Any) -> bool:
-        if not isinstance(x, Navigate):
+        if not isinstance(x, self.__class__):
             return NotImplemented
 
         return self.url == x.url
@@ -143,7 +143,7 @@ class WaitImplicitly(BaseOperation):
         return x
 
     def __eq__(self, x: Any) -> bool:
-        if not isinstance(x, WaitImplicitly):
+        if not isinstance(x, self.__class__):
             return NotImplemented
 
         return self.seconds == x.seconds
@@ -184,7 +184,7 @@ class Click(ElementAction):
         browser.click(element)
 
     def __eq__(self, x: Any) -> bool:
-        if not isinstance(x, Click):
+        if not isinstance(x, self.__class__):
             return NotImplemented
 
         return True
@@ -240,7 +240,7 @@ class SendKeys(ElementAction):
         browser.send_keys(element=element, value=self.value, clear=self.clear)
 
     def __eq__(self, x: Any) -> bool:
-        if not isinstance(x, SendKeys):
+        if not isinstance(x, self.__class__):
             return NotImplemented
 
         return self.value == x.value and self.clear == x.clear

@@ -35,4 +35,7 @@ class JSON(BaseOperation):
         return obj.json()
 
     def __eq__(self, other):
-        return isinstance(other, JSON)
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        return True

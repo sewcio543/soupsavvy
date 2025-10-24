@@ -81,3 +81,13 @@ class TestJSON:
     def test_inequality(self, other, json_operation: JSON):
         """Test inequality of JSON operation with different type."""
         assert json_operation != other
+
+    @pytest.mark.parametrize(
+        argnames="other",
+        argvalues=["string", MockIntOperation()],
+        ids=["string", "different_operation"],
+    )
+    def test_equality_check_returns_not_implemented(self, other, json_operation: JSON):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        result = json_operation.__eq__(other)
+        assert result is NotImplemented

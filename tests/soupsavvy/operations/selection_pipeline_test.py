@@ -337,6 +337,24 @@ class TestSelectionPipeline:
         """Tests if two instances of SelectionPipeline are not equal."""
         assert (selectors[0] == selectors[1]) is False
 
+    @pytest.mark.parametrize(
+        argnames="operations",
+        argvalues=[
+            (
+                SelectionPipeline(MockDivSelector(), MockTextOperation()),
+                MockDivSelector(),
+            ),
+            (
+                SelectionPipeline(MockDivSelector(), MockTextOperation()),
+                MockIntOperation(),
+            ),
+        ],
+    )
+    def test_equality_check_returns_not_implemented(self, operations: tuple):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        result = operations[0].__eq__(operations[1])
+        assert result is NotImplemented
+
     def test_or_operator_pipes_operations(self):
         """
         Tests if | operator add next operation to the selection pipeline.

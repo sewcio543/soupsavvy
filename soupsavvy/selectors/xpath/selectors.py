@@ -74,8 +74,8 @@ class XPathSelector(SoupSelector):
         return result.fetch(limit)
 
     def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, XPathSelector):
-            return False
+        if not isinstance(other, self.__class__):
+            return NotImplemented
 
         return self.xpath == other.xpath
 

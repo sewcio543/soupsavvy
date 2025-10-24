@@ -71,3 +71,12 @@ class TestSelfSelector:
     def test_two_tag_selectors_are_not_equal(self, selectors: tuple):
         """Tests if selector is not equal to SelfSelector."""
         assert (selectors[0] == selectors[1]) is False
+
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[(SelfSelector(), MockLinkSelector())],
+    )
+    def test_equality_check_returns_not_implemented(self, selectors: tuple):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        result = selectors[0].__eq__(selectors[1])
+        assert result is NotImplemented

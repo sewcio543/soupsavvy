@@ -437,6 +437,18 @@ class TestNthOfSelector:
         assert (selectors[0] == selectors[1]) is False
 
     @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            (NthOfSelector(MockClassMenuSelector(), "2n"), MockClassMenuSelector()),
+            (NthOfSelector(MockClassMenuSelector(), "2n"), "string"),
+        ],
+    )
+    def test_equality_check_returns_not_implemented(self, selectors: tuple):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        result = selectors[0].__eq__(selectors[1])
+        assert result is NotImplemented
+
+    @pytest.mark.parametrize(
         argnames="nth, expected",
         argvalues=[
             ("2n", [2, 4, 6]),

@@ -95,7 +95,10 @@ class FieldWrapper(TagSearcher, Comparable):
         bool
             True if the instances are equal, False otherwise.
         """
-        return isinstance(x, self.__class__) and self.selector == x.selector
+        if not isinstance(x, self.__class__):
+            return NotImplemented
+
+        return self.selector == x.selector
 
     def __or__(self, x: Any) -> SelectionPipeline:
         """

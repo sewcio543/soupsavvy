@@ -105,3 +105,20 @@ class TestCSSSoupSelectorEquality:
     def test_two_selectors_are_not_equal(self, selectors: tuple):
         """Tests if two multiple soup selectors are not equal."""
         assert (selectors[0] == selectors[1]) is False
+
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # not instances of CSSSoupSelector
+            (
+                MockCSSSoupSelector("div"),
+                MockNotCSSSoupSelector("div"),
+            ),
+        ],
+    )
+    def test_equality_check_returns_not_implemented(
+        self, selectors: tuple[MockSelector, MockSelector]
+    ):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        result = selectors[0].__eq__(selectors[1])
+        assert result is NotImplemented

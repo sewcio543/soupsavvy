@@ -81,8 +81,8 @@ class IfElse(OperationSearcherMixin):
         return operation.execute(arg)
 
     def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, IfElse):
-            return False
+        if not isinstance(other, self.__class__):
+            return NotImplemented
 
         return (
             self._condition is other._condition
@@ -130,7 +130,10 @@ class Break(OperationSearcherMixin):
         raise exc.BreakOperationException(arg)
 
     def __eq__(self, other: Any) -> bool:
-        return isinstance(other, Break)
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        return True
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}()"
@@ -163,7 +166,10 @@ class Continue(OperationSearcherMixin):
         return arg
 
     def __eq__(self, other: Any) -> bool:
-        return isinstance(other, Continue)
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        return True
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}()"

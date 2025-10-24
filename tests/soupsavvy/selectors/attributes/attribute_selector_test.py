@@ -407,6 +407,20 @@ class TestAttributeSelector:
         """Tests if two AttributeSelector instances are not equal."""
         assert (selectors[0] == selectors[1]) is False
 
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            (
+                AttributeSelector("class", value="menu"),
+                MockDivSelector(),
+            )
+        ],
+    )
+    def test_equality_check_returns_not_implemented(self, selectors: tuple):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        result = selectors[0].__eq__(selectors[1])
+        assert result is NotImplemented
+
     @pytest.mark.edge_case
     def test_find_matches_element_with_list_of_values_if_one_matches(
         self,

@@ -148,6 +148,20 @@ class TestPlaywrightElement:
         assert element1 != element3
         assert element1 != node1
 
+    def test_equality_check_returns_not_implemented(self, playwright_page: Page):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        text = """
+            <div><p>Hello</p></div>
+        """
+        playwright_page.set_content(text)
+        node = playwright_page.query_selector("html")
+        assert node is not None
+
+        element = PlaywrightElement(node)
+
+        assert element.__eq__(node) is NotImplemented
+        assert element.__eq__("string") is NotImplemented
+
     def test_name_attribute_has_correct_value(self, playwright_page: Page):
         """Tests if `name` attribute returns name of the node element."""
         text = """
@@ -1245,3 +1259,18 @@ class TestPlaywrightBrowser:
         assert browser1 == browser1
         assert browser1 == browser2
         assert browser1 != browser3
+
+    @pytest.mark.parametrize(
+        "other",
+        [
+            FakeDriver(),
+            "not a browser",
+        ],
+    )
+    def test_equality_check_returns_not_implemented_for_different_type(self, other):
+        """
+        Tests if `__eq__` method returns NotImplemented for incompatible types.
+        """
+        browser = PlaywrightBrowser(FakeDriver())  # type: ignore
+        result = browser.__eq__(other)
+        assert result is NotImplemented
