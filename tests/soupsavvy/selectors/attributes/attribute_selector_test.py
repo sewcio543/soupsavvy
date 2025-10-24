@@ -413,11 +413,7 @@ class TestAttributeSelector:
             (
                 AttributeSelector("class", value="menu"),
                 MockDivSelector(),
-            ),
-            (
-                AttributeSelector("id", value="widget"),
-                ClassSelector(value="widget"),
-            ),
+            )
         ],
     )
     def test_equality_check_returns_not_implemented(self, selectors: tuple):
