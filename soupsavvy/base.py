@@ -760,7 +760,7 @@ class CompositeSoupSelector(SoupSelector):
 
     def __eq__(self, other: object) -> bool:
         # for compatibility with type checkers
-        if not isinstance(other, self.__class__):
+        if not isinstance(other, CompositeSoupSelector):
             return NotImplemented
 
         elif type(self) is not type(other):

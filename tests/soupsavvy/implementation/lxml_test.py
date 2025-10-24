@@ -143,6 +143,17 @@ class TestLXMLElement:
         assert element1 != element3
         assert element1 != node1
 
+    def test_equality_check_returns_not_implemented(self):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        text = """
+            <div><p>Hello</p></div>
+        """
+        node = to_lxml(text)
+        element = LXMLElement(node)
+
+        assert element.__eq__(node) is NotImplemented
+        assert element.__eq__("string") is NotImplemented
+
     def test_name_attribute_has_correct_value(self):
         """Tests if `name` attribute returns name of the node element."""
         text = """

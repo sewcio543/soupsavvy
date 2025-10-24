@@ -118,7 +118,6 @@ class TestSoupElement:
             <div><p>Hello</p></div>
         """
         bs = BeautifulSoup(text, features="lxml")
-        element = SoupElement(bs)
 
         node1 = bs.find("div")
         node2 = bs.find("div")
@@ -136,6 +135,17 @@ class TestSoupElement:
         assert element1 == element2
         assert element1 != element3
         assert element1 != node1
+
+    def test_equality_check_returns_not_implemented(self):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        text = """
+            <div><p>Hello</p></div>
+        """
+        bs = BeautifulSoup(text, features="lxml")
+        element = SoupElement(bs)
+
+        assert element.__eq__(bs) is NotImplemented
+        assert element.__eq__("string") is NotImplemented
 
     def test_name_attribute_has_correct_value(self):
         """Tests if `name` attribute returns name of the node element."""

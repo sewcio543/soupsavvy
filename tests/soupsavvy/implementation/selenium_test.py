@@ -137,6 +137,19 @@ class TestSeleniumElement:
         assert element1 != element3
         assert element1 != node1
 
+    def test_equality_check_returns_not_implemented(self, driver_selenium: WebDriver):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        text = """
+            <div><p>Hello</p></div>
+        """
+        insert(text, driver=driver_selenium)
+        node = driver_selenium.find_element(By.TAG_NAME, "html")
+
+        element = SeleniumElement(node)
+
+        assert element.__eq__(node) is NotImplemented
+        assert element.__eq__("string") is NotImplemented
+
     def test_name_attribute_has_correct_value(self, driver_selenium: WebDriver):
         """Tests if `name` attribute returns name of the node element."""
         text = """
@@ -1188,3 +1201,18 @@ class TestSeleniumBrowser:
         assert browser1 == browser1
         assert browser1 == browser2
         assert browser1 != browser3
+
+    @pytest.mark.parametrize(
+        "other",
+        [
+            FakeDriver(),
+            "not a browser",
+        ],
+    )
+    def test_equality_check_returns_not_implemented_for_different_type(self, other):
+        """
+        Tests if `__eq__` method returns NotImplemented for incompatible types.
+        """
+        browser = SeleniumBrowser(FakeDriver())  # type: ignore
+        result = browser.__eq__(other)
+        assert result is NotImplemented
