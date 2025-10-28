@@ -149,6 +149,32 @@ By default None, which results in default message.</p>
 </section>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="soupsavvy.base.check_tag_searcher">
+<span class="sig-name descname"><span class="pre">check_tag_searcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a></span></span><a class="reference internal" href="_modules/soupsavvy/base.html#check_tag_searcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.base.check_tag_searcher" title="Link to this definition"></a></dt>
+<dd><p>Checks if provided object is a valid <cite>soupsavvy</cite> TagSearcher.
+Checks for instance of <cite>TagSearcher</cite> or other compatible type like Model class.
+Returns provided object if fulfills the condition for convenience.</p>
+<section id="id3">
+<h2>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>x<span class="classifier">Any</span></dt><dd><p>Any object to be validated as correct TagSearcher.</p>
+</dd>
+<dt>message<span class="classifier">str, optional</span></dt><dd><p>Custom message to be displayed in case of raising an exception.
+By default None, which results in default message.</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h2>Raises<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>NotTagSearcherException</dt><dd><p>If provided object is not an instance of <cite>TagSearcher</cite>
+or any other compatible type.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.base.SoupSelector">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SoupSelector</span></span><a class="reference internal" href="_modules/soupsavvy/base.html#SoupSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.base.SoupSelector" title="Link to this definition"></a></dt>
@@ -199,8 +225,8 @@ Additionally <cite>limit</cite> and <cite>recursive</cite> parameters can be set
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span></dt>
 <dd><p>Finds the first matching element in provided <cite>IElement</cite>.</p>
-<section id="id3">
-<h3>Parameters<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<section id="id5">
+<h3>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>tag<span class="classifier">IElement</span></dt><dd><p>Any <cite>IElement</cite> object to search within.</p>
 </dd>
@@ -222,8 +248,8 @@ By default <cite>True</cite>.</p>
 </dd>
 </dl>
 </section>
-<section id="id4">
-<h3>Raises<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<section id="id6">
+<h3>Raises<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>TagNotFoundException</dt><dd><p>If strict parameter is set to <cite>True</cite> and none matching element was found.</p>
 </dd>
@@ -235,8 +261,8 @@ By default <cite>True</cite>.</p>
 <dt class="sig sig-object py" id="soupsavvy.base.SoupSelector.find_all">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/base.html#SoupSelector.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.base.SoupSelector.find_all" title="Link to this definition"></a></dt>
 <dd><p>Finds all elements matching selector in provided <cite>IElement</cite>.</p>
-<section id="id5">
-<h3>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<section id="id7">
+<h3>Parameters<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>tag<span class="classifier">IElement</span></dt><dd><p>Any <cite>IElement</cite> object to search within.</p>
 </dd>
@@ -249,8 +275,8 @@ By default <cite>None</cite>, all found elements are returned.</p>
 </dd>
 </dl>
 </section>
-<section id="id6">
-<h3>Returns<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<section id="id8">
+<h3>Returns<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>list[IElement]</dt><dd><p>List of <cite>IElement</cite> objects matching selector.
 If none found, the list is empty.</p>
@@ -268,8 +294,8 @@ If none found, the list is empty.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Interface for selectors, that can clearly and unambiguously defined css selector,
 used to search for elements, that matches the same elements as find methods.</p>
-<section id="id7">
-<h2>Notes<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<section id="id9">
+<h2>Notes<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
 <p>To implement SelectableCSS interface, child class must implement:
 - ‘selector’ property, which return a string representing css selector.</p>
 <dl class="py property">
@@ -292,8 +318,8 @@ used to search for elements, that matches the same elements as find methods.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CompositeSoupSelector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/base.html#CompositeSoupSelector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.base.CompositeSoupSelector" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupSelector</span></code></a></p>
 <p>Interface for selectors consisting of multiple selectors.</p>
-<section id="id8">
-<h2>Notes<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<section id="id10">
+<h2>Notes<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
 <p>To implement <cite>CompositeSoupSelector</cite> interface, child class must
 call its init method with provided selectors to set up the object.</p>
 </section>
@@ -313,15 +339,15 @@ call its init method with provided selectors to set up the object.</p>
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selectors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/base.html#CompositeSoupSelector.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.base.CompositeSoupSelector.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes composite selector object with provided selectors.
 Checks if all selectors are instances of <cite>SoupSelector</cite>.</p>
-<section id="id9">
-<h3>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<section id="id11">
+<h3>Parameters<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>selectors: Iterable[SoupSelector]</dt><dd><p>Selectors used to search for elements.</p>
 </dd>
 </dl>
 </section>
-<section id="id10">
-<h3>Raises<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<section id="id12">
+<h3>Raises<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>NotSoupSelectorException</dt><dd><p>If any of provided parameters is not an instance of <cite>SoupSelector</cite>.</p>
 </dd>
@@ -333,8 +359,8 @@ Checks if all selectors are instances of <cite>SoupSelector</cite>.</p>
 <dt class="sig sig-object py" id="soupsavvy.base.CompositeSoupSelector.selectors">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">selectors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.base.CompositeSoupSelector.selectors" title="Link to this definition"></a></dt>
 <dd><p>Returns a list of selectors that composite selector consists of.</p>
-<section id="id11">
-<h3>Returns<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<section id="id13">
+<h3>Returns<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>list[SoupSelector]</dt><dd><p>List of <cite>SoupSelector</cite> objects used for searching elements.</p>
 </dd>
@@ -364,8 +390,8 @@ extract and transform the data.</p>
 <p>Operations can be combined with selectors to extract and transform
 target information.</p>
 </section>
-<section id="id12">
-<h2>Example<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
+<section id="id14">
+<h2>Example<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeSelector</span>
 <span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Operation</span><span class="p">,</span> <span class="n">Text</span>
 <span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">Text</span><span class="p">()</span> <span class="o">|</span> <span class="n">Operation</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
@@ -379,17 +405,26 @@ target information.</p>
 <dt class="sig sig-object py" id="soupsavvy.base.BaseOperation.execute">
 <span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/soupsavvy/base.html#BaseOperation.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.base.BaseOperation.execute" title="Link to this definition"></a></dt>
 <dd><p>Execute the operation on the given argument and return the result.</p>
-<section id="id13">
-<h3>Parameters<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<section id="id15">
+<h3>Parameters<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>arg<span class="classifier">Any</span></dt><dd><p>Argument to be processed by the operation.</p>
 </dd>
 </dl>
 </section>
-<section id="id14">
-<h3>Returns<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
+<section id="id16">
+<h3>Returns<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>Any</dt><dd><p>Result of the operation.</p>
+</dd>
+</dl>
+</section>
+<section id="id17">
+<h3>Raises<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>BreakOperationException</dt><dd><p>If operation execution should be interrupted and propagated to caller.</p>
+</dd>
+<dt>FailedOperationExecution</dt><dd><p>If operation execution fails for any other reason.</p>
 </dd>
 </dl>
 </section>
@@ -409,8 +444,8 @@ to perform operation directly on scope element.</p>
 <dt class="sig sig-object py" id="soupsavvy.base.OperationSearcherMixin.find_all">
 <span class="sig-name descname"><span class="pre">find_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/soupsavvy/base.html#OperationSearcherMixin.find_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.base.OperationSearcherMixin.find_all" title="Link to this definition"></a></dt>
 <dd><p>Processes provided element and returns the result in a list.</p>
-<section id="id15">
-<h2>Parameters<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
+<section id="id18">
+<h2>Parameters<a class="headerlink" href="#id18" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>tag<span class="classifier">IElement</span></dt><dd><p>Any <cite>IElement</cite> object to process.</p>
 </dd>
@@ -420,8 +455,8 @@ to perform operation directly on scope element.</p>
 </dd>
 </dl>
 </section>
-<section id="id16">
-<h2>Returns<a class="headerlink" href="#id16" title="Link to this heading"></a></h2>
+<section id="id19">
+<h2>Returns<a class="headerlink" href="#id19" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>list[Any]</dt><dd><p>Result of applied operation on element in a list.</p>
 </dd>
@@ -433,8 +468,8 @@ to perform operation directly on scope element.</p>
 <dt class="sig sig-object py" id="soupsavvy.base.OperationSearcherMixin.find">
 <span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/soupsavvy/base.html#OperationSearcherMixin.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.base.OperationSearcherMixin.find" title="Link to this definition"></a></dt>
 <dd><p>Processes provided element and returns the result.</p>
-<section id="id17">
-<h2>Parameters<a class="headerlink" href="#id17" title="Link to this heading"></a></h2>
+<section id="id20">
+<h2>Parameters<a class="headerlink" href="#id20" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>tag<span class="classifier">IElement</span></dt><dd><p>Any <cite>IElement</cite> object to process.</p>
 </dd>
@@ -444,8 +479,8 @@ to perform operation directly on scope element.</p>
 </dd>
 </dl>
 </section>
-<section id="id18">
-<h2>Returns<a class="headerlink" href="#id18" title="Link to this heading"></a></h2>
+<section id="id21">
+<h2>Returns<a class="headerlink" href="#id21" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>Any</dt><dd><p>Result of applied operation on element.</p>
 </dd>
@@ -453,6 +488,95 @@ to perform operation directly on scope element.</p>
 </section>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.base.BrowserOperation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BrowserOperation</span></span><a class="reference internal" href="_modules/soupsavvy/base.html#BrowserOperation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.base.BrowserOperation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.base.BaseOperation" title="soupsavvy.base.BaseOperation"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseOperation</span></code></a></p>
+<p>Base class for operations that act on a <cite>IBrowser</cite> interface.</p>
+<p>Browser operations are designed to perform actions with objects implementing
+the <cite>IBrowser</cite> interface. It validates that input argument to <cite>execute</cite> method
+is of this type. If operation returns value, it is passed through, otherwise
+the original <cite>IBrowser</cite> instance is returned.</p>
+<p>As standard operations, browser operations can be chained together using
+the pipe operator ‘|’.</p>
+<p>Operations can be combined with selectors to extract and transform
+target information. Chaining other types of operations might result in errors.</p>
+<p>Each derived operation class needs to implement <cite>__eq__</cite> method.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.base.BrowserOperation.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IBrowser" title="soupsavvy.interfaces.IBrowser"><span class="pre">IBrowser</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/soupsavvy/base.html#BrowserOperation.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.base.BrowserOperation.execute" title="Link to this definition"></a></dt>
+<dd><p>Execute the operation on the given argument and return the result.</p>
+<section id="id22">
+<h2>Parameters<a class="headerlink" href="#id22" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>arg<span class="classifier">Any</span></dt><dd><p>Argument to be processed by the operation.</p>
+</dd>
+</dl>
+</section>
+<section id="id23">
+<h2>Returns<a class="headerlink" href="#id23" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>Any</dt><dd><p>Result of the operation.</p>
+</dd>
+</dl>
+</section>
+<section id="id24">
+<h2>Raises<a class="headerlink" href="#id24" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>BreakOperationException</dt><dd><p>If operation execution should be interrupted and propagated to caller.</p>
+</dd>
+<dt>FailedOperationExecution</dt><dd><p>If operation execution fails for any other reason.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.base.ElementAction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ElementAction</span></span><a class="reference internal" href="_modules/soupsavvy/base.html#ElementAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.base.ElementAction" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.Comparable" title="soupsavvy.interfaces.Comparable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Comparable</span></code></a></p>
+<p>Abstract base class for actions that use browser to interact with an element.</p>
+<p>Actions perform operation on element in dynamic context, it requires both
+browser context (<cite>IBrowser</cite>) and the target element active
+in browser context (<cite>IElement</cite>).</p>
+<p>ElementActions are not typical operations, so they cannot be chained with other
+<cite>soupsavvy</cite> operations. They are intended to be used within <cite>ApplyTo</cite> operation.</p>
+<section id="id25">
+<h2>Example<a class="headerlink" href="#id25" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.browser.operations</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApplyTo</span><span class="p">,</span> <span class="n">Click</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeSelector</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.implementation.selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeleniumBrowser</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="n">browser</span> <span class="o">=</span> <span class="n">SeleniumBrowser</span><span class="p">(</span><span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">())</span>
+<span class="gp">... </span><span class="n">action</span> <span class="o">=</span> <span class="n">Click</span><span class="p">()</span>
+<span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s1">&#39;button&#39;</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">ApplyTo</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">browser</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>ElementAction</cite> inherits from <cite>Comparable</cite> interface,
+<cite>__eq__</cite> method needs to be implemented in derived classes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.base.ElementAction.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">browser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IBrowser" title="soupsavvy.interfaces.IBrowser"><span class="pre">IBrowser</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><span class="pre">IElement</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/base.html#ElementAction.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.base.ElementAction.execute" title="Link to this definition"></a></dt>
+<dd><p>Execute the action on provided element within the browser context.</p>
+<section id="id26">
+<h3>Parameters<a class="headerlink" href="#id26" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>browser<span class="classifier">IBrowser</span></dt><dd><p>The browser instance within which the action is performed.</p>
+</dd>
+<dt>element<span class="classifier">IElement</span></dt><dd><p>The element on which the action is performed using browser context.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
 </dd></dl>
 
 </section>

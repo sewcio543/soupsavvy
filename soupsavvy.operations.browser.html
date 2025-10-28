@@ -1,0 +1,431 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>operations.browser &mdash; soupsavvy  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=eea9572f" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="operations.conditional" href="soupsavvy.operations.conditional.html" />
+    <link rel="prev" title="operations" href="soupsavvy.operations.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            soupsavvy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Components</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.selectors.html">selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.models.html">models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="soupsavvy.operations.html">operations</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="soupsavvy.operations.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">operations.browser</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.browser.ApplyTo"><code class="docutils literal notranslate"><span class="pre">ApplyTo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.browser.Navigate"><code class="docutils literal notranslate"><span class="pre">Navigate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.browser.WaitImplicitly"><code class="docutils literal notranslate"><span class="pre">WaitImplicitly</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.browser.Click"><code class="docutils literal notranslate"><span class="pre">Click</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.browser.SendKeys"><code class="docutils literal notranslate"><span class="pre">SendKeys</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.browser.Find"><code class="docutils literal notranslate"><span class="pre">Find</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.operations.browser.FindAll"><code class="docutils literal notranslate"><span class="pre">FindAll</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.conditional.html">operations.conditional</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.element.html">operations.element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.general.html">operations.general</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.selection_pipeline.html">operations.selection_pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.serialization.html">operations.serialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soupsavvy.operations.wrappers.html">operations.wrappers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.operations.html#module-soupsavvy.operations">Content</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="soupsavvy.implementation.html">implementation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="demos/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/features.html">Why soupsavvy?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/showcase.html">Showcase</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/selectors.html">Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/combining.html">Composite Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/css.html">CSS Selectors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demos/models.html">Models</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">soupsavvy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="soupsavvy.operations.html">operations</a></li>
+      <li class="breadcrumb-item active">operations.browser</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/soupsavvy.operations.browser.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-soupsavvy.operations.browser">
+<span id="operations-browser"></span><h1>operations.browser<a class="headerlink" href="#module-soupsavvy.operations.browser" title="Link to this heading"></a></h1>
+<p>Module defining browser operations for web automation tasks.
+Contains typical browser operations and actions on web elements.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.operations.browser.ApplyTo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ApplyTo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.ElementAction" title="soupsavvy.base.ElementAction"><span class="pre">ElementAction</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/operations/browser.html#ApplyTo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.browser.ApplyTo" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.BrowserOperation" title="soupsavvy.base.BrowserOperation"><code class="xref py py-class docutils literal notranslate"><span class="pre">BrowserOperation</span></code></a></p>
+<p>Applies a given action to a single element selected from the browser document.</p>
+<p>This operation uses a <code class="xref py py-class docutils literal notranslate"><span class="pre">SoupSelector</span></code> to find a target element
+within the browser’s DOM and then executes the provided <code class="xref py py-class docutils literal notranslate"><span class="pre">ElementAction</span></code>
+on it.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>selector<span class="classifier">SoupSelector</span></dt><dd><p>Selector used to locate the target element in the document.</p>
+</dd>
+<dt>action<span class="classifier">ElementAction</span></dt><dd><p>Action to execute on the selected element.</p>
+</dd>
+</dl>
+</section>
+<section id="raises">
+<h2>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>soupsavvy.exceptions.FailedOperationExecution</dt><dd><p>If the element cannot be found using the provided selector.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.operations.browser.ApplyTo.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.SoupSelector" title="soupsavvy.base.SoupSelector"><span class="pre">SoupSelector</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.ElementAction" title="soupsavvy.base.ElementAction"><span class="pre">ElementAction</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/browser.html#ApplyTo.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.browser.ApplyTo.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.operations.browser.Navigate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Navigate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/operations/browser.html#Navigate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.browser.Navigate" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.BrowserOperation" title="soupsavvy.base.BrowserOperation"><code class="xref py py-class docutils literal notranslate"><span class="pre">BrowserOperation</span></code></a></p>
+<p>Operation for navigating the browser to a specified URL.</p>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">Navigate</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.implementation.selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeleniumBrowser</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="n">browser</span> <span class="o">=</span> <span class="n">SeleniumBrowser</span><span class="p">(</span><span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">())</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Navigate</span><span class="p">(</span><span class="s2">&quot;https://example.com&quot;</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">browser</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.operations.browser.Navigate.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/browser.html#Navigate.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.browser.Navigate.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the Navigate operation with the specified URL.</p>
+<section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>url<span class="classifier">str</span></dt><dd><p>The target URL to navigate to.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.operations.browser.WaitImplicitly">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">WaitImplicitly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/operations/browser.html#WaitImplicitly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.browser.WaitImplicitly" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.BaseOperation" title="soupsavvy.base.BaseOperation"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseOperation</span></code></a></p>
+<p>Pauses execution for a specified number of seconds.
+Useful for browser operations that require waiting for a page to load
+or for dynamic content to render.</p>
+<section id="id2">
+<h2>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">WaitImplicitly</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">WaitImplicitly</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It proves more useful when chained with other browser operations.</p>
+</section>
+<section id="id3">
+<h2>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">WaitImplicitly</span><span class="p">,</span> <span class="n">Navigate</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.implementation.selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeleniumBrowser</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="n">browser</span> <span class="o">=</span> <span class="n">SeleniumBrowser</span><span class="p">(</span><span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">())</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Navigate</span><span class="p">(</span><span class="s2">&quot;https://example.com&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">WaitImplicitly</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">browser</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><cite>WaitImplicitly</cite> uses <cite>time.sleep</cite> under the hood, it does not require
+a browser instance to operate and can be used independently.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.operations.browser.WaitImplicitly.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/browser.html#WaitImplicitly.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.browser.WaitImplicitly.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the WaitImplicitly operation with the specified wait time.</p>
+<section id="id4">
+<h3>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>seconds<span class="classifier">float</span></dt><dd><p>Number of seconds to wait.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.operations.browser.Click">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Click</span></span><a class="reference internal" href="_modules/soupsavvy/operations/browser.html#Click"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.browser.Click" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.ElementAction" title="soupsavvy.base.ElementAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElementAction</span></code></a></p>
+<p>Clicks on a target element using the browser context.</p>
+<section id="id5">
+<h2>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">Click</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeSelector</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Click</span><span class="p">()</span>
+<span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s1">&#39;button&#39;</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">element</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">browser</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It proves more useful when used in conjunction with <cite>ApplyTo</cite> operation,
+which can be integrated into browser workflows.</p>
+</section>
+<section id="id6">
+<h2>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApplyTo</span><span class="p">,</span> <span class="n">Click</span><span class="p">,</span> <span class="n">Navigate</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeSelector</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.implementation.selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeleniumBrowser</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="n">browser</span> <span class="o">=</span> <span class="n">SeleniumBrowser</span><span class="p">(</span><span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">())</span>
+<span class="gp">... </span><span class="n">action</span> <span class="o">=</span> <span class="n">Click</span><span class="p">()</span>
+<span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Navigate</span><span class="p">(</span><span class="s2">&quot;https://example.com&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">ApplyTo</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">browser</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.operations.browser.SendKeys">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SendKeys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/operations/browser.html#SendKeys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.browser.SendKeys" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.base.html#soupsavvy.base.ElementAction" title="soupsavvy.base.ElementAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElementAction</span></code></a></p>
+<p>Sends a string of keys or text input to a target element.</p>
+<section id="id7">
+<h2>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">SendKeys</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeSelector</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">SendKeys</span><span class="p">(</span><span class="s2">&quot;Hello, World!&quot;</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">element</span> <span class="o">=</span> <span class="n">selector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">browser</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It proves more useful when used in conjunction with <cite>ApplyTo</cite> operation,
+which can be integrated into browser workflows.</p>
+</section>
+<section id="id8">
+<h2>Example<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApplyTo</span><span class="p">,</span> <span class="n">SendKeys</span><span class="p">,</span> <span class="n">Navigate</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeSelector</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.implementation.selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeleniumBrowser</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="n">browser</span> <span class="o">=</span> <span class="n">SeleniumBrowser</span><span class="p">(</span><span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">())</span>
+<span class="gp">... </span><span class="n">action</span> <span class="o">=</span> <span class="n">SendKeys</span><span class="p">(</span><span class="s2">&quot;Hello, World!&quot;</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Navigate</span><span class="p">(</span><span class="s2">&quot;https://example.com&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">ApplyTo</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">browser</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.operations.browser.SendKeys.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/browser.html#SendKeys.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.browser.SendKeys.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the SendKeys action with the specified input value.</p>
+<section id="id9">
+<h3>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>value<span class="classifier">str</span></dt><dd><p>The string or keys to send to the element.</p>
+</dd>
+<dt>clear<span class="classifier">bool, optional</span></dt><dd><p>Whether to clear the element’s existing content before sending keys.
+Default is True.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.operations.browser.Find">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/operations/browser.html#Find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.browser.Find" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_FindBase</span></code></p>
+<p>Finds and returns an element from the browser document using a specified selector.</p>
+<section id="id10">
+<h2>Example<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">Find</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeSelector</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.implementation.selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeleniumBrowser</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="n">browser</span> <span class="o">=</span> <span class="n">SeleniumBrowser</span><span class="p">(</span><span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">())</span>
+<span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">Find</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">browser</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It can be used as an element of browser workflows to extract information
+from web pages, for example: navigate -&gt; click -&gt; wait -&gt; find.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.operations.browser.Find.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/browser.html#Find.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.browser.Find.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the Find operation with the specified selector.</p>
+<section id="id11">
+<h3>Parameters<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>selector<span class="classifier">TagSearcher</span></dt><dd><p>Selector used to locate the target element in the document.</p>
+</dd>
+<dt>strict<span class="classifier">bool, optional</span></dt><dd><p>Whether to enforce strict finding (raise exception if not found).
+Default is False.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.operations.browser.FindAll">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FindAll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/operations/browser.html#FindAll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.browser.FindAll" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_FindBase</span></code></p>
+<p>Finds and returns elements from the browser document using a specified selector.</p>
+<section id="id12">
+<h2>Example<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations.browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">FindAll</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeSelector</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.implementation.selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeleniumBrowser</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">...</span>
+<span class="gp">... </span><span class="n">browser</span> <span class="o">=</span> <span class="n">SeleniumBrowser</span><span class="p">(</span><span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">())</span>
+<span class="gp">... </span><span class="n">selector</span> <span class="o">=</span> <span class="n">TypeSelector</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span> <span class="o">=</span> <span class="n">FindAll</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
+<span class="gp">... </span><span class="n">operation</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">browser</span><span class="p">)</span>
+<span class="go">[...]</span>
+</pre></div>
+</div>
+<p>It can be used as an element of browser workflows to extract information
+from web pages, for example: navigate -&gt; click -&gt; wait -&gt; find_all.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.operations.browser.FindAll.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcher" title="soupsavvy.interfaces.TagSearcher"><span class="pre">TagSearcher</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/operations/browser.html#FindAll.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.operations.browser.FindAll.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the FindAll operation with the specified selector.</p>
+<section id="id13">
+<h3>Parameters<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>selector<span class="classifier">TagSearcher</span></dt><dd><p>Selector used to locate the target element in the document.</p>
+</dd>
+<dt>limit<span class="classifier">int, optional</span></dt><dd><p>Maximum number of elements to find. Default is None (no limit).</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="soupsavvy.operations.html" class="btn btn-neutral float-left" title="operations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soupsavvy.operations.conditional.html" class="btn btn-neutral float-right" title="operations.conditional" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, soupsavvy.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

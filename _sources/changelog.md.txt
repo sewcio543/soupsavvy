@@ -1,6 +1,19 @@
 # Changelog
 
-## v1.0.0<!-- Release notes generated using configuration in .github/release.yml at v1.0.0 -->### Breaking Changes 💥\* Implementations rework by @sewcio543 in https://github.com/sewcio543/soupsavvy/pull/207\* About tutorial for new design by @sewcio543 in https://github.com/sewcio543/soupsavvy/pull/208**Full Changelog**: https://github.com/sewcio543/soupsavvy/compare/v0.3.1...v1.0.0
+## v1.0.1<!-- Release notes generated using configuration in .github/release.yml at v1.0.1 -->### New Features 🎉\* Playwright implementation by @sewcio543 in https://github.com/sewcio543/soupsavvy/pull/215### Fixes 🛠️\* [BUGFIX] Showcase demo by @sewcio543 in https://github.com/sewcio543/soupsavvy/pull/219### Other Changes\* Model improvements by @sewcio543 in https://github.com/sewcio543/soupsavvy/pull/217**Full Changelog**: https://github.com/sewcio543/soupsavvy/compare/v1.0.0...v1.0.1
+
+## v1.0.0<!-- Release notes generated using configuration in .github/release.yml at v1.0.0 -->
+
+### Breaking Changes 💥
+
+- Rework of selector to be *implementation-agnostic*
+- Implementations for various libraries: `BeautifulSoup`, `lxml`, `selenium`
+
+### Documentation 📚
+
+- Updating `README` and demos
+
+**Full Changelog**: https://github.com/sewcio543/soupsavvy/compare/v0.3.1...v1.0.0
 
 ## v0.3.1<!-- Release notes generated using configuration in .github/release.yml at v0.3.1 -->
 

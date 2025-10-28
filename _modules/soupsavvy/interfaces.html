@@ -103,17 +103,26 @@
 <span class="sd">- `TagSearcher` - Interface for objects that can search within `IElement`.</span>
 <span class="sd">- `IElement` - Interface for any tree structure compatible with `soupsavvy`.</span>
 <span class="sd">- `SelectionApi` - Interface for selection of elements based on specific selector.</span>
+<span class="sd">- `IBrowser` - Interface for browser implementations compatible with `soupsavvy`.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Self</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">soupsavvy.exceptions</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exc</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_raise_not_implemented</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raises a `NotImplementedError` indicating that this method is abstract.&quot;&quot;&quot;</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an interface &quot;</span>
+        <span class="s2">&quot;and does not implement this method.&quot;</span>
+    <span class="p">)</span>
 
 
 <div class="viewcode-block" id="Executable">
@@ -129,10 +138,7 @@
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes the operation on the given argument.&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an interface &quot;</span>
-            <span class="s2">&quot;and does not implement this method.&quot;</span>
-        <span class="p">)</span></div>
+        <span class="n">_raise_not_implemented</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 
@@ -147,15 +153,26 @@
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an interface &quot;</span>
-            <span class="s2">&quot;and does not implement this method.&quot;</span>
-        <span class="p">)</span></div>
+        <span class="n">_raise_not_implemented</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 
-<span class="c1"># possible exceptions raised when TagSearcher fails</span>
-<span class="n">TagSearcherExceptions</span> <span class="o">=</span> <span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">FailedOperationExecution</span><span class="p">,</span> <span class="n">exc</span><span class="o">.</span><span class="n">TagNotFoundException</span><span class="p">)</span>
+<div class="viewcode-block" id="JSONSerializable">
+<a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.JSONSerializable">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">JSONSerializable</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class for objects that can be serialized to JSON.</span>
+<span class="sd">    They must have `json` method that returns any JSON serializable object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="JSONSerializable.json">
+<a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.JSONSerializable.json">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Serializes the object to a JSON-compatible format.&quot;&quot;&quot;</span>
+        <span class="n">_raise_not_implemented</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+</div>
+
 
 
 <div class="viewcode-block" id="TagSearcher">
@@ -195,10 +212,7 @@
 <span class="sd">        Any</span>
 <span class="sd">            Processed result from the element.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an interface &quot;</span>
-            <span class="s2">&quot;and does not implement this method.&quot;</span>
-        <span class="p">)</span></div>
+        <span class="n">_raise_not_implemented</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TagSearcher.find_all">
@@ -230,17 +244,97 @@
 <span class="sd">        list[Any]</span>
 <span class="sd">            A list of results from processed element.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an interface &quot;</span>
-            <span class="s2">&quot;and does not implement this method.&quot;</span>
-        <span class="p">)</span></div>
+        <span class="n">_raise_not_implemented</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 
 
+<div class="viewcode-block" id="TagSearcherMeta">
+<a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcherMeta">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TagSearcherMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">ABC</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the same interface as TagSearcher, but for metaclass level,</span>
+<span class="sd">    used by BaseModel mostly for typing purposes.</span>
+<span class="sd">    Subclasses should implement the `find` and `find_all` on metaclass level</span>
+<span class="sd">    or as classmethods, but it&#39;s not enforced by abstractmethod here and is taken</span>
+<span class="sd">    care of by BaseModel class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TagSearcherMeta.find">
+<a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcherMeta.find">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
+        <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Processes `IElement` object and returns result.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tag : IElement</span>
+<span class="sd">            Any `IElement` object to process.</span>
+<span class="sd">        strict : bool, optional</span>
+<span class="sd">            If True, enforces results to be found in the element, by default False.</span>
+<span class="sd">        recursive : bool, optional</span>
+<span class="sd">            Specifies if search should be recursive.</span>
+<span class="sd">            If set to `False`, only direct children of the element will be searched.</span>
+<span class="sd">            By default `True`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Any</span>
+<span class="sd">            Processed result from the element.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="TagSearcherMeta.find_all">
+<a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.TagSearcherMeta.find_all">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_all</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">IElement</span><span class="p">,</span>
+        <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Processes `IElement` object and returns list of results.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tag : IElement</span>
+<span class="sd">            Any `IElement` object to process.</span>
+<span class="sd">        recursive : bool, optional</span>
+<span class="sd">            Specifies if search should be recursive.</span>
+<span class="sd">            If set to `False`, only direct children of the element will be searched.</span>
+<span class="sd">            By default `True`.</span>
+<span class="sd">        limit : int, optional</span>
+<span class="sd">            Specifies maximum number of results to return in a list.</span>
+<span class="sd">            By default `None`, everything is returned.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[Any]</span>
+<span class="sd">            A list of results from processed element.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+</div>
+
+
+
+<span class="c1"># valid TagSearcher types</span>
+<span class="n">TagSearcherType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">TagSearcher</span><span class="p">,</span> <span class="n">TagSearcherMeta</span><span class="p">]</span>
+<span class="c1"># possible exceptions raised when TagSearcher fails</span>
+<span class="n">TagSearcherExceptions</span> <span class="o">=</span> <span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">FailedOperationExecution</span><span class="p">,</span> <span class="n">exc</span><span class="o">.</span><span class="n">TagNotFoundException</span><span class="p">)</span>
+
+
+<span class="n">N</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;N&quot;</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="IElement">
 <a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.IElement">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">IElement</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">IElement</span><span class="p">(</span><span class="n">ABC</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">N</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Interface representing a general HTML node within a tree structure.</span>
 <span class="sd">    `IElement` defines methods for common DOM operations, such as searching for elements,</span>
@@ -264,7 +358,7 @@
 
 <div class="viewcode-block" id="IElement.__init__">
 <a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">N</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the implementation with the given node.</span>
 
@@ -289,7 +383,7 @@
 <div class="viewcode-block" id="IElement.from_node">
 <a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.from_node">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_node</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_node</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">N</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a new instance of the implementation from a node.</span>
 
@@ -340,13 +434,13 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">node</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">node</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">N</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the underlying node wrapped by the instance.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span>  <span class="c1"># pragma: no cover</span>
 
 <div class="viewcode-block" id="IElement.get">
 <a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.IElement.get">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">N</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the node wrapped by the instance.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span>  <span class="c1"># pragma: no cover</span></div>
 
@@ -456,6 +550,11 @@
 <span class="sd">        -------</span>
 <span class="sd">        Optional[str]</span>
 <span class="sd">            The attribute value as a string, or `None` if the attribute does not exist.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        For dynamic attributes (e.g., in browser contexts), the returned value</span>
+<span class="sd">        reflects the current state of the element.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raise_not_implemented</span><span class="p">()</span></div>
 
@@ -535,16 +634,19 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Hashes element object using the wrapped node&#39;s hash.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="ow">is</span> <span class="n">other</span><span class="o">.</span><span class="n">node</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">node</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="si">!r}</span><span class="s2">)&quot;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="si">!r}</span><span class="s2">)&quot;</span></div>
 
 
 
@@ -594,6 +696,174 @@
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is abstract and does not implement select method.&quot;</span>
         <span class="p">)</span></div>
 </div>
+
+
+
+<span class="n">E</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">IElement</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="IBrowser">
+<a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.IBrowser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">IBrowser</span><span class="p">(</span><span class="n">ABC</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">B</span><span class="p">,</span> <span class="n">E</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interface representing a general browser for web navigation and interaction.</span>
+<span class="sd">    `IBrowser` defines methods for common browser operations.</span>
+
+<span class="sd">    This interface enables consistent access to various browser implementations</span>
+<span class="sd">    like selenium or playwright for automation of web interactions.</span>
+
+<span class="sd">    Any implementation should wrap a browser object and allow `soupsavvy`</span>
+<span class="sd">    components to operate on it seamlessly.</span>
+
+<span class="sd">    Current Implementations:</span>
+<span class="sd">    - `SeleniumBrowser`: Wraps a `Selenium WebDriver` instance.</span>
+<span class="sd">    - `PlaywrightBrowser`: Wraps a `Playwright Page` instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_NOT_IMPLEMENTED_MESSAGE</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;IBrowser is an abstract interface and does not implement this method.&quot;</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="IBrowser.__init__">
+<a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.IBrowser.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">browser</span><span class="p">:</span> <span class="n">B</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the implementation with the given browser instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        browser : Any</span>
+<span class="sd">            Browser instance to wrap for specific implementation.</span>
+<span class="sd">        *args: Any</span>
+<span class="sd">            Additional positional arguments to pass to the constructor.</span>
+<span class="sd">        **kwargs: Any</span>
+<span class="sd">            Additional keyword arguments to pass to the constructor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_browser</span> <span class="o">=</span> <span class="n">browser</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">browser</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">B</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the underlying browser wrapped by the instance.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_browser</span>  <span class="c1"># pragma: no cover</span>
+
+<div class="viewcode-block" id="IBrowser.get">
+<a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.IBrowser.get">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">B</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the browser wrapped by the instance.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span>  <span class="c1"># pragma: no cover</span></div>
+
+
+<div class="viewcode-block" id="IBrowser.navigate">
+<a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.IBrowser.navigate">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">navigate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Navigates the browser to the specified URL.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        url : str</span>
+<span class="sd">            The URL to navigate to.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raise_not_implemented</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="IBrowser.click">
+<a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.IBrowser.click">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">E</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs a click action on the specified element.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        element : IElement</span>
+<span class="sd">            The target element of implementation compatible with browser</span>
+<span class="sd">            that will be clicked.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raise_not_implemented</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="IBrowser.send_keys">
+<a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.IBrowser.send_keys">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">E</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">clear</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sends keystrokes to the specified element.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        element : IElement</span>
+<span class="sd">            The target element of implementation compatible with browser</span>
+<span class="sd">            to interact with.</span>
+<span class="sd">        value : str</span>
+<span class="sd">            The value to insert into the element.</span>
+<span class="sd">        clear : bool, optional</span>
+<span class="sd">            If `True`, clears existing content before sending keys.</span>
+<span class="sd">            Defaults to `True`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raise_not_implemented</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="IBrowser.get_document">
+<a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.IBrowser.get_document">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_document</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">E</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the html document of the current page as an `IElement`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        IElement</span>
+<span class="sd">            The html document of the current page, soupsavvy implementation</span>
+<span class="sd">            compatible with the browser.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TagNotFoundException</span>
+<span class="sd">            If the &lt;html&gt; element is not found on the page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raise_not_implemented</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="IBrowser.close">
+<a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.IBrowser.close">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Closes the browser and releases resources.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raise_not_implemented</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="IBrowser.get_current_url">
+<a class="viewcode-back" href="../../soupsavvy.interfaces.html#soupsavvy.interfaces.IBrowser.get_current_url">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_current_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the current URL of the browser.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raise_not_implemented</span><span class="p">()</span></div>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_raise_not_implemented</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Raises a `NotImplementedError` indicating that this method is abstract.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_NOT_IMPLEMENTED_MESSAGE</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Hashes element object using the wrapped browser&#39;s id.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">browser</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="si">!r}</span><span class="s2">)&quot;</span></div>
 
 </pre></div>
 

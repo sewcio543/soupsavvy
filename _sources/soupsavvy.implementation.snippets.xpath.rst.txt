@@ -1,0 +1,7 @@
+implementation.snippets.xpath
+==============================================
+
+.. automodule:: soupsavvy.implementation.snippets.xpath
+   :members:
+   :undoc-members:
+   :show-inheritance:

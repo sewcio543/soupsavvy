@@ -55,6 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="soupsavvy.implementation.html">implementation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.implementation.html#subpackages">Subpackages</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="soupsavvy.implementation.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.implementation.bs4.html">implementation.bs4</a></li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.implementation.element.html">implementation.element</a></li>
@@ -62,6 +63,7 @@
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.implementation.playwright.html">implementation.playwright</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">implementation.selenium</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.implementation.selenium.SeleniumElement"><code class="docutils literal notranslate"><span class="pre">SeleniumElement</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soupsavvy.implementation.selenium.SeleniumBrowser"><code class="docutils literal notranslate"><span class="pre">SeleniumBrowser</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -114,19 +116,21 @@
              
   <section id="module-soupsavvy.implementation.selenium">
 <span id="implementation-selenium"></span><h1>implementation.selenium<a class="headerlink" href="#module-soupsavvy.implementation.selenium" title="Link to this heading"></a></h1>
-<p>Module with <cite>selenium</cite> implementation of <cite>IElement</cite>.
-<cite>SeleniumElement</cite> class is an adapter making <cite>selenium</cite> tree,
-compatible with <cite>IElement</cite> interface and usable across the library.</p>
+<p>Module with <cite>selenium</cite> implementations compatible with soupsavvy interfaces.
+- <cite>SeleniumElement</cite> class is an adapter making <cite>selenium</cite> tree,
+compatible with <cite>IElement</cite> interface and usable across the library.
+- <cite>SeleniumBrowser</cite> class is an adapter making <cite>selenium</cite> WebDriver
+compatible with <cite>IBrowser</cite>.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.implementation.selenium.SeleniumElement">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SeleniumElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/implementation/selenium.html#SeleniumElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.selenium.SeleniumElement" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">IElement</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SeleniumElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">N</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/implementation/selenium.html#SeleniumElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.selenium.SeleniumElement" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">IElement</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">WebElement</span></code>]</p>
 <p>Implementation of <cite>IElement</cite> for <cite>selenium</cite> tree.
 Adapter for <cite>selenium</cite> objects, that makes them usable across the library.</p>
 <section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.implementation.selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeleniumElement</span>
-<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">selenium.webdriver.common.by</span><span class="w"> </span><span class="kn">import</span> <span class="n">By</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">selenium.ISeleniumDriver.common.by</span><span class="w"> </span><span class="kn">import</span> <span class="n">By</span>
 <span class="gp">... </span><span class="n">node</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">TAG_NAME</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">)</span>
 <span class="gp">... </span><span class="n">element</span> <span class="o">=</span> <span class="n">SeleniumElement</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
 </pre></div>
@@ -265,6 +269,11 @@ Nodes are returned in depth-first order.</p>
 </dd>
 </dl>
 </section>
+<section id="id11">
+<h3>Notes<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<p>For dynamic attributes (e.g., in browser contexts), the returned value
+reflects the current state of the element.</p>
+</section>
 </dd></dl>
 
 <dl class="py property">
@@ -277,14 +286,14 @@ Nodes are returned in depth-first order.</p>
 <dt class="sig sig-object py" id="soupsavvy.implementation.selenium.SeleniumElement.text">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">text</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#soupsavvy.implementation.selenium.SeleniumElement.text" title="Link to this definition"></a></dt>
 <dd><p>Gets the combined text content of this element.</p>
-<section id="id11">
-<h3>Notes<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<section id="id12">
+<h3>Notes<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
 <p>Concatenates all text nodes within this element. The format may vary
 slightly across implementations depending on handling of whitespace or
 nested elements.</p>
 </section>
-<section id="id12">
-<h3>Returns<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<section id="id13">
+<h3>Returns<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>str</dt><dd><p>Text content of this element, or an empty string if none is found.</p>
 </dd>
@@ -296,15 +305,15 @@ nested elements.</p>
 <dt class="sig sig-object py" id="soupsavvy.implementation.selenium.SeleniumElement.css">
 <span class="sig-name descname"><span class="pre">css</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="soupsavvy.selectors.css.api.html#soupsavvy.selectors.css.api.SeleniumCSSApi" title="soupsavvy.selectors.css.api.SeleniumCSSApi"><span class="pre">SeleniumCSSApi</span></a></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/selenium.html#SeleniumElement.css"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.selenium.SeleniumElement.css" title="Link to this definition"></a></dt>
 <dd><p>Returns a <cite>SelectionApi</cite> for CSS-based selection.</p>
-<section id="id13">
-<h3>Parameters<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<section id="id14">
+<h3>Parameters<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>selector<span class="classifier">Any</span></dt><dd><p>The CSS selector to apply.</p>
 </dd>
 </dl>
 </section>
-<section id="id14">
-<h3>Returns<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
+<section id="id15">
+<h3>Returns<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>SelectionApi</dt><dd><p>Initialized <cite>SelectionApi</cite> instance for CSS selection.</p>
 </dd>
@@ -316,15 +325,15 @@ nested elements.</p>
 <dt class="sig sig-object py" id="soupsavvy.implementation.selenium.SeleniumElement.xpath">
 <span class="sig-name descname"><span class="pre">xpath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="soupsavvy.selectors.xpath.api.html#soupsavvy.selectors.xpath.api.SeleniumXPathApi" title="soupsavvy.selectors.xpath.api.SeleniumXPathApi"><span class="pre">SeleniumXPathApi</span></a></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/selenium.html#SeleniumElement.xpath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.selenium.SeleniumElement.xpath" title="Link to this definition"></a></dt>
 <dd><p>Returns a <cite>SelectionApi</cite> for XPath-based selection.</p>
-<section id="id15">
-<h3>Parameters<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<section id="id16">
+<h3>Parameters<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>selector<span class="classifier">Any</span></dt><dd><p>The XPath selector to apply.</p>
 </dd>
 </dl>
 </section>
-<section id="id16">
-<h3>Returns<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
+<section id="id17">
+<h3>Returns<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>SelectionApi</dt><dd><p>Initialized <cite>SelectionApi</cite> instance for XPath selection.</p>
 </dd>
@@ -332,16 +341,100 @@ nested elements.</p>
 </section>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="soupsavvy.implementation.selenium.SeleniumElement.node">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">node</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">WebElement</span></em><a class="headerlink" href="#soupsavvy.implementation.selenium.SeleniumElement.node" title="Link to this definition"></a></dt>
-<dd><p>Returns the underlying node wrapped by the instance.</p>
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="soupsavvy.implementation.selenium.SeleniumBrowser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SeleniumBrowser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">browser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/implementation/selenium.html#SeleniumBrowser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.selenium.SeleniumBrowser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IBrowser" title="soupsavvy.interfaces.IBrowser"><code class="xref py py-class docutils literal notranslate"><span class="pre">IBrowser</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">WebDriver</span></code>, <a class="reference internal" href="#soupsavvy.implementation.selenium.SeleniumElement" title="soupsavvy.implementation.selenium.SeleniumElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">SeleniumElement</span></code></a>]</p>
+<p>Implementation of <cite>IBrowser</cite> for <cite>selenium</cite> WebDriver.
+Adapter for <cite>selenium</cite> WebDriver, that makes them usable across the library.</p>
+<section id="id18">
+<h2>Example<a class="headerlink" href="#id18" title="Link to this heading"></a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.implementation.selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">SeleniumBrowser</span>
+<span class="gp">... </span><span class="kn">from</span><span class="w"> </span><span class="nn">selenium</span><span class="w"> </span><span class="kn">import</span> <span class="n">webdriver</span>
+<span class="gp">... </span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">()</span>
+<span class="gp">... </span><span class="n">browser</span> <span class="o">=</span> <span class="n">SeleniumBrowser</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.implementation.selenium.SeleniumBrowser.navigate">
+<span class="sig-name descname"><span class="pre">navigate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/selenium.html#SeleniumBrowser.navigate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.selenium.SeleniumBrowser.navigate" title="Link to this definition"></a></dt>
+<dd><p>Navigates the browser to the specified URL.</p>
+<section id="id19">
+<h3>Parameters<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>url<span class="classifier">str</span></dt><dd><p>The URL to navigate to.</p>
+</dd>
+</dl>
+</section>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.implementation.selenium.SeleniumElement.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">WebElement</span></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/selenium.html#SeleniumElement.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.selenium.SeleniumElement.get" title="Link to this definition"></a></dt>
-<dd><p>Returns the node wrapped by the instance.</p>
+<dt class="sig sig-object py" id="soupsavvy.implementation.selenium.SeleniumBrowser.click">
+<span class="sig-name descname"><span class="pre">click</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#soupsavvy.implementation.selenium.SeleniumElement" title="soupsavvy.implementation.selenium.SeleniumElement"><span class="pre">SeleniumElement</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/selenium.html#SeleniumBrowser.click"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.selenium.SeleniumBrowser.click" title="Link to this definition"></a></dt>
+<dd><p>Performs a click action on the specified element.</p>
+<section id="id20">
+<h3>Parameters<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>element<span class="classifier">IElement</span></dt><dd><p>The target element of implementation compatible with browser
+that will be clicked.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.implementation.selenium.SeleniumBrowser.send_keys">
+<span class="sig-name descname"><span class="pre">send_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#soupsavvy.implementation.selenium.SeleniumElement" title="soupsavvy.implementation.selenium.SeleniumElement"><span class="pre">SeleniumElement</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/selenium.html#SeleniumBrowser.send_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.selenium.SeleniumBrowser.send_keys" title="Link to this definition"></a></dt>
+<dd><p>Sends keystrokes to the specified element.</p>
+<section id="id21">
+<h3>Parameters<a class="headerlink" href="#id21" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>element<span class="classifier">IElement</span></dt><dd><p>The target element of implementation compatible with browser
+to interact with.</p>
+</dd>
+<dt>value<span class="classifier">str</span></dt><dd><p>The value to insert into the element.</p>
+</dd>
+<dt>clear<span class="classifier">bool, optional</span></dt><dd><p>If <cite>True</cite>, clears existing content before sending keys.
+Defaults to <cite>True</cite>.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.implementation.selenium.SeleniumBrowser.get_document">
+<span class="sig-name descname"><span class="pre">get_document</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#soupsavvy.implementation.selenium.SeleniumElement" title="soupsavvy.implementation.selenium.SeleniumElement"><span class="pre">SeleniumElement</span></a></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/selenium.html#SeleniumBrowser.get_document"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.selenium.SeleniumBrowser.get_document" title="Link to this definition"></a></dt>
+<dd><p>Returns the html document of the current page as an <cite>IElement</cite>.</p>
+<section id="id22">
+<h3>Returns<a class="headerlink" href="#id22" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>IElement</dt><dd><p>The html document of the current page, soupsavvy implementation
+compatible with the browser.</p>
+</dd>
+</dl>
+</section>
+<section id="raises">
+<h3>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>TagNotFoundException</dt><dd><p>If the &lt;html&gt; element is not found on the page.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.implementation.selenium.SeleniumBrowser.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/selenium.html#SeleniumBrowser.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.selenium.SeleniumBrowser.close" title="Link to this definition"></a></dt>
+<dd><p>Closes the browser and releases resources.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="soupsavvy.implementation.selenium.SeleniumBrowser.get_current_url">
+<span class="sig-name descname"><span class="pre">get_current_url</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/selenium.html#SeleniumBrowser.get_current_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.selenium.SeleniumBrowser.get_current_url" title="Link to this definition"></a></dt>
+<dd><p>Returns the current URL of the browser.</p>
 </dd></dl>
 
 </section>

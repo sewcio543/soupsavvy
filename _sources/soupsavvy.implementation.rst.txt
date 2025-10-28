@@ -1,6 +1,14 @@
 implementation
 ================================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.implementation.snippets
+
 Submodules
 ----------
 

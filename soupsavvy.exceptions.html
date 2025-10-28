@@ -318,6 +318,14 @@ of the pipeline. Special exception that accepts result as first argument.</p>
 </dd></dl>
 
 <dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.exceptions.NotBrowserException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NotBrowserException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#NotBrowserException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.NotBrowserException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.OperationException" title="soupsavvy.exceptions.OperationException"><code class="xref py py-class docutils literal notranslate"><span class="pre">OperationException</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">TypeError</span></code></p>
+<p>Exception to be raised when function expected <cite>IBrowser</cite> as input
+and got argument of the different, invalid type.</p>
+</dd></dl>
+
+<dl class="py exception">
 <dt class="sig sig-object py" id="soupsavvy.exceptions.BaseModelException">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseModelException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#BaseModelException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.BaseModelException" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.SoupsavvyException" title="soupsavvy.exceptions.SoupsavvyException"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoupsavvyException</span></code></a></p>
@@ -394,6 +402,14 @@ Frozen model instances are read-only and cannot be modified.</p>
 <dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.BaseModelException" title="soupsavvy.exceptions.BaseModelException"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModelException</span></code></a></p>
 <p>Exception raised by <cite>BaseModel</cite> when a method is decorated with an invalid
 decorator.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="soupsavvy.exceptions.ModelNotJsonSerializableException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ModelNotJsonSerializableException</span></span><a class="reference internal" href="_modules/soupsavvy/exceptions.html#ModelNotJsonSerializableException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.exceptions.ModelNotJsonSerializableException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#soupsavvy.exceptions.BaseModelException" title="soupsavvy.exceptions.BaseModelException"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModelException</span></code></a></p>
+<p>Exception raised by <cite>BaseModel</cite> when trying to serialize model to JSON
+but one of its fields is not JSON serializable.</p>
 </dd></dl>
 
 </section>

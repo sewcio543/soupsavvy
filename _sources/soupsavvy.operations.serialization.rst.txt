@@ -1,0 +1,7 @@
+operations.serialization
+=========================================
+
+.. automodule:: soupsavvy.operations.serialization
+   :members:
+   :undoc-members:
+   :show-inheritance:

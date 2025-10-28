@@ -25,7 +25,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="implementation.element" href="soupsavvy.implementation.element.html" />
-    <link rel="prev" title="implementation" href="soupsavvy.implementation.html" /> 
+    <link rel="prev" title="implementation.snippets.xpath" href="soupsavvy.implementation.snippets.xpath.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -55,6 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="soupsavvy.implementation.html">implementation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.implementation.html#subpackages">Subpackages</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="soupsavvy.implementation.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">implementation.bs4</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#soupsavvy.implementation.bs4.SoupElement"><code class="docutils literal notranslate"><span class="pre">SoupElement</span></code></a></li>
@@ -119,8 +120,8 @@
 compatible with <cite>IElement</cite> interface and usable across the library.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.implementation.bs4.SoupElement">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SoupElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/implementation/bs4.html#SoupElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.bs4.SoupElement" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">IElement</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SoupElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">N</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/implementation/bs4.html#SoupElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.bs4.SoupElement" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">IElement</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tag</span></code>]</p>
 <p>Implementation of <cite>IElement</cite> for <cite>BeautifulSoup</cite> tree.
 Adapter for <cite>bs4</cite> objects, that makes them usable across the library.</p>
 <section id="example">
@@ -217,6 +218,11 @@ If <cite>None</cite>, returns all ancestors.</p>
 </dd>
 </dl>
 </section>
+<section id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h3>
+<p>For dynamic attributes (e.g., in browser contexts), the returned value
+reflects the current state of the element.</p>
+</section>
 </dd></dl>
 
 <dl class="py method">
@@ -243,12 +249,12 @@ If <cite>None</cite>, returns all ancestors.</p>
 <dt class="sig sig-object py" id="soupsavvy.implementation.bs4.SoupElement.children">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">children</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Self</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.implementation.bs4.SoupElement.children" title="Link to this definition"></a></dt>
 <dd><p>Returns an iterable of the direct child elements of this node.</p>
-<section id="notes">
-<h3>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h3>
+<section id="id9">
+<h3>Notes<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
 <p>Only tag elements are included; text and comment nodes are excluded.</p>
 </section>
-<section id="id9">
-<h3>Returns<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<section id="id10">
+<h3>Returns<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>Iterable[Self]</dt><dd><p>Iterable of direct child nodes, in document order.</p>
 </dd>
@@ -260,13 +266,13 @@ If <cite>None</cite>, returns all ancestors.</p>
 <dt class="sig sig-object py" id="soupsavvy.implementation.bs4.SoupElement.descendants">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">descendants</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Self</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.implementation.bs4.SoupElement.descendants" title="Link to this definition"></a></dt>
 <dd><p>Returns an iterable of all descendant nodes of this node.</p>
-<section id="id10">
-<h3>Notes<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<section id="id11">
+<h3>Notes<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
 <p>Only tag elements are included; text and comment nodes are excluded.
 Nodes are returned in depth-first order.</p>
 </section>
-<section id="id11">
-<h3>Returns<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<section id="id12">
+<h3>Returns<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>Iterable[Self]</dt><dd><p>Iterable of all descendant nodes.</p>
 </dd>
@@ -278,8 +284,8 @@ Nodes are returned in depth-first order.</p>
 <dt class="sig sig-object py" id="soupsavvy.implementation.bs4.SoupElement.parent">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Self</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#soupsavvy.implementation.bs4.SoupElement.parent" title="Link to this definition"></a></dt>
 <dd><p>Returns the immediate parent node of this element, if it exists.</p>
-<section id="id12">
-<h3>Returns<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<section id="id13">
+<h3>Returns<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>Optional[Self]</dt><dd><p>The parent element, or <cite>None</cite> if this is the root node.</p>
 </dd>
@@ -297,31 +303,19 @@ Nodes are returned in depth-first order.</p>
 <dt class="sig sig-object py" id="soupsavvy.implementation.bs4.SoupElement.text">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">text</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#soupsavvy.implementation.bs4.SoupElement.text" title="Link to this definition"></a></dt>
 <dd><p>Gets the combined text content of this element.</p>
-<section id="id13">
-<h3>Notes<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<section id="id14">
+<h3>Notes<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
 <p>Concatenates all text nodes within this element. The format may vary
 slightly across implementations depending on handling of whitespace or
 nested elements.</p>
 </section>
-<section id="id14">
-<h3>Returns<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
+<section id="id15">
+<h3>Returns<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>str</dt><dd><p>Text content of this element, or an empty string if none is found.</p>
 </dd>
 </dl>
 </section>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="soupsavvy.implementation.bs4.SoupElement.node">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">node</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tag</span></em><a class="headerlink" href="#soupsavvy.implementation.bs4.SoupElement.node" title="Link to this definition"></a></dt>
-<dd><p>Returns the underlying node wrapped by the instance.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.implementation.bs4.SoupElement.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tag</span></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/bs4.html#SoupElement.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.bs4.SoupElement.get" title="Link to this definition"></a></dt>
-<dd><p>Returns the node wrapped by the instance.</p>
 </dd></dl>
 
 </section>
@@ -333,7 +327,7 @@ nested elements.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="soupsavvy.implementation.html" class="btn btn-neutral float-left" title="implementation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="soupsavvy.implementation.snippets.xpath.html" class="btn btn-neutral float-left" title="implementation.snippets.xpath" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="soupsavvy.implementation.element.html" class="btn btn-neutral float-right" title="implementation.element" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

@@ -1,0 +1,7 @@
+operations.browser
+===================================
+
+.. automodule:: soupsavvy.operations.browser
+   :members:
+   :undoc-members:
+   :show-inheritance:

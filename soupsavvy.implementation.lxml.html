@@ -55,6 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.testing.html">testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="soupsavvy.operators.html">operators</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="soupsavvy.implementation.html">implementation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="soupsavvy.implementation.html#subpackages">Subpackages</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="soupsavvy.implementation.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.implementation.bs4.html">implementation.bs4</a></li>
 <li class="toctree-l3"><a class="reference internal" href="soupsavvy.implementation.element.html">implementation.element</a></li>
@@ -119,8 +120,8 @@
 compatible with <cite>IElement</cite> interface and usable across the library.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="soupsavvy.implementation.lxml.LXMLElement">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LXMLElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/implementation/lxml.html#LXMLElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.lxml.LXMLElement" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">IElement</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LXMLElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">N</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/soupsavvy/implementation/lxml.html#LXMLElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.lxml.LXMLElement" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="soupsavvy.interfaces.html#soupsavvy.interfaces.IElement" title="soupsavvy.interfaces.IElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">IElement</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">_Element</span></code>]</p>
 <p>Implementation of <cite>IElement</cite> for <cite>lxml</cite> tree.
 Adapter for <cite>lxml</cite> objects, that makes them usable across the library.</p>
 <section id="example">
@@ -217,6 +218,11 @@ If <cite>None</cite>, returns all ancestors.</p>
 </dd>
 </dl>
 </section>
+<section id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h3>
+<p>For dynamic attributes (e.g., in browser contexts), the returned value
+reflects the current state of the element.</p>
+</section>
 </dd></dl>
 
 <dl class="py method">
@@ -263,12 +269,12 @@ If <cite>None</cite>, returns all ancestors.</p>
 <dt class="sig sig-object py" id="soupsavvy.implementation.lxml.LXMLElement.children">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">children</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Self</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.implementation.lxml.LXMLElement.children" title="Link to this definition"></a></dt>
 <dd><p>Returns an iterable of the direct child elements of this node.</p>
-<section id="notes">
-<h3>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h3>
+<section id="id11">
+<h3>Notes<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
 <p>Only tag elements are included; text and comment nodes are excluded.</p>
 </section>
-<section id="id11">
-<h3>Returns<a class="headerlink" href="#id11" title="Link to this heading"></a></h3>
+<section id="id12">
+<h3>Returns<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>Iterable[Self]</dt><dd><p>Iterable of direct child nodes, in document order.</p>
 </dd>
@@ -280,13 +286,13 @@ If <cite>None</cite>, returns all ancestors.</p>
 <dt class="sig sig-object py" id="soupsavvy.implementation.lxml.LXMLElement.descendants">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">descendants</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Self</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#soupsavvy.implementation.lxml.LXMLElement.descendants" title="Link to this definition"></a></dt>
 <dd><p>Returns an iterable of all descendant nodes of this node.</p>
-<section id="id12">
-<h3>Notes<a class="headerlink" href="#id12" title="Link to this heading"></a></h3>
+<section id="id13">
+<h3>Notes<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
 <p>Only tag elements are included; text and comment nodes are excluded.
 Nodes are returned in depth-first order.</p>
 </section>
-<section id="id13">
-<h3>Returns<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<section id="id14">
+<h3>Returns<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>Iterable[Self]</dt><dd><p>Iterable of all descendant nodes.</p>
 </dd>
@@ -298,8 +304,8 @@ Nodes are returned in depth-first order.</p>
 <dt class="sig sig-object py" id="soupsavvy.implementation.lxml.LXMLElement.parent">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parent</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Self</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#soupsavvy.implementation.lxml.LXMLElement.parent" title="Link to this definition"></a></dt>
 <dd><p>Returns the immediate parent node of this element, if it exists.</p>
-<section id="id14">
-<h3>Returns<a class="headerlink" href="#id14" title="Link to this heading"></a></h3>
+<section id="id15">
+<h3>Returns<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>Optional[Self]</dt><dd><p>The parent element, or <cite>None</cite> if this is the root node.</p>
 </dd>
@@ -317,31 +323,19 @@ Nodes are returned in depth-first order.</p>
 <dt class="sig sig-object py" id="soupsavvy.implementation.lxml.LXMLElement.text">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">text</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#soupsavvy.implementation.lxml.LXMLElement.text" title="Link to this definition"></a></dt>
 <dd><p>Gets the combined text content of this element.</p>
-<section id="id15">
-<h3>Notes<a class="headerlink" href="#id15" title="Link to this heading"></a></h3>
+<section id="id16">
+<h3>Notes<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
 <p>Concatenates all text nodes within this element. The format may vary
 slightly across implementations depending on handling of whitespace or
 nested elements.</p>
 </section>
-<section id="id16">
-<h3>Returns<a class="headerlink" href="#id16" title="Link to this heading"></a></h3>
+<section id="id17">
+<h3>Returns<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>str</dt><dd><p>Text content of this element, or an empty string if none is found.</p>
 </dd>
 </dl>
 </section>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="soupsavvy.implementation.lxml.LXMLElement.node">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">node</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">_Element</span></em><a class="headerlink" href="#soupsavvy.implementation.lxml.LXMLElement.node" title="Link to this definition"></a></dt>
-<dd><p>Returns the underlying node wrapped by the instance.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="soupsavvy.implementation.lxml.LXMLElement.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_Element</span></span></span><a class="reference internal" href="_modules/soupsavvy/implementation/lxml.html#LXMLElement.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#soupsavvy.implementation.lxml.LXMLElement.get" title="Link to this definition"></a></dt>
-<dd><p>Returns the node wrapped by the instance.</p>
 </dd></dl>
 
 </section>

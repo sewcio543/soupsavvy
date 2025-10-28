@@ -332,6 +332,19 @@
 
 
 
+<span class="c1">#! BROWSER OPERATIONS</span>
+
+
+<div class="viewcode-block" id="NotBrowserException">
+<a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.NotBrowserException">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NotBrowserException</span><span class="p">(</span><span class="n">OperationException</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exception to be raised when function expected `IBrowser` as input</span>
+<span class="sd">    and got argument of the different, invalid type.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+
 <span class="c1">#! MODELS</span>
 
 
@@ -428,6 +441,16 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Exception raised by `BaseModel` when a method is decorated with an invalid</span>
 <span class="sd">    decorator.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="ModelNotJsonSerializableException">
+<a class="viewcode-back" href="../../soupsavvy.exceptions.html#soupsavvy.exceptions.ModelNotJsonSerializableException">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ModelNotJsonSerializableException</span><span class="p">(</span><span class="n">BaseModelException</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exception raised by `BaseModel` when trying to serialize model to JSON</span>
+<span class="sd">    but one of its fields is not JSON serializable.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 </pre></div>

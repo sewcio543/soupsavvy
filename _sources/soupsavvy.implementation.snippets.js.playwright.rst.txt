@@ -1,0 +1,7 @@
+implementation.snippets.js.playwright
+======================================================
+
+.. automodule:: soupsavvy.implementation.snippets.js.playwright
+   :members:
+   :undoc-members:
+   :show-inheritance:

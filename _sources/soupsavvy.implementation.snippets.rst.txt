@@ -1,0 +1,27 @@
+implementation.snippets
+=========================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.implementation.snippets.js
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.implementation.snippets.css
+   soupsavvy.implementation.snippets.xpath
+
+Content
+---------------
+
+.. automodule:: soupsavvy.implementation.snippets
+   :members:
+   :undoc-members:
+   :show-inheritance:

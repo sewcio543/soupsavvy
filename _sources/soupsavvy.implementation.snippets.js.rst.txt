@@ -1,0 +1,19 @@
+implementation.snippets.js
+============================================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   soupsavvy.implementation.snippets.js.playwright
+   soupsavvy.implementation.snippets.js.selenium
+
+Content
+---------------
+
+.. automodule:: soupsavvy.implementation.snippets.js
+   :members:
+   :undoc-members:
+   :show-inheritance:

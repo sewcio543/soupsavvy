@@ -109,8 +109,14 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">soupsavvy.exceptions</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exc</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_operation</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">Comparable</span><span class="p">,</span> <span class="n">IElement</span><span class="p">,</span> <span class="n">TagSearcher</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_operation</span><span class="p">,</span> <span class="n">check_tag_searcher</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Comparable</span><span class="p">,</span>
+    <span class="n">IElement</span><span class="p">,</span>
+    <span class="n">JSONSerializable</span><span class="p">,</span>
+    <span class="n">TagSearcher</span><span class="p">,</span>
+    <span class="n">TagSearcherType</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.operations.selection_pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">SelectionPipeline</span>
 
 
@@ -118,34 +124,29 @@
 <a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.FieldWrapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FieldWrapper</span><span class="p">(</span><span class="n">TagSearcher</span><span class="p">,</span> <span class="n">Comparable</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A wrapper for `TagSearcher` objects, that acts as a higher order searcher,</span>
+<span class="sd">    A wrapper for `TagSearcher` valid objects, that acts as a higher order searcher,</span>
 <span class="sd">    which controls behavior of the wrapped searcher.</span>
-<span class="sd">    Used as field to defined model.</span>
+<span class="sd">    Used as field in defined model.</span>
+<span class="sd">    Subclasses must implement `find` method with their specific behavior.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FieldWrapper.__init__">
 <a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.FieldWrapper.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">TagSearcher</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">TagSearcherType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initializes wrapper with a `TagSearcher` instance.</span>
+<span class="sd">        Initializes wrapper with a `TagSearcher` valid object.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        selector : TagSearcher</span>
-<span class="sd">            The `TagSearcher` instance to be wrapped.</span>
+<span class="sd">            The `TagSearcher` valid object to be wrapped.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        NotTagSearcherException</span>
-<span class="sd">            If provided object is not an instance of `TagSearcher`.</span>
+<span class="sd">            If provided object is not a valid `TagSearcher`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">selector</span><span class="p">,</span> <span class="n">TagSearcher</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">NotTagSearcherException</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="n">TagSearcher</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
-            <span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_selector</span> <span class="o">=</span> <span class="n">selector</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_selector</span> <span class="o">=</span> <span class="n">check_tag_searcher</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
@@ -205,7 +206,10 @@
 <span class="sd">        bool</span>
 <span class="sd">            True if the instances are equal, False otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">==</span> <span class="n">x</span><span class="o">.</span><span class="n">selector</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span> <span class="o">==</span> <span class="n">x</span><span class="o">.</span><span class="n">selector</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SelectionPipeline</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -236,6 +240,33 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="FieldList">
+<a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.FieldList">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FieldList</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">JSONSerializable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convenience wrapper around list to provide JSON serialization for lists</span>
+<span class="sd">    containing JSON serializable items. Useful as field value to represent multiple</span>
+<span class="sd">    matched elements.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="FieldList.json">
+<a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.FieldList.json">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Serializes the FieldList to a JSON-compatible list.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list[Any]</span>
+<span class="sd">            A list containing JSON-serializable representations of the items.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">JSONSerializable</span><span class="p">)</span> <span class="k">else</span> <span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span>
+        <span class="p">]</span></div>
+</div>
 
 
 
@@ -278,7 +309,7 @@
 <span class="sd">        list[Any]</span>
 <span class="sd">            A list of matching results.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">FieldList</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selector</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="n">recursive</span><span class="p">))</span></div>
 </div>
 
 
@@ -353,14 +384,14 @@
 
 <div class="viewcode-block" id="Default.__init__">
 <a class="viewcode-back" href="../../../soupsavvy.models.wrappers.html#soupsavvy.models.Default.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">TagSearcher</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">TagSearcherType</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes `Default` field wrapper.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        selector : TagSearcher</span>
-<span class="sd">            The `TagSearcher` instance to be wrapped.</span>
+<span class="sd">            Object compatible with `TagSearcher` interface to be wrapped.</span>
 <span class="sd">        default : Any</span>
 <span class="sd">            The default value to return if no match is found.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

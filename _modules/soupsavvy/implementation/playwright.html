@@ -101,71 +101,22 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">islice</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">playwright.sync_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElementHandle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">playwright.sync_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElementHandle</span><span class="p">,</span> <span class="n">Page</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Self</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IElement</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">soupsavvy.exceptions</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">exc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">soupsavvy.implementation.snippets.js.playwright</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">js</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.implementation.snippets</span><span class="w"> </span><span class="kn">import</span> <span class="n">css</span><span class="p">,</span> <span class="n">xpath</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">IBrowser</span><span class="p">,</span> <span class="n">IElement</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.selectors.css.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaywrightCSSApi</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">soupsavvy.selectors.xpath.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlaywrightXPathApi</span>
 
 <span class="n">_UID_REGEX</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s*_uid=&quot;[^&quot;]*&quot;&#39;</span><span class="p">)</span>
 
-<span class="n">_FIND_ANCESTORS_SCRIPT</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">(element, limit) =&gt; {</span>
-<span class="s2">  function findAncestors(el, lim) {</span>
-<span class="s2">    const ancestors = [];</span>
-<span class="s2">    let parent = el.parentElement;</span>
-<span class="s2">    while (parent &amp;&amp; parent.nodeType === 1) {</span>
-<span class="s2">      ancestors.push(parent);</span>
-<span class="s2">      if (lim &amp;&amp; ancestors.length &gt;= lim) break;</span>
-<span class="s2">      parent = parent.parentElement;</span>
-<span class="s2">    }</span>
-<span class="s2">    return ancestors;</span>
-<span class="s2">  }</span>
-<span class="s2">  return findAncestors(element, limit);</span>
-<span class="s2">}</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="n">_FIND_ALL_SCRIPT</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">(element, args) =&gt; {</span>
-<span class="s2">  const [tagName, attrs, recursive] = args;</span>
-
-<span class="s2">  function matchesAttributes(element, attrs) {</span>
-<span class="s2">    for (const [key, val] of Object.entries(attrs)) {</span>
-<span class="s2">      const attrVal = element.getAttribute(key);</span>
-<span class="s2">      if (attrVal === null) return false;</span>
-
-<span class="s2">      if (typeof val === &quot;string&quot; &amp;&amp; !attrVal.split(&quot; &quot;).includes(val)) {</span>
-<span class="s2">        return false;</span>
-<span class="s2">      }</span>
-<span class="s2">    }</span>
-<span class="s2">    return true;</span>
-<span class="s2">  }</span>
-
-<span class="s2">  function collectElements(element, recursive) {</span>
-<span class="s2">    const matches = [];</span>
-<span class="s2">    const elements = recursive ? element.querySelectorAll(&quot;*&quot;) : element.children;</span>
-
-<span class="s2">    for (const el of elements) {</span>
-<span class="s2">      if (</span>
-<span class="s2">        (!tagName || el.tagName.toLowerCase() === tagName.toLowerCase()) &amp;&amp;</span>
-<span class="s2">        matchesAttributes(el, attrs)</span>
-<span class="s2">      ) {</span>
-<span class="s2">        matches.push(el);</span>
-<span class="s2">      }</span>
-<span class="s2">    }</span>
-
-<span class="s2">    return matches;</span>
-<span class="s2">  }</span>
-
-<span class="s2">  return collectElements(element, recursive);</span>
-<span class="s2">}</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
 
 <div class="viewcode-block" id="PlaywrightElement">
 <a class="viewcode-back" href="../../../soupsavvy.implementation.playwright.html#soupsavvy.implementation.playwright.PlaywrightElement">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">PlaywrightElement</span><span class="p">(</span><span class="n">IElement</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlaywrightElement</span><span class="p">(</span><span class="n">IElement</span><span class="p">[</span><span class="n">ElementHandle</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Implementation of `IElement` for `playwright` tree.</span>
 <span class="sd">    Adapter for `playwright` handles, that makes them usable across the library.</span>
@@ -191,16 +142,7 @@
 
         <span class="c1"># playwright does not guarantee the same identity for handles</span>
         <span class="c1"># from different queries, it needs to be worked around</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            el =&gt; {</span>
-<span class="sd">                if (!el._uid) {</span>
-<span class="sd">                    el._uid = Math.random().toString(36).substr(2, 9);</span>
-<span class="sd">                }</span>
-<span class="sd">                return el._uid;</span>
-<span class="sd">            }</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-        <span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">js</span><span class="o">.</span><span class="n">ADD_IDENTIFIER_SCRIPT</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PlaywrightElement.find_all">
@@ -216,7 +158,7 @@
         <span class="n">js_attrs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">attrs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
         <span class="n">found</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">evaluate_handle</span><span class="p">(</span>
-            <span class="n">_FIND_ALL_SCRIPT</span><span class="p">,</span>
+            <span class="n">js</span><span class="o">.</span><span class="n">FILTER_NODES_SCRIPT</span><span class="p">,</span>
             <span class="p">[</span><span class="n">name</span><span class="p">,</span> <span class="n">js_attrs</span><span class="p">,</span> <span class="n">recursive</span><span class="p">],</span>
         <span class="p">)</span>
         <span class="n">matched_elements</span> <span class="o">=</span> <span class="p">[</span>
@@ -238,25 +180,17 @@
 <div class="viewcode-block" id="PlaywrightElement.find_subsequent_siblings">
 <a class="viewcode-back" href="../../../soupsavvy.implementation.playwright.html#soupsavvy.implementation.playwright.PlaywrightElement.find_subsequent_siblings">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">find_subsequent_siblings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
-        <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">query_selector_all</span><span class="p">(</span><span class="s2">&quot;xpath=following-sibling::*&quot;</span><span class="p">)</span>
+        <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">query_selector_all</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;xpath=</span><span class="si">{</span><span class="n">xpath</span><span class="o">.</span><span class="n">FIND_SUBSEQUENT_SIBLINGS_SELECTOR</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">islice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="p">(</span><span class="n">iterator</span><span class="p">),</span> <span class="n">limit</span><span class="p">))</span></div>
-
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">node</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementHandle</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span>
-
-<div class="viewcode-block" id="PlaywrightElement.get">
-<a class="viewcode-back" href="../../../soupsavvy.implementation.playwright.html#soupsavvy.implementation.playwright.PlaywrightElement.get">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ElementHandle</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span></div>
 
 
 <div class="viewcode-block" id="PlaywrightElement.find_ancestors">
 <a class="viewcode-back" href="../../../soupsavvy.implementation.playwright.html#soupsavvy.implementation.playwright.PlaywrightElement.find_ancestors">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">find_ancestors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
         <span class="n">js_handle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">evaluate_handle</span><span class="p">(</span>
-            <span class="n">_FIND_ANCESTORS_SCRIPT</span><span class="p">,</span>
+            <span class="n">js</span><span class="o">.</span><span class="n">FIND_ANCESTORS_SCRIPT</span><span class="p">,</span>
             <span class="n">limit</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">ancestors</span> <span class="o">=</span> <span class="p">[</span>
@@ -269,17 +203,19 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
-        <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">query_selector_all</span><span class="p">(</span><span class="s2">&quot;xpath=./*&quot;</span><span class="p">)</span>
+        <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">query_selector_all</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;xpath=</span><span class="si">{</span><span class="n">xpath</span><span class="o">.</span><span class="n">FIND_ALL_CHILDREN_SELECTOR</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="p">(</span><span class="n">iterator</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">descendants</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
-        <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">query_selector_all</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>
+        <span class="n">iterator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">query_selector_all</span><span class="p">(</span><span class="n">css</span><span class="o">.</span><span class="n">FIND_ALL_DESCENDANTS_SELECTOR</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="p">(</span><span class="n">iterator</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Self</span><span class="p">]:</span>
-        <span class="n">handle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">evaluate_handle</span><span class="p">(</span><span class="s2">&quot;el =&gt; el.parentElement&quot;</span><span class="p">)</span>
+        <span class="n">handle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">evaluate_handle</span><span class="p">(</span><span class="n">js</span><span class="o">.</span><span class="n">PARENT_ELEMENT_SCRIPT</span><span class="p">)</span>
         <span class="n">element</span> <span class="o">=</span> <span class="n">handle</span><span class="o">.</span><span class="n">as_element</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -290,15 +226,21 @@
 <div class="viewcode-block" id="PlaywrightElement.get_attribute">
 <a class="viewcode-back" href="../../../soupsavvy.implementation.playwright.html#soupsavvy.implementation.playwright.PlaywrightElement.get_attribute">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="c1"># get live JS property first, then html attribute</span>
+        <span class="n">property_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">js</span><span class="o">.</span><span class="n">GET_ATTRIBUTE_SCRIPT</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">property_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">property_</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;el =&gt; el.tagName&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">js</span><span class="o">.</span><span class="n">TAG_NAME_SCRIPT</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">html</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;el =&gt; el.outerHTML&quot;</span><span class="p">)</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">js</span><span class="o">.</span><span class="n">OUTER_HTML_SCRIPT</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">_UID_REGEX</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">html</span><span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -318,7 +260,80 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_id</span></div>
+
+
+
+<div class="viewcode-block" id="PlaywrightBrowser">
+<a class="viewcode-back" href="../../../soupsavvy.implementation.playwright.html#soupsavvy.implementation.playwright.PlaywrightBrowser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlaywrightBrowser</span><span class="p">(</span><span class="n">IBrowser</span><span class="p">[</span><span class="n">Page</span><span class="p">,</span> <span class="n">PlaywrightElement</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementation of `IBrowser` for `playwright` Page.</span>
+<span class="sd">    Adapter for Playwright&#39;s `Page` object, allowing unified use across soupsavvy.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from playwright.sync_api import sync_playwright</span>
+<span class="sd">    &gt;&gt;&gt; from soupsavvy.implementation.playwright import PlaywrightBrowser</span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt; with sync_playwright() as p:</span>
+<span class="sd">    ...     browser = p.chromium.launch()</span>
+<span class="sd">    ...     page = browser.new_page()</span>
+<span class="sd">    ...     pw_browser = PlaywrightBrowser(page)</span>
+<span class="sd">    ...     pw_browser.navigate(&quot;https://example.com&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PlaywrightBrowser.navigate">
+<a class="viewcode-back" href="../../../soupsavvy.implementation.playwright.html#soupsavvy.implementation.playwright.PlaywrightBrowser.navigate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">navigate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="n">url</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlaywrightBrowser.click">
+<a class="viewcode-back" href="../../../soupsavvy.implementation.playwright.html#soupsavvy.implementation.playwright.PlaywrightBrowser.click">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">PlaywrightElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">js</span><span class="o">.</span><span class="n">CLICK_ELEMENT_SCRIPT</span><span class="p">,</span> <span class="n">element</span><span class="o">.</span><span class="n">node</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlaywrightBrowser.send_keys">
+<a class="viewcode-back" href="../../../soupsavvy.implementation.playwright.html#soupsavvy.implementation.playwright.PlaywrightBrowser.send_keys">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_keys</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">PlaywrightElement</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">clear</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">clear</span><span class="p">:</span>
+            <span class="n">element</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="n">element</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlaywrightBrowser.get_document">
+<a class="viewcode-back" href="../../../soupsavvy.implementation.playwright.html#soupsavvy.implementation.playwright.PlaywrightBrowser.get_document">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_document</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PlaywrightElement</span><span class="p">:</span>
+        <span class="n">element</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">query_selector</span><span class="p">(</span><span class="s2">&quot;html&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">TagNotFoundException</span><span class="p">(</span><span class="s2">&quot;Could not find &lt;html&gt; element on the page.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">PlaywrightElement</span><span class="p">(</span><span class="n">element</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlaywrightBrowser.close">
+<a class="viewcode-back" href="../../../soupsavvy.implementation.playwright.html#soupsavvy.implementation.playwright.PlaywrightBrowser.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PlaywrightBrowser.get_current_url">
+<a class="viewcode-back" href="../../../soupsavvy.implementation.playwright.html#soupsavvy.implementation.playwright.PlaywrightBrowser.get_current_url">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_current_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">url</span></div>
+</div>
 
 </pre></div>
 
