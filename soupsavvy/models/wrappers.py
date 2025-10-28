@@ -20,7 +20,6 @@ from soupsavvy.interfaces import (
     TagSearcher,
     TagSearcherType,
 )
-from soupsavvy.models.base import BaseModel
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 
 

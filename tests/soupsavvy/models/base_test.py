@@ -1609,7 +1609,7 @@ class TestBaseModel:
         model = ChildModel(title="Title", price=10)
         assert model.json() == {"title": "Title!?", "price": 10}
 
-    def test_custom_serializer_methodss_are_inherited_and_overridden(self):
+    def test_custom_serializer_methods_are_inherited_and_overridden(self):
         """
         Tests if custom serializer methods are inherited from base class
         and can be overridden in child class.
