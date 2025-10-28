@@ -15,6 +15,7 @@ from sqlalchemy.orm import relationship
 import soupsavvy.exceptions as exc
 from soupsavvy.models import All, Default, Required
 from soupsavvy.models.base import BaseModel, Field
+from soupsavvy.models.wrappers import FieldList
 from soupsavvy.operations import (
     Break,
     Continue,
@@ -395,7 +396,9 @@ class TestBaseModelIntegration:
         bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
+
         assert result == MockModel(title="Title", price=[10, 20, 30])
+        assert isinstance(result.price, FieldList)
 
     def test_all_returns_multiple_models_when_found(self, to_element: ToElement):
         """Tests if All returns list of models when wrapping model field."""
@@ -409,7 +412,6 @@ class TestBaseModelIntegration:
             __scope__ = MockDivSelector()
 
             title = TITLE_SELECTOR
-            #! TODO: list of models is not serialized properly in JSON operation
             info = All(MockInfo)
 
         text = """
@@ -423,6 +425,7 @@ class TestBaseModelIntegration:
         bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
+
         assert result == MockModel(
             title="Title",
             info=[
@@ -431,6 +434,7 @@ class TestBaseModelIntegration:
                 MockInfo(name="Heisenberg"),
             ],
         )
+        assert isinstance(result.info, FieldList)
 
     def test_all_returns_empty_list_if_nothing_found_for_field(
         self, to_element: ToElement
@@ -456,7 +460,9 @@ class TestBaseModelIntegration:
         bs = to_element(text)
         selector = MockModel
         result = selector.find(bs)
+
         assert result == MockModel(title="Title", price=[])
+        assert isinstance(result.price, FieldList)
 
     def test_ifelse_operation_evaluates_condition_properly(self, to_element: ToElement):
         """
@@ -850,6 +856,36 @@ class TestBaseModelIntegration:
             {"title": "Title2", "price": 20},
         ]
 
+    def test_raises_error_when_any_field_is_not_serializable(
+        self, to_element: ToElement
+    ):
+        """
+        Tests if pipeline raises FailedOperationExecution when any field
+        of the model is not serializable to JSON. JSON operation fails
+        and raises the exception.
+        """
+
+        class MockNotSerializable:
+            pass
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = TITLE_SELECTOR | Operation(lambda x: MockNotSerializable())
+            price = PRICE_SELECTOR
+
+        text = """
+            <div>
+                <a>Title</a>
+                <p class="widget">10</p>
+            </div>
+        """
+        bs = to_element(text)
+        pipe = MockModel | JSON()
+
+        with pytest.raises(exc.FailedOperationExecution):
+            pipe.find(bs)
+
     def test_json_serialization_when_model_not_found(self, to_element: ToElement):
         """
         Tests if model combined with JSON operation handles not found model as expected:
@@ -901,14 +937,14 @@ class TestBaseModelIntegration:
             <div>
                 <span>
                     <a>Hello</a>
-                    <span class="menu">World</span>
+                    <h1 class="menu">World</h1>
                 </span>
                 <p class="widget">20</p>
             </div>
             <div>
                 <span>
                     <a>Hello2</a>
-                    <span class="menu">World2</span>
+                    <h1 class="menu">World2</h1>
                 </span>
                 <p class="widget">200</p>
             </div>
@@ -970,7 +1006,7 @@ class TestBaseModelIntegration:
             <div>
                 <span>
                     <a>Hello</a>
-                    <span class="menu">World</span>
+                    <h1 class="menu">World</h1>
                 </span>
                 <p class="widget">20</p>
             </div>
@@ -991,5 +1027,81 @@ class TestBaseModelIntegration:
                 "title": "Hello",
                 "author": "World",
             },
+            "price": 20,
+        }
+
+    def test_all_serialization_with_json_and_standard_objects(
+        self, to_element: ToElement
+    ):
+        """
+        Tests if pipeline with JSON operation works properly when All is used
+        to extract multiple standard objects (int, str, etc.) in list.
+        """
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            title = TITLE_SELECTOR
+            price = All(PRICE_SELECTOR)
+
+        text = """
+            <div>
+                <a>Title</a>
+                <p class="widget">10</p>
+                <p class="widget">20</p>
+                <a>Title2</a>
+                <p>Hello</p>
+                <p class="widget">30</p>
+            </div>
+        """
+        bs = to_element(text)
+
+        pipe = MockModel | JSON()
+        result = pipe.find(bs)
+        expected = {"title": "Title", "price": [10, 20, 30]}
+        assert result == expected
+
+    def test_all_serialization_with_json_and_nested_models(self, to_element: ToElement):
+        """
+        Tests if pipeline with JSON operation works properly when All is used
+        to extract multiple nested models. It should return serialized list of models
+        in dictionary.
+        """
+
+        class MockInfoModel(BaseModel):
+            __scope__ = MockSpanSelector()
+
+            title = TITLE_SELECTOR
+            author = MockClassMenuSelector() | MockTextOperation()
+
+        class MockModel(BaseModel):
+            __scope__ = MockDivSelector()
+
+            info = All(MockInfoModel)
+            price = PRICE_SELECTOR
+
+        text = """
+            <div>
+                <span>
+                    <a>Hello</a>
+                    <h1 class="menu">World</h1>
+                </span>
+                <span>
+                    <a>Hello2</a>
+                    <h1 class="menu">World2</h1>
+                </span>
+                <p class="widget">20</p>
+            </div>
+        """
+        bs = to_element(text)
+
+        pipe = MockModel | JSON()
+        result = pipe.find(bs)
+
+        assert result == {
+            "info": [
+                {"title": "Hello", "author": "World"},
+                {"title": "Hello2", "author": "World2"},
+            ],
             "price": 20,
         }

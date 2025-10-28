@@ -20,6 +20,14 @@ from typing_extensions import Self
 import soupsavvy.exceptions as exc
 
 
+def _raise_not_implemented(self) -> NoReturn:
+    """Raises a `NotImplementedError` indicating that this method is abstract."""
+    raise NotImplementedError(
+        f"{self.__class__.__name__} is an interface "
+        "and does not implement this method."
+    )
+
+
 class Executable(ABC):
     """
     Interface for operations that can be executed on single argument.
@@ -29,10 +37,7 @@ class Executable(ABC):
     @abstractmethod
     def execute(self, arg: Any) -> Any:
         """Executes the operation on the given argument."""
-        raise NotImplementedError(
-            f"{self.__class__.__name__} is an interface "
-            "and does not implement this method."
-        )
+        _raise_not_implemented(self)
 
 
 class Comparable(ABC):
@@ -43,10 +48,19 @@ class Comparable(ABC):
 
     @abstractmethod
     def __eq__(self, x: Any) -> bool:
-        raise NotImplementedError(
-            f"{self.__class__.__name__} is an interface "
-            "and does not implement this method."
-        )
+        _raise_not_implemented(self)
+
+
+class JSONSerializable(ABC):
+    """
+    Abstract class for objects that can be serialized to JSON.
+    They must have `json` method that returns any JSON serializable object.
+    """
+
+    @abstractmethod
+    def json(self) -> Any:
+        """Serializes the object to a JSON-compatible format."""
+        _raise_not_implemented(self)
 
 
 class TagSearcher(ABC):
@@ -82,10 +96,7 @@ class TagSearcher(ABC):
         Any
             Processed result from the element.
         """
-        raise NotImplementedError(
-            f"{self.__class__.__name__} is an interface "
-            "and does not implement this method."
-        )
+        _raise_not_implemented(self)
 
     @abstractmethod
     def find_all(
@@ -114,10 +125,7 @@ class TagSearcher(ABC):
         list[Any]
             A list of results from processed element.
         """
-        raise NotImplementedError(
-            f"{self.__class__.__name__} is an interface "
-            "and does not implement this method."
-        )
+        _raise_not_implemented(self)
 
 
 class TagSearcherMeta(type(ABC)):

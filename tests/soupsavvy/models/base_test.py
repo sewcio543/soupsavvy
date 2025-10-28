@@ -9,6 +9,7 @@ and all its utilities, including Field and decorators.
 import pytest
 
 import soupsavvy.exceptions as exc
+from soupsavvy.interfaces import JSONSerializable
 from soupsavvy.models import Required
 from soupsavvy.models.base import BaseModel, Field, MigrationSchema, post, serializer
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
@@ -37,6 +38,19 @@ from tests.soupsavvy.models.conftest import (
     MockNotEqualModel,
     MockTitle,
 )
+
+
+class MockNotJsonSerializable:
+    def __init__(self, x):
+        self.x = x
+
+
+class MockJsonSerializable(JSONSerializable):
+    def __init__(self, x):
+        self.x = x
+
+    def json(self) -> dict:
+        return {"x": self.x}
 
 
 @pytest.mark.model
@@ -1595,7 +1609,7 @@ class TestBaseModel:
         model = ChildModel(title="Title", price=10)
         assert model.json() == {"title": "Title!?", "price": 10}
 
-    def test_custom_serializer_methods_are_inherited_and_overridden(self):
+    def test_custom_serializer_methodss_are_inherited_and_overridden(self):
         """
         Tests if custom serializer methods are inherited from base class
         and can be overridden in child class.
@@ -1662,6 +1676,77 @@ class TestBaseModel:
                 @post("random")
                 def method(self, value: str) -> str:
                     return value
+
+    def test_json_serializable_objects_are_serialized(self):
+        """
+        Tests if any object as a field that inherits from JsonSerializable
+        is serialized using its json method.
+        """
+
+        title_instance = MockJsonSerializable(10)
+        instance = MockModel(title=title_instance, price=10)
+        json_dict = instance.json()
+        title_json = title_instance.json()
+
+        assert title_json == {"x": 10}
+        assert json_dict == {"title": title_json, "price": 10}
+
+    @pytest.mark.parametrize(
+        argnames="title",
+        argvalues=[
+            MockTitle(name="Title"),
+            MockJsonSerializable(20),
+            MockNotJsonSerializable(67),
+        ],
+        ids=["single_model", "json_serializable", "not_json_serializable_object"],
+    )
+    def test_serializer_decorator_overrides_default_serialization_and_raises_error(
+        self, title
+    ):
+        """
+        Tests if serializer decorator overrides default serialization
+        and raises ModelNotJsonSerializableException when returned object
+        is not JSON serializable.
+        """
+
+        class ChildModel(MockModel):
+
+            @serializer("title")
+            def serialize_title(self, value):
+                # override serialization to just return the value directly
+                return value
+
+        instance = ChildModel(title=title, price=10)
+
+        with pytest.raises(exc.ModelNotJsonSerializableException):
+            instance.json()
+
+    @pytest.mark.parametrize(
+        argnames="title",
+        argvalues=[
+            [MockTitle(name="Title1"), "some_string"],
+            MockNotJsonSerializable(67),
+            {"key1": MockTitle(name="Title"), "key2": "value2"},
+        ],
+        ids=[
+            "list_with_not_json_serializable",
+            "not_json_serializable_object",
+            "dict_with_not_json_serializable",
+        ],
+    )
+    def test_raises_error_when_field_object_is_not_json_serializable(self, title):
+        """
+        Tests if ModelNotJsonSerializableException is raised
+        when any of field objects is not JSON serializable.
+        """
+
+        instance = MockModel(
+            title=title,
+            price=10,
+        )
+
+        with pytest.raises(exc.ModelNotJsonSerializableException):
+            instance.json()
 
     def test_or_operation_on_model_class_returns_selection_pipeline(self):
         """

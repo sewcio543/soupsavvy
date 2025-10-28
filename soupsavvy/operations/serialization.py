@@ -1,18 +1,7 @@
 """Module with all serialization operations."""
 
-from typing import Protocol
-
 from soupsavvy.base import BaseOperation
-
-
-class JSONSerializable(Protocol):
-    """
-    Protocol for objects that can be serialized to JSON.
-    They must have `json` method that returns a dictionary.
-    This is a protocol and not a base class to allow for more flexibility.
-    """
-
-    def json(self) -> dict: ...
+from soupsavvy.interfaces import JSONSerializable
 
 
 class JSON(BaseOperation):
