@@ -10,6 +10,7 @@ Classes
 
 from __future__ import annotations
 
+import json
 from collections.abc import Callable
 from dataclasses import dataclass
 from dataclasses import field as datafield
@@ -24,6 +25,7 @@ from soupsavvy.base import BaseOperation, SoupSelector, check_operation, check_s
 from soupsavvy.interfaces import (
     Comparable,
     IElement,
+    JSONSerializable,
     TagSearcher,
     TagSearcherExceptions,
     TagSearcherMeta,
@@ -106,6 +108,14 @@ def serializer(field: str) -> Callable[[Callable], Callable]:
         return func
 
     return decorator
+
+
+def _is_json_serializable(obj) -> tuple[bool, Optional[Exception]]:
+    try:
+        json.dumps(obj)
+        return True, None
+    except TypeError as e:
+        return False, e
 
 
 @dataclass
@@ -336,7 +346,7 @@ class ModelMeta(TagSearcherMeta):
         return SelectionPipeline(selector=cls, operation=x)
 
 
-class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
+class BaseModel(TagSearcher, Comparable, JSONSerializable, metaclass=ModelMeta):
     """Base class for all user-defined models in `soupsavvy`."""
 
     __scope__: SoupSelector = None  # type: ignore
@@ -638,20 +648,28 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         dict
             A json-serializable representation of the model instance.
         """
-        dictionary = {}
+        serializers = getattr(self, c.SERIALIZERS)
 
-        for name in self.__class__.fields.keys():
-            attribute = getattr(self, name)
-            serializer = getattr(self, c.SERIALIZERS).get(name)
+        def serialize_field(name: str) -> Any:
+            serialized = value = getattr(self, name)
+            serializer = serializers.get(name)
 
-            json_value = (
-                attribute.json()
-                if isinstance(attribute, BaseModel)
-                else serializer(self, attribute) if serializer else attribute
-            )
-            dictionary[name] = json_value
+            if serializer is not None:
+                serialized = serializer(self, value)
+            elif isinstance(value, JSONSerializable):
+                serialized = value.json()
 
-        return dictionary
+            is_serializable, error = _is_json_serializable(serialized)
+
+            if is_serializable is False:
+                raise exc.ModelNotJsonSerializableException(
+                    f"Field '{name}' with value '{value}' of type '{type(value)}' "
+                    f"in model '{self.__class__.__name__}' is not JSON serializable."
+                ) from error
+
+            return serialized
+
+        return {name: serialize_field(name) for name in self.__class__.fields.keys()}
 
     def __setattr__(self, key, value) -> None:
         initialized = getattr(self, c.INITIALIZED, False)

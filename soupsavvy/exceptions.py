@@ -259,3 +259,10 @@ class InvalidDecorationException(BaseModelException):
     Exception raised by `BaseModel` when a method is decorated with an invalid
     decorator.
     """
+
+
+class ModelNotJsonSerializableException(BaseModelException):
+    """
+    Exception raised by `BaseModel` when trying to serialize model to JSON
+    but one of its fields is not JSON serializable.
+    """

@@ -13,7 +13,13 @@ from typing import Any, Optional
 
 import soupsavvy.exceptions as exc
 from soupsavvy.base import check_operation, check_tag_searcher
-from soupsavvy.interfaces import Comparable, IElement, TagSearcher, TagSearcherType
+from soupsavvy.interfaces import (
+    Comparable,
+    IElement,
+    JSONSerializable,
+    TagSearcher,
+    TagSearcherType,
+)
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 
 
@@ -131,6 +137,27 @@ class FieldWrapper(TagSearcher, Comparable):
         return str(self)
 
 
+class FieldList(list, JSONSerializable):
+    """
+    Convenience wrapper around list to provide JSON serialization for lists
+    containing JSON serializable items. Useful as field value to represent multiple
+    matched elements.
+    """
+
+    def json(self) -> list[Any]:
+        """
+        Serializes the FieldList to a JSON-compatible list.
+
+        Returns
+        -------
+        list[Any]
+            A list containing JSON-serializable representations of the items.
+        """
+        return [
+            item.json() if isinstance(item, JSONSerializable) else item for item in self
+        ]
+
+
 class All(FieldWrapper):
     """
     Field wrapper for selecting multiple elements matching the selector.
@@ -166,7 +193,7 @@ class All(FieldWrapper):
         list[Any]
             A list of matching results.
         """
-        return self.selector.find_all(tag, recursive=recursive)
+        return FieldList(self.selector.find_all(tag, recursive=recursive))
 
 
 class Required(FieldWrapper):

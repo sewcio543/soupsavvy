@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "soupsavvy"
 readme = "README.md"
-description = "Powerful and flexible search engine for BeautifulSoup"
+description = "Powerful and flexible web scraping Search Engine"
 authors = [{name = "sewcio543"}]
 license = {file = "LICENSE"}
 requires-python = ">=3.9"

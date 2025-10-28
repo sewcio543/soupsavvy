@@ -7,8 +7,8 @@ from typing import Type
 import pytest
 
 import soupsavvy.exceptions as exc
-from soupsavvy.interfaces import IElement
-from soupsavvy.models.wrappers import All, Default, FieldWrapper, Required
+from soupsavvy.interfaces import IElement, JSONSerializable
+from soupsavvy.models.wrappers import All, Default, FieldList, FieldWrapper, Required
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 from tests.soupsavvy.conftest import (
     MockDivSelector,
@@ -344,6 +344,8 @@ class TestAll(BaseFieldWrapperTest):
         bs = to_element(text)
         selector = All(MockLinkSelector())
         result = selector.find(bs)
+
+        assert isinstance(result, FieldList)
         assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a>1</a>"""),
             strip("""<a>2</a>"""),
@@ -366,6 +368,8 @@ class TestAll(BaseFieldWrapperTest):
         bs = to_element(text)
         selector = All(MockLinkSelector())
         result = selector.find(bs, strict=strict)
+
+        assert isinstance(result, FieldList)
         assert result == []
 
     def test_find_returns_list_of_matching_elements_with_recursive_false(
@@ -387,6 +391,8 @@ class TestAll(BaseFieldWrapperTest):
         bs = to_element(text)
         selector = All(MockLinkSelector())
         result = selector.find(bs, recursive=False)
+
+        assert isinstance(result, FieldList)
         assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a>1</a>"""),
             strip("""<a><p>2</p></a>"""),
@@ -413,6 +419,8 @@ class TestAll(BaseFieldWrapperTest):
         bs = to_element(text)
         selector = All(MockLinkSelector())
         result = selector.find(bs, strict=strict, recursive=False)
+
+        assert isinstance(result, FieldList)
         assert result == []
 
 
@@ -657,3 +665,42 @@ class TestDefault(BaseFieldWrapperTest):
 
         with pytest.raises(exc.TagNotFoundException):
             selector.find(bs, strict=True, recursive=False)
+
+
+class MockJsonSerializable(JSONSerializable):
+    """Mock class for testing JSONSerializable interface."""
+
+    def __init__(self, name: str) -> None:
+        self.name = name
+
+    def json(self) -> dict[str, str]:
+        """Serializes the object to JSON."""
+        return {"mock_name": self.name}
+
+
+class TestFieldList:
+    """Unit test suite for FieldList wrapper."""
+
+    def test_field_list_serialization_to_json(self):
+        """
+        Tests if FieldList serializes to JSON correctly.
+        When element is an instance of JSONSerializable,
+        it is serialized using its json method.
+        Otherwise, the element is included as is.
+        """
+        items = [
+            MockJsonSerializable(name="Alice"),
+            "Bob",
+            67,
+            MockModel(name="Charlie"),
+        ]
+
+        field_list = FieldList(items)
+        json_result = field_list.json()
+
+        assert json_result == [
+            {"mock_name": "Alice"},
+            "Bob",
+            67,
+            {"name": "Charlie"},
+        ]
