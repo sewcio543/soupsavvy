@@ -6,17 +6,26 @@ Module with `soupsavvy` interfaces used across the package.
 - `TagSearcher` - Interface for objects that can search within `IElement`.
 - `IElement` - Interface for any tree structure compatible with `soupsavvy`.
 - `SelectionApi` - Interface for selection of elements based on specific selector.
+- `IBrowser` - Interface for browser implementations compatible with `soupsavvy`.
 """
 
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import Any, NoReturn, Optional, Pattern, Union
+from typing import Any, Generic, NoReturn, Optional, Pattern, TypeVar, Union
 
 from typing_extensions import Self
 
 import soupsavvy.exceptions as exc
+
+
+def _raise_not_implemented(self) -> NoReturn:
+    """Raises a `NotImplementedError` indicating that this method is abstract."""
+    raise NotImplementedError(
+        f"{self.__class__.__name__} is an interface "
+        "and does not implement this method."
+    )
 
 
 class Executable(ABC):
@@ -28,10 +37,7 @@ class Executable(ABC):
     @abstractmethod
     def execute(self, arg: Any) -> Any:
         """Executes the operation on the given argument."""
-        raise NotImplementedError(
-            f"{self.__class__.__name__} is an interface "
-            "and does not implement this method."
-        )
+        _raise_not_implemented(self)
 
 
 class Comparable(ABC):
@@ -42,14 +48,19 @@ class Comparable(ABC):
 
     @abstractmethod
     def __eq__(self, x: Any) -> bool:
-        raise NotImplementedError(
-            f"{self.__class__.__name__} is an interface "
-            "and does not implement this method."
-        )
+        _raise_not_implemented(self)
 
 
-# possible exceptions raised when TagSearcher fails
-TagSearcherExceptions = (exc.FailedOperationExecution, exc.TagNotFoundException)
+class JSONSerializable(ABC):
+    """
+    Abstract class for objects that can be serialized to JSON.
+    They must have `json` method that returns any JSON serializable object.
+    """
+
+    @abstractmethod
+    def json(self) -> Any:
+        """Serializes the object to a JSON-compatible format."""
+        _raise_not_implemented(self)
 
 
 class TagSearcher(ABC):
@@ -85,10 +96,7 @@ class TagSearcher(ABC):
         Any
             Processed result from the element.
         """
-        raise NotImplementedError(
-            f"{self.__class__.__name__} is an interface "
-            "and does not implement this method."
-        )
+        _raise_not_implemented(self)
 
     @abstractmethod
     def find_all(
@@ -117,13 +125,84 @@ class TagSearcher(ABC):
         list[Any]
             A list of results from processed element.
         """
-        raise NotImplementedError(
-            f"{self.__class__.__name__} is an interface "
-            "and does not implement this method."
-        )
+        _raise_not_implemented(self)
 
 
-class IElement(ABC):
+class TagSearcherMeta(type(ABC)):
+    """
+    Defines the same interface as TagSearcher, but for metaclass level,
+    used by BaseModel mostly for typing purposes.
+    Subclasses should implement the `find` and `find_all` on metaclass level
+    or as classmethods, but it's not enforced by abstractmethod here and is taken
+    care of by BaseModel class.
+    """
+
+    def find(
+        cls,
+        tag: IElement,
+        strict: bool = False,
+        recursive: bool = True,
+    ) -> Any:
+        """
+        Processes `IElement` object and returns result.
+
+        Parameters
+        ----------
+        tag : IElement
+            Any `IElement` object to process.
+        strict : bool, optional
+            If True, enforces results to be found in the element, by default False.
+        recursive : bool, optional
+            Specifies if search should be recursive.
+            If set to `False`, only direct children of the element will be searched.
+            By default `True`.
+
+        Returns
+        -------
+        Any
+            Processed result from the element.
+        """
+        ...
+
+    def find_all(
+        cls,
+        tag: IElement,
+        recursive: bool = True,
+        limit: Optional[int] = None,
+    ) -> list[Any]:
+        """
+        Processes `IElement` object and returns list of results.
+
+        Parameters
+        ----------
+        tag : IElement
+            Any `IElement` object to process.
+        recursive : bool, optional
+            Specifies if search should be recursive.
+            If set to `False`, only direct children of the element will be searched.
+            By default `True`.
+        limit : int, optional
+            Specifies maximum number of results to return in a list.
+            By default `None`, everything is returned.
+
+        Returns
+        -------
+        list[Any]
+            A list of results from processed element.
+        """
+        ...
+
+
+# valid TagSearcher types
+TagSearcherType = Union[TagSearcher, TagSearcherMeta]
+# possible exceptions raised when TagSearcher fails
+TagSearcherExceptions = (exc.FailedOperationExecution, exc.TagNotFoundException)
+
+
+N = TypeVar("N")
+
+
+class IElement(ABC, Generic[N]):
     """
     Interface representing a general HTML node within a tree structure.
     `IElement` defines methods for common DOM operations, such as searching for elements,
@@ -145,7 +224,7 @@ class IElement(ABC):
     )
     _NODE_TYPE: type[Any] = object
 
-    def __init__(self, node: Any, *args, **kwargs) -> None:
+    def __init__(self, node: N, *args, **kwargs) -> None:
         """
         Initializes the implementation with the given node.
 
@@ -167,7 +246,7 @@ class IElement(ABC):
         self._node = node
 
     @classmethod
-    def from_node(cls, node: Any) -> Self:
+    def from_node(cls, node: N) -> Self:
         """
         Creates a new instance of the implementation from a node.
 
@@ -214,11 +293,11 @@ class IElement(ABC):
         self._raise_not_implemented()
 
     @property
-    def node(self) -> Any:
+    def node(self) -> N:
         """Returns the underlying node wrapped by the instance."""
         return self._node  # pragma: no cover
 
-    def get(self) -> Any:
+    def get(self) -> N:
         """Returns the node wrapped by the instance."""
         return self.node  # pragma: no cover
 
@@ -319,6 +398,11 @@ class IElement(ABC):
         -------
         Optional[str]
             The attribute value as a string, or `None` if the attribute does not exist.
+
+        Notes
+        -----
+        For dynamic attributes (e.g., in browser contexts), the returned value
+        reflects the current state of the element.
         """
         self._raise_not_implemented()
 
@@ -391,16 +475,19 @@ class IElement(ABC):
 
     def __hash__(self):
         """Hashes element object using the wrapped node's hash."""
-        return hash(self._node)
+        return hash((self.node, self.__class__))
 
     def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.node is other.node
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        return self.node == other.node
 
     def __str__(self) -> str:
-        return str(self._node)
+        return str(self.node)
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self._node!r})"
+        return f"{self.__class__.__name__}({self.node!r})"
 
 
 class SelectionApi(ABC):
@@ -441,3 +528,144 @@ class SelectionApi(ABC):
         raise NotImplementedError(
             f"{self.__class__.__name__} is abstract and does not implement select method."
         )
+
+
+E = TypeVar("E", bound=IElement)
+B = TypeVar("B")
+
+
+class IBrowser(ABC, Generic[B, E]):
+    """
+    Interface representing a general browser for web navigation and interaction.
+    `IBrowser` defines methods for common browser operations.
+
+    This interface enables consistent access to various browser implementations
+    like selenium or playwright for automation of web interactions.
+
+    Any implementation should wrap a browser object and allow `soupsavvy`
+    components to operate on it seamlessly.
+
+    Current Implementations:
+    - `SeleniumBrowser`: Wraps a `Selenium WebDriver` instance.
+    - `PlaywrightBrowser`: Wraps a `Playwright Page` instance.
+    """
+
+    _NOT_IMPLEMENTED_MESSAGE = (
+        "IBrowser is an abstract interface and does not implement this method."
+    )
+
+    def __init__(self, browser: B, *args, **kwargs) -> None:
+        """
+        Initializes the implementation with the given browser instance.
+
+        Parameters
+        ----------
+        browser : Any
+            Browser instance to wrap for specific implementation.
+        *args: Any
+            Additional positional arguments to pass to the constructor.
+        **kwargs: Any
+            Additional keyword arguments to pass to the constructor.
+        """
+        self._browser = browser
+
+    @property
+    def browser(self) -> B:
+        """Returns the underlying browser wrapped by the instance."""
+        return self._browser  # pragma: no cover
+
+    def get(self) -> B:
+        """Returns the browser wrapped by the instance."""
+        return self.browser  # pragma: no cover
+
+    @abstractmethod
+    def navigate(self, url: str) -> None:
+        """
+        Navigates the browser to the specified URL.
+
+        Parameters
+        ----------
+        url : str
+            The URL to navigate to.
+        """
+        self._raise_not_implemented()
+
+    @abstractmethod
+    def click(self, element: E) -> None:
+        """
+        Performs a click action on the specified element.
+
+        Parameters
+        ----------
+        element : IElement
+            The target element of implementation compatible with browser
+            that will be clicked.
+        """
+        self._raise_not_implemented()
+
+    @abstractmethod
+    def send_keys(self, element: E, value: str, clear: bool = True) -> None:
+        """
+        Sends keystrokes to the specified element.
+
+        Parameters
+        ----------
+        element : IElement
+            The target element of implementation compatible with browser
+            to interact with.
+        value : str
+            The value to insert into the element.
+        clear : bool, optional
+            If `True`, clears existing content before sending keys.
+            Defaults to `True`.
+        """
+        self._raise_not_implemented()
+
+    @abstractmethod
+    def get_document(self) -> E:
+        """
+        Returns the html document of the current page as an `IElement`.
+
+        Returns
+        -------
+        IElement
+            The html document of the current page, soupsavvy implementation
+            compatible with the browser.
+
+        Raises
+        ------
+        TagNotFoundException
+            If the <html> element is not found on the page.
+        """
+        self._raise_not_implemented()
+
+    @abstractmethod
+    def close(self) -> None:
+        """Closes the browser and releases resources."""
+        self._raise_not_implemented()
+
+    @abstractmethod
+    def get_current_url(self) -> str:
+        """Returns the current URL of the browser."""
+        self._raise_not_implemented()
+
+    @classmethod
+    def _raise_not_implemented(cls) -> NoReturn:
+        """Raises a `NotImplementedError` indicating that this method is abstract."""
+        raise NotImplementedError(cls._NOT_IMPLEMENTED_MESSAGE)
+
+    def __hash__(self):
+        """Hashes element object using the wrapped browser's id."""
+        return hash((id(self.browser), self.__class__))
+
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        return self.browser == other.browser
+
+    def __str__(self) -> str:
+        return str(self.browser)
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.browser!r})"

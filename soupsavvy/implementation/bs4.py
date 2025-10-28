@@ -16,7 +16,7 @@ from soupsavvy.interfaces import IElement, SelectionApi
 from soupsavvy.selectors.css.api import SoupsieveApi
 
 
-class SoupElement(IElement):
+class SoupElement(IElement[bs4.Tag]):
     """
     Implementation of `IElement` for `BeautifulSoup` tree.
     Adapter for `bs4` objects, that makes them usable across the library.
@@ -94,11 +94,10 @@ class SoupElement(IElement):
         return self.node.text
 
     def __hash__(self):
-        return id(self._node)
+        return id(self.node)
 
-    @property
-    def node(self) -> bs4.Tag:
-        return self._node
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, SoupElement):
+            return NotImplemented
 
-    def get(self) -> bs4.Tag:
-        return self.node
+        return id(self.node) == id(other.node)

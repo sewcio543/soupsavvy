@@ -77,7 +77,10 @@ class ElementWrapper:
 
     def __eq__(self, other):
         """Checks equality based on hash value."""
-        return isinstance(other, ElementWrapper) and hash(self) == hash(other)
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        return hash(self) == hash(other)
 
 
 class TagResultSet:

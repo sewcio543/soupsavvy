@@ -81,8 +81,8 @@ class TypeSelector(SoupSelector, SelectableCSS):
         return self.name
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, TypeSelector):
-            return False
+        if not isinstance(other, self.__class__):
+            return NotImplemented
 
         # TypeSelectors produce the same results if names of the tag are the same
         return self.name == other.name
@@ -168,8 +168,8 @@ class PatternSelector(SoupSelector):
         return list(itertools.islice(filter_, limit))
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, PatternSelector):
-            return False
+        if not isinstance(other, self.__class__):
+            return NotImplemented
 
         return self.pattern == other.pattern
 
@@ -218,8 +218,10 @@ class UniversalSelector(SoupSelector, SelectableCSS):
         return ns.CSS_SELECTOR_WILDCARD
 
     def __eq__(self, other: object) -> bool:
-        # UniversalSelector is always the same
-        return isinstance(other, UniversalSelector)
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        return True
 
 
 @deprecated(f"'AnyTagSelector' is deprecated, use 'UniversalSelector' class instead.")
@@ -252,8 +254,10 @@ class SelfSelector(SoupSelector):
         return [tag]
 
     def __eq__(self, other: object) -> bool:
-        # needs to be the same type
-        return isinstance(other, SelfSelector)
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        return True
 
 
 @dataclass
@@ -303,7 +307,7 @@ class ExpressionSelector(SoupSelector):
         return list(itertools.islice(filter_, limit))
 
     def __eq__(self, other) -> bool:
-        if not isinstance(other, ExpressionSelector):
-            return False
+        if not isinstance(other, self.__class__):
+            return NotImplemented
 
         return self.f is other.f

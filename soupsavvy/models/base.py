@@ -10,7 +10,7 @@ Classes
 
 from __future__ import annotations
 
-from abc import ABC
+import json
 from collections.abc import Callable
 from dataclasses import dataclass
 from dataclasses import field as datafield
@@ -21,13 +21,17 @@ from typing_extensions import Self
 
 import soupsavvy.exceptions as exc
 import soupsavvy.models.constants as c
-from soupsavvy.base import SoupSelector, check_selector
+from soupsavvy.base import BaseOperation, SoupSelector, check_operation, check_selector
 from soupsavvy.interfaces import (
     Comparable,
     IElement,
+    JSONSerializable,
     TagSearcher,
     TagSearcherExceptions,
+    TagSearcherMeta,
+    TagSearcherType,
 )
+from soupsavvy.operations.selection_pipeline import SelectionPipeline
 
 # Generic type variable for model migration
 T = TypeVar("T")
@@ -106,6 +110,14 @@ def serializer(field: str) -> Callable[[Callable], Callable]:
     return decorator
 
 
+def _is_json_serializable(obj) -> tuple[bool, Optional[Exception]]:
+    try:
+        json.dumps(obj)
+        return True, None
+    except TypeError as e:
+        return False, e
+
+
 @dataclass
 class Field(TagSearcher, Comparable):
     """
@@ -143,7 +155,7 @@ class Field(TagSearcher, Comparable):
     is equivalent to default behavior.
     """
 
-    selector: Union[TagSearcher, type[BaseModel]]
+    selector: TagSearcherType
     repr: bool = True
     compare: bool = True
     migrate: bool = True
@@ -157,8 +169,8 @@ class Field(TagSearcher, Comparable):
         return self.selector.find(tag, strict=strict, recursive=recursive)
 
     def __eq__(self, x: Any) -> bool:
-        if not isinstance(x, Field):
-            return False
+        if not isinstance(x, self.__class__):
+            return NotImplemented
 
         return all(
             [
@@ -176,7 +188,7 @@ class Field(TagSearcher, Comparable):
         )
 
 
-class ModelMeta(type(ABC)):
+class ModelMeta(TagSearcherMeta):
     """
     Metaclass for all models derived from `BaseModel`. This metaclass ensures that
     certain attributes and methods are defined
@@ -309,11 +321,15 @@ class ModelMeta(type(ABC)):
                 {
                     key: value if isinstance(value, Field) else Field(value)
                     for key, value in class_.__dict__.items()
+                    # in python 3.9
+                    # TypeError: Subscripted generics cannot be used with class and instance checks
+                    # TODO: consider dropping support for 3.9 in the nearest future
                     if (
-                        # accepted field must be TagSearcher
                         isinstance(value, TagSearcher)
-                        # or BaseModel subclass
-                        or (isinstance(value, type) and issubclass(value, BaseModel))
+                        or (
+                            isinstance(value, type)
+                            and isinstance(value, TagSearcherMeta)
+                        )
                     )
                     and key not in c.SPECIAL_ATTRIBUTES
                 }
@@ -321,8 +337,16 @@ class ModelMeta(type(ABC)):
             ],
         )
 
+    def __or__(cls, x: BaseOperation) -> SelectionPipeline:
+        message = (
+            f"Bitwise OR not supported for types {cls} and {type(x)}, "
+            f"expected an instance of {BaseOperation.__name__}."
+        )
+        check_operation(x, message=message)
+        return SelectionPipeline(selector=cls, operation=x)
 
-class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
+
+class BaseModel(TagSearcher, Comparable, JSONSerializable, metaclass=ModelMeta):
     """Base class for all user-defined models in `soupsavvy`."""
 
     __scope__: SoupSelector = None  # type: ignore
@@ -501,7 +525,6 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
                     strict=c.DEFAULT_STRICT,
                     recursive=c.DEFAULT_RECURSIVE,
                 )
-            #! TODO
             except exc.RequiredConstraintException as e:
                 raise exc.FieldExtractionException(
                     f"Field '{key}' is required and was not found in model '{cls.__name__}' "
@@ -625,20 +648,28 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         dict
             A json-serializable representation of the model instance.
         """
-        dictionary = {}
+        serializers = getattr(self, c.SERIALIZERS)
 
-        for name in self.__class__.fields.keys():
-            attribute = getattr(self, name)
-            serializer = getattr(self, c.SERIALIZERS).get(name)
+        def serialize_field(name: str) -> Any:
+            serialized = value = getattr(self, name)
+            serializer = serializers.get(name)
 
-            json_value = (
-                attribute.json()
-                if isinstance(attribute, BaseModel)
-                else serializer(self, attribute) if serializer else attribute
-            )
-            dictionary[name] = json_value
+            if serializer is not None:
+                serialized = serializer(self, value)
+            elif isinstance(value, JSONSerializable):
+                serialized = value.json()
 
-        return dictionary
+            is_serializable, error = _is_json_serializable(serialized)
+
+            if is_serializable is False:
+                raise exc.ModelNotJsonSerializableException(
+                    f"Field '{name}' with value '{value}' of type '{type(value)}' "
+                    f"in model '{self.__class__.__name__}' is not JSON serializable."
+                ) from error
+
+            return serialized
+
+        return {name: serialize_field(name) for name in self.__class__.fields.keys()}
 
     def __setattr__(self, key, value) -> None:
         initialized = getattr(self, c.INITIALIZED, False)
@@ -691,7 +722,7 @@ class BaseModel(TagSearcher, Comparable, metaclass=ModelMeta):
         They need to be of the same class and have the same field values.
         """
         if not isinstance(x, self.__class__):
-            return False
+            return NotImplemented
 
         include = {key for key, value in self.__class__.fields.items() if value.compare}
         fields = self.attributes.keys()

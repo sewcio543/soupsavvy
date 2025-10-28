@@ -71,6 +71,25 @@ class TestOperationWrapper:
         """Tests if two wrappers are not equal."""
         assert (operations[0] == operations[1]) is False
 
+    @pytest.mark.parametrize(
+        argnames="operations",
+        argvalues=[
+            # different higher order operation wrapper
+            (
+                MockOperationWrapper(MockTextOperation()),
+                MockOperationWrapper2(MockTextOperation()),
+            ),
+            # not operation
+            (MockOperationWrapper(MockTextOperation()), MockLinkSelector()),
+            # simple operation
+            (MockOperationWrapper(MockTextOperation()), MockIntOperation()),
+        ],
+    )
+    def test_equality_check_returns_not_implemented(self, operations: tuple):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        result = operations[0].__eq__(operations[1])
+        assert result is NotImplemented
+
 
 @pytest.mark.operation
 class TestSuppress:

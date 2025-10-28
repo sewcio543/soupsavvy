@@ -29,7 +29,7 @@ class TestSoupElement:
         """
 
         with pytest.raises(TypeError):
-            SoupElement(text)
+            SoupElement(text)  # type: ignore
 
     def test_node_is_wrapped_by_element(self):
         """
@@ -92,11 +92,22 @@ class TestSoupElement:
         bs = BeautifulSoup(text, features="lxml")
         element = SoupElement(bs)
 
-        div = bs.find("div")
-        div2 = bs.find("div")
+        node1 = bs.find("div")
+        node2 = bs.find("div")
+        node3 = bs.find("p")
 
-        assert hash(SoupElement(div)) == hash(SoupElement(div2))
-        assert hash(element) == hash(id(bs))
+        assert isinstance(node1, Tag)
+        assert isinstance(node2, Tag)
+        assert isinstance(node3, Tag)
+
+        element1 = SoupElement(node1)
+        element2 = SoupElement(node2)
+        element3 = SoupElement(node3)
+
+        assert hash(element1) == hash(element1)
+        assert hash(element1) == hash(element2)
+        assert hash(element1) != hash(element3)
+        assert hash(element1) != hash(node1)
 
     def test_equality_is_implemented_correctly(self):
         """
@@ -107,11 +118,34 @@ class TestSoupElement:
             <div><p>Hello</p></div>
         """
         bs = BeautifulSoup(text, features="lxml")
+
+        node1 = bs.find("div")
+        node2 = bs.find("div")
+        node3 = bs.find("p")
+
+        assert isinstance(node1, Tag)
+        assert isinstance(node2, Tag)
+        assert isinstance(node3, Tag)
+
+        element1 = SoupElement(node1)
+        element2 = SoupElement(node2)
+        element3 = SoupElement(node3)
+
+        assert element1 == element1
+        assert element1 == element2
+        assert element1 != element3
+        assert element1 != node1
+
+    def test_equality_check_returns_not_implemented(self):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        text = """
+            <div><p>Hello</p></div>
+        """
+        bs = BeautifulSoup(text, features="lxml")
         element = SoupElement(bs)
 
-        assert element == SoupElement(bs)
-        assert element != SoupElement(bs.p)  # type: ignore
-        assert element != bs
+        assert element.__eq__(bs) is NotImplemented
+        assert element.__eq__("string") is NotImplemented
 
     def test_name_attribute_has_correct_value(self):
         """Tests if `name` attribute returns name of the node element."""

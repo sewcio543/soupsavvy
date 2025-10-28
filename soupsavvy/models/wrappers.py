@@ -12,39 +12,40 @@ Classes
 from typing import Any, Optional
 
 import soupsavvy.exceptions as exc
-from soupsavvy.base import check_operation
-from soupsavvy.interfaces import Comparable, IElement, TagSearcher
+from soupsavvy.base import check_operation, check_tag_searcher
+from soupsavvy.interfaces import (
+    Comparable,
+    IElement,
+    JSONSerializable,
+    TagSearcher,
+    TagSearcherType,
+)
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 
 
 class FieldWrapper(TagSearcher, Comparable):
     """
-    A wrapper for `TagSearcher` objects, that acts as a higher order searcher,
+    A wrapper for `TagSearcher` valid objects, that acts as a higher order searcher,
     which controls behavior of the wrapped searcher.
-    Used as field to defined model.
+    Used as field in defined model.
+    Subclasses must implement `find` method with their specific behavior.
     """
 
-    def __init__(self, selector: TagSearcher) -> None:
+    def __init__(self, selector: TagSearcherType) -> None:
         """
-        Initializes wrapper with a `TagSearcher` instance.
+        Initializes wrapper with a `TagSearcher` valid object.
 
         Parameters
         ----------
         selector : TagSearcher
-            The `TagSearcher` instance to be wrapped.
+            The `TagSearcher` valid object to be wrapped.
 
         Raises
         ------
         NotTagSearcherException
-            If provided object is not an instance of `TagSearcher`.
+            If provided object is not a valid `TagSearcher`.
         """
-
-        if not isinstance(selector, TagSearcher):
-            raise exc.NotTagSearcherException(
-                f"Expected {TagSearcher.__name__}, got {type(selector)}."
-            )
-
-        self._selector = selector
+        self._selector = check_tag_searcher(selector)
 
     @property
     def selector(self) -> TagSearcher:
@@ -100,7 +101,10 @@ class FieldWrapper(TagSearcher, Comparable):
         bool
             True if the instances are equal, False otherwise.
         """
-        return isinstance(x, self.__class__) and self.selector == x.selector
+        if not isinstance(x, self.__class__):
+            return NotImplemented
+
+        return self.selector == x.selector
 
     def __or__(self, x: Any) -> SelectionPipeline:
         """
@@ -131,6 +135,27 @@ class FieldWrapper(TagSearcher, Comparable):
 
     def __repr__(self) -> str:
         return str(self)
+
+
+class FieldList(list, JSONSerializable):
+    """
+    Convenience wrapper around list to provide JSON serialization for lists
+    containing JSON serializable items. Useful as field value to represent multiple
+    matched elements.
+    """
+
+    def json(self) -> list[Any]:
+        """
+        Serializes the FieldList to a JSON-compatible list.
+
+        Returns
+        -------
+        list[Any]
+            A list containing JSON-serializable representations of the items.
+        """
+        return [
+            item.json() if isinstance(item, JSONSerializable) else item for item in self
+        ]
 
 
 class All(FieldWrapper):
@@ -168,7 +193,7 @@ class All(FieldWrapper):
         list[Any]
             A list of matching results.
         """
-        return self.selector.find_all(tag, recursive=recursive)
+        return FieldList(self.selector.find_all(tag, recursive=recursive))
 
 
 class Required(FieldWrapper):
@@ -231,14 +256,14 @@ class Default(FieldWrapper):
     "1234"
     """
 
-    def __init__(self, selector: TagSearcher, default: Any) -> None:
+    def __init__(self, selector: TagSearcherType, default: Any) -> None:
         """
         Initializes `Default` field wrapper.
 
         Parameters
         ----------
         selector : TagSearcher
-            The `TagSearcher` instance to be wrapped.
+            Object compatible with `TagSearcher` interface to be wrapped.
         default : Any
             The default value to return if no match is found.
         """

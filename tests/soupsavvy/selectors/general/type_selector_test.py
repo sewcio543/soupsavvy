@@ -292,6 +292,15 @@ class TestTypeSelector:
         assert (selectors[0] == selectors[1]) is False
 
     @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[(TypeSelector("a"), MockLinkSelector())],
+    )
+    def test_equality_check_returns_not_implemented(self, selectors: tuple):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        result = selectors[0].__eq__(selectors[1])
+        assert result is NotImplemented
+
+    @pytest.mark.parametrize(
         argnames="name",
         argvalues=["div", "p", "some_other_random"],
     )

@@ -7,12 +7,19 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from typing import TYPE_CHECKING, Any, Literal, Optional, Union, overload
+from typing import TYPE_CHECKING, Any, Literal, Optional, Union, cast, overload
 
 from typing_extensions import deprecated
 
 import soupsavvy.exceptions as exc
-from soupsavvy.interfaces import Comparable, Executable, IElement, TagSearcher
+from soupsavvy.interfaces import (
+    Comparable,
+    Executable,
+    IBrowser,
+    IElement,
+    TagSearcher,
+    TagSearcherMeta,
+)
 
 if TYPE_CHECKING:
     from soupsavvy.operations.general import OperationPipeline
@@ -80,6 +87,45 @@ def check_operation(x: Any, message: Optional[str] = None) -> BaseOperation:
         raise exc.NotOperationException(message)
 
     return x
+
+
+def check_tag_searcher(x: Any, message: Optional[str] = None) -> TagSearcher:
+    """
+    Checks if provided object is a valid `soupsavvy` TagSearcher.
+    Checks for instance of `TagSearcher` or other compatible type like Model class.
+    Returns provided object if fulfills the condition for convenience.
+
+    Parameters
+    ----------
+    x : Any
+        Any object to be validated as correct TagSearcher.
+    message : str, optional
+        Custom message to be displayed in case of raising an exception.
+        By default None, which results in default message.
+
+    Raises
+    ------
+    NotTagSearcherException
+        If provided object is not an instance of `TagSearcher`
+        or any other compatible type.
+    """
+    message = (
+        message
+        or f"Object {x} is not an instance of {TagSearcher.__name__} "
+        "or any other compatible type."
+    )
+
+    # in python 3.9
+    # TypeError: Subscripted generics cannot be used with class and instance checks
+    # TODO: consider dropping support for 3.9 in the nearest future
+
+    if not (
+        isinstance(x, TagSearcher)
+        or (isinstance(x, type) and isinstance(x, TagSearcherMeta))
+    ):
+        raise exc.NotTagSearcherException(message)
+
+    return cast(TagSearcher, x)
 
 
 class SoupSelector(TagSearcher, Comparable):
@@ -713,14 +759,15 @@ class CompositeSoupSelector(SoupSelector):
         return self._selectors
 
     def __eq__(self, other: object) -> bool:
-        # check for CompositeSoupSelector type for type checking sake
+        # for compatibility with type checkers
         if not isinstance(other, CompositeSoupSelector):
-            return False
+            return NotImplemented
+
         elif type(self) is not type(other):
             # checking for exact type match - isinstance(other, self.__class__)
             # when other is subclass of self.__class__ would call other.__eq__(self)
             # which is not desired behavior, as it returns False
-            return False
+            return NotImplemented
 
         if not self.__class__.COMMUTATIVE:
             return self.selectors == other.selectors
@@ -785,6 +832,13 @@ class BaseOperation(Executable, Comparable):
         -------
         Any
             Result of the operation.
+
+        Raises
+        ------
+        BreakOperationException
+            If operation execution should be interrupted and propagated to caller.
+        FailedOperationExecution
+            If operation execution fails for any other reason.
         """
         try:
             return self._execute(arg)
@@ -808,8 +862,8 @@ class BaseOperation(Executable, Comparable):
     def __or__(self, x: Any) -> OperationPipeline:
         """
         Overrides `__or__` method called also by pipe operator '|'.
-        Syntactical Sugar for logical disjunction, that creates `OperationPipeline` instance,
-        which chains two operations together.
+        Syntactical Sugar for logical disjunction, that creates `OperationPipeline`
+        instance, which chains two operations together.
 
         Parameters
         ----------
@@ -893,3 +947,83 @@ class OperationSearcherMixin(BaseOperation, TagSearcher):
             Result of applied operation on element.
         """
         return self.execute(tag)
+
+
+class BrowserOperation(BaseOperation):
+    """
+    Base class for operations that act on a `IBrowser` interface.
+
+    Browser operations are designed to perform actions with objects implementing
+    the `IBrowser` interface. It validates that input argument to `execute` method
+    is of this type. If operation returns value, it is passed through, otherwise
+    the original `IBrowser` instance is returned.
+
+    As standard operations, browser operations can be chained together using
+    the pipe operator '|'.
+
+    Operations can be combined with selectors to extract and transform
+    target information. Chaining other types of operations might result in errors.
+
+    Each derived operation class needs to implement `__eq__` method.
+    """
+
+    _PASSTHROUGH_BROWSER = True
+
+    def execute(self, arg: IBrowser) -> Any:
+        if not isinstance(arg, IBrowser):
+            raise exc.NotBrowserException(
+                f"{self.__class__} is a BrowserOperation, "
+                f"which requires {IBrowser.__name__} instance for `execute` "
+                f"method argument, got {type(arg)}"
+            )
+
+        result = super().execute(arg)
+        return arg if self._PASSTHROUGH_BROWSER else result
+
+
+class ElementAction(Comparable):
+    """
+    Abstract base class for actions that use browser to interact with an element.
+
+    Actions perform operation on element in dynamic context, it requires both
+    browser context (`IBrowser`) and the target element active
+    in browser context (`IElement`).
+
+    ElementActions are not typical operations, so they cannot be chained with other
+    `soupsavvy` operations. They are intended to be used within `ApplyTo` operation.
+
+    Example
+    -------
+    >>> from soupsavvy.browser.operations import ApplyTo, Click
+    ... from soupsavvy import TypeSelector
+    ... from soupsavvy.implementation.selenium import SeleniumBrowser
+    ... from selenium import webdriver
+    ...
+    ... browser = SeleniumBrowser(webdriver.Chrome())
+    ... action = Click()
+    ... selector = TypeSelector('button')
+    ... operation = ApplyTo(selector, action)
+    ... operation.execute(browser)
+
+
+    `ElementAction` inherits from `Comparable` interface,
+    `__eq__` method needs to be implemented in derived classes.
+    """
+
+    def execute(self, browser: IBrowser, element: IElement) -> None:
+        """
+        Execute the action on provided element within the browser context.
+
+        Parameters
+        ----------
+        browser : IBrowser
+            The browser instance within which the action is performed.
+        element : IElement
+            The element on which the action is performed using browser context.
+        """
+        self._execute(browser, element)
+
+    @abstractmethod
+    def _execute(self, browser: IBrowser, element: IElement) -> None:
+        """Executes the operation logic with browser on the given element."""
+        raise NotImplementedError(f"{self.__class__} must implement _execute method")

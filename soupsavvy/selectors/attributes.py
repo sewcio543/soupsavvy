@@ -93,8 +93,8 @@ class AttributeSelector(SoupSelector):
         return tag.find_all(attrs=params, recursive=recursive, limit=limit)
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, AttributeSelector):
-            return False
+        if not isinstance(other, self.__class__):
+            return NotImplemented
 
         # pattern is what is used in find methods
         return self._pattern == other._pattern and self.name == other.name

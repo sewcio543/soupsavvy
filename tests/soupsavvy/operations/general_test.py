@@ -187,6 +187,18 @@ class TestOperation:
         operation1, operation2 = operations
         assert (operation1 == operation2) is False
 
+    @pytest.mark.parametrize(
+        argnames="operations",
+        argvalues=[
+            (Operation(mock_args_func), MockIntOperation()),
+            (Operation(mock_args_func), MockLinkSelector()),
+        ],
+    )
+    def test_equality_check_returns_not_implemented(self, operations: tuple):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        result = operations[0].__eq__(operations[1])
+        assert result is NotImplemented
+
 
 class MockText(str):
     """Mock class that imitates IElement with text attribute."""
@@ -324,3 +336,23 @@ class TestOperationPipeline:
         """Tests if __eq__ method returns False if objects are not equal."""
         operation1, operation2 = operations
         assert (operation1 == operation2) is False
+
+    @pytest.mark.parametrize(
+        argnames="operations",
+        argvalues=[
+            # different operation type
+            (
+                OperationPipeline(MockTextOperation(), MockIntOperation()),
+                MockIntOperation(),
+            ),
+            # not operation
+            (
+                OperationPipeline(MockTextOperation(), MockIntOperation()),
+                MockLinkSelector(),
+            ),
+        ],
+    )
+    def test_equality_check_returns_not_implemented(self, operations: tuple):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        result = operations[0].__eq__(operations[1])
+        assert result is NotImplemented

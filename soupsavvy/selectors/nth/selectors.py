@@ -90,7 +90,7 @@ class BaseNthOfSelector(SoupSelector):
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
-            return False
+            return NotImplemented
 
         return (
             self.selector == other.selector and self.nth_selector == other.nth_selector
@@ -233,8 +233,8 @@ class OnlyOfSelector(SoupSelector):
         return results.fetch(limit)
 
     def __eq__(self, other):
-        if not isinstance(other, OnlyOfSelector):
-            return False
+        if not isinstance(other, self.__class__):
+            return NotImplemented
 
         return self.selector == other.selector
 

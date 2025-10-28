@@ -181,6 +181,16 @@ class BreakOperationException(OperationException):
         self.result = result
 
 
+#! BROWSER OPERATIONS
+
+
+class NotBrowserException(OperationException, TypeError):
+    """
+    Exception to be raised when function expected `IBrowser` as input
+    and got argument of the different, invalid type.
+    """
+
+
 #! MODELS
 
 
@@ -248,4 +258,11 @@ class InvalidDecorationException(BaseModelException):
     """
     Exception raised by `BaseModel` when a method is decorated with an invalid
     decorator.
+    """
+
+
+class ModelNotJsonSerializableException(BaseModelException):
+    """
+    Exception raised by `BaseModel` when trying to serialize model to JSON
+    but one of its fields is not JSON serializable.
     """

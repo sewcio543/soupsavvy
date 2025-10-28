@@ -1,22 +1,20 @@
 """Module with unit tests for wrappers in soupsavvy.models module."""
 
+# mypy: disable-error-code="arg-type"
+
 from typing import Type
 
 import pytest
 
-from soupsavvy.exceptions import (
-    NotOperationException,
-    NotTagSearcherException,
-    RequiredConstraintException,
-    TagNotFoundException,
-)
-from soupsavvy.interfaces import IElement
-from soupsavvy.models.wrappers import All, Default, FieldWrapper, Required
+import soupsavvy.exceptions as exc
+from soupsavvy.interfaces import IElement, JSONSerializable
+from soupsavvy.models.wrappers import All, Default, FieldList, FieldWrapper, Required
 from soupsavvy.operations.selection_pipeline import SelectionPipeline
 from tests.soupsavvy.conftest import (
     MockDivSelector,
     MockIntOperation,
     MockLinkSelector,
+    MockModel,
     MockTextOperation,
     ToElement,
     strip,
@@ -73,12 +71,29 @@ class TestFieldWrapper:
         """Tests if selector are not equal."""
         assert (selectors[0] == selectors[1]) is False
 
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            # different higher order field wrapper
+            (
+                MockFieldWrapper(MockLinkSelector()),
+                MockFieldWrapper2(MockLinkSelector()),
+            ),
+            # not tag searcher
+            (MockFieldWrapper(MockLinkSelector()), MockTextOperation()),
+        ],
+    )
+    def test_equality_check_returns_not_implemented(self, selectors: tuple):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        result = selectors[0].__eq__(selectors[1])
+        assert result is NotImplemented
+
     def test_or_operator_raises_exception_if_not_operation(self):
         """
         Tests if `|` operator raises NotOperationException
         if not used with instance of BaseOperation.
         """
-        with pytest.raises(NotOperationException):
+        with pytest.raises(exc.NotOperationException):
             MockFieldWrapper(MockDivSelector()) | MockLinkSelector()  # type: ignore
 
     def test_or_operator_returns_selection_pipeline_on_operation(self):
@@ -94,6 +109,20 @@ class TestFieldWrapper:
         assert result.selector == wrapper
         assert result.operation == operation
 
+    @pytest.mark.parametrize(
+        argnames="selector",
+        argvalues=[MockModel, MockModel(name="Test")],
+        ids=["model_class", "model_instance"],
+    )
+    def test_model_can_be_wrapped(self, selector):
+        """
+        Tests if Model class or instance can be wrapped by FieldWrapper.
+        It is accepted and exception is not raised as Model is valid tag searcher.
+        """
+        wrapper = MockFieldWrapper(selector)
+        assert wrapper.selector == selector
+        assert wrapper.selector is selector
+
 
 @pytest.mark.selector
 class BaseFieldWrapperTest:
@@ -105,7 +134,7 @@ class BaseFieldWrapperTest:
         Tests if raises NotTagSearcherException if invalid selector is passed.
         It expects instance of TagSearcher.
         """
-        with pytest.raises(NotTagSearcherException):
+        with pytest.raises(exc.NotTagSearcherException):
             self.wrapper(MockTextOperation(), **self.params)  # type: ignore
 
     def test_find_all_return_all_elements_matched_by_selector(
@@ -130,6 +159,43 @@ class BaseFieldWrapperTest:
             strip("""<a><p>3</p></a>"""),
         ]
 
+    def test_find_all_return_all_elements_matched_by_model(self, to_element: ToElement):
+        """Tests if find_all method returns all elements matched by model."""
+        text = """
+            <div>
+                <a>Andy</a>
+                <span>Not name</span>
+            </div>
+            <span>
+                <a>Hello</a>
+            </span>
+            <a>1</a>
+            <div>
+                <a>Carlos</a>
+            </div>
+        """
+        bs = to_element(text)
+        selector = self.wrapper(MockModel, **self.params)
+        result = selector.find_all(bs)
+        assert result == [MockModel(name="Andy"), MockModel(name="Carlos")]
+
+    def test_raises_error_when_field_extraction_fails_for_model(
+        self, to_element: ToElement
+    ):
+        """
+        Tests if FieldExtractionException is propagated when model extraction fails.
+        """
+        text = """
+            <div>
+                <span>Andy</span>
+            </div>
+        """
+        bs = to_element(text)
+        selector = self.wrapper(MockModel, **self.params)
+
+        with pytest.raises(exc.FieldExtractionException):
+            selector.find(bs)
+
     def test_find_all_returns_empty_list_if_no_matches(self, to_element: ToElement):
         """
         Tests if find_all returns empty list if no element matches the selector.
@@ -141,6 +207,23 @@ class BaseFieldWrapperTest:
         """
         bs = to_element(text)
         selector = self.wrapper(MockLinkSelector(), **self.params)
+        result = selector.find_all(bs)
+        assert result == []
+
+    def test_find_all_returns_empty_list_if_no_matches_with_model(
+        self, to_element: ToElement
+    ):
+        """
+        Tests if find_all returns empty list if no element matches the selector
+        when wrapped selector is a model class.
+        """
+        text = """
+            <span class="widget">
+                <a>Not name</a>
+            </span>
+        """
+        bs = to_element(text)
+        selector = self.wrapper(MockModel, **self.params)
         result = selector.find_all(bs)
         assert result == []
 
@@ -261,6 +344,8 @@ class TestAll(BaseFieldWrapperTest):
         bs = to_element(text)
         selector = All(MockLinkSelector())
         result = selector.find(bs)
+
+        assert isinstance(result, FieldList)
         assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a>1</a>"""),
             strip("""<a>2</a>"""),
@@ -283,6 +368,8 @@ class TestAll(BaseFieldWrapperTest):
         bs = to_element(text)
         selector = All(MockLinkSelector())
         result = selector.find(bs, strict=strict)
+
+        assert isinstance(result, FieldList)
         assert result == []
 
     def test_find_returns_list_of_matching_elements_with_recursive_false(
@@ -304,6 +391,8 @@ class TestAll(BaseFieldWrapperTest):
         bs = to_element(text)
         selector = All(MockLinkSelector())
         result = selector.find(bs, recursive=False)
+
+        assert isinstance(result, FieldList)
         assert list(map(lambda x: strip(str(x)), result)) == [
             strip("""<a>1</a>"""),
             strip("""<a><p>2</p></a>"""),
@@ -330,6 +419,8 @@ class TestAll(BaseFieldWrapperTest):
         bs = to_element(text)
         selector = All(MockLinkSelector())
         result = selector.find(bs, strict=strict, recursive=False)
+
+        assert isinstance(result, FieldList)
         assert result == []
 
 
@@ -369,7 +460,7 @@ class TestRequired(BaseFieldWrapperTest):
         bs = to_element(text)
         selector = Required(MockLinkSelector())
 
-        with pytest.raises(RequiredConstraintException):
+        with pytest.raises(exc.RequiredConstraintException):
             selector.find(bs)
 
     def test_find_propagates_error_if_no_matches_in_strict_mode(
@@ -387,7 +478,7 @@ class TestRequired(BaseFieldWrapperTest):
         bs = to_element(text)
         selector = Required(MockLinkSelector())
 
-        with pytest.raises(TagNotFoundException):
+        with pytest.raises(exc.TagNotFoundException):
             selector.find(bs, strict=True)
 
     def test_find_returns_first_matching_element_with_recursive_false(
@@ -429,7 +520,7 @@ class TestRequired(BaseFieldWrapperTest):
         bs = to_element(text)
         selector = Required(MockLinkSelector())
 
-        with pytest.raises(RequiredConstraintException):
+        with pytest.raises(exc.RequiredConstraintException):
             selector.find(bs, recursive=False)
 
     def test_find_propagates_error_if_no_matches_with_recursive_false_and_strict_mode(
@@ -450,7 +541,7 @@ class TestRequired(BaseFieldWrapperTest):
         bs = to_element(text)
         selector = Required(MockLinkSelector())
 
-        with pytest.raises(TagNotFoundException):
+        with pytest.raises(exc.TagNotFoundException):
             selector.find(bs, strict=True, recursive=False)
 
 
@@ -509,7 +600,7 @@ class TestDefault(BaseFieldWrapperTest):
         bs = to_element(text)
         selector = Default(MockLinkSelector(), default=DEFAULT)
 
-        with pytest.raises(TagNotFoundException):
+        with pytest.raises(exc.TagNotFoundException):
             selector.find(bs, strict=True)
 
     def test_find_returns_first_matching_element_with_recursive_false(
@@ -572,5 +663,44 @@ class TestDefault(BaseFieldWrapperTest):
         bs = to_element(text)
         selector = Default(MockLinkSelector(), default=DEFAULT)
 
-        with pytest.raises(TagNotFoundException):
+        with pytest.raises(exc.TagNotFoundException):
             selector.find(bs, strict=True, recursive=False)
+
+
+class MockJsonSerializable(JSONSerializable):
+    """Mock class for testing JSONSerializable interface."""
+
+    def __init__(self, name: str) -> None:
+        self.name = name
+
+    def json(self) -> dict[str, str]:
+        """Serializes the object to JSON."""
+        return {"mock_name": self.name}
+
+
+class TestFieldList:
+    """Unit test suite for FieldList wrapper."""
+
+    def test_field_list_serialization_to_json(self):
+        """
+        Tests if FieldList serializes to JSON correctly.
+        When element is an instance of JSONSerializable,
+        it is serialized using its json method.
+        Otherwise, the element is included as is.
+        """
+        items = [
+            MockJsonSerializable(name="Alice"),
+            "Bob",
+            67,
+            MockModel(name="Charlie"),
+        ]
+
+        field_list = FieldList(items)
+        json_result = field_list.json()
+
+        assert json_result == [
+            {"mock_name": "Alice"},
+            "Bob",
+            67,
+            {"name": "Charlie"},
+        ]

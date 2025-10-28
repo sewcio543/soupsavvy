@@ -301,6 +301,20 @@ class TestExpressionSelector:
         """Tests if selector is not equal to ExpressionSelector."""
         assert (selectors[0] == selectors[1]) is False
 
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            (
+                ExpressionSelector(mock_predicate),
+                MockLinkSelector(),
+            ),
+        ],
+    )
+    def test_equality_check_returns_not_implemented(self, selectors: tuple):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        result = selectors[0].__eq__(selectors[1])
+        assert result is NotImplemented
+
     def test_propagates_exception_raised_inside_predicate(self, to_element: ToElement):
         """Tests if exception raised inside predicate is propagated to the caller."""
         text = """

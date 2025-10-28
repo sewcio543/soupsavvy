@@ -37,7 +37,7 @@ class TestLXMLElement:
         """
 
         with pytest.raises(TypeError):
-            LXMLElement(text)
+            LXMLElement(text)  # type: ignore
 
     def test_node_is_wrapped_by_element(self):
         """
@@ -98,27 +98,61 @@ class TestLXMLElement:
             <p>World</p>
         """
         node = to_lxml(text)
-        element = LXMLElement(node)
 
-        div = node.find(".//div")
-        div2 = node.find(".//div")
+        node1 = node.find(".//div")
+        node2 = node.find(".//div")
+        node3 = node.find(".//p")
 
-        assert hash(LXMLElement(div)) == hash(LXMLElement(div2))
-        assert hash(element) == hash(node)
+        assert node1 is not None
+        assert node2 is not None
+        assert node3 is not None
+
+        element1 = LXMLElement(node1)
+        element2 = LXMLElement(node2)
+        element3 = LXMLElement(node3)
+
+        assert hash(element1) == hash(element1)
+        assert hash(element1) == hash(element2)
+        assert hash(element1) != hash(element3)
+        assert hash(element1) != hash(node1)
 
     def test_equality_is_implemented_correctly(self):
         """
-        Tests if only two element objects with the same wrapped node element are equal.
+        Tests if only two element objects with the same wrapped node element are equal,
+        even when they are results of different searches.
         """
+        text = """
+            <div><p>Hello</p></div>
+        """
+        node = to_lxml(text)
+
+        node1 = node.find(".//div")
+        node2 = node.find(".//div")
+        node3 = node.find(".//p")
+
+        assert node1 is not None
+        assert node2 is not None
+        assert node3 is not None
+
+        element1 = LXMLElement(node1)
+        element2 = LXMLElement(node2)
+        element3 = LXMLElement(node3)
+
+        assert element1 == element1
+        assert element1 == element2
+        assert element1 != element3
+        assert element1 != node1
+
+    def test_equality_check_returns_not_implemented(self):
+        """Tests if equality check returns NotImplemented for non comparable types."""
         text = """
             <div><p>Hello</p></div>
         """
         node = to_lxml(text)
         element = LXMLElement(node)
 
-        assert element == LXMLElement(node)
-        assert element != LXMLElement(node.find(".//p"))  # type: ignore
-        assert element != node
+        assert element.__eq__(node) is NotImplemented
+        assert element.__eq__("string") is NotImplemented
 
     def test_name_attribute_has_correct_value(self):
         """Tests if `name` attribute returns name of the node element."""

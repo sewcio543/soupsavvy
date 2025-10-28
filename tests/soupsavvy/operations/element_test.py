@@ -90,6 +90,16 @@ class TestText:
         operation1, operation2 = operations
         assert (operation1 == operation2) is False
 
+    @pytest.mark.parametrize(
+        argnames="operations",
+        argvalues=[(Text(), MockIntOperation())],
+    )
+    def test_equality_check_returns_not_implemented(self, operations: tuple):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        operation1, operation2 = operations
+        result = operation1.__eq__(operation2)
+        assert result is NotImplemented
+
 
 @pytest.mark.operation
 class TestHref:
@@ -153,6 +163,19 @@ class TestHref:
         """Tests if __eq__ method returns False if objects are not equal."""
         operation1, operation2 = operations
         assert (operation1 == operation2) is False
+
+    @pytest.mark.parametrize(
+        argnames="operations",
+        argvalues=[
+            (Href(), MockIntOperation()),
+            (Href(), MockLinkSelector()),
+        ],
+    )
+    def test_equality_check_returns_not_implemented(self, operations: tuple):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        operation1, operation2 = operations
+        result = operation1.__eq__(operation2)
+        assert result is NotImplemented
 
 
 @pytest.mark.operation
@@ -282,6 +305,19 @@ class TestParent:
         """Tests if __eq__ method returns False if objects are not equal."""
         operation1, operation2 = operations
         assert (operation1 == operation2) is False
+
+    @pytest.mark.parametrize(
+        argnames="operations",
+        argvalues=[
+            (Parent(), MockIntOperation()),
+            (Parent(), MockLinkSelector()),
+        ],
+    )
+    def test_equality_check_returns_not_implemented(self, operations: tuple):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        operation1, operation2 = operations
+        result = operation1.__eq__(operation2)
+        assert result is NotImplemented
 
     def test_piping_with_selector_returns_selector_list(self):
         """Tests if piping operation with selector returns SelectorList."""

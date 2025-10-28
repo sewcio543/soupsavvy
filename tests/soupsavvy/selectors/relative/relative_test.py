@@ -598,6 +598,25 @@ class TestRelativeSelectorEquality:
         """Tests if two multiple soup selectors are not equal."""
         assert (selectors[0] == selectors[1]) is False
 
+    @pytest.mark.parametrize(
+        argnames="selectors",
+        argvalues=[
+            (
+                MockRelativeSelector(MockLinkSelector()),
+                MockLinkSelector(),
+            ),
+            # the same selector but different subclass of RelativeSelector
+            (
+                MockRelativeSelector(MockLinkSelector()),
+                MockRelativeSelectorNotEqual(MockLinkSelector()),
+            ),
+        ],
+    )
+    def test_equality_check_returns_not_implemented(self, selectors: tuple):
+        """Tests if equality check returns NotImplemented for non comparable types."""
+        result = selectors[0].__eq__(selectors[1])
+        assert result is NotImplemented
+
 
 def _find_anchor(bs: IElement) -> IElement:
     """
