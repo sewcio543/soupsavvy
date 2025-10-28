@@ -1,6 +1,23 @@
 # Changelog
 
-## v1.0.1<!-- Release notes generated using configuration in .github/release.yml at v1.0.1 -->### New Features 🎉\* Playwright implementation by @sewcio543 in https://github.com/sewcio543/soupsavvy/pull/215### Fixes 🛠️\* [BUGFIX] Showcase demo by @sewcio543 in https://github.com/sewcio543/soupsavvy/pull/219### Other Changes\* Model improvements by @sewcio543 in https://github.com/sewcio543/soupsavvy/pull/217**Full Changelog**: https://github.com/sewcio543/soupsavvy/compare/v1.0.0...v1.0.1
+## v1.1.0<!-- Release notes generated using configuration in .github/release.yml at v1.1.0 -->### New Features 🎉\* High level interface for browsers and selenium implementation by @sewcio543 in https://github.com/sewcio543/soupsavvy/pull/220\* Playwright implementation of IBrowser by @sewcio543 in https://github.com/sewcio543/soupsavvy/pull/221\* Browser Operations by @sewcio543 in https://github.com/sewcio543/soupsavvy/pull/225\* Serialization with JSON by @sewcio543 in https://github.com/sewcio543/soupsavvy/pull/226\* Find operations by @sewcio543 in https://github.com/sewcio543/soupsavvy/pull/229### Improvements 🚀\* Model serialization improvement by @sewcio543 in https://github.com/sewcio543/soupsavvy/pull/233### Other Changes\* NotImplemented in equality checks by @sewcio543 in https://github.com/sewcio543/soupsavvy/pull/231**Full Changelog**: https://github.com/sewcio543/soupsavvy/compare/v1.0.1...v1.1.0
+
+## v1.0.1<!-- Release notes generated using configuration in .github/release.yml at v1.0.1 -->
+
+### Breaking Changes 💥
+
+- Removing `__inherit_fields__` option from `BaseModel`
+
+### New Features 🎉
+
+- `Playwright` implementation
+- `json` method with `serialize` decorator for model serialization
+
+### Other Changes
+
+- Typing improvements in implementations
+
+**Full Changelog**: https://github.com/sewcio543/soupsavvy/compare/v1.0.0...v1.0.1
 
 ## v1.0.0<!-- Release notes generated using configuration in .github/release.yml at v1.0.0 -->
 
