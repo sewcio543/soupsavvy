@@ -94,4 +94,10 @@ class SoupElement(IElement[bs4.Tag]):
         return self.node.text
 
     def __hash__(self):
-        return id(self._node)
+        return id(self.node)
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, SoupElement):
+            return NotImplemented
+
+        return id(self.node) == id(other.node)

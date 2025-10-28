@@ -98,7 +98,7 @@ def check_tag_searcher(x: Any, message: Optional[str] = None) -> TagSearcher:
     Parameters
     ----------
     x : Any
-        Any object to be validated as correct operation.
+        Any object to be validated as correct TagSearcher.
     message : str, optional
         Custom message to be displayed in case of raising an exception.
         By default None, which results in default message.
