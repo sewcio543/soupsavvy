@@ -12,6 +12,7 @@ import soupsavvy.exceptions as exc
 from soupsavvy.base import (
     BaseOperation,
     BrowserOperation,
+    Condition,
     ElementAction,
     SoupSelector,
     check_tag_searcher,
@@ -147,6 +148,55 @@ class WaitImplicitly(BaseOperation):
             return NotImplemented
 
         return self.seconds == x.seconds
+
+
+class WaitUntil(BrowserOperation):
+
+    def __init__(
+        self,
+        condition: Condition,
+        timeout: float,
+        poll_frequency: float = 0.5,
+        strict: bool = False,
+        recursive: bool = True,
+    ) -> None:
+        """
+        Initializes the WaitUntil operation with the specified condition and timeout.
+
+        Parameters
+        ----------
+        condition : Condition
+            Condition to be met for the wait to end.
+        timeout : float
+            Maximum number of seconds to wait for the condition to be met.
+        poll_frequency : float, optional
+            Frequency in seconds to check the condition. Default is 0.5 seconds.
+        strict : bool, optional
+            Whether to enforce strict finding in the condition. Default is False.
+        recursive : bool, optional
+            Whether to search recursively in the condition. Default is True.
+        """
+        self.condition = condition
+        self.timeout = timeout
+        self.poll_frequency = poll_frequency
+        self.strict = strict
+        self.recursive = recursive
+
+    def _execute(self, browser: IBrowser) -> None:
+        start_time = time.time()
+
+        while True:
+            body = browser.get_document()
+            if self.condition.find(body, strict=self.strict, recursive=self.recursive):
+                return
+
+            elapsed_time = time.time() - start_time
+            if elapsed_time >= self.timeout:
+                raise Exception(
+                    f"Condition {self.condition} was not met within {self.timeout} seconds."
+                )
+
+            time.sleep(self.poll_frequency)
 
 
 class Click(ElementAction):
