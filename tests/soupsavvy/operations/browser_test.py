@@ -1,6 +1,7 @@
 """Unit tests for operations specific to browser context."""
 
-from typing import cast
+from dataclasses import dataclass
+from typing import Any, cast
 from unittest.mock import patch
 
 import pytest
@@ -11,6 +12,7 @@ from soupsavvy.interfaces import IBrowser, IElement
 from soupsavvy.operations.browser import (
     ApplyTo,
     Click,
+    Condition,
     Find,
     FindAll,
     Navigate,
@@ -908,3 +910,434 @@ class TestBrowserIntegration:
         """
         with pytest.raises(exc.FailedOperationExecution):
             operations.execute("not a browser")
+
+
+@dataclass(frozen=True)
+class FunctionCall:
+    params: dict
+    result: Any
+
+
+@pytest.fixture(scope="function")
+def calls() -> list[FunctionCall]:
+    """Fixture for collecting function calls."""
+    return []
+
+
+def mock_predicate(x: bool, y: bool) -> bool:
+    result = x and y
+    return result
+
+
+class MockPredicateClass:
+    def __call__(self, x: bool, y: bool) -> bool:
+        return True
+
+
+@pytest.mark.browser
+class TestCondition:
+    """Test suite for base Condition class."""
+
+    @pytest.mark.parametrize(
+        argnames="x, y, expected",
+        argvalues=[
+            (True, True, True),
+            (True, False, False),
+            (False, False, False),
+        ],
+    )
+    def test_check_method_works_as_expected_with_predicate(
+        self, x: bool, y: bool, expected: bool, calls: list[FunctionCall]
+    ):
+        """
+        Tests if check method works correctly when predicate function is provided
+        and all required parameters are passed. Function should be called only once
+        with correct parameters.
+        """
+
+        def predicate(x: bool, y: bool) -> bool:
+            result = x and y
+            calls.append(FunctionCall(params={"x": x, "y": y}, result=result))
+            return result
+
+        condition = Condition(predicate, params={"x": x, "y": y})
+        result = condition.check()
+
+        assert isinstance(result, bool)
+        assert result is expected
+        assert calls == [FunctionCall(params={"x": x, "y": y}, result=expected)]
+
+    def test_parameters_can_be_skipped_if_function_does_not_accept_any(
+        self, calls: list[FunctionCall]
+    ):
+        """
+        Tests if check method works properly
+        when function does not accept any parameters.
+        In this case, params are not required.
+        """
+
+        def predicate() -> bool:
+            calls.append(FunctionCall(params={}, result=True))
+            return True
+
+        condition = Condition(predicate)
+        result = condition.check()
+
+        assert result is True
+        assert calls == [FunctionCall(params={}, result=True)]
+
+    def test_parameters_can_be_skipped_if_function_only_accepts_find_params(
+        self, calls: list[FunctionCall]
+    ):
+        """
+        Tests if check method works properly when function only accepts
+        find parameters. In this case, params are not required.
+        """
+
+        def predicate(tag, strict: bool) -> bool:
+            calls.append(
+                FunctionCall(params={"tag": tag, "strict": strict}, result=False)
+            )
+            return False
+
+        condition = Condition(predicate)
+        result = condition.check(tag="string", strict=True)  # type: ignore
+
+        assert result is False
+        assert calls == [
+            FunctionCall(params={"tag": "string", "strict": True}, result=False)
+        ]
+
+    @pytest.mark.parametrize(
+        argnames="func",
+        argvalues=[lambda x, y: True, mock_predicate, MockPredicateClass()],
+        ids=["lambda", "function", "callable-class"],
+    )
+    def test_any_callable_can_be_used_as_predicate(self, func):
+        """
+        Tests if check method works correctly when any callable
+        (lambda, function, callable class) is provided as predicate.
+        """
+        condition = Condition(func, params={"x": True, "y": True})
+        result = condition.check()
+        assert result is True
+
+    @pytest.mark.parametrize(
+        argnames="x, y, expected",
+        argvalues=[
+            (1, 1, 2),
+            (1, -1, 0),
+        ],
+    )
+    def test_check_method_works_as_expected_with_function_returning_non_boolean(
+        self, x: bool, y: bool, expected: bool, calls: list[FunctionCall]
+    ):
+        """
+        Tests if check method works correctly when function returning non-boolean
+        value is provided. Result returned by the function should be cast to boolean.
+        """
+
+        def func(x: Any, y: Any) -> int:
+            result = x + y
+            calls.append(FunctionCall(params={"x": x, "y": y}, result=result))
+            return result
+
+        condition = Condition(func, params={"x": x, "y": y})
+        result = condition.check()
+
+        assert isinstance(result, bool)
+        assert result is bool(expected)
+        assert calls == [FunctionCall(params={"x": x, "y": y}, result=expected)]
+
+    def test_raises_error_when_arguments_missing(self):
+        """
+        Tests if check method raises InvalidParametersBinding
+        when required arguments are missing.
+        """
+
+        def func(x: Any, y: Any) -> bool:
+            return True
+
+        with pytest.raises(exc.InvalidParametersBinding):
+            Condition(func, params={"x": 1})
+
+    def test_raises_error_when_invalid_argduments_provided(self):
+        """
+        Tests if check method raises InvalidParametersBinding
+        when invalid arguments are provided. One of the arguments
+        does not correspond to any parameter in the function signature.
+        """
+
+        def func(x: Any, y: Any) -> bool:
+            return True
+
+        with pytest.raises(exc.InvalidParametersBinding):
+            Condition(func, params={"x": 1, "y": 2, "z": 3})
+
+    def test_handles_keyword_arguments_when_defined_by_function(
+        self, calls: list[FunctionCall]
+    ):
+        """
+        Tests if extra parameters are bound to **kwargs
+        when function defines keyword arguments. Positional arguments can be defined
+        in function signature as well, but are internally ignored.
+        The name does not have to be standard **kwargs,
+        any valid identifier is accepted.
+        """
+
+        def func(x: bool, y: int, *args, **keywords) -> bool:
+            calls.append(
+                FunctionCall(
+                    params={"x": x, "y": y, "keywords": keywords, "args": args},
+                    result=True,
+                )
+            )
+            return True
+
+        condition = Condition(func, params={"x": 1, "y": 2, "z": 3, "i": 4})
+        result = condition.check()
+
+        assert result is True
+        assert calls == [
+            FunctionCall(
+                params={"x": 1, "y": 2, "keywords": {"z": 3, "i": 4}, "args": ()},
+                result=True,
+            )
+        ]
+
+    def test_passes_when_arguments_with_defaults_are_skipped(
+        self, calls: list[FunctionCall]
+    ):
+        """
+        Tests if check method works correctly when some arguments
+        have default values and are skipped in params.
+        """
+
+        def predicate(x: bool, y: bool = True) -> bool:
+            result = x and y
+            calls.append(FunctionCall(params={"x": x, "y": y}, result=result))
+            return result
+
+        condition = Condition(predicate, params={"x": True})
+        result = condition.check()
+
+        assert result is True
+        assert calls == [FunctionCall(params={"x": True, "y": True}, result=True)]
+
+    def test_default_arguments_are_overridden_by_params(
+        self, calls: list[FunctionCall]
+    ):
+        """
+        Tests if default arguments are correctly overridden by params
+        provided to Condition.
+        """
+
+        def predicate(x: bool, y: bool = False) -> bool:
+            result = x and y
+            calls.append(FunctionCall(params={"x": x, "y": y}, result=result))
+            return result
+
+        condition = Condition(predicate, params={"x": True, "y": True})
+
+        result = condition.check()
+        assert result is True
+        assert calls == [FunctionCall(params={"x": True, "y": True}, result=True)]
+
+    def test_find_arguments_are_handled_separately(self, calls: list[FunctionCall]):
+        """
+        Tests if find arguments (tag, strict, recursive) are skipped on initialization
+        and handled separately in check method where they are passed into
+        partial function.
+        """
+
+        def predicate(
+            tag: bool, strict: bool, recursive: bool, x: bool, y: bool
+        ) -> bool:
+            result = x and y and strict and recursive and tag
+            calls.append(
+                FunctionCall(
+                    params={
+                        "x": x,
+                        "y": y,
+                        "strict": strict,
+                        "recursive": recursive,
+                        "tag": tag,
+                    },
+                    result=result,
+                )
+            )
+            return result
+
+        condition = Condition(predicate, params={"x": True, "y": True})
+        result = condition.check(tag=True, strict=True, recursive=False)  # type: ignore
+
+        assert result is False
+        assert calls == [
+            FunctionCall(
+                params={
+                    "x": True,
+                    "y": True,
+                    "strict": True,
+                    "recursive": False,
+                    "tag": True,
+                },
+                result=False,
+            )
+        ]
+
+    def test_find_arguments_are_not_overridden_when_provided_in_init(
+        self, calls: list[FunctionCall]
+    ):
+        """
+        Tests if find arguments (tag, strict, recursive) provided in Condition
+        initialization are not overridden by those provided in check method.
+        Bound parameters take precedence.
+        """
+        calls = []
+
+        def predicate(strict: bool, x: bool, y: bool) -> bool:
+            result = x and y and strict
+            calls.append(
+                FunctionCall(params={"x": x, "y": y, "strict": strict}, result=result)
+            )
+            return result
+
+        condition = Condition(predicate, params={"x": True, "y": True, "strict": True})
+        result = condition.check(strict=False)
+
+        assert result is True
+        assert calls == [
+            FunctionCall(params={"x": True, "y": True, "strict": True}, result=True)
+        ]
+
+    def test_find_arguments_are_provided_as_default_if_not_in_init(
+        self, calls: list[FunctionCall]
+    ):
+        """
+        Tests if find arguments (tag, strict, recursive) are not provided
+        in initialization nor in check method, they take default values
+        defined in check method signature.
+        """
+
+        def predicate(tag, strict: bool, recursive: bool, x: bool, y: bool) -> bool:
+            result = x and y and strict and recursive and tag
+            calls.append(
+                FunctionCall(
+                    params={
+                        "x": x,
+                        "y": y,
+                        "strict": strict,
+                        "recursive": recursive,
+                        "tag": tag,
+                    },
+                    result=result,
+                )
+            )
+            return result
+
+        condition = Condition(predicate, params={"x": True, "y": True})
+        result = condition.check()
+
+        assert result is False
+        assert calls == [
+            FunctionCall(
+                params={
+                    "x": True,
+                    "y": True,
+                    "strict": False,
+                    "recursive": True,
+                    "tag": None,
+                },
+                result=False,
+            )
+        ]
+
+    def test_two_conditions_are_equal(self):
+        """
+        Tests if two Condition instances with the same predicate and params
+        provided at initialization are equal.
+        """
+        condition1 = Condition(mock_predicate, params={"x": True, "y": True})
+        condition2 = Condition(mock_predicate, params={"x": True, "y": True})
+        assert condition1 == condition2
+
+    def test_two_conditions_are_not_equal_if_provided_parameters_are_different(self):
+        """
+        Tests if two Condition instances with the same function but different params
+        provided at initialization are not equal.
+        """
+        condition1 = Condition(mock_predicate, params={"x": True, "y": True})
+        condition2 = Condition(mock_predicate, params={"x": True, "y": False})
+        assert condition1 != condition2
+
+    def test_two_conditions_are_not_equal_if_predicates_are_different(self):
+        """
+        Tests if two Condition instances with different predicate functions
+        are always not equal.
+        """
+        condition1 = Condition(mock_predicate, params={"x": True, "y": True})
+        condition2 = Condition(lambda x, y: x and y, params={"x": True, "y": True})
+        assert condition1 != condition2
+
+    def test_two_conditions_are_not_equal_if_other_is_not_condition_instance(self):
+        """
+        Tests if Condition instance is not equal to an object of different type.
+        Condition in such case should return NotImplemented
+        """
+        condition1 = Condition(mock_predicate, params={"x": True, "y": True})
+        condition2 = mock_predicate
+
+        assert condition1.__eq__(condition2) is NotImplemented
+        assert condition1 != condition2
+
+    @pytest.mark.integration
+    def test_condition_works_with_selector_to_confirm_presence_of_element(
+        self, to_element: ToElement
+    ):
+        """
+        Test that Condition can be used with a selector
+        to confirm presence of an element in the provided tag.
+        """
+        text = """
+        <div>
+            <span>Other Element</span>
+            <a href="https://example.com">123</a>
+        </div>
+        """
+        element = to_element(text)
+        selector = MockLinkSelector()
+        condition = Condition(lambda tag: selector.find(tag) is not None)
+        result = condition.check(tag=element)
+        assert result is True
+
+    @pytest.mark.integration
+    def test_condition_works_with_selector_to_confirm_presence_of_element_with_params(
+        self, to_element: ToElement
+    ):
+        """
+        Test that Condition can be used with a selector to check attribute
+        value of the found element by passing additional parameters.
+        """
+        text = """
+        <div>
+            <span>Other Element</span>
+            <a href="https://example.com">123</a>
+        </div>
+        """
+
+        def predicate(tag, href: str, strict: bool) -> bool:
+            selected = MockLinkSelector().find(tag, strict=strict)
+            assert selected is not None
+            real_href = selected.get_attribute("href")
+            assert real_href is not None
+            return real_href.strip("/") == href  # playwright adds trailing slash
+
+        element = to_element(text)
+
+        condition = Condition(predicate, params={"href": "https://example.com"})
+        result = condition.check(tag=element)
+        assert result is True
+
+        condition2 = Condition(predicate, params={"href": "https://example123.com"})
+        result = condition2.check(tag=element)
+        assert result is False

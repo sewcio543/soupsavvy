@@ -3,6 +3,8 @@ Module defining browser operations for web automation tasks.
 Contains typical browser operations and actions on web elements.
 """
 
+import functools
+import inspect
 import time
 from collections.abc import Callable
 from functools import partial
@@ -12,12 +14,11 @@ import soupsavvy.exceptions as exc
 from soupsavvy.base import (
     BaseOperation,
     BrowserOperation,
-    Condition,
     ElementAction,
     SoupSelector,
     check_tag_searcher,
 )
-from soupsavvy.interfaces import IBrowser, IElement, TagSearcher
+from soupsavvy.interfaces import Comparable, IBrowser, IElement, TagSearcher
 
 
 class ApplyTo(BrowserOperation):
@@ -150,6 +151,85 @@ class WaitImplicitly(BaseOperation):
         return self.seconds == x.seconds
 
 
+class Condition(Comparable):
+    _FIND_ARGUMENTS = {"tag", "strict", "recursive"}
+
+    def __init__(
+        self,
+        predicate: Callable[..., Any],
+        params: Optional[dict[str, Any]] = None,
+    ) -> None:
+        params = params or {}
+        signature = inspect.signature(predicate)
+
+        try:
+            bound_args = signature.bind_partial(**params)
+        except TypeError as e:
+            raise exc.InvalidParametersBinding(
+                f"Error binding provided parameters to predicate: {e}"
+            ) from e
+
+        first_args = bound_args.arguments
+        missing = {x for x in signature.parameters if x not in first_args}
+        missing_required = {
+            x
+            for x in missing
+            if signature.parameters[x].default is inspect._empty
+            and signature.parameters[x].kind
+            not in {inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD}
+        }
+
+        check = missing_required - self._FIND_ARGUMENTS
+
+        if check:
+            raise exc.InvalidParametersBinding(
+                "Not all required parameters were provided for the predicate. "
+                f"Missing: {', '.join(check)}"
+            )
+
+        kwargs_name = next(
+            (
+                x
+                for x in signature.parameters
+                if signature.parameters[x].kind is inspect.Parameter.VAR_KEYWORD
+            ),
+            None,
+        )
+        # unpacking kwargs if present
+        first_args |= first_args.pop(kwargs_name, {})  # type: ignore
+
+        self._to_provide = self._FIND_ARGUMENTS & missing
+        self.predicate = functools.partial(predicate, **first_args)
+
+    def check(
+        self,
+        tag: Optional[IElement] = None,
+        strict: bool = False,
+        recursive: bool = True,
+    ) -> bool:
+        dymanic_params = {
+            "tag": tag,
+            "strict": strict,
+            "recursive": recursive,
+        }
+
+        to_provide = {k: v for k, v in dymanic_params.items() if k in self._to_provide}
+        signature = inspect.signature(self.predicate)
+        params = signature.bind_partial(**to_provide).arguments
+        result = self.predicate(**params)
+        return bool(result)
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Condition):
+            return NotImplemented
+
+        return (
+            self.predicate.func == other.predicate.func
+            and self.predicate.args == other.predicate.args
+            and self.predicate.keywords == other.predicate.keywords
+        )
+
+
 class WaitUntil(BrowserOperation):
 
     def __init__(
@@ -187,7 +267,7 @@ class WaitUntil(BrowserOperation):
 
         while True:
             body = browser.get_document()
-            if self.condition.find(body, strict=self.strict, recursive=self.recursive):
+            if self.condition.check(body, strict=self.strict, recursive=self.recursive):
                 return
 
             elapsed_time = time.time() - start_time

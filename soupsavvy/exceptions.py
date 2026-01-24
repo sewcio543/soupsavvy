@@ -191,6 +191,16 @@ class NotBrowserException(OperationException, TypeError):
     """
 
 
+#! CONDITION
+
+
+class InvalidParametersBinding(SoupsavvyException, TypeError):
+    """
+    Exception to be raised when user provides invalid parameters binding
+    to the function on Condition initialization.
+    """
+
+
 #! MODELS
 
 
