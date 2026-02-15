@@ -27,8 +27,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 
+import soupsavvy.exceptions as exc
 from soupsavvy.base import BaseOperation, SoupSelector
-from soupsavvy.exceptions import BreakOperationException
 from soupsavvy.implementation.bs4 import SoupElement
 from soupsavvy.implementation.lxml import LXMLElement
 from soupsavvy.implementation.playwright import PlaywrightElement
@@ -327,7 +327,14 @@ class MockBreakOperation(BaseMockOperation):
 
     def _execute(self, arg: Any) -> Any:
         result = self.operation.execute(arg)
-        raise BreakOperationException(result)
+        raise exc.BreakOperationException(result)
+
+
+class MockRaiseOperation(BaseMockOperation):
+    """Mock class for raising exception during operation execution."""
+
+    def _execute(self, arg: Any) -> Any:
+        raise arg
 
 
 class MockModel(BaseModel):

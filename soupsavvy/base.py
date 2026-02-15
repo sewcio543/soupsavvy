@@ -847,6 +847,8 @@ class BaseOperation(Executable, Comparable):
         except exc.BreakOperationException:
             # break exception is propagated to the caller to handle
             raise
+        except exc.FailedOperationExecution:
+            raise
         except Exception as e:
             raise exc.FailedOperationExecution(
                 f"Failed to execute operation: {e}"
