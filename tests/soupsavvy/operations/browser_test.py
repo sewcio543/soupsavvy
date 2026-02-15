@@ -39,6 +39,11 @@ MOCK_TEXT = "mock-element"
 MOCK_ELEMENT = cast(IElement, MOCK_TEXT)
 
 
+def mock_time_sleep(seconds: float) -> None:
+    """Mock time.sleep to avoid actual waiting during tests."""
+    pass
+
+
 class MockBrowserException(Exception):
     """Custom exception for MockBrowser to simulate browser errors."""
 
@@ -337,7 +342,7 @@ class TestWaitImplicitly:
         """Test that WaitImplicitly calls time.sleep() with the correct timeout."""
         op = WaitImplicitly(0.01)
 
-        with patch("time.sleep") as mock_sleep:
+        with patch("time.sleep", side_effect=mock_time_sleep) as mock_sleep:
             result = op.execute(arg)
 
             mock_sleep.assert_called_once_with(0.01)
@@ -350,7 +355,7 @@ class TestWaitImplicitly:
         """
         op = WaitImplicitly(0.01)
 
-        with patch("time.sleep") as mock_sleep:
+        with patch("time.sleep", side_effect=mock_time_sleep) as mock_sleep:
             result = op.execute("any argument")
 
             mock_sleep.assert_called_once_with(0.01)
@@ -1161,7 +1166,7 @@ class TestCondition:
         with pytest.raises(exc.InvalidParametersBinding):
             Condition(func, params={"x": 1})
 
-    def test_raises_error_when_invalid_argduments_provided(self):
+    def test_raises_error_when_invalid_arguments_provided(self):
         """
         Tests if check method raises InvalidParametersBinding
         when invalid arguments are provided. One of the arguments
@@ -1443,10 +1448,13 @@ class TestCondition:
         assert result is False
 
 
+@pytest.mark.operation
+@pytest.mark.browser
 class TestWaitUntil:
     """Tests suite for the WaitUntil operation."""
 
-    DEFAULT_TIMEOUT = 0.01
+    DEFAULT_TIMEOUT = 10
+    DEFAULT_CONDITION_EXECUTION_TIME = 1
     MOCK_CONDITION = Condition(lambda: False)
 
     class MockBool:
@@ -1531,42 +1539,96 @@ class TestWaitUntil:
         and raises an exception if the condition is not met.
         """
         mock_browser.body = MOCK_ELEMENT
+        current_time = 0.0
 
-        condition = Condition(lambda: False)
-        wait_op = WaitUntil(condition=condition, timeout=0.01)
+        def fake_monotonic() -> float:
+            return current_time
 
-        with pytest.raises(exc.FailedOperationExecution):
-            wait_op.execute(mock_browser)
-
-    def test_checks_if_time_consuming_condition_is_handled_properly(
-        self, mock_browser: MockBrowser
-    ):
-        """
-        Test that WaitUntil handles time-consuming condition function properly
-        by retrying until timeout is reached. If pool frequency is less than the time
-        taken by condition function, it should fast-forward to the next check
-        and raise exception after first check that finished after timeout is reached.
-        """
-        mock_browser.body = MOCK_ELEMENT
-
-        COUNTER = self.Counter()
+        def fake_sleep(seconds: float):
+            nonlocal current_time
+            current_time += seconds
 
         def condition_func():
-            # it should be executed two times, after that timeout is reached
-            time.sleep(0.006)
+            nonlocal current_time
+            current_time += self.DEFAULT_CONDITION_EXECUTION_TIME
+            return False
+
+        condition = Condition(condition_func)
+        wait_op = WaitUntil(condition=condition, timeout=self.DEFAULT_TIMEOUT)
+
+        with patch("time.monotonic", side_effect=fake_monotonic):
+            with patch("time.sleep", side_effect=fake_sleep):
+                with pytest.raises(exc.FailedOperationExecution):
+                    wait_op.execute(mock_browser)
+
+    @pytest.mark.parametrize(
+        argnames="execution_time, pool_frequency, expected_calls",
+        argvalues=[
+            (1, 2, 4),  # timeout is checked before sleeping
+            (
+                2,
+                9,
+                2,
+            ),  # waiting time excedes timeout, it is still executed one more time
+            (
+                4,
+                2,
+                2,
+            ),  # when after execution time is exactly at the timeout, it should not be executed again
+            (
+                11,
+                1,
+                1,
+            ),  # when execution time is greater than timeout, it should be executed only once
+        ],
+        ids=[
+            "execution_time_1_pool_frequency_2",
+            "execution_time_2_pool_frequency_9",
+            "execution_time_4_pool_frequency_2",
+            "execution_time_11_pool_frequency_1",
+        ],
+    )
+    def test_handles_retries_as_expected(
+        self,
+        mock_browser: MockBrowser,
+        pool_frequency: float,
+        execution_time: float,
+        expected_calls: int,
+    ):
+        """
+        Test that WaitUntil operation handles retries as expected based on the provided
+        execution time of the condition and the poll frequency.
+        """
+        mock_browser.body = MOCK_ELEMENT
+        COUNTER = self.Counter()
+        current_time = 0.0
+
+        def fake_monotonic() -> float:
+            return current_time
+
+        def fake_sleep(seconds: float):
+            nonlocal current_time
+            current_time += seconds
+
+        def condition_func():
+            nonlocal current_time
+            current_time += execution_time
             COUNTER.increment()
             return False
 
-        timeout = self.DEFAULT_TIMEOUT
+        with patch("time.monotonic", side_effect=fake_monotonic):
+            with patch("time.sleep", side_effect=fake_sleep):
 
-        condition = Condition(condition_func)
-        # poll frequency is set to low value, to ensure timeout has primary control
-        wait_op = WaitUntil(condition=condition, timeout=0.01, poll_frequency=0.001)
+                condition = Condition(condition_func)
+                wait_op = WaitUntil(
+                    condition=condition,
+                    timeout=self.DEFAULT_TIMEOUT,
+                    poll_frequency=pool_frequency,
+                )
+                with pytest.raises(exc.FailedOperationExecution):
+                    wait_op.execute(mock_browser)
 
-        with pytest.raises(exc.FailedOperationExecution):
-            wait_op.execute(mock_browser)
-
-        assert COUNTER.count == 2
+        assert COUNTER.count == expected_calls
 
     def test_passes_when_condition_is_met(self, mock_browser: MockBrowser):
         """
@@ -1598,8 +1660,21 @@ class TestWaitUntil:
         In this case, condition fails.
         """
         mock_browser.body = MOCK_ELEMENT
+        current_time = 0.0
 
-        condition = Condition(lambda strict, recursive: strict and recursive)
+        def fake_monotonic() -> float:
+            return current_time
+
+        def fake_sleep(seconds: float):
+            nonlocal current_time
+            current_time += seconds
+
+        def condition_func(strict: bool, recursive: bool):
+            nonlocal current_time
+            current_time += self.DEFAULT_CONDITION_EXECUTION_TIME
+            return strict and recursive
+
+        condition = Condition(condition_func)
         wait_op = WaitUntil(
             condition=condition,
             timeout=self.DEFAULT_TIMEOUT,
@@ -1607,8 +1682,10 @@ class TestWaitUntil:
             recursive=recursive,
         )
 
-        with pytest.raises(exc.FailedOperationExecution):
-            wait_op.execute(mock_browser)
+        with patch("time.monotonic", side_effect=fake_monotonic):
+            with patch("time.sleep", side_effect=fake_sleep):
+                with pytest.raises(exc.FailedOperationExecution):
+                    wait_op.execute(mock_browser)
 
     def test_execute_passes_strict_and_recursive_args_to_to_condition_and_passes(
         self, mock_browser: MockBrowser
@@ -1644,19 +1721,30 @@ class TestWaitUntil:
         that returns False on the first call and True on the second call.
         """
         mock_browser.body = MOCK_ELEMENT
-
-        MOCK_BOOL = self.MockBool(False, revert_after=retries)
         MOCK_COUNTER = self.Counter()
+        current_time = 0.0
+
+        def fake_monotonic() -> float:
+            return current_time
+
+        def fake_sleep(seconds: float):
+            nonlocal current_time
+            current_time += seconds
 
         def condition_func():
-            MOCK_BOOL.revert()
+            nonlocal current_time
+            current_time += self.DEFAULT_CONDITION_EXECUTION_TIME
+
             MOCK_COUNTER.increment()
-            return MOCK_BOOL.value
+            return MOCK_COUNTER.count > retries
 
         condition = Condition(condition_func)
         wait_op = WaitUntil(condition=condition, timeout=self.DEFAULT_TIMEOUT)
 
-        result = wait_op.execute(mock_browser)
+        with patch("time.monotonic", side_effect=fake_monotonic):
+            with patch("time.sleep", side_effect=fake_sleep):
+                result = wait_op.execute(mock_browser)
+
         assert result is mock_browser
         assert MOCK_COUNTER.count == retries + 1
 
@@ -1666,18 +1754,27 @@ class TestWaitUntil:
         and retries until condition is met.
         """
         mock_browser.body = MOCK_ELEMENT
-
-        MOCK_BOOL = self.MockBool(False, revert_after=2)
+        RETRIES = 3
         MOCK_COUNTER = self.Counter()
+        current_time = 0.0
+
+        def fake_monotonic() -> float:
+            return current_time
+
+        def fake_sleep(seconds: float):
+            nonlocal current_time
+            current_time += seconds
 
         def condition_func():
-            MOCK_BOOL.revert()
+            nonlocal current_time
+            current_time += self.DEFAULT_CONDITION_EXECUTION_TIME
+
             MOCK_COUNTER.increment()
 
-            if MOCK_BOOL.value is False:
+            if MOCK_COUNTER.count < RETRIES:
                 raise ValueError("Condition not met yet")
 
-            return MOCK_BOOL.value
+            return True
 
         condition = Condition(condition_func)
         wait_op = WaitUntil(
@@ -1686,7 +1783,10 @@ class TestWaitUntil:
             ignored_exceptions=[ValueError],
         )
 
-        result = wait_op.execute(mock_browser)
+        with patch("time.monotonic", side_effect=fake_monotonic):
+            with patch("time.sleep", side_effect=fake_sleep):
+                result = wait_op.execute(mock_browser)
+
         assert result is mock_browser
         assert MOCK_COUNTER.count == 3
 
@@ -1699,8 +1799,18 @@ class TestWaitUntil:
         after which it raises FailedOperationExecution.
         """
         mock_browser.body = MOCK_ELEMENT
+        current_time = 0.0
+
+        def fake_monotonic() -> float:
+            return current_time
+
+        def fake_sleep(seconds: float):
+            nonlocal current_time
+            current_time += seconds
 
         def condition_func():
+            nonlocal current_time
+            current_time += self.DEFAULT_CONDITION_EXECUTION_TIME
             raise ValueError("Condition will never be met mf")
 
         condition = Condition(condition_func)
@@ -1710,8 +1820,10 @@ class TestWaitUntil:
             ignored_exceptions=[ValueError],
         )
 
-        with pytest.raises(exc.FailedOperationExecution):
-            wait_op.execute(mock_browser)
+        with patch("time.monotonic", side_effect=fake_monotonic):
+            with patch("time.sleep", side_effect=fake_sleep):
+                with pytest.raises(exc.FailedOperationExecution):
+                    wait_op.execute(mock_browser)
 
     def test_execute_raises_error_when_arg_is_not_browser(self):
         """

@@ -176,7 +176,7 @@ class Condition(Comparable):
         missing_required = {
             x
             for x in missing
-            if signature.parameters[x].default is inspect._empty
+            if signature.parameters[x].default is inspect.Parameter.empty
             and signature.parameters[x].kind
             not in {inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD}
         }
@@ -209,13 +209,13 @@ class Condition(Comparable):
         strict: bool = False,
         recursive: bool = True,
     ) -> bool:
-        dymanic_params = {
+        dynamic_params = {
             "tag": tag,
             "strict": strict,
             "recursive": recursive,
         }
 
-        to_provide = {k: v for k, v in dymanic_params.items() if k in self._to_provide}
+        to_provide = {k: v for k, v in dynamic_params.items() if k in self._to_provide}
         signature = inspect.signature(self.predicate)
         params = signature.bind_partial(**to_provide).arguments
         result = self.predicate(**params)
@@ -267,18 +267,7 @@ class WaitUntil(BrowserOperation):
         deadline = start + self.timeout
         attempts = 0
 
-        next_tick = start
-
         while True:
-            now = time.monotonic()
-
-            if now >= deadline:
-                raise exc.ConditionFailedException(
-                    f"Condition {self.condition} was not met after "
-                    f"{self.timeout:.2f}s "
-                    f"({attempts} attempts, poll={self.poll_frequency}s)."
-                )
-
             attempts += 1
 
             with suppress(*self.ignored_exceptions):
@@ -289,19 +278,16 @@ class WaitUntil(BrowserOperation):
                 ):
                     return
 
-            next_tick += self.poll_frequency
+            now = time.monotonic()
 
-            # If we're already behind schedule (predicate slow),
-            # fast-forward next_tick without sleeping
-            while next_tick <= time.monotonic():
-                next_tick += self.poll_frequency
+            if now >= deadline:
+                raise exc.ConditionFailedException(
+                    f"Condition {self.condition} was not met after "
+                    f"{now - start:.2f}s "
+                    f"({attempts} attempts, poll={self.poll_frequency}s)."
+                )
 
-            sleep_duration = min(
-                next_tick - time.monotonic(), deadline - time.monotonic()
-            )
-
-            if sleep_duration > 0:
-                time.sleep(sleep_duration)
+            time.sleep(min(self.poll_frequency, max(0, deadline - now)))
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, WaitUntil):

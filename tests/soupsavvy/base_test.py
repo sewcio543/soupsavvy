@@ -577,7 +577,8 @@ class TestBaseOperation:
 
         with pytest.raises(exc.BreakOperationException) as info:
             operation.execute("10")
-            assert info.value.result == 10
+
+        assert info.value.result == 10
 
     def test_execute_raises_failed_operation_if_error_in_operation(self):
         """
@@ -603,7 +604,8 @@ class TestBaseOperation:
 
         with pytest.raises(exc.FailedOperationExecution, match=text) as info:
             operation.execute(expected)
-            assert info is expected
+
+        assert info.value is expected
 
 
 @pytest.mark.operation
