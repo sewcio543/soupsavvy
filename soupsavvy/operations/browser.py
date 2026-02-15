@@ -5,8 +5,10 @@ Contains typical browser operations and actions on web elements.
 
 import functools
 import inspect
+import math
 import time
 from collections.abc import Callable
+from contextlib import suppress
 from functools import partial
 from typing import Any, Optional
 
@@ -235,48 +237,84 @@ class WaitUntil(BrowserOperation):
     def __init__(
         self,
         condition: Condition,
-        timeout: float,
-        poll_frequency: float = 0.5,
+        timeout: float = 10.0,
+        poll_frequency: Optional[float] = None,
         strict: bool = False,
         recursive: bool = True,
+        ignored_exceptions: Optional[list[type[BaseException]]] = None,
     ) -> None:
-        """
-        Initializes the WaitUntil operation with the specified condition and timeout.
+        if timeout <= 0:
+            raise ValueError("Timeout must be a positive number.")
 
-        Parameters
-        ----------
-        condition : Condition
-            Condition to be met for the wait to end.
-        timeout : float
-            Maximum number of seconds to wait for the condition to be met.
-        poll_frequency : float, optional
-            Frequency in seconds to check the condition. Default is 0.5 seconds.
-        strict : bool, optional
-            Whether to enforce strict finding in the condition. Default is False.
-        recursive : bool, optional
-            Whether to search recursively in the condition. Default is True.
-        """
+        if poll_frequency is None:
+            poll_frequency = timeout / 10
+
+        if poll_frequency <= 0:
+            raise ValueError("Poll frequency must be a positive number.")
+
+        if poll_frequency > timeout:
+            raise ValueError("Poll frequency cannot be greater than timeout.")
+
         self.condition = condition
         self.timeout = timeout
         self.poll_frequency = poll_frequency
         self.strict = strict
         self.recursive = recursive
+        self.ignored_exceptions = ignored_exceptions or []
 
     def _execute(self, browser: IBrowser) -> None:
-        start_time = time.time()
+        start = time.monotonic()
+        deadline = start + self.timeout
+        attempts = 0
+
+        next_tick = start
 
         while True:
-            body = browser.get_document()
-            if self.condition.check(body, strict=self.strict, recursive=self.recursive):
-                return
+            now = time.monotonic()
 
-            elapsed_time = time.time() - start_time
-            if elapsed_time >= self.timeout:
-                raise Exception(
-                    f"Condition {self.condition} was not met within {self.timeout} seconds."
+            if now >= deadline:
+                raise exc.ConditionFailedException(
+                    f"Condition {self.condition} was not met after "
+                    f"{self.timeout:.2f}s "
+                    f"({attempts} attempts, poll={self.poll_frequency}s)."
                 )
 
-            time.sleep(self.poll_frequency)
+            attempts += 1
+
+            with suppress(*self.ignored_exceptions):
+                if self.condition.check(
+                    browser.get_document(),
+                    strict=self.strict,
+                    recursive=self.recursive,
+                ):
+                    return
+
+            next_tick += self.poll_frequency
+
+            # If we're already behind schedule (predicate slow),
+            # fast-forward next_tick without sleeping
+            while next_tick <= time.monotonic():
+                next_tick += self.poll_frequency
+
+            sleep_duration = min(
+                next_tick - time.monotonic(), deadline - time.monotonic()
+            )
+
+            if sleep_duration > 0:
+                time.sleep(sleep_duration)
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, WaitUntil):
+            return NotImplemented
+
+        return (
+            self.condition == other.condition
+            and math.isclose(self.timeout, other.timeout)
+            and math.isclose(self.poll_frequency, other.poll_frequency)
+            and self.strict == other.strict
+            and self.recursive == other.recursive
+            and set(self.ignored_exceptions) == set(other.ignored_exceptions)
+        )
 
 
 class Click(ElementAction):

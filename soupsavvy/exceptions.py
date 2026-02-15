@@ -191,6 +191,13 @@ class NotBrowserException(OperationException, TypeError):
     """
 
 
+class ConditionFailedException(OperationException):
+    """
+    Exception raised by `WaitUntil` operation when condition was not met within
+    the timeout period.
+    """
+
+
 #! CONDITION
 
 
