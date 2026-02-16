@@ -1635,12 +1635,18 @@ class TestWaitUntil:
         Test that WaitUntil operation passes and returns the browser instance
         when the condition is met within the timeout.
         """
+        COUNTER = self.Counter()
         mock_browser.body = MOCK_ELEMENT
 
-        condition = Condition(lambda: True)
+        def mock_predicate():
+            COUNTER.increment()
+            return True
+
+        condition = Condition(mock_predicate)
         wait_op = WaitUntil(condition=condition, timeout=self.DEFAULT_TIMEOUT)
         result = wait_op.execute(mock_browser)
         assert result is mock_browser
+        assert COUNTER.count == 1
 
     @pytest.mark.parametrize(
         "strict, recursive",
@@ -1695,9 +1701,14 @@ class TestWaitUntil:
         to the condition and the condition is evaluated with those arguments.
         In this case, condition passes.
         """
+        COUNTER = self.Counter()
         mock_browser.body = MOCK_ELEMENT
 
-        condition = Condition(lambda strict, recursive: strict and recursive)
+        def mock_predicate(strict: bool, recursive: bool) -> bool:
+            COUNTER.increment()
+            return strict and recursive
+
+        condition = Condition(mock_predicate)
         wait_op = WaitUntil(
             condition=condition,
             timeout=self.DEFAULT_TIMEOUT,
@@ -1707,6 +1718,7 @@ class TestWaitUntil:
 
         result = wait_op.execute(mock_browser)
         assert result is mock_browser
+        assert COUNTER.count == 1
 
     @pytest.mark.parametrize(
         argnames="retries",
@@ -1944,10 +1956,15 @@ class TestWaitUntil:
         the arguments provided in Condition take precedence
         and are used in condition evaluation.
         """
+        COUNTER = self.Counter()
         mock_browser.body = MOCK_ELEMENT
 
+        def mock_predicate(strict: bool, recursive: bool):
+            COUNTER.increment()
+            return strict and recursive
+
         condition = Condition(
-            lambda strict, recursive: strict and recursive,
+            mock_predicate,
             params={"strict": True, "recursive": True},
         )
         wait_op = WaitUntil(
@@ -1959,3 +1976,30 @@ class TestWaitUntil:
 
         result = wait_op.execute(mock_browser)
         assert result is mock_browser
+        assert COUNTER.count == 1
+
+    def test_execute_does_not_ignore_browser_exceptions(
+        self, mock_browser: MockBrowser
+    ):
+        """
+        Test that execute method does not ignore exceptions raised by
+        the browser instance in `get_document` even if they are specified
+        in ignored_exceptions. If this happens, operation fails.
+        """
+        COUNTER = self.Counter()
+
+        def mock_predicate():
+            COUNTER.increment()
+            return True
+
+        wait_op = WaitUntil(
+            condition=Condition(mock_predicate),
+            timeout=self.DEFAULT_TIMEOUT,
+            ignored_exceptions=[MockBrowserException],
+        )
+
+        with pytest.raises(exc.FailedOperationExecution):
+            wait_op.execute(mock_browser)
+
+        # fails even before first condition is executed
+        assert COUNTER.count == 0

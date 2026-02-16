@@ -9,7 +9,6 @@ import math
 import time
 from collections.abc import Callable
 from contextlib import suppress
-from functools import partial
 from typing import Any, Optional
 
 import soupsavvy.exceptions as exc
@@ -154,6 +153,26 @@ class WaitImplicitly(BaseOperation):
 
 
 class Condition(Comparable):
+    """
+    Wraps a predicate function and prepares it to be evaluated as a condition.
+    `Condition` binds a subset of keyword arguments to the given predicate in
+    advance, while deferring a specific set of arguments (``tag``, ``strict``,
+    and ``recursive``) to be provided later when :meth:`check` is called.
+    This is useful for building reusable conditions that can be evaluated
+    against different elements or search configurations.
+
+    Examples
+    --------
+    >>> from soupsavvy.operations.browser import Condition
+    >>> condition = Condition(lambda tag, text: tag.text == text, params={"text": "Hello"})
+    >>> condition.check(tag=some_element)
+    True
+
+    Conditions are typically used in conjunction with higher-level browser
+    operations (such as waiting utilities) that repeatedly call
+    :meth:`check` until the predicate is satisfied.
+    """
+
     _FIND_ARGUMENTS = {"tag", "strict", "recursive"}
 
     def __init__(
@@ -161,6 +180,33 @@ class Condition(Comparable):
         predicate: Callable[..., Any],
         params: Optional[dict[str, Any]] = None,
     ) -> None:
+        """
+        Initializes the Condition with a predicate function and bound parameters.
+
+        Parameters
+        ----------
+        predicate : Callable
+            A callable that represents the condition to evaluate.
+            Any parameters required by ``predicate`` can be supplied
+            via ``params``.
+        params : dict[str, Any], optional
+            Mapping of keyword arguments to bind to ``predicate`` at construction
+            time. These parameters are validated against the callable's signature.
+
+        predicate:
+            It accepts ``TagSearcher`` parameters (``tag``, ``strict``, and ``recursive``)
+            without the need to specify them in ``params``. They can be supplied
+            when calling :meth:`check`. Bound parameters always take precedence.
+            Function should return boolean value, but it is not strictly required
+            as the result will be cast to bool.
+
+        Raises
+        ------
+        InvalidParametersBinding
+            If the provided ``params`` cannot be bound to ``predicate`` (for
+            example, when required parameters other than ``tag``, ``strict``,
+            or ``recursive`` are missing or unexpected parameters are supplied).
+        """
         params = params or {}
         signature = inspect.signature(predicate)
 
@@ -209,6 +255,27 @@ class Condition(Comparable):
         strict: bool = False,
         recursive: bool = True,
     ) -> bool:
+        """
+        Evaluates the condition by calling the underlying predicate
+        with bound parameters and provided `TagSearcher` arguments only if acceptable
+        by the predicate's signature.
+
+        Parameters
+        ----------
+        tag : IElement
+            Any `IElement` object to process.
+        strict : bool, optional
+            If True, enforces results to be found in the element, by default False.
+        recursive : bool, optional
+            Specifies if search should be recursive.
+            If set to `False`, only direct children of the element will be searched.
+            By default `True`.
+
+        Returns
+        -------
+        bool
+            The result of evaluating the predicate, always cast to a boolean value.
+        """
         dynamic_params = {
             "tag": tag,
             "strict": strict,
@@ -233,6 +300,27 @@ class Condition(Comparable):
 
 
 class WaitUntil(BrowserOperation):
+    """
+    Repeatedly evaluates a :class:`Condition` until it is satisfied or a timeout occurs.
+    This operation polls the current browser document at a fixed interval, checking
+    whether the provided :class:`Condition` returns ``True``.
+
+    Examples
+    --------
+    >>> from soupsavvy.operations.browser import WaitUntil, Condition
+    ...
+    ... condition = Condition(lambda tag: tag.get_attribute("title") == "Dashboard")
+    ... wait_op = WaitUntil(condition, timeout=20.0, poll_frequency=1.0)
+    ... wait_op.execute(browser)
+
+    Raises
+    ------
+    ConditionFailedException
+        If the condition is not satisfied before the timeout expires.
+    NotBrowserException
+        If this operation is executed with an object that does not implement
+        the :class:`IBrowser` interface.
+    """
 
     def __init__(
         self,
@@ -243,6 +331,37 @@ class WaitUntil(BrowserOperation):
         recursive: bool = True,
         ignored_exceptions: Optional[list[type[BaseException]]] = None,
     ) -> None:
+        """
+        Initializes the WaitUntil operation with the specified condition and parameters.
+
+        Parameters
+        ----------
+        condition: Condition
+            A :class:`Condition` instance encapsulating the predicate to be checked
+            against the browser's current document.
+        timeout: float
+            Maximum time in seconds to wait for the condition to become ``True``.
+            Must be a positive number.
+        poll_frequency: float, optional
+            Interval in seconds between condition checks. If ``None``,
+            a default of ``timeout / 10`` is used. Must be positive and not greater
+            than ``timeout``.
+        strict: bool
+            If ``True``, the underlying condition is evaluated with ``strict=True``.
+        recursive: bool
+            If ``True`` (the default), the condition is evaluated with ``recursive=True``.
+        ignored_exceptions: list[type[BaseException]], optional
+            A list of exception types that should be suppressed while evaluating
+            the condition. If any of these exceptions are raised by the condition
+            they are caught and ignored, and the condition
+            is retried until the timeout is reached.
+
+        Raises
+        ------
+        ValueError
+            If ``timeout`` is not positive, if ``poll_frequency`` is not positive,
+            or if ``poll_frequency`` is greater than ``timeout``.
+        """
         if timeout <= 0:
             raise ValueError("Timeout must be a positive number.")
 
@@ -269,10 +388,11 @@ class WaitUntil(BrowserOperation):
 
         while True:
             attempts += 1
+            document = browser.get_document()
 
             with suppress(*self.ignored_exceptions):
                 if self.condition.check(
-                    browser.get_document(),
+                    document,
                     strict=self.strict,
                     recursive=self.recursive,
                 ):
@@ -409,7 +529,7 @@ class _FindBase(BrowserOperation):
 
     def __init__(self, selector: TagSearcher, method: Callable, kwargs: dict) -> None:
         self.selector = selector
-        self.method = partial(method, **kwargs)
+        self.method = functools.partial(method, **kwargs)
 
     def _execute(self, browser: IBrowser) -> Any:
         body = browser.get_document()
