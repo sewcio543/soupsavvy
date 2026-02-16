@@ -42,6 +42,7 @@ from tests.soupsavvy.conftest import (
     MockIntOperation,
     MockLinkSelector,
     MockModel,
+    MockRaiseOperation,
     MockSelector,
     MockTextOperation,
     ToElement,
@@ -576,7 +577,8 @@ class TestBaseOperation:
 
         with pytest.raises(exc.BreakOperationException) as info:
             operation.execute("10")
-            assert info.value.result == 10
+
+        assert info.value.result == 10
 
     def test_execute_raises_failed_operation_if_error_in_operation(self):
         """
@@ -588,6 +590,22 @@ class TestBaseOperation:
 
         with pytest.raises(exc.FailedOperationExecution):
             operation.execute("abc")
+
+    def test_execute_propagates_failed_operation_exception(self):
+        """
+        Tests if execute method propagates FailedOperationExecution
+        if it was raised during _execute method,
+        instead of wrapping it in another FailedOperationExecution.
+        """
+        operation = MockRaiseOperation()
+
+        text = "Error message"
+        expected = exc.FailedOperationExecution(text)
+
+        with pytest.raises(exc.FailedOperationExecution, match=text) as info:
+            operation.execute(expected)
+
+        assert info.value is expected
 
 
 @pytest.mark.operation

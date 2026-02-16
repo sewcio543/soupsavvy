@@ -191,6 +191,23 @@ class NotBrowserException(OperationException, TypeError):
     """
 
 
+class ConditionFailedException(OperationException):
+    """
+    Exception raised by `WaitUntil` operation when condition was not met within
+    the timeout period.
+    """
+
+
+#! CONDITION
+
+
+class InvalidParametersBinding(SoupsavvyException, TypeError):
+    """
+    Exception to be raised when user provides invalid parameters binding
+    to the function on Condition initialization.
+    """
+
+
 #! MODELS
 
 

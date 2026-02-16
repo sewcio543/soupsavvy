@@ -5,8 +5,10 @@ Introduces another layer of abstraction for operations and selectors.
 
 from __future__ import annotations
 
+import functools
+import inspect
 from abc import ABC, abstractmethod
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from typing import TYPE_CHECKING, Any, Literal, Optional, Union, cast, overload
 
 from typing_extensions import deprecated
@@ -844,6 +846,8 @@ class BaseOperation(Executable, Comparable):
             return self._execute(arg)
         except exc.BreakOperationException:
             # break exception is propagated to the caller to handle
+            raise
+        except exc.FailedOperationExecution:
             raise
         except Exception as e:
             raise exc.FailedOperationExecution(

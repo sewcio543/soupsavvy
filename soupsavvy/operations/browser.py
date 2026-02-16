@@ -3,9 +3,12 @@ Module defining browser operations for web automation tasks.
 Contains typical browser operations and actions on web elements.
 """
 
+import functools
+import inspect
+import math
 import time
 from collections.abc import Callable
-from functools import partial
+from contextlib import suppress
 from typing import Any, Optional
 
 import soupsavvy.exceptions as exc
@@ -16,7 +19,7 @@ from soupsavvy.base import (
     SoupSelector,
     check_tag_searcher,
 )
-from soupsavvy.interfaces import IBrowser, IElement, TagSearcher
+from soupsavvy.interfaces import Comparable, IBrowser, IElement, TagSearcher
 
 
 class ApplyTo(BrowserOperation):
@@ -149,6 +152,277 @@ class WaitImplicitly(BaseOperation):
         return self.seconds == x.seconds
 
 
+class Condition(Comparable):
+    """
+    Wraps a predicate function and prepares it to be evaluated as a condition.
+    `Condition` binds a subset of keyword arguments to the given predicate in
+    advance, while deferring a specific set of arguments (``tag``, ``strict``,
+    and ``recursive``) to be provided later when :meth:`check` is called.
+    This is useful for building reusable conditions that can be evaluated
+    against different elements or search configurations.
+
+    Examples
+    --------
+    >>> from soupsavvy.operations.browser import Condition
+    >>> condition = Condition(lambda tag, text: tag.text == text, params={"text": "Hello"})
+    >>> condition.check(tag=some_element)
+    True
+
+    Conditions are typically used in conjunction with higher-level browser
+    operations (such as waiting utilities) that repeatedly call
+    :meth:`check` until the predicate is satisfied.
+    """
+
+    _FIND_ARGUMENTS = {"tag", "strict", "recursive"}
+
+    def __init__(
+        self,
+        predicate: Callable[..., Any],
+        params: Optional[dict[str, Any]] = None,
+    ) -> None:
+        """
+        Initializes the Condition with a predicate function and bound parameters.
+
+        Parameters
+        ----------
+        predicate : Callable
+            A callable that represents the condition to evaluate.
+            Any parameters required by ``predicate`` can be supplied
+            via ``params``.
+        params : dict[str, Any], optional
+            Mapping of keyword arguments to bind to ``predicate`` at construction
+            time. These parameters are validated against the callable's signature.
+
+        predicate:
+            It accepts ``TagSearcher`` parameters (``tag``, ``strict``, and ``recursive``)
+            without the need to specify them in ``params``. They can be supplied
+            when calling :meth:`check`. Bound parameters always take precedence.
+            Function should return boolean value, but it is not strictly required
+            as the result will be cast to bool.
+
+        Raises
+        ------
+        InvalidParametersBinding
+            If the provided ``params`` cannot be bound to ``predicate`` (for
+            example, when required parameters other than ``tag``, ``strict``,
+            or ``recursive`` are missing or unexpected parameters are supplied).
+        """
+        params = params or {}
+        signature = inspect.signature(predicate)
+
+        try:
+            bound_args = signature.bind_partial(**params)
+        except TypeError as e:
+            raise exc.InvalidParametersBinding(
+                f"Error binding provided parameters to predicate: {e}"
+            ) from e
+
+        first_args = bound_args.arguments
+        missing = {x for x in signature.parameters if x not in first_args}
+        missing_required = {
+            x
+            for x in missing
+            if signature.parameters[x].default is inspect.Parameter.empty
+            and signature.parameters[x].kind
+            not in {inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD}
+        }
+
+        check = missing_required - self._FIND_ARGUMENTS
+
+        if check:
+            raise exc.InvalidParametersBinding(
+                "Not all required parameters were provided for the predicate. "
+                f"Missing: {', '.join(check)}"
+            )
+
+        kwargs_name = next(
+            (
+                x
+                for x in signature.parameters
+                if signature.parameters[x].kind is inspect.Parameter.VAR_KEYWORD
+            ),
+            None,
+        )
+        # unpacking kwargs if present
+        first_args |= first_args.pop(kwargs_name, {})  # type: ignore
+
+        self._to_provide = self._FIND_ARGUMENTS & missing
+        self.predicate = functools.partial(predicate, **first_args)
+
+    def check(
+        self,
+        tag: Optional[IElement] = None,
+        strict: bool = False,
+        recursive: bool = True,
+    ) -> bool:
+        """
+        Evaluates the condition by calling the underlying predicate
+        with bound parameters and provided `TagSearcher` arguments only if acceptable
+        by the predicate's signature.
+
+        Parameters
+        ----------
+        tag : IElement
+            Any `IElement` object to process.
+        strict : bool, optional
+            If True, enforces results to be found in the element, by default False.
+        recursive : bool, optional
+            Specifies if search should be recursive.
+            If set to `False`, only direct children of the element will be searched.
+            By default `True`.
+
+        Returns
+        -------
+        bool
+            The result of evaluating the predicate, always cast to a boolean value.
+        """
+        dynamic_params = {
+            "tag": tag,
+            "strict": strict,
+            "recursive": recursive,
+        }
+
+        to_provide = {k: v for k, v in dynamic_params.items() if k in self._to_provide}
+        signature = inspect.signature(self.predicate)
+        params = signature.bind_partial(**to_provide).arguments
+        result = self.predicate(**params)
+        return bool(result)
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Condition):
+            return NotImplemented
+
+        return (
+            self.predicate.func == other.predicate.func
+            and self.predicate.args == other.predicate.args
+            and self.predicate.keywords == other.predicate.keywords
+        )
+
+
+class WaitUntil(BrowserOperation):
+    """
+    Repeatedly evaluates a :class:`Condition` until it is satisfied or a timeout occurs.
+    This operation polls the current browser document at a fixed interval, checking
+    whether the provided :class:`Condition` returns ``True``.
+
+    Examples
+    --------
+    >>> from soupsavvy.operations.browser import WaitUntil, Condition
+    ...
+    ... condition = Condition(lambda tag: tag.get_attribute("title") == "Dashboard")
+    ... wait_op = WaitUntil(condition, timeout=20.0, poll_frequency=1.0)
+    ... wait_op.execute(browser)
+
+    Raises
+    ------
+    ConditionFailedException
+        If the condition is not satisfied before the timeout expires.
+    NotBrowserException
+        If this operation is executed with an object that does not implement
+        the :class:`IBrowser` interface.
+    """
+
+    def __init__(
+        self,
+        condition: Condition,
+        timeout: float = 10.0,
+        poll_frequency: Optional[float] = None,
+        strict: bool = False,
+        recursive: bool = True,
+        ignored_exceptions: Optional[list[type[BaseException]]] = None,
+    ) -> None:
+        """
+        Initializes the WaitUntil operation with the specified condition and parameters.
+
+        Parameters
+        ----------
+        condition: Condition
+            A :class:`Condition` instance encapsulating the predicate to be checked
+            against the browser's current document.
+        timeout: float
+            Maximum time in seconds to wait for the condition to become ``True``.
+            Must be a positive number.
+        poll_frequency: float, optional
+            Interval in seconds between condition checks. If ``None``,
+            a default of ``timeout / 10`` is used. Must be positive and not greater
+            than ``timeout``.
+        strict: bool
+            If ``True``, the underlying condition is evaluated with ``strict=True``.
+        recursive: bool
+            If ``True`` (the default), the condition is evaluated with ``recursive=True``.
+        ignored_exceptions: list[type[BaseException]], optional
+            A list of exception types that should be suppressed while evaluating
+            the condition. If any of these exceptions are raised by the condition
+            they are caught and ignored, and the condition
+            is retried until the timeout is reached.
+
+        Raises
+        ------
+        ValueError
+            If ``timeout`` is not positive, if ``poll_frequency`` is not positive,
+            or if ``poll_frequency`` is greater than ``timeout``.
+        """
+        if timeout <= 0:
+            raise ValueError("Timeout must be a positive number.")
+
+        if poll_frequency is None:
+            poll_frequency = timeout / 10
+
+        if poll_frequency <= 0:
+            raise ValueError("Poll frequency must be a positive number.")
+
+        if poll_frequency > timeout:
+            raise ValueError("Poll frequency cannot be greater than timeout.")
+
+        self.condition = condition
+        self.timeout = timeout
+        self.poll_frequency = poll_frequency
+        self.strict = strict
+        self.recursive = recursive
+        self.ignored_exceptions = ignored_exceptions or []
+
+    def _execute(self, browser: IBrowser) -> None:
+        start = time.monotonic()
+        deadline = start + self.timeout
+        attempts = 0
+
+        while True:
+            attempts += 1
+            document = browser.get_document()
+
+            with suppress(*self.ignored_exceptions):
+                if self.condition.check(
+                    document,
+                    strict=self.strict,
+                    recursive=self.recursive,
+                ):
+                    return
+
+            now = time.monotonic()
+
+            if now >= deadline:
+                raise exc.ConditionFailedException(
+                    f"Condition {self.condition} was not met after "
+                    f"{now - start:.2f}s "
+                    f"({attempts} attempts, poll={self.poll_frequency}s)."
+                )
+
+            time.sleep(min(self.poll_frequency, max(0, deadline - now)))
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, WaitUntil):
+            return NotImplemented
+
+        return (
+            self.condition == other.condition
+            and math.isclose(self.timeout, other.timeout)
+            and math.isclose(self.poll_frequency, other.poll_frequency)
+            and self.strict == other.strict
+            and self.recursive == other.recursive
+            and set(self.ignored_exceptions) == set(other.ignored_exceptions)
+        )
+
+
 class Click(ElementAction):
     """
     Clicks on a target element using the browser context.
@@ -255,7 +529,7 @@ class _FindBase(BrowserOperation):
 
     def __init__(self, selector: TagSearcher, method: Callable, kwargs: dict) -> None:
         self.selector = selector
-        self.method = partial(method, **kwargs)
+        self.method = functools.partial(method, **kwargs)
 
     def _execute(self, browser: IBrowser) -> Any:
         body = browser.get_document()
