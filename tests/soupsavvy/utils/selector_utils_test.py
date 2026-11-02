@@ -104,8 +104,7 @@ class TestTagIterator:
         tag = mock_element
         tag_iterator = TagIterator(tag)
         expected = [
-            strip(
-                """
+            strip("""
                 <div>
                     <a class="link"></a>
                     <div class="link">
@@ -113,17 +112,14 @@ class TestTagIterator:
                         <a class="menu"></a>
                     </div>
                 </div>
-                """
-            ),
+                """),
             strip("""<a class="link"></a>"""),
-            strip(
-                """
+            strip("""
                 <div class="link">
                     <a class="menu"></a>
                     <a class="menu"></a>
                 </div>
-                """
-            ),
+                """),
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu"></a>"""),
             strip("""<span class="widget"></span>"""),
@@ -139,8 +135,7 @@ class TestTagIterator:
         tag = mock_element
         tag_iterator = TagIterator(tag, recursive=False)
         expected = [
-            strip(
-                """
+            strip("""
                 <div>
                     <a class="link"></a>
                     <div class="link">
@@ -148,8 +143,7 @@ class TestTagIterator:
                         <a class="menu"></a>
                     </div>
                 </div>
-                """
-            ),
+                """),
             strip("""<span class="widget"></span>"""),
         ]
         assert [strip(str(tag)) for tag in tag_iterator] == expected
@@ -164,8 +158,7 @@ class TestTagIterator:
 
         iter_ = iter(tag_iterator)
         # first tag
-        expected = strip(
-            """
+        expected = strip("""
                 <div>
                     <a class="link"></a>
                     <div class="link">
@@ -173,8 +166,7 @@ class TestTagIterator:
                         <a class="menu"></a>
                     </div>
                 </div>
-            """
-        )
+            """)
         assert strip(str(next(iter_))) == expected
 
         iter_ = iter(tag_iterator)
@@ -200,8 +192,7 @@ class TestTagIterator:
         tag = mock_element
         tag_iterator = TagIterator(tag, include_self=True)
         expected = [
-            strip(
-                """
+            strip("""
                 <body>
                     <div>
                         <a class="link"></a>
@@ -212,10 +203,8 @@ class TestTagIterator:
                     </div>
                     <span class="widget"></span>
                 </body>
-                """
-            ),
-            strip(
-                """
+                """),
+            strip("""
                 <div>
                     <a class="link"></a>
                     <div class="link">
@@ -223,17 +212,14 @@ class TestTagIterator:
                         <a class="menu"></a>
                     </div>
                 </div>
-                """
-            ),
+                """),
             strip("""<a class="link"></a>"""),
-            strip(
-                """
+            strip("""
                 <div class="link">
                     <a class="menu"></a>
                     <a class="menu"></a>
                 </div>
-                """
-            ),
+                """),
             strip("""<a class="menu"></a>"""),
             strip("""<a class="menu"></a>"""),
             strip("""<span class="widget"></span>"""),
@@ -250,8 +236,7 @@ class TestTagIterator:
         tag = mock_element
         tag_iterator = TagIterator(tag, recursive=False, include_self=True)
         expected = [
-            strip(
-                """
+            strip("""
                 <body>
                     <div>
                         <a class="link"></a>
@@ -262,10 +247,8 @@ class TestTagIterator:
                     </div>
                     <span class="widget"></span>
                 </body>
-                """
-            ),
-            strip(
-                """
+                """),
+            strip("""
                 <div>
                     <a class="link"></a>
                     <div class="link">
@@ -273,8 +256,7 @@ class TestTagIterator:
                         <a class="menu"></a>
                     </div>
                 </div>
-                """
-            ),
+                """),
             strip("""<span class="widget"></span>"""),
         ]
         assert [strip(str(tag)) for tag in tag_iterator] == expected
